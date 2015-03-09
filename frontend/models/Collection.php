@@ -238,6 +238,10 @@ class Collection extends \yii\db\ActiveRecord {
 	{
 		$real = self::totalReal();
 		$amounts = self::totalAmounts();
+<<<<<<< HEAD
+// 		var_dump($amounts);exit;
+=======
+>>>>>>> f26c01cfc0293b1162a308ff9ff3e7e5e781df80
 		if($real !== 0.0 and $amounts !== 0.0)
 			$percentage = sprintf("%.2f",$real/$amounts)*100;
 		else 
