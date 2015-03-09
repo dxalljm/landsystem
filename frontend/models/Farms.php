@@ -126,7 +126,7 @@ class Farms extends \yii\db\ActiveRecord {
 				'pinyin' => '农场名称拼音首字母',
 				'farmerpinyin' => '法人姓名简单首字母',
 				'state' => '状态',
-				'notclear' => '未明确地块',
+				'notclear' => '未明确地块面积',
 				'contractnumber' => '合同号',
 				'begindate' => '开始日期',
 				'enddate' => '结束日期',

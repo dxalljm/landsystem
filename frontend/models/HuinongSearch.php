@@ -20,7 +20,7 @@ class HuinongSearch extends Huinong
         return [
             [['id', 'typeid', 'create_at', 'update_at', 'begindate', 'enddate'], 'integer'],
             [['subsidiestype_id'], 'safe'],
-            [['subsidiesarea', 'subsidiesmoney', 'totalamount', 'realtotalamount'], 'number'],
+            [['subsidiesarea', 'subsidiesmoney', 'totalamount', 'realtotalamount','totalsubsidiesarea'], 'number'],
         ];
     }
 
@@ -61,7 +61,7 @@ class HuinongSearch extends Huinong
             'subsidiesarea' => $this->subsidiesarea,
             'subsidiesmoney' => $this->subsidiesmoney,
             'typeid' => $this->typeid,
-        	
+        	'totalsubsidiesarea' => $this->totalsubsidiesarea,
             'totalamount' => $this->totalamount,
             'realtotalamount' => $this->realtotalamount,
             'create_at' => $this->create_at,

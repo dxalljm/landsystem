@@ -6,6 +6,7 @@ use app\models\Reviewprocess;
 use app\models\User;
 use yii\helpers\Html;
 use app\models\Tempauditing;
+use app\models\Huinong;
 ?>
 
 <header class="main-header">
@@ -65,6 +66,9 @@ use app\models\Tempauditing;
                         echo "<li ><a href=" . Url::to('index.php?r='.$menu['menuurl']) . ">". $menu['menuname'];
                         if($menu['menuurl'] == 'reviewprocess/reviewprocessindex') {
                         	echo Reviewprocess::getUserProcessCount();
+                        }
+                        if($menu['menuurl'] == 'huinong/huinonglist') {
+                        	echo huinong::getHuinongCount();
                         }
                         echo "</a></li>";  
                        

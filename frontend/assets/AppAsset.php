@@ -29,6 +29,7 @@ class AppAsset extends AssetBundle
         'vendor/bower/font-awesome/css/font-awesome.min.css',
         'vendor/bower/AdminLTE/dist/css/AdminLTE.min.css',
         'vendor/bower/AdminLTE/dist/css/skins/_all-skins.min.css',
+    	'vendor/bower/nprogress/nprogress.css',
         'css/site.css',
     ];
 
@@ -42,11 +43,12 @@ class AppAsset extends AssetBundle
         'vendor/bower/AdminLTE/dist/js/app.min.js',
         'vendor/bower/devbridge-autocomplete/dist/jquery.autocomplete.min.js',
     	'js/vendor/bower/lodop/LodopFuncs.js',
-
+		
         'vendor/bower/echarts/build/dist/echarts.js',
     	'vendor/bower/echarts/build/dist/echarts.min.js',
         'js/main.js',
     	'js/showEcharts.js',
+    	'vendor/bower/nprogress/nprogress.js',
     ];
 
     // 依赖

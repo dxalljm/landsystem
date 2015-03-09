@@ -16,6 +16,8 @@ use frontend\models\HuinonggrantSearch;
 use yii\data\ActiveDataProvider;
 use app\models\Lease;
 use app\models\Subsidiestype;
+use app\models\Goodseed;
+use app\models\Tempprogress;
 /**
  * HuinongController implements the CRUD actions for Huinong model.
  */
@@ -293,10 +295,6 @@ class HuinongController extends Controller
         $model = new Huinong();
 
         if ($model->load(Yii::$app->request->post())) {
-//         	var_dump($model);exit;
-//         	$model->subsidiestype_id = Yii::$app->request->post($model->subsidiestype_id);
-//         	$model->typeid = 
-// 			var_dump($model->typeid);exit;
 			if(Yii::$app->request->post('goodseed'))
 				$model->typeid = Yii::$app->request->post('goodseed');
 			if(Yii::$app->request->post('plant'))
@@ -305,8 +303,46 @@ class HuinongController extends Controller
         	$model->update_at = $model->create_at;
         	$model->begindate = (string)strtotime($model->begindate);
         	$model->enddate = (string)strtotime($model->enddate);
-//         	var_dump($model);exit;
-        	$model->save();
+        	if(Yii::$app->request->post('goodseed'))
+        		$model->totalsubsidiesarea = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid])->sum('area');
+        	if(Yii::$app->request->post('plant'))
+        		$model->totalsubsidiesarea = Plantingstructure::find()->where(['plant_id'=>$model->typeid])->sum('area');
+        	if(Yii::$app->request->post('goodseed'))
+        		$model->totalamount = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid])->sum('area')*$model->subsidiesmoney;
+        	if(Yii::$app->request->post('plant'))
+        		$model->totalamount = Plantingstructure::find()->where(['plant_id'=>$model->typeid])->sum('area')*$model->subsidiesmoney;
+        	
+        	if($model->save()) {
+        		if(Yii::$app->request->post('goodseed'))
+        			$plantingsructure = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid])->all();
+        		if(Yii::$app->request->post('plant'))
+        			$plantingsructure = Plantingstructure::find()->where(['plant_id'=>$model->typeid])->all();
+        		foreach ($plantingsructure as $val) {
+        			$temp = new Tempprogress();
+        			$temp->id = $val['id'];
+        			$temp->save();
+        		}
+        		foreach ($plantingsructure as $value) {
+	        		$huinonggrantModel = new Huinonggrant();
+
+	        		$huinonggrantModel->farms_id = $value['farms_id'];
+	        		$huinonggrantModel->management_area = $value['management_area'];
+	        		$huinonggrantModel->huinong_id = $model->id;
+	        		$huinonggrantModel->subsidiestype_id = $model->subsidiestype_id;
+	        		$huinonggrantModel->typeid = $model->typeid;
+	        		$huinonggrantModel->lease_id = $value['lease_id'];
+	        		$huinonggrantModel->money = $value['area'] * $model->subsidiesmoney;
+	        		$huinonggrantModel->area = $value['area'];
+	        		$huinonggrantModel->state = 0;
+	        		$huinonggrantModel->issubmit = 0;
+	        		$huinonggrantModel->create_at = time();
+	        		$huinonggrantModel->update_at = $huinonggrantModel->create_at;
+	        		$huinonggrantModel->save();
+	        		Logs::writeLog('建立所有符合条件用户数据',$huinonggrantModel->id,'',$huinonggrantModel->attributes);
+	        		$tempModel = Tempprogress::findOne($valur['id']);
+	        		$tempModel->delete();
+        		}
+        	}
         	
         	Logs::writeLog('新增惠农政策',$model->id,'',$model->attributes);
             return $this->redirect(['huinongindex']);

@@ -19,7 +19,7 @@ class huinonggrantSearch extends Huinonggrant
     public function rules()
     {
         return [
-            [['id', 'farms_id','farmer_id','lease_id','subsidiestype_id','typeid', 'huinong_id', 'state','lease_id','management_area'], 'integer'],
+            [['id', 'farms_id','farmer_id','lease_id','subsidiestype_id','typeid', 'huinong_id', 'state','lease_id','management_area','issubmit'], 'integer'],
             [['money', 'area'], 'number'],
             [['note'], 'safe'],
         ];
@@ -66,6 +66,7 @@ class huinonggrantSearch extends Huinonggrant
             'money' => $this->money,
             'area' => $this->area,
             'state' => $this->state,
+        	'issubmit' => $this->issubmit,
         ]);
 
         $query->andFilterWhere(['like', 'note', $this->note]);
