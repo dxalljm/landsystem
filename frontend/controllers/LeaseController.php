@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Farmer;
 use app\models\Farms;
+use app\models\Theyear;
 
 /**
  * LeaseController implements the CRUD actions for Lease model.
@@ -41,12 +42,12 @@ class LeaseController extends Controller
      * Lists all Lease models.
      * @return mixed
      */
-    public function actionLeaseindex($id,$year)
+    public function actionLeaseindex($id)
     {
     	//$this->layout='@app/views/layouts/nomain.php';
-    	$lease = Lease::find()->where(['farms_id'=>$id,'years'=>$year])->all();
+    	$lease = Lease::find()->where(['farms_id'=>$id,'years'=>Theyear::findOne(1)['years']])->all();
          $searchModel = new leaseSearch();
-         $dataProvider = $searchModel->search(['farms_id'=>$id,'years'=>$year]);
+         $dataProvider = $searchModel->search(['farms_id'=>$id,'years'=>Theyear::findOne(1)['years']]);
 		//$this->getView()->registerJsFile($url)
         return $this->renderAjax('leaseindex', [
              'searchModel' => $searchModel,

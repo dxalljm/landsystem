@@ -41,7 +41,6 @@ function leaseindex(farmsid) {
 		    {
 		    	r: 'lease/leaseindex',
 		        id: farmsid,
-		        year:$('#theyear-years').val(),
 		    },
 		    function (data) {
 		        $('.modal-body').html(data);
