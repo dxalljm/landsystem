@@ -1,0 +1,178 @@
+<?php
+
+namespace backend\controllers;
+
+use Yii;
+use app\models\tablefields;
+use app\models\tables;
+use app\models\farms;
+use backend\models\tablefieldsSearch;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
+use yii\db\Migration;
+use yii\filters\AccessControl;
+/**
+ * TablefieldsController implements the CRUD actions for tablefields model.
+ */
+class TablefieldsController extends Controller
+{
+    public function behaviors()
+    {
+         return [
+			'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['tablefieldscreate', 'tablefieldsupdate', 'tablefieldsview', 'tablefieldsindex', 'tablefieldsdelete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                ],
+            ],
+        ];
+    }
+    public function beforeAction($action)
+    {
+    	$action = Yii::$app->controller->action->id;
+    	if(\Yii::$app->user->can($action)){
+    		return true;
+    	}else{
+    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+    	}
+    }
+
+    /**
+     * Lists all tablefields models.
+     * @return mixed
+     */
+    public function actionTablefieldsindex()
+    {
+        $searchModel = new tablefieldsSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('tablefieldsindex', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Displays a single tablefields model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionTablefieldsview($id)
+    {
+        return $this->render('tablefieldsview', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
+    /**
+     * Creates a new tablefields model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionTablefieldscreate()
+    {
+        $model = new tablefields();
+        $mir = new Migration();
+        $sch = new \yii\db\mysql\Schema;
+        if ($model->load(Yii::$app->request->post())) {
+        	$tablename = tables::find()->where(['id'=>$model->tables_id])->one()['tablename'];
+        	$columns = $mir->getColumns($tablename);
+			if($this->isIn($model->fields, $columns)) {
+				return $this->render('tablefieldserror', [
+                	'message' => '该表项已经存在，不能被创建！',
+            	]);
+			} else {
+				$table = Tables::find()->where(['id'=>$model->tables_id])->one(); 
+				$mir->addColumn($mir->db->tablePrefix.$table->tablename, $model->fields, $model->type);    
+			    $model->save(); 
+            	return $this->redirect(['tablefieldsview', 'id' => $model->id]);
+			}
+        } else {
+            return $this->render('tablefieldscreate', [
+                'model' => $model,
+            ]);
+        }
+    }
+	
+    public function isIn($str,$arr)
+    {
+    	foreach($arr as $val)
+    	{
+    		//echo $val[''];
+    		if($val['COLUMN_NAME'] == $str) {
+    			return true;
+    			//break;
+    		}
+    			
+    	}
+    	return false;
+    }
+    
+    /**
+     * Updates an existing tablefields model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionTablefieldsupdate($id)
+    {
+        $model = $this->findModel($id);
+		$modelold = $this->findModel($id);
+        if ($model->load(Yii::$app->request->post())) {
+			$table = Tables::find()->where(['id'=>$model->tables_id])->one();
+			$mir = new Migration();  
+			$sch = new \yii\db\mysql\Schema;  
+			$mir->renameColumn($mir->db->tablePrefix.$table->tablename, $modelold->fields, $model->fields, $model->type);    
+			 $model->save();
+            return $this->redirect(['tablefieldsview', 'id' => $model->id]);
+        } else {
+            return $this->render('tablefieldsupdate', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    /**
+     * Deletes an existing tablefields model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionTablefieldsdelete($id)
+    {
+        $model = $this->findModel($id);
+        $table = Tables::find()->where(['id'=>$model->tables_id])->one();
+        $mir = new Migration();
+        $sch = new \yii\db\mysql\Schema;
+        $bool = $mir->dropColumn($mir->db->tablePrefix.$table->tablename,$model->fields);
+       	$this->findModel($id)->delete();
+       	return $this->redirect(['tablefieldsindex']);    
+    }
+
+    /**
+     * Finds the tablefields model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return tablefields the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = tablefields::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+}
