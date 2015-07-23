@@ -13,11 +13,10 @@ use app\models\Collection;
 /* @var $model app\models\Collection */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-<script src="/landsystem/frontend/web/assets/8eabedae/jquery.js"></script>
 <div class="collection-form">
 
     <?php $form = ActiveFormrdiv::begin(); ?>
-    
+
     <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$farmsid])->label(false) ?>
     <?= $form->field($model, 'cardid')->hiddenInput(['value'=>$cardid])->label(false) ?>
 	<?= $form->field($model, 'isupdate')->hiddenInput()->label(false) ?>
@@ -46,14 +45,14 @@ use app\models\Collection;
     <td align="center">应追缴费面积</td>
     <td align="center">应追缴费金额</td>
     <td align="center">剩余欠缴金额</td>
-    
+
   </tr>
   <tr>
     <td align="center"><?= $year?></td>
     <td align="center"><?= $model->getYpayarea($year, $model->real_income_amount)?></td>
     <td align="center"><?= $model->getYpaymoney($year, $model->real_income_amount)?></td>
     <td align="center"><?= $owe+$model->getAR($year)-$model->real_income_amount?></td>
-    
+
   </tr>
   <?php foreach($collectiondataProvider as $val) {?>
   <tr>
@@ -61,7 +60,7 @@ use app\models\Collection;
     <td align="center"><?= $val['ypayarea']?></td>
     <td align="center"><?= $val['ypaymoney']?></td>
     <td align="center"><?= $owe?></td>
-    
+
   </tr>
   <?php }?>
 </table>
@@ -71,28 +70,30 @@ use app\models\Collection;
     </div>
 <?php ActiveFormrdiv::end(); ?>
 </div>
-<?php
-$script = <<<JS
-jQuery('#collection-real_income_amount').blur(function(){
-	money = $(this).val()*1 + $model->real_income_amount*1;
-    if(money > $('#collection-amounts_receivable').val()){
-		alert('实收金额('+money+')超过本年度应追缴金额'+$('#collection-amounts_receivable').val());
-		JQuery(this).focus();
-	}
-});
-// jQuery('submit').click(function(){
-//     var year = $(this).val();
-// 	var farmsid = $('#collection-farms_id').val();
-// 	var farmerid = $('#collection-farmer_id').val();
-//     $.get('/landsystem/frontend/web/index.php?r=collection/collectioncreate',{farmsid:farmsid,farmerid:farmerid,year:year},function (data) {
-// 		$('body').html(data);
-// 	});
-// });
-JS;
-$this->registerJs($script);
-?>
 <script>
 function submittype(v) {
 	$('#collection-isupdate').val(v);
 }
+
+$(document).ready(function () {
+
+  // 实收金额判断
+  $('#collection-real_income_amount').blur(function() {
+
+    // 实收金额
+    var realPrice = parseFloat($(this).val());
+
+    // 应收金额
+    var amountsPrice = parseFloat($('#collection-amounts_receivable').val());
+
+    // 实收金额小于应收金额
+    if (realPrice > amountsPrice) {
+      alert('实收金额(' + realPrice + ')超过本年度应追缴金额(' + amountsPrice + ')');
+      $(this).focus();
+    }
+
+  });
+
+});
+
 </script>
