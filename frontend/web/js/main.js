@@ -1,3 +1,10 @@
+// BootStrap Modal 禁用ESC，以及遮罩层点击事件
+$.fn.modal.Constructor.DEFAULTS.keyboard = false;
+$.fn.modal.Constructor.DEFAULTS.backdrop = 'static';
+
+
+
+
 function farmercontract(key) {
     // $('#createassign').click(function() {
     // alert(key);
@@ -16,20 +23,20 @@ function farmercontract(key) {
     // });
 }
 function farmercreate(key) {
-	// $('#createassign').click(function() {
-		// alert(key);
-		$.get(
-		    'index.php',         
-		    {
-		    	r: 'farmer/farmercreate',
-		        id: key,
-		    },
-		    function (data) {
-		        $('.modal-body').html(data);
-		        
-		    }  
-		);
-	// });
+    // $('#createassign').click(function() {
+    // alert(key);
+    $.get(
+        'index.php',         
+        {
+            r: 'farmer/farmercreate',
+            id: key,
+        },
+        function (data) {
+            $('.modal-body').html(data);
+
+        }  
+    );
+    // });
 }
 
 function leaseindex(farmsid) {
