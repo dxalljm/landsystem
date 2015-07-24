@@ -8,42 +8,19 @@ use yii\widgets\ActiveFormrdiv;
 use yii\helpers\ArrayHelper;
 use app\models\Farms;
 
-$this->title = 'My Yii Application';
+
 ?>
 
 <div class="farms-menu">
+<?php $form = ActiveFormrdiv::begin(); ?>
+<br><br><br>
 	<table class="table table-striped table-bordered table-hover table-condensed">
       <tr>
-        <td width="174" align="right">年度：</td>
-        <td colspan="3" align="left">
-        <?php $form = ActiveFormrdiv::begin(); ?>
-        <?= $form->field($year, 'years')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(DateTimePicker::className(), [
-    'language' => 'zh-CN',
-    'size' => 'xs',
-    'template' => '{input}',
-    //'pickButtonIcon' => 'glyphicon-calendar',
-    'inline' => false,
-    'clientOptions' => [
-        'startView' => 'decade',
-        'minView' => 4,
-        //'maxView' => 2,
-        'autoclose' => true,
-        //'CustomFormat' => 'yyyy',
-        'format' => 'yyyy', // if inline = false
-        'todayBtn' => false
-    ]
-]);?>
-
-</td>
-      </tr>
-      <tr>
-        <td align="right">管理区：</td>
-        <td width="250" align="left">&nbsp;
-        <?= html::dropDownList('managementarea',$areaid,ArrayHelper::map(ManagementArea::find()->all(),'id','areaname'),['id'=>'managementarea'])?>
-           </td>
-        <td width="144" align="right">农场名称：</td>
-        <td width="282" align="left">&nbsp;<?= html::dropDownList('farmname',$farm->id,ArrayHelper::map(Farms::find()->where(['management_area'=>$areaid])->all(),'id','farmname'),['id'=>'farmname','prompt'=>'请选择'])?>
-         </td>
+        <td width="128" align="right">管理区：</td>
+        <td width="193" align="left">&nbsp;
+        <?= html::dropDownList('managementarea',$areaid,ArrayHelper::map(ManagementArea::find()->all(),'id','areaname'),['id'=>'managementarea'])?>           </td>
+        <td width="92" align="right">农场名称：</td>
+        <td width="278" align="left">&nbsp;<?= html::dropDownList('farmname',$farm->id,ArrayHelper::map(Farms::find()->where(['management_area'=>$areaid])->all(),'id','farmname'),['id'=>'farmname','prompt'=>'请选择'])?>        </td>
       </tr>
       <tr>
         <td align="right">承包年限：</td>
