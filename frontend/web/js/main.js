@@ -34,8 +34,6 @@ function farmercreate(key) {
 }
 
 function leaseindex(farmsid) {
-	// $('#createassign').click(function() {
-		// alert(key);
 		$.get(
 		    'index.php',         
 		    {
@@ -66,25 +64,78 @@ function collectioncreate(farmsid,cardid) {
 	);
 // });
 }
-function leasecreate(farmsid,theyear) {
-	// $('#createassign').click(function() {
-		// alert(key);
-		$.get(
-		    'index.php',         
-		    {
-		    	r: 'lease/leasecreate',
-		        id: farmsid,
-		        year:theyear,
-		    },
-		    function (data) {
-		        $('.modal-body').html(data);
-		        
-		    }  
-		);
-		
-	// });
+
+
+/**
+ * 租凭事件
+ *
+ * @returns {{isCreateButton: boolean, create: Function, close: Function}}
+ */
+var leaseEvent = function () {
+
+	return {
+
+		/**
+		 * @var boolean 是否点击创建按钮
+		 */
+		isCreateButton: false,
+
+		/**
+		 * 农场ID
+		 */
+		farmsId: 0,
+
+		/**
+		 * 点击添加租凭
+		 * @param int farmsId 农场ID
+		 * @param int theYear 当前选择的年份
+		 */
+		create: function (farmsId, theYear) {
+
+			_this = this;
+
+			// 设置当前ID
+			this.farmsId = farmsid;
+
+			// 隐藏当前modal
+            $.get('index.php', {r: 'lease/leasecreate', id: farmsId, year:theYear}, function (data) {
+
+                // 点击创建按钮
+                _this.isCreateButton = true;
+
+                // 填充数据
+                $('.modal-body').html(data);
+
+            });
+
+		},
+
+		/**
+		 * 点击租凭
+		 */
+		close: function () {
+
+			_this = this;
+
+			// 关闭modal点击
+			$('#close-leaseindex-modal').on("click", function () {
+
+				// 重新请求数据，渲染视图
+				if (_this.isCreateButton == true) {
+					leaseindex(_this.farmsId);
+				} else {
+					$('#leaseindex-modal').modal('hide');
+				}
+
+				// 取消创建按钮事件
+				_this.isCreateButton = false;
+
+			});
+		}
+	}
 }
-function offleasecreate() {
-	$('#leasecreate-modal').modal('hide');
-}
+
+// 实例化租凭合同
+lease = leaseEvent();
+lease.close();
 
