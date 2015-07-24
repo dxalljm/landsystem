@@ -18,7 +18,7 @@ use app\models\Theyear;
 	<table>
 		<tr>
 			<td align="right">请选择年度：</td>
-			<td><?php 
+			<td><?php
 				echo DateTimePicker::widget([
 					'name' => 'years',
 					'id' => 'years',
@@ -56,11 +56,11 @@ use app\models\Theyear;
             'telephone',
             [
             	'label' => '农场',
-              	'attribute' => 'farmname',      						
+              	'attribute' => 'farmname',
             	'value' => 'farms.farmname',
             ],
             [
-            
+
             'format'=>'raw',
             //'class' => 'btn btn-primary btn-lg',
             'value' => function($model,$key){
@@ -69,14 +69,13 @@ use app\models\Theyear;
             			'title' => '农场相关业务办理',
             			'data-toggle' => 'modal',
             			'data-target' => '#collectioncreate-modal',
-            			'data-dropback' => true,
             			'onclick' => 'collectioncreate('.$model->farms_id.','.$model->cardid.')',
             			//'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/collection/collectioncreate','id'=>$key,'year'=>$years])."','','width=700,height=600,top=50,left=380, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
             	]);
             }
             ],
             [
-            
+
             'format'=>'raw',
             //'class' => 'btn btn-primary btn-lg',
             'value' => function($model,$key){
@@ -86,11 +85,10 @@ use app\models\Theyear;
             			'title' => '填写承包信息',
             			'data-toggle' => 'modal',
             			'data-target' => '#farmercontract-modal',
-            			'data-dropback' => true,
             			'onclick' => 'farmercontract('.$model->farms_id.')',
             			//'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/farmer/farmercontract','id'=>$key])."','','width=1200,height=600,top=50,left=80, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
-            			
-            
+
+
             	]);
             }
             ],
@@ -113,6 +111,7 @@ $this->registerJs($script);
     'id' => 'collectioncreate-modal',
 	'size'=>'modal-lg',
 	'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>',
+	'options' => ['data-keyboard' => 'false', 'data-backdrop' => 'static']
 	//'header' => '<h4 class="modal-title"></h4>',
 ]);?>
 <?php \yii\bootstrap\Modal::end(); ?>
