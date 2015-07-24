@@ -95,7 +95,7 @@ var leaseEvent = function () {
 			_this = this;
 
 			// 设置当前ID
-			this.farmsId = farmsid;
+			this.farmsId = farmsId;
 
 			// 隐藏当前modal
             $.get('index.php', {r: 'lease/leasecreate', id: farmsId, year:theYear}, function (data) {
