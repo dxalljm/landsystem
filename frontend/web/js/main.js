@@ -87,7 +87,7 @@ var leaseEvent = function () {
         isCreateButton: false,
 
         /**
-         * 农场ID
+         * @var int 农场ID
          */
         farmsId: 0,
 
