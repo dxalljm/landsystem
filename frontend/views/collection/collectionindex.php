@@ -14,35 +14,8 @@ use app\models\Theyear;
 
 ?>
 <div class="farms-menu">
-	<h1>缴费业务</h1>
-	<table>
-		<tr>
-			<td align="right">请选择年度：</td>
-			<td><?php
-				echo DateTimePicker::widget([
-					'name' => 'years',
-					'id' => 'years',
-					'value' => $years,
-					'language' => 'zh-CN',
-				    'size' => 'xs',
-				    'template' => '{input}',
-				    //'pickButtonIcon' => 'glyphicon-calendar',
-				    'inline' => false,
-				    'clientOptions' => [
-				        'startView' => 'decade',
-				        'minView' => 4,
-				        //'maxView' => 2,
-				        'autoclose' => true,
-				        //'CustomFormat' => 'yyyy',
-				        'format' => 'yyyy', // if inline = false
-				        'todayBtn' => false
-				    ],
-					//'containerOptions' => ['id'=>'years','onclick'=>'setyears()',]
-				]);
-				?></td>
+	<h1>缴费业务(<?= Theyear::findOne(1)['years']?>年度)</h1>
 
-		</tr>
-	</table>
 <br />
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

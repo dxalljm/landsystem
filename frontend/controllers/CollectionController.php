@@ -77,9 +77,10 @@ class CollectionController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCollectioncreate($farmsid,$cardid,$year)
+    public function actionCollectioncreate($farmsid,$cardid)
     {
     	//$this->layout='@app/views/layouts/nomain.php';
+    	$year = Theyear::findOne(1)['years'];
     	$collection = Collection::find()->where(['farms_id'=>$farmsid,'cardid'=>$cardid,'ypayyear'=>$year])->one();
     	if($collection) {
     		$model = $this->findModel($collection->id);

@@ -50,13 +50,13 @@ function leaseindex(farmsid) {
 	// });
 }
 function collectioncreate(farmsid,cardid) {
+	$('#leasecreate-modal').modal("hide");
 	$.get(
 	    'index.php',         
 	    {
 	    	r: 'collection/collectioncreate',
 	        farmsid: farmsid,
 	        cardid:cardid,
-	        year:$('#years').val(),
 	        
 	    },
 	    function (data) {

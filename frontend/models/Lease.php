@@ -29,7 +29,7 @@ class Lease extends \yii\db\ActiveRecord
     public function getOverArea()
     {
     	$areas = 0;
-    	if(($model = self::find()->where(['farms_id'=>$_GET['id'],'years'=>$_GET['year']])->all()) !== null) {
+    	if(($model = self::find()->where(['farms_id'=>$_GET['id'],'years'=>Theyear::findOne(1)['years']])->all()) !== null) {
     		foreach($model as $val) {
     			$areas+=$val['lease_area'];
     		}
