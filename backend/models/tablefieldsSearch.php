@@ -42,7 +42,7 @@ class tablefieldsSearch extends tablefields
      */
     public function search($params)
     {
-        $query = tablefields::find();
+        $query = tablefields::find()->andWhere($params);
         $query->joinWith(['tables']);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

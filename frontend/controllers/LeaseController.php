@@ -45,7 +45,7 @@ class LeaseController extends Controller
     public function actionLeaseindex($id)
     {
     	//$this->layout='@app/views/layouts/nomain.php';
-    	$lease = Lease::find()->where(['farms_id'=>$id,'years'=>Theyear::findOne(1)['years']])->all();
+    	//$lease = Lease::find()->where(['farms_id'=>$id,'years'=>Theyear::findOne(1)['years']])->all();
          $searchModel = new leaseSearch();
          $dataProvider = $searchModel->search(['farms_id'=>$id,'years'=>Theyear::findOne(1)['years']]);
 		//$this->getView()->registerJsFile($url)

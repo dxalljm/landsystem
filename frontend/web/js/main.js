@@ -23,7 +23,6 @@ function farmercreate(key) {
 		    {
 		    	r: 'farmer/farmercreate',
 		        id: key,
-		        year:$('#theyear-years').val(),
 		    },
 		    function (data) {
 		        $('.modal-body').html(data);

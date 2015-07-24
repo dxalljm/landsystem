@@ -52,10 +52,11 @@ class TablefieldsController extends Controller
      * Lists all tablefields models.
      * @return mixed
      */
-    public function actionTablefieldsindex()
+    public function actionTablefieldsindex($id)
     {
+    	$this->layout='@app/views/layouts/nomain.php';
         $searchModel = new tablefieldsSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(["tables_id"=>$id]);
 
         return $this->render('tablefieldsindex', [
             'searchModel' => $searchModel,
@@ -70,6 +71,7 @@ class TablefieldsController extends Controller
      */
     public function actionTablefieldsview($id)
     {
+    	$this->layout='@app/views/layouts/nomain.php';
         return $this->render('tablefieldsview', [
             'model' => $this->findModel($id),
         ]);
@@ -80,8 +82,9 @@ class TablefieldsController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionTablefieldscreate()
+    public function actionTablefieldscreate($tables_id)
     {
+    	$this->layout='@app/views/layouts/nomain.php';
         $model = new tablefields();
         $mir = new Migration();
         $sch = new \yii\db\mysql\Schema;
@@ -127,6 +130,7 @@ class TablefieldsController extends Controller
      */
     public function actionTablefieldsupdate($id)
     {
+    	$this->layout='@app/views/layouts/nomain.php';
         $model = $this->findModel($id);
 		$modelold = $this->findModel($id);
         if ($model->load(Yii::$app->request->post())) {
@@ -151,13 +155,14 @@ class TablefieldsController extends Controller
      */
     public function actionTablefieldsdelete($id)
     {
+    	$this->layout='@app/views/layouts/nomain.php';
         $model = $this->findModel($id);
         $table = Tables::find()->where(['id'=>$model->tables_id])->one();
         $mir = new Migration();
         $sch = new \yii\db\mysql\Schema;
         $bool = $mir->dropColumn($mir->db->tablePrefix.$table->tablename,$model->fields);
        	$this->findModel($id)->delete();
-       	return $this->redirect(['tablefieldsindex']);    
+       	return $this->redirect(['tablefieldsindex','id'=>$_GET['tables_id']]);    
     }
 
     /**

@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use app\models\Farms;
 use yii\web\UploadedFile;
 use app\models\Lease;
+use app\models\Theyear;
 /**
  * FarmerController implements the CRUD actions for farmer model.
  */
@@ -75,9 +76,9 @@ class FarmerController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionFarmercreate($id,$year)
+    public function actionFarmercreate($id)
     {
-    	
+    	$year = Theyear::findOne(1)['years'];
     	$farm = Farms::find()->where(['id'=>$id])->one();
     	$farmerid = farmer::find()->where(['farms_id'=>$id,'years'=>$year])->one()['id'];
     	if($farmerid) {

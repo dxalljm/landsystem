@@ -5,13 +5,14 @@ use app\models\tables;
 use app\models\Nation;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\Theyear;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\farmer */
 
 ?>
 <div class="farmer-form">
-<h3><?= $farm->farmname.'('.$_GET['year'].'年度)' ?></h3>
+<h3><?= $farm->farmname.'('.Theyear::findOne(1)['years'].'年度)' ?></h3>
 <?php $form = ActiveFormrdiv::begin(['id' => "farmer-form",'enableAjaxValidation' => false,'options' => ['enctype' => 'multipart/form-data'],]); ?>
       <?= $form->field($model, 'isupdate')->hiddenInput()->label(false);?>
       <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['id']])->label(false);?>
