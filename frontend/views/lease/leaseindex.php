@@ -15,7 +15,7 @@ use app\models\Farms;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 	<?php if($areas < Farms::find()->where(['id'=>$_GET['id']])->one()['measure']) {?>
     <p>
-         <?= Html::a('添加', ['leasecreate','id'=>$_GET['id']], ['onclick'=>'leasecreate('.$_GET['id'].')','data-toggle' => 'modal','data-target' => '#leasecreate-modal','class' => 'btn btn-success']) ?>
+         <?= Html::a('添加', ['leasecreate','id'=>$_GET['id']], ['onclick'=>'leasecreate('.$_GET['id'].')','data-toggle' => 'modal','data-target' => '#leasecreate-create','class' => 'btn btn-success']) ?>
     </p>
 	<?php }?>
 	<script type="text/javascript">
