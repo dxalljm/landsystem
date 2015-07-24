@@ -111,7 +111,7 @@ var leaseEvent = function () {
 		},
 
 		/**
-		 * 点击租凭
+		 * 关闭租凭
 		 */
 		close: function () {
 
