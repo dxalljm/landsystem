@@ -15,7 +15,7 @@ use app\models\Farms;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 	<?php if($areas < Farms::find()->where(['id'=>$_GET['id']])->one()['measure']) {?>
     <p>
-         <?= Html::a('添加', ['leasecreate','id'=>$_GET['id']], ['onclick'=>'leasecreate('.$_GET['id'].')','data-toggle' => 'modal','data-target' => '#leasecreate-create','class' => 'btn btn-success']) ?>
+         <?= Html::a('添加', 'javascript:void(0)', ['onclick'=>'lease.create('.$_GET['id'].')', 'data-target' => '#lease-create-modal', 'class' => 'btn btn-success', 'id' => 'wubaiqing']) ?>
     </p>
 	<?php }?>
 	<script type="text/javascript">
@@ -42,13 +42,4 @@ use app\models\Farms;
     ]); ?>
 
 </div>
-<?php \yii\bootstrap\Modal::begin([
-    'id' => 'leasecreate-modal',
-	'size'=>'modal-lg',
-	//'header' => '<h4 class="modal-title"></h4>',
-	'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>',
 
-]); 
-
-?>
-<?php \yii\bootstrap\Modal::end(); ?>
