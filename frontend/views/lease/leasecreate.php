@@ -17,7 +17,7 @@ use yii\helpers\Html;
         'model' => $model,
     	'areas' => $areas,
     	'farm' => $farm,
-    	'farmer' => $farmer,
+    	'farmer' => $farmer
     ]) ?>
 
 </div>

@@ -82,8 +82,6 @@ class LeaseController extends Controller
      */
     public function actionLeasecreate($id)
     {
-        echo 'wubaiqing-lease-create-controller-test';
-        Yii::$app->end();
     	//$this->layout='@app/views/layouts/nomain.php';
     	$farm = Farms::find()->where(['id'=>$id])->one();
     	$farmer = Farmer::find()->where(['farms_id'=>$id])->one();
