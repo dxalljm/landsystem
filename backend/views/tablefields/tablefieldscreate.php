@@ -7,8 +7,6 @@ use yii\helpers\Html;
 /* @var $model app\models\tablefields */
 
 $this->title = '添加表项目';
-$this->params['breadcrumbs'][] = ['label' => '表项管理', 'url' => ['tablefieldsindex']];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tablefields-create">
 
