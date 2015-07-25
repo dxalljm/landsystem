@@ -57,7 +57,21 @@ use app\models\Theyear;
         <td colspan="4" valign="middle"><?php if(!$model->isupdate and $model->cardpic == '') echo $form->field($model, 'cardpic')->fileInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px']); ?></td>
       </tr>
   </table>
-
+<h3>家庭主要成员</h3>
+  <table  class="table table-bordered table-hover table-condensed">
+      <tr>
+        <td width="88" height="25" align="center" valign="middle">关系</td>
+        <td width="97" align="center" valign="middle">姓名</td>
+        <td width="126" height="25" align="center" valign="middle">身份证号码</td>
+        <td width="121" align="center" valign="middle">备注</td>
+     </tr>
+      <tr>
+        <td align="right" valign="middle">&nbsp;</td>
+        <td valign="middle">&nbsp;</td>
+        <td align="right" valign="middle">&nbsp;</td>
+        <td valign="middle">&nbsp;</td>
+      </tr>
+  </table>
 <?php if(!$model->isupdate) {?>
 <div class="form-group">
   		<?= Html::submitButton('提交', ['class' => 'btn btn-danger','title'=>'注意：点提交后不可更改','method' => 'post','onclick'=>'submittype(1)']) ?>

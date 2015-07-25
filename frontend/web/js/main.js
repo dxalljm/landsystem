@@ -104,7 +104,7 @@ var leaseEvent = function () {
             this.farmsId = farmsId;
 
             // 隐藏当前modal
-            $.get('index.php', {r: 'lease/leasecreate', id: farmsId, year:theYear}, function (data) {
+            $.get('index.php', {r: 'lease/leasecreate', id: farmsId}, function (data) {
 
                 // 点击创建按钮
                 _this.isCreateButton = true;
