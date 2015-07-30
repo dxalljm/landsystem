@@ -82,7 +82,6 @@ class LeaseController extends Controller
      */
     public function actionLeasecreate($id)
     {
-        
     	//$this->layout='@app/views/layouts/nomain.php';
     	$farm = Farms::find()->where(['id'=>$id])->one();
     	$farmer = Farmer::find()->where(['farms_id'=>$id])->one();

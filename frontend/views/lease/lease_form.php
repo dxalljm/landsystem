@@ -1,14 +1,14 @@
 <?php
 
+use yii\web\View;
 use yii\helpers\Html;
 use yii\widgets\ActiveFormrdiv;
 use yii\helpers\ArrayHelper;
 use app\models\Farms;
 use app\models\Plant;
 use dosamigos\datetimepicker\DateTimePicker;
-/* @var $this yii\web\View */
-/* @var $model app\models\Lease */
-/* @var $form yii\widgets\ActiveForm */
+
+
 ?>
 
 <div class="lease-form">
@@ -50,67 +50,61 @@ use dosamigos\datetimepicker\DateTimePicker;
     <td align="center">租赁期限</td>
     <td width="19" align="center">自</td>
     <td width="61" align="center"><?= $form->field($model, 'begindate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(DateTimePicker::className(), [
-    'language' => 'zh-CN',
-    'size' => 'xs',
-    'template' => '{input}',
-    //'pickButtonIcon' => 'glyphicon-calendar',
-    'inline' => false,
-    'clientOptions' => [
-        'startView' => 'decade',
-        //'minView' => 1,
-        //'maxView' => 2,
-        'autoclose' => true,
-        //'CustomFormat' => 'yyyy',
-        'format' => 'yyyy-mm-dd', // if inline = false
-        'todayBtn' => false
-    ]
-]);?></td>
+        'language' => 'zh-CN',
+        'size' => 'xs',
+        'template' => '{input}',
+        'inline' => false,
+        'clientOptions' => [
+            'startView' => 'decade',
+            'autoclose' => true,
+            'format' => 'yyyy-mm-dd', // if inline = false
+            'todayBtn' => false
+        ]
+    ]);?></td>
     <td width="22" align="center">至</td>
     <td width="64" align="center"><?= $form->field($model, 'enddate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(DateTimePicker::className(), [
-    'language' => 'zh-CN',
-    'size' => 'xs',
-    'template' => '{input}',
-    //'pickButtonIcon' => 'glyphicon-calendar',
-    'inline' => false,
-    'clientOptions' => [
-        'startView' => 'decade',
-        //'minView' => 1,
-        //'maxView' => 2,
-        'autoclose' => true,
-        //'CustomFormat' => 'yyyy',
-        'format' => 'yyyy-mm-dd', // if inline = false
-        'todayBtn' => false
-    ]
-]);?></td>
+        'language' => 'zh-CN',
+        'size' => 'xs',
+        'template' => '{input}',
+        'inline' => false,
+        'clientOptions' => [
+            'startView' => 'decade',
+            'autoclose' => true,
+            //'CustomFormat' => 'yyyy',
+            'format' => 'yyyy-mm-dd', // if inline = false
+            'todayBtn' => false
+        ]
+    ]);?></td>
     <td width="16" align="center">止</td>
   </tr>
-</table
-
-    ><?= html::dropDownList('father_id','',ArrayHelper::map(Plant::find()->where(['father_id'=>1])->andWhere('id>1')->all(),'id','cropname'),['class'=>'form-control','id'=>'father_id']) ?>
-	<?= $form->field($model, 'plant_id')->dropDownList(ArrayHelper::map(Plant::find()->all(),'id','cropname'))->label(false) ?>
+</table>
+    <?= html::dropDownList('father_id','',ArrayHelper::map(Plant::find()->where(['father_id'=>1])->andWhere('id>1')->all(),'id','cropname'),['class'=>'form-control','id'=>'father_id']) ?>
+    <?= $form->field($model, 'plant_id')->dropDownList(ArrayHelper::map(Plant::find()->all(),'id','cropname'))->label(false) ?>
 <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['onclick'=>'setFarmsid('.$_GET['id'].')','class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
   </div>
     <?php ActiveFormrdiv::end(); ?>
 <?php
-$script = <<<JS
+    $script = <<<JS
 jQuery('#years').change(function(){
     var year = $(this).val();
     $.get('/landsystem/frontend/web/index.php?r=collection/collectionindex',{year:year},function (data) {
-		      $('body').html(data);
-		    });
+              $('body').html(data);
+            });
 });
 JS;
 $this->registerJs($script);
+
+$this->registerJsFile('js/vendor/bower/devbridge-autocomplete/dist/jquery.autocomplete.js', ['position' => View::POS_HEAD]);
+$this->registerJsFile('js/lease.js', ['position' => View::POS_HEAD]);
 ?>
 <script type="text/javascript">
 
 function setFarmsid(id)
 {
-	$('#lease-farms_id').val(id);
+    $('#lease-farms_id').val(id);
 }
 </script>
-    
+
 
 </div>
->
