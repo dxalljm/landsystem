@@ -6,7 +6,6 @@ use app\models\Nation;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\Theyear;
-use dosamigos\datetimepicker\DateTimePicker;
 use yii\web\View;
 
 
@@ -56,30 +55,11 @@ use yii\web\View;
         <td colspan="3" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'domicile')->textInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.$model->domicile; ?></td>
       </tr>
       <tr>
-        <td align="right" valign="middle">承包日期</td>
-        <td colspan="4" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'create_at')->label(false)->error(false)->widget(
-    DateTimePicker::className(), [
-    	'language'=>'zh-CN',
-    	'inline' => false, 
-    	
-        // modify template for custom rendering
-        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
-        'clientOptions' => [
-        	'minView' => 3,
-        	//'maxView' => 3,
-            'autoclose' => true,
-            'format' => 'yyyy-mm-dd'
-        ]
-]); else echo '&nbsp;'.$model->create_at; ?></td>
-      </tr>
-      <tr>
         <td align="right" valign="middle">身份证扫描件</td>
         <td colspan="4" valign="middle"><?php if(!$model->isupdate and $model->cardpic == '') echo $form->field($model, 'cardpic')->fileInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px']); ?></td>
       </tr>
   </table>
-<h3>家庭主要成员</h3><div class="form-group">
-        <?= Html::button('增加成员', ['class' => 'btn btn-info','title'=>'注意：点提交后不可更改', 'id' => 'add-member-family']) ?>
-    </div>
+<h3>家庭主要成员</h3>
   <table  class="table table-bordered table-hover table-condensed" id="member-family">
 
 	  <!-- 家庭成员模板 -->
@@ -89,6 +69,7 @@ use yii\web\View;
               <td><?php echo Html::textInput('Parmembers[membername][]', '', ['class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('Parmembers[cardid][]', '', ['class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('Parmembers[remarks][]', '', ['class' => 'form-control']); ?></td>
+              <td><?php echo Html::button('-', ['class' => 'btn btn-warning delete-member-family']) ?></td>
           </tr>
       </thead>
 
@@ -98,25 +79,29 @@ use yii\web\View;
 			  <td width="97" align="center" valign="middle">姓名</td>
 			  <td width="126" height="25" align="center" valign="middle">身份证号码</td>
 			  <td width="121" align="center" valign="middle">备注</td>
+              <td width="20" align="center" valign="middle">操作</td>
 		  </tr>
 		  <tr>
 			  <td><?php echo Html::textInput('Parmembers[relationship][]', '', ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[membername][]', '', ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[cardid][]', '', ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[remarks][]', '', ['class' => 'form-control']); ?></td>
+              <td><?php echo Html::button('-', ['class' => 'btn btn-warning delete-member-family']) ?></td>
 		  </tr>
 
       </tbody>
   </table>
 
 
-    
+    <div class="form-group">
+        <?= Html::button('添加成员', ['class' => 'btn btn-info ','title'=>'注意：点提交后不可更改', 'id' => 'add-member-family']) ?>
+    </div>
 <div class="form-group">
+    <?php if(!$model->isupdate) {?>
   		<?= Html::submitButton('提交', ['class' => 'btn btn-danger','title'=>'注意：点提交后不可更改','method' => 'post','onclick'=>'submittype(1)']) ?>
 
         <?= Html::submitButton('保存', ['class' => 'btn btn-success','title'=>'注意：在不确定数据正确可点击保存','method' => 'post','onclick'=>'submittype(0)']) ?>
 
-        <?php if(!$model->isupdate) {?>
 
 <?php }?>
  </div>
@@ -127,11 +112,15 @@ function submittype(v) {
 	$('#farmer-isupdate').val(v);
 }
 
-
     // 添加家庭成员
     $('#add-member-family').click(function () {
         var template = $('#member-family-template').html();
         $('#member-family > tbody').append(template);
+    });
+
+    // 删除
+    $(document).on("click", ".delete-member-family", function () {
+        $(this).parent().parent().remove();
     });
 
 </script>
