@@ -64,10 +64,17 @@ public function rules()
         $newAttr = [];
         foreach ($attr as $key => $filed) {
             foreach ($filed as $childKey => $value) {
+
+                // 判断是否为空
                 $relationship = self::isEmpty($attr['relationship'][$childKey]);
                 $membername   = self::isEmpty($attr['membername'][$childKey]);
                 $cardid       = self::isEmpty($attr['cardid'][$childKey]);
-                $remarks      = self::isEmpty($attr['relationship'][$childKey]);
+                $remarks      = self::isEmpty($attr['remarks'][$childKey]);
+
+                // 如果都为空，跳出循环
+                if (empty($relationship) && empty($membername) && empty($cardid) && empty($remarks)) {
+                    continue;
+                }
 
             }
         }
@@ -81,7 +88,6 @@ public function rules()
      */
     public static function isEmpty($data)
     {
-
         if (!empty($data)) {
             return true;
         }

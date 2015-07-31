@@ -113,7 +113,6 @@ function submittype(v) {
     // 添加家庭成员
     $('#add-member-family').click(function () {
         var template = $('#member-family-template').html();
-        console.log(template);
         $('#member-family > tbody').append(template);
     });
 
