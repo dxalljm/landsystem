@@ -68,14 +68,24 @@ public function rules()
                 $membername   = self::isEmpty($attr['membername'][$childKey]);
                 $cardid       = self::isEmpty($attr['cardid'][$childKey]);
                 $remarks      = self::isEmpty($attr['relationship'][$childKey]);
+
             }
         }
         return $newAttr;
     }
 
-    public static function isEmpty()
+    /**
+     * 验证是否为空
+     * @param string $data
+     * @return bool
+     */
+    public static function isEmpty($data)
     {
 
+        if (!empty($data)) {
+            return true;
+        }
+        return false;
     }
 
     public static function returnData($status, $data)
