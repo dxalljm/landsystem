@@ -92,3 +92,6 @@ a.desc:after {
 #farmscreate-modal {
 margin: 275px 0 0 -860px; /* PLAY THE WITH THE VALUES TO SEE GET THE DESIRED EFFECT */
 }
+.d-none {
+    display: none;
+}

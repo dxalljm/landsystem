@@ -7,11 +7,14 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\Theyear;
 use dosamigos\datetimepicker\DateTimePicker;
+use yii\web\View;
+
+
 /* @var $this yii\web\View */
 /* @var $model app\models\farmer */
 
 ?>
-<div class="farmer-form">
+<thead class="farmer-form">
 <h3><?= $farm->farmname.'('.Theyear::findOne(1)['years'].'年度)' ?></h3>
 <?php $form = ActiveFormrdiv::begin(['id' => "farmer-form",'enableAjaxValidation' => false,'options' => ['enctype' => 'multipart/form-data'],]); ?>
       <?= $form->field($model, 'isupdate')->hiddenInput()->label(false);?>
@@ -74,35 +77,62 @@ use dosamigos\datetimepicker\DateTimePicker;
         <td colspan="4" valign="middle"><?php if(!$model->isupdate and $model->cardpic == '') echo $form->field($model, 'cardpic')->fileInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px']); ?></td>
       </tr>
   </table>
-<h3>家庭主要成员</h3>
-  <table  class="table table-bordered table-hover table-condensed">
-      <tr>
-        <td width="88" height="25" align="center" valign="middle">关系</td>
-        <td width="97" align="center" valign="middle">姓名</td>
-        <td width="126" height="25" align="center" valign="middle">身份证号码</td>
-        <td width="121" align="center" valign="middle">备注</td>
-     </tr>
-      <tr>
-        <td align="right" valign="middle">&nbsp;</td>
-        <td valign="middle">&nbsp;</td>
-        <td align="right" valign="middle">&nbsp;</td>
-        <td valign="middle">&nbsp;</td>
-      </tr>
+<h3>家庭主要成员</h3><div class="form-group">
+        <?= Html::button('增加成员', ['class' => 'btn btn-info','title'=>'注意：点提交后不可更改', 'id' => 'add-member-family']) ?>
+    </div>
+  <table  class="table table-bordered table-hover table-condensed" id="member-family">
+
+	  <!-- 家庭成员模板 -->
+      <thead id="member-family-template" class="d-none">
+          <tr>
+              <td><?php echo Html::textInput('Parmembers[relationship][]', '', ['class' => 'form-control']); ?></td>
+              <td><?php echo Html::textInput('Parmembers[membername][]', '', ['class' => 'form-control']); ?></td>
+              <td><?php echo Html::textInput('Parmembers[cardid][]', '', ['class' => 'form-control']); ?></td>
+              <td><?php echo Html::textInput('Parmembers[remarks][]', '', ['class' => 'form-control']); ?></td>
+          </tr>
+      </thead>
+
+      <tbody>
+		  <tr>
+			  <td width="88" height="25" align="center" valign="middle">关系</td>
+			  <td width="97" align="center" valign="middle">姓名</td>
+			  <td width="126" height="25" align="center" valign="middle">身份证号码</td>
+			  <td width="121" align="center" valign="middle">备注</td>
+		  </tr>
+		  <tr>
+			  <td><?php echo Html::textInput('Parmembers[relationship][]', '', ['class' => 'form-control']); ?></td>
+			  <td><?php echo Html::textInput('Parmembers[membername][]', '', ['class' => 'form-control']); ?></td>
+			  <td><?php echo Html::textInput('Parmembers[cardid][]', '', ['class' => 'form-control']); ?></td>
+			  <td><?php echo Html::textInput('Parmembers[remarks][]', '', ['class' => 'form-control']); ?></td>
+		  </tr>
+
+      </tbody>
   </table>
-<?php if(!$model->isupdate) {?>
+
+
+    
 <div class="form-group">
   		<?= Html::submitButton('提交', ['class' => 'btn btn-danger','title'=>'注意：点提交后不可更改','method' => 'post','onclick'=>'submittype(1)']) ?>
-        
+
         <?= Html::submitButton('保存', ['class' => 'btn btn-success','title'=>'注意：在不确定数据正确可点击保存','method' => 'post','onclick'=>'submittype(0)']) ?>
-           
+
+        <?php if(!$model->isupdate) {?>
 
 <?php }?>
  </div>
     <?php ActiveFormrdiv::end(); ?>
+    <?php $this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
 <script type="text/javascript">
 function submittype(v) {
 	$('#farmer-isupdate').val(v);
 }
+
+
+    // 添加家庭成员
+    $('#add-member-family').click(function () {
+        var template = $('#member-family-template').html();
+        $('#member-family > tbody').append(template);
+    });
 
 </script>
 </div>
