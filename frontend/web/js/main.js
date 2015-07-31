@@ -1,6 +1,8 @@
 // BootStrap Modal 禁用ESC，以及遮罩层点击事件
-$.fn.modal.Constructor.DEFAULTS.keyboard = false;
-$.fn.modal.Constructor.DEFAULTS.backdrop = 'static';
+if ($.fn.modal !== undefined) {
+    $.fn.modal.Constructor.DEFAULTS.keyboard = false;
+    $.fn.modal.Constructor.DEFAULTS.backdrop = 'static';
+}
 
 
 
