@@ -65,10 +65,10 @@ use yii\web\View;
 	  <!-- 家庭成员模板 -->
       <thead id="member-family-template" class="d-none">
           <tr>
-              <td align="right" valign="middle">&nbsp;</td>
-              <td valign="middle">&nbsp;</td>
-              <td align="right" valign="middle">&nbsp;</td>
-              <td valign="middle">&nbsp;</td>
+              <td><?php echo Html::textInput('Parmembers[relationship][]', '', ['class' => 'form-control']); ?></td>
+              <td><?php echo Html::textInput('Parmembers[membername][]', '', ['class' => 'form-control']); ?></td>
+              <td><?php echo Html::textInput('Parmembers[cardid][]', '', ['class' => 'form-control']); ?></td>
+              <td><?php echo Html::textInput('Parmembers[remarks][]', '', ['class' => 'form-control']); ?></td>
           </tr>
       </thead>
 
@@ -80,10 +80,10 @@ use yii\web\View;
 			  <td width="121" align="center" valign="middle">备注</td>
 		  </tr>
 		  <tr>
-			  <td align="right" valign="middle">&nbsp;</td>
-			  <td valign="middle">&nbsp;</td>
-			  <td align="right" valign="middle">&nbsp;</td>
-			  <td valign="middle">&nbsp;</td>
+			  <td><?php echo Html::textInput('Parmembers[relationship][]', '', ['class' => 'form-control']); ?></td>
+			  <td><?php echo Html::textInput('Parmembers[membername][]', '', ['class' => 'form-control']); ?></td>
+			  <td><?php echo Html::textInput('Parmembers[cardid][]', '', ['class' => 'form-control']); ?></td>
+			  <td><?php echo Html::textInput('Parmembers[remarks][]', '', ['class' => 'form-control']); ?></td>
 		  </tr>
 
       </tbody>

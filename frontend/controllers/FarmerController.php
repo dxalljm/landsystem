@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use app\models\Farmermembers;
 use Yii;
 use app\models\Farmer;
 use frontend\models\farmerSearch;
@@ -81,15 +82,20 @@ class FarmerController extends Controller
     	//$this->layout='@app/views/layouts/nomain.php';
     	$year = Theyear::findOne(1)['years'];
     	$farm = Farms::find()->where(['id'=>$id])->one();
+
+        $farmembers = new Farmermembers;
+
     	$farmerid = farmer::find()->where(['farms_id'=>$id,'years'=>$year])->one()['id'];
     	if($farmerid) {
     		 $model = $this->findModel($farmerid);
+
     		 if ($model->load(Yii::$app->request->post()) && $model->save()) {
     		 	return $this->redirect(['farms/farmsmenu','id'=>$id,'areaid'=>$farm->management_area]);
     		 } else {
     		 	return $this->render('farmercreate', [
 		                'model' => $model,
 		            	'farm' => $farm,
+                        'farmembers' => $farmembers,
 		            ]);
     		 }
     	} else {
