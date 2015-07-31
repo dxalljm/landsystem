@@ -78,6 +78,7 @@ class FarmerController extends Controller
      */
     public function actionFarmercreate($id)
     {
+    	$this->layout='@app/views/layouts/nomain.php';
     	$year = Theyear::findOne(1)['years'];
     	$farm = Farms::find()->where(['id'=>$id])->one();
     	$farmerid = farmer::find()->where(['farms_id'=>$id,'years'=>$year])->one()['id'];
@@ -86,7 +87,7 @@ class FarmerController extends Controller
     		 if ($model->load(Yii::$app->request->post()) && $model->save()) {
     		 	return $this->redirect(['farms/farmsmenu','id'=>$id,'areaid'=>$farm->management_area]);
     		 } else {
-    		 	return $this->renderAjax('farmercreate', [
+    		 	return $this->render('farmercreate', [
 		                'model' => $model,
 		            	'farm' => $farm,
 		            ]);
@@ -113,7 +114,7 @@ class FarmerController extends Controller
 	    	 	if($model->save())
 	            	return $this->redirect(['farms/farmsmenu','id'=>$id,'areaid'=>$farm->management_area]);
 		        } else {
-		            return $this->renderAjax('farmercreate', [
+		            return $this->render('farmercreate', [
 		                'model' => $model,
 		            	'farm' => $farm,
 		            ]);

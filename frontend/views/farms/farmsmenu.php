@@ -57,13 +57,14 @@ use app\models\Farms;
   <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
         
         ?>
-    <td width="20%" align="center"><?=  Html::a(html::img('images/User With Frame.png',['width'=>'150']),'#', [
+    <td width="20%" align="center"><?=  Html::a(html::img('images/User With Frame.png',['width'=>'150']),'landsystem/index.php?r=farmer/farmerindex&id=$farm->id', [
             			'id' => 'farmerview',
             			'title' => '承包信息',
             			'target' => '_black',
-            			'data-toggle' => 'modal',
-            			'data-target' => '#farmercreate-modal',
-            			'onclick' => 'farmercreate($("#farmname").val())',
+            			//'data-toggle' => 'modal',
+            			//'data-target' => '#farmercreate-modal',
+            			//'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/farmer/farmercreate','id'=>$farm->id])."','','width=1200,height=1000,top=150,left=180, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
+            			//'onclick' => 'farmercreate($("#farmname").val())',
              	]);?></td>
     <td width="20%" align="center"><?=  Html::a(html::img('images/farmerzr.png',['width'=>'150']),'#', [
             			'id' => 'farmerview',
