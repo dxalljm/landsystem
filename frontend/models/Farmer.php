@@ -25,11 +25,11 @@ class Farmer extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-	public function rules() 
+public function rules() 
     { 
         return [
             [['farms_id', 'isupdate', 'years'], 'integer'],
-            [['farmername', 'cardid', 'farmerbeforename', 'nickname', 'gender', 'nation', 'political_outlook', 'cultural_degree', 'domicile', 'nowlive', 'telephone', 'living_room', 'photo', 'cardpic'], 'string', 'max' => 500]
+            [['farmername', 'cardid', 'farmerbeforename', 'nickname', 'gender', 'nation', 'political_outlook', 'cultural_degree', 'domicile', 'nowlive', 'telephone', 'living_room', 'photo', 'cardpic', 'create_at', 'update_at'], 'string', 'max' => 500]
         ]; 
     } 
 
@@ -57,8 +57,10 @@ class Farmer extends \yii\db\ActiveRecord
             'photo' => '近期照片',
             'cardpic' => '身份证扫描件',
             'years' => '年度',
+            'create_at' => '创建日期',
+            'update_at' => '更新日期',
         ]; 
-    }
+    } 
     public function getFarms()
     {
     	return $this->hasOne(Farms::className(), ['id' => 'farms_id']);

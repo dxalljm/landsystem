@@ -13,8 +13,11 @@ use yii\helpers\ArrayHelper;
 
     <?php $form = ActiveForm::begin(); ?>
 
-     
+    <?php if(isset($_GET['tables_id'])) {?>
     <?= $form->field($model, 'tables_id')->hiddenInput(['value'=>$_GET['tables_id']])->label(false);?>
+    <?php } else {?>
+    <?= $form->field($model, 'tables_id')->hiddenInput()->label(false);?>
+    <?php }?>
     <?= $form->field($model, 'fields')->textInput(['maxlength' => 100]) ?>
 
    <?= $form->field($model, 'type')->dropDownList(['int(11)' => '数值型','varchar(500) null'=>'字符型','text'=>'文本型','FLOAT'=>'浮点型']) ?>

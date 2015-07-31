@@ -6,7 +6,7 @@ use app\models\Nation;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\Theyear;
-
+use dosamigos\datetimepicker\DateTimePicker;
 /* @var $this yii\web\View */
 /* @var $model app\models\farmer */
 
@@ -51,6 +51,23 @@ use app\models\Theyear;
 	  <tr>
         <td align="right" valign="middle">户籍所在地</td>
         <td colspan="3" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'domicile')->textInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.$model->domicile; ?></td>
+      </tr>
+      <tr>
+        <td align="right" valign="middle">承包日期</td>
+        <td colspan="4" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'create_at')->label(false)->error(false)->widget(
+    DateTimePicker::className(), [
+    	'language'=>'zh-CN',
+    	'inline' => false, 
+    	
+        // modify template for custom rendering
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+        	'minView' => 3,
+        	//'maxView' => 3,
+            'autoclose' => true,
+            'format' => 'yyyy-mm-dd'
+        ]
+]); else echo '&nbsp;'.$model->create_at; ?></td>
       </tr>
       <tr>
         <td align="right" valign="middle">身份证扫描件</td>

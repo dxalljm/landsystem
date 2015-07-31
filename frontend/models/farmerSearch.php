@@ -20,7 +20,7 @@ class farmerSearch extends farmer
     {
         return [
             [['id', 'farms_id', 'isupdate', 'years'], 'integer'],
-            [['farmername', 'cardid', 'farmname','farmerbeforename', 'nickname', 'gender', 'nation', 'political_outlook', 'cultural_degree', 'domicile', 'nowlive', 'telephone', 'living_room', 'photo', 'cardpic'], 'safe'],
+            [['farmername', 'cardid', 'farmerbeforename', 'nickname', 'gender', 'nation', 'political_outlook', 'cultural_degree', 'domicile', 'nowlive', 'telephone', 'living_room', 'photo', 'cardpic', 'create_at', 'update_at'], 'safe'],
         ];
     }
 
@@ -78,6 +78,8 @@ public function search($params)
             ->andFilterWhere(['like', 'living_room', $this->living_room])
             ->andFilterWhere(['like', 'photo', $this->photo])
             ->andFilterWhere(['like', 'cardpic', $this->cardpic])
+            ->andFilterWhere(['like', 'create_at', $this->create_at])
+            ->andFilterWhere(['like', 'update_at', $this->update_at])
         ->andFilterWhere(['like', 'land_farms.farmname', $this->farmname]);
         return $dataProvider;
     }

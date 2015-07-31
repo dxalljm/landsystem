@@ -95,6 +95,7 @@ class FarmerController extends Controller
     	} else {
     		$model = new farmer(); 	
 	    	 if ($model->load(Yii::$app->request->post())) {
+	    	 	$model->update_at = $model->create_at;
 	    	 	if($model->photo != '') {
 	    	 		$upload = new UploadedFile();
 		    	 	$photo =  $upload->getInstance($model,'photo');
