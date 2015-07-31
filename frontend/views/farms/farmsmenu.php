@@ -57,7 +57,7 @@ use app\models\Farms;
   <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
         
         ?>
-    <td width="20%" align="center"><?=  Html::a(html::img('images/User With Frame.png',['width'=>'150']),'landsystem/index.php?r=farmer/farmerindex&id=$farm->id', [
+    <td width="20%" align="center"><?=  Html::a(html::img('images/User With Frame.png',['width'=>'150']),'index.php?r=farmer/farmercreate&id='.$farm->id, [
             			'id' => 'farmerview',
             			'title' => '承包信息',
             			'target' => '_black',

@@ -78,7 +78,7 @@ class FarmerController extends Controller
      */
     public function actionFarmercreate($id)
     {
-    	$this->layout='@app/views/layouts/nomain.php';
+    	//$this->layout='@app/views/layouts/nomain.php';
     	$year = Theyear::findOne(1)['years'];
     	$farm = Farms::find()->where(['id'=>$id])->one();
     	$farmerid = farmer::find()->where(['farms_id'=>$id,'years'=>$year])->one()['id'];
