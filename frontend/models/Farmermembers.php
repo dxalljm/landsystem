@@ -50,5 +50,37 @@ public function rules()
             'remarks' => '备注',
             'isupdate' => '是否可更新',
         ]; 
-    } 
+    }
+
+
+    /**
+     * 格式化家庭成员数据
+     * @param array $attr POST-Parmember数据
+     * @param array $reuqireField  必填字段
+     * @return array 新格式化的数组
+     */
+    public static function formatAttr(array $attr, array $reuqireField)
+    {
+        $newAttr = [];
+        foreach ($attr as $key => $filed) {
+            foreach ($filed as $childKey => $value) {
+                $relationship = self::isEmpty($attr['relationship'][$childKey]);
+                $membername   = self::isEmpty($attr['membername'][$childKey]);
+                $cardid       = self::isEmpty($attr['cardid'][$childKey]);
+                $remarks      = self::isEmpty($attr['relationship'][$childKey]);
+            }
+        }
+        return $newAttr;
+    }
+
+    public static function isEmpty()
+    {
+
+    }
+
+    public static function returnData($status, $data)
+    {
+
+    }
+
 }

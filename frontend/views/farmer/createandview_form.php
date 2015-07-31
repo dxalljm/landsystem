@@ -93,12 +93,12 @@ use yii\web\View;
     <div class="form-group">
         <?= Html::button('添加成员', ['class' => 'btn btn-info','title'=>'注意：点提交后不可更改', 'id' => 'add-member-family']) ?>
     </div>
-<?php if(!$model->isupdate) {?>
 <div class="form-group">
   		<?= Html::submitButton('提交', ['class' => 'btn btn-danger','title'=>'注意：点提交后不可更改','method' => 'post','onclick'=>'submittype(1)']) ?>
 
         <?= Html::submitButton('保存', ['class' => 'btn btn-success','title'=>'注意：在不确定数据正确可点击保存','method' => 'post','onclick'=>'submittype(0)']) ?>
-           
+
+        <?php if(!$model->isupdate) {?>
 
 <?php }?>
  </div>
