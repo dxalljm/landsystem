@@ -15,7 +15,6 @@ use yii\helpers\Html;
     <?= $this->render('createandview_form', [
         'model' => $model,
     	'farm' => $farm,
-        'farmembers' => $farmembers,
     ]) ?>
 
 </div>
