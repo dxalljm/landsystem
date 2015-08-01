@@ -82,30 +82,47 @@ class FarmerController extends Controller
     	//$this->layout='@app/views/layouts/nomain.php';
     	$year = Theyear::findOne(1)['years'];
     	$farm = Farms::find()->where(['id'=>$id])->one();
-
+		
     	$farmerid = farmer::find()->where(['farms_id'=>$id,'years'=>$year])->one()['id'];
-
+    	$membermodel = Farmermembers::find()->where(['farmer_id' => $farmerid])->all();
     	if($farmerid) {
     		 $model = $this->findModel($farmerid);
-
-    		 if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			 //$membermodel = Farmermembers::find()->where(['farmer_id' => $farmerid])->all();
+			 if ($model->load(Yii::$app->request->post()) && $model->save()) {
 
                  // 处理家庭成员
-                 $parmembers = Yii::$app->request->post('Parmembers');
-                 if (count($parmembers) > 0) {
+               	$parmembers = Yii::$app->request->post('Parmembers');
+                 /* if (count($parmembers) > 0) {
                      $attr = Farmermembers::formatAttr($parmembers, []);
-                 }
-
+                 } */
+               	//得到post提交的记录数
+               	$row = count($parmembers['membername']);
+               	for($i=1;$i<$row;$i++) {
+               		//如果得到成员数据就给$membermodel赋值成员数据，否则就实例化一个成员数据（在修改家庭成员数据时有新增成员数据）
+               		if($this->findMemberModel($parmembers['id'][$i]))
+               			$membermodel = $this->findMemberModel($parmembers['id'][$i]);
+               		else
+               			$membermodel = new Farmermembers();
+               		$membermodel->farmer_id = $farmerid;
+               		$membermodel->relationship = $parmembers['relationship'][$i];
+               		$membermodel->membername = $parmembers['membername'][$i];
+               		$membermodel->cardid = $parmembers['cardid'][$i];
+               		$membermodel->remarks = $parmembers['remarks'][$i];
+               		$membermodel->save();
+               	}
     		 	return $this->redirect(['farms/farmsmenu','id'=>$id,'areaid'=>$farm->management_area]);
     		 } else {
     		 	return $this->render('farmercreate', [
 		                'model' => $model,
+    		 			'membermodel' => $membermodel,
 		            	'farm' => $farm,
 		            ]);
     		 }
     	} else {
-    		$model = new farmer(); 	
-	    	 if ($model->load(Yii::$app->request->post())) {
+    		$model = new farmer(); 
+    		
+    		$membermodel = Farmermembers::find()->where(['farmer_id' => $farmerid])->all();
+    		if ($model->load(Yii::$app->request->post())) {
 	    	 	$model->update_at = $model->create_at;
 	    	 	if($model->photo != '') {
 	    	 		$upload = new UploadedFile();
@@ -123,11 +140,25 @@ class FarmerController extends Controller
 		    	 	$model->cardpic = 'uploads/'.$cardpicName;
 	    	 	}
 	    	 	$model->years = $year;
-	    	 	if($model->save())
+	    	 	$issave = $model->save();
+	    	 	$parmembers = Yii::$app->request->post('Parmembers');
+	    	 	//print_r($parmembers);
+	    	 	$row = count($parmembers['membername']);
+	    	 	for($i=1;$i<$row;$i++) {
+	    	 		$membermodel = new Farmermembers();
+	    	 		$membermodel->farmer_id = $model->id;
+	    	 		$membermodel->relationship = $parmembers['relationship'][$i];
+	    	 		$membermodel->membername = $parmembers['membername'][$i];
+	    	 		$membermodel->cardid = $parmembers['cardid'][$i];
+	    	 		$membermodel->remarks = $parmembers['remarks'][$i];
+	    	 		$membermodel->save();
+	    	 	}
+	    	 	if($issave)
 	            	return $this->redirect(['farms/farmsmenu','id'=>$id,'areaid'=>$farm->management_area]);
 		        } else {
 		            return $this->render('farmercreate', [
 		                'model' => $model,
+		            	'membermodel' => $membermodel,
 		            	'farm' => $farm,
 		            ]);
 		        } 
@@ -198,5 +229,15 @@ class FarmerController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    protected function findMemberModel($id)
+    {
+    	if (($model = Farmermembers::findOne($id)) !== null) {
+    		//print_r($model);
+    		return $model;
+    	} else {
+    		return false;
+    	}
     }
 }
