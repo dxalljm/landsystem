@@ -6,7 +6,6 @@ use app\models\Nation;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\Theyear;
-use dosamigos\datetimepicker\DateTimePicker;
 use yii\web\View;
 
 
@@ -14,7 +13,7 @@ use yii\web\View;
 /* @var $model app\models\farmer */
 
 ?>
-<thead class="farmer-form">
+<div class="farmer-form">
 <h3><?= $farm->farmname.'('.Theyear::findOne(1)['years'].'年度)' ?></h3>
 <?php $form = ActiveFormrdiv::begin(['id' => "farmer-form",'enableAjaxValidation' => false,'options' => ['enctype' => 'multipart/form-data'],]); ?>
       <?= $form->field($model, 'isupdate')->hiddenInput()->label(false);?>
@@ -56,33 +55,18 @@ use yii\web\View;
         <td colspan="3" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'domicile')->textInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.$model->domicile; ?></td>
       </tr>
       <tr>
-        <td align="right" valign="middle">承包日期</td>
-        <td colspan="4" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'create_at')->label(false)->error(false)->widget(
-    DateTimePicker::className(), [
-    	'language'=>'zh-CN',
-    	'inline' => false, 
-    	
-        // modify template for custom rendering
-        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
-        'clientOptions' => [
-        	'minView' => 3,
-        	//'maxView' => 3,
-            'autoclose' => true,
-            'format' => 'yyyy-mm-dd'
-        ]
-]); else echo '&nbsp;'.$model->create_at; ?></td>
-      </tr>
-      <tr>
         <td align="right" valign="middle">身份证扫描件</td>
         <td colspan="4" valign="middle"><?php if(!$model->isupdate and $model->cardpic == '') echo $form->field($model, 'cardpic')->fileInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px']); ?></td>
       </tr>
   </table>
 <h3>家庭主要成员</h3>
+
 <?php if(!$model->isupdate) {?>
 <div class="form-group">
         <?= Html::button('增加成员', ['class' => 'btn btn-info','title'=>'点击可增加家庭成员', 'id' => 'add-member-family']) ?>
     </div><?php }?>
     <?php if(!$model->isupdate) {?>
+
   <table  class="table table-bordered table-hover table-condensed" id="member-family">
 
 	  <!-- 家庭成员模板 -->
@@ -93,6 +77,7 @@ use yii\web\View;
               <td><?php echo Html::textInput('Parmembers[membername][]', '', ['class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('Parmembers[cardid][]', '', ['class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('Parmembers[remarks][]', '', ['class' => 'form-control']); ?></td>
+              <td valign="middle" align="center"><?php echo Html::button('-', ['class' => 'btn btn-warning delete-member-family']) ?></td>
           </tr>
       </thead>
 	
@@ -102,6 +87,7 @@ use yii\web\View;
 			  <td width="97" align="center" valign="middle">姓名</td>
 			  <td width="126" height="25" align="center" valign="middle">身份证号码</td>
 			  <td width="121" align="center" valign="middle">备注</td>
+              <td width="20" align="center" valign="middle">操作</td>
 		  </tr>
 		  <?php if(empty($membermodel)) {?>
 		  <tr>
@@ -109,6 +95,7 @@ use yii\web\View;
 			  <td><?php echo Html::textInput('Parmembers[membername][]', '', ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[cardid][]', '', ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[remarks][]', '', ['class' => 'form-control']); ?></td>
+              <td valign="middle" align="center"><?php echo Html::button('-', ['class' => 'btn btn-warning delete-member-family']) ?></td>
 		  </tr>
 		<?php } else {?>
 		<?php foreach($membermodel as $value) { ?>
@@ -117,12 +104,14 @@ use yii\web\View;
 			  <td><?php echo Html::textInput('Parmembers[membername][]', $value['membername'], ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[cardid][]', $value['cardid'], ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[remarks][]', $value['remarks'], ['class' => 'form-control']); ?></td>
+			  <td valign="middle" align="center"><?php echo Html::button('-', ['class' => 'btn btn-warning delete-member-family']) ?></td>
 		  </tr>
 		<?php }}?>
       </tbody>
   </table>
 <?php } else {?>
   <table  class="table table-bordered table-hover table-condensed">
+
 
 	  <!-- 家庭成员显示模板 -->
 		  <tr>
@@ -140,13 +129,13 @@ use yii\web\View;
 		  </tr>
 <?php }?>
   </table>
-<?php }?><?php if(!$model->isupdate) {?>
+<?php }?>
+<?php if(!$model->isupdate) {?>
 <div class="form-group">
+
   		<?= Html::submitButton('提交', ['class' => 'btn btn-danger','title'=>'注意：点提交后不可更改','method' => 'post','onclick'=>'submittype(1)']) ?>
 
         <?= Html::submitButton('保存', ['class' => 'btn btn-success','title'=>'注意：在不确定数据正确可点击保存','method' => 'post','onclick'=>'submittype(0)']) ?>
-
-        
 
 <?php }?>
  </div>
@@ -157,11 +146,15 @@ function submittype(v) {
 	$('#farmer-isupdate').val(v);
 }
 
-
     // 添加家庭成员
     $('#add-member-family').click(function () {
         var template = $('#member-family-template').html();
         $('#member-family > tbody').append(template);
+    });
+
+    // 删除
+    $(document).on("click", ".delete-member-family", function () {
+        $(this).parent().parent().remove();
     });
 
 </script>
