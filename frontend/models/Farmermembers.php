@@ -99,4 +99,9 @@ public function rules()
 
     }
 
+    //删除家庭成员信息的静态方法，用来外部调用（farmerController）
+    static function memeberDelete($id) {
+    	Farmermembers::findOne($id)->delete();
+    	echo "yes";
+    }
 }
