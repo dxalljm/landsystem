@@ -123,5 +123,9 @@ function submittype(v) {
         $(this).parent().parent().remove();
     });
 
+    $(document).on("blur", "input[name='Parmembers[relationship][]'], input[name='Parmembers[membername][]']", function () {
+        alert('123');
+    });
+
 </script>
 </div>
