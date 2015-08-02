@@ -123,9 +123,31 @@ function submittype(v) {
         $(this).parent().parent().remove();
     });
 
-    $(document).on("blur", "input[name='Parmembers[relationship][]'], input[name='Parmembers[membername][]']", function () {
-        alert('123');
+    // 关系
+    $(document).on("blur", "input[name='Parmembers[relationship][]']", function () {
+        if ($(this).val() == '') {
+            return alert('关系不能为空');
+        }
     });
+
+    // 姓名
+	$(document).on("blur", "input[name='Parmembers[membername][]']", function () {
+        if ($(this).val() == '') {
+            return alert('姓名不能为空');
+        }
+    });
+
+    // 身份证
+	$(document).on("blur", "input[name='Parmembers[cardid][]']", function () {
+        var val = $(this).val();
+		if (val == '') {
+			return alert('身份证不能为空');
+		}
+
+        if(/^[0-9X]/i.test(val) == false) {
+            return alert('请填写正确的身份证号码');
+        }
+	});
 
 </script>
 </div>
