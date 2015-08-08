@@ -68,11 +68,10 @@ jQuery('#cooperativetypedelete').click(function(){
     $.get('/landsystem/frontend/web/index.php?r=cooperativetype/cooperativetypedelete',{id:typeid},function (data) {
 		  $('body').html(data);
 	});
-
 });
 
 $('#cooperative-form').on('show.bs.modal', function (e) {
-    $.get('index.php?r=cooperativetype/cooperativetypecreate', {ajax: true}, function (body) {
+    $.get('index.php?r=cooperativetype/cooperativetypecreateajax', {ajax: true}, function (body) {
 		$('.modal-body').html(body);
     });
 });

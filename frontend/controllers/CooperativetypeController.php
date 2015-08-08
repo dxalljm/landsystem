@@ -65,11 +65,27 @@ class CooperativetypeController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['cooperative/cooperativecreate']);
         } else {
-            if ($ajax == true) {
-                return $this->renderAjax('cooperativetypecreate', [
-                    'model' => $model,
-                ]);
-            }
+			return $this->render('cooperativetypecreate', [
+				'model' => $model,
+			]);
+        }
+    }
+
+    /**
+     * Creates a new Cooperativetype model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCooperativetypecreateajax()
+    {
+        $model = new Cooperativetype();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['cooperative/cooperativecreate']);
+        } else {
+            return $this->renderAjax('cooperativetypecreate', [
+                'model' => $model,
+            ]);
         }
     }
 
