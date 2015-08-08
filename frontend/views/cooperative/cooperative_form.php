@@ -21,7 +21,9 @@ use app\models\Cooperativetype;
   <tr>
     <td align="right">合作社类型</td>
     <td><?= $form->field($model, 'cooperativetype')->dropDownList(ArrayHelper::map(Cooperativetype::find()->all(), 'id', 'typename'),['prompt'=>'请选择'])->label(false)->error(false) ?></td>
-    <td><?php echo Html::a('+', 'index.php?r=cooperativetype/cooperativetypecreate',['class' => 'btn btn-warning delete-member-family']) ?> <?php echo Html::a('-', '#',['id'=>'cooperativetypedelete','class' => 'btn btn-warning delete-member-family']) ?></td>
+    <td>
+        <?php echo Html::a('+', '',['class' => 'btn btn-warning', 'data-toggle' => 'modal', 'data-target' => '#cooperative-form']) ?>
+    </td>
   </tr>
   <tr>
     <td align="right">理事长姓名</td>
@@ -45,6 +47,20 @@ use app\models\Cooperativetype;
     </div>
 
     <?php ActiveFormrdiv::end(); ?>
+
+
+    <?php \yii\bootstrap\Modal::begin([
+        'id' => 'cooperative-form',
+        'size'=>'modal-lg',
+        'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>',
+        'options' => ['data-keyboard' => 'false', 'data-backdrop' => 'static']
+        //'header' => '<h4 class="modal-title"></h4>',
+    ]);
+    \yii\bootstrap\Modal::end(); ?>
+
+
+
+
 <?php
 $script = <<<JS
 jQuery('#cooperativetypedelete').click(function(){
@@ -54,7 +70,19 @@ jQuery('#cooperativetypedelete').click(function(){
 	});
 
 });
+
+$('#cooperative-form').on('show.bs.modal', function (e) {
+    $.get('index.php?r=cooperativetype/cooperativetypecreate', {ajax: true}, function (body) {
+		$('.modal-body').html(body);
+    });
+});
+
 JS;
 $this->registerJs($script);
+
+
+
+
+
 ?>
 </div>
