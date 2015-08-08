@@ -26,7 +26,8 @@ class Cooperativetype extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['typename'], 'string', 'max' => 500]
+            [['typename'], 'string', 'max' => 500],
+            [['typename'], 'required']
         ];
     }
 

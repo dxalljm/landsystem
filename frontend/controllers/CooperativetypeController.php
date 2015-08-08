@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use yii\web\Response;
 use app\models\Cooperativetype;
 use frontend\models\cooperativetypeSearch;
 use yii\web\Controller;
@@ -58,7 +59,7 @@ class CooperativetypeController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCooperativetypecreate($ajax=false)
+    public function actionCooperativetypecreate()
     {
         $model = new Cooperativetype();
 
@@ -79,9 +80,12 @@ class CooperativetypeController extends Controller
     public function actionCooperativetypecreateajax()
     {
         $model = new Cooperativetype();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['cooperative/cooperativecreate']);
+        $typeName = Yii::$app->request->get('typename');
+        if (!empty($typeName)) {
+            $model->typename = $typeName;
+            $model->save();
+            echo json_encode(['status' => 1, 'data' => [$model->id, $model->typename]]);
+            Yii::$app->end();
         } else {
             return $this->renderAjax('cooperativetypecreate', [
                 'model' => $model,

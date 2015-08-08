@@ -76,6 +76,18 @@ $('#cooperative-form').on('show.bs.modal', function (e) {
     });
 });
 
+$(document).on("click", "#ajax-create", function () {
+    var typename = $('#cooperativetype-typename').val();
+    $.getJSON('index.php?r=cooperativetype/cooperativetypecreateajax', {typename: typename}, function (data) {
+        if (data.status == 1) {
+			$('#cooperative-form').modal('hide');
+			$('#cooperative-cooperativetype').append('<option selected="selected" value="'+data.data[0]+'">'+data.data[1]+'</option>');
+        } else {
+            alert('合作社类型添加失败');
+        }
+    });
+});
+
 JS;
 $this->registerJs($script);
 
