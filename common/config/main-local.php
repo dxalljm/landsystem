@@ -3,9 +3,9 @@ return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=landsystem',
-            'username' => 'root',
-            'password' => '',
+            'dsn' => 'mysql:host=feature.jios.org;dbname=landsystem;port=33060',
+            'username' => 'landsystem',
+            'password' => 'landsystem',
             'charset' => 'utf8',
 			'tablePrefix' => 'land_',
         ],
