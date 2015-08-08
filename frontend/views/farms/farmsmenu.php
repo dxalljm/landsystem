@@ -96,6 +96,50 @@ use app\models\Farms;
              	]);?></td>
   </tr>
   </table>
+  <br>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
+        
+        ?>
+    <td width="20%" align="center"><?=  Html::a(html::img('images/User With Frame.png',['width'=>'150']),'index.php?r=cooperative/cooperativeindex&farms_id='.$farm->id, [
+            			'id' => 'farmerview',
+            			'title' => '承包信息',
+            			'target' => '_black',
+            			//'data-toggle' => 'modal',
+            			//'data-target' => '#farmercreate-modal',
+            			//'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/farmer/farmercreate','id'=>$farm->id])."','','width=1200,height=1000,top=150,left=180, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
+            			//'onclick' => 'farmercreate($("#farmname").val())',
+             	]);?></td>
+    <td width="20%" align="center"><?=  Html::a(html::img('images/farmerzr.png',['width'=>'150']),'#', [
+            			'id' => 'farmerview',
+            			'title' => '转让信息',
+            			'target' => '_black',
+            			'data-toggle' => 'modal',
+            			'data-target' => '#leaseindex-modal',
+            			'onclick' => 'leaseindex($("#farmname").val())',
+             	]);?></td>
+    <td width="20%" align="center"><?=  Html::a(html::img('images/farmerzp.png',['width'=>'150']),'#', [
+            			'id' => 'leaseview',
+            			'title' => '租赁信息',
+            			'target' => '_black',
+            			'data-toggle' => 'modal',
+            			'data-target' => '#leaseindex-modal',
+            			'onclick' => 'leaseindex($("#farmname").val())',
+             	]);?></td>
+    <td width="20%" align="center"><?=  Html::a(html::img('images/farmerdk.png',['width'=>'150']),'#', [
+            			'id' => 'farmerview',
+            			'title' => '抵押贷款信息',
+            			'target' => '_black',
+            			'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/lease/leaseindex','id'=>$farm->id,'year'=>$year])."','','width=1200,height=600,top=50,left=80, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
+             	]);?></td>
+    <td width="20%" align="center"><?=  Html::a(html::img('images/farmerjf.png',['width'=>'150']),'#', [
+            			'id' => 'farmerview',
+            			'title' => '承包经营权纠纷',
+            			'target' => '_black',
+            			'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/farmer/farmerview','id'=>$farm->id])."','','width=1200,height=600,top=50,left=80, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
+             	]);?></td>
+  </tr>
+  </table>
  <?php ActiveFormrdiv::end(); ?>
 </div>
 <?php

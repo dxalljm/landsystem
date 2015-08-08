@@ -37,7 +37,7 @@ class FarmerController extends Controller
     	if(\Yii::$app->user->can($action)){
     		return true;
     	}else{
-    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+    		throw new \yii\web\UnauthorizedHttpException('瀵逛笉璧凤紝鎮ㄧ幇鍦ㄨ繕娌¤幏姝ゆ搷浣滅殑鏉冮檺');
     	}
     }
     /**
@@ -90,17 +90,17 @@ class FarmerController extends Controller
 			 //$membermodel = Farmermembers::find()->where(['farmer_id' => $farmerid])->all();
 			 if ($model->load(Yii::$app->request->post()) && $model->save()) {
 
-                 // 处理家庭成员
+                 // 澶勭悊瀹跺涵鎴愬憳
                	$parmembers = Yii::$app->request->post('Parmembers');
-               	//删除家庭成员
+               	//鍒犻櫎瀹跺涵鎴愬憳
                	$this->deleteMembers($membermodel, $parmembers['id']);
                  /* if (count($parmembers) > 0) {
                      $attr = Farmermembers::formatAttr($parmembers, []);
                  } */
-               	//得到post提交的记录数
+               	//寰楀埌post鎻愪氦鐨勮褰曟暟
                	$row = count($parmembers['membername']);
                	for($i=1;$i<$row;$i++) {
-	               	//如果得到成员数据就给$membermodel赋值成员数据，否则就实例化一个成员数据（在修改家庭成员数据时有新增成员数据）
+	               	//濡傛灉寰楀埌鎴愬憳鏁版嵁灏辩粰$membermodel璧嬪�兼垚鍛樻暟鎹紝鍚﹀垯灏卞疄渚嬪寲涓�涓垚鍛樻暟鎹紙鍦ㄤ慨鏀瑰搴垚鍛樻暟鎹椂鏈夋柊澧炴垚鍛樻暟鎹級
 	               	if($this->findMemberModel($parmembers['id'][$i]))
 	               		$membermodel = $this->findMemberModel($parmembers['id'][$i]);
 	               	else
@@ -168,8 +168,9 @@ class FarmerController extends Controller
     	}
     }
 
-    //查询POST家庭成员记录ID是否存在于家庭成员数据库中,返回已经删除的ID号
+    //鏌ヨPOST瀹跺涵鎴愬憳璁板綍ID鏄惁瀛樺湪浜庡搴垚鍛樻暟鎹簱涓�,杩斿洖宸茬粡鍒犻櫎鐨処D鍙�
     private function deleteMembers($nowdatabase,$postdataidarr) {
+    	$databaseid = array();
     	foreach($nowdatabase as $value) {
     		$databaseid[] = $value['id'];
     	}
