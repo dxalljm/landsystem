@@ -21,7 +21,9 @@ use app\models\Cooperativetype;
   <tr>
     <td align="right">合作社类型</td>
     <td><?= $form->field($model, 'cooperativetype')->dropDownList(ArrayHelper::map(Cooperativetype::find()->all(), 'id', 'typename'),['prompt'=>'请选择'])->label(false)->error(false) ?></td>
-    <td><?php echo Html::a('+', 'index.php?r=cooperativetype/cooperativetypecreate',['class' => 'btn btn-warning delete-member-family']) ?> <?php echo Html::a('-', '#',['id'=>'cooperativetypedelete','class' => 'btn btn-warning delete-member-family']) ?></td>
+    <td>
+        <?php echo Html::a('+', 'index.php?r=cooperativetype/cooperativetypecreate',['class' => 'btn btn-warning delete-member-family']) ?>
+    </td>
   </tr>
   <tr>
     <td align="right">理事长姓名</td>
