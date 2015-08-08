@@ -17,8 +17,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-    	 <?= Html::a('添加', ['cooperativecreate', 'id' => $model->id,'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('更新', ['cooperativeupdate', 'id' => $model->id,'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-primary']) ?>
+    	 <?= Html::a('添加', ['cooperativecreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('更新', ['cooperativeupdate', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('删除', ['cooperativedelete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -32,7 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'farms_id',
             'cooperativename',
             'cooperativetype',
             'directorname',

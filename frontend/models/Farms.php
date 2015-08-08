@@ -32,8 +32,8 @@ public function rules()
     { 
         return [
             [['farmname'], 'required'],
-            [['iscontract', 'measure'], 'integer'],
-            [['farmname', 'address', 'management_area', 'spyear', 'contractlife', 'zongdi'], 'string', 'max' => 500]
+            [['iscontract', 'measure', 'isdelete'], 'integer'],
+            [['farmname', 'address', 'management_area', 'spyear', 'contractlife', 'zongdi', 'cooperative_id'], 'string', 'max' => 500]
         ]; 
     } 
 
@@ -52,6 +52,8 @@ public function rules()
             'contractlife' => '承包年限',
             'measure' => '面积',
             'zongdi' => '宗地',
+            'isdelete' => '回收站',
+            'cooperative_id' => '合作社',
         ]; 
     } 
     

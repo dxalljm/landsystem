@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('添加', ['cooperativecreate','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('添加', ['cooperativecreate'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -28,7 +28,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'farms_id',
             'cooperativename',
             'cooperativetype',
             'directorname',

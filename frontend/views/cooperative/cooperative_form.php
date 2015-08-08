@@ -12,7 +12,6 @@ use app\models\Cooperativetype;
 
     <?php $form = ActiveFormrdiv::begin(); ?>
     
-    <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false)->error(false); ?>
 <table width="441" class="table table-striped table-bordered table-hover table-condensed">
   <tr>
     <td width="42" align="right">合作社名称</td>
@@ -22,7 +21,7 @@ use app\models\Cooperativetype;
   <tr>
     <td align="right">合作社类型</td>
     <td><?= $form->field($model, 'cooperativetype')->dropDownList(ArrayHelper::map(Cooperativetype::find()->all(), 'id', 'typename'),['prompt'=>'请选择'])->label(false)->error(false) ?></td>
-    <td><?php echo Html::a('+', 'index.php?r=cooperativetype/cooperativetypecreate&farms_id='.$_GET['farms_id'],['class' => 'btn btn-warning delete-member-family']) ?></td>
+    <td><?php echo Html::a('+', 'index.php?r=cooperativetype/cooperativetypecreate',['class' => 'btn btn-warning delete-member-family']) ?> <?php echo Html::a('-', '#',['id'=>'cooperativetypedelete','class' => 'btn btn-warning delete-member-family']) ?></td>
   </tr>
   <tr>
     <td align="right">理事长姓名</td>
@@ -46,5 +45,16 @@ use app\models\Cooperativetype;
     </div>
 
     <?php ActiveFormrdiv::end(); ?>
+<?php
+$script = <<<JS
+jQuery('#cooperativetypedelete').click(function(){
+    var typeid = $('#cooperative-cooperativetype').val();
+    $.get('/landsystem/frontend/web/index.php?r=cooperativetype/cooperativetypedelete',{id:typeid},function (data) {
+		  $('body').html(data);
+	});
 
+});
+JS;
+$this->registerJs($script);
+?>
 </div>

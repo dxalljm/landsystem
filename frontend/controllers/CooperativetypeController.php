@@ -58,12 +58,12 @@ class CooperativetypeController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCooperativetypecreate($farms_id)
+    public function actionCooperativetypecreate($typeid=null)
     {
         $model = new Cooperativetype();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['cooperative/cooperativecreate','farms_id'=>$farms_id]);
+            return $this->redirect(['cooperative/cooperativecreate']);
         } else {
             return $this->render('cooperativetypecreate', [
                 'model' => $model,
@@ -100,7 +100,7 @@ class CooperativetypeController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['cooperativetypeindex']);
+        return $this->redirect(['cooperative/cooperativecreate']);
     }
 
     /**

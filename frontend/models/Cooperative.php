@@ -8,7 +8,6 @@ use Yii;
  * This is the model class for table "{{%cooperative}}".
  *
  * @property integer $id
- * @property integer $farms_id
  * @property string $cooperativename
  * @property string $cooperativetype
  * @property string $directorname
@@ -31,7 +30,7 @@ class Cooperative extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['farms_id', 'peoples'], 'integer'],
+            [['peoples'], 'integer'],
             [['cooperativename', 'cooperativetype', 'directorname', 'finance'], 'string', 'max' => 500]
         ];
     }
@@ -43,7 +42,6 @@ class Cooperative extends \yii\db\ActiveRecord
     {
         return [
 			'id' => 'ID',
-            'farms_id' => '农场ID',
             'cooperativename' => '合作社名称',
             'cooperativetype' => '合作社类型',
             'directorname' => '理事长姓名',

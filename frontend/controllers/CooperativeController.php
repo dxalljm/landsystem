@@ -30,10 +30,10 @@ class CooperativeController extends Controller
      * Lists all Cooperative models.
      * @return mixed
      */
-    public function actionCooperativeindex($farms_id)
+    public function actionCooperativeindex()
     {
         $searchModel = new cooperativeSearch();
-        $dataProvider = $searchModel->search(['farms_id'=>$farms_id,'years'=>Theyear::findOne(1)['years']]);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('cooperativeindex', [
             'searchModel' => $searchModel,
@@ -58,12 +58,12 @@ class CooperativeController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCooperativecreate($farms_id)
+    public function actionCooperativecreate()
     {
         $model = new Cooperative();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['cooperativeview', 'id' => $model->id,'farms_id'=>$farms_id]);
+            return $this->redirect(['cooperativeview', 'id' => $model->id]);
         } else {
             return $this->render('cooperativecreate', [
                 'model' => $model,

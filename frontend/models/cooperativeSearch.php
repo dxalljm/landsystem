@@ -18,7 +18,7 @@ class cooperativeSearch extends Cooperative
     public function rules()
     {
         return [
-            [['id', 'farms_id', 'peoples'], 'integer'],
+            [['id', 'peoples'], 'integer'],
             [['cooperativename', 'cooperativetype', 'directorname', 'finance'], 'safe'],
         ];
     }
@@ -57,7 +57,6 @@ class cooperativeSearch extends Cooperative
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'farms_id' => $this->farms_id,
             'peoples' => $this->peoples,
         ]);
 
