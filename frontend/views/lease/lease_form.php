@@ -31,55 +31,58 @@ use dosamigos\datetimepicker\DateTimePicker;
   </tr>
   <tr>
     <td align="center">承租人姓名</td>
-    <td colspan="5" align="center"><?= $form->field($model, 'lessee')->textInput()->label(false)->error(false) ?></td>
-    <td colspan="2" rowspan="5" align="center">&nbsp;</td>
+    <td colspan="6" align="center"><?= $form->field($model, 'lessee')->textInput()->label(false)->error(false) ?></td>
+    <td rowspan="5" align="center">&nbsp;</td>
   </tr>
   <tr>
     <td align="center">身份证号</td>
-    <td colspan="5" align="center"><?= $form->field($model, 'lessee_cardid')->textInput()->label(false)->error(false) ?></td>
-  </tr>
+    <td colspan="6" align="center"><?= $form->field($model, 'lessee_cardid')->textInput()->label(false)->error(false) ?></td>
+    </tr>
   <tr>
     <td align="center">电话</td>
-    <td colspan="5" align="center"><?= $form->field($model, 'lessee_telephone')->textInput()->label(false)->error(false) ?></td>
-  </tr>
+    <td colspan="6" align="center"><?= $form->field($model, 'lessee_telephone')->textInput()->label(false)->error(false) ?></td>
+    </tr>
   <tr>
     <td align="center">租赁面积</td>
-    <td colspan="5" align="center"><?= $form->field($model, 'lease_area')->textInput(['value'=>$areas])->label(false)->error(false) ?></td>
-  </tr>
+    <td colspan="6" align="center"><?= $form->field($model, 'lease_area')->textInput(['value'=>$areas])->label(false)->error(false) ?></td>
+    </tr>
   <tr>
     <td align="center">租赁期限</td>
     <td width="19" align="center">自</td>
-    <td width="61" align="center"><?= $form->field($model, 'begindate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(DateTimePicker::className(), [
-        'language' => 'zh-CN',
-        'size' => 'xs',
-        'template' => '{input}',
-        'inline' => false,
+    <td width="61" align="center"><?= $form->field($model, 'begindate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
         'clientOptions' => [
-            'startView' => 'decade',
             'autoclose' => true,
-            'format' => 'yyyy-mm-dd', // if inline = false
-            'todayBtn' => false
+        	'minView' => 3,
+        	'maxView' => 3,
+            'format' => 'yyyy-mm-dd'
         ]
-    ]);?></td>
+]);?></td>
     <td width="22" align="center">至</td>
-    <td width="64" align="center"><?= $form->field($model, 'enddate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(DateTimePicker::className(), [
-        'language' => 'zh-CN',
-        'size' => 'xs',
-        'template' => '{input}',
-        'inline' => false,
+    <td width="64" align="center"><?= $form->field($model, 'enddate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
         'clientOptions' => [
-            'startView' => 'decade',
             'autoclose' => true,
-            //'CustomFormat' => 'yyyy',
-            'format' => 'yyyy-mm-dd', // if inline = false
-            'todayBtn' => false
+        	'minView' => 3,
+        	'maxView' => 3,
+            'format' => 'yyyy-mm-dd'
         ]
-    ]);?></td>
+]);?></td>
     <td width="16" align="center">止</td>
+    <td align="center">&nbsp;</td>
   </tr>
 </table>
-    <?= html::dropDownList('father_id','',ArrayHelper::map(Plant::find()->where(['father_id'=>1])->andWhere('id>1')->all(),'id','cropname'),['class'=>'form-control','id'=>'father_id']) ?>
-    <?= $form->field($model, 'plant_id')->dropDownList(ArrayHelper::map(Plant::find()->all(),'id','cropname'))->label(false) ?>
+   
 <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['onclick'=>'setFarmsid('.$_GET['id'].')','class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
   </div>

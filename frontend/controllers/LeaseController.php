@@ -49,7 +49,7 @@ class LeaseController extends Controller
          $searchModel = new leaseSearch();
          $dataProvider = $searchModel->search(['farms_id'=>$id,'years'=>Theyear::findOne(1)['years']]);
 		//$this->getView()->registerJsFile($url)
-        return $this->renderAjax('leaseindex', [
+        return $this->render('leaseindex', [
              'searchModel' => $searchModel,
              'dataProvider' => $dataProvider,
         	 'areas' => $this->getAreas($id),
@@ -93,7 +93,7 @@ class LeaseController extends Controller
         	$model->save();
             return $this->redirect(['leaseindex', 'id' => $id]);
         } else {
-            return $this->renderAjax('leasecreate', [
+            return $this->render('leasecreate', [
                 'model' => $model,
             	'areas' => $areas,
             	'farm' => $farm,
