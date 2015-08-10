@@ -7,7 +7,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\Theyear;
 use yii\web\View;
-
+use dosamigos\datetimepicker\DateTimePicker;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\farmer */
@@ -18,45 +18,85 @@ use yii\web\View;
 <?php $form = ActiveFormrdiv::begin(['id' => "farmer-form",'enableAjaxValidation' => false,'options' => ['enctype' => 'multipart/form-data'],]); ?>
       <?= $form->field($model, 'isupdate')->hiddenInput()->label(false);?>
       <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['id']])->label(false);?>
-    <table  class="table table-bordered table-hover table-condensed">
+    <table width="662"  class="table table-bordered table-hover table-condensed">
       <tr>
-        <td width="99" height="25" align="right" valign="middle">承包人姓名</td>
-        <td width="129" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'farmername')->textInput(['maxlength' => 10])->label(false)->error(false); else echo '&nbsp;'.$model->farmername; ?></td>
-        <td width="83" height="25" align="right" valign="middle">曾用名</td>
-        <td width="121" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'farmerbeforename')->textInput(['maxlength' => 8])->label(false)->error(false); else echo '&nbsp;'.$model->farmerbeforename; ?></td>
-        <td width="79" rowspan="6" align="center" valign="middle"><p>
+        <td width="8%" height="25" align="right" valign="middle">承包人姓名</td>
+        <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'farmername')->textInput(['maxlength' => 10])->label(false)->error(false); else echo '&nbsp;'.$model->farmername; ?></td>
+        <td width="9%" height="25" align="right" valign="middle">曾用名</td>
+        <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'farmerbeforename')->textInput(['maxlength' => 8])->label(false)->error(false); else echo '&nbsp;'.$model->farmerbeforename; ?></td>
+        <td width="19%" rowspan="6" align="center" valign="middle"><p>
           <?php if(!$model->isupdate and $model->photo == '') echo $form->field($model, 'photo')->fileInput(['maxlength' => 200])->label(false)->error(false); else echo Html::img($model->photo,['width'=>'180px','height'=>'200px']); ?>
         </p></td>
      </tr>
       <tr>
         <td align="right" valign="middle">身份证号</td>
-        <td valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'cardid')->textInput(['maxlength' => 18])->label(false)->error(false); else echo '&nbsp;'.$model->cardid; ?></td>
+        <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'cardid')->textInput(['maxlength' => 18])->label(false)->error(false); else echo '&nbsp;'.$model->cardid; ?></td>
         <td align="right" valign="middle">性别</td>
-        <td valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'gender')->dropDownList(['男'=>'男','女'=>'女'])->label(false)->error(false); else echo '&nbsp;'.$model->gender; ?></td>
+        <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'gender')->dropDownList(['男'=>'男','女'=>'女'])->label(false)->error(false); else echo '&nbsp;'.$model->gender; ?></td>
       </tr>
       <tr>
         <td align="right" valign="middle">民族</td>
-        <td valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'nation')->dropDownList(ArrayHelper::map(Nation::find()->all(),'id','nationname'))->label(false)->error(false); else echo '&nbsp;'.Nation::find()->where(['id'=>$model->nation])->one()['nationname']; ?></td>
+        <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'nation')->dropDownList(ArrayHelper::map(Nation::find()->all(),'id','nationname'))->label(false)->error(false); else echo '&nbsp;'.Nation::find()->where(['id'=>$model->nation])->one()['nationname']; ?></td>
         <td align="right" valign="middle">政治面貌</td>
-        <td valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'political_outlook')->dropDownList(['党员'=>'党员','群众'=>'群众'])->label(false)->error(false); else echo '&nbsp;'.$model->political_outlook; ?></td>
+        <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'political_outlook')->dropDownList(['党员'=>'党员','群众'=>'群众'])->label(false)->error(false); else echo '&nbsp;'.$model->political_outlook; ?></td>
       </tr>
       <tr>
         <td align="right" valign="middle">文化程度</td>
-        <td valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'cultural_degree')->dropDownList(['研究生'=>'研究生','本科'=>'本科','大专'=>'大专','高中'=>'高中','初中'=>'初中','小学'=>'小学','文盲'=>'文盲'])->label(false)->error(false); else echo '&nbsp;'.$model->cultural_degree; ?></td>
+        <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'cultural_degree')->dropDownList(['研究生'=>'研究生','本科'=>'本科','大专'=>'大专','高中'=>'高中','初中'=>'初中','小学'=>'小学','文盲'=>'文盲'])->label(false)->error(false); else echo '&nbsp;'.$model->cultural_degree; ?></td>
         <td align="right" valign="middle">电话</td>
-        <td valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'telephone')->textInput(['size' => 11])->label(false)->error(false); else echo '&nbsp;'.$model->telephone; ?></td>
+        <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'telephone')->textInput(['size' => 11])->label(false)->error(false); else echo '&nbsp;'.$model->telephone; ?></td>
       </tr>
       <tr>
         <td align="right" valign="middle">现住地</td>
-        <td colspan="3" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'nowlive')->textInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.$model->nowlive; ?></td>
+        <td colspan="5" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'nowlive')->textInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.$model->nowlive; ?></td>
       </tr>
 	  <tr>
         <td align="right" valign="middle">户籍所在地</td>
-        <td colspan="3" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'domicile')->textInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.$model->domicile; ?></td>
+        <td colspan="5" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'domicile')->textInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.$model->domicile; ?></td>
+      </tr>
+      <tr>
+        <td align="right" valign="middle">合同号</td>
+        <td colspan="5" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'contractnumber')->textInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.$model->contractnumber; ?></td>
+        <td valign="middle">&nbsp;</td>
+      </tr>
+      <tr>
+        <td align="right" valign="middle">承包年限</td>
+        <td width="5%" align="center" valign="middle">自        </td>
+        <td width="27%" align="center" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'begindate')->label(false)->error(false)->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+            'autoclose' => true,
+        	'minView' => 3,
+        	'maxView' => 3,
+            'format' => 'yyyy-mm-dd'
+        ]
+]); else echo '&nbsp;'.$model->begindate; ?></td>
+        <td align="center" valign="middle">至</td>
+        <td width="27%" align="center" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'enddate')->label(false)->error(false)->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+            'autoclose' => true,
+        	'minView' => 3,
+        	'maxView' => 3,
+            'format' => 'yyyy-mm-dd'
+        ]
+]); else echo '&nbsp;'.$model->enddate; ?></td>
+        <td width="5%" align="center" valign="middle">止</td>
+        <td align="center" valign="middle">&nbsp;</td>
       </tr>
       <tr>
         <td align="right" valign="middle">身份证扫描件</td>
-        <td colspan="4" valign="middle"><?php if(!$model->isupdate and $model->cardpic == '') echo $form->field($model, 'cardpic')->fileInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px']); ?></td>
+        <td colspan="6" valign="middle"><?php if(!$model->isupdate and $model->cardpic == '') echo $form->field($model, 'cardpic')->fileInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px']); ?></td>
       </tr>
   </table>
 <h3>家庭主要成员</h3>

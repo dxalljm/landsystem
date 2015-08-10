@@ -11,6 +11,25 @@ use Yii;
  * @property string $farmername
  * @property string $cardid
  * @property integer $farms_id
+ * @property integer $isupdate
+ * @property string $farmerbeforename
+ * @property string $nickname
+ * @property string $gender
+ * @property string $nation
+ * @property string $political_outlook
+ * @property string $cultural_degree
+ * @property string $domicile
+ * @property string $nowlive
+ * @property string $telephone
+ * @property string $living_room
+ * @property string $photo
+ * @property string $cardpic
+ * @property integer $years
+ * @property string $create_at
+ * @property string $update_at
+ * @property string $contractnumber
+ * @property string $begindate
+ * @property string $enddate
  */
 class Farmer extends \yii\db\ActiveRecord
 {
@@ -25,21 +44,21 @@ class Farmer extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-public function rules() 
-    { 
+    public function rules()
+    {
         return [
             [['farms_id', 'isupdate', 'years'], 'integer'],
-            [['farmername', 'cardid', 'farmerbeforename', 'nickname', 'gender', 'nation', 'political_outlook', 'cultural_degree', 'domicile', 'nowlive', 'telephone', 'living_room', 'photo', 'cardpic', 'create_at', 'update_at'], 'string', 'max' => 500]
-        ]; 
-    } 
+            [['farmername', 'cardid', 'farmerbeforename', 'nickname', 'gender', 'nation', 'political_outlook', 'cultural_degree', 'domicile', 'nowlive', 'telephone', 'living_room', 'photo', 'cardpic', 'create_at', 'update_at', 'contractnumber', 'begindate', 'enddate'], 'string', 'max' => 500]
+        ];
+    }
 
-    /** 
-     * @inheritdoc 
-     */ 
-    public function attributeLabels() 
-    { 
-        return [ 
-            'id' => 'ID',
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+			'id' => 'ID',
             'farmername' => '承包人姓名',
             'cardid' => '身份证号',
             'farms_id' => '农场ID',
@@ -59,10 +78,9 @@ public function rules()
             'years' => '年度',
             'create_at' => '创建日期',
             'update_at' => '更新日期',
-        ]; 
-    } 
-    public function getFarms()
-    {
-    	return $this->hasOne(Farms::className(), ['id' => 'farms_id']);
+            'contractnumber' => '合同号',
+            'begindate' => '开始日期',
+            'enddate' => '结束日期',
+        ];
     }
 }
