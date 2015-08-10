@@ -74,13 +74,13 @@ use app\models\Farms;
             			'data-target' => '#leaseindex-modal',
             			'onclick' => 'leaseindex($("#farmname").val())',
              	]);?></td>
-    <td width="20%" align="center"><?=  Html::a(html::img('images/farmerzp.png',['width'=>'150']),'#', [
+    <td width="20%" align="center"><?=  Html::a(html::img('images/farmerzp.png',['width'=>'150']),'index.php?r=lease/leaseindex&id='.$farm->id, [
             			'id' => 'leaseview',
             			'title' => '租赁信息',
             			'target' => '_black',
-            			'data-toggle' => 'modal',
+            			/* 'data-toggle' => 'modal',
             			'data-target' => '#leaseindex-modal',
-            			'onclick' => 'leaseindex($("#farmname").val())',
+            			'onclick' => 'leaseindex($("#farmname").val())', */
              	]);?></td>
     <td width="20%" align="center"><?=  Html::a(html::img('images/farmerdk.png',['width'=>'150']),'#', [
             			'id' => 'farmerview',
