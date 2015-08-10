@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = '更新';
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= $this->render('inputproduct_form', [
+    <?= $this->render('inputproductupdate_form', [
         'model' => $model,
     ]) ?>
 

@@ -13,10 +13,13 @@ use yii\helpers\ArrayHelper;
 <div class="inputproduct-form">
 
     <?php $form = ActiveForm::begin(); ?>
-	<?php $plant = Inputproduct::find()->andWhere('father_id<=1')->all();?>
-    <?= html::dropDownList('dalei','',ArrayHelper::map($plant, 'id', 'fertilizer'),['class'=>"form-control",'id'=>'dalei']) ?>
     
-    <?php if(isset($_GET['fatherid'])) $two = Inputproduct::find()->where(['father_id'=>$_GET['fatherid']])->all(); else $two = array();?>
+	<?php if(isset($_GET['fatherid'])) $daleiID = $_GET['fatherid']; else $daleiID = Inputproduct::find()->where(['id'=>$model->father_id])->one()['father_id'];?>
+	
+	<?php $plant = Inputproduct::find()->andWhere('father_id<=1')->all();?>
+    <?= html::dropDownList('dalei',$daleiID,ArrayHelper::map($plant, 'id', 'fertilizer'),['class'=>"form-control",'id'=>'dalei']) ?>
+    
+    <?php if(isset($_GET['fatherid'])) $two = Inputproduct::find()->where(['father_id'=>$_GET['fatherid']])->all(); else $two = Inputproduct::find()->where(['father_id'=>$daleiID])->all();;?>
 	<?= $form->field($model, 'father_id')->dropDownList(ArrayHelper::map($two, 'id', 'fertilizer')) ?>
 	
     <?= $form->field($model, 'fertilizer')->textInput(['maxlength' => 500]) ?>
@@ -32,7 +35,7 @@ use yii\helpers\ArrayHelper;
 $script = <<<JS
 jQuery('#dalei').change(function(){
     var fatherid = $(this).val();
-    jQuery.get('index.php?r=inputproduct/inputproductcreate',{fatherid:fatherid},function(data){
+    jQuery.get('index.php?r=inputproduct/inputproductupdate',{id:$model->id,fatherid:fatherid},function(data){
         $('body').html(data);
     });
  
