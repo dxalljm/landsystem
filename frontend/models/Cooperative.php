@@ -13,6 +13,8 @@ use Yii;
  * @property string $directorname
  * @property integer $peoples
  * @property string $finance
+ * @property double $registered_capital
+ * @property string $dividendmode
  */
 class Cooperative extends \yii\db\ActiveRecord
 {
@@ -31,7 +33,8 @@ class Cooperative extends \yii\db\ActiveRecord
     {
         return [
             [['peoples'], 'integer'],
-            [['cooperativename', 'cooperativetype', 'directorname', 'finance'], 'string', 'max' => 500]
+            [['registered_capital'], 'number'],
+            [['cooperativename', 'cooperativetype', 'directorname', 'finance', 'dividendmode'], 'string', 'max' => 500]
         ];
     }
 
@@ -47,6 +50,8 @@ class Cooperative extends \yii\db\ActiveRecord
             'directorname' => '理事长姓名',
             'peoples' => '入社人数',
             'finance' => '财务报表',
+            'registered_capital' => '注册资金',
+            'dividendmode' => '分红模式',
         ];
     }
 }

@@ -3,7 +3,7 @@ namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
-
+use app\models\Cooperativetype;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\cooperativeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -23,13 +23,19 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        //'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            //['class' => 'yii\grid\SerialColumn'],
 
             'id',
             'cooperativename',
-            'cooperativetype',
+            //'cooperativetype',
+            [
+            	'attribute'=>'cooperativetype',
+            	'value'=>function($model){
+            		return Cooperativetype::find()->where(['id'=>$model->cooperativetype])->one()['typename'];
+            	}
+            ],
             'directorname',
             // 'peoples',
             // 'finance',

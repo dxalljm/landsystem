@@ -3,6 +3,7 @@ namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\Cooperativetype;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Cooperative */
@@ -33,7 +34,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'cooperativename',
-            'cooperativetype',
+            //'cooperativetype:html',
+            [
+            	'label'=>'合作社类型',
+            	'value'=>Cooperativetype::find()->where(['id'=>$model->cooperativetype])->one()['typename'],
+            ],
             'directorname',
             'peoples',
             'finance',

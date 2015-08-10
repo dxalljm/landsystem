@@ -5,12 +5,12 @@ namespace frontend\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Cooperative;
+use app\models\CooperativeOfFarm;
 
 /**
- * cooperativeSearch represents the model behind the search form about `app\models\Cooperative`.
+ * cooperativeoffarmSearch represents the model behind the search form about `app\models\CooperativeOfFarm`.
  */
-class cooperativeSearch extends Cooperative
+class cooperativeoffarmSearch extends CooperativeOfFarm
 {
     /**
      * @inheritdoc
@@ -18,9 +18,9 @@ class cooperativeSearch extends Cooperative
     public function rules()
     {
         return [
-            [['id', 'peoples'], 'integer'],
-            [['cooperativename', 'cooperativetype', 'directorname', 'finance', 'dividendmode'], 'safe'],
-            [['registered_capital'], 'number'],
+            [['id', 'farms_id', 'cia', 'cooperative_id'], 'integer'],
+            [['proportion'], 'safe'],
+            [['bonus'], 'number'],
         ];
     }
 
@@ -42,7 +42,7 @@ class cooperativeSearch extends Cooperative
      */
     public function search($params)
     {
-        $query = Cooperative::find();
+        $query = CooperativeOfFarm::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -58,15 +58,13 @@ class cooperativeSearch extends Cooperative
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'peoples' => $this->peoples,
-            'registered_capital' => $this->registered_capital,
+            'farms_id' => $this->farms_id,
+            'cia' => $this->cia,
+            'bonus' => $this->bonus,
+            'cooperative_id' => $this->cooperative_id,
         ]);
 
-        $query->andFilterWhere(['like', 'cooperativename', $this->cooperativename])
-            ->andFilterWhere(['like', 'cooperativetype', $this->cooperativetype])
-            ->andFilterWhere(['like', 'directorname', $this->directorname])
-            ->andFilterWhere(['like', 'finance', $this->finance])
-            ->andFilterWhere(['like', 'dividendmode', $this->dividendmode]);
+        $query->andFilterWhere(['like', 'proportion', $this->proportion]);
 
         return $dataProvider;
     }

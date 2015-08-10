@@ -139,7 +139,7 @@ class TablefieldsController extends Controller
 			$sch = new \yii\db\mysql\Schema;  
 			$mir->renameColumn($mir->db->tablePrefix.$table->tablename, $modelold->fields, $model->fields, $model->type);    
 			 $model->save();
-            return $this->redirect(['tablefieldsview', 'id' => $model->id]);
+            return $this->redirect(['tablefieldsindex', 'id' => $model->tables_id]);
         } else {
             return $this->render('tablefieldsupdate', [
                 'model' => $model,

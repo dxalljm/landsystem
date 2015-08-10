@@ -40,6 +40,21 @@ use app\models\Cooperativetype;
     <td><?= $form->field($model, 'finance')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
     <td>&nbsp;</td>
   </tr>
+  <tr>
+
+	<td width=15% align='right'>注册资金</td>
+	
+	<td align='left'><?= $form->field($model, 'registered_capital')->textInput()->label(false)->error(false) ?></td>
+	<td>&nbsp;</td>
+	</tr>
+	
+	<tr>
+	
+	<td width=15% align='right'>分红模式</td>
+	
+	<td align='left'><?= $form->field($model, 'dividendmode')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+	<td>&nbsp;</td>
+	</tr>
 </table>
 
     <div class="form-group">
