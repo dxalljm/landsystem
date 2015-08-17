@@ -70,12 +70,12 @@ class EmployeeController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionEmployeecreate()
+    public function actionEmployeecreate($farms_id)
     {
         $model = new Employee();
-
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['employeeview', 'id' => $model->id]);
+            return $this->redirect(['employeefathers', 'farms_id' => $farms_id]);
         } else {
             return $this->render('employeecreate', [
                 'model' => $model,
@@ -89,12 +89,12 @@ class EmployeeController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionEmployeeupdate($id)
+    public function actionEmployeeupdate($id,$farms_id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['employeeview', 'id' => $model->id]);
+            return $this->redirect(['employeefathers', 'farms_id' => $farms_id]);
         } else {
             return $this->render('employeeupdate', [
                 'model' => $model,
@@ -108,11 +108,11 @@ class EmployeeController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionEmployeedelete($id)
+    public function actionEmployeedelete($id,$farms_id)
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['employeeindex']);
+        return $this->redirect(['employeefathers', 'farms_id' => $farms_id]);
     }
 
     /**

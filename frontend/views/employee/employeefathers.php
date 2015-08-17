@@ -4,6 +4,8 @@ use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\Employee;
+use yii\grid\ActionColumn;
+use Yii;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\employeeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -27,11 +29,11 @@ $this->params['breadcrumbs'][] = $this->title;
   <tr>
     <td colspan="2" align="center"><?= $val['lessee'] ?></td>
     <td colspan="2" align="center"><?= $val['lease_area'] ?></td>
-    <td align="center"><?= Html::a('雇佣','index.php?r=employee/employeecreate&father_id='.$val['id'], [
+    <td align="center"><?= Html::a('雇佣','index.php?r=employee/employeecreate&father_id='.$val['id'].'&farms_id='.$_GET['farms_id'], [
             			'id' => 'employeecreate',
             			'title' => '给'.$val['lessee'].'添加雇工人员',
             			//'class' => 'btn btn-primary',
-            			]).'&nbsp;&nbsp;&nbsp;&nbsp;'.Html::a('批量雇佣','index.php?r=employee/employeecreate&father_id='.$val['id'], [
+            			]).'&nbsp;&nbsp;&nbsp;&nbsp;'.Html::a('批量雇佣','index.php?r=employee/employeecreate&father_id='.$val['id'].'&farms_id='.$_GET['farms_id'], [
             			'id' => 'employeecreates',
             			'title' => '给'.$val['lessee'].'批量添加雇工人员',
             			//'class' => 'btn btn-primary',
@@ -46,15 +48,16 @@ $this->params['breadcrumbs'][] = $this->title;
     <td width="9%" align="center"><?= $emp['employeename']?></td>
     <td width="15%" align="center"><?= $emp['employeetype']?></td>
     <td width="15%" align="center"><?= $emp['cardid']?></td>
-    <td width="15%" align="center"><?= GridView::widget([
-        
-        'columns' => [
-           
-
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?></td>
+    <td width="15%" align="center"><?= Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 'index.php?r=employee/employeeview&id='.$emp['id'].'&farms_id='.$_GET['farms_id'], [
+                    'title' => Yii::t('yii', 'View'),
+                    'data-pjax' => '0',
+                ]);?>&nbsp;&nbsp;<?= Html::a('<span class="glyphicon glyphicon-pencil"></span>', 'index.php?r=employee/employeeupdate&id='.$emp['id'].'&father_id='.$val['id'].'&farms_id='.$_GET['farms_id'], [
+                    'title' => Yii::t('yii', 'update'),
+                    'data-pjax' => '0',
+                ]);?>&nbsp;&nbsp;<?= Html::a('<span class="glyphicon glyphicon-trash"></span>', 'index.php?r=employee/employeedelete&id='.$emp['id'].'&farms_id='.$_GET['farms_id'], [
+                    'title' => Yii::t('yii', 'delete'),
+                    'data-pjax' => '0',
+                ]);?></td>
     </tr>
   <?php }}?>
 </table>
