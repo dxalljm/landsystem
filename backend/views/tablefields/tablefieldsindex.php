@@ -2,12 +2,13 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-
+use app\models\Tablefields;
+use app\models\Tables;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\tablefieldsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '表项管理';
+$this->title = '表项管理('.Tables::findOne(['id'=>$_GET['id']])['Ctablename'].')';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tablefields-index">
