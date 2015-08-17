@@ -9,7 +9,7 @@ use yii\widgets\DetailView;
 
 $this->title = 'ID:'.$model->id;
 $title = Tables::find()->where(['tablename'=>'lease'])->one()['Ctablename'];
-$this->params['breadcrumbs'][] = ['label' => $title, 'url' => ['leaseindex']];
+$this->params['breadcrumbs'][] = ['label' => $title, 'url' => ['leaseindex','farms_id'=>$_GET['farms_id']]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="lease-view">
@@ -17,8 +17,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-    	 <?= Html::a('添加', ['leasecreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('更新', ['leaseupdate', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+    	 <?= Html::a('添加', ['leasecreate', 'id' => $model->id,'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('更新', ['leaseupdate', 'id' => $model->id,'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('删除', ['leasedelete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -28,15 +28,44 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'lease_area',
-            'lessee',
-            'plant_id',
-            'farms_id',
-        ],
-    ]) ?>
+    <table class="table table-striped table-bordered table-hover table-condensed">
+  <tr>
+    <td width="80" align="center">农场名称</td>
+    <td colspan="2" align="center"><?= $farm->farmname?></td>
+    <td align="center">法人</td>
+    <td colspan="2" align="center"><?= $farmer->farmername?></td>
+    <td width="107" align="center">宜农林地面积</td>
+    <td width="106" align="center"><?= $farm->measure?></td>
+  </tr>
+  <tr>
+    <td colspan="8" align="center"><h4>承租人基础信息</h4></td>
+  </tr>
+  <tr>
+    <td align="center">承租人姓名</td>
+    <td colspan="6"><?= $model->lessee ?></td>
+    <td rowspan="5" align="center">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center">身份证号</td>
+    <td colspan="6"><?= $model->lessee_cardid; ?></td>
+    </tr>
+  <tr>
+    <td align="center">电话</td>
+    <td colspan="6"><?= $model->lessee_telephone ?></td>
+    </tr>
+  <tr>
+    <td align="center">租赁面积</td>
+    <td colspan="6"><?= $model->lease_area ?></td>
+    </tr>
+  <tr>
+    <td align="center">租赁期限</td>
+    <td width="19" align="center">自</td>
+    <td width="61" align="center"><?= $model->begindate?></td>
+    <td width="22" align="center">至</td>
+    <td width="64" align="center"><?= $model->enddate?></td>
+    <td width="16" align="center">止</td>
+    <td align="center">&nbsp;</td>
+  </tr>
+</table>
 
 </div>

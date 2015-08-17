@@ -26,24 +26,24 @@ class Lease extends \yii\db\ActiveRecord
      * @inheritdoc
      */
     
-    public function getOverArea()
+    public static function getOverArea()
     {
     	$areas = 0;
-    	if(($model = self::find()->where(['farms_id'=>$_GET['id'],'years'=>Theyear::findOne(1)['years']])->all()) !== null) {
+    	if(($model = self::find()->where(['farms_id'=>$_GET['farms_id']])->all()) !== null) {
     		foreach($model as $val) {
     			$areas+=$val['lease_area'];
     		}
     	}
-    	$farms = Farms::find()->where(['id'=>$_GET['id']])->one()['measure'];
+    	$farms = Farms::find()->where(['id'=>$_GET['farms_id']])->one()['measure'];
     	return $farms-$areas;
     }
     
 	public function rules() 
     { 
         return [
-            [['farms_id', 'years', 'lessee_telephone'], 'integer'],
+            [['farms_id', 'years'], 'integer'],
             [['lessee_cardid', 'enddate'], 'string'],
-            [['lease_area', 'lessee', 'plant_id', 'begindate', 'photo'], 'string', 'max' => 500]
+            [['lease_area', 'lessee', 'plant_id', 'lessee_telephone', 'begindate', 'photo'], 'string', 'max' => 500]
         ]; 
     } 
 

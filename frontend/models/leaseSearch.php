@@ -18,8 +18,8 @@ class leaseSearch extends Lease
 public function rules()
     {
         return [
-            [['id', 'farms_id', 'years', 'lessee_telephone'], 'integer'],
-            [['lease_area', 'lessee', 'plant_id', 'lessee_cardid', 'begindate', 'enddate', 'photo'], 'safe'],
+            [['id', 'farms_id', 'years'], 'integer'],
+            [['lease_area', 'lessee', 'plant_id', 'lessee_cardid', 'lessee_telephone', 'begindate', 'enddate', 'photo'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ public function rules()
      */
     public function search($params)
     {
-        $query = Lease::find();
+        $query = Lease::find()->andWhere($params);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -55,20 +55,21 @@ public function rules()
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
+         $query->andFilterWhere([
             'id' => $this->id,
             'farms_id' => $this->farms_id,
             'years' => $this->years,
-            'lessee_telephone' => $this->lessee_telephone,
         ]);
 
         $query->andFilterWhere(['like', 'lease_area', $this->lease_area])
             ->andFilterWhere(['like', 'lessee', $this->lessee])
             ->andFilterWhere(['like', 'plant_id', $this->plant_id])
             ->andFilterWhere(['like', 'lessee_cardid', $this->lessee_cardid])
+            ->andFilterWhere(['like', 'lessee_telephone', $this->lessee_telephone])
             ->andFilterWhere(['like', 'begindate', $this->begindate])
             ->andFilterWhere(['like', 'enddate', $this->enddate])
             ->andFilterWhere(['like', 'photo', $this->photo]);
+        
 
         return $dataProvider;
     }

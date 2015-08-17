@@ -7,13 +7,15 @@ use yii\helpers\ArrayHelper;
 use app\models\Farms;
 use app\models\Plant;
 use dosamigos\datetimepicker\DateTimePicker;
+use app\models\Farmer;
 
 
 ?>
 
 <div class="lease-form">
-<?php $farms = Farms::find()->where(['id'=>$_GET['id']])->one();?>
+<?php $farms = Farms::find()->where(['id'=>$_GET['farms_id']])->one();?>
     <?php $form = ActiveFormrdiv::begin(); ?>
+    
     <?php $overarea = $farms['measure']-$areas;?>
     <?= html::hiddenInput('measure',$areas,['id'=>'measure']);?>
 
@@ -31,7 +33,7 @@ use dosamigos\datetimepicker\DateTimePicker;
   </tr>
   <tr>
     <td align="center">承租人姓名</td>
-    <td colspan="6" align="center"><?= $form->field($model, 'lessee')->textInput()->label(false)->error(false) ?></td>
+    <td colspan="6" align="center"><?= $form->field($model, 'lessee')->textInput(['value'=>$farmer->farmername])->label(false)->error(false) ?></td>
     <td rowspan="5" align="center">&nbsp;</td>
   </tr>
   <tr>
@@ -43,8 +45,8 @@ use dosamigos\datetimepicker\DateTimePicker;
     <td colspan="6" align="center"><?= $form->field($model, 'lessee_telephone')->textInput()->label(false)->error(false) ?></td>
     </tr>
   <tr>
-    <td align="center">租赁面积</td>
-    <td colspan="6" align="center"><?= $form->field($model, 'lease_area')->textInput(['value'=>$areas])->label(false)->error(false) ?></td>
+    <td align="center">租赁面积</td><?php if(Yii::$app->controller->action->id == 'leaseupdate') $value = $model->lease_area; else $value = $areas;?>
+    <td colspan="6" align="center"><?= $form->field($model, 'lease_area')->textInput(['value'=>$value])->label(false)->error(false) ?></td>
     </tr>
   <tr>
     <td align="center">租赁期限</td>
@@ -84,7 +86,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 </table>
    
 <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['onclick'=>'setFarmsid('.$_GET['id'].')','class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['onclick'=>'setFarmsid('.$_GET['farms_id'].')','class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
   </div>
     <?php ActiveFormrdiv::end(); ?>
 <?php

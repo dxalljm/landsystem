@@ -11,11 +11,11 @@ use app\models\Farms;
 ?>
 <div class="lease-index">
 
-    <h1><?= Farms::find()->where(['id'=>$_GET['id']])->one()['farmname']; ?></h1>
+    <h1><?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']; ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-	<?php if($areas < Farms::find()->where(['id'=>$_GET['id']])->one()['measure']) {?>
+	<?php if($areas < Farms::find()->where(['id'=>$_GET['farms_id']])->one()['measure']) {?>
     <p>
-    	<?= Html::a('添加', ['leasecreate','id'=>$_GET['id']], ['class' => 'btn btn-success']) ?>
+    	<?= Html::a('添加', ['leasecreate','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?>
          <?php //echo Html::a('添加', 'javascript:void(0)', ['onclick'=>'lease.create('.$_GET['id'].')', 'class' => 'btn btn-success', 'id' => 'wubaiqing']) ?>
     </p>
 	<?php }?>
@@ -38,7 +38,42 @@ use app\models\Farms;
             'plant_id',
             //'farms_id',
 
-            ['class' => 'yii\grid\ActionColumn'],
+             [
+            'class' => 'yii\grid\ActionColumn',
+            'template' => '{view} {update} {delete}',
+            'buttons' => [
+                // 下面代码来自于 yii\grid\ActionColumn 简单修改了下
+                'view' => function ($url, $model, $key) {
+                    $options = [
+                        'title' => Yii::t('yii', 'View'),
+                        'aria-label' => Yii::t('yii', 'View'),
+                        'data-pjax' => '0',
+                    ];
+                    $url.='&farms_id='.$_GET['farms_id'];
+                    return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, $options);
+                },
+                'update' => function ($url, $model, $key) {
+                    $options = [
+                        'title' => Yii::t('yii', 'Update'),
+                        'aria-label' => Yii::t('yii', 'Update'),
+                        'data-pjax' => '0',
+                    ];
+                    $url.='&farms_id='.$_GET['farms_id'];
+                    return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, $options);
+                },
+                'delete' => function ($url, $model, $key) {
+                    $options = [
+                        'title' => Yii::t('yii', 'Delete'),
+                        'aria-label' => Yii::t('yii', 'Delete'),
+                        'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+                        'data-method' => 'post',
+                        'data-pjax' => '0',
+                    ];
+                    $url.='&farms_id='.$_GET['farms_id'];
+                    return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, $options);
+                },
+            	]
+       	 	],
         ],
     ]); ?>
 
