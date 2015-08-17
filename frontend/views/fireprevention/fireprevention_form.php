@@ -46,24 +46,22 @@ use yii\widgets\ActiveFormrdiv;
 
 <tr>
 
-<td width=8% align='center'><?= $form->field($model, 'firecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-
-<td align='center'><?= $form->field($model, 'safecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?= $form->field($model, 'environmental_agreement')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?= $form->field($model, 'firetools')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?= $form->field($model, 'mechanical_fire_cover')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?= $form->field($model, 'chimney_fire_cover')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?= $form->field($model, 'isolation_belt')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?= $form->field($model, 'propagandist')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?= $form->field($model, 'fire_administrator')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?= $form->field($model, 'cooker')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td width=8% align='center'><?php $model->firecontract = 0;?><?= $form->field($model, 'firecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php $model->safecontract = 0;?><?= $form->field($model, 'safecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php $model->environmental_agreement = 0;?><?= $form->field($model, 'environmental_agreement')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php $model->firetools = 0;?><?= $form->field($model, 'firetools')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php $model->mechanical_fire_cover = 0;?><?= $form->field($model, 'mechanical_fire_cover')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php $model->chimney_fire_cover = 0;?><?= $form->field($model, 'chimney_fire_cover')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php $model->isolation_belt = 0;?><?= $form->field($model, 'isolation_belt')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php $model->propagandist = 0;?><?= $form->field($model, 'propagandist')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php $model->fire_administrator = 0;?><?= $form->field($model, 'fire_administrator')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php $model->cooker = 0;?><?= $form->field($model, 'cooker')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
 
 </tr>
 
 <tr>
 
 <td colspan="5" align='center'><h4>农场防火宣传栏</h4></td>
-
 <td colspan="3" align='center'><h4>防火宣传检查现场取景照</h4></td>
 <td align='left'>&nbsp;</td>
 <td align='left'>&nbsp;</td>
@@ -73,7 +71,6 @@ use yii\widgets\ActiveFormrdiv;
 <tr>
 
 <td width=8% align='center'>野外作业许可证</td>
-
 <td align='center'>防火合同</td>
 <td align='center'>防火宣传单</td>
 <td align='center'>雇工防火合同</td>
@@ -88,23 +85,23 @@ use yii\widgets\ActiveFormrdiv;
 
 <tr>
 
-<td width=8% align='center'><?= $form->field($model, 'fieldpermit')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-
-<td align='center'><?= $form->field($model, 'propaganda_firecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?= $form->field($model, 'leaflets')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?= $form->field($model, 'employee_firecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?= $form->field($model, 'rectification_record')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?= $form->field($model, 'equipmentpic')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?= $form->field($model, 'peoplepic')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?= $form->field($model, 'facilitiespic')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td width=8% align='center'><?php $model->fieldpermit = 0;?><?= $form->field($model, 'fieldpermit')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php $model->propaganda_firecontract = 0;?><?= $form->field($model, 'propaganda_firecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php $model->leaflets = 0;?><?= $form->field($model, 'leaflets')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php $model->employee_firecontract = 0;?><?= $form->field($model, 'employee_firecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php $model->rectification_record = 0;?><?= $form->field($model, 'rectification_record')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php $model->equipmentpic = 0;?><?= $form->field($model, 'equipmentpic')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php $model->peoplepic = 0;?><?= $form->field($model, 'peoplepic')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php $model->facilitiespic = 0;?><?= $form->field($model, 'facilitiespic')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
 <td align='left'>&nbsp;</td>
 <td align='left'>&nbsp;</td>
 
 </tr>
-
+</table>
+<table width="57%" class="table table-striped table-bordered table-hover table-condensed">
 <tr>
 
-<td colspan="10" align='center'><h3>农场雇工登记</h3></td>
+<td colspan="6" align='center'><h3>农场雇工登记</h3></td>
 
 </tr>
 
@@ -116,30 +113,30 @@ use yii\widgets\ActiveFormrdiv;
 <td align='center'>身份证号</td>
 <td align='center'>是否吸烟</td>
 <td align='center'>智障人员</td>
-<td align='left'>其他</td>
-<td align='left'>&nbsp;</td>
-<td align='left'>&nbsp;</td>
-<td align='left'>&nbsp;</td>
-<td align='left'>&nbsp;</td>
+
+
 
 </tr>
-
+<?php 
+$i=0;
+foreach($employees as $emp) {
+	
+	foreach($emp as $val) {
+		$i++;
+	?>
 <tr>
+<?php echo Html::hiddenInput('ArrEmployeesFire[employees_id][]', $val['id']); ?>
+<td width=8% align='center'><?= $val['employeetype'] ?></td>
 
-<td width=8% align='right'>&nbsp;</td>
+<td align='center'><?= $val['employeename'] ?></td>
+<td align='center'><?= $val['cardid'] ?></td>
+<td align='center'><?php echo Html::radioList('ArrEmployeesFire[is_smoking]['.$i.']', 0, [1=>'是',0=>'否']); ?></td>
+<td align='center'><?php echo Html::radioList('ArrEmployeesFire[is_retarded]['.$i.']', 0, [1=>'是',0=>'否']); ?></td>
 
-<td align='left'>&nbsp;</td>
-<td align='left'>&nbsp;</td>
-<td align='left'>&nbsp;</td>
-<td align='left'>&nbsp;</td>
-<td align='left'>&nbsp;</td>
-<td align='left'>&nbsp;</td>
-<td align='left'>&nbsp;</td>
-<td align='left'>&nbsp;</td>
-<td align='left'>&nbsp;</td>
+
 
 </tr>
-
+<?php }}?>
 </table>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

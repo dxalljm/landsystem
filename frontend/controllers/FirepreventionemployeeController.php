@@ -3,18 +3,16 @@
 namespace frontend\controllers;
 
 use Yii;
-use app\models\Fireprevention;
-use frontend\models\firepreventionSearch;
+use app\models\Firepreventionemployee;
+use frontend\models\firepreventionemployeeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\models\Employee;
-use app\models\Lease;
-use app\models\Firepreventionemployee;
+
 /**
- * FirepreventionController implements the CRUD actions for Fireprevention model.
+ * FirepreventionemployeeController implements the CRUD actions for Firepreventionemployee model.
  */
-class FirepreventionController extends Controller
+class FirepreventionemployeeController extends Controller
 {
     public function behaviors()
     {
@@ -29,99 +27,92 @@ class FirepreventionController extends Controller
     }
 
     /**
-     * Lists all Fireprevention models.
+     * Lists all Firepreventionemployee models.
      * @return mixed
      */
-    public function actionFirepreventionindex()
+    public function actionFirepreventionemployeeindex()
     {
-        $searchModel = new firepreventionSearch();
+        $searchModel = new firepreventionemployeeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('firepreventionindex', [
+        return $this->render('firepreventionemployeeindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single Fireprevention model.
+     * Displays a single Firepreventionemployee model.
      * @param integer $id
      * @return mixed
      */
-    public function actionFirepreventionview($id)
+    public function actionFirepreventionemployeeview($id)
     {
-        return $this->render('firepreventionview', [
+        return $this->render('firepreventionemployeeview', [
             'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new Fireprevention model.
+     * Creates a new Firepreventionemployee model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionFirepreventioncreate($farms_id)
+    public function actionFirepreventionemployeecreate()
     {
-        $model = new Fireprevention();
-        $fireemployeeModel = new Firepreventionemployee();
-        $lease = Lease::find()->where(['farms_id'=>$farms_id])->all();
-		foreach($lease as $val) {
-			$employees[] = Employee::find()->where(['father_id'=>$val['id']])->all();
-		}
-		
+        $model = new Firepreventionemployee();
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['firepreventionview', 'id' => $model->id]);
+            return $this->redirect(['firepreventionemployeeview', 'id' => $model->id]);
         } else {
-            return $this->render('firepreventioncreate', [
+            return $this->render('firepreventionemployeecreate', [
                 'model' => $model,
-            	'employees' => $employees,
-            	'fireemployeeModel' => $fireemployeeModel,
             ]);
         }
     }
 
     /**
-     * Updates an existing Fireprevention model.
+     * Updates an existing Firepreventionemployee model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionFirepreventionupdate($id)
+    public function actionFirepreventionemployeeupdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['firepreventionview', 'id' => $model->id]);
+            return $this->redirect(['firepreventionemployeeview', 'id' => $model->id]);
         } else {
-            return $this->render('firepreventionupdate', [
+            return $this->render('firepreventionemployeeupdate', [
                 'model' => $model,
             ]);
         }
     }
 
     /**
-     * Deletes an existing Fireprevention model.
+     * Deletes an existing Firepreventionemployee model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionFirepreventiondelete($id)
+    public function actionFirepreventionemployeedelete($id)
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['firepreventionindex']);
+        return $this->redirect(['firepreventionemployeeindex']);
     }
 
     /**
-     * Finds the Fireprevention model based on its primary key value.
+     * Finds the Firepreventionemployee model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Fireprevention the loaded model
+     * @return Firepreventionemployee the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Fireprevention::findOne($id)) !== null) {
+        if (($model = Firepreventionemployee::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
