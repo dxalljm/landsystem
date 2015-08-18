@@ -61,7 +61,7 @@ class UserController extends Controller
     public function actionUserview($id)
     {
     	//print_r($_GET['t']);
-        return $this->renderAjax('userview', [
+        return $this->render('userview', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -96,7 +96,7 @@ class UserController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['userview', 'id' => $model->id]);
         } else {
             return $this->render('userupdate', [
                 'model' => $model,
