@@ -8,7 +8,7 @@ use yii\grid\GridView;
 /* @var $searchModel frontend\models\firepreventionemployeeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'firepreventionemployee';
+$this->title = 'fireprevention_employee';
 $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctablename'];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

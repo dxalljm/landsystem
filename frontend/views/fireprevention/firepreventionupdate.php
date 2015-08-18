@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = '更新';
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= $this->render('fireprevention_form', [
+    <?= $this->render('firepreventionupdate_form', [
         'model' => $model,
     ]) ?>
 

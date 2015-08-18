@@ -18,8 +18,7 @@ class firepreventionemployeeSearch extends Firepreventionemployee
     public function rules()
     {
         return [
-            [['id', 'employee_id', 'is_smoking', 'is_retarded'], 'integer'],
-            [['create_at', 'update_at'], 'safe'],
+            [['id', 'employee_id', 'is_smoking', 'is_retarded','create_at','update_at'], 'integer'],
         ];
     }
 
@@ -60,10 +59,9 @@ class firepreventionemployeeSearch extends Firepreventionemployee
             'employee_id' => $this->employee_id,
             'is_smoking' => $this->is_smoking,
             'is_retarded' => $this->is_retarded,
+        	'create_at' => $this->create_at,
+        	'update_at' => $this->update_at,
         ]);
-
-        $query->andFilterWhere(['like', 'create_at', $this->create_at])
-            ->andFilterWhere(['like', 'update_at', $this->update_at]);
 
         return $dataProvider;
     }

@@ -30,8 +30,7 @@ class Firepreventionemployee extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['employee_id', 'is_smoking', 'is_retarded'], 'integer'],
-            [['create_at', 'update_at'], 'string', 'max' => 500]
+            [['employee_id', 'is_smoking', 'is_retarded','create_at','update_at'], 'integer'],
         ];
     }
 

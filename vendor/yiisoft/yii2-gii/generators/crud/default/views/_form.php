@@ -30,11 +30,10 @@ use yii\widgets\ActiveFormrdiv;
 <table class="table table-striped table-bordered table-hover table-condensed">
 		<?php foreach ($generator->getColumnNames() as $attribute) {
 		    if (in_array($attribute, $safeAttributes)) {
-
-		    	echo "<tr>\n\n";
-		    		echo "<td width=15% align='right'>".$generator->generateSearchLabels()[$attribute]."</td>\n\n";
-		        	echo "<td align='left'><?= " . $generator->generateActiveField($attribute)."->label(false)->error(false)" . " ?></td>\n\n";
-		        echo "</tr>\n\n";
+		    	echo "<tr>\n";
+		    		echo "<td width=15% align='right'>".$generator->generateSearchLabels()[$attribute]."</td>\n";
+		        	echo "<td align='left'><?= " . $generator->generateActiveField($attribute)."->label(false)->error(false)" . " ?></td>\n";
+		        echo "</tr>\n";
 		    }
 		} ?>
 </table>

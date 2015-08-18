@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveFormrdiv;
-
+use app\models\Firepreventionemployee;
 /* @var $this yii\web\View */
 /* @var $model app\models\Fireprevention */
 /* @var $form yii\widgets\ActiveForm */
@@ -46,16 +46,16 @@ use yii\widgets\ActiveFormrdiv;
 
 <tr>
 
-<td width=8% align='center'><?php $model->firecontract = 0;?><?= $form->field($model, 'firecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php $model->safecontract = 0;?><?= $form->field($model, 'safecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php $model->environmental_agreement = 0;?><?= $form->field($model, 'environmental_agreement')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php $model->firetools = 0;?><?= $form->field($model, 'firetools')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php $model->mechanical_fire_cover = 0;?><?= $form->field($model, 'mechanical_fire_cover')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php $model->chimney_fire_cover = 0;?><?= $form->field($model, 'chimney_fire_cover')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php $model->isolation_belt = 0;?><?= $form->field($model, 'isolation_belt')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php $model->propagandist = 0;?><?= $form->field($model, 'propagandist')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php $model->fire_administrator = 0;?><?= $form->field($model, 'fire_administrator')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php $model->cooker = 0;?><?= $form->field($model, 'cooker')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td width=8% align='center'><?php if($model->firecontract == '') $model->firecontract = 0;?><?= $form->field($model, 'firecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php if($model->safecontract == '') $model->safecontract = 0;?><?= $form->field($model, 'safecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php if($model->environmental_agreement == '') $model->environmental_agreement = 0;?><?= $form->field($model, 'environmental_agreement')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php if($model->firetools == '') $model->firetools = 0;?><?= $form->field($model, 'firetools')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php if($model->mechanical_fire_cover == '') $model->mechanical_fire_cover = 0;?><?= $form->field($model, 'mechanical_fire_cover')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php if($model->chimney_fire_cover == '') $model->chimney_fire_cover = 0;?><?= $form->field($model, 'chimney_fire_cover')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php if($model->isolation_belt == '') $model->isolation_belt = 0;?><?= $form->field($model, 'isolation_belt')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php if($model->propagandist == '') $model->propagandist = 0;?><?= $form->field($model, 'propagandist')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php if($model->fire_administrator == '') $model->fire_administrator = 0;?><?= $form->field($model, 'fire_administrator')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php if($model->cooker == '') $model->cooker = 0;?><?= $form->field($model, 'cooker')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
 
 </tr>
 
@@ -85,14 +85,14 @@ use yii\widgets\ActiveFormrdiv;
 
 <tr>
 
-<td width=8% align='center'><?php $model->fieldpermit = 0;?><?= $form->field($model, 'fieldpermit')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php $model->propaganda_firecontract = 0;?><?= $form->field($model, 'propaganda_firecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php $model->leaflets = 0;?><?= $form->field($model, 'leaflets')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php $model->employee_firecontract = 0;?><?= $form->field($model, 'employee_firecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php $model->rectification_record = 0;?><?= $form->field($model, 'rectification_record')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php $model->equipmentpic = 0;?><?= $form->field($model, 'equipmentpic')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php $model->peoplepic = 0;?><?= $form->field($model, 'peoplepic')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php $model->facilitiespic = 0;?><?= $form->field($model, 'facilitiespic')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td width=8% align='center'><?php if($model->fieldpermit == '') $model->fieldpermit = 0;?><?= $form->field($model, 'fieldpermit')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php if($model->propaganda_firecontract == '') $model->propaganda_firecontract = 0;?><?= $form->field($model, 'propaganda_firecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php if($model->leaflets == '') $model->leaflets = 0;?><?= $form->field($model, 'leaflets')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php if($model->employee_firecontract == '') $model->employee_firecontract = 0;?><?= $form->field($model, 'employee_firecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php if($model->rectification_record == '') $model->rectification_record = 0;?><?= $form->field($model, 'rectification_record')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php if($model->equipmentpic == '') $model->equipmentpic = 0;?><?= $form->field($model, 'equipmentpic')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php if($model->peoplepic == '') $model->peoplepic = 0;?><?= $form->field($model, 'peoplepic')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+<td align='center'><?php if($model->facilitiespic == '') $model->facilitiespic = 0;?><?= $form->field($model, 'facilitiespic')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
 <td align='left'>&nbsp;</td>
 <td align='left'>&nbsp;</td>
 
@@ -118,25 +118,26 @@ use yii\widgets\ActiveFormrdiv;
 
 </tr>
 <?php 
+
 $i=0;
 foreach($employees as $emp) {
-	
 	foreach($emp as $val) {
-		$i++;
+		$efire = Firepreventionemployee::find()->where(['employee_id'=>$val['id']])->one();
 	?>
 <tr>
-<?php echo Html::hiddenInput('ArrEmployeesFire[employees_id][]', $val['id']); ?>
+<?php if(!empty($efire)) $value = $efire['id'];else $value = '';?>
+<?php echo Html::hiddenInput('ArrEmployeesFire[id][]',$value); ?>
+<?php if(!empty($efire)) $value = $efire['employee_id'];else $value = $val['id'];?>
+<?php echo Html::hiddenInput('ArrEmployeesFire[employee_id][]', $value); ?>
 <td width=8% align='center'><?= $val['employeetype'] ?></td>
-
 <td align='center'><?= $val['employeename'] ?></td>
 <td align='center'><?= $val['cardid'] ?></td>
-<td align='center'><?php echo Html::radioList('ArrEmployeesFire[is_smoking]['.$i.']', 0, [1=>'是',0=>'否']); ?></td>
-<td align='center'><?php echo Html::radioList('ArrEmployeesFire[is_retarded]['.$i.']', 0, [1=>'是',0=>'否']); ?></td>
-
-
-
+<?php if(!empty($efire)) $value = $efire['is_smoking'];else $value = 0;?>
+<td align='center'><?php echo Html::radioList('ArrEmployeesFire[is_smoking]['.$i.']', $value, [1=>'是',0=>'否']); ?></td>
+<?php if(!empty($efire)) $value = $efire['is_retarded'];else $value = 0;?>
+<td align='center'><?php echo Html::radioList('ArrEmployeesFire[is_retarded]['.$i.']', $value, [1=>'是',0=>'否']); ?></td>
 </tr>
-<?php }}?>
+<?php $i++;}}?>
 </table>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

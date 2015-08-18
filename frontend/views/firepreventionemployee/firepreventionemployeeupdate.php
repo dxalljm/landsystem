@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Firepreventionemployee */
 
-$this->title = 'firepreventionemployee' ;
+$this->title = 'fireprevention_employee' ;
 $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctablename'];
 $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['firepreventionemployeeindex']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['firepreventionemployeeview', 'id' => $model->id]];

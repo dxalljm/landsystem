@@ -60,7 +60,7 @@ use app\models\Farms;
     <td width="20%" align="center"><?=  Html::a(html::img('images/User With Frame.png',['width'=>'150']),'index.php?r=farmer/farmercreate&id='.$farm->id, [
             			'id' => 'farmerview',
             			'title' => '承包信息',
-            			'target' => '_black',
+            			'target' => '_blank',
             			//'data-toggle' => 'modal',
             			//'data-target' => '#farmercreate-modal',
             			//'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/farmer/farmercreate','id'=>$farm->id])."','','width=1200,height=1000,top=150,left=180, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
@@ -69,7 +69,7 @@ use app\models\Farms;
     <td width="20%" align="center"><?=  Html::a(html::img('images/farmerzr.png',['width'=>'150']),'#', [
             			'id' => 'farmerview',
             			'title' => '转让信息',
-            			'target' => '_black',
+            			'target' => '_blank',
             			'data-toggle' => 'modal',
             			'data-target' => '#leaseindex-modal',
             			'onclick' => 'leaseindex($("#farmname").val())',
@@ -77,7 +77,7 @@ use app\models\Farms;
     <td width="20%" align="center"><?=  Html::a(html::img('images/farmerzp.png',['width'=>'150']),'index.php?r=lease/leaseindex&farms_id='.$farm->id, [
             			'id' => 'leaseview',
             			'title' => '租赁信息',
-            			'target' => '_black',
+            			'target' => '_blank',
             			/* 'data-toggle' => 'modal',
             			'data-target' => '#leaseindex-modal',
             			'onclick' => 'leaseindex($("#farmname").val())', */
@@ -85,13 +85,13 @@ use app\models\Farms;
     <td width="20%" align="center"><?=  Html::a(html::img('images/farmerdk.png',['width'=>'150']),'#', [
             			'id' => 'farmerview',
             			'title' => '抵押贷款信息',
-            			'target' => '_black',
+            			'target' => '_blank',
             			'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/lease/leaseindex','id'=>$farm->id,'year'=>$year])."','','width=1200,height=600,top=50,left=80, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
              	]);?></td>
     <td width="20%" align="center"><?=  Html::a(html::img('images/farmerjf.png',['width'=>'150']),'#', [
             			'id' => 'farmerview',
             			'title' => '承包经营权纠纷',
-            			'target' => '_black',
+            			'target' => '_blank',
             			'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/farmer/farmerview','id'=>$farm->id])."','','width=1200,height=600,top=50,left=80, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
              	]);?></td>
   </tr>
@@ -104,7 +104,7 @@ use app\models\Farms;
     <td width="20%" align="center"><?=  Html::a('合作社管理','index.php?r=cooperative/cooperativeindex&farms_id='.$farm->id, [
             			'id' => 'farmerview',
             			'title' => '承包信息',
-            			'target' => '_black',
+            			'target' => '_blank',
             			//'data-toggle' => 'modal',
             			//'data-target' => '#farmercreate-modal',
             			//'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/farmer/farmercreate','id'=>$farm->id])."','','width=1200,height=1000,top=150,left=180, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
@@ -113,25 +113,25 @@ use app\models\Farms;
     <td width="20%" align="center"><?=  Html::a('合作社信息','index.php?r=cooperativeoffarm/cooperativeoffarmindex&farms_id='.$farm->id, [
             			'id' => 'farmerview',
             			'title' => '合作社信息',
-            			'target' => '_black',
+            			'target' => '_blank',
 
              	]);?></td>    
     <td width="20%" align="center"><?=  Html::a('雇工信息','index.php?r=employee/employeefathers&farms_id='.$farm->id, [
             			'id' => 'employeefathers',
             			'title' => '雇工信息',
-            			'target' => '_black',
+            			'target' => '_blank',
             			
              	]);?></td>
     <td width="20%" align="center"><?=  Html::a('防火工作','index.php?r=fireprevention/firepreventioncreate&farms_id='.$farm->id, [
             			'id' => 'firepreventioncreate',
             			'title' => '防火工作',
-            			'target' => '_black',
+            			'target' => '_blank',
             			
              	]);?></td>
     <td width="20%" align="center"><?=  Html::a('种值结构','index.php?r=plant/plantindex&farms_id='.$farm->id, [
             			'id' => 'plantindex',
             			'title' => '种值结构',
-            			'target' => '_black',
+            			'target' => '_blank',
             			
              	]);?></td>
   </tr>
@@ -143,7 +143,7 @@ use app\models\Farms;
     <td width="20%" align="center"><?=  Html::a('合作社管理','index.php?r=cooperative/cooperativeindex&farms_id='.$farm->id, [
             			'id' => 'farmerview',
             			'title' => '承包信息',
-            			'target' => '_black',
+            			'target' => '_blank',
             			//'data-toggle' => 'modal',
             			//'data-target' => '#farmercreate-modal',
             			//'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/farmer/farmercreate','id'=>$farm->id])."','','width=1200,height=1000,top=150,left=180, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
@@ -152,25 +152,25 @@ use app\models\Farms;
     <td width="20%" align="center"><?=  Html::a('合作社信息','index.php?r=cooperativeoffarm/cooperativeoffarmindex&farms_id='.$farm->id, [
             			'id' => 'farmerview',
             			'title' => '合作社信息',
-            			'target' => '_black',
+            			'target' => '_blank',
 
              	]);?></td>    
     <td width="20%" align="center"><?=  Html::a('雇工信息','index.php?r=employee/employeeindex&farms_id='.$farm->id, [
             			'id' => 'employeeindex',
             			'title' => '雇工信息',
-            			'target' => '_black',
+            			'target' => '_blank',
             			
              	]);?></td>
     <td width="20%" align="center"><?=  Html::a('防火工作','index.php?r=fireprevention/firepreventioncreate&farms_id='.$farm->id, [
             			'id' => 'firepreventioncreate',
             			'title' => '防火工作',
-            			'target' => '_black',
+            			'target' => '_blank',
             			
              	]);?></td>
     <td width="20%" align="center"><?=  Html::a('种值结构','index.php?r=plant/plantindex&farms_id='.$farm->id, [
             			'id' => 'plantindex',
             			'title' => '种值结构',
-            			'target' => '_black',
+            			'target' => '_blank',
             			
              	]);?></td>
   </tr>
