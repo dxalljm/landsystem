@@ -37,7 +37,8 @@ use yii\widgets\ActiveFormrdiv;
 <td align='left'><?= $form->field($model, 'cardid')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 
 </tr>
-
+<?= $form->field($model, 'create_at')->hiddenInput(['value'=>time()])->label(false)->error(false) ?>
+<?= $form->field($model, 'update_at')->hiddenInput(['value'=>time()])->label(false)->error(false) ?>
 </table>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

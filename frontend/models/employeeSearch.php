@@ -18,7 +18,7 @@ class employeeSearch extends Employee
     public function rules()
     {
         return [
-            [['id', 'father_id'], 'integer'],
+            [['id', 'father_id', 'create_at', 'update_at'], 'integer'],
             [['employeetype', 'employeename', 'cardid'], 'safe'],
         ];
     }
@@ -58,6 +58,8 @@ class employeeSearch extends Employee
         $query->andFilterWhere([
             'id' => $this->id,
             'father_id' => $this->father_id,
+            'create_at' => $this->create_at,
+            'update_at' => $this->update_at,
         ]);
 
         $query->andFilterWhere(['like', 'employeetype', $this->employeetype])

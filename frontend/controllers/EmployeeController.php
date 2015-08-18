@@ -82,7 +82,45 @@ class EmployeeController extends Controller
             ]);
         }
     }
-
+	//批量添加方法
+    public function actionEmployeebatch($father_id,$farms_id)
+    {
+    	
+    	$model = new Employee();
+    	$employees = Employee::find()->where(['father_id'=>$father_id])->all();
+    	
+    	if($model->load(Yii::$app->request->post())) {
+    		$EmployeesPost = Yii::$app->request->post('EmployeesPost');
+	    	$row = count($EmployeesPost['id']);
+	    	print_r($EmployeesPost);
+	    	for($i=0;$i<$row;$i++) {
+	    		if($this->findModel($EmployeesPost['id'][$i])) {
+	    			$model = $this->findModel($EmployeesPost['id'][$i]);
+	    			$model->update_at = time();
+	    		}
+	    		else {
+	    			$model = new Employee();
+	    			$model->create_at = time();
+	    			$model->update_at = time();
+	    		}
+	    		$model->father_id = $EmployeesPost['father_id'][$i];
+	    		$model->employeename = $EmployeesPost['employeename'][$i];
+	    		$model->employeetype = $EmployeesPost['employeetype'][$i];
+	    		$model->cardid = $EmployeesPost['cardid'][$i];
+	 			print_r($model);
+	    		$model->save();	 	
+	    		print_r($model->getErrors());		
+	    	}
+	    	//return $this->redirect(['employeeindex', 'farms_id' => $farms_id]);  
+    	}
+    	else {
+	    	return $this->render('employeebatch', [
+	    			'model' => $model,
+	    			'employees' => $employees,
+	    	]);
+    	}
+    }
+    
     /**
      * Updates an existing Employee model.
      * If update is successful, the browser will be redirected to the 'view' page.

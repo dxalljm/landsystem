@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             			'id' => 'employeecreate',
             			'title' => '给'.$val['lessee'].'添加雇工人员',
             			//'class' => 'btn btn-primary',
-            			]).'&nbsp;&nbsp;&nbsp;&nbsp;'.Html::a('批量雇佣','index.php?r=employee/employeecreate&father_id='.$val['id'].'&farms_id='.$_GET['farms_id'], [
+            			]).'&nbsp;&nbsp;&nbsp;&nbsp;'.Html::a('批量雇佣','index.php?r=employee/employeebatch&father_id='.$val['id'].'&farms_id='.$_GET['farms_id'], [
             			'id' => 'employeecreates',
             			'title' => '给'.$val['lessee'].'批量添加雇工人员',
             			//'class' => 'btn btn-primary',
