@@ -11,7 +11,6 @@ use yii\web\View;
 ?>
 
 <div class="employee-form">
-
     <?php $form = ActiveFormrdiv::begin(); ?>
     <div class="form-group">
         <h2><?php echo '为 '.Lease::find()->where(['id'=>$_GET['father_id']])->one()['lessee'].' 批量添加雇工';?></h2><?= Html::button('增加人员', ['class' => 'btn btn-info','title'=>'点击可增加雇工人员', 'id' => 'add-employee']) ?>
@@ -19,7 +18,7 @@ use yii\web\View;
 <table class="table table-striped table-bordered table-hover table-condensed" id="employee">
 	
  <!-- 模板 -->
-	  
+
       <thead id="employee-template" class="d-none">
           <tr><?php echo Html::hiddenInput('EmployeesPost[id][]', '', ['class' => 'form-control']); ?>
               <?php echo Html::hiddenInput('EmployeesPost[father_id][]', $_GET['father_id'], ['class' => 'form-control']); ?>
@@ -38,14 +37,20 @@ use yii\web\View;
 		</tr>
 		<?php 
 		foreach($employees as $val) {
+            $model->id = $val['id'];
+            $model->father_id = $val['father_id'];
 			$model->employeetype = $val['employeetype'];
 			$model->employeename = $val['employeename'];
 			$model->cardid = $val['cardid'];
 		?>
 		<tr>
-			<td width=15% align='center'><?= $form->field($model, 'employeetype')->dropDownList(['长期工'=>'长期工','短期工'=>'短期工','临时工'=>'临时工'])->label(false)->error(false) ?></td>
-			<td align='center'><?= $form->field($model, 'employeename')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
-			<td align='center'><?= $form->field($model, 'cardid')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+			<td width=15% align='center'>
+                <?= $form->field($model, 'id')->hiddenInput(['name' => 'EmployeesPost[id][]'])->label(false)->error(false) ?>
+                <?= $form->field($model, 'father_id')->hiddenInput(['name' => 'EmployeesPost[father_id][]'])->label(false)->error(false) ?>
+                <?= $form->field($model, 'employeetype')->dropDownList(['长期工'=>'长期工','短期工'=>'短期工','临时工'=>'临时工'], ['name' => 'EmployeesPost[employeetype][]'])->label(false)->error(false) ?>
+            </td>
+			<td align='center'><?= $form->field($model, 'employeename')->textInput(['maxlength' => 500, 'name' => 'EmployeesPost[employeename][]'])->label(false)->error(false) ?></td>
+			<td align='center'><?= $form->field($model, 'cardid')->textInput(['maxlength' => 500, 'name' => 'EmployeesPost[cardid][]'])->label(false)->error(false) ?></td>
 			<td valign="middle" align="center"><?php echo Html::button('-', ['class' => 'btn btn-warning delete-employee']) ?></td>
 		</tr>
 		<?php }?>

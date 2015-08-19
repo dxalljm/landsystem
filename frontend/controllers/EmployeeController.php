@@ -85,9 +85,10 @@ class EmployeeController extends Controller
 	//批量添加方法
     public function actionEmployeebatch($father_id,$farms_id)
     {
-    	
-    	$model = new Employee();
+
+        $model = new Employee();
     	$employees = Employee::find()->where(['father_id'=>$father_id])->all();
+<<<<<<< HEAD
     	print_r($model->load(Yii::$app->request->post()));
     	if($model->load(Yii::$app->request->post())) {
     		$EmployeesPost = Yii::$app->request->post('EmployeesPost');
@@ -114,6 +115,15 @@ class EmployeeController extends Controller
 	    	return $this->redirect(['employeeindex', 'farms_id' => $farms_id]);  
     	}
     	else {
+=======
+
+        $EmployeesPost = Yii::$app->request->post('EmployeesPost');
+    	if ($EmployeesPost) {
+            // 批量添加
+            Employee::batchAdd($EmployeesPost);
+	    	return $this->redirect(['employeeindex', 'farms_id' => $farms_id]);
+    	} else {
+>>>>>>> origin/master
 	    	return $this->render('employeebatch', [
 	    			'model' => $model,
 	    			'employees' => $employees,
