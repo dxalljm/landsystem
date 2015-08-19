@@ -1,0 +1,25 @@
+<?php
+namespace backend\controllers;
+use app\models\tables;
+use yii\helpers\Html;
+use yii\widgets\ActiveFormrdiv;
+
+
+/* @var $this yii\web\View */
+/* @var $model app\models\Parcel */
+
+$this->title = 'parcel' ;
+$title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctablename'];
+$this->title = '导入'.$title;
+$this->params['breadcrumbs'][] = ['label' => $title, 'url' => ['parcelindex']];
+$this->params['breadcrumbs'][] = $this->title;
+?>
+<div class="parcel-xls">
+
+    <h1><?= Html::encode($this->title) ?></h1>
+
+    <?= $this->render('xls_form',[
+    		'model' => $model,
+    ]) ?>
+
+</div>

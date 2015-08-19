@@ -200,7 +200,7 @@ class UploadedFile extends Object
         if (self::$_files === null) {
             self::$_files = [];
             if (isset($_FILES) && is_array($_FILES)) {
-            	print_r($_FILES);
+            	
                 foreach ($_FILES as $class => $info) {
                     self::loadFilesRecursive($class, $info['name'], $info['tmp_name'], $info['type'], $info['size'], $info['error']);
                 }
