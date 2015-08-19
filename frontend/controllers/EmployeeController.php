@@ -88,7 +88,7 @@ class EmployeeController extends Controller
     	
     	$model = new Employee();
     	$employees = Employee::find()->where(['father_id'=>$father_id])->all();
-    	
+    	print_r($model->load(Yii::$app->request->post()));
     	if($model->load(Yii::$app->request->post())) {
     		$EmployeesPost = Yii::$app->request->post('EmployeesPost');
 	    	$row = count($EmployeesPost['id']);
@@ -111,7 +111,7 @@ class EmployeeController extends Controller
 	    		$model->save();	 	
 	    		print_r($model->getErrors());		
 	    	}
-	    	//return $this->redirect(['employeeindex', 'farms_id' => $farms_id]);  
+	    	return $this->redirect(['employeeindex', 'farms_id' => $farms_id]);  
     	}
     	else {
 	    	return $this->render('employeebatch', [

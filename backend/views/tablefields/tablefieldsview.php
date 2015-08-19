@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\tablefields */
 
 $this->title = 'ID:'.$model->id;
-$this->params['breadcrumbs'][] = ['label' => '表项管理', 'url' => ['tablefieldsindex']];
+$this->params['breadcrumbs'][] = ['label' => '表项管理', 'url' => ['tablefieldsindex','id'=>$model->tables_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tablefields-view">
