@@ -51,4 +51,35 @@ class Employee extends \yii\db\ActiveRecord
             'update_at' => '更新日期',
         ];
     }
+
+
+    /**
+     * 批量添加员工
+     * @param array $employeesPost 员工数组
+     */
+    public static function batchAdd($employeesPost)
+    {
+        foreach ($employeesPost['employeename'] as $k => $item) {
+
+            // 如果为空跳出循环
+            if (empty($item)) {
+                continue;
+            }
+
+            // 查找员工
+            if(($model = self::findOne($employeesPost['id'][$k])) !== null) {
+                $model->update_at = time();
+            } else {
+                $model = new Employee();
+                $model->create_at = time();
+                $model->update_at = time();
+            }
+            $model->father_id = $employeesPost['father_id'][$k];
+            $model->employeename = $employeesPost['employeename'][$k];
+            $model->employeetype = $employeesPost['employeetype'][$k];
+            $model->cardid = $employeesPost['cardid'][$k];
+            $model->save();
+
+        }
+    }
 }
