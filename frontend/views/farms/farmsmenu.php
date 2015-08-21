@@ -23,9 +23,9 @@ use app\models\Farms;
         <td width="278" align="left">&nbsp;<?= html::dropDownList('farmname',$farm->id,ArrayHelper::map(Farms::find()->where(['management_area'=>$areaid])->all(),'id','farmname'),['id'=>'farmname','prompt'=>'请选择'])?>        </td>
       </tr>
       <tr>
-        <td align="right">承包年限：</td>
+        <td align="right">合作社</td>
         <td align="left">&nbsp;
-          <?= $farm->contractlife;?></td>
+          <?= $farm->cooperative_id;?></td>
         <td align="right">审批年度：</td>
         <td align="left">&nbsp;
           <?= $farm->spyear;?></td>
@@ -140,9 +140,9 @@ use app\models\Farms;
   <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
         
         ?>
-    <td width="20%" align="center"><?=  Html::a('合作社管理','index.php?r=cooperative/cooperativeindex&farms_id='.$farm->id, [
-            			'id' => 'farmerview',
-            			'title' => '承包信息',
+    <td width="20%" align="center"><?=  Html::a('宗地管理','index.php?r=parcel/parcelindex&farms_id='.$farm->id, [
+            			'id' => 'parcelindex',
+            			'title' => '宗地管理',
             			'target' => '_blank',
             			//'data-toggle' => 'modal',
             			//'data-target' => '#farmercreate-modal',

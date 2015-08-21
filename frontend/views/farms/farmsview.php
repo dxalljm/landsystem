@@ -36,10 +36,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'address',
             'management_area',
             'spyear',
-            'iscontract',
-            'contractlife',
             'measure',
             'zongdi',
+            'cooperative_id',
+            'surveydate',
+            'groundsign',
+            'investigator',
+            'farmersign',
         ],
     ]) ?>
 

@@ -25,9 +25,21 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'spyear') ?>
 
-    <?php // echo $form->field($model, 'iscontract') ?>
-
     <?php // echo $form->field($model, 'contractlife') ?>
+
+    <?php // echo $form->field($model, 'measure') ?>
+
+    <?php // echo $form->field($model, 'zongdi') ?>
+
+    <?php // echo $form->field($model, 'cooperative_id') ?>
+
+    <?php // echo $form->field($model, 'surveydate') ?>
+
+    <?php // echo $form->field($model, 'groundsign') ?>
+
+    <?php // echo $form->field($model, 'investigator') ?>
+
+    <?php // echo $form->field($model, 'farmersign') ?>
 
     <div class="form-group">
         <?= Html::submitButton('搜索', ['class' => 'btn btn-primary']) ?>

@@ -20,8 +20,8 @@ class farmsSearch extends farms
     public function rules()
     {
         return [
-            [['id', 'iscontract'], 'integer'],
-            [['farmname', 'address', 'areaname', 'management_area', 'spyear', 'contractlife'], 'safe'],
+            [['id', 'measure'], 'integer'],
+            [['farmname', 'address', 'management_area', 'spyear', 'zongdi', 'cooperative_id', 'surveydate', 'groundsign', 'investigator', 'farmersign'], 'safe'],
         ];
     }
 
@@ -85,14 +85,18 @@ class farmsSearch extends farms
         
         $query->andFilterWhere([
             'id' => $this->id,
-            'iscontract' => $this->iscontract,
         ]);
 
-        $query->andFilterWhere(['like', 'farmname', $this->farmname])
+         $query->andFilterWhere(['like', 'farmname', $this->farmname])
             ->andFilterWhere(['like', 'address', $this->address])
             ->andFilterWhere(['like', 'management_area', $this->management_area])
             ->andFilterWhere(['like', 'spyear', $this->spyear])
-            ->andFilterWhere(['like', 'contractlife', $this->contractlife])
+            ->andFilterWhere(['like', 'zongdi', $this->zongdi])
+            ->andFilterWhere(['like', 'cooperative_id', $this->cooperative_id])
+            ->andFilterWhere(['like', 'surveydate', $this->surveydate])
+            ->andFilterWhere(['like', 'groundsign', $this->groundsign])
+            ->andFilterWhere(['like', 'investigator', $this->investigator])
+            ->andFilterWhere(['like', 'farmersign', $this->farmersign])
         	->andFilterWhere(['like', 'land_management_area.areaname', $this->areaname]);
 
         return $dataProvider;

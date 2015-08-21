@@ -3,12 +3,16 @@
 namespace frontend\controllers;
 
 use Yii;
-use app\models\farms;
+use app\models\Farms;
 use frontend\models\farmsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Theyear;
+use app\models\UploadForm;
+use app\models\Farmer;
+use app\models\ManagementArea;
+use yii\web\UploadedFile;
 /**
  * FarmsController implements the CRUD actions for farms model.
  */
@@ -48,6 +52,52 @@ class FarmsController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+    
+    public function actionFarmsxls()
+    {
+    	set_time_limit(0);
+    	$model = new UploadForm();
+    	echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";
+    	$rows = 0;
+    	if (Yii::$app->request->isPost) {
+    		
+    		$model->file = UploadedFile::getInstance($model, 'file');
+    		if($model->file == null)
+    			throw new \yii\web\UnauthorizedHttpException('对不起，请先选择xls文件');
+    		if ($model->file && $model->validate()) {
+    	
+    			$xlsName = time().rand(100,999);
+    			$model->file->name = $xlsName;
+    			$model->file->saveAs('uploads/' . $model->file->name . '.' . $model->file->extension);
+    			$path = 'uploads/' . $model->file->name . '.' . $model->file->extension;
+    			$loadxls = \PHPExcel_IOFactory::load($path);
+    			$rows = $loadxls->getActiveSheet()->getHighestRow();
+    			for($i=1;$i<=$rows;$i++) {
+    				echo $loadxls->getActiveSheet()->getCell('F'.$i)->getValue()."<br>";
+    				//echo  ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];"<br>";
+//     				$farmsmodel = new Farms();
+					$farmsmodel = $this->findModel($loadxls->getActiveSheet()->getCell('A'.$i)->getValue());
+//     				$farmsmodel->id = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
+//     				$farmsmodel->management_area = ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];
+//     				$farmsmodel->farmname =  $loadxls->getActiveSheet()->getCell('C'.$i)->getValue();
+//     				$farmsmodel->address =  $loadxls->getActiveSheet()->getCell('D'.$i)->getValue();
+//     				$farmsmodel->spyear =  $loadxls->getActiveSheet()->getCell('E'.$i)->getValue();
+					$time = ($loadxls->getActiveSheet()->getCell('F'.$i)->getValue() - 25569)*24*60*60;
+    				$farmsmodel->surveydate =  date('Y-m-d',$time);
+    				echo $farmsmodel->surveydate;
+//     				$farmsmodel->groundsign =  $loadxls->getActiveSheet()->getCell('G'.$i)->getValue();
+//     				$farmsmodel->investigator =  $loadxls->getActiveSheet()->getCell('H'.$i)->getValue();
+//     				$farmsmodel->farmersign =  $loadxls->getActiveSheet()->getCell('I'.$i)->getValue();
+     				$farmsmodel->save();
+//     				print_r($farmsmodel->getErrors());
+    			}
+    		}
+    	}
+    	return $this->render('farmsxls',[
+    			'model' => $model,
+    			'rows' => $rows,
+    	]);
     }
     
     public function actionFarmsbusiness()
