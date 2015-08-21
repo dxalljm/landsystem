@@ -20,7 +20,7 @@ use dosamigos\datetimepicker\DateTimePicker;
       <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['id']])->label(false);?>
     <table width="662"  class="table table-bordered table-hover table-condensed">
       <tr>
-        <td width="8%" height="25" align="right" valign="middle">承包人姓名</td>
+        <td width="10%" height="25" align="right" valign="middle">承包人姓名</td>
         <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'farmername')->textInput(['maxlength' => 10])->label(false)->error(false); else echo '&nbsp;'.$model->farmername; ?></td>
         <td width="9%" height="25" align="right" valign="middle">曾用名</td>
         <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'farmerbeforename')->textInput(['maxlength' => 8])->label(false)->error(false); else echo '&nbsp;'.$model->farmerbeforename; ?></td>
