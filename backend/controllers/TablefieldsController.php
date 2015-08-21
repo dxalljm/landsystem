@@ -162,7 +162,7 @@ class TablefieldsController extends Controller
         $sch = new \yii\db\mysql\Schema;
         $bool = $mir->dropColumn($mir->db->tablePrefix.$table->tablename,$model->fields);
        	$this->findModel($id)->delete();
-       	return $this->redirect(['tablefieldsindex','id'=>$_GET['tables_id']]);    
+       	return $this->redirect(['tablefieldsindex','tables_id'=>$_GET['tables_id']]);    
     }
 
     /**

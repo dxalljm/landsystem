@@ -136,7 +136,7 @@ class TablesController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionTablesdelete($id)
+    public function actionTablesdelete($id,$farms_id)
     {
 		$t = $this->findModel($id);
         $this->findModel($id)->delete();
