@@ -30,6 +30,7 @@ use Yii;
  * @property string $contractnumber
  * @property string $begindate
  * @property string $enddate
+ * @property integer $state
  */
 class Farmer extends \yii\db\ActiveRecord
 {
@@ -47,7 +48,7 @@ class Farmer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['farms_id', 'isupdate', 'years'], 'integer'],
+            [['farms_id', 'isupdate', 'years', 'state'], 'integer'],
             [['farmername', 'cardid', 'farmerbeforename', 'nickname', 'gender', 'nation', 'political_outlook', 'cultural_degree', 'domicile', 'nowlive', 'telephone', 'living_room', 'photo', 'cardpic', 'create_at', 'update_at', 'contractnumber', 'begindate', 'enddate'], 'string', 'max' => 500]
         ];
     }
@@ -81,6 +82,7 @@ class Farmer extends \yii\db\ActiveRecord
             'contractnumber' => '合同号',
             'begindate' => '开始日期',
             'enddate' => '结束日期',
+            'state' => '状态',
         ];
     }
 }

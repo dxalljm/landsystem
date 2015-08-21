@@ -19,7 +19,7 @@ class farmerSearch extends farmer
     public function rules()
     {
        return [
-            [['id', 'farms_id', 'isupdate', 'years'], 'integer'],
+            [['id', 'farms_id', 'isupdate', 'years', 'state'], 'integer'],
             [['farmername', 'cardid', 'farmerbeforename', 'nickname', 'gender', 'nation', 'political_outlook', 'cultural_degree', 'domicile', 'nowlive', 'telephone', 'living_room', 'photo', 'cardpic', 'create_at', 'update_at', 'contractnumber', 'begindate', 'enddate'], 'safe'],
         ];
     }
