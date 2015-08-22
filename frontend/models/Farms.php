@@ -37,7 +37,7 @@ class Farms extends \yii\db\ActiveRecord
     {
         return [
             [['farmname'], 'required'],
-            [['measure'], 'integer'],
+            [['measure'], 'number'],
             [['farmname', 'address', 'zongdi', 'cooperative_id', 'groundsign', 'investigator', 'farmersign'], 'string', 'max' => 500]
         ];
     }

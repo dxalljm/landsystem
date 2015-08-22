@@ -13,6 +13,8 @@ use app\models\UploadForm;
 use app\models\Farmer;
 use app\models\ManagementArea;
 use yii\web\UploadedFile;
+use frontend\models\parcelSearch;
+use app\models\Parcel;
 /**
  * FarmsController implements the CRUD actions for farms model.
  */
@@ -58,7 +60,6 @@ class FarmsController extends Controller
     {
     	set_time_limit(0);
     	$model = new UploadForm();
-    	echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";
     	$rows = 0;
     	if (Yii::$app->request->isPost) {
     		
@@ -128,8 +129,15 @@ class FarmsController extends Controller
      */
     public function actionFarmsview($id)
     {
+    	$model = $this->findModel($id);
+    	
+    	$zongdiarr = explode(' ', $model->zongdi);
+    	foreach($zongdiarr as $zongdi) {
+    		$dataProvider[] = Parcel::find()->where(['unifiedserialnumber' => $zongdi])->one();
+    	}
         return $this->render('farmsview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+        	'dataProvider' => $dataProvider,
         ]);
     }
 

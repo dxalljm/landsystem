@@ -20,7 +20,7 @@ use yii\helpers\ArrayHelper;
     <?php }?>
     <?= $form->field($model, 'fields')->textInput(['maxlength' => 100]) ?>
 
-   <?= $form->field($model, 'type')->dropDownList(['int(11)' => '数值型','varchar(500) null'=>'字符型','text'=>'文本型','FLOAT'=>'浮点型']) ?>
+   <?= $form->field($model, 'type')->dropDownList(['int(11)' => '数值型','varchar(500) null'=>'字符型','text'=>'文本型','FLOAT(10,2)'=>'浮点型']) ?>
 
     <?= $form->field($model, 'cfields')->textInput(['maxlength' => 100]) ?>
 

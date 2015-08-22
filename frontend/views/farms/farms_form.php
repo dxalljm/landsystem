@@ -42,7 +42,7 @@ use app\models\Parcel;
 		</tr>
 		<tr>
 			<td width=15% align='right'>合作社</td>
-			<td align='left'><?= $form->field($model, 'cooperative_id')->dropDownList(ArrayHelper::map(Cooperative::find()->all(), 'id', 'cooperativename'))->label(false)->error(false) ?></td>
+			<td align='left'><?= $form->field($model, 'cooperative_id')->dropDownList(ArrayHelper::map(Cooperative::find()->all(), 'id', 'cooperativename'),['prompt'=>'无'])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>调查日期</td>
@@ -83,28 +83,39 @@ use app\models\Parcel;
 <?php
 
 $script = <<<JS
-//事情委托
-//     $('#farms-zongdi').keyup(function(){
-//         var input = $(this).val();
-// 		if(input.length>0) {
-// 			$.getJSON('index.php?r=parcel/parcelarea', {zongdi: input}, function (data) {
-// 		        alert(data.area);
-// 	    });
-//     }
+// $("#farms-zongdi").keydown(function(event){ 
+// $("div").html("Key: " + event.which); 
+// }); 
+		
+// $(document).ready(  
+// 	function() {  
+// 	    $("#farms-zongdi").keydown(function(event) {  
+// 			var input = $(this).val();
+// 		    if (event.keyCode == 32) {  
+//  			    //$('#farms-measure').val(input);
+// 				$.getJSON('index.php?r=parcel/parcelarea', {zongdi: input}, function (data) {
+// 			        if (data.status == 1) {
+// 						$('#farms-measure').val(data.area);
+// 			        }
+// 		   		});
+// 		    } 
+// 	    }  
+//     );
 // });
-$(document).ready(  
-	function() {  
-	    $("#farms-zongdi").keydown(function(event) {  
-			var input = $(this).val();
-		    if (event.keyCode == 188) {  
-			    $('#farms-measure').val(input);alert("OK");
-				    $.getJSON('index.php?r=parcel/parcelarea', {zongdi: input}, function (data) {
-					alert("OK");
-				});
-		    } 
-	    }  
-    );
-});
+
+$("#farms-zongdi").keyup(function (event) {
+    var input = $(this).val();
+	if (event.keyCode == 32) {  
+		input = $.trim(input)+'、';  
+		$("#farms-zongdi").val(input);
+	}
+	$.getJSON('index.php?r=parcel/parcelarea', {zongdi: input}, function (data) {
+		if (data.status == 1) {
+			$('#farms-measure').val(data.area);
+		}
+	});
+ });
+
 JS;
 $this->registerJs($script);
 
