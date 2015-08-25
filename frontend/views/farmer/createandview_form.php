@@ -15,6 +15,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 ?>
 <div class="farmer-form">
 <h3><?= $farm->farmname.'('.Theyear::findOne(1)['years'].'年度)' ?></h3>
+<?= Html::a('XLS导入', ['farmerxls'], ['class' => 'btn btn-success']) ?>
 <?php $form = ActiveFormrdiv::begin(['id' => "farmer-form",'enableAjaxValidation' => false,'options' => ['enctype' => 'multipart/form-data'],]); ?>
       <?= $form->field($model, 'isupdate')->hiddenInput()->label(false);?>
       <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['id']])->label(false);?>

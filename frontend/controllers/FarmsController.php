@@ -77,19 +77,19 @@ class FarmsController extends Controller
     			for($i=1;$i<=$rows;$i++) {
     				echo $loadxls->getActiveSheet()->getCell('F'.$i)->getValue()."<br>";
     				//echo  ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];"<br>";
-//     				$farmsmodel = new Farms();
+    				$farmsmodel = new Farms();
 					$farmsmodel = $this->findModel($loadxls->getActiveSheet()->getCell('A'.$i)->getValue());
-//     				$farmsmodel->id = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
-//     				$farmsmodel->management_area = ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];
-//     				$farmsmodel->farmname =  $loadxls->getActiveSheet()->getCell('C'.$i)->getValue();
-//     				$farmsmodel->address =  $loadxls->getActiveSheet()->getCell('D'.$i)->getValue();
-//     				$farmsmodel->spyear =  $loadxls->getActiveSheet()->getCell('E'.$i)->getValue();
+    				$farmsmodel->id = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
+    				$farmsmodel->management_area = ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];
+    				$farmsmodel->farmname =  $loadxls->getActiveSheet()->getCell('C'.$i)->getValue();
+    				$farmsmodel->address =  $loadxls->getActiveSheet()->getCell('D'.$i)->getValue();
+    				$farmsmodel->spyear =  $loadxls->getActiveSheet()->getCell('E'.$i)->getValue();
 					$time = ($loadxls->getActiveSheet()->getCell('F'.$i)->getValue() - 25569)*24*60*60;
     				$farmsmodel->surveydate =  date('Y-m-d',$time);
-    				echo $farmsmodel->surveydate;
-//     				$farmsmodel->groundsign =  $loadxls->getActiveSheet()->getCell('G'.$i)->getValue();
-//     				$farmsmodel->investigator =  $loadxls->getActiveSheet()->getCell('H'.$i)->getValue();
-//     				$farmsmodel->farmersign =  $loadxls->getActiveSheet()->getCell('I'.$i)->getValue();
+    				//echo $farmsmodel->surveydate;
+    				$farmsmodel->groundsign =  $loadxls->getActiveSheet()->getCell('G'.$i)->getValue();
+    				$farmsmodel->investigator =  $loadxls->getActiveSheet()->getCell('H'.$i)->getValue();
+    				$farmsmodel->farmersign =  $loadxls->getActiveSheet()->getCell('I'.$i)->getValue();
      				$farmsmodel->save();
 //     				print_r($farmsmodel->getErrors());
     			}

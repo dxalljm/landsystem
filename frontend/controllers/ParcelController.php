@@ -37,11 +37,23 @@ class ParcelController extends Controller
     {
         $searchModel = new parcelSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+		
         return $this->render('parcelindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+    
+    public function actionParcellist($zongdi)
+    {
+    	$zongdiarr = explode('、', $zongdi);
+    	foreach($zongdiarr as $value) {
+    		$parcels[] = Parcel::find()->where(['unifiedserialnumber'=>$value])->one();
+    	}
+    
+    	return $this->render('parcellist', [
+    			'parcels' => $parcels,
+    	]);
     }
 
     /**
@@ -167,18 +179,16 @@ class ParcelController extends Controller
     public  function  actionParcelarea($zongdi)
     {
     	$grossarea = 0;
-    	$zongdi = '1-100,1-1001';
-	    $zongdiarr = explode(',',$zongdi);
-	    if($zongdiarr[0] !== ',') {
+	    $zongdiarr = explode('、',$zongdi);
+	    if(!empty($zongdi)) {
 	    	foreach ($zongdiarr as $zd) {
 	    		$grossarea += Parcel::find()->where(['unifiedserialnumber' => $zd])->one()['grossarea'];
 	    	}
     	}
     	else 
-    		$grossarea = Parcel::find()->where(['unifiedserialnumber' => $zongdi])->one()['grossarea'];
-    		//echo $grossarea;
-    	echo json_encode(['status' => 1, 'area' => [$grossarea]]);
-    	print_r($zongdiarr);
+    		throw new NotFoundHttpException('对不起，您输入宗地号的地块不存在');
+    	echo json_encode(['status' => 1, 'area' => $grossarea]);
+    	//print_r($zongdiarr);
     	//return $this->render('parcelarea');
     }
 }

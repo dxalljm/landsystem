@@ -13,6 +13,8 @@ use app\models\Farms;
 use yii\web\UploadedFile;
 use app\models\Lease;
 use app\models\Theyear;
+use app\models\UploadForm;
+use app\models\ManagementArea;
 /**
  * FarmerController implements the CRUD actions for farmer model.
  */
@@ -70,6 +72,47 @@ class FarmerController extends Controller
             	'lease' => $lease,
             ]);
         
+    }
+    
+    public function actionFarmerxls()
+    {
+    	set_time_limit(0);
+    	$model = new UploadForm();
+    	echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";
+    	$rows = 0;
+    	if (Yii::$app->request->isPost) {
+    
+    		$model->file = UploadedFile::getInstance($model, 'file');
+    		if($model->file == null)
+    			throw new \yii\web\UnauthorizedHttpException('对不起，请先选择xls文件');
+    		if ($model->file && $model->validate()) {
+    			 
+    			$xlsName = time().rand(100,999);
+    			$model->file->name = $xlsName;
+    			$model->file->saveAs('uploads/' . $model->file->name . '.' . $model->file->extension);
+    			$path = 'uploads/' . $model->file->name . '.' . $model->file->extension;
+    			$loadxls = \PHPExcel_IOFactory::load($path);
+    			$rows = $loadxls->getActiveSheet()->getHighestRow();
+    			for($i=1;$i<=$rows;$i++) {
+    				//echo $loadxls->getActiveSheet()->getCell('F'.$i)->getValue()."<br>";
+    				echo  ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];"<br>";
+    				$farmermodel = new Farmer();
+
+    				$farmermodel->farms_id = Farms::find()->where(['farmname'=>$loadxls->getActiveSheet()->getCell('A'.$i)->getValue()])->one()['id'];
+    				$farmermodel->farmername = $loadxls->getActiveSheet()->getCell('B'.$i)->getValue();
+    				$farmermodel->cardid =  $loadxls->getActiveSheet()->getCell('C'.$i)->getValue();
+    				$farmermodel->telephone =  $loadxls->getActiveSheet()->getCell('D'.$i)->getValue();
+  
+    				$farmermodel->save();
+    				
+    				//     				print_r($farmermodel->getErrors());
+    			}
+    		}
+    	}
+    	return $this->render('farmerxls',[
+    			'model' => $model,
+    			'rows' => $rows,
+    	]);
     }
     
     /**
