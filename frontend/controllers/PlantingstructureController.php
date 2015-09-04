@@ -12,6 +12,8 @@ use app\models\Farms;
 use app\models\Parcel;
 use app\models\Lease;
 use frontend\models\leaseSearch;
+use app\models\Plantinputproduct;
+use app\models\Plantpesticides;
 /**
  * PlantingstructureController implements the CRUD actions for Plantingstructure model.
  */
@@ -62,6 +64,10 @@ class PlantingstructureController extends Controller
     public function actionPlantingstructurecreate($lease_id,$farms_id)
     {
         $model = new Plantingstructure();
+        $plantinputproductModel = new Plantinputproduct();
+        $plantpesticidesModel = new Plantpesticides();
+        $plantinputproductData = Plantinputproduct::find()->where(['farms_id'=>$farms_id,'lessee_id'=>$lease_id])->all();
+        $plantpesticidesData = Plantpesticides::find()->where(['farms_id'=>$farms_id,'lessee_id'=>$lease_id])->all();
 		$farm = Farms::find()->where(['id'=>$farms_id])->one();
 		$lease = Lease::find()->where(['id'=>$lease_id])->one();
 		$zongdiarr = explode('、', $lease['lease_area']);
@@ -73,6 +79,10 @@ class PlantingstructureController extends Controller
         } else {
             return $this->render('plantingstructurecreate', [
                 'model' => $model,
+            	'plantpesticidesModel' => $plantpesticidesModel,
+            	'plantinputproductModel' => $plantinputproductModel,
+            	'plantinputproductData' => $plantinputproductData,
+            	'plantpesticidesData' => $plantpesticidesData,
             	'farm' => $farm,
             	'zongdi' => $zongdi,
             ]);

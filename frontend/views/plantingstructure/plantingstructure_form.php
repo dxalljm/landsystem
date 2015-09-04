@@ -26,7 +26,7 @@ use app\models\Lease;
 <td width=15% align='right'>农场名称</td>
 <td align='left'><?= $farm->farmname?></td>
 <td align='right'>法人</td>
-<td align='left'><?= Farmer::find()->where(['farms_id'=>$farm->id])->one()['farmername']?></td>
+<td colspan="2" align='left'><?= Farmer::find()->where(['farms_id'=>$farm->id])->one()['farmername']?></td>
 <td align='right'>承租人</td>
 <td align='right'><?= Lease::find()->where(['id'=>$_GET['lease_id']])->one()['lessee'] ?></td>
 <td align='right'>宜农林地面积</td>
@@ -34,29 +34,77 @@ use app\models\Lease;
 </tr>
 <tr>
   <td align='right'>宗地</td>
-  <td align='left'><?= $form->field($model, 'zongdi')->dropDownList(ArrayHelper::map($zongdi, 'unifiedserialnumber', 'unifiedserialnumber'), ['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
+  <td colspan="4" align='left'><?= $form->field($model, 'zongdi')->dropDownList(ArrayHelper::map($zongdi, 'unifiedserialnumber', 'unifiedserialnumber'), ['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
+  <?php if(isset($_GET['zongdi'])) $value = Parcel::find()->where(['id'=>$_GET['zongdi']->one()['grossarea']]); else $value = 0;?>
+  <td colspan="2" align='right'>种植面积</td>
+  <td colspan="2" align='right'><?= $form->field($model, 'area')->textInput(['value'=>$value])->label(false)->error(false) ?></td>
+  </tr>
+<tr>
   <td align='right'>种植作物</td>
   <td align='left'><?= html::dropDownList('plant-father','',ArrayHelper::map(Plant::find()->where(['father_id'=>1])->all(), 'id', 'cropname'),['prompt'=>'请选择...','class'=>'form-control','id'=>'plantfather']) ?></td>
-  <td colspan="2" align='left'><?= $form->field($model, 'plant_id')->dropDownList(['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
-  <td align='right'>良种型号</td>
-  <td align='left'><?= $form->field($model, 'goodseed_id')->dropDownList(['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
+  <td colspan="3" align='right'><?= $form->field($model, 'plant_id')->dropDownList(['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
+  <td colspan="2" align="right">良种型号</td>
+  <td colspan="2"><?= $form->field($model, 'goodseed_id')->dropDownList(['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
 </tr>
 <tr>
-  <td align='right'>种植面积</td><?php if(isset($_GET['zongdi'])) $value = Parcel::find()->where(['id'=>$_GET['zongdi']->one()['grossarea']]); else $value = 0;?>
-  <td align='left'><?= $form->field($model, 'area')->textInput(['value'=>$value])->label(false)->error(false) ?></td>
-  <td align='right'>化肥使用情况</td>
-  <td align='left'><?= html::dropDownList('inputproduct-father','',ArrayHelper::map(Inputproduct::find()->where(['father_id'=>1])->all(), 'id', 'fertilizer'),['prompt'=>'请选择...','class'=>'form-control','id'=>'inputproductfather']) ?></td>
-  <td colspan="2"><?= html::dropDownList('inputproduct-son','',['prompt'=>'请选择...'],['class'=>'form-control','id'=>'inputproductson']) ?></td>
-  <td><?= $form->field($model, 'inputproduct_id')->dropDownList(['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
-  <td align='left'>&nbsp;</td>
+  <td colspan="9" align='center'>投入品使用情况</td>
 </tr>
 <tr>
-  <td align='right'>农药使用情况</td>
-  <td align='left'><?= $form->field($model, 'pesticides_id')->dropDownList(ArrayHelper::map(Pesticides::find()->all(), 'id', 'pesticidename'),['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
-  <td align='right'>农药用量</td>
-  <td align='left'><?= $form->field($model, 'pconsumption')->textInput()->label(false)->error(false)?></td>
-  <td colspan="3" align='right'>&nbsp;</td>
-  <td align='left'>&nbsp;</td>
+  <td colspan="5" align='center'>投入品名称</td>
+  <td colspan="3" align='center'>投入品用量</td>
+  <td align='center'><?= Html::a('添加','#', [
+            			'id' => 'employeecreate',
+            			'title' => '添加',
+            			'class' => 'btn btn-primary',
+            			'data-target' => '#plantinputproductcreate-modal',
+            			'data-toggle' => 'modal',
+            			'data-keyboard' => 'false', 
+            			'data-backdrop' => 'static',
+						'onclick'=> 'plantinputproductcreate('.$_GET['lease_id'].','.$_GET['farms_id'].')',
+            			]);?></td>
+</tr>
+<?php foreach ($plantinputproductData as $value) {?>
+<tr>
+  <td colspan="5" align='center'><?= Inputproduct::find()->where(['id'=>$value['father_id']])->one()['fertilizer'].'>'.Inputproduct::find()->where(['id'=>$value['son_id']])->one()['fertilizer'].'>'.Inputproduct::find()->where(['id'=>$value['inputproduct_id']])->one()['fertilizer']?></td>
+  <td colspan="3" align='center'><?= $value['pconsumption'].'斤/亩'?></td>
+  <td align='center'><?= Html::a('<span class="glyphicon glyphicon-eye-open"></span>', '#', [
+                    'title' => Yii::t('yii', '查看'),
+                    'data-pjax' => '0',
+                    'data-target' => '#plantinputproductview-modal',
+                    'data-toggle' => 'modal',
+                    'data-keyboard' => 'false',
+                    
+                    'onclick'=> 'plantinputproductview('.$value['id'].','.$_GET['lease_id'].','.$_GET['farms_id'].')',
+                ]);?>&nbsp;&nbsp;<?= Html::a('<span class="glyphicon glyphicon-pencil"></span>', '#', [
+                    'title' => Yii::t('yii', '更新'),
+                    'data-pjax' => '0',
+                    'data-target' => '#plantinputproductupdate-modal',
+                    'data-toggle' => 'modal',
+                    'data-keyboard' => 'false',
+                    'data-backdrop' => 'static',
+                    'onclick'=> 'plantinputproductupdate('.$value['id'].','.$_GET['lease_id'].','.$_GET['farms_id'].')',
+                ]);?>&nbsp;&nbsp;<?= Html::a('<span class="glyphicon glyphicon-trash"></span>', 'index.php?r=plantingstructure/plantingstructuredelete&id='.$value['id'].'&farms_id='.$_GET['farms_id'], [
+                    'title' => Yii::t('yii', '删除'),
+                    'data-pjax' => '0',
+                    'data' => [
+		                'confirm' => '您确定要删除这项吗？',
+		                //'method' => 'post',
+           			 ],
+                ]);?></td>
+</tr>
+<?php }?>
+<tr>
+  <td colspan="9" align='center'>农药使用情况</td>
+  </tr>
+<tr>
+  <td colspan="5" align='center'>农药名称</td>
+  <td colspan="3" align='center'>农药用量</td>
+  <td align='center'>&nbsp;</td>
+</tr>
+<tr>
+  <td colspan="5" align='center'>&nbsp;</td>
+  <td colspan="3" align='center'>&nbsp;</td>
+  <td align='center'>&nbsp;</td>
 </tr>
 </table>
     <div class="form-group">
@@ -64,8 +112,56 @@ use app\models\Lease;
     </div>
 
     <?php ActiveFormrdiv::end(); ?>
+
 <?php $this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
 <script type="text/javascript">
+function plantinputproductcreate(lease_id,farms_id) {
+			$.get(
+			    'index.php',         
+			    {
+			    	r: 'plantinputproduct/plantinputproductcreate',
+			    	lease_id: lease_id,
+			    	farms_id: farms_id,
+			         
+			    },
+			    function (data) {
+			        $('.modal-body').html(data);
+			        
+			    }  
+			);
+}
+function plantinputproductview(id,lease_id,farms_id) {
+	$.get(
+	    'index.php',         
+	    {
+	    	r: 'plantinputproduct/plantinputproductview',
+	    	id: id,
+	    	lease_id: lease_id,
+	    	farms_id: farms_id,
+	         
+	    },
+	    function (data) {
+	        $('.modal-body').html(data);
+	        
+	    }  
+	);
+}
+function plantinputproductupdate(id,lease_id,farms_id) {
+	$.get(
+	    'index.php',         
+	    {
+	    	r: 'plantinputproduct/plantinputproductupdate',
+	    	id: id,
+	    	lease_id: lease_id,
+	    	farms_id: farms_id,
+	         
+	    },
+	    function (data) {
+	        $('.modal-body').html(data);
+	        
+	    }  
+	);
+}
 $('#plantingstructure-zongdi').change(function(){
 	zongdi = $(this).val();
 	$.getJSON('index.php?r=plantingstructure/plantingstructuregetarea', {zongdi: zongdi}, function (data) {
@@ -149,4 +245,24 @@ $('#inputproductson').change(function(){
 	});
 });
 </script>
+<?php \yii\bootstrap\Modal::begin([
+    'id' => 'plantinputproductcreate-modal',
+	'size'=>'modal-lg',
+	'options' => ['data-keyboard' => 'false', 'data-backdrop' => 'static']
+]); 
+?>
+<?php \yii\bootstrap\Modal::end(); ?>
+<?php \yii\bootstrap\Modal::begin([
+    'id' => 'plantinputproductview-modal',
+	'size'=>'modal-lg',
+	'options' => ['data-keyboard' => 'true', 'data-backdrop' => 'true']
+]); 
+?>
+<?php \yii\bootstrap\Modal::end(); ?>
+<?php \yii\bootstrap\Modal::begin([
+    'id' => 'plantinputproductupdate-modal',
+	'size'=>'modal-lg',
+]); 
+?>
+<?php \yii\bootstrap\Modal::end(); ?>
 </div>

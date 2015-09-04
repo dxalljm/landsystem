@@ -167,9 +167,9 @@ use app\models\Cooperative;
             			'target' => '_blank',
             			
              	]);?></td>
-    <td width="20%" align="center"><?=  Html::a('种值结构','index.php?r=plant/plantindex&farms_id='.$farm->id, [
+    <td width="20%" align="center"><?=  Html::a('投入品管理','index.php?r=plantinputproduct/plantinputproductindex&farms_id='.$farm->id, [
             			'id' => 'plantindex',
-            			'title' => '种值结构',
+            			'title' => '投入品管理',
             			'target' => '_blank',
             			
              	]);?></td>
