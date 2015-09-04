@@ -34,8 +34,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'plant_id',
             'plant_model',
-            'planting_area',
-            'plant_measurearea',
         ],
     ]) ?>
 

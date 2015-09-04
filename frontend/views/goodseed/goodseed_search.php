@@ -21,10 +21,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'plant_model') ?>
 
-    <?= $form->field($model, 'planting_area') ?>
-
-    <?= $form->field($model, 'plant_measurearea') ?>
-
     <div class="form-group">
         <?= Html::submitButton('搜索', ['class' => 'btn btn-primary']) ?>
         <?= Html::resetButton('重置', ['class' => 'btn btn-default']) ?>

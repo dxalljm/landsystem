@@ -3,6 +3,8 @@ namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\Plant;
+use yii\data\DataProviderInterface;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\goodseedSearch */
@@ -28,10 +30,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'plant_id',
+            [
+            	'attribute'=>'plant_id',
+            	'value' => function ($model) {
+            		return Plant::find()->where(['id'=>$model->plant_id])->one()['cropname'];
+            	}
+            ],
             'plant_model',
-            'planting_area',
-            'plant_measurearea',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
