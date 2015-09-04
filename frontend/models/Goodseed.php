@@ -10,8 +10,6 @@ use Yii;
  * @property integer $id
  * @property integer $plant_id
  * @property string $plant_model
- * @property double $planting_area
- * @property double $plant_measurearea
  */
 class Goodseed extends \yii\db\ActiveRecord
 {
@@ -30,7 +28,6 @@ class Goodseed extends \yii\db\ActiveRecord
     {
         return [
             [['plant_id'], 'integer'],
-            [['planting_area', 'plant_measurearea'], 'number'],
             [['plant_model'], 'string', 'max' => 500]
         ];
     }
@@ -44,8 +41,6 @@ class Goodseed extends \yii\db\ActiveRecord
 			'id' => 'ID',
             'plant_id' => '种植结构',
             'plant_model' => '农作物型号',
-            'planting_area' => '种植区域',
-            'plant_measurearea' => '种植面积',
         ];
     }
 }

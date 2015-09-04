@@ -15,6 +15,7 @@ use app\models\ManagementArea;
 use yii\web\UploadedFile;
 use frontend\models\parcelSearch;
 use app\models\Parcel;
+use app\models\Logs;
 /**
  * FarmsController implements the CRUD actions for farms model.
  */
@@ -49,7 +50,7 @@ class FarmsController extends Controller
     {
         $searchModel = new farmsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        Logs::writeLog('农场管理');
         return $this->render('farmsindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -95,6 +96,7 @@ class FarmsController extends Controller
     			}
     		}
     	}
+    	Logs::writeLog('农场XLS批量导入');
     	return $this->render('farmsxls',[
     			'model' => $model,
     			'rows' => $rows,
@@ -105,7 +107,7 @@ class FarmsController extends Controller
     {
     	$searchModel = new farmsSearch();
     	$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-    
+    	Logs::writeLog('业务办理');
     	return $this->render('farmsbusiness', [
     			'searchModel' => $searchModel,
     			'dataProvider' => $dataProvider,
@@ -115,6 +117,7 @@ class FarmsController extends Controller
     public function actionFarmsmenu($id,$areaid)
     {
     	$farm = $this->findModel($id);
+    	Logs::writeLog('进入业务办理菜单页面',$id);
     	return $this->render('farmsmenu',[
     		'farm' => $farm,
     		'year' => Theyear::findOne(1),
@@ -135,6 +138,7 @@ class FarmsController extends Controller
     	foreach($zongdiarr as $zongdi) {
     		$dataProvider[] = Parcel::find()->where(['unifiedserialnumber' => $zongdi])->one();
     	}
+    	Logs::writeLog('查看农场信息',$id);
         return $this->render('farmsview', [
             'model' => $model,
         	'dataProvider' => $dataProvider,
@@ -149,10 +153,13 @@ class FarmsController extends Controller
     public function actionFarmscreate()
     {
         $model = new farms();
-
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$newAttr = $model->attributes;
+        	var_dump(Logs::writeLog('创建农场',$model->id,'',$newAttr));
             return $this->redirect(['farmsview', 'id' => $model->id]);
         } else {
+        	//Logs::writeLog('农场创建表单');
             return $this->render('farmscreate', [
                 'model' => $model,
             ]);
@@ -168,10 +175,14 @@ class FarmsController extends Controller
     public function actionFarmsupdate($id)
     {
         $model = $this->findModel($id);
-
+		$oldAttr = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$newAttr = $model->attributes;
+        	Logs::writeLog('更新农场信息',$id,$oldAttr,$newAttr);
+            
             return $this->redirect(['farmsview', 'id' => $model->id]);
         } else {
+        	//Logs::writeLog('农场更新表单');
             return $this->render('farmsupdate', [
                 'model' => $model,
             ]);
@@ -186,8 +197,10 @@ class FarmsController extends Controller
      */
     public function actionFarmsdelete($id)
     {
-        $this->findModel($id)->delete();
-
+    	$model = $this->findModel($id);
+    	$oldAttr = $model->getAttributes();
+        $model->delete();      
+        Logs::writeLog('删除农场信息',$id,$oldAttr);
         return $this->redirect(['farmsindex']);
     }
 

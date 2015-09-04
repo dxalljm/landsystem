@@ -3,16 +3,16 @@
 namespace frontend\controllers;
 
 use Yii;
-use app\models\Goodseed;
-use frontend\models\goodseedSearch;
+use app\models\Log;
+use frontend\models\logSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\models\Plant;
+
 /**
- * GoodseedController implements the CRUD actions for Goodseed model.
+ * LogController implements the CRUD actions for Log model.
  */
-class GoodseedController extends Controller
+class LogController extends Controller
 {
     public function behaviors()
     {
@@ -27,102 +27,92 @@ class GoodseedController extends Controller
     }
 
     /**
-     * Lists all Goodseed models.
+     * Lists all Log models.
      * @return mixed
      */
-    public function actionGoodseedindex()
+    public function actionLogindex()
     {
-        $searchModel = new goodseedSearch();
+        $searchModel = new logSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('goodseedindex', [
+        return $this->render('logindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single Goodseed model.
+     * Displays a single Log model.
      * @param integer $id
      * @return mixed
      */
-    public function actionGoodseedview($id)
+    public function actionLogview($id)
     {
-        return $this->render('goodseedview', [
+        return $this->render('logview', [
             'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new Goodseed model.
+     * Creates a new Log model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionGoodseedcreate()
+    public function actionLogcreate()
     {
-        $model = new Goodseed();
+        $model = new Log();
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['goodseedview', 'id' => $model->id]);
+            return $this->redirect(['logview', 'id' => $model->id]);
         } else {
-            return $this->render('goodseedcreate', [
+            return $this->render('logcreate', [
                 'model' => $model,
             ]);
         }
     }
-    
-    public function  actionGoodseedgetmodel($plant_id)
-    {
-    	$goodseed = Goodseed::find()->where(['plant_id'=>$plant_id])->all();
-    	$newData = NULL;
-    	foreach($goodseed as $key=>$val){
-    		$newData[$key] = $val->attributes;
-    	}
-    	echo json_encode(['status'=>1,'goodseed'=>$newData]);
-    }
 
     /**
-     * Updates an existing Goodseed model.
+     * Updates an existing Log model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionGoodseedupdate($id)
+    public function actionLogupdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['goodseedview', 'id' => $model->id]);
+            return $this->redirect(['logview', 'id' => $model->id]);
         } else {
-            return $this->render('goodseedupdate', [
+            return $this->render('logupdate', [
                 'model' => $model,
             ]);
         }
     }
 
     /**
-     * Deletes an existing Goodseed model.
+     * Deletes an existing Log model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionGoodseeddelete($id)
+    public function actionLogdelete($id)
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['goodseedindex']);
+        return $this->redirect(['logindex']);
     }
 
-    
     /**
-     * Finds the Goodseed model based on its primary key value.
+     * Finds the Log model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Goodseed the loaded model
+     * @return Log the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Goodseed::findOne($id)) !== null) {
+        if (($model = Log::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

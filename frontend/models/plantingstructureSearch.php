@@ -5,21 +5,22 @@ namespace frontend\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Lease;
+use app\models\Plantingstructure;
 
 /**
- * leaseSearch represents the model behind the search form about `app\models\Lease`.
+ * plantingstructureSearch represents the model behind the search form about `app\models\Plantingstructure`.
  */
-class leaseSearch extends Lease
+class plantingstructureSearch extends Plantingstructure
 {
     /**
      * @inheritdoc
      */
-public function rules()
+    public function rules()
     {
         return [
-            [['id', 'farms_id', 'years'], 'integer'],
-            [['lease_area', 'lessee', 'lessee_cardid', 'lessee_telephone', 'begindate', 'enddate', 'photo'], 'safe'],
+            [['id', 'plant_id', 'inputproduct_id', 'pesticides_id', 'pconsumption', 'goodseed_id', 'farms_id', 'lease_id'], 'integer'],
+            [['area'], 'number'],
+            [['zongdi'], 'safe'],
         ];
     }
 
@@ -41,7 +42,7 @@ public function rules()
      */
     public function search($params)
     {
-        $query = Lease::find()->andWhere($params);
+        $query = Plantingstructure::find()->where($params);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -55,20 +56,19 @@ public function rules()
             return $dataProvider;
         }
 
-         $query->andFilterWhere([
+        $query->andFilterWhere([
             'id' => $this->id,
+            'plant_id' => $this->plant_id,
+            'area' => $this->area,
+            'inputproduct_id' => $this->inputproduct_id,
+            'pesticides_id' => $this->pesticides_id,
+            'pconsumption' => $this->pconsumption,
+            'goodseed_id' => $this->goodseed_id,
             'farms_id' => $this->farms_id,
-            'years' => $this->years,
+        	'lease_id' => $this->lease_id,
         ]);
 
-        $query->andFilterWhere(['like', 'lease_area', $this->lease_area])
-            ->andFilterWhere(['like', 'lessee', $this->lessee])
-            ->andFilterWhere(['like', 'lessee_cardid', $this->lessee_cardid])
-            ->andFilterWhere(['like', 'lessee_telephone', $this->lessee_telephone])
-            ->andFilterWhere(['like', 'begindate', $this->begindate])
-            ->andFilterWhere(['like', 'enddate', $this->enddate])
-            ->andFilterWhere(['like', 'photo', $this->photo]);
-        
+        $query->andFilterWhere(['like', 'zongdi', $this->zongdi]);
 
         return $dataProvider;
     }

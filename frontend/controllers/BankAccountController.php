@@ -8,7 +8,7 @@ use frontend\models\bankaccountSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use app\models\Logs;
 /**
  * BankAccountController implements the CRUD actions for BankAccount model.
  */
@@ -45,7 +45,7 @@ class BankAccountController extends Controller
     {
         $searchModel = new bankaccountSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+		Logs::writeLog('进入银账号管理页面');
         return $this->render('bankaccountindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -59,6 +59,7 @@ class BankAccountController extends Controller
      */
     public function actionBankaccountview($id)
     {
+    	Logs::writeLog('银行账号查看操作',$id);
         return $this->render('bankaccountview', [
             'model' => $this->findModel($id),
         ]);
@@ -74,6 +75,8 @@ class BankAccountController extends Controller
         $model = new BankAccount();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$newAttr = $model->attributes;
+        	Logs::writeLog('创建银行账号',$model->id,'',$newAttr);
             return $this->redirect(['bankaccountview', 'id' => $model->id]);
         } else {
             return $this->render('bankaccountcreate', [
@@ -91,8 +94,10 @@ class BankAccountController extends Controller
     public function actionBankaccountupdate($id)
     {
         $model = $this->findModel($id);
-
+		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('更新银行账号',$id,$old,$new);
             return $this->redirect(['bankaccountview', 'id' => $model->id]);
         } else {
             return $this->render('bankaccountupdate', [
@@ -109,8 +114,10 @@ class BankAccountController extends Controller
      */
     public function actionBankaccountdelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id);
+		$old = $model->attributes;
+		$model->delete();
+		Logs::writeLog('删除银行账号',$id,$old);
         return $this->redirect(['bankaccountindex']);
     }
 

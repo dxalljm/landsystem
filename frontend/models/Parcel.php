@@ -31,6 +31,9 @@ class Parcel extends \yii\db\ActiveRecord
         return '{{%parcel}}';
     }
 
+    
+    
+    
     /**
      * @inheritdoc
      */

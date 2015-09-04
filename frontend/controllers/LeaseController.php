@@ -52,10 +52,20 @@ class LeaseController extends Controller
         return $this->render('leaseindex', [
              'searchModel' => $searchModel,
              'dataProvider' => $dataProvider,
-        	 'areas' => $this->getAreas($farms_id),
+        	 'areas' => Lease::getNoArea($farms_id),
         ]);
     }
-
+	
+    public function actionLeaseallview($farms_id)
+    {
+    	$lease = Lease::find()->where(['farms_id'=>$farms_id])->all();
+    	$farm = Farms::find()->where(['id'=>$farms_id])->one();
+    	return $this->render('leaseallview', [
+    			'leases'=>$lease,
+    			'farm' => $farm,
+    	]);
+    }
+    
     /**
      * Displays a single Lease model.
      * @param integer $id
@@ -71,6 +81,7 @@ class LeaseController extends Controller
             'model' => $model,
         	'farm' => $farm,
         	'farmer' => $farmer,
+        	'noarea' => Lease::getNoArea($model->farms_id),
         ]);
     }
     
@@ -91,17 +102,22 @@ class LeaseController extends Controller
     	//$this->layout='@app/views/layouts/nomain.php';
     	$farm = Farms::find()->where(['id'=>$farms_id])->one();
     	$farmer = Farmer::find()->where(['farms_id'=>$farms_id])->one();
-        $model = new leaseSearch();
+        $model = new lease();
         
-		$areas = $model::getOverArea();
+		$overarea = $model::getOverArea($farms_id);
+		$noarea = $model::getNoArea($farms_id);
         if ($model->load(Yii::$app->request->post())) {
         	$model->farms_id = $farms_id;
+        	$model->create_at = time();
+        	$model->update_at = time();
         	$model->save();
+        	//var_dump($model->getErrors());
             return $this->redirect(['leaseindex', 'farms_id' => $farms_id]);
         } else {
             return $this->render('leasecreate', [
                 'model' => $model,
-            	'areas' => $areas,
+            	'overarea' => $overarea,
+            	'noarea' => $noarea,
             	'farm' => $farm,
             	'farmer' => $farmer,
             ]);
@@ -114,20 +130,24 @@ class LeaseController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionLeaseupdate($id)
+    public function actionLeaseupdate($id,$farms_id)
     {
         $model = $this->findModel($id);
         $farm = Farms::find()->where(['id'=>$model->farms_id])->one();
         $farmer = Farmer::find()->where(['farms_id'=>$model->farms_id])->one();
-        $areas = $model::getOverArea();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $overarea = $model::getOverArea($farms_id);
+		$noarea = $model::getNoArea($farms_id);
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->update_at = time();
+        	$model->save();
             return $this->redirect(['leaseview', 'id' => $model->id, 'farms_id'=>$model->farms_id]);
         } else {
             return $this->render('leaseupdate', [
                 'model' => $model,
             	'farm' => $farm,
             	'farmer' => $farmer,
-            	'areas' => $areas,
+            	'overarea' => $overarea,
+            	'noarea' => $noarea,
             ]);
         }
     }
@@ -143,7 +163,7 @@ class LeaseController extends Controller
     	$farms = $this->findModel($id);
         $this->findModel($id)->delete();
 		
-        return $this->redirect(['leaseindex','id'=>$farms['farms_id']]);
+        return $this->redirect(['leaseindex','farms_id'=>$farms['farms_id']]);
     }
 
     /**

@@ -82,6 +82,26 @@ class PlantController extends Controller
         }
     }
 
+    public function actionPlantgetson($father_id)
+    {
+    	$plantSon = Plant::find()->where(['father_id'=>$father_id])->all();
+    	$newData = NULL;
+    	foreach($plantSon as $key=>$val){
+    		$newData[$key] = $val->attributes;
+    	}
+    	echo json_encode(['status'=>1,'son'=>$newData]);
+    }
+    
+    public function objectToArray($e){
+    	$e=(array)$e;
+    	foreach($e as $k=>$v){
+    		if( gettype($v)=='resource' ) return;
+    		if( gettype($v)=='object' || gettype($v)=='array' )
+    			$e[$k]=(array)$this->objectToArray($v);
+    	}
+    	return $e;
+    }
+    
     /**
      * Updates an existing Plant model.
      * If update is successful, the browser will be redirected to the 'view' page.

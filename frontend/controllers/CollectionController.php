@@ -14,6 +14,7 @@ use app\models\Farmer;
 use frontend\models\farmerSearch;
 use app\models\Theyear;
 use app\models\PlantPrice;
+use app\models\Logs;
 /**
  * CollectionController implements the CRUD actions for Collection model.
  */
@@ -51,7 +52,7 @@ class CollectionController extends Controller
     		$year = Theyear::findOne(1)['years'];
         $searchModel = new farmerSearch();
         $dataProvider = $searchModel->search(['years'=>$year]);
-		
+		Logs::writeLog('进入承包费收缴页面');
         return $this->render('collectionindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -67,6 +68,7 @@ class CollectionController extends Controller
      */
     public function actionCollectionview($id)
     {
+    	Logs::writeLog('查看一笔收缴信息',$id);
         return $this->render('collectionview', [
             'model' => $this->findModel($id),
         ]);

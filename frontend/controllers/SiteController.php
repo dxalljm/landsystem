@@ -7,6 +7,7 @@ use yii\web\Controller;
 use common\models\LoginForm;
 use yii\filters\VerbFilter;
 use frontend\models\SignupForm;
+use app\models\Logs;
 /**
  * Site controller
  */
@@ -55,7 +56,7 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-    	
+    	Logs::writeLog('访问首页');
         return $this->render('index');
     }
 
@@ -69,6 +70,7 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
         	if($model->username == 'admin')
         		throw new \yii\web\UnauthorizedHttpException('对不起，此用户不能在前台页面登录。');
+        	
             return $this->goBack();
         } else {
 			$this->layout='@app/views/layouts/main2.php';
@@ -80,6 +82,7 @@ class SiteController extends Controller
 
     public function actionLogout()
     {
+    	Logs::writeLog('用户退出');
         Yii::$app->user->logout();
 
         return $this->goHome();

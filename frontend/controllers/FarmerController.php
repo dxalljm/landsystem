@@ -126,7 +126,7 @@ class FarmerController extends Controller
     	$year = Theyear::findOne(1)['years'];
     	$farm = Farms::find()->where(['id'=>$id])->one();
 		
-    	$farmerid = farmer::find()->where(['farms_id'=>$id,'years'=>$year])->one()['id'];
+    	$farmerid = farmer::find()->where(['farms_id'=>$id])->one()['id'];
     	$membermodel = Farmermembers::find()->where(['farmer_id' => $farmerid])->all();
     	if($farmerid) {
     		 $model = $this->findModel($farmerid);

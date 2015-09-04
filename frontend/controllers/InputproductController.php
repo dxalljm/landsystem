@@ -53,6 +53,16 @@ class InputproductController extends Controller
         ]);
     }
 
+    public function  actionInputproductgetfertilizer($father_id)
+    {
+    	$inputproduct = Inputproduct::find()->where(['father_id'=>$father_id])->all();
+    	$newData = NULL;
+    	foreach($inputproduct as $key=>$val){
+    		$newData[$key] = $val->attributes;
+    	}
+    	echo json_encode(['status'=>1,'inputproductson'=>$newData]);
+    }
+    
     /**
      * Creates a new Inputproduct model.
      * If creation is successful, the browser will be redirected to the 'view' page.
