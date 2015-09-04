@@ -13,11 +13,15 @@ use app\models\Farms;
 
     <h1><?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']; ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-	<?php if($areas < Farms::find()->where(['id'=>$_GET['farms_id']])->one()['measure']) {?>
+	<?php if($areas) {?>
     <p>
     	<?= Html::a('添加', ['leasecreate','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?>
          <?php //echo Html::a('添加', 'javascript:void(0)', ['onclick'=>'lease.create('.$_GET['id'].')', 'class' => 'btn btn-success', 'id' => 'wubaiqing']) ?>
     </p>
+	<?php } else {?>
+	<p>
+	<?= Html::a('查看明细', ['leaseallview','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
+	</p>
 	<?php }?>
 	<script type="text/javascript">
 	function openwindows(url)
@@ -26,6 +30,7 @@ use app\models\Farms;
 		self.close();
 	}
 	</script>
+	<?php if($areas) {?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
@@ -35,7 +40,7 @@ use app\models\Farms;
             'id',
             'lease_area',
             'lessee',
-            'plant_id',
+            //'plant_id',
             //'farms_id',
 
              [
@@ -76,6 +81,37 @@ use app\models\Farms;
        	 	],
         ],
     ]); ?>
+<?php } else {?>
+<?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        //'filterModel' => $searchModel,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
 
+            'id',
+            'lease_area',
+            'lessee',
+            //'plant_id',
+            //'farms_id',
+
+             [
+            'class' => 'yii\grid\ActionColumn',
+            'template' => '{view}',
+            'buttons' => [
+                // 下面代码来自于 yii\grid\ActionColumn 简单修改了下
+                'view' => function ($url, $model, $key) {
+                    $options = [
+                        'title' => Yii::t('yii', 'View'),
+                        'aria-label' => Yii::t('yii', 'View'),
+                        'data-pjax' => '0',
+                    ];
+                    $url.='&farms_id='.$_GET['farms_id'];
+                    return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, $options);
+                },
+            	]
+       	 	],
+        ],
+    ]); ?>
+<?php }?>
 </div>
 

@@ -20,7 +20,8 @@ $this->params['breadcrumbs'][] = '更新';
         'model' => $model,
     	'farm' => $farm,
     	'farmer' => $farmer,
-    	'areas' => $areas,
+    	'overarea' => $overarea,
+        'noarea' => $noarea,
     ]) ?>
 
 </div>

@@ -15,9 +15,10 @@ use yii\helpers\Html;
 
     <?= $this->render('lease_form', [
         'model' => $model,
-    	'areas' => $areas,
-    	'farm' => $farm,
-    	'farmer' => $farmer
+        'overarea' => $overarea,
+        'noarea' => $noarea,
+        'farm' => $farm,
+        'farmer' => $farmer,
     ]) ?>
 
 </div>

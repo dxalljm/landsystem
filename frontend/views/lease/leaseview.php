@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="lease-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+<?php if($noarea) {?>
     <p>
     	 <?= Html::a('添加', ['leasecreate', 'id' => $model->id,'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?>
         <?= Html::a('更新', ['leaseupdate', 'id' => $model->id,'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-primary']) ?>
@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-
+<?php }?>
     <table class="table table-striped table-bordered table-hover table-condensed">
   <tr>
     <td width="80" align="center">农场名称</td>
