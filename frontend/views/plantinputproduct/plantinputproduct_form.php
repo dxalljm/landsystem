@@ -43,33 +43,13 @@ use yii\web\View;
             <td align='center'>投入品用量</td>
 			<td align='center'>操作</td>
 		</tr>
-		<?php 
-		foreach($plantinputproducts as $val) {
-            $model->id = $val['id'];
-            $model->father_id = $val['father_id'];
-			$model->son_id = $val['son_id'];
-			$model->inputproduct_id = $val['inputproduct_id'];
-			$model->pconsumption = $val['pconsumption'];
-		?>
-		<tr>
-			<td width=15% align='center'>
-                <?= $form->field($model, 'id')->hiddenInput(['name' => 'PlantInputproductPost[id][]'])->label(false)->error(false) ?>
-                <?= $form->field($model, 'farms_id')->hiddenInput(['name' => 'PlantInputproductPost[farms_id][]'])->label(false)->error(false) ?>
-                <?= $form->field($model, 'lessee_id')->hiddenInput(['name' => 'PlantInputproductPost[lessee_id][]'])->label(false)->error(false) ?>
-                <?= $form->field($model, 'zongdi')->hiddenInput(['name' => 'PlantInputproductPost[zongdi][]'])->label(false)->error(false) ?>
-                <?= $form->field($model, 'plant_id')->hiddenInput(['name' => 'PlantInputproductPost[plant_id][]'])->label(false)->error(false) ?>
-                <?= $form->field($model, 'father_id')->dropDownList(ArrayHelper::map(Inputproduct::find()->where(['father_id'=>1])->all(), 'id', 'fertilizer'), ['prompt'=>'请选择...', 'id'=>'plantinputproduct-father_id', 'name' => 'PlantInputproductPost[employeetype][]'])->label(false)->error(false) ?>
-            </td>
-			<td align='center'><?= $form->field($model, 'son_id')->dropDownList(ArrayHelper::map(Inputproduct::find()->where(['father_id'=>$model->son_id])->all(), 'id', 'fertilizer'),['prompt'=>'请选择...', 'name' => 'PlantInputproductPost[son_id][]'])->label(false)->error(false) ?></td>
-			<td align='center'><?= $form->field($model, 'inputproduct_id')->dropDownList(ArrayHelper::map(Inputproduct::find()->where(['father_id'=>$model->inputproduct_id])->all(), 'id', 'fertilizer'),['prompt'=>'请选择...', 'name' => 'PlantInputproductPost[inputproduct_id][]'])->label(false)->error(false) ?></td>
-			<td align='center'><?= $form->field($model, 'pconsumption')->textInput(['maxlength' => 500, 'name' => 'PlantInputproductPost[pconsumption][]'])->label(false)->error(false) ?></td>
-			<td valign="middle" align="center"><?php echo Html::button('-', ['class' => 'btn btn-warning delete-plantinputproduct']) ?></td>
-		</tr>
-		<?php }?>
+		
+
+		
 	</tbody>
 </table>
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? '更新' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? '提交' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveFormrdiv::end(); ?>

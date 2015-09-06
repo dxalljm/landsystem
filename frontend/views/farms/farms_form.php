@@ -6,6 +6,7 @@ use yii\helpers\ArrayHelper;
 use app\models\Cooperative;
 use dosamigos\datetimepicker\DateTimePicker;
 use app\models\Parcel;
+use app\models\ManagementArea;
 /* @var $this yii\web\View */
 /* @var $model app\models\Farms */
 /* @var $form yii\widgets\ActiveForm */
@@ -26,7 +27,7 @@ use app\models\Parcel;
 		</tr>
 		<tr>
 			<td width=15% align='right'>管理区</td>
-			<td align='left'><?= $form->field($model, 'management_area')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+			<td align='left'><?= $form->field($model, 'management_area')->dropDownList(ArrayHelper::map(ManagementArea::find()->all(), 'id', 'areaname'))->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>审批年度</td>

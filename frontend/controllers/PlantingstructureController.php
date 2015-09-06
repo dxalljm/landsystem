@@ -69,12 +69,11 @@ class PlantingstructureController extends Controller
         $plantinputproductData = Plantinputproduct::find()->where(['farms_id'=>$farms_id,'lessee_id'=>$lease_id])->all();
         $plantpesticidesData = Plantpesticides::find()->where(['farms_id'=>$farms_id,'lessee_id'=>$lease_id])->all();
 		$farm = Farms::find()->where(['id'=>$farms_id])->one();
-		$lease = Lease::find()->where(['id'=>$lease_id])->one();
-		$zongdiarr = explode('、', $lease['lease_area']);
-		foreach($zongdiarr as $value) {
-			$zongdi[]['unifiedserialnumber'] = $value;
-		}
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+		$zongdi = $this->getListZongdi($lease_id);
+		
+        if ($model->load(Yii::$app->request->post())) {
+            $model->zongdi = Lease::getZongdi($model->zongdi);
+        	$model->save();
             return $this->redirect(['plantingstructureindex', 'farms_id' => $farms_id]);
         } else {
             return $this->render('plantingstructurecreate', [
@@ -89,6 +88,74 @@ class PlantingstructureController extends Controller
         }
     }
 
+    //获取承租人的宗地信息，如果已经添加过，则过滤掉
+    public function getListZongdi($lease_id)
+    {
+    	echo '<br><br><br><br><br><br><br>';
+    	$zongdi = array();
+    	$lease = Lease::find()->where(['id'=>$lease_id])->one();
+    	$zongdiarr = explode('、', $lease['lease_area']);
+    	$plantings = Plantingstructure::find()->where(['lease_id'=>$lease_id])->all();
+    	
+    	if(count($plantings)>1)
+    		$plantings = $this->zongdiAreaSum($plantings);
+    	foreach ($plantings as $value) {
+    		$ps[$value['zongdi'].'('.$value['area'].')'] = $value['zongdi'].'('.$value['area'].')';
+    	}
+    	//var_dump($ps);
+    	if($plantings) {
+	    	foreach($zongdiarr as $value) {
+	    		foreach ($plantings as $plants) {
+	    			if(Lease::getZongdi($value) == $plants['zongdi']){
+	    				echo Lease::getArea($value) .'-'. $plants['area'].'<br>';
+	    				if(Lease::getArea($value) !== $plants['area']){
+	    					echo Lease::getArea($value) .'-'. $plants['area'].'<br>';
+	    					$areac = Lease::getArea($value) - $plants['area'];
+	    					$zongdi[Lease::getZongdi($value).'('.$areac.')'] = Lease::getZongdi($value).'('.$areac.')';
+	    					echo 'nnnnnnnn=====';var_dump($zongdi);
+	    				}
+	    			}
+	    			else {
+	    				$zongdi[$value] = $value;
+	    				echo 'wwwwwwwwwwww=========';
+	    				var_dump($zongdi);
+	    				$zongdi = array_diff($ps,$zongdi);
+	    			}
+	    		}
+	    	}
+	    	
+	    	return $zongdi;
+    	}
+    	else {
+    		foreach($zongdiarr as $key => $value) {
+    			$zongdi[$value] = $value;
+    		}
+    		//var_dump($zongdi);
+    		return $zongdi;
+    	}
+    }
+    //对plantingstructure中获取的面积进程累加处理
+    public function zongdiAreaSum($arrayArea) 
+    {
+    	//var_dump($arrayArea[0]['zongdi']);
+    	
+    	for($i=0;$i<count($arrayArea);$i++) {
+    		for($j=$i+1;$j<count($arrayArea);$j++) {
+    			if(isset($arrayArea[$j]['zongdi'])) {
+	    			if(Lease::getZongdi($arrayArea[$i]['zongdi']) == Lease::getZongdi($arrayArea[$j]['zongdi'])) {
+	    				$areaSum = $arrayArea[$i]['area']+$arrayArea[$j]['area'];
+	    				//$arrayArea[$i]['zongdi'] = Lease::getZongdi($arrayArea[$i]['zongdi']).'('.$areaSum.')';
+	    				$arrayArea[$i]['area'] = $areaSum;
+	    				unset($arrayArea[$j]);
+	    				sort($arrayArea);
+	    				//var_dump($arrayArea);
+	    				$arrayArea = self::zongdiAreaSum($arrayArea);
+	    			}
+    			}
+    		}
+    	}
+    	return $arrayArea;
+    }
     public function actionPlantingstructuregetarea($zongdi) 
     {
     	$area = Lease::getArea($zongdi);

@@ -14,6 +14,7 @@ use app\models\ManagementArea;
 class farmsSearch extends farms
 {
 	public $areaname;
+	//public $farmname;
     /**
      * @inheritdoc
      */
@@ -45,6 +46,7 @@ class farmsSearch extends farms
     {
         $query = farms::find();
         $query->joinWith(['managementarea']);
+        //$query->joinWith(['farms']);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -62,8 +64,8 @@ class farmsSearch extends farms
         						//'label' => '管理区',
         				],
         				'farmname' => [
-        						'asc' => ['farmname' => SORT_ASC],
-        						'desc' => ['farmname' => SORT_DESC],
+        						'asc' => ['land_farms.farmname' => SORT_ASC],
+        						'desc' => ['land_farms.farmname' => SORT_DESC],
         						//'label' => '管理区',
         				],
         				'spyear' => [
@@ -98,6 +100,7 @@ class farmsSearch extends farms
             ->andFilterWhere(['like', 'investigator', $this->investigator])
             ->andFilterWhere(['like', 'farmersign', $this->farmersign])
         	->andFilterWhere(['like', 'land_management_area.areaname', $this->areaname]);
+         //->andFilterWhere(['like', 'land_farms.farmname', $this->farmname]);
 
         return $dataProvider;
     }

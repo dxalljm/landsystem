@@ -4491,7 +4491,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
 }
 
 .navbar-inverse {
-  background-color: #222222;
+  background-color: #0E5D30;
   border-color: #080808;
 }
 
