@@ -3,7 +3,6 @@
 namespace app\models;
 
 use Yii;
-use frontend\helpers\eActionColumn;
 
 /**
  * This is the model class for table "{{%plantinputproduct}}".
@@ -19,9 +18,6 @@ use frontend\helpers\eActionColumn;
  * @property integer $plant_id
  */
 
-$e = new eActionColumn();
-var_dump($e);
-exit;
 class Plantinputproduct extends \yii\db\ActiveRecord
 {
     /**
