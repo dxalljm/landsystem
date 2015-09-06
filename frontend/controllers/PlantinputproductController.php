@@ -61,12 +61,14 @@ class PlantinputproductController extends Controller
     {
         $model = new Plantinputproduct();
 		$planting = Plantingstructure::findOne($planting_id);
+		$plantinputproducts = Plantinputproduct::find()->where(['farms_id'=>$planting->farms_id,'lessee_id'=>$planting->lease_id,'plant_id'=>$planting->plant_id,'zongdi'=>$planting->zongdi])->all();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['plantingstructure/plantingstructurecreate', 'lease_id'=>$lease_id,'farms_id' => $farms_id]);
         } else {
             return $this->render('plantinputproductcreate', [
                 'model' => $model,
             	'planting' => $planting,
+            	'plantinputproducts' => $plantinputproducts,
             ]);
         }
     }
