@@ -1,5 +1,6 @@
 <?php
-namespace yii\grid;
+
+namespace frontend\helpers;
 
 use Yii;
 use Closure;
