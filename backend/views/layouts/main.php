@@ -42,7 +42,7 @@ AppAsset::register($this);
 				$menuItems[] = ['label' => '菜单管理', 'url' => ['/mainmenu/mainmenuindex']];
 				$menuItems[] = ['label' => '导航管理', 'url' => ['/menutouser/menutouserindex']];
 				$menuItems[] = ['label' => '数据库表管理', 'url' => ['/tables/tablesindex']];
-				$menuItems[] = ['label' => '表项管理', 'url' => ['/tablefields/tablefieldsindex']];
+				$menuItems[] = ['label' => '科室管理', 'url' => ['/department/departmentindex']];
 				$menuItems[] = ['label' => '生成数据文件', 'url' => ['/gii']];
 				$menuItems[] = ['label' => '角色管理', 'url' => ['/role/roleindex']];
 				$menuItems[] = ['label' => '权限管理', 'url' => ['/permission/permissionindex']];
