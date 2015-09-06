@@ -99,7 +99,7 @@ use yii\web\View;
 		$.getJSON('index.php?r=inputproduct/inputproductgetfertilizer', {father_id: father_id}, function (data) {
 			fertilizerChild.html(null);
 			fertilizerChild.append('<option value="prompt">请选择</option>');
-			if (data.status == 1) {
+			if (data.status == 1 && data.inputproductson !== null) {
 				for(i = 0; i < data.inputproductson.length; i++) {
 					fertilizerChild.append('<option value="'+data.inputproductson[i]['id']+'">'+data.inputproductson[i]['fertilizer']+'</option>');
 				}
@@ -117,7 +117,7 @@ use yii\web\View;
 		$.getJSON('index.php?r=inputproduct/inputproductgetfertilizer', {father_id: father_id}, function (data) {
 			product.html(null);
 			product.append('<option value="prompt">请选择</option>');
-			if (data.status == 1) {
+			if (data.status == 1 && data.inputproductson !== null) {
 				for(i = 0; i < data.inputproductson.length; i++) {
 					product.append('<option value="'+data.inputproductson[i]['id']+'">'+data.inputproductson[i]['fertilizer']+'</option>');
 				}
