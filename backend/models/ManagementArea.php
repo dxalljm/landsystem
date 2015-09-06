@@ -20,6 +20,16 @@ class ManagementArea extends \yii\db\ActiveRecord
         return '{{%management_area}}';
     }
 
+    public static function getAreaname($strId) 
+    {
+    	$arrayId = explode(',', $strId);
+    	foreach ($arrayId as $value) {
+    		$arrayAreaName[] = self::find()->where(['id'=>$value])->one()['areaname'];
+    	}
+    	$strAreaName = implode(',', $arrayAreaName);
+    	return $strAreaName;
+    }
+    
     /**
      * @inheritdoc
      */

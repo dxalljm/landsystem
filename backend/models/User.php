@@ -49,7 +49,7 @@ class User extends \yii\db\ActiveRecord
    public function rules()
     {
         return [
-			[['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at', ], 'required'],
+			[['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at', 'department_id'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
             [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
@@ -58,6 +58,7 @@ class User extends \yii\db\ActiveRecord
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
 
         ];
+        
     }
 
     /**
@@ -75,6 +76,7 @@ class User extends \yii\db\ActiveRecord
             'status' => '状态',
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
+        	'department_id' => '科室ID'
         ];
     }
 	

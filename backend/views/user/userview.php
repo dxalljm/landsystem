@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\Department;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\user */
@@ -37,9 +38,20 @@ $this->params['breadcrumbs'][] = $this->title;
             'password_reset_token',
             'email:email',
             'status',
-            'created_at',
-            'updated_at',
-            //'groups',
+            [
+            	'attribute' => 'created_at',
+            	'value' => date('Y-m-d H:i:s',$model->created_at),
+            ],
+            [
+            	'attribute' => 'update_at',
+            	'value' => date('Y-m-d H:i:s',$model->created_at),
+            ],
+            [
+            	'label' => '所属科室',
+            	'attribute' => 'department_id',
+            	'value' => Department::find()->where(['id'=>$model->department_id])->one()['departmentname'],
+            ],
+            
         ],
     ]) ?>
 

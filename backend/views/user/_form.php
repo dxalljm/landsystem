@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\models\groups;
 use yii\helpers\ArrayHelper;
+use app\models\Department;
 /* @var $this yii\web\View */
 /* @var $model app\models\user */
 /* @var $form yii\widgets\ActiveForm */
@@ -28,7 +29,8 @@ use yii\helpers\ArrayHelper;
     <?= $form->field($model, 'created_at')->textInput() ?>
 
     <?= $form->field($model, 'updated_at')->textInput() ?>
-
+    
+	<?= $form->field($model, 'department_id')->dropDownList(ArrayHelper::map(Department::find()->all(), 'id', 'departmentname')) ?>
     
 
     <div class="form-group">
