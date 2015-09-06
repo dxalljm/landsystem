@@ -22,12 +22,13 @@ use yii\web\View;
  <!-- 模板 -->
 
       <thead id="plantinputdroduct-template" class="d-none">
-          <tr><?php echo Html::hiddenInput('PlantInputproductPost[id][]', '', ['class' => 'form-control']); ?>
+          <tr>
+			  <?php echo Html::hiddenInput('PlantInputproductPost[id][]', '', ['class' => 'form-control']); ?>
               <?php echo Html::hiddenInput('PlantInputproductPost[farms_id][]', $planting->farms_id, ['class' => 'form-control']); ?>
               <?php echo Html::hiddenInput('PlantInputproductPost[lessee_id][]', $planting->lease_id, ['class' => 'form-control']); ?>
               <?php echo Html::hiddenInput('PlantInputproductPost[zongdi][]', $planting->zongdi, ['class' => 'form-control']); ?>
               <?php echo Html::hiddenInput('PlantInputproductPost[plant_id][]', $planting->plant_id, ['class' => 'form-control']); ?>
-              <td><?php echo Html::dropDownList('PlantInputproductPost[father_id][]', '', ArrayHelper::map(Inputproduct::find()->where(['father_id'=>1])->all(), 'id', 'fertilizer'),['prompt'=>'请选择...', 'id'=>'plantinputproduct-father_id','class' => 'form-control']); ?></td>
+              <td><?php echo Html::dropDownList('PlantInputproductPost[father_id][]', '', ArrayHelper::map(Inputproduct::find()->where(['father_id'=>1])->all(), 'id', 'fertilizer'),['prompt'=>'请选择...', 'class'=>'plantinputproduct-father_id','class' => 'form-control']); ?></td>
               <td><?php echo Html::dropDownList('PlantInputproductPost[son_id][]', '',['prompt'=>'请选择...'], ['id'=>'plantinputproduct-son_id', 'class' => 'form-control']); ?></td>
               <td><?php echo Html::dropDownList('PlantInputproductPost[inputproduct_id][]', '',['prompt'=>'请选择...'] ,['id'=>'plantinputproduct-inputproduct_id','class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('PlantInputproductPost[pconsumption][]', '', ['id'=>'plantinputproduct-pconsumption','class' => 'form-control']); ?></td>
@@ -83,50 +84,46 @@ use yii\web\View;
     });
 
     // 删除
-    $(document).on("click", ".delete-plantinputproduct", function () {
+    $(document).on("click", ".delete-employee", function () {
         $(this).parent().parent().remove();
     });
 
-    $('#plantinputproduct-father_id').change(function(){
-        alert('ddddddd');
-    	father_id = $(this).val();
-    	
-    	$.getJSON('index.php?r=inputproduct/inputproductgetfertilizer', {father_id: father_id}, function (data) {
-    		
-    		if (data.status == 1) {
-    			$('#plantinputproduct-son_id').html(null);
-    			$('#plantinputproduct-son_id').append('<option value="prompt">请选择。。。</option>');
-    			for(i=0;i<data.inputproductson.length;i++) {
-    				$('#plantinputproduct-son_id').append('<option value="'+data.inputproductson[i]['id']+'">'+data.inputproductson[i]['fertilizer']+'</option>');
-    			}
-    		}
-    		else {
-    			$('#plantinputproduct-son_id').html(null);
-    			$('#plantinputproduct-son_id').append('<option value="prompt">请选择。。。</option>');
-    		}
-    			
-    	});
-    });
-    $('#plantinputproduct-son_id').change(function(){
-    	 alert('ssss');
-    	father_id = $(this).val();
-    	
-    	$.getJSON('index.php?r=inputproduct/inputproductgetfertilizer', {father_id: father_id}, function (data) {
-    		
-    		if (data.status == 1) {
-    			$('#plantingstructure-inputproduct_id').html(null);
-    			$('#plantingstructure-inputproduct_id').append('<option value="prompt">璇烽�夋嫨...</option>');
-    			for(i=0;i<data.inputproductson.length;i++) {
-    				$('#plantingstructure-inputproduct_id').append('<option value="'+data.inputproductson[i]['id']+'">'+data.inputproductson[i]['fertilizer']+'</option>');
-    			}
-    		}
-    		else {
-    			$('#plantingstructure-inputproduct_id').html(null);
-    			$('#plantingstructure-inputproduct_id').append('<option value="prompt">璇烽�夋嫨...</option>');
-    		}
-    			
-    	});
-    });
+
+	// 投入品子类联动
+	$(document).on("change", "select[name='PlantInputproductPost[father_id][]']", function () {
+		// 投入品子类，投入品
+		var fertilizerChild = $(this).parent().next().children(),
+			father_id = $(this).val();
+
+		// 请求二级分类
+		$.getJSON('index.php?r=inputproduct/inputproductgetfertilizer', {father_id: father_id}, function (data) {
+			fertilizerChild.html(null);
+			fertilizerChild.append('<option value="prompt">请选择</option>');
+			if (data.status == 1) {
+				for(i = 0; i < data.inputproductson.length; i++) {
+					fertilizerChild.append('<option value="'+data.inputproductson[i]['id']+'">'+data.inputproductson[i]['fertilizer']+'</option>');
+				}
+			}
+		});
+	});
+
+	// 投入品选择
+	$(document).on("change", "select[name='PlantInputproductPost[son_id][]']", function () {
+		// 投入品子类，投入品
+		var product = $(this).parent().next().children(),
+		father_id = $(this).val();
+
+		// 请求二级分类
+		$.getJSON('index.php?r=inputproduct/inputproductgetfertilizer', {father_id: father_id}, function (data) {
+			product.html(null);
+			product.append('<option value="prompt">请选择</option>');
+			if (data.status == 1) {
+				for(i = 0; i < data.inputproductson.length; i++) {
+					product.append('<option value="'+data.inputproductson[i]['id']+'">'+data.inputproductson[i]['fertilizer']+'</option>');
+				}
+			}
+		});
+	});
 
 </script>
 
