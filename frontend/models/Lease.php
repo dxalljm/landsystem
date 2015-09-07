@@ -157,6 +157,17 @@ class Lease extends \yii\db\ActiveRecord
             [['lease_area', 'lessee', 'lessee_telephone', 'begindate', 'photo'], 'string', 'max' => 500]
         ]; 
     } 
+    //将数组中1-100(10),1-200(123)的面积进行累加
+    public static function getListArea($strArea)
+    {
+    	$result = 0;
+    	$arrayArea = explode('、', $strArea);
+    	foreach($arrayArea as $value) {
+    		$result += self::getArea($value);
+    	}
+    	//echo $result;
+    	return $result;
+    }
 
     /** 
      * @inheritdoc 
