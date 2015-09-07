@@ -22,8 +22,8 @@ AppAsset::register($this);
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
-    <link rel="stylesheet" href="./vendor/bower/AdminLTE/dist/css/skins/_all-skins.min.css" />
     <link rel="stylesheet" href="./vendor/bower/AdminLTE/dist/css/AdminLTE.min.css" />
+    <link rel="stylesheet" href="./vendor/bower/AdminLTE/dist/css/skins/_all-skins.min.css" />
 </head>
 <body>
     <?php $this->beginBody() ?>

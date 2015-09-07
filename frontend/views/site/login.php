@@ -8,7 +8,7 @@ use yii\bootstrap\ActiveForm;
 
 ?>
 
-<div class="site-index">
+<div class="site-index login-bg">
 
  <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
         <table background="images/login.jpg" height="639" width="1024px" border="0" align="center" cellpadding="0" cellspacing="0">

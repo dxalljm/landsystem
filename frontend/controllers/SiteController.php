@@ -73,7 +73,7 @@ class SiteController extends Controller
         	
             return $this->goBack();
         } else {
-			$this->layout='@app/views/layouts/main2.php';
+            $this->layout='@app/views/layouts/main2.php';
             return $this->render('login', [
                 'model' => $model,
             ]);
