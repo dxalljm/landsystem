@@ -92,17 +92,22 @@ class PlantingstructureController extends Controller
     public function getListZongdi($lease_id)
     {
     	echo '<br><br><br><br><br><br><br>';
-    	$zongdi = array();
+    	//$zongdi = array();
     	$lease = Lease::find()->where(['id'=>$lease_id])->one();
     	$zongdiarr = explode('、', $lease['lease_area']);
     	$plantings = Plantingstructure::find()->where(['lease_id'=>$lease_id])->all();
     	
-    	if(count($plantings)>1)
+    	if(count($plantings)>=1) {
     		$plantings = $this->zongdiAreaSum($plantings);
-    	foreach ($plantings as $value) {
-    		$ps[$value['zongdi'].'('.$value['area'].')'] = $value['zongdi'].'('.$value['area'].')';
+	    	foreach ($plantings as $value) {
+	    		$ps[$value['zongdi'].'('.$value['area'].')'] = $value['zongdi'].'('.$value['area'].')';
+	    	}
+	    	$zongdiarr = array_diff($zongdiarr,$ps);
     	}
-    	//var_dump($ps);
+    	
+    	//echo 'ps='.var_dump($ps);
+    	
+    	//var_dump($zongdi);
     	if($plantings) {
 	    	foreach($zongdiarr as $value) {
 	    		foreach ($plantings as $plants) {
@@ -112,18 +117,14 @@ class PlantingstructureController extends Controller
 	    					echo Lease::getArea($value) .'-'. $plants['area'].'<br>';
 	    					$areac = Lease::getArea($value) - $plants['area'];
 	    					$zongdi[Lease::getZongdi($value).'('.$areac.')'] = Lease::getZongdi($value).'('.$areac.')';
-	    					echo 'nnnnnnnn=====';var_dump($zongdi);
+	    					//echo 'zongdi_l=';var_dump($zongdi);
 	    				}
-	    			}
-	    			else {
+	    			} else {
 	    				$zongdi[$value] = $value;
-	    				echo 'wwwwwwwwwwww=========';
-	    				var_dump($zongdi);
-	    				$zongdi = array_diff($ps,$zongdi);
+	    				$zongdi = array_diff($zongdi,$zongdiarr);
 	    			}
 	    		}
-	    	}
-	    	
+	    	}	
 	    	return $zongdi;
     	}
     	else {

@@ -50,6 +50,7 @@ use app\models\Lease;
 <?php }?>
 </table>
     <div class="form-group">
+    <?php ?>
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 

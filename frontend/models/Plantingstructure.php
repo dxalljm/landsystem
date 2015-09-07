@@ -33,7 +33,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['plant_id', 'inputproduct_id', 'pesticides_id', 'pconsumption', 'goodseed_id', 'farms_id', 'lease_id'], 'integer'],
+            [['plant_id', 'inputproduct_id', 'pesticides_id', 'pconsumption', 'farms_id', 'lease_id'], 'integer'],
             [['area'], 'number'],
             [['zongdi'], 'string', 'max' => 500]
         ]; 

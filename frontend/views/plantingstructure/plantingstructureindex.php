@@ -6,6 +6,7 @@ use yii\grid\GridView;
 use app\models\Farms;
 use app\models\Plantingstructure;
 use app\models\Plant;
+use app\models\Lease;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\leaseSearch */
@@ -32,14 +33,23 @@ use app\models\Plant;
   <tr>
     <td colspan="2" align="center"><?= $val['lessee'] ?></td>
     <td colspan="2" align="center"><?= $val['lease_area'] ?></td>
-    <td align="center"><?= Html::a('添加','index.php?r=plantingstructure/plantingstructurecreate&lease_id='.$val['id'].'&farms_id='.$_GET['farms_id'], [
+    <?php 
+    	  $plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id'],'lease_id'=>$val['id']])->all();
+    	  $sumArea = 0;
+    	  foreach($plantings as $value) {
+    	  	$sumArea += $value['area'];
+    	  }
+    	  $leaseSumArea = Lease::getListArea($val['lease_area']);
+    	  //echo $val['lease_area'];
+    ?>
+    <td align="center"><?php if($sumArea !== $leaseSumArea) {?><?= Html::a('添加','index.php?r=plantingstructure/plantingstructurecreate&lease_id='.$val['id'].'&farms_id='.$_GET['farms_id'], [
             			'id' => 'employeecreate',
-            			'title' => '给'.$val['lessee'].'添加雇工人员',
+            			'title' => '给'.$val['lessee'].'添加',
             			'class' => 'btn btn-primary',
-            			]);?></td>
+            			]);?><?php }?></td>
     </tr>
   <?php 
-  		$plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id'],'lease_id'=>$val['id']])->all();
+  		
 	  	foreach($plantings as $v) {
   ?>
   <tr>
