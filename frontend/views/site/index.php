@@ -44,6 +44,13 @@ $this->title = '岭南管委会';
 <?php $action = Yii::$app->controller->action->id;?>
     <div class="body-content">
 
+    <div class="info-box">
+        <span class="info-box-icon bg-aqua"><i class="fa fa-envelope-o"></i></span>
+        <div class="info-box-content">
+          <span class="info-box-text">Messages</span>
+          <span class="info-box-number">1,410</span>
+        </div><!-- /.info-box-content -->
+      </div>
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
   <?php if(\Yii::$app->user->can('farmsindex')){?>

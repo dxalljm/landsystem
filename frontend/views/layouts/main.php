@@ -24,6 +24,8 @@ AppAsset::register($this);
     <?php $this->head() ?>
     <link rel="stylesheet" href="./vendor/bower/AdminLTE/dist/css/AdminLTE.min.css" />
     <link rel="stylesheet" href="./vendor/bower/AdminLTE/dist/css/skins/_all-skins.min.css" />
+    <link rel="stylesheet" href="./vendor/bower/Ionicons/css/ionicons.min.css" />
+    <link rel="stylesheet" href="./vendor/bower/font-awesome/css/font-awesome.min.css" />
 </head>
 <body>
     <?php $this->beginBody() ?>
