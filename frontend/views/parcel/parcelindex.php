@@ -21,10 +21,23 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('添加', ['parcelcreate'], ['class' => 'btn btn-success']) ?>
         <?= Html::a('XLS导入', ['parcelxls'], ['class' => 'btn btn-success']) ?>
     </p>
-
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            Data Tables
+            <small>advanced tables</small>
+          </h1>
+          <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="#">Tables</a></li>
+            <li class="active">Data tables</li>
+          </ol>
+        </section>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        //'tableOptions' => 'table table-bordered table-hover',
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
