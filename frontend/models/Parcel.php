@@ -66,4 +66,14 @@ class Parcel extends \yii\db\ActiveRecord
             'figurenumber' => '图幅号',
         ];
     }
+    
+    public static function getAllGrossarea()
+    {
+    	$all = 0;
+    	$parcels = Parcel::find()->all();
+    	foreach($parcels as $value) {
+    		$all += $value['grossarea'];
+    	}
+    	return $all;
+    }
 }

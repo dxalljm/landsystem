@@ -8,6 +8,11 @@ use common\models\LoginForm;
 use yii\filters\VerbFilter;
 use frontend\models\SignupForm;
 use app\models\Logs;
+use app\models\User;
+use app\models\Department;
+use app\models\Parcel;
+use app\models\ManagementArea;
+use app\models\Farms;
 /**
  * Site controller
  */
@@ -57,7 +62,33 @@ class SiteController extends Controller
     public function actionIndex()
     {
     	Logs::writeLog('访问首页');
-        return $this->render('index');
+    	$dep_id = User::findByUsername(yii::$app->user->identity->username)['department_id'];
+    	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
+    	
+    	$whereArray = explode(',', $departmentData['membership']);
+    	$areaname = '';
+    	foreach ($whereArray as $value) {
+    		$areaname[] = ManagementArea::find()->where(['id' => $value])->one()['areaname'];
+    	}
+    	$farms = Farms::find()->where(['management_area'=>$whereArray])->all();
+    	// var_dump($farms);
+    	$sumMeasure = 0;
+    	foreach ($farms as $value) {
+    		if(is_array($value)) {
+    			foreach ($value as $k => $v) {
+    				$sumMeasure += $v['measure'];
+    			}
+    		} else {
+    			$sumMeasure += $value['measure'];
+    		}
+    	}
+    	
+        return $this->render('index',[
+        		'areaname' => implode(',', $areaname),
+        		'sumMeasure' => $sumMeasure,
+        		'farmsRows' => count($farms),
+        		'allArea' => Parcel::getAllGrossarea(),
+        ]);
     }
 
     public function actionLogin()
