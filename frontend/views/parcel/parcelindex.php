@@ -10,31 +10,31 @@ use yii\grid\GridView;
 
 $this->title = 'parcel';
 $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctablename'];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="parcel-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a('添加', ['parcelcreate'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('XLS导入', ['parcelxls'], ['class' => 'btn btn-success']) ?>
-    </p>
       <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
-            Data Tables
-            <small>advanced tables</small>
+           <?= Html::a('添加', ['parcelcreate'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('XLS导入', ['parcelxls'], ['class' => 'btn btn-success']) ?>
           </h1>
           <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#">Tables</a></li>
-            <li class="active">Data tables</li>
+            <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+            <li><a href="#"><?= $this->title?></a></li>
           </ol>
         </section>
-    <?= GridView::widget([
+        <!-- Main content -->
+        <section class="content">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title"><?= $this->title ?></h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         //'tableOptions' => 'table table-bordered table-hover',
@@ -58,5 +58,12 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </section><!-- /.content -->
+      </div><!-- /.content-wrapper -->
+    
 
 </div>

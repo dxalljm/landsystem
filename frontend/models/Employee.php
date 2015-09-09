@@ -65,10 +65,11 @@ class Employee extends \yii\db\ActiveRecord
             if (empty($item)) {
                 continue;
             }
-
+			$oldAttr = '';
             // 查找员工
             if(($model = self::findOne($employeesPost['id'][$k])) !== null) {
-                $model->update_at = time();
+            	$oldAttr = $model->attributes;
+            	$model->update_at = time();
             } else {
                 $model = new Employee();
                 $model->create_at = time();
@@ -79,7 +80,8 @@ class Employee extends \yii\db\ActiveRecord
             $model->employeetype = $employeesPost['employeetype'][$k];
             $model->cardid = $employeesPost['cardid'][$k];
             $model->save();
-
+			$newAttr = $model->attributes;
+			Logs::writeLog('雇工信息批量添加更新',$model->id,$oldAttr,$newAttr);
         }
     }
 }

@@ -94,11 +94,6 @@ public function rules()
         return false;
     }
 
-    public static function returnData($status, $data)
-    {
-
-    }
-
     //删除家庭成员信息的静态方法，用来外部调用（farmerController）
     static function memeberDelete($id) {
     	Farmermembers::findOne($id)->delete();

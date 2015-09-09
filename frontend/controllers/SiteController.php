@@ -13,6 +13,7 @@ use app\models\Department;
 use app\models\Parcel;
 use app\models\ManagementArea;
 use app\models\Farms;
+use app\models\Collection;
 /**
  * Site controller
  */
@@ -76,18 +77,28 @@ class SiteController extends Controller
     	foreach ($farms as $value) {
     		if(is_array($value)) {
     			foreach ($value as $k => $v) {
+    				$arrayID[] = $v['id'];
     				$sumMeasure += $v['measure'];
     			}
     		} else {
+    			$arrayID[] = $value['id'];
     			$sumMeasure += $value['measure'];
     		}
     	}
-    	
+    	$real = 0;
+    	$amounts = 0;
+    	$collections = Collection::find()->where(['farms_id'=>$arrayID])->all();
+    	foreach ($collections as $value) {
+    		$real += $value['real_income_amount'];
+    		$amounts += $value['amounts_receivable'];
+    	}
         return $this->render('index',[
         		'areaname' => implode(',', $areaname),
         		'sumMeasure' => $sumMeasure,
         		'farmsRows' => count($farms),
         		'allArea' => Parcel::getAllGrossarea(),
+        		'real' => $real,
+        		'amounts' => $amounts,
         ]);
     }
 
