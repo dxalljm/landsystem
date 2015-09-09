@@ -8,6 +8,7 @@ use frontend\models\pesticidesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Logs;
 
 /**
  * PesticidesController implements the CRUD actions for Pesticides model.
@@ -34,7 +35,7 @@ class PesticidesController extends Controller
     {
         $searchModel = new pesticidesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+		Logs::writeLog('农药管理');
         return $this->render('pesticidesindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -48,6 +49,7 @@ class PesticidesController extends Controller
      */
     public function actionPesticidesview($id)
     {
+    	Logs::writeLog('查看农药信息',$id);
         return $this->render('pesticidesview', [
             'model' => $this->findModel($id),
         ]);
@@ -63,6 +65,8 @@ class PesticidesController extends Controller
         $model = new Pesticides();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('添加农药',$model->id,'',$new);
             return $this->redirect(['pesticidesview', 'id' => $model->id]);
         } else {
             return $this->render('pesticidescreate', [
@@ -80,8 +84,10 @@ class PesticidesController extends Controller
     public function actionPesticidesupdate($id)
     {
         $model = $this->findModel($id);
-
+		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('更新农药信息',$id,$old,$new);
             return $this->redirect(['pesticidesview', 'id' => $model->id]);
         } else {
             return $this->render('pesticidesupdate', [
@@ -98,7 +104,10 @@ class PesticidesController extends Controller
      */
     public function actionPesticidesdelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+    	$old = $model->attributes;
+    	Logs::writeLog('删除农药',$id,$old);
+        $model->delete();
 
         return $this->redirect(['pesticidesindex']);
     }

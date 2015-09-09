@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use app\models\Farmer;
 use app\models\Farms;
 use app\models\Theyear;
+use app\models\Logs;
 
 /**
  * LeaseController implements the CRUD actions for Lease model.
@@ -49,6 +50,7 @@ class LeaseController extends Controller
          $searchModel = new leaseSearch();
          $dataProvider = $searchModel->search(['farms_id'=>$farms_id]);
 		//$this->getView()->registerJsFile($url)
+		Logs::writeLog('租赁');
         return $this->render('leaseindex', [
              'searchModel' => $searchModel,
              'dataProvider' => $dataProvider,
@@ -76,7 +78,7 @@ class LeaseController extends Controller
     	$model = $this->findModel($id);
     	$farm = Farms::find()->where(['id'=>$model->farms_id])->one();
     	$farmer = Farmer::find()->where(['farms_id'=>$model->farms_id])->one();
-    	
+    	Logs::writeLog('查看租赁信息',$id);
         return $this->render('leaseview', [
             'model' => $model,
         	'farm' => $farm,
@@ -111,6 +113,8 @@ class LeaseController extends Controller
         	$model->create_at = time();
         	$model->update_at = time();
         	$model->save();
+        	$new = $model->attributes;
+        	Logs::writeLog('创建租赁信息',$model->id,'',$new);
         	//var_dump($model->getErrors());
             return $this->redirect(['leaseindex', 'farms_id' => $farms_id]);
         } else {
@@ -133,6 +137,7 @@ class LeaseController extends Controller
     public function actionLeaseupdate($id,$farms_id)
     {
         $model = $this->findModel($id);
+        $old = $model->attributes;
         $farm = Farms::find()->where(['id'=>$model->farms_id])->one();
         $farmer = Farmer::find()->where(['farms_id'=>$model->farms_id])->one();
         $overarea = $model::getOverArea($farms_id);
@@ -140,6 +145,8 @@ class LeaseController extends Controller
         if ($model->load(Yii::$app->request->post())) {
         	$model->update_at = time();
         	$model->save();
+        	$new = $model->attributes;
+        	Logs::writeLog('更新租赁信息',$id,$old,$new);
             return $this->redirect(['leaseview', 'id' => $model->id, 'farms_id'=>$model->farms_id]);
         } else {
             return $this->render('leaseupdate', [
@@ -160,10 +167,12 @@ class LeaseController extends Controller
      */
     public function actionLeasedelete($id)
     {
-    	$farms = $this->findModel($id);
-        $this->findModel($id)->delete();
+    	$lease = $this->findModel($id);
+    	$old = $lease->attributes;
+    	Logs::writeLog('删除租赁信息',$id,$old);
+        $lease->delete();
 		
-        return $this->redirect(['leaseindex','farms_id'=>$farms['farms_id']]);
+        return $this->redirect(['leaseindex','farms_id'=>$lease['farms_id']]);
     }
 
     /**

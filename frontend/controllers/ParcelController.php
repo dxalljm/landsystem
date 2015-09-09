@@ -13,6 +13,7 @@ use \PHPExcel_IOFactory;
 use yii\web\UploadedFile;
 use app\models\UploadForm;
 use app\models\Farms;
+use app\models\Logs;
 /**
  * ParcelController implements the CRUD actions for Parcel model.
  */
@@ -38,7 +39,7 @@ class ParcelController extends Controller
     {
         $searchModel = new parcelSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-		
+		Logs::writeLog('宗地管理');
         return $this->render('parcelindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -51,7 +52,7 @@ class ParcelController extends Controller
     	foreach($zongdiarr as $value) {
     		$parcels[] = Parcel::find()->where(['unifiedserialnumber'=>$value])->one();
     	}
-    
+    	
     	return $this->render('parcellist', [
     			'parcels' => $parcels,
     	]);
@@ -82,6 +83,7 @@ class ParcelController extends Controller
      */
     public function actionParcelview($id)
     {
+    	Logs::writeLog('查看宗地信息',$id);
         return $this->render('parcelview', [
             'model' => $this->findModel($id),
         ]);
@@ -97,6 +99,8 @@ class ParcelController extends Controller
         $model = new Parcel();
 		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('创建宗地',$model->id,'',$new);
             return $this->redirect(['parcelview', 'id' => $model->id]);
         } else {
             return $this->render('parcelcreate', [
@@ -137,6 +141,8 @@ class ParcelController extends Controller
     				$parchmodel->netarea =  $loadxls->getActiveSheet()->getCell('K'.$i)->getValue();
     				$parchmodel->figurenumber =  $loadxls->getActiveSheet()->getCell('L'.$i)->getValue();
     				$parchmodel->save();
+    				$new = $parchmodel->attributes;
+    				Logs::writeLog('xls批量导入创建宗地信息',$parchmodel->id,'',$new);
     				//print_r($parchmodel->getErrors());
 	            }
 	        }
@@ -156,8 +162,10 @@ class ParcelController extends Controller
     public function actionParcelupdate($id)
     {
         $model = $this->findModel($id);
-
+		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('更新宗地信息',$id,$old,$new);
             return $this->redirect(['parcelview', 'id' => $model->id]);
         } else {
             return $this->render('parcelupdate', [
@@ -174,7 +182,10 @@ class ParcelController extends Controller
      */
     public function actionParceldelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+    	$old = $model->attributes;
+    	Logs::writeLog('删除宗地',$id,$old);
+        $model->delete();
 
         return $this->redirect(['parcelindex']);
     }

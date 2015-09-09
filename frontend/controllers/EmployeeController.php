@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use app\models\Farmer;
 use app\models\Lease;
 use frontend\models\leaseSearch;
+use app\models\Logs;
 /**
  * EmployeeController implements the CRUD actions for Employee model.
  */
@@ -33,6 +34,7 @@ class EmployeeController extends Controller
     	
     	$lease = Lease::find()->where(['farms_id'=>$farms_id])->all();
 		//$this->getView()->registerJsFile($url)
+		Logs::writeLog('雇工信息');
         return $this->render('employeefathers', [
              'lease' => $lease,
         ]);
@@ -60,6 +62,7 @@ class EmployeeController extends Controller
      */
     public function actionEmployeeview($id)
     {
+    	Logs::writeLog('查看雇工信息',$id);
         return $this->render('employeeview', [
             'model' => $this->findModel($id),
         ]);
@@ -75,6 +78,8 @@ class EmployeeController extends Controller
         $model = new Employee();
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$newAttr = $model->attributes;
+        	Logs::writeLog('创建雇工',$model->id,'',$newAttr);
             return $this->redirect(['employeefathers', 'farms_id' => $farms_id]);
         } else {
             return $this->render('employeecreate', [
@@ -88,7 +93,6 @@ class EmployeeController extends Controller
 
         $model = new Employee();
     	$employees = Employee::find()->where(['father_id'=>$father_id])->all();
-
 
         $EmployeesPost = Yii::$app->request->post('EmployeesPost');
     	if ($EmployeesPost) {
@@ -113,8 +117,10 @@ class EmployeeController extends Controller
     public function actionEmployeeupdate($id,$farms_id)
     {
         $model = $this->findModel($id);
-
+		$oldAttr = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$newAttr = $model->attributes;
+        	Logs::writeLog('更新雇工信息',$id,$oldAttr,$newAttr);
             return $this->redirect(['employeefathers', 'farms_id' => $farms_id]);
         } else {
             return $this->render('employeeupdate', [
@@ -131,7 +137,10 @@ class EmployeeController extends Controller
      */
     public function actionEmployeedelete($id,$farms_id)
     {
-        $this->findModel($id)->delete();
+    	$model = $this->findModel($id);
+    	$oldAttr = $model->attributes;
+    	Logs::writeLog('删除雇工信息',$id,$oldAttr);
+        $model->delete();
 
         return $this->redirect(['employeefathers', 'farms_id' => $farms_id]);
     }

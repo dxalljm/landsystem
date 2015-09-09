@@ -8,6 +8,7 @@ use frontend\models\cooperativeoffarmSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Logs;
 
 /**
  * CooperativeoffarmController implements the CRUD actions for CooperativeOfFarm model.
@@ -34,7 +35,7 @@ class CooperativeoffarmController extends Controller
     {
         $searchModel = new cooperativeoffarmSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+		Logs::writeLog('农场合作社信息');
         return $this->render('cooperativeoffarmindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -48,6 +49,7 @@ class CooperativeoffarmController extends Controller
      */
     public function actionCooperativeoffarmview($id)
     {
+    	Logs::writeLog('查看农场合作社信息',$id);
         return $this->render('cooperativeoffarmview', [
             'model' => $this->findModel($id),
         ]);
@@ -61,8 +63,10 @@ class CooperativeoffarmController extends Controller
     public function actionCooperativeoffarmcreate($farms_id)
     {
         $model = new CooperativeOfFarm();
-
+		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$newAttr = $model->attributes;
+        	Logs::writeLog('创建农场合作社信息',$model->id,'',$newAttr);
             return $this->redirect(['cooperativeoffarmview', 'id' => $model->id,'farms_id'=>$farms_id]);
         } else {
             return $this->render('cooperativeoffarmcreate', [
@@ -80,8 +84,10 @@ class CooperativeoffarmController extends Controller
     public function actionCooperativeoffarmupdate($id,$farms_id)
     {
         $model = $this->findModel($id);
-
+		$oldAttr = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$newAttr = $model->attributes;
+        	Logs::writeLog('更新农场合作社信息',$id,$oldAttr,$newAttr);
             return $this->redirect(['cooperativeoffarmview', 'id' => $model->id,'farms_id'=>$farms_id]);
         } else {
             return $this->render('cooperativeoffarmupdate', [
@@ -98,7 +104,9 @@ class CooperativeoffarmController extends Controller
      */
     public function actionCooperativeoffarmdelete($id,$farms_id)
     {
-        $this->findModel($id)->delete();
+    	$model = $this->findModel($id);
+        $oldAttr = $model->attributes;
+        Logs::writeLog('删除农场合作社信息',$id,$oldAttr);
 
         return $this->redirect(['cooperativeoffarmindex','farms_id'=>$farms_id]);
     }

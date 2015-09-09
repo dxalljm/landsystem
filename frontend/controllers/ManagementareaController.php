@@ -8,6 +8,7 @@ use frontend\models\managementareaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Logs;
 
 /**
  * ManagementareaController implements the CRUD actions for ManagementArea model.
@@ -44,7 +45,7 @@ class ManagementareaController extends Controller
     {
         $searchModel = new managementareaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+		Logs::writeLog('管理区管理');
         return $this->render('managementareaindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -58,6 +59,7 @@ class ManagementareaController extends Controller
      */
     public function actionManagementareaview($id)
     {
+    	Logs::writeLog('查看管理区信息',$id);
         return $this->render('managementareaview', [
             'model' => $this->findModel($id),
         ]);
@@ -73,6 +75,8 @@ class ManagementareaController extends Controller
         $model = new ManagementArea();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('创建管理区',$model->id,'',$new);
             return $this->redirect(['managementareaview', 'id' => $model->id]);
         } else {
             return $this->render('managementareacreate', [
@@ -90,8 +94,10 @@ class ManagementareaController extends Controller
     public function actionManagementareaupdate($id)
     {
         $model = $this->findModel($id);
-
+		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('更新管理区信息',$id,$old,$new);
             return $this->redirect(['managementareaview', 'id' => $model->id]);
         } else {
             return $this->render('managementareaupdate', [
@@ -108,7 +114,10 @@ class ManagementareaController extends Controller
      */
     public function actionManagementareadelete($id)
     {
-        $this->findModel($id)->delete();
+    	$model = $this->findModel($id);
+    	$old = $model->attributes;
+    	Logs::writeLog('删除管理区',$id,$old);
+        $model->delete();
 
         return $this->redirect(['managementareaindex']);
     }

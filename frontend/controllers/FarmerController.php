@@ -15,6 +15,7 @@ use app\models\Lease;
 use app\models\Theyear;
 use app\models\UploadForm;
 use app\models\ManagementArea;
+use app\models\Logs;
 /**
  * FarmerController implements the CRUD actions for farmer model.
  */
@@ -50,7 +51,7 @@ class FarmerController extends Controller
     {
         $searchModel = new farmerSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+		Logs::writeLog('农场主信息');
         return $this->render('farmerindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -64,8 +65,8 @@ class FarmerController extends Controller
     	$lease = Lease::find()->where(['farms_id'=>$id])->all();
     	//$farmer = Farmer::find()->where(['farms_id'=>$id])->one();
     	$farmerid = farmer::find()->where(['farms_id'=>$id])->one()['id'];
-    		 $model = $this->findModel($farmerid);
-
+    	$model = $this->findModel($farmerid);
+		Logs::writeLog('农场详细信息',$id);
             return $this->renderAjax('farmercontract', [
                 'model' => $model,
             	'farm' => $farm,
@@ -104,6 +105,8 @@ class FarmerController extends Controller
     				$farmermodel->telephone =  $loadxls->getActiveSheet()->getCell('D'.$i)->getValue();
   
     				$farmermodel->save();
+    				$newAttr = $farmermodel->attributes;
+    				Logs::writeLog('xls批量导入农场主信息',$farmermodel->id,'',$newAttr);
     				
     				//     				print_r($farmermodel->getErrors());
     			}
@@ -130,9 +133,11 @@ class FarmerController extends Controller
     	$membermodel = Farmermembers::find()->where(['farmer_id' => $farmerid])->all();
     	if($farmerid) {
     		 $model = $this->findModel($farmerid);
+    		 $old = $model->attributes;
 			 //$membermodel = Farmermembers::find()->where(['farmer_id' => $farmerid])->all();
 			 if ($model->load(Yii::$app->request->post()) && $model->save()) {
-
+				$new = $model->attributes;
+				Logs::writeLog('更新法人信息',$model->id,$old,$new);
                  // 得到家庭成员post的数据
                	$parmembers = Yii::$app->request->post('Parmembers');
                	//删除家庭成员
@@ -142,10 +147,13 @@ class FarmerController extends Controller
                  } */
                	//家庭成员的记录数
                	$row = count($parmembers['membername']);
+               	$oldAttr = '';
                	for($i=1;$i<$row;$i++) {
 	               	//判断数据是否存在，如果已经存在则得到该条数据（为更新数据），如果不存在，就新建数据
-	               	if($this->findMemberModel($parmembers['id'][$i]))
+	               	if($this->findMemberModel($parmembers['id'][$i])) {
 	               		$membermodel = $this->findMemberModel($parmembers['id'][$i]);
+	               		$oldAttr = $membermodel->attributes;
+	               	}
 	               	else
 	               		$membermodel = new Farmermembers();
 	               	$membermodel->farmer_id = $farmerid;
@@ -154,6 +162,8 @@ class FarmerController extends Controller
 	               	$membermodel->cardid = $parmembers['cardid'][$i];
 	               	$membermodel->remarks = $parmembers['remarks'][$i];
 	               	$membermodel->save();
+	               	$newAttr = $membermodel->attributes;
+	               	Logs::writeLog('创建家庭成员',$membermodel->id,$oldAttr,$newAttr);
                	}
                	
                	return $this->redirect(['farms/farmsmenu','id'=>$id,'areaid'=>$farm->management_area]);
@@ -187,6 +197,8 @@ class FarmerController extends Controller
 	    	 	}
 	    	 	$model->years = $year;
 	    	 	$issave = $model->save();
+	    	 	$newAttr = $model->attributes;
+	    	 	Logs::writeLog('添加法人信息',$model->id,'',$newAttr);
 	    	 	$parmembers = Yii::$app->request->post('Parmembers');
 	    	 	//print_r($parmembers);
 	    	 	$row = count($parmembers['membername']);
@@ -198,6 +210,8 @@ class FarmerController extends Controller
 	    	 		$membermodel->cardid = $parmembers['cardid'][$i];
 	    	 		$membermodel->remarks = $parmembers['remarks'][$i];
 	    	 		$membermodel->save();
+	    	 		$new = $membermodel->attributes;
+	    	 		Logs::writeLog('添加家庭成员',$membermodel->id,'',$new);
 	    	 	}
 	    	 	if($issave)
 	            	return $this->redirect(['farms/farmsmenu','id'=>$id,'areaid'=>$farm->management_area]);
@@ -220,6 +234,9 @@ class FarmerController extends Controller
     	$result = array_diff($databaseid,$postdataidarr);
     	if($result) {
 	    	foreach($result as $val) {
+	    		$model = Farmermembers::findOne($val);
+	    		$oldAttr = $model->attirbutes;
+	    		Logs::writeLog('删除家庭成员',$val,$oldAttr);
 	    		Farmermembers::memeberDelete($val);
 	    	}
 	    	return true;
