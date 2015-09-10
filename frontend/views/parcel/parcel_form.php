@@ -8,7 +8,6 @@ use yii\widgets\ActiveFormrdiv;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="parcel-form">
 
     <?php $form = ActiveFormrdiv::begin(); ?>
 <table class="table table-striped table-bordered table-hover table-condensed">
@@ -67,4 +66,3 @@ use yii\widgets\ActiveFormrdiv;
 
     <?php ActiveFormrdiv::end(); ?>
 
-</div>

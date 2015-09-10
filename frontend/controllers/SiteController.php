@@ -132,6 +132,7 @@ class SiteController extends Controller
 	
 	public function actionHome()
     {
+
         return $this->render('home');
     }
 

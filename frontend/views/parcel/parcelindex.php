@@ -11,59 +11,55 @@ use yii\grid\GridView;
 $this->title = 'parcel';
 $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctablename'];
 ?>
-<div class="parcel-index">
+<section class="content-header">
+  <h1>
+       <?= Html::a('添加', ['parcelcreate'], ['class' => 'btn btn-success']) ?>
+       <?= Html::a('XLS导入', ['parcelxls'], ['class' => 'btn btn-success']) ?>
+  </h1>
+  <ol class="breadcrumb">
 
-      <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-          <h1>
-           <?= Html::a('添加', ['parcelcreate'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('XLS导入', ['parcelxls'], ['class' => 'btn btn-success']) ?>
-          </h1>
-          <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
-            <li><a href="#"><?= $this->title?></a></li>
-          </ol>
-        </section>
-        <!-- Main content -->
-        <section class="content">
-          <div class="row">
-            <div class="col-xs-12">
-              <div class="box">
+    <li>
+        <a href="#">
+            <i class="fa fa-dashboard"></i>
+            首页
+        </a>
+    </li>
+
+    <li>
+        <a href="#">
+            <?= $this->title?>
+        </a>
+    </li>
+  </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
                 <div class="box-header">
-                  <h3 class="box-title"><?= $this->title ?></h3>
-                </div><!-- /.box-header -->
+                    <h3 class="box-title">
+                        <?= $this->title ?>
+                    </h3>
+                </div>
                 <div class="box-body">
-                  <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        //'tableOptions' => 'table table-bordered table-hover',
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+                    <?=
+                        GridView::widget([
+                            'dataProvider' => $dataProvider,
+                            'filterModel' => $searchModel,
+                            'columns' => [
+                                ['class' => 'yii\grid\SerialColumn'],
+                                'unifiedserialnumber',
+                                'agrotype',
+                                'stonecontent',
+                                'grossarea',
+                                ['class' => 'yii\grid\ActionColumn'],
+                            ],
+                        ]);
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-            //'id',
-            //'serialnumber',
-            //'temporarynumber',
-            'unifiedserialnumber',
-            //'powei',
-            // 'poxiang',
-            // 'podu',
-             'agrotype',
-             'stonecontent',
-             'grossarea',
-            // 'piecemealarea',
-            // 'netarea',
-            // 'figurenumber',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-                </div><!-- /.box-body -->
-              </div><!-- /.box -->
-            </div><!-- /.col -->
-          </div><!-- /.row -->
-        </section><!-- /.content -->
-      </div><!-- /.content-wrapper -->
-    
-
-</div>
