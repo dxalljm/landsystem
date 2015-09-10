@@ -11,18 +11,17 @@ use yii\grid\GridView;
 $this->title = 'parcel';
 $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctablename'];
 ?>
-        <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
-           <?= Html::a('添加', ['parcelcreate'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('XLS导入', ['parcelxls'], ['class' => 'btn btn-success']) ?>
+               <?= Html::a('添加', ['parcelcreate'], ['class' => 'btn btn-success']) ?>
+               <?= Html::a('XLS导入', ['parcelxls'], ['class' => 'btn btn-success']) ?>
           </h1>
           <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
             <li><a href="#"><?= $this->title?></a></li>
           </ol>
         </section>
-        <!-- Main content -->
+
         <section class="content">
           <div class="row">
             <div class="col-xs-12">
