@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use app\models\Employee;
 use app\models\Lease;
 use app\models\Firepreventionemployee;
+use app\models\Logs;
 /**
  * FirepreventionController implements the CRUD actions for Fireprevention model.
  */
@@ -36,7 +37,7 @@ class FirepreventionController extends Controller
     {
         $searchModel = new firepreventionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+		Logs::writeLog('防火工作');
         return $this->render('firepreventionindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -54,6 +55,7 @@ class FirepreventionController extends Controller
     	foreach($lease as $val) {
     		$employees[] = Employee::find()->where(['father_id'=>$val['id']])->all();
     	}
+    	Logs::writeLog('查看防火工作',$id);
         return $this->render('firepreventionview', [
             'model' => $this->findModel($id),
         	'employees' => $employees,
@@ -67,8 +69,11 @@ class FirepreventionController extends Controller
      */
     public function actionFirepreventioncreate($farms_id)
     {
-    	if($this->findFarmsModel($farms_id))
+    	$oldAttr = '';
+    	if($this->findFarmsModel($farms_id)) {
     		$model = $this->findFarmsModel($farms_id);
+    		$oldAttr = $model->attributes;
+    	}
     	else
     		$model = new Fireprevention();
 
@@ -78,23 +83,30 @@ class FirepreventionController extends Controller
 		}
 		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$newAttr = $model->attributes;
+        	Logs::writeLog('添加防火信息',$model->id,$oldAttr,$newAttr);
         $ArrEmployeesFire = Yii::$app->request->post('ArrEmployeesFire');
         $row = count($ArrEmployeesFire['id']);
+        $old = '';
         for($i=0;$i<$row;$i++) {
         	if($this->findFirepreventionemployeeModel($ArrEmployeesFire['id'][$i])) {
         		$fireemployeeModel = $this->findFirepreventionemployeeModel($ArrEmployeesFire['id'][$i]);
+        		$old = $fireemployeeModel->attributes;
         		$fireemployeeModel->update_at = time();
+        		$message = '更新雇工防火信息';
         	}
         	else {
         		$fireemployeeModel = new Firepreventionemployee();
         		$fireemployeeModel->create_at = time();
         		$fireemployeeModel->update_at = time();
+        		$message = '创建雇工防火信息';
         	}
         	$fireemployeeModel->employee_id = $ArrEmployeesFire['employee_id'][$i];
         	$fireemployeeModel->is_smoking = $ArrEmployeesFire['is_smoking'][$i];
         	$fireemployeeModel->is_retarded = $ArrEmployeesFire['is_retarded'][$i];
-        	
+        	$new = $fireemployeeModel->attributes;
         	$fireemployeeModel->save();
+        	Logs::writeLog($message,$fireemployeeModel->id,$old,$new);
         	
         }
             return $this->redirect(['firepreventionview', 'id' => $model->id,'farms_id'=>$farms_id]);

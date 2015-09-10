@@ -156,7 +156,7 @@ class FarmsController extends Controller
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
         	$newAttr = $model->attributes;
-        	var_dump(Logs::writeLog('创建农场',$model->id,'',$newAttr));
+        	Logs::writeLog('创建农场',$model->id,'',$newAttr);
             return $this->redirect(['farmsview', 'id' => $model->id]);
         } else {
         	//Logs::writeLog('农场创建表单');

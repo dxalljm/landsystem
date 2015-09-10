@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Plant;
+use app\models\Logs;
 /**
  * GoodseedController implements the CRUD actions for Goodseed model.
  */
@@ -34,7 +35,7 @@ class GoodseedController extends Controller
     {
         $searchModel = new goodseedSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+		Logs::writeLog('良种信息');
         return $this->render('goodseedindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -48,6 +49,7 @@ class GoodseedController extends Controller
      */
     public function actionGoodseedview($id)
     {
+    	Logs::writeLog('查看良种信息',$id);
         return $this->render('goodseedview', [
             'model' => $this->findModel($id),
         ]);
@@ -62,6 +64,8 @@ class GoodseedController extends Controller
     {
         $model = new Goodseed();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('创建良种信息',$model->id,'',$new);
             return $this->redirect(['goodseedview', 'id' => $model->id]);
         } else {
             return $this->render('goodseedcreate', [
@@ -89,8 +93,10 @@ class GoodseedController extends Controller
     public function actionGoodseedupdate($id)
     {
         $model = $this->findModel($id);
-
+		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('更新良种信息',$id,$old,$new);
             return $this->redirect(['goodseedview', 'id' => $model->id]);
         } else {
             return $this->render('goodseedupdate', [
@@ -107,7 +113,10 @@ class GoodseedController extends Controller
      */
     public function actionGoodseeddelete($id)
     {
-        $this->findModel($id)->delete();
+    	$model = $this->findModel($id);
+    	$old = $model->attributes;
+    	Logs::writeLog('删除良咱信息',$id,$old);
+        $model->delete();
 
         return $this->redirect(['goodseedindex']);
     }

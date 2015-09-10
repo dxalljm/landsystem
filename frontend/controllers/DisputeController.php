@@ -8,6 +8,7 @@ use frontend\models\disputeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Logs;
 
 /**
  * DisputeController implements the CRUD actions for Dispute model.
@@ -34,7 +35,7 @@ class DisputeController extends Controller
     {
         $searchModel = new disputeSearch();
         $dataProvider = $searchModel->search(['farms_id'=>$farms_id]);
-
+		Logs::writeLog('纠纷');
         return $this->render('disputeindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -48,6 +49,7 @@ class DisputeController extends Controller
      */
     public function actionDisputeview($id)
     {
+    	Logs::writeLog('查看纠纷',$id);
         return $this->render('disputeview', [
             'model' => $this->findModel($id),
         ]);
@@ -61,11 +63,13 @@ class DisputeController extends Controller
     public function actionDisputecreate()
     {
         $model = new Dispute();
-
+		
         if ($model->load(Yii::$app->request->post())) {
         	$model->create_at = time();
         	$model->update_at = time();
         	$model->save();
+        	$newAttr = $model->attributes;
+        	Logs::writeLog('创建纠纷',$model->id,'',$newAttr);
             return $this->redirect(['disputeview', 'id' => $model->id]);
         } else {
             return $this->render('disputecreate', [
@@ -83,10 +87,12 @@ class DisputeController extends Controller
     public function actionDisputeupdate($id)
     {
         $model = $this->findModel($id);
-
+		$oldAttr = $model->attributes;
         if ($model->load(Yii::$app->request->post())) {
         	$model->update_at = time();
         	$model->save();
+        	$newAttr = $model->attributes;
+        	Logs::writeLog('更新纠纷',$id,$oldAttr,$newAttr);
             return $this->redirect(['disputeview', 'id' => $model->id]);
         } else {
             return $this->render('disputeupdate', [
@@ -103,7 +109,10 @@ class DisputeController extends Controller
      */
     public function actionDisputedelete($id)
     {
-        $this->findModel($id)->delete();
+    	$model = $this->findModel($id);
+    	$oldAttr = $model->attributes;
+    	Logs::writeLog('删除纠纷',$id,$oldAttr);
+        $model->delete();
 
         return $this->redirect(['disputeindex']);
     }

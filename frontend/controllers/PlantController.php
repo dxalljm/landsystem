@@ -8,6 +8,7 @@ use frontend\models\plantSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Logs;
 
 /**
  * PlantController implements the CRUD actions for Plant model.
@@ -45,7 +46,7 @@ class PlantController extends Controller
     	//print_r(Yii::$app->request->queryParams);
         $searchModel = new plantSearch();
         $dataProvider = $searchModel->search('id>1','with');
-
+		Logs::writeLog('作物管理');
         return $this->render('plantindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -59,6 +60,7 @@ class PlantController extends Controller
      */
     public function actionPlantview($id)
     {
+    	Logs::writeLog('查看作物信息',$id);
         return $this->render('plantview', [
             'model' => $this->findModel($id),
         ]);
@@ -74,6 +76,8 @@ class PlantController extends Controller
         $model = new Plant();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('添加作物',$model->id,'',$new);
             return $this->redirect(['plantview', 'id' => $model->id]);
         } else {
             return $this->render('plantcreate', [
@@ -111,8 +115,10 @@ class PlantController extends Controller
     public function actionPlantupdate($id)
     {
         $model = $this->findModel($id);
-
+		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('更新作物信息',$id,$old,$new);
             return $this->redirect(['plantview', 'id' => $model->id]);
         } else {
             return $this->render('plantupdate', [
@@ -129,7 +135,10 @@ class PlantController extends Controller
      */
     public function actionPlantdelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+    	$old = $model->attributes;
+    	Logs::writeLog('删除作物',$id,$old);
+        $model->delete();
 
         return $this->redirect(['plantindex']);
     }

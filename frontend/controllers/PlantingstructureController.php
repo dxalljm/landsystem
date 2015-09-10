@@ -14,6 +14,7 @@ use app\models\Lease;
 use frontend\models\leaseSearch;
 use app\models\Plantinputproduct;
 use app\models\Plantpesticides;
+use app\models\Logs;
 /**
  * PlantingstructureController implements the CRUD actions for Plantingstructure model.
  */
@@ -38,7 +39,8 @@ class PlantingstructureController extends Controller
     public function actionPlantingstructureindex($farms_id)
     {
         $lease = Lease::find()->where(['farms_id'=>$farms_id])->all();
-		//$this->getView()->registerJsFile($url)
+		$farmname = Farms::findOne($farms_id)['farmname'];
+		Logs::writeLog($farmname.'的种植结构');
         return $this->render('Plantingstructureindex', [
              'leases' => $lease,
         ]);
@@ -51,6 +53,7 @@ class PlantingstructureController extends Controller
      */
     public function actionPlantingstructureview($id)
     {
+    	Logs::writeLog('查看种植结构',$id);
         return $this->render('plantingstructureview', [
             'model' => $this->findModel($id),
         ]);
@@ -64,24 +67,19 @@ class PlantingstructureController extends Controller
     public function actionPlantingstructurecreate($lease_id,$farms_id)
     {
         $model = new Plantingstructure();
-        $plantinputproductModel = new Plantinputproduct();
-        $plantpesticidesModel = new Plantpesticides();
-        $plantinputproductData = Plantinputproduct::find()->where(['farms_id'=>$farms_id,'lessee_id'=>$lease_id])->all();
-        $plantpesticidesData = Plantpesticides::find()->where(['farms_id'=>$farms_id,'lessee_id'=>$lease_id])->all();
+
 		$farm = Farms::find()->where(['id'=>$farms_id])->one();
 		$zongdi = $this->getListZongdi($lease_id);
 		
         if ($model->load(Yii::$app->request->post())) {
             $model->zongdi = Lease::getZongdi($model->zongdi);
         	$model->save();
+        	$new = $model->attributes;
+        	Logs::writeLog('为'.Lease::find()->where(['id'=>$lease_id])->one()['lessee'].'创建种植结构信息',$model->id,'',$new);
             return $this->redirect(['plantingstructureindex', 'farms_id' => $farms_id]);
         } else {
             return $this->render('plantingstructurecreate', [
                 'model' => $model,
-            	'plantpesticidesModel' => $plantpesticidesModel,
-            	'plantinputproductModel' => $plantinputproductModel,
-            	'plantinputproductData' => $plantinputproductData,
-            	'plantpesticidesData' => $plantpesticidesData,
             	'farm' => $farm,
             	'zongdi' => $zongdi,
             ]);
@@ -172,6 +170,7 @@ class PlantingstructureController extends Controller
     public function actionPlantingstructureupdate($id)
     {
         $model = $this->findModel($id);
+        $old = $model->attributes;
         $farm = Farms::find()->where(['id'=>$model->farms_id])->one();
         $lease = Lease::find()->where(['id'=>$model->lease_id])->one();
         $zongdiarr = explode('、', $lease['lease_area']);
@@ -179,6 +178,8 @@ class PlantingstructureController extends Controller
         	$zongdi[]['unifiedserialnumber'] = $value;
         }
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('更新租赁信息',$id,$old,$new);
             return $this->redirect(['plantingstructureview', 'id' => $model->id]);
         } else {
             return $this->render('plantingstructureupdate', [
@@ -197,7 +198,10 @@ class PlantingstructureController extends Controller
      */
     public function actionPlantingstructuredelete($id,$farms_id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+    	$old = $model->attributes;
+    	Logs::writeLog('删除租赁信息',$id,$old);
+        $model->delete();
 
         return $this->redirect(['plantingstructureindex','farms_id'=>$farms_id]);
     }

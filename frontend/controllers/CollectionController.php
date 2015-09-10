@@ -114,8 +114,11 @@ class CollectionController extends Controller
         	else
         		$model->owe = $model->ypaymoney;
 			//print_r($model);
-        	if($model->save())
-            	return $this->redirect(['collectionview', 'id' => $model->id]);
+        	if($model->save()) {
+        		$newAttr = $model->attributes;
+        		Logs::writeLog('收缴一笔承包费',$model->id,'',$newAttr);
+        		return $this->redirect(['collectionview', 'id' => $model->id]);
+        	}
         } else {
             return $this->renderAjax('collectioncreate', [
                 'model' => $model,
@@ -139,8 +142,10 @@ class CollectionController extends Controller
     public function actionCollectionupdate($id)
     {
         $model = $this->findModel($id);
-
+        $oldAttr = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$newAttr = $model->attributes;
+        	Logs::writeLog('更新农场信息',$id,$oldAttr,$newAttr);
             return $this->redirect(['collectionview', 'id' => $model->id]);
         } else {
             return $this->render('collectionupdate', [

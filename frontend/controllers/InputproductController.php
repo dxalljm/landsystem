@@ -8,6 +8,7 @@ use frontend\models\inputproductSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Logs;
 
 /**
  * InputproductController implements the CRUD actions for Inputproduct model.
@@ -34,7 +35,7 @@ class InputproductController extends Controller
     {
         $searchModel = new inputproductSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+		Logs::writeLog('投入器管理');
         return $this->render('inputproductindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -48,6 +49,7 @@ class InputproductController extends Controller
      */
     public function actionInputproductview($id)
     {
+    	Logs::writeLog('查看投入品信息',$id);
         return $this->render('inputproductview', [
             'model' => $this->findModel($id),
         ]);
@@ -73,6 +75,8 @@ class InputproductController extends Controller
         $model = new Inputproduct();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('创建投入品',$model->id,'',$new);
             return $this->redirect(['inputproductview', 'id' => $model->id]);
         } else {
             return $this->render('inputproductcreate', [
@@ -90,8 +94,10 @@ class InputproductController extends Controller
     public function actionInputproductupdate($id)
     {
         $model = $this->findModel($id);
-
+		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('更新调入品信息',$id,$old,$new);
             return $this->redirect(['inputproductview', 'id' => $model->id]);
         } else {
             return $this->render('inputproductupdate', [
@@ -108,7 +114,10 @@ class InputproductController extends Controller
      */
     public function actionInputproductdelete($id)
     {
-        $this->findModel($id)->delete();
+    	$model = $this->findModel($id);
+    	$old = $model->attributes;
+    	Logs::writeLog('删除投入品',$id,$old);
+        $model->delete();
 
         return $this->redirect(['inputproductindex']);
     }

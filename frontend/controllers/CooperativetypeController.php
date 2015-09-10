@@ -9,6 +9,7 @@ use frontend\models\cooperativetypeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Logs;
 
 /**
  * CooperativetypeController implements the CRUD actions for Cooperativetype model.
@@ -35,7 +36,7 @@ class CooperativetypeController extends Controller
     {
         $searchModel = new cooperativetypeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+		Logs::writeLog('合作社类型');
         return $this->render('cooperativetypeindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -49,6 +50,7 @@ class CooperativetypeController extends Controller
      */
     public function actionCooperativetypeview($id)
     {
+    	Logs::writeLog('查看合作社类型',$id);
         return $this->render('cooperativetypeview', [
             'model' => $this->findModel($id),
         ]);
@@ -64,6 +66,8 @@ class CooperativetypeController extends Controller
         $model = new Cooperativetype();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$newAttr = $model->attributes;
+        	Logs::writeLog('创建合作社类型',$model->id,'',$newAttr);
             return $this->redirect(['cooperative/cooperativecreate']);
         } else {
 			return $this->render('cooperativetypecreate', [
@@ -84,6 +88,8 @@ class CooperativetypeController extends Controller
         if (!empty($typeName)) {
             $model->typename = $typeName;
             $model->save();
+            $newAttr = $model->attributes;
+            Logs::writeLog('创建合作社类型',$model->id,'',$newAttr);
             echo json_encode(['status' => 1, 'data' => [$model->id, $model->typename]]);
             Yii::$app->end();
         } else {
@@ -102,8 +108,10 @@ class CooperativetypeController extends Controller
     public function actionCooperativetypeupdate($id)
     {
         $model = $this->findModel($id);
-
+		$oldAttr = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$newAttr = $model->attributes;
+        	Logs::writeLog('更新合作社类型',$id,$oldAttr,$newAttr);
             return $this->redirect(['cooperativetypeview', 'id' => $model->id]);
         } else {
             return $this->render('cooperativetypeupdate', [
@@ -120,7 +128,10 @@ class CooperativetypeController extends Controller
      */
     public function actionCooperativetypedelete($id)
     {
-        $this->findModel($id)->delete();
+    	$model = $this->findModel($id);
+    	$oldAttr = $model->attributes;
+    	Logs::writeLog('删除合作社类型',$id,$oldAttr);
+        $model->delete();
 
         return $this->redirect(['cooperative/cooperativecreate']);
     }
