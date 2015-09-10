@@ -9,7 +9,6 @@ $this->title = '岭南管委会';
 ?>
 
 
-<<<<<<< HEAD
 
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
@@ -684,6 +683,3 @@ $this->title = '岭南管委会';
 
 
 
-
-=======
->>>>>>> origin/master
