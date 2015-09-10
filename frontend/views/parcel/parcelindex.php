@@ -17,8 +17,19 @@ $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctable
        <?= Html::a('XLS导入', ['parcelxls'], ['class' => 'btn btn-success']) ?>
   </h1>
   <ol class="breadcrumb">
-    <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
-    <li><a href="#"><?= $this->title?></a></li>
+
+    <li>
+        <a href="#">
+            <i class="fa fa-dashboard"></i>
+            首页
+        </a>
+    </li>
+
+    <li>
+        <a href="#">
+            <?= $this->title?>
+        </a>
+    </li>
   </ol>
 </section>
 
@@ -27,22 +38,25 @@ $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctable
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title"><?= $this->title ?></h3>
-
+                    <h3 class="box-title">
+                        <?= $this->title ?>
+                    </h3>
                 </div>
                 <div class="box-body">
-                    <?= GridView::widget([
-                        'dataProvider' => $dataProvider,
-                        'filterModel' => $searchModel,
-                        'columns' => [
-                            ['class' => 'yii\grid\SerialColumn'],
-                            'unifiedserialnumber',
-                            'agrotype',
-                            'stonecontent',
-                            'grossarea',
-                            ['class' => 'yii\grid\ActionColumn'],
-                        ],
-                    ]); ?>
+                    <?=
+                        GridView::widget([
+                            'dataProvider' => $dataProvider,
+                            'filterModel' => $searchModel,
+                            'columns' => [
+                                ['class' => 'yii\grid\SerialColumn'],
+                                'unifiedserialnumber',
+                                'agrotype',
+                                'stonecontent',
+                                'grossarea',
+                                ['class' => 'yii\grid\ActionColumn'],
+                            ],
+                        ]);
+                    ?>
                 </div>
             </div>
         </div>
