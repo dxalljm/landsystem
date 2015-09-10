@@ -92,7 +92,6 @@ class SiteController extends Controller
     		$real += $value['real_income_amount'];
     		$amounts += $value['amounts_receivable'];
     	}
-        $this->layout='@app/views/layouts/adminLte.php';
         return $this->render('index',[
         		'areaname' => implode(',', $areaname),
         		'sumMeasure' => $sumMeasure,

@@ -15,9 +15,17 @@
     <link rel="stylesheet" href="./vendor/bower/AdminLTE/dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="./vendor/bower/AdminLTE/dist/css/skins/_all-skins.min.css">
 
-    <?= Html::csrfMetaTags() ?>
+
+    <?php
+        frontend\assets\AppAsset::register($this);
+    ?>
+
+    <?= Html::csrfMetaTags(); ?>
+
+
   </head>
   <body class="skin-blue sidebar-mini">
+
 
     <div class="wrapper">
 

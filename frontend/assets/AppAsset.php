@@ -17,13 +17,24 @@ class AppAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
+
+    // 注册CSS
     public $css = [
         'css/site.css',
+        'vendor/bower/AdminLTE/bootstrap/css/bootstrap.min.css',
+        'vendor/bower/font-awesome/css/font-awesome.min.css',
+        'vendor/bower/AdminLTE/dist/css/AdminLTE.min.css',
+        'vendor/bower/AdminLTE/dist/css/skins/_all-skins.min.css',
     ];
+
+    // 注册JS
     public $js = [
     	'js/main.js',
-    	//'js/jquery.js',
+        'vendor/bower/AdminLTE/bootstrap/js/bootstrap.min.js',
+        'vendor/bower/AdminLTE/dist/js/app.min.js',
     ];
+
+    // 依赖
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
