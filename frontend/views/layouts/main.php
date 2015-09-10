@@ -1,5 +1,8 @@
 <?php
     use yii\helpers\Html;
+    use frontend\assets\AppAsset;
+
+    AppAsset::register($this);
 ?>
 
 <?php $this->beginPage() ?>
@@ -9,23 +12,13 @@
     <meta charset="<?= Yii::$app->charset ?>">
     <title><?= Html::encode($this->title) ?></title>
 
-    <!-- AdminLTE样式文件 -->
-    <link rel="stylesheet" href="./vendor/bower/AdminLTE/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./vendor/bower/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="./vendor/bower/AdminLTE/dist/css/AdminLTE.min.css">
-    <link rel="stylesheet" href="./vendor/bower/AdminLTE/dist/css/skins/_all-skins.min.css">
-
-
-    <?php
-        frontend\assets\AppAsset::register($this);
-    ?>
+    <?php $this->head(); ?>
 
     <?= Html::csrfMetaTags(); ?>
 
 
   </head>
   <body class="skin-blue sidebar-mini">
-
 
     <div class="wrapper">
 

@@ -2,9 +2,6 @@
 use app\models\MenuToUser;
 use app\models\Mainmenu;
 use yii\helpers\Url;
-
-
-
 ?>
 
 <header class="main-header">

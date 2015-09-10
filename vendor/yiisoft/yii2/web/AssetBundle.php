@@ -145,6 +145,7 @@ class AssetBundle extends Object
         foreach ($this->js as $js) {
             $view->registerJsFile($manager->getAssetUrl($this, $js), $this->jsOptions);
         }
+
         foreach ($this->css as $css) {
             $view->registerCssFile($manager->getAssetUrl($this, $css), $this->cssOptions);
         }
