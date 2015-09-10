@@ -34,7 +34,7 @@ $this->title = '岭南管委会';
                   <p>农场</p>
                 </div>
                 <div class="icon">
-                  <i class="ion ion-bag"></i>
+                  <i class="fa fa-th"></i>
                 </div>
                 <i class="fa"></i>
               </div>
@@ -47,7 +47,7 @@ $this->title = '岭南管委会';
                   <p>面积</p>
                 </div>
                 <div class="icon">
-                  <i class="ion ion-stats-bars"></i>
+                  <i class="fa fa-map"></i>
                 </div>
                 <i class="fa"></i>
               </div>
@@ -61,7 +61,7 @@ $this->title = '岭南管委会';
                   <p>缴费情况</p>
                 </div>
                 <div class="icon">
-                  <i class="ion ion-person-add"></i>
+                  <i class="fa fa-yen"></i>
                 </div>
                 
               </div>

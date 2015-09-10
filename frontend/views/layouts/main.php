@@ -97,39 +97,16 @@ use yii\helpers\Url;
                 	<?php }
                 }
                 ?>
-<<<<<<< HEAD
-       <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
-=======
-                <li class="dropdown">
+
+          <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">数据管理 <span class="caret"></span></a>
->>>>>>> origin/master
+
           <ul class="dropdown-menu" role="menu">
             <li><a href="<?= Url::to('index.php?r=nation/nationindex')?>">民族管理</a></li>
             <li class="divider"></li>
-<<<<<<< HEAD
-            <li><a href="#">Separated link</a></li>
-          </ul>
-        </li>
-      </ul>
-      <form class="navbar-form navbar-left" role="search">
-        <div class="form-group">
-          <input type="text" class="form-control" id="navbar-search-input" placeholder="Search">
-        </div>
-      </form>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Link</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-=======
             <li><a href="<?= Url::to('index.php?r=plant/plantindex')?>">作物管理</a></li>
             <li class="divider"></li>
             <li><a href="<?= Url::to('index.php?r=Inputproduct/Inputproductindex')?>">投入品管理</a></li>
->>>>>>> origin/master
             <li class="divider"></li>
             <li><a href="<?= Url::to('index.php?r=pesticides/pesticidesindex')?>">农药管理</a></li>
             <li class="divider"></li>

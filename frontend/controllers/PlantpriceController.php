@@ -8,6 +8,7 @@ use frontend\models\plantpriceSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Logs;
 
 /**
  * PlantpriceController implements the CRUD actions for PlantPrice model.
@@ -43,7 +44,7 @@ class PlantpriceController extends Controller
     {
         $searchModel = new plantpriceSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+		Logs::writeLog('缴费基数');
         return $this->render('plantpriceindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -57,6 +58,7 @@ class PlantpriceController extends Controller
      */
     public function actionPlantpriceview($id)
     {
+    	Logs::writeLog('查看缴费基数',$id);
         return $this->render('plantpriceview', [
             'model' => $this->findModel($id),
         ]);
@@ -72,6 +74,8 @@ class PlantpriceController extends Controller
         $model = new PlantPrice();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('添加缴费基数',$model->id,'',$new);
             return $this->redirect(['plantpriceview', 'id' => $model->id]);
         } else {
             return $this->render('plantpricecreate', [
@@ -89,8 +93,10 @@ class PlantpriceController extends Controller
     public function actionPlantpriceupdate($id)
     {
         $model = $this->findModel($id);
-
+		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('更新缴费基数',$id,$old,$new);
             return $this->redirect(['plantpriceview', 'id' => $model->id]);
         } else {
             return $this->render('plantpriceupdate', [
@@ -107,7 +113,10 @@ class PlantpriceController extends Controller
      */
     public function actionPlantpricedelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+    	$old = $model->attributes;
+    	Logs::writeLog('删除缴费基数',$id,$old);
+        $model->delete();
 
         return $this->redirect(['plantpriceindex']);
     }

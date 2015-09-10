@@ -8,6 +8,7 @@ use frontend\models\plantpesticidesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Logs;
 
 /**
  * PlantpesticidesController implements the CRUD actions for Plantpesticides model.
@@ -34,7 +35,7 @@ class PlantpesticidesController extends Controller
     {
         $searchModel = new plantpesticidesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+		Logs::writeLog('农药使用情况');
         return $this->render('plantpesticidesindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -48,6 +49,7 @@ class PlantpesticidesController extends Controller
      */
     public function actionPlantpesticidesview($id)
     {
+    	Logs::writeLog('查看农药使用情况',$id);
         return $this->render('plantpesticidesview', [
             'model' => $this->findModel($id),
         ]);
@@ -61,8 +63,10 @@ class PlantpesticidesController extends Controller
     public function actionPlantpesticidescreate()
     {
         $model = new Plantpesticides();
-
+		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('添加农药情况情况',$model->id,'',$new);
             return $this->redirect(['plantpesticidesview', 'id' => $model->id]);
         } else {
             return $this->render('plantpesticidescreate', [
@@ -80,8 +84,10 @@ class PlantpesticidesController extends Controller
     public function actionPlantpesticidesupdate($id)
     {
         $model = $this->findModel($id);
-
+		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$new = $model->attributes;
+        	Logs::writeLog('更新农药使用情况',$id,$old,$new);
             return $this->redirect(['plantpesticidesview', 'id' => $model->id]);
         } else {
             return $this->render('plantpesticidesupdate', [
@@ -98,7 +104,10 @@ class PlantpesticidesController extends Controller
      */
     public function actionPlantpesticidesdelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+    	$old = $model->attributes;
+    	Logs::writeLog('删除农药使用情况',$id,$old);
+        $model->delete();
 
         return $this->redirect(['plantpesticidesindex']);
     }

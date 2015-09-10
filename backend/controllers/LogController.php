@@ -1,19 +1,18 @@
 <?php
 
-namespace frontend\controllers;
+namespace backend\controllers;
 
 use Yii;
-use app\models\Theyear;
-use frontend\models\theyearSearch;
+use app\models\Log;
+use frontend\models\logSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\models\Logs;
 
 /**
- * TheyearController implements the CRUD actions for Theyear model.
+ * LogController implements the CRUD actions for Log model.
  */
-class TheyearController extends Controller
+class LogController extends Controller
 {
     public function behaviors()
     {
@@ -28,101 +27,92 @@ class TheyearController extends Controller
     }
 
     /**
-     * Lists all Theyear models.
+     * Lists all Log models.
      * @return mixed
      */
-    public function actionTheyearindex()
+    public function actionLogindex()
     {
-        $searchModel = new theyearSearch();
+        $searchModel = new logSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-		Logs::writeLog('年度管理');
-        return $this->render('theyearindex', [
+
+        return $this->render('logindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single Theyear model.
+     * Displays a single Log model.
      * @param integer $id
      * @return mixed
      */
-    public function actionTheyearview($id)
+    public function actionLogview($id)
     {
-    	Logs::writeLog('查看年度',$id);
-        return $this->render('theyearview', [
+        return $this->render('logview', [
             'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new Theyear model.
+     * Creates a new Log model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionTheyearcreate()
+    public function actionLogcreate()
     {
-        $model = new Theyear();
+        $model = new Log();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$new = $model->attributes;
-        	Logs::writeLog('添加年度',$model->id,'',$new);
-        	
-            return $this->redirect(['theyearview', 'id' => $model->id]);
+            return $this->redirect(['logview', 'id' => $model->id]);
         } else {
-            return $this->render('theyearcreate', [
+            return $this->render('logcreate', [
                 'model' => $model,
             ]);
         }
     }
 
     /**
-     * Updates an existing Theyear model.
+     * Updates an existing Log model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionTheyearupdate()
+    public function actionLogupdate($id)
     {
-        $model = $this->findModel(1);
-		$old = $model->attributes;
+        $model = $this->findModel($id);
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$new = $model->attributes;
-        	Logs::writeLog('更新年度',1,$old,$new);
-            return $this->redirect(['theyearview', 'id' => $model->id]);
+            return $this->redirect(['logview', 'id' => $model->id]);
         } else {
-            return $this->render('theyearupdate', [
+            return $this->render('logupdate', [
                 'model' => $model,
             ]);
         }
     }
 
     /**
-     * Deletes an existing Theyear model.
+     * Deletes an existing Log model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionTheyeardelete()
+    public function actionLogdelete($id)
     {
-        $model = $this->findModel(1);
-    	$old = $model->attributes;
-    	Logs::writeLog('删除年度',1,$old);
-        $model->delete();
+        $this->findModel($id)->delete();
 
-        return $this->redirect(['theyearindex']);
+        return $this->redirect(['logindex']);
     }
 
     /**
-     * Finds the Theyear model based on its primary key value.
+     * Finds the Log model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Theyear the loaded model
+     * @return Log the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Theyear::findOne($id)) !== null) {
+        if (($model = Log::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
