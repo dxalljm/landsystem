@@ -13,12 +13,17 @@ $this->title = '添加'.$title;
 $this->params['breadcrumbs'][] = ['label' => $title, 'url' => ['parcelindex']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="parcel-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<section class="content-header">
+    <h1>
+        <?= Html::encode($this->title) ?>
+        <small>Preview sample</small>
+    </h1>
+</section>
 
+<section class="content">
     <?= $this->render('parcel_form', [
         'model' => $model,
     ]) ?>
 
-</div>
+</section>
