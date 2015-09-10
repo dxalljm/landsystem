@@ -11,9 +11,6 @@ use yii\grid\GridView;
 $this->title = 'parcel';
 $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctablename'];
 ?>
-<div class="parcel-index">
-
-      <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
@@ -63,7 +60,3 @@ $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctable
             </div><!-- /.col -->
           </div><!-- /.row -->
         </section><!-- /.content -->
-      </div><!-- /.content-wrapper -->
-    
-
-</div>
