@@ -168,16 +168,13 @@ var statis = function () {
         },
         // 实收金额
         payment : function () {
-            $.getJSON('index.php?r=farms/getamounts', function () {
+            $.getJSON('index.php?r=collection/getamounts', function (data) {
                 if (data.status == 1) {
-                    $('statis-area').html(data.count);
+                    $('#statis-real').html(data.count.real);
+                    $('#statis-mounts').html(data.count.amounts);
                 }
             });
         }
     }
 }
-var s = statis();
-s.farms();
-s.area();
-s.payment();
 

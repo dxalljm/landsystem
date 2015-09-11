@@ -55,8 +55,8 @@ $this->title = '岭南管委会';
       <!-- small box -->
       <div class="small-box bg-yellow">
         <div class="inner">
-          <h4>实收：<sup style="font-size: 10px"><span id="statis-real"></span>元</sup></h4>
-          <h4>应收：<sup style="font-size: 10px"><span id="statis-mounts"></span>元</sup></h4>
+          <h4>实收：<span id="statis-real"></span><sup style="font-size: 10px">元</sup></h4>
+          <h4>应收：<span id="statis-mounts"></span><sup style="font-size: 10px">元</sup></h4>
           <p>缴费情况</p>
         </div>
         <div class="icon">
@@ -81,4 +81,10 @@ $this->title = '岭南管委会';
   </div><!-- /.row -->
 </section><!-- /.content -->
 
+<script type="text/javascript">
+var s = statis();
+s.farms();
+s.area();
+s.payment();
+</script>
 
