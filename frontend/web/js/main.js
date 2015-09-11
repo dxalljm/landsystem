@@ -151,23 +151,33 @@ var statis = function () {
     return {
         // 农场管理
         farms : function () {
-            $.get('index.php?r=farms/getfarmrows', function () {
-
+            $.getJSON('index.php?r=farms/getfarmrows', function (data) {
+                console.log(data);
+                if (data.status == 1) {
+                    $('#statis-farms').html(data.count);
+                }
             });
         },
         // 面积
         area : function () {
-            $.get('index.php?r=farms/getfarmrows', function () {
-
+            $.getJSON('index.php?r=farms/getfarmrows', function (data) {
+                if (data.status == 1) {
+                    $('#statis-area').html(data.count);
+                }
             });
         },
         // 实收金额
         payment : function () {
-            $.get('index.php?r=farms/getfarmrows', function () {
-
+            $.getJSON('index.php?r=farms/getamounts', function () {
+                if (data.status == 1) {
+                    $('statis-area').html(data.count);
+                }
             });
-
         }
     }
 }
+var s = statis();
+s.farms();
+s.area();
+s.payment();
 

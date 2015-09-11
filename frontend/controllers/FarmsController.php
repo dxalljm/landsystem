@@ -4,7 +4,10 @@ namespace frontend\controllers;
 
 use Yii;
 use app\models\Farms;
+use app\models\User;
+use app\models\Department;
 use frontend\models\farmsSearch;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -63,7 +66,8 @@ class FarmsController extends Controller
     	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
     	$whereArray = explode(',', $departmentData['membership']);
     	$farmsRows = Farms::find()->where(['management_area'=>$whereArray])->count();
-    	return $farmsRows;
+		echo Json::encode(['status' => 1, 'count' => $farmsRows]);
+		Yii::$app->end();
     }
     
     public function actionGetfarmarea()
@@ -83,7 +87,8 @@ class FarmsController extends Controller
     			$sumMeasure += $value['measure'];
     		}
     	}
-    	return $sumMeasure;
+		echo Json::encode(['status' => 1, 'count' => $sumMeasure]);
+		Yii::$app->end();
     }
     
     public function actionFarmsxls()
