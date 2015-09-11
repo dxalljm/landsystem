@@ -25,7 +25,7 @@ $this->title = '岭南管委会';
               <!-- small box -->
               <div class="small-box bg-aqua">
                 <div class="inner">
-                  <h3><sup style="font-size: 20px">个</sup></h3>
+                  <h3><span id="statis-farms"></span><sup style="font-size: 20px">个</sup></h3>
                   <p>农场</p>
                 </div>
                 <div class="icon">
@@ -38,7 +38,7 @@ $this->title = '岭南管委会';
               <!-- small box -->
               <div class="small-box bg-green">
                 <div class="inner">
-                  <h3><sup style="font-size: 20px">亩</sup></h3>
+                  <h3><span id="statis-area"></span><sup style="font-size: 20px">亩</sup></h3>
                   <p>面积</p>
                 </div>
                 <div class="icon">
@@ -51,8 +51,8 @@ $this->title = '岭南管委会';
               <!-- small box -->
               <div class="small-box bg-yellow">
                 <div class="inner">
-                  <h4>实收：2<sup style="font-size: 10px">元</sup></h4>
-                  <h4>应收：3<sup style="font-size: 10px">元</sup></h4>
+                  <h4>实收：<sup style="font-size: 10px"><span id="statis-real"></span>元</sup></h4>
+                  <h4>应收：<sup style="font-size: 10px"><span id="statis-mounts"></span>元</sup></h4>
                   <p>缴费情况</p>
                 </div>
                 <div class="icon">
