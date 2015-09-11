@@ -15,14 +15,25 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="farms-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <section class="content-header">
 
     <p>
         <?= Html::a('添加', ['farmscreate'], ['class' => 'btn btn-success']) ?>
         <?= Html::a('XLS导入', ['farmsxls'], ['class' => 'btn btn-success']) ?>
     </p>
+</section>
 
+    
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <?= $this->title ?>
+                    </h3>
+                </div>
+                <div class="box-body">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -75,4 +86,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 <?php \yii\bootstrap\Modal::end(); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>

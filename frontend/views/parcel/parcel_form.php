@@ -10,7 +10,7 @@ use yii\widgets\ActiveFormrdiv;
 
 
     <?php $form = ActiveFormrdiv::begin(); ?>
-<table class="table table-striped table-bordered table-hover table-condensed">
+<table class="table table-bordered table-hover">
 		<tr>
 <td width=15% align='right'>编号</td>
 <td align='left'><?= $form->field($model, 'serialnumber')->textInput()->label(false)->error(false) ?></td>

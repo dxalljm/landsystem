@@ -16,7 +16,7 @@ use app\models\ManagementArea;
 
     <?php $form = ActiveFormrdiv::begin(); ?>
 <table
-		class="table table-striped table-bordered table-hover table-condensed">
+		class="table table-bordered table-hover">
 		<tr>
 			<td width=15% align='right'>农场名称</td>
 			<td align='left'><?= $form->field($model, 'farmname')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>

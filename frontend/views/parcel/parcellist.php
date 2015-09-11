@@ -13,14 +13,20 @@ $this->title = '宗地明细'
 ?>
 <div class="parcel-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <?= $this->title ?>
+                    </h3>
+                </div>
+                <div class="box-body">
         <?= Html::a('打印', '', ['class' => 'btn btn-success']) ?>
     </p>
 
-    <table class="table table-striped table-bordered table-hover table-condensed">
+    <table class="table table-bordered table-hover">
     
     	<tr>
     		<td align='center'>序号</td>
@@ -55,5 +61,9 @@ $this->title = '宗地明细'
     	</tr>
     	<?php $i++;}?>
     </table>
-
+	                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>

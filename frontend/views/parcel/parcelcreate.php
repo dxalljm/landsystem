@@ -17,13 +17,25 @@ $this->params['breadcrumbs'][] = $this->title;
 <section class="content-header">
     <h1>
         <?= Html::encode($this->title) ?>
-        <small>Preview sample</small>
+        <small></small>
     </h1>
 </section>
 
 <section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <?= $this->title ?>
+                    </h3>
+                </div>
+                <div class="box-body">
     <?= $this->render('parcel_form', [
         'model' => $model,
     ]) ?>
-
+                </div>
+            </div>
+        </div>
+    </div>
 </section>

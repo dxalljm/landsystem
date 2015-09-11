@@ -19,8 +19,16 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="farms-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <?= $this->title ?>
+                    </h3>
+                </div>
+                <div class="box-body">
     <p>
     	 <?= Html::a('添加', ['farmscreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
         <?= Html::a('更新', ['farmsupdate', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -33,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
-    <table class="table table-striped table-bordered table-hover table-condensed">
+    <table class="table table-bordered table-hover">
 		<tr>
 			<td width=15% align='right'>农场名称</td>
 			<td align='left'><?= $model->farmname; ?></td>
@@ -127,6 +135,11 @@ $this->params['breadcrumbs'][] = $this->title;
 			<td align='left'><?= $model->farmersign ?></td>
 		</tr>
 	</table>
+	                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>
 <?php $this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
 

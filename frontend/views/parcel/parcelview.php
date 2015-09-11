@@ -14,8 +14,22 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="parcel-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
+<section class="content-header">
+    <h1>
+        <?= Html::encode($this->title) ?>
+        <small></small>
+    </h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <?= $this->title ?>
+                    </h3>
+                </div>
+                <div class="box-body">
     <p>
     	 <?= Html::a('添加', ['parcelcreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
         <?= Html::a('更新', ['parcelupdate', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -46,5 +60,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'figurenumber',
         ],
     ]) ?>
-
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>

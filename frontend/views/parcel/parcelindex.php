@@ -3,6 +3,7 @@ namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\parcelSearch */
@@ -19,14 +20,14 @@ $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctable
   <ol class="breadcrumb">
 
     <li>
-        <a href="#">
+        <a href="<?= Url::to('index.php?r=site/index')?>">
             <i class="fa fa-dashboard"></i>
             首页
         </a>
     </li>
 
     <li>
-        <a href="#">
+        <a href="<?= Url::to('index.php?r=parcel/parcelindex')?>">
             <?= $this->title?>
         </a>
     </li>

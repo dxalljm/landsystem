@@ -11,7 +11,16 @@ use app\models\ManagementArea;
 
 ?>
 <div class="farms-menu">
-	<h1>业务办理</h1>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        业务办理
+                    </h3>
+                </div>
+                <div class="box-body">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -61,7 +70,11 @@ use app\models\ManagementArea;
             ],
         ],
     ]); ?>
-
+	                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>
 <?php \yii\bootstrap\Modal::begin([
     'id' => 'farmercontract-modal',

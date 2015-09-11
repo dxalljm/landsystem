@@ -7,11 +7,6 @@ use app\models\Farms;
 use yii\helpers\Url;
 $this->title = '岭南管委会';
 ?>
-
-
-
-      <!-- Content Wrapper. Contains page content -->
-      <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
@@ -668,7 +663,6 @@ $this->title = '岭南管委会';
             </div><!-- /.col -->
           </div><!-- /.row -->
         </section><!-- /.content -->
-      </div><!-- /.content-wrapper -->
 
       <footer class="main-footer">
         <div class="pull-right hidden-xs">
