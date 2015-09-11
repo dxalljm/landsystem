@@ -32,8 +32,7 @@ class AppAsset extends AssetBundle
     // 注册JS
     public $js = [
         'js/main.js',
-        //'vendor/bower/AdminLTE/bootstrap/js/bootstrap.min.js',
-         'vendor/bower/AdminLTE/dist/js/app.min.js',
+        'vendor/bower/AdminLTE/bootstrap/js/bootstrap.min.js',
     ];
 
     // 依赖
