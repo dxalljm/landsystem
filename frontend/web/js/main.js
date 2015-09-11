@@ -160,7 +160,7 @@ var statis = function () {
         },
         // 面积
         area : function () {
-            $.getJSON('index.php?r=farms/getfarmrows', function (data) {
+            $.getJSON('index.php?r=farms/getfarmarea', function (data) {
                 if (data.status == 1) {
                     $('#statis-area').html(data.count);
                 }
