@@ -15,6 +15,8 @@ use frontend\models\farmerSearch;
 use app\models\Theyear;
 use app\models\PlantPrice;
 use app\models\Logs;
+use app\models\User;
+use app\models\Department;
 /**
  * CollectionController implements the CRUD actions for Collection model.
  */
@@ -64,12 +66,28 @@ class CollectionController extends Controller
     {
     	$real = 0;
     	$amounts = 0;
+    	$dep_id = User::findByUsername(yii::$app->user->identity->username)['department_id'];
+    	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
+    	$whereArray = explode(',', $departmentData['membership']);
+    	$farms = Farms::find()->where(['management_area'=>$whereArray])->all();
+    	foreach ($farms as $value) {
+    		if(is_array($value)) {
+    			foreach ($value as $k => $v) {
+    				$arrayID[] = $v['id'];
+    			}
+    		} else {
+    			$arrayID[] = $value['id'];
+    		}
+    	}
+    	 
     	$collections = Collection::find()->where(['farms_id'=>$arrayID])->all();
     	foreach ($collections as $value) {
     		$real += $value['real_income_amount'];
     		$amounts += $value['amounts_receivable'];
     	}
-    	return ['real'=>$real,'amounts'=>$amounts];
+    	$resault = ['real'=>$real,'amounts'=>$amounts];
+    	echo json_encode(['status' => 1, 'count' => $resault]);
+		Yii::$app->end();
     }
     
     /**

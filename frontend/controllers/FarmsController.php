@@ -76,6 +76,7 @@ class FarmsController extends Controller
     	$dep_id = User::findByUsername(yii::$app->user->identity->username)['department_id'];
     	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
     	$whereArray = explode(',', $departmentData['membership']);
+    	$farms = Farms::find()->where(['management_area'=>$whereArray])->all();
     	foreach ($farms as $value) {
     		if(is_array($value)) {
     			foreach ($value as $k => $v) {
