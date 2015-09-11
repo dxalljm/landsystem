@@ -57,6 +57,35 @@ class FarmsController extends Controller
         ]);
     }
     
+    public function actionGetfarmrows()
+    {
+    	$dep_id = User::findByUsername(yii::$app->user->identity->username)['department_id'];
+    	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
+    	$whereArray = explode(',', $departmentData['membership']);
+    	$farmsRows = Farms::find()->where(['management_area'=>$whereArray])->count();
+    	return $farmsRows;
+    }
+    
+    public function actionGetfarmarea()
+    {
+    	$sumMeasure = 0;
+    	$dep_id = User::findByUsername(yii::$app->user->identity->username)['department_id'];
+    	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
+    	$whereArray = explode(',', $departmentData['membership']);
+    	foreach ($farms as $value) {
+    		if(is_array($value)) {
+    			foreach ($value as $k => $v) {
+    				$arrayID[] = $v['id'];
+    				$sumMeasure += $v['measure'];
+    			}
+    		} else {
+    			$arrayID[] = $value['id'];
+    			$sumMeasure += $value['measure'];
+    		}
+    	}
+    	return $sumMeasure;
+    }
+    
     public function actionFarmsxls()
     {
     	set_time_limit(0);

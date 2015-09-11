@@ -122,6 +122,8 @@ class SiteController extends Controller
         }
     }
 
+    
+    
     public function actionLogout()
     {
     	Logs::writeLog('用户退出');
