@@ -151,14 +151,21 @@ var statis = function () {
     return {
         // 农场管理
         farms : function () {
+            $.get('index.php?r=farms/getfarmrows', function () {
 
-
+            });
         },
         // 面积
         area : function () {
+            $.get('index.php?r=farms/getfarmrows', function () {
 
+            });
         },
+        // 实收金额
         payment : function () {
+            $.get('index.php?r=farms/getfarmrows', function () {
+
+            });
 
         }
     }
