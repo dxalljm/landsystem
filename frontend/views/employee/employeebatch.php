@@ -14,10 +14,23 @@ $this->params['breadcrumbs'][] = ['label' => $title, 'url' => ['employeefathers'
 
 ?>
 <div class="employee-batch">
-
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <?= $this->title ?>
+                    </h3>
+                </div>
+                <div class="box-body">
     <?= $this->render('batch_form', [
         'model' => $model,
     	'employees' => $employees,
     ]) ?>
-
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>

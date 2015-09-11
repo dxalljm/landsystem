@@ -12,7 +12,7 @@ use app\models\Firepreventionemployee;
 
     <?php $form = ActiveFormrdiv::begin(); ?>
     <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false)->error(false) ?>
-<table width="57%" class="table table-striped table-bordered table-hover table-condensed">
+<table width="57%" class="table table-bordered table-hover">
 		<tr>
 
 <td colspan="3" align='center'><h4>防火、安全、环保合同</h4></td>

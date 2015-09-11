@@ -1,5 +1,6 @@
 <?php 
 use yii\helpers\Url;
+use app\models\Farms;
 ?>
 <aside class="main-sidebar">
     <section class="sidebar" style="height: auto;">
@@ -28,6 +29,7 @@ use yii\helpers\Url;
           <?php 
           	$action = Yii::$app->controller->action->id;
 	    	if($action == 'farmsmenu'){?>
+	    	<li class="header"><?= Farms::find()->where(['id'=>$_GET['id']])->one()['farmname']?></li>
 				<li class="treeview">
                 	<a href="#"><i class="fa fa-dashboard"></i><span>承包</span></a>
            		</li>

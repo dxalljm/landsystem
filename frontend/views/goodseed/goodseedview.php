@@ -14,8 +14,16 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="goodseed-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <?= $this->title ?>
+                    </h3>
+                </div>
+                <div class="box-body">
     <p>
     	 <?= Html::a('添加', ['goodseedcreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
         <?= Html::a('更新', ['goodseedupdate', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -36,5 +44,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'plant_model',
         ],
     ]) ?>
-
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>

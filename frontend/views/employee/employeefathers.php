@@ -16,10 +16,19 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="employee-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <?= $this->title ?>
+                    </h3>
+                </div>
+                <div class="box-body">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-<table class="table table-striped table-bordered table-hover table-condensed">
+<table class="table table-bordered table-hover">
   <tr>
     <td width="20%" colspan="2" align="center">承租人</td>
     <td colspan="2" align="center">租赁面积</td>
@@ -61,5 +70,9 @@ $this->params['breadcrumbs'][] = $this->title;
     </tr>
   <?php }}?>
 </table>
-
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>

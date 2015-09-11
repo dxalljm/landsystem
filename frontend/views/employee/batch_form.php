@@ -15,7 +15,7 @@ use yii\web\View;
     <div class="form-group">
         <h2><?php echo '为 '.Lease::find()->where(['id'=>$_GET['father_id']])->one()['lessee'].' 批量添加雇工';?></h2><?= Html::button('增加人员', ['class' => 'btn btn-info','title'=>'点击可增加雇工人员', 'id' => 'add-employee']) ?>
     </div>
-<table class="table table-striped table-bordered table-hover table-condensed" id="employee">
+<table class="table table-bordered table-hover" id="employee">
 	
  <!-- 模板 -->
 

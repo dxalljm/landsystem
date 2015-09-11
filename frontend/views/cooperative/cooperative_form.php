@@ -12,7 +12,7 @@ use app\models\Cooperativetype;
 
     <?php $form = ActiveFormrdiv::begin(); ?>
     
-<table width="441" class="table table-striped table-bordered table-hover table-condensed">
+<table width="441" class="table table-bordered table-hover">
   <tr>
     <td width="42" align="right">合作社名称</td>
     <td width="344"><?= $form->field($model, 'cooperativename')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>

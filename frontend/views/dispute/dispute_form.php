@@ -11,7 +11,7 @@ use yii\widgets\ActiveFormrdiv;
 <div class="dispute-form">
 
     <?php $form = ActiveFormrdiv::begin(); ?>
-<table class="table table-striped table-bordered table-hover table-condensed">
+<table class="table table-bordered table-hover">
 <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false)->error(false) ?>
 	<tr>
 		<td width=15% align='right'>备注</td>

@@ -113,7 +113,7 @@ use app\models\Lease;
             </h4>
          </div>
          <div class="modal-body">
-            <table class="table table-striped table-bordered table-hover table-condensed">
+            <table class="table table-bordered table-hover">
     
     	<tr>
     		<td align='center'>租赁面积（宗地）</td>

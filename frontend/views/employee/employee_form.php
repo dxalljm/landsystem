@@ -11,7 +11,7 @@ use yii\widgets\ActiveFormrdiv;
 <div class="employee-form">
 
     <?php $form = ActiveFormrdiv::begin(); ?>
-<table class="table table-striped table-bordered table-hover table-condensed">
+<table class="table table-bordered table-hover">
 	<?= $form->field($model, 'father_id')->hiddenInput(['value'=>$_GET['father_id']])->label(false)->error(false) ?>
 
 <tr>

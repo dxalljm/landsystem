@@ -42,7 +42,7 @@ use yii\helpers\Url;
                         <li class="divider"></li>
                         <li><a href="<?= Url::to('index.php?r=plant/plantindex')?>">作物管理</a></li>
                         <li class="divider"></li>
-                        <li><a href="<?= Url::to('index.php?r=Inputproduct/Inputproductindex')?>">投入品管理</a></li>
+                        <li><a href="<?= Url::to('index.php?r=inputproduct/inputproductindex')?>">投入品管理</a></li>
                         <li class="divider"></li>
                         <li><a href="<?= Url::to('index.php?r=pesticides/pesticidesindex')?>">农药管理</a></li>
                         <li class="divider"></li>

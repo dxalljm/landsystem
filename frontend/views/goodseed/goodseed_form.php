@@ -13,7 +13,7 @@ use yii\helpers\ArrayHelper;
 <div class="goodseed-form">
 <?php if(isset($_GET['fahter_id'])) echo $_GET['father_id'];?>
     <?php $form = ActiveFormrdiv::begin(); ?>
-<table class="table table-striped table-bordered table-hover table-condensed">
+<table class="table table-bordered table-hover">
 		<tr>
 <td width=15% align='right'>种植结构大类</td><?php if(isset($_GET['father_id'])) $fathervalue = $_GET['father_id']; else $fathervalue = 1;?>
 <td align='left'><?= html::dropDownList('plant_father',$fathervalue,ArrayHelper::map(Plant::find()->where(['father_id'=>1])->all(), 'id', 'cropname'),['id'=>'plantfather','class'=>'form-control']) ?></td>
