@@ -65,15 +65,16 @@ class SiteController extends Controller
     	Logs::writeLog('访问首页');
     	$dep_id = User::findByUsername(yii::$app->user->identity->username)['department_id'];
     	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
-    	
+
     	$whereArray = explode(',', $departmentData['membership']);
     	$areaname = '';
     	foreach ($whereArray as $value) {
     		$areaname[] = ManagementArea::find()->where(['id' => $value])->one()['areaname'];
     	}
+
+        $areaname = [];
         return $this->render('index',[
-        		'areaname' => implode(',', $areaname),
-        		'allArea' => Parcel::getAllGrossarea(),
+            'areaname' => implode(',', $areaname)
         ]);
     }
 

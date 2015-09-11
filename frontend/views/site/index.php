@@ -5,7 +5,13 @@ use Yii;
 use yii\helpers\Html;
 use app\models\Farms;
 use yii\helpers\Url;
+use yii\web\View;
+
+
+
 $this->title = '岭南管委会';
+
+
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
