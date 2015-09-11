@@ -73,7 +73,6 @@ class SiteController extends Controller
     	}
         return $this->render('index',[
         		'areaname' => implode(',', $areaname),
-        		'allArea' => Parcel::getAllGrossarea(),
         ]);
     }
 
