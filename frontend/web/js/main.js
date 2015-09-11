@@ -147,3 +147,20 @@ var leaseEvent = function () {
 lease = leaseEvent();
 lease.close();
 
+var statis = function () {
+    return {
+        // 农场管理
+        farms : function () {
+
+
+        },
+        // 面积
+        area : function () {
+
+        },
+        payment : function () {
+
+        }
+    }
+}
+
