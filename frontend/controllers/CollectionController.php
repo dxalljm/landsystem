@@ -60,24 +60,16 @@ class CollectionController extends Controller
         ]);
     }
 	
-    public function actionGetreal()
-    {
-    	$real = 0;
-    	$collections = Collection::find()->where(['farms_id'=>$arrayID])->all();
-    	foreach ($collections as $value) {
-    		$real += $value['real_income_amount'];
-    	}
-    	return $real;
-    }
-    
     public function actionGetamounts()
     {
+    	$real = 0;
     	$amounts = 0;
     	$collections = Collection::find()->where(['farms_id'=>$arrayID])->all();
     	foreach ($collections as $value) {
+    		$real += $value['real_income_amount'];
     		$amounts += $value['amounts_receivable'];
     	}
-    	return $amounts;
+    	return ['real'=>$real,'amounts'=>$amounts];
     }
     
     /**
