@@ -21,7 +21,7 @@ use app\models\Lease;
     
     <?= html::hiddenInput('measure',$noarea,['id'=>'measure']);?>
 
-    <table class="table table-striped table-bordered table-hover table-condensed">
+    <table class="table table-bordered table-hover">
   <tr>
     <td width="20%" align="center">农场名称</td>
     <td colspan="2" align="center" width="20%"><?= $farm->farmname?></td>

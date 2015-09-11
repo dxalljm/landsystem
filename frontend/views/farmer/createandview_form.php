@@ -19,7 +19,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 <?php $form = ActiveFormrdiv::begin(['id' => "farmer-form",'enableAjaxValidation' => false,'options' => ['enctype' => 'multipart/form-data'],]); ?>
       <?= $form->field($model, 'isupdate')->hiddenInput()->label(false);?>
       <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['id']])->label(false);?>
-    <table width="662"  class="table table-bordered table-hover table-condensed">
+    <table width="662"  class="table table-bordered table-hover">
       <tr>
         <td width="10%" height="25" align="right" valign="middle">承包人姓名</td>
         <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'farmername')->textInput(['maxlength' => 10])->label(false)->error(false); else echo '&nbsp;'.$model->farmername; ?></td>
@@ -114,7 +114,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 	  
       <thead id="member-family-template" class="d-none">
           <tr>
-              <td><?php echo Html::hiddenInput('Parmembers[id][]', '', ['class' => 'form-control']); ?><?php echo Html::hiddenInput('Parmembers[farmer_id][]', '', ['class' => 'form-control']); ?><?php echo Html::textInput('Parmembers[relationship][]', '', ['class' => 'form-control']); ?></td>
+              <td><?php echo Html::hiddenInput('Parmembers[id][]', '', ['class' => 'form-control']); ?><?php echo Html::hiddenInput('Parmembers[farmer_id][]', '', ['class' => 'form-control']); ?><?php echo Html::dropDownList('Parmembers[relationship][]', '', ['妻子','丈夫','子女','父亲','母亲','岳父','岳母','弟兄','姐妹'],['class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('Parmembers[membername][]', '', ['class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('Parmembers[cardid][]', '', ['class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('Parmembers[remarks][]', '', ['class' => 'form-control']); ?></td>
@@ -132,7 +132,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 		  </tr>
 		  <?php if(empty($membermodel)) {?>
 		  <tr>
-			  <td><?php echo Html::hiddenInput('Parmembers[id][]', '', ['class' => 'form-control']); ?><?php echo Html::hiddenInput('Parmembers[farmer_id][]', '', ['class' => 'form-control']); ?><?php echo Html::textInput('Parmembers[relationship][]', '', ['class' => 'form-control']); ?></td>
+			  <td><?php echo Html::hiddenInput('Parmembers[id][]', '', ['class' => 'form-control']); ?><?php echo Html::hiddenInput('Parmembers[farmer_id][]', '', ['class' => 'form-control']); ?><?php echo Html::dropDownList('Parmembers[relationship][]', '',['妻子','丈夫','子女','父亲','母亲','岳父','岳母','弟兄','姐妹'], ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[membername][]', '', ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[cardid][]', '', ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[remarks][]', '', ['class' => 'form-control']); ?></td>
@@ -141,7 +141,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 		<?php } else {?>
 		<?php foreach($membermodel as $value) { ?>
 		 <tr>
-			  <td><?php echo Html::hiddenInput('Parmembers[id][]', $value['id'], ['class' => 'form-control']); ?><?php echo Html::hiddenInput('Parmembers[farmer_id][]', $value['farmer_id'], ['class' => 'form-control']); ?><?php echo Html::textInput('Parmembers[relationship][]', $value['relationship'], ['class' => 'form-control']); ?></td>
+			  <td><?php echo Html::hiddenInput('Parmembers[id][]', $value['id'], ['class' => 'form-control']); ?><?php echo Html::hiddenInput('Parmembers[farmer_id][]', $value['farmer_id'], ['class' => 'form-control']); ?><?php echo Html::dropDownList('Parmembers[relationship][]', $value['relationship'], ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[membername][]', $value['membername'], ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[cardid][]', $value['cardid'], ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[remarks][]', $value['remarks'], ['class' => 'form-control']); ?></td>

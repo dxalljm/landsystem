@@ -10,9 +10,8 @@ use app\models\Cooperative;
 ?>
 
 <div class="cooperative-of-farm-form">
-
     <?php $form = ActiveFormrdiv::begin(); ?>
-<table class="table table-striped table-bordered table-hover table-condensed">
+<table class="table table-bordered table-hover">
 
 <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false)->error(false) ?>
 

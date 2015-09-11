@@ -7,7 +7,7 @@ use app\models\Nation;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
 use app\models\Plant;
-
+use app\models\Lease;
 /* @var $this yii\web\View */
 /* @var $model app\models\farmer */
 /* @var $form yii\widgets\ActiveForm */
@@ -22,7 +22,7 @@ use app\models\Plant;
 <div class="farmer-form">
 
   <p>农场信息 </p>
-    <table class="table table-striped table-bordered table-hover table-condensed">
+    <table class="table table-bordered table-hover">
       <tr>
         <td width="174" align="right">农场名称：</td>
         <td width="250" align="left">&nbsp;          <?= $farm->farmname;?></td>
@@ -30,16 +30,16 @@ use app\models\Plant;
         <td width="282" align="left">&nbsp;<?= ManagementArea::find()->where(['id'=>$farm->management_area])->one()['areaname'];?></td>
       </tr>
       <tr>
-        <td align="right">承包年限：</td>
-        <td align="left">&nbsp;          <?= $farm->contractlife;?></td>
         <td align="right">审批年度：</td>
-        <td align="left">&nbsp;          <?= $farm->spyear;?></td>
+        <td align="left"><?= $farm->spyear;?></td>
+        <td align="right">面积：</td>
+        <td align="left">&nbsp;
+        <?= $farm->measure;?></td>
       </tr>
       <tr>
-        <td align="right">面积：</td>
-        <td align="left">&nbsp;          <?= $farm->measure;?></td>
         <td align="right">宗地：</td>
-        <td align="left">&nbsp;          <?= $farm->zongdi;?></td>
+        <td colspan="3" align="left">&nbsp;&nbsp;
+        <?= $farm->zongdi;?></td>
       </tr>
       <tr>
         <td align="right">农场位置：</td>
@@ -47,9 +47,9 @@ use app\models\Plant;
         </td>
       </tr>
     </table>
-    <br>
+<br>
    <p>承包人信息</p>
-   <table class="table table-striped table-bordered table-hover table-condensed">
+   <table class="table table-bordered table-hover">
       <tr>
         <td width="170" height="25" align="right">承包人姓名：</td>
         <td width="85"><?= '&nbsp;'.$model->farmername; ?></td>
@@ -93,20 +93,24 @@ use app\models\Plant;
   <br>
   <p>宜林农地租赁</p>
 
-  <table class="table table-striped table-bordered table-hover table-condensed">
+  <table class="table table-bordered table-hover">
   <tr>
     <td align="center">承租人</td>
+    <td align="center">联系电话</td>
     <td align="center">租凭面积</td>
-    <td align="center">种植结构</td>
+    <td align="center">起止日期</td>
     </tr>
-<?php foreach($lease as $val) {?>
+<?php 
+if(!empty($lease)) {
+foreach($lease as $val) {?>
   <tr>
     <td align="center">&nbsp;<?= $val['lessee']?></td>
-    <td align="center">&nbsp;<?= $val['lease_area']?></td>
-    <td align="center">&nbsp;<?= Plant::find()->where(['id'=>$val['plant_id']])->one()['cropname']?></td>
+    <td align="center">&nbsp;<?= $val['lessee_telephone']?></td>
+    <td align="center">&nbsp;<?= Lease::getListArea($val['lease_area'])?></td>
+    <td align="center">&nbsp;从<?= $val['begindate']?>至<?= $val['enddate']?>止</td>
     </tr>
   <tr>
-<?php }?>
+<?php }}?>
 </table>
 </div>
 <script type="text/javascript">

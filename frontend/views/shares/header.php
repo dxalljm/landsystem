@@ -47,6 +47,8 @@ use yii\helpers\Url;
                         <li><a href="<?= Url::to('index.php?r=pesticides/pesticidesindex')?>">农药管理</a></li>
                         <li class="divider"></li>
                         <li><a href="<?= Url::to('index.php?r=goodseed/goodseedindex')?>">良种管理</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<?= Url::to('index.php?r=cooperative/cooperativeindex')?>">合作社管理</a></li>
                     </ul>
                 </li>
             </ul>

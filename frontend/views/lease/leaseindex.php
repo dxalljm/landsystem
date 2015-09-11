@@ -10,8 +10,16 @@ use app\models\Farms;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 ?>
 <div class="lease-index">
-
-    <h1><?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']; ?></h1>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']; ?>
+                    </h3>
+                </div>
+                <div class="box-body">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 	<?php if($areas) {?>
     <p>
@@ -113,5 +121,10 @@ use app\models\Farms;
         ],
     ]); ?>
 <?php }?>
+	                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>
 

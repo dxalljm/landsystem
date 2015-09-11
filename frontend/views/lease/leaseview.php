@@ -14,7 +14,16 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="lease-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <?= $this->title ?>
+                    </h3>
+                </div>
+                <div class="box-body">
 <?php if($noarea) {?>
     <p>
     	 <?= Html::a('添加', ['leasecreate', 'id' => $model->id,'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?>
@@ -28,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 <?php }?>
-    <table class="table table-striped table-bordered table-hover table-condensed">
+    <table class="table table-bordered table-hover">
   <tr>
     <td width="80" align="center">农场名称</td>
     <td colspan="2" align="center"><?= $farm->farmname?></td>
@@ -67,5 +76,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <td align="center">&nbsp;</td>
   </tr>
 </table>
-
+	                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>
