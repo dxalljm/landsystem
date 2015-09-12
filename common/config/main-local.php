@@ -1,6 +1,13 @@
 <?php
 return [
     'components' => [
+		'assetManager' => [
+			'bundles' => [
+				'yii\bootstrap\BootstrapPluginAsset' => [
+					'js'=>[]
+				],
+			],
+		],
 //         'db' => [
 //             'class' => 'yii\db\Connection',
 //             'dsn' => 'mysql:host=feature.jios.org;port=33060;dbname=landsystem',
