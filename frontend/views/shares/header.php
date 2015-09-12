@@ -30,11 +30,8 @@ use yii\helpers\Url;
 
                     foreach($menulistarr as $val) {
                         $menu = Mainmenu::find()->where(['id'=>$val])->one();
-                        echo "<li ><a href=" . Url::to('index.php?r='.$menu['menuurl']) . ">". $menu['menuname'] . "</a></li>";
-                    }
-                    if(Mainmenu::isDropdown($menuliststr)) {
-                    ?>
-                    <li class="dropdown">
+                        if($menu['menuurl'] == 'dropdown') {?>
+                        	<li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">数据管理 <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="<?= Url::to('index.php?r=nation/nationindex')?>">民族管理</a></li>
@@ -49,8 +46,12 @@ use yii\helpers\Url;
                         <li class="divider"></li>
                         <li><a href="<?= Url::to('index.php?r=cooperative/cooperativeindex')?>">合作社管理</a></li>
                     </ul>
-                </li>
-                <?php }  }?>
+                        <?php } else {
+                        echo "<li ><a href=" . Url::to('index.php?r='.$menu['menuurl']) . ">". $menu['menuname'] . "</a></li>";
+                    } ?>
+                    
+               
+                <?php }} ?>
 
                 
             </ul>

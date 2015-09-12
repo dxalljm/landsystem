@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\widgets\Menu;
 
 /**
  * This is the model class for table "{{%mainmenu}}".
@@ -47,7 +48,8 @@ class Mainmenu extends \yii\db\ActiveRecord
     {
     	$menuArr = explode(',', $strMenuID);
     	foreach ($menuArr as $value) {
-    		if($value == 18)
+    		$menuname = Mainmenu::find()->where(['id'=>$value])->one()['menuname'];
+    		if($menuname == 'dropdown')
     			return true;
     		else
     			return false;
