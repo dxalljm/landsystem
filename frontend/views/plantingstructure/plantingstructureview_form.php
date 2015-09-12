@@ -19,7 +19,7 @@ use app\models\Goodseed;
 <div class="plantingstructure-form">
 
     <?php $form = ActiveFormrdiv::begin(); ?>
-<table width="61%" class="table table-striped table-bordered table-hover table-condensed">
+<table width="61%" class="table table-bordered table-hover">
 <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$farm->id])->label(false)->error(false) ?>
 <tr>
 <td width=15% align='right'>农场名称</td>
@@ -150,4 +150,5 @@ $('#inputproductson').change(function(){
 	});
 });
 </script>
+
 </div>

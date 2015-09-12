@@ -13,8 +13,16 @@ use app\models\Lease;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 ?>
 <div class="lease-index">
-
-    <h1><?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']; ?> 的种植结构</h1>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']; ?> 的种植结构
+                    </h3>
+                </div>
+                <div class="box-body">
 
 	<script type="text/javascript">
 	function openwindows(url)
@@ -23,7 +31,7 @@ use app\models\Lease;
 		self.close();
 	}
 	</script>
-<table class="table table-striped table-bordered table-hover table-condensed">
+<table class="table table-bordered table-hover">
   <tr>
     <td width="20%" colspan="2" align="center">承租人</td>
     <td colspan="2" align="center">租赁面积</td>
@@ -74,5 +82,10 @@ use app\models\Lease;
     </tr>
   <?php }}?>
 </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>
 

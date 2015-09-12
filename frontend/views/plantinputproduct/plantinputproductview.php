@@ -14,7 +14,16 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="plantinputproduct-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <?= $this->title ?>
+                    </h3>
+                </div>
+                <div class="box-body">
 
     <p>
     	 <?= Html::a('添加', ['plantinputproductcreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
@@ -42,5 +51,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'plant_id',
         ],
     ]) ?>
-
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>

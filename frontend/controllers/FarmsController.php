@@ -111,7 +111,7 @@ class FarmsController extends Controller
     			$loadxls = \PHPExcel_IOFactory::load($path);
     			$rows = $loadxls->getActiveSheet()->getHighestRow();
     			for($i=1;$i<=$rows;$i++) {
-    				echo $loadxls->getActiveSheet()->getCell('F'.$i)->getValue()."<br>";
+    				//echo $loadxls->getActiveSheet()->getCell('F'.$i)->getValue()."<br>";
     				//echo  ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];"<br>";
     				$farmsmodel = new Farms();
 					$farmsmodel = $this->findModel($loadxls->getActiveSheet()->getCell('A'.$i)->getValue());

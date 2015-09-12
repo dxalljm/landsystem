@@ -13,9 +13,17 @@ use app\models\Theyear;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 ?>
-<div class="farms-menu">
-	<h1>缴费业务(<?= Theyear::findOne(1)['years']?>年度)</h1>
 
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        缴费业务(<?= Theyear::findOne(1)['years']?>年度)
+                    </h3>
+                </div>
+                <div class="box-body">
 <br />
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -67,7 +75,11 @@ use app\models\Theyear;
             ],
         ],
     ]); ?>
-
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>
 <?php
 $script = <<<JS

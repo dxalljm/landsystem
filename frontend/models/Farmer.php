@@ -85,4 +85,8 @@ class Farmer extends \yii\db\ActiveRecord
             'state' => '状态',
         ];
     }
+    public function getfarms()
+    {
+    	return $this->hasOne(Farms::className(), ['id' => 'farms_id']);
+    }
 }

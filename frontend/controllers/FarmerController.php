@@ -96,7 +96,7 @@ class FarmerController extends Controller
     			$rows = $loadxls->getActiveSheet()->getHighestRow();
     			for($i=1;$i<=$rows;$i++) {
     				//echo $loadxls->getActiveSheet()->getCell('F'.$i)->getValue()."<br>";
-    				echo  ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];"<br>";
+    				//echo  ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];"<br>";
     				$farmermodel = new Farmer();
 
     				$farmermodel->farms_id = Farms::find()->where(['farmname'=>$loadxls->getActiveSheet()->getCell('A'.$i)->getValue()])->one()['id'];
@@ -267,18 +267,34 @@ class FarmerController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionFarmerupdate($id)
-    {
-        $model = $this->findModel($id);
+//     public function actionFarmerupdate($id)
+//     {
+//         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['farmerview', 'id' => $model->id]);
-        } else {
-            return $this->render('farmerupdate', [
-                'model' => $model,
-            ]);
-        }
-    }
+//         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//             return $this->redirect(['farmerview', 'id' => $model->id]);
+//         } else {
+//             return $this->render('farmerupdate', [
+//                 'model' => $model,
+//             ]);
+//         }
+//     }
+    
+//     public function addtime()
+//     {
+//     	set_time_limit(0);
+//     	$farmers = Farmer::find()->all();
+    
+//     	foreach ($farmers  as $value) {
+//     		foreach ($value as $key=>$val) {
+//     			$model = $this->findModel($val['id']);
+//     			$model->create_at = time();
+//     			$model->update_at = time();
+//     			$model->save();
+//     		}
+//     	}
+//     	//return $this->render('farmerupdate');
+//     }
 
     /**
      * Deletes an existing Farmer model.

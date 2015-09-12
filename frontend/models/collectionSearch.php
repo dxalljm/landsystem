@@ -16,6 +16,7 @@ class collectionSearch extends Collection
     /**
      * @inheritdoc
      */
+	public $farmname;
 	public function rules()
     {
         return [
@@ -43,8 +44,8 @@ class collectionSearch extends Collection
      */
     public function search($params)
     {
-        $query = Collection::find();
-
+        $query = Collection::find()->where($params);
+        $query->joinWith(['farms']);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -71,7 +72,8 @@ class collectionSearch extends Collection
 
         $query->andFilterWhere(['like', 'payyear', $this->payyear])
             ->andFilterWhere(['like', 'billingtime', $this->billingtime])
-            ->andFilterWhere(['like', 'cardid', $this->cardid]);
+            ->andFilterWhere(['like', 'cardid', $this->cardid])
+            ->andFilterWhere(['like', 'land_farms.farmname', $this->farmname]);
 
         return $dataProvider;
     }

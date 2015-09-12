@@ -68,8 +68,5 @@ class Farms extends \yii\db\ActiveRecord
     	return $this->hasOne(ManagementArea::className(), ['id' => 'management_area']);
     }
     
-    public function getfarms()
-    {
-    	return $this->hasOne(Farms::className(), ['id' => 'farms_id']);
-    }
+    
 }

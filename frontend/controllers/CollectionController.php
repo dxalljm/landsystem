@@ -53,7 +53,7 @@ class CollectionController extends Controller
     	if($year === null)
     		$year = Theyear::findOne(1)['years'];
         $searchModel = new farmerSearch();
-        $dataProvider = $searchModel->search(['years'=>$year]);
+        $dataProvider = $searchModel->search([]);
 		Logs::writeLog('进入承包费收缴页面');
         return $this->render('collectionindex', [
             'searchModel' => $searchModel,

@@ -93,5 +93,8 @@ class Collection extends \yii\db\ActiveRecord
         	'cardid' => '法人身份证',
         ]; 
     } 
-    
+    public function getfarms()
+    {
+    	return $this->hasOne(Farms::className(), ['id' => 'farms_id']);
+    }
 }

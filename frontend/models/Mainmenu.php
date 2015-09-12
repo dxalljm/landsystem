@@ -42,4 +42,15 @@ class Mainmenu extends \yii\db\ActiveRecord
             'menuurl' => '菜单地址',
         ];
     }
+
+    public static function isDropdown($strMenuID)
+    {
+    	$menuArr = explode(',', $strMenuID);
+    	foreach ($menuArr as $value) {
+    		if($value == 18)
+    			return true;
+    		else
+    			return false;
+    	}
+    }
 }
