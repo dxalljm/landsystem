@@ -28,10 +28,10 @@ use app\models\Farms;
           <li class="header">导航栏</li>
           <?php 
           	$action = Yii::$app->controller->action->id;
-	    	if($action == 'farmsmenu'){?>
-	    	<li class="header"><?= Farms::find()->where(['id'=>$_GET['id']])->one()['farmname']?></li>
+	    	if($action == 'farmsmenu' or $action == 'farmercreate' or $action == 'leaseindex'){?>
+	    	<li class="header"><?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']?></li>
 				<li class="treeview">
-                	<a href="#"><i class="fa fa-dashboard"></i><span>承包</span></a>
+                	<a href="<?= Url::to('index.php?r=farmer/farmercreate&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-dashboard"></i><span>承包</span></a>
            		</li>
            		<li class="treeview">
                 	<a href="#"><i class="fa fa-dashboard"></i><span>转让</span></a>
@@ -64,7 +64,7 @@ use app\models\Farms;
           
             
             <li class="treeview">
-                <a href="#"><i class="fa fa-dashboard"></i><span>菜单1</span></a>
+                <a href="<?= url::to('index.php?r=parcel/parcelindex') ?>"><i class="fa fa-dashboard"></i><span>宗地管理</span></a>
             </li>
             <li class="treeview">
                 <a href="#"><i class="fa fa-dashboard"></i><span>菜单1</span></a>

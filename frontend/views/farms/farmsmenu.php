@@ -66,7 +66,7 @@ use app\models\Cooperative;
   <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
         
         ?>
-    <td width="20%" align="center"><?=  Html::a(html::img('images/User With Frame.png',['width'=>'100']),'index.php?r=farmer/farmercreate&id='.$farm->id, [
+    <td width="20%" align="center"><?=  Html::a(html::img('images/User With Frame.png',['width'=>'100']),'index.php?r=farmer/farmercreate&farms_id='.$farm->id, [
             			'id' => 'farmerview',
             			'title' => '承包信息',
             			//'target' => '_blank',

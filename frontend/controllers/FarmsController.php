@@ -149,10 +149,10 @@ class FarmsController extends Controller
     	]);
     }
 
-    public function actionFarmsmenu($id,$areaid)
+    public function actionFarmsmenu($farms_id,$areaid)
     {
-    	$farm = $this->findModel($id);
-    	Logs::writeLog('进入业务办理菜单页面',$id);
+    	$farm = $this->findModel($farms_id);
+    	Logs::writeLog('进入业务办理菜单页面',$farms_id);
     	return $this->render('farmsmenu',[
     		'farm' => $farm,
     		'year' => Theyear::findOne(1),
