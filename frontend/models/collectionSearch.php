@@ -50,6 +50,18 @@ class collectionSearch extends Collection
             'query' => $query,
         ]);
 
+        $dataProvider->setSort([
+        		'attributes' => [
+        
+        				'farmname' => [
+        						'asc' => ['farms.farmname' => SORT_ASC],
+        						'desc' => ['farms.farmname' => SORT_DESC],
+        						//'label' => '管理区',
+        				],
+        
+        		]
+        ]);
+        
         $this->load($params);
 
         if (!$this->validate()) {
@@ -58,6 +70,8 @@ class collectionSearch extends Collection
             return $dataProvider;
         }
 
+        
+        
        $query->andFilterWhere([
             'id' => $this->id,
             'farms_id' => $this->farms_id,

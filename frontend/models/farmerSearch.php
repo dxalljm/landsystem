@@ -43,7 +43,7 @@ class farmerSearch extends farmer
 public function search($params)
     {
     	
-        $query = Farmer::find()->where($params);
+        $query = Farmer::find();
         $query->joinWith(['farms']);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

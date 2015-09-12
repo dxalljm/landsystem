@@ -33,13 +33,14 @@ use app\models\Theyear;
 
           // 'id',
             'farmername',
-            'cardid',
-            'telephone',
+            
             [
             	'label' => '农场',
               	'attribute' => 'farmname',
             	'value' => 'farms.farmname',
             ],
+            'cardid',
+            'telephone',
             [
 
             'format'=>'raw',
