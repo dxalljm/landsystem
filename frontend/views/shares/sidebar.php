@@ -1,6 +1,8 @@
 <?php 
 use yii\helpers\Url;
 use app\models\Farms;
+use app\models\MenuToUser;
+use app\models\Mainmenu;
 ?>
 <aside class="main-sidebar">
     <section class="sidebar" style="height: auto;">
@@ -29,7 +31,7 @@ use app\models\Farms;
           <?php 
           	$action = Yii::$app->controller->action->id;
 	    	if($action == 'farmsmenu' or $action == 'farmercreate' or $action == 'leaseindex'){?>
-	    	<li class="header"><?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']?></li>
+	    	<h3 class="box-title text-light-blue"><?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']?></h3>
 				<li class="treeview">
                 	<a href="<?= Url::to('index.php?r=farmer/farmercreate&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-dashboard"></i><span>承包</span></a>
            		</li>
@@ -37,13 +39,13 @@ use app\models\Farms;
                 	<a href="#"><i class="fa fa-dashboard"></i><span>转让</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="#"><i class="fa fa-dashboard"></i><span>租赁</span></a>
+                	<a href="<?= Url::to('index.php?r=lease/leaseindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-dashboard"></i><span>租赁</span></a>
            		</li>
            		<li class="treeview">
                 	<a href="#"><i class="fa fa-dashboard"></i><span>贷款</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="#"><i class="fa fa-dashboard"></i><span>纠纷</span></a>
+                	<a href="<?= Url::to('index.php?r=dispute/disputeindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-dashboard"></i><span>纠纷</span></a>
            		</li>
            		<li class="treeview">
                 	<a href="#"><i class="fa fa-dashboard"></i><span>贷款</span></a>
@@ -62,22 +64,18 @@ use app\models\Farms;
            		</li>
 	    	<?php } else {?>
           
+          	 <?php
+                if(yii::$app->user->identity->username != 'admin') {
+                    $menuliststr = MenuToUser::find()->where(['user_id'=>\Yii::$app->user->id])->one()['menulist'];
+                    $menulistarr = explode(',', $menuliststr);
+
+                    foreach($menulistarr as $val) {
+                        $menu = Mainmenu::find()->where(['id'=>$val])->one();
+                        echo "<li ><a href=" . Url::to('index.php?r='.$menu['menuurl']) . "><i class='fa fa-dashboard'></i><span>". $menu['menuname'] . "</span></a></li>";
+                    }
+                }
+                ?>
             
-            <li class="treeview">
-                <a href="<?= url::to('index.php?r=parcel/parcelindex') ?>"><i class="fa fa-dashboard"></i><span>宗地管理</span></a>
-            </li>
-            <li class="treeview">
-                <a href="#"><i class="fa fa-dashboard"></i><span>菜单1</span></a>
-            </li>
-            <li class="treeview">
-                <a href="#"><i class="fa fa-dashboard"></i><span>菜单1</span></a>
-            </li>
-            <li class="treeview">
-                <a href="#"><i class="fa fa-dashboard"></i><span>菜单1</span></a>
-            </li>
-            <li class="treeview">
-                <a href="#"><i class="fa fa-dashboard"></i><span>菜单1</span></a>
-            </li>
             <?php }?>
         </ul>
     </section>

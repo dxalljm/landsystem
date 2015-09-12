@@ -123,13 +123,13 @@ class FarmerController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionFarmercreate($id)
+    public function actionFarmercreate($farms_id)
     {
     	//$this->layout='@app/views/layouts/nomain.php';
     	$year = Theyear::findOne(1)['years'];
-    	$farm = Farms::find()->where(['id'=>$id])->one();
+    	$farm = Farms::find()->where(['id'=>$farms_id])->one();
 		
-    	$farmerid = farmer::find()->where(['farms_id'=>$id])->one()['id'];
+    	$farmerid = farmer::find()->where(['farms_id'=>$farms_id])->one()['id'];
     	$membermodel = Farmermembers::find()->where(['farmer_id' => $farmerid])->all();
     	if($farmerid) {
     		 $model = $this->findModel($farmerid);
@@ -166,7 +166,7 @@ class FarmerController extends Controller
 	               	Logs::writeLog('创建家庭成员',$membermodel->id,$oldAttr,$newAttr);
                	}
                	
-               	return $this->redirect(['farms/farmsmenu','id'=>$id,'areaid'=>$farm->management_area]);
+               	return $this->redirect(['farms/farmsmenu','farms_id'=>$farms_id,'areaid'=>$farm->management_area]);
     		 } else {
     		 	return $this->render('farmercreate', [
 		                'model' => $model,

@@ -18,7 +18,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 <?= Html::a('XLS导入', ['farmerxls'], ['class' => 'btn btn-success']) ?>
 <?php $form = ActiveFormrdiv::begin(['id' => "farmer-form",'enableAjaxValidation' => false,'options' => ['enctype' => 'multipart/form-data'],]); ?>
       <?= $form->field($model, 'isupdate')->hiddenInput()->label(false);?>
-      <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['id']])->label(false);?>
+      <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false);?>
     <table width="662"  class="table table-bordered table-hover">
       <tr>
         <td width="10%" height="25" align="right" valign="middle">承包人姓名</td>
