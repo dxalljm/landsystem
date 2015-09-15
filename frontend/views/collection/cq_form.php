@@ -23,7 +23,20 @@ use app\models\Collection;
 <table class="table table-bordered table-hover">
   <tr>
     <td align="right">缴费年度：</td>
-    <td><?= $form->field($model, 'payyear')->textInput(['value'=>$year,'disabled'=>'disabled'])->label(false)->error(false) ?></td>
+    <td><?= $form->field($model, 'payyear')->textInput(['value'=>$year,'disabled'=>'disabled'])->label(false)->error(false)->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+            'autoclose' => true,
+        	'minView' => 3,
+        	'maxView' => 3,
+            'format' => 'yyyy-mm-dd'
+        ]
+]); ?></td>
     <td align="right">开票时间：</td>
     <td><?= $form->field($model, 'billingtime')->hiddenInput(['maxlength' => 500,'value'=>0])->label(false)->error(false) ?></td>
   </tr>

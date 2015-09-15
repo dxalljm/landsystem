@@ -14,10 +14,23 @@ $this->params['breadcrumbs'][] = '更新';
 ?>
 <div class="disputetype-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <?= $this->title ?>
+                    </h3>
+                </div>
+                <div class="box-body">
 
     <?= $this->render('disputetype_form', [
         'model' => $model,
     ]) ?>
-
+	                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>

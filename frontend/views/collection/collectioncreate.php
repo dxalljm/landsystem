@@ -15,7 +15,16 @@ $this->title = $title."(".Farms::find()->where(['id'=>$farmsid])->one()['farmnam
 ?>
 <div class="collection-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        缴费业务(<?= Theyear::findOne(1)['years']?>年度)
+                    </h3>
+                </div>
+                <div class="box-body">
 
     <?= $this->render('collection_form', [
         'model' => $model,
@@ -25,5 +34,9 @@ $this->title = $title."(".Farms::find()->where(['id'=>$farmsid])->one()['farmnam
     	'collectiondataProvider' => $collectiondataProvider,
     	'owe' => $owe,
     ]) ?>
-
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>

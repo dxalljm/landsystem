@@ -45,6 +45,8 @@ use yii\helpers\Url;
                         <li><a href="<?= Url::to('index.php?r=goodseed/goodseedindex')?>">良种管理</a></li>
                         <li class="divider"></li>
                         <li><a href="<?= Url::to('index.php?r=cooperative/cooperativeindex')?>">合作社管理</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<?= Url::to('index.php?r=disputetype/disputetypeindex')?>">纠纷类型</a></li>
                     </ul>
                         <?php } else {
                         echo "<li ><a href=" . Url::to('index.php?r='.$menu['menuurl']) . ">". $menu['menuname'] . "</a></li>";

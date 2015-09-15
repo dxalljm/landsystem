@@ -15,18 +15,18 @@ use dosamigos\datetimepicker\DateTimePicker;
 ?>
 <div class="farmer-form">
 <h3><?= $farm->farmname.'('.Theyear::findOne(1)['years'].'年度)' ?></h3>
-<?= Html::a('XLS导入', ['farmerxls'], ['class' => 'btn btn-success']) ?>
+<?php //echo Html::a('XLS导入', ['farmerxls'], ['class' => 'btn btn-success']) ?>
 <?php $form = ActiveFormrdiv::begin(['id' => "farmer-form",'enableAjaxValidation' => false,'options' => ['enctype' => 'multipart/form-data'],]); ?>
       <?= $form->field($model, 'isupdate')->hiddenInput()->label(false);?>
       <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false);?>
     <table width="662"  class="table table-bordered table-hover">
       <tr>
-        <td width="10%" height="25" align="right" valign="middle">承包人姓名</td>
+        <td width="12%" height="25" align="right" valign="middle">承包人姓名</td>
         <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'farmername')->textInput(['maxlength' => 10])->label(false)->error(false); else echo '&nbsp;'.$model->farmername; ?></td>
         <td width="9%" height="25" align="right" valign="middle">曾用名</td>
         <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'farmerbeforename')->textInput(['maxlength' => 8])->label(false)->error(false); else echo '&nbsp;'.$model->farmerbeforename; ?></td>
         <td width="19%" rowspan="6" align="center" valign="middle"><p>
-          <?php if(!$model->isupdate and $model->photo == '') echo $form->field($model, 'photo')->fileInput(['maxlength' => 200])->label(false)->error(false); else echo Html::img($model->photo,['width'=>'180px','height'=>'200px']); ?>
+          <?php if(!$model->isupdate) echo $form->field($model, 'photo')->fileInput(['maxlength' => 200])->label(false)->error(false); echo Html::img($model->photo,['width'=>'180px','height'=>'200px']); ?>
         </p></td>
      </tr>
       <tr>
@@ -97,7 +97,7 @@ use dosamigos\datetimepicker\DateTimePicker;
       </tr>
       <tr>
         <td align="right" valign="middle">身份证扫描件</td>
-        <td colspan="6" valign="middle"><?php if(!$model->isupdate and $model->cardpic == '') echo $form->field($model, 'cardpic')->fileInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px']); ?></td>
+        <td colspan="6" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'cardpic')->fileInput(['maxlength' => 200])->label(false)->error(false);  echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px']); ?></td>
       </tr>
   </table>
 <h3>家庭主要成员</h3>
@@ -141,7 +141,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 		<?php } else {?>
 		<?php foreach($membermodel as $value) { ?>
 		 <tr>
-			  <td><?php echo Html::hiddenInput('Parmembers[id][]', $value['id'], ['class' => 'form-control']); ?><?php echo Html::hiddenInput('Parmembers[farmer_id][]', $value['farmer_id'], ['class' => 'form-control']); ?><?php echo Html::dropDownList('Parmembers[relationship][]', $value['relationship'], ['class' => 'form-control']); ?></td>
+			  <td><?php echo Html::hiddenInput('Parmembers[id][]', $value['id'], ['class' => 'form-control']); ?><?php echo Html::hiddenInput('Parmembers[farmer_id][]', $value['farmer_id'], ['class' => 'form-control']); ?><?php echo Html::dropDownList('Parmembers[relationship][]', $value['relationship'],['妻子','丈夫','子女','父亲','母亲','岳父','岳母','弟兄','姐妹'], ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[membername][]', $value['membername'], ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[cardid][]', $value['cardid'], ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[remarks][]', $value['remarks'], ['class' => 'form-control']); ?></td>

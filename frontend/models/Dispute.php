@@ -12,6 +12,7 @@ use Yii;
  * @property string $content
  * @property string $create_at
  * @property string $update_at
+ * @property integer $disputetype_id
  */
 class Dispute extends \yii\db\ActiveRecord
 {
@@ -29,9 +30,9 @@ class Dispute extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['farms_id'], 'integer'],
+            [['farms_id', 'disputetype_id'], 'integer'],
             [['content'], 'string'],
-            [['create_at', 'update_at'], 'string', 'max' => 500]
+           
         ];
     }
 
@@ -46,11 +47,7 @@ class Dispute extends \yii\db\ActiveRecord
             'content' => '备注',
             'create_at' => '创建日期',
             'update_at' => '更新日期',
+            'disputetype_id' => '纠纷类型',
         ];
-    }
-    
-    public function getFarms()
-    {
-    	return $this->hasOne(Farms::className(), ['id' => 'farms_id']);
     }
 }

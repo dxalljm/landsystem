@@ -49,7 +49,7 @@ class Farmer extends \yii\db\ActiveRecord
     {
         return [
             [['farms_id', 'isupdate', 'years', 'state'], 'integer'],
-            [['farmername', 'cardid', 'farmerbeforename', 'nickname', 'gender', 'nation', 'political_outlook', 'cultural_degree', 'domicile', 'nowlive', 'telephone', 'living_room', 'photo', 'cardpic', 'create_at', 'update_at', 'contractnumber', 'begindate', 'enddate'], 'string', 'max' => 500]
+            [['farmername', 'cardid', 'farmerbeforename', 'nickname', 'gender', 'nation', 'political_outlook', 'cultural_degree', 'domicile', 'nowlive', 'telephone', 'living_room', 'photo', 'cardpic', 'contractnumber', 'begindate', 'enddate'], 'string', 'max' => 500]
         ];
     }
 

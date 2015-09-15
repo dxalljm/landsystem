@@ -184,14 +184,9 @@ use app\models\Cooperative;
              	]);?></td>
   </tr>
   </table>
-  	                </div>
-            </div>
-        </div>
-    </div>
-</section>
+
  <?php ActiveFormrdiv::end(); ?>
-</div>
-<?php
+ <?php
 $script = <<<JS
 
 
@@ -210,25 +205,12 @@ jQuery('#farmname').change(function(){
 JS;
 $this->registerJs($script);
 ?>
-<?php \yii\bootstrap\Modal::begin([
-    'id' => 'farmercreate-modal',
-	'size'=>'modal-lg',
-	//'header' => '<h4 class="modal-title"></h4>',
-	'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>',
+   	                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-]); 
+</div>
 
-?>
-<?php \yii\bootstrap\Modal::end(); ?>
 
-<?php
-
-\yii\bootstrap\Modal::begin([
-    'id' => 'leaseindex-modal',
-	'size'=>'modal-lg',
-	//'header' => '<h4 class="modal-title"></h4>',
-	'footer' => '<a href="#" class="btn btn-primary" id="close-leaseindex-modal" >关闭</a>',
-]);
-\yii\bootstrap\Modal::end();
-
-?>

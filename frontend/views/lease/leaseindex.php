@@ -58,7 +58,7 @@ use app\models\Farms;
                 // 下面代码来自于 yii\grid\ActionColumn 简单修改了下
                 'view' => function ($url, $model, $key) {
                     $options = [
-                        'title' => Yii::t('yii', 'View'),
+                        'title' => Yii::t('yii', '查看'),
                         'aria-label' => Yii::t('yii', 'View'),
                         'data-pjax' => '0',
                     ];
@@ -67,7 +67,7 @@ use app\models\Farms;
                 },
                 'update' => function ($url, $model, $key) {
                     $options = [
-                        'title' => Yii::t('yii', 'Update'),
+                        'title' => Yii::t('yii', '更新'),
                         'aria-label' => Yii::t('yii', 'Update'),
                         'data-pjax' => '0',
                     ];
@@ -76,7 +76,7 @@ use app\models\Farms;
                 },
                 'delete' => function ($url, $model, $key) {
                     $options = [
-                        'title' => Yii::t('yii', 'Delete'),
+                        'title' => Yii::t('yii', '删除'),
                         'aria-label' => Yii::t('yii', 'Delete'),
                         'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
                         'data-method' => 'post',

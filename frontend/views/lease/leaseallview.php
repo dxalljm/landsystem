@@ -10,8 +10,16 @@ use app\models\Cooperative;
 
 ?>
 <div class="lease-view">
-
-    <h1>租赁情况明细</h1>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        租赁情况明细
+                    </h3>
+                </div>
+                <div class="box-body">
 
 <table class="table table-striped table-bordered table-hover table-condensed">
       <tr>
@@ -63,5 +71,9 @@ use app\models\Cooperative;
   </tr>
   <?php }?>
 </table>
-
+	                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>

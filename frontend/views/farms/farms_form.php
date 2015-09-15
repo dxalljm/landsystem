@@ -31,7 +31,19 @@ use app\models\ManagementArea;
 		</tr>
 		<tr>
 			<td width=15% align='right'>审批年度</td>
-			<td align='left'><?= $form->field($model, 'spyear')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+			<td align='left'><?= $form->field($model, 'spyear')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+            'autoclose' => true,
+        	'startView' => 4,
+        	'minView' => 4,
+            'format' => 'yyyy'
+        ]]);  ?></td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>面积</td>

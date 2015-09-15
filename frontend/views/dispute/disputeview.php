@@ -3,6 +3,8 @@ namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\Farms;
+use app\models\Disputetype;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Dispute */
@@ -26,8 +28,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="box-body">
 
     <p>
-    	 <?= Html::a('添加', ['disputecreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('更新', ['disputeupdate', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+    	 <?= Html::a('添加', ['disputecreate', 'id' => $model->id,'farms_id'=>$model->farms_id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('更新', ['disputeupdate', 'id' => $model->id,'farms_id'=>$model->farms_id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('删除', ['disputedelete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -41,10 +43,26 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'farms_id',
+            [
+            	'label' => '农场名称',
+            	'attribute' => 'farms_id',
+            	'value' => Farms::findOne($model->farms_id)['farmname'],
+            ],
+            [
+            	'attribute' => 'disputetype_id',
+            	'value' => Disputetype::findOne($model->disputetype_id)['typename'],
+            ],
+            
             'content:ntext',
-            'create_at',
-            'update_at',
+            [
+            	'attribute' => 'create_at',
+            	'value' => date('Y-m-d H:m:s',$model->create_at),
+            ],
+            
+            [
+            	'attribute' => 'update_at',
+            	'value' => date('Y-m-d H:m:s',$model->update_at),
+            ],
         ],
     ]) ?>
                 </div>

@@ -29,9 +29,12 @@ use app\models\Mainmenu;
           <!-- /.search form -->
           <li class="header">导航栏</li>
           <?php 
-          	$action = Yii::$app->controller->action->id;
-	    	if($action == 'farmsmenu' or $action == 'farmercreate' or $action == 'leaseindex'){?>
-	    	<h3 class="box-title text-light-blue"><?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']?></h3>
+          	$controller = Yii::$app->controller->id;
+          	$action = yii::$app->controller->action->id;
+	    	if($action == 'farmsmenu' or $controller == 'farmer' or $controller == 'lease' or $controller == 'fireprevention' or $controller == 'dispute' or $controller == 'lease' or $controller == 'cooperativeoffarm' or $controller == 'employee' or $controller == 'plantingstructure' or $controller == 'plantinputproduct'){?>
+	    	<?php if(isset($_GET['farms_id'])) {?>
+	    	<li class="header text-light-blue"><?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']?></li>
+	    	<?php }?>
 				<li class="treeview">
                 	<a href="<?= Url::to('index.php?r=farmer/farmercreate&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-dashboard"></i><span>承包</span></a>
            		</li>
@@ -48,20 +51,21 @@ use app\models\Mainmenu;
                 	<a href="<?= Url::to('index.php?r=dispute/disputeindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-dashboard"></i><span>纠纷</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="#"><i class="fa fa-dashboard"></i><span>贷款</span></a>
+                	<a href="<?= Url::to('index.php?r=cooperativeoffarm/cooperativeoffarmindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-dashboard"></i><span>合作社信息</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="#"><i class="fa fa-dashboard"></i><span>贷款</span></a>
+                	<a href="<?= Url::to('index.php?r=employee/employeefathers&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-dashboard"></i><span>雇工信息</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="#"><i class="fa fa-dashboard"></i><span>贷款</span></a>
+                	<a href="<?= Url::to('index.php?r=plantingstructure/plantingstructureindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-dashboard"></i><span>种植结构</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="#"><i class="fa fa-dashboard"></i><span>贷款</span></a>
+                	<a href="<?= Url::to('index.php?r=plantinputproduct/plantinputproductindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-dashboard"></i><span>投入品</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="#"><i class="fa fa-dashboard"></i><span>贷款</span></a>
+                	<a href="<?= Url::to('index.php?r=fireprevention/firepreventioncreate&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-dashboard"></i><span>防火工作</span></a>
            		</li>
+           		
 	    	<?php } else {?>
           
           	 <?php
@@ -75,7 +79,7 @@ use app\models\Mainmenu;
                     }
                 }
                 ?>
-            
+	            
             <?php }?>
         </ul>
     </section>

@@ -43,7 +43,7 @@ class disputeSearch extends Dispute
     public function search($params)
     {
         $query = Dispute::find()->where($params);
-        $query->joinWith(['farms']);
+        //$query->joinWith(['farms']);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -56,19 +56,19 @@ class disputeSearch extends Dispute
             return $dataProvider;
         }
         
-        $dataProvider->setSort([
-        		'attributes' => [
-        				/* 其它字段不要动 */
-        				/*  下面这段是加入的 */
-        				/*=============*/
-        				'farmsname' => [
-        						'asc' => ['farms.farmname' => SORT_ASC],
-        						'desc' => ['farms.farmname' => SORT_DESC],
-        						'label' => '农场名称'
-        				],
-        				/*=============*/
-        		]
-        ]);
+//         $dataProvider->setSort([
+//         		'attributes' => [
+//         				/* 其它字段不要动 */
+//         				/*  下面这段是加入的 */
+//         				/*=============*/
+//         				'farmsname' => [
+//         						'asc' => ['farms.farmname' => SORT_ASC],
+//         						'desc' => ['farms.farmname' => SORT_DESC],
+//         						'label' => '农场名称'
+//         				],
+//         				/*=============*/
+//         		]
+//         ]);
         
         $query->andFilterWhere([
             'id' => $this->id,
@@ -77,8 +77,8 @@ class disputeSearch extends Dispute
 
         $query->andFilterWhere(['like', 'content', $this->content])
             ->andFilterWhere(['like', 'create_at', $this->create_at])
-            ->andFilterWhere(['like', 'update_at', $this->update_at])
-            ->andFilterWhere(['like', 'farms.farmname', $this->farmname]);
+            ->andFilterWhere(['like', 'update_at', $this->update_at]);
+            //->andFilterWhere(['like', 'farms.farmname', $this->farmname]);
 
         return $dataProvider;
     }

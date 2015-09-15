@@ -14,7 +14,16 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="collection-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        缴费业务(<?= Theyear::findOne(1)['years']?>年度)
+                    </h3>
+                </div>
+                <div class="box-body"
 
     <p>
     	 <?= Html::a('添加', ['collectioncreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
@@ -44,5 +53,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'isupdate',
         ],
     ]) ?>
-
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>

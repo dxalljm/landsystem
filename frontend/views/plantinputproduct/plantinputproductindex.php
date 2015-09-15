@@ -50,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	    	<td align="center"><?= $planting->area;?></td>
 	    	<td align="center"><?= Plant::find()->where(['id'=>$planting->plant_id])->one()['cropname']?></td>
 	    	<td align="center"><?= Goodseed::find()->where(['id'=>$planting->goodseed_id])->one()['plant_model']?></td>
-	    	<td align="center"><?= Html::a('添加', ['plantinputproductcreate','planting_id'=>$planting->id], ['class' => 'btn btn-success']) ?></td>
+	    	<td align="center"><?= Html::a('添加', ['plantinputproductcreate','planting_id'=>$planting->id,'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?></td>
 	    </tr>
 
 <?php foreach (Plantinputproduct::find()->where(['farms_id'=>$planting->farms_id,'lessee_id'=>$planting->lease_id,'zongdi'=>$planting->zongdi,'plant_id'=>$planting->plant_id])->all() as $value) {?>

@@ -70,7 +70,8 @@ class DisputeController extends Controller
         	$model->save();
         	$newAttr = $model->attributes;
         	Logs::writeLog('创建纠纷',$model->id,'',$newAttr);
-            return $this->redirect(['disputeview', 'id' => $model->id]);
+            //var_dump($model->getErrors());
+            return $this->redirect(['disputeview', 'id' => $model->id,'farms_id' => $model->farms_id]);
         } else {
             return $this->render('disputecreate', [
                 'model' => $model,
@@ -93,7 +94,7 @@ class DisputeController extends Controller
         	$model->save();
         	$newAttr = $model->attributes;
         	Logs::writeLog('更新纠纷',$id,$oldAttr,$newAttr);
-            return $this->redirect(['disputeview', 'id' => $model->id]);
+            return $this->redirect(['disputeview', 'id' => $model->id,'farms_id' => $model->farms_id]);
         } else {
             return $this->render('disputeupdate', [
                 'model' => $model,

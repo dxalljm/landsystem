@@ -19,7 +19,7 @@ use app\models\Lease;
 <div class="plantingstructure-form">
 
     <?php $form = ActiveFormrdiv::begin(); ?>
-<table width="61%" class="table table-striped table-bordered table-hover table-condensed">
+<table width="61%" class="table table-bordered table-hover">
 <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$farm->id])->label(false)->error(false) ?>
 <?= $form->field($model, 'lease_id')->hiddenInput(['value'=>$_GET['lease_id']])->label(false)->error(false) ?>
 <tr>
@@ -46,8 +46,7 @@ use app\models\Lease;
   <td colspan="2" align="right">良种型号</td>
   <td colspan="2"><?= $form->field($model, 'goodseed_id')->dropDownList(['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
 </tr>
-<?php foreach ($plantinputproductData as $value) {?>
-<?php }?>
+
 </table>
     <div class="form-group">
     <?php ?>
@@ -188,24 +187,5 @@ $('#inputproductson').change(function(){
 	});
 });
 </script>
-<?php \yii\bootstrap\Modal::begin([
-    'id' => 'plantinputproductcreate-modal',
-	'size'=>'modal-lg',
-	'options' => ['data-keyboard' => 'false', 'data-backdrop' => 'static']
-]); 
-?>
-<?php \yii\bootstrap\Modal::end(); ?>
-<?php \yii\bootstrap\Modal::begin([
-    'id' => 'plantinputproductview-modal',
-	'size'=>'modal-lg',
-	'options' => ['data-keyboard' => 'true', 'data-backdrop' => 'true']
-]); 
-?>
-<?php \yii\bootstrap\Modal::end(); ?>
-<?php \yii\bootstrap\Modal::begin([
-    'id' => 'plantinputproductupdate-modal',
-	'size'=>'modal-lg',
-]); 
-?>
-<?php \yii\bootstrap\Modal::end(); ?>
+
 </div>
