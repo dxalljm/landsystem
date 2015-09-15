@@ -89,7 +89,6 @@ class PlantingstructureController extends Controller
     //获取承租人的宗地信息，如果已经添加过，则过滤掉
     public function getListZongdi($lease_id)
     {
-    	echo '<br><br><br><br><br><br><br>';
     	//$zongdi = array();
     	$lease = Lease::find()->where(['id'=>$lease_id])->one();
     	$zongdiarr = explode('、', $lease['lease_area']);
