@@ -25,57 +25,9 @@ use app\models\Theyear;
                 </div>
                 <div class="box-body">
 <br />
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-          // 'id',
-            'farmername',
-            
-            [
-            	'label' => '农场',
-              	'attribute' => 'farmname',
-            	'value' => 'farms.farmname',
-            ],
-            'cardid',
-            'telephone',
-            [
-
-            'format'=>'raw',
-            //'class' => 'btn btn-primary btn-lg',
-            'value' => function($model,$key){
-            	return Html::a('缴费','#', [
-            			'id' => 'collectionindex',
-            			'title' => '农场相关业务办理',
-            			'data-toggle' => 'modal',
-            			'data-target' => '#collectioncreate-modal',
-            			'onclick' => 'collectioncreate('.$model->farms_id.','.$model->cardid.')',
-            			//'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/collection/collectioncreate','id'=>$key,'year'=>$years])."','','width=700,height=600,top=50,left=380, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
-            	]);
-            }
-            ],
-            [
-
-            'format'=>'raw',
-            //'class' => 'btn btn-primary btn-lg',
-            'value' => function($model,$key){
-            	// $url = ['/user/userassign','id'=>$model->id];
-            	return Html::a('详细信息','#', [
-            			'id' => 'farmercreate',
-            			'title' => '填写承包信息',
-            			'data-toggle' => 'modal',
-            			'data-target' => '#farmercontract-modal',
-            			'onclick' => 'farmercontract('.$model->farms_id.')',
-            			//'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/farmer/farmercontract','id'=>$key])."','','width=1200,height=600,top=50,left=80, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
-
-
-            	]);
-            }
-            ],
-        ],
-    ]); ?>
+    <?= $this->render('farmer_search', [
+        'model' => $model,
+    ]) ?>
                 </div>
             </div>
         </div>

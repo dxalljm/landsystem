@@ -66,13 +66,9 @@ class CollectionController extends Controller
     {
     	if($year === null)
     		$year = Theyear::findOne(1)['years'];
-    	$searchModel = new farmerSearch();
-    	$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-    	Logs::writeLog('进入陈欠页面');
+    	$model = new farmerSearch();
     	return $this->render('collectioncq', [
-    			'searchModel' => $searchModel,
-    			'dataProvider' => $dataProvider,
-    			'years' => $year,
+    			'model' => $model,
     	]);
     }
 	

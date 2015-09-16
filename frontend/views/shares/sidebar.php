@@ -20,7 +20,7 @@ use app\models\Mainmenu;
           <!-- search form -->
           <form action="#" method="get" class="sidebar-form">
             <div class="input-group">
-              <input type="text" name="q" class="form-control" placeholder="搜索">
+              <input type="text" name="q" id="sidebarSearch" class="form-control" placeholder="搜索">
               <span class="input-group-btn">
                 <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
               </span>
@@ -84,3 +84,14 @@ use app\models\Mainmenu;
         </ul>
     </section>
 </aside>
+<?php
+$script = <<<JS
+jQuery('#sidebarSearch').change(function(){
+    var search = $(this).val();
+    $.get('/landsystem/frontend/web/index.php?r=search/searchindex',{year:year},function (data) {
+              $('body').html(data);
+            });
+});
+JS;
+$this->registerJs($script);
+?>

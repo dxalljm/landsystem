@@ -36,10 +36,7 @@ class Lease extends \yii\db\ActiveRecord
     {
     	$areas = 0;
     	preg_match_all('/-([0-9]+)\(([0-9.]+?)\)/', $Leasearea, $area);
-    	if(is_array($areas))
-    		$areas = (float)$area[2][0];
-    	else
-    		$areas = $Leasearea;
+    	$areas = (float)$area[2][0];
     	return $areas;
     }
     public static function getZongdi($Leasearea) {
