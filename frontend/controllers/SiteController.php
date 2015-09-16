@@ -14,6 +14,12 @@ use app\models\Parcel;
 use app\models\ManagementArea;
 use app\models\Farms;
 use app\models\Collection;
+
+
+
+use frontend\helpers\Pinyin;
+
+
 /**
  * Site controller
  */
@@ -62,6 +68,9 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
+      echo Pinyin::encode('中国');
+
+      exit;
     	Logs::writeLog('访问首页');
     	$dep_id = User::findByUsername(yii::$app->user->identity->username)['department_id'];
     	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
