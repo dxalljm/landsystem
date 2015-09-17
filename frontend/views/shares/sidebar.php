@@ -92,10 +92,10 @@ use app\models\Mainmenu;
   $('#sidebarSearch').autocomplete({
       lookup: json,
       formatResult: function (json) {
-        return json.data
+        return json.data;
       },
       onSelect: function (suggestion) {
-          alert('You selected: ' + suggestion.data);
+        return suggestion.data;
       }
   });
 </script>
