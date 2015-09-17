@@ -104,7 +104,11 @@ class Farms extends \yii\db\ActiveRecord
         $data = [];
         $result = Farms::find()->all();
         foreach ($result as $farm) {
-            $data[] = ['value' => $farm['pinyin'], 'data' => $farm['farmname']];
+          $data[] = [
+            'value' => $farm['pinyin'], // 拼音
+            'data' => $farm['farmname'], // 下拉框显示的名称
+            'role' => 1, // 角色 
+          ];
         }
 		$farmer = Farmer::find()->all();
 		foreach ($farmer as $farm) {

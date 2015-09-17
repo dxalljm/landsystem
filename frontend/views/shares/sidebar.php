@@ -95,7 +95,8 @@ use app\models\Mainmenu;
         return json.data;
       },
       onSelect: function (suggestion) {
-        return suggestion.data;
+        console.log(suggestion.role);
+        $(this).val(suggestion.data);
       }
   });
 </script>
