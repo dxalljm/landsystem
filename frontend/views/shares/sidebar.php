@@ -18,9 +18,9 @@ use app\models\Mainmenu;
             </div>
           </div>
           <!-- search form -->
-          <form action="#" method="get" class="sidebar-form">
+          <form action="" method="get" class="sidebar-form">
             <div class="input-group">
-              <input type="text" name="q" id="sidebarSearch"  list="search_list" class="form-control" placeholder="搜索">
+              <input type="text" name="q" id="sidebarSearch" class="form-control" placeholder="搜索">
             </div>
           </form>
           <!-- /.search form -->
@@ -84,9 +84,6 @@ use app\models\Mainmenu;
         </ul>
     </section>
 </aside>
-<datalist id="search_list">
-
-</datalist>
 <script type="text/javascript" charset="utf-8">
   var json = <?= Farms::searchAll() ?>;
   $('#sidebarSearch').autocomplete({
@@ -95,8 +92,9 @@ use app\models\Mainmenu;
         return json.data;
       },
       onSelect: function (suggestion) {
-        console.log(suggestion.role);
+        location.href = suggestion.url;
         $(this).val(suggestion.data);
+        
       }
   });
 </script>

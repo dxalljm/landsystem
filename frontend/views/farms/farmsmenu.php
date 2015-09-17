@@ -46,19 +46,16 @@ use app\models\Plantpesticides;
         <td width="278" align="left"><?= $farm->farmname?></td>
       </tr>
       <tr>
-        <td align="right">合作社</td>
-        <td align="left">&nbsp;
-          <?= Cooperative::find()->where(['id'=>$farm->cooperative_id])->one()['cooperativename']?></td>
         <td align="right">审批年度：</td>
         <td align="left">&nbsp;
           <?= $farm->spyear;?></td>
-      </tr>
-      <tr>
         <td align="right">面积：</td>
         <td align="left">&nbsp;
           <?= $farm->measure.'亩'?></td>
+      </tr>
+      <tr>
         <td align="right">宗地：</td>
-        <td align="left">&nbsp;
+        <td colspan="3" align="left">&nbsp;
           <?= $farm->zongdi;?></td>
       </tr>
       <tr>

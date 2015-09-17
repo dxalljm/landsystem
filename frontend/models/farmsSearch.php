@@ -22,7 +22,7 @@ class farmsSearch extends farms
     {
         return [
             [['id', 'measure'], 'integer'],
-            [['farmname', 'address', 'management_area', 'spyear', 'zongdi', 'cooperative_id', 'surveydate', 'groundsign', 'investigator', 'farmersign'], 'safe'],
+            [['farmname', 'address', 'management_area', 'spyear', 'zongdi', 'surveydate', 'groundsign', 'investigator', 'farmersign'], 'safe'],
         ];
     }
 
@@ -94,7 +94,6 @@ class farmsSearch extends farms
             ->andFilterWhere(['like', 'management_area', $this->management_area])
             ->andFilterWhere(['like', 'spyear', $this->spyear])
             ->andFilterWhere(['like', 'zongdi', $this->zongdi])
-            ->andFilterWhere(['like', 'cooperative_id', $this->cooperative_id])
             ->andFilterWhere(['like', 'surveydate', $this->surveydate])
             ->andFilterWhere(['like', 'groundsign', $this->groundsign])
             ->andFilterWhere(['like', 'investigator', $this->investigator])

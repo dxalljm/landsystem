@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\helpers\Json;
 use app\models\ManagementArea;
+use yii\helpers\Url;
 /**
  * This is the model class for table "{{%farms}}".
  *
@@ -39,7 +40,7 @@ class Farms extends \yii\db\ActiveRecord
         return [
             [['farmname'], 'required'],
             [['measure'], 'number'],
-            [['farmname', 'address', 'zongdi', 'cooperative_id', 'groundsign', 'investigator', 'farmersign','pinyin'], 'string', 'max' => 500]
+            [['farmname', 'address', 'zongdi', 'groundsign', 'investigator', 'farmersign','pinyin'], 'string', 'max' => 500]
         ];
     }
 
@@ -56,7 +57,6 @@ class Farms extends \yii\db\ActiveRecord
             'spyear' => '审批年度',
             'measure' => '面积',
             'zongdi' => '宗地',
-            'cooperative_id' => '合作社',
             'surveydate' => '调查日期',
             'groundsign' => '地产科签字',
             'investigator' => '地星调查员',
@@ -107,12 +107,17 @@ class Farms extends \yii\db\ActiveRecord
           $data[] = [
             'value' => $farm['pinyin'], // 拼音
             'data' => $farm['farmname'], // 下拉框显示的名称
-            'role' => 1, // 角色 
+            'url' => Url::to('index.php?r=farms/farmsmenu&farms_id='.$farm['id']), // 角色 
           ];
         }
-		$farmer = Farmer::find()->all();
-		foreach ($farmer as $farm) {
-			$data[] = ['value' => $farm['pinyin'], 'data' => $farm['farmername']];
+		$farmers = Farmer::find()->all();
+		foreach ($farmers as $farmer) {
+			$data[] = [
+				'value' => $farmer['pinyin'], 
+				'data' => $farmer['farmername'],
+				'url' => Url::to('index.php?r=farms/farmsmenu&farms_id='.$farmer['farms_id']),
+					
+			];
 		}
         $jsonData = Json::encode($data);
         Yii::$app->cache->set($cacheKey, $jsonData, 3);

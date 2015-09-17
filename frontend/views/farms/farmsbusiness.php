@@ -42,7 +42,7 @@ use app\models\ManagementArea;
             'format'=>'raw',
             //'class' => 'btn btn-primary btn-lg',
             'value' => function($model,$key){
-            	$url = ['/farms/farmsmenu','farms_id'=>$model->id,'areaid'=>$model->management_area];
+            	$url = ['/farms/farmsmenu','farms_id'=>$model->id];
             	return Html::a('进入业务办理',$url, [
             			'id' => 'farmermenu',
             			'title' => '农场相关业务办理',

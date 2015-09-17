@@ -54,10 +54,6 @@ use app\models\ManagementArea;
 			<td align='left'><?= $form->field($model, 'zongdi')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
-			<td width=15% align='right'>合作社</td>
-			<td align='left'><?= $form->field($model, 'cooperative_id')->dropDownList(ArrayHelper::map(Cooperative::find()->all(), 'id', 'cooperativename'),['prompt'=>'无'])->label(false)->error(false) ?></td>
-		</tr>
-		<tr>
 			<td width=15% align='right'>调查日期</td>
 			<td align='left'><?= $form->field($model, 'surveydate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
     DateTimePicker::className(), [

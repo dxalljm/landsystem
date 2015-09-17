@@ -44,7 +44,7 @@ class SearchController extends Controller
      * Lists all BankAccount models.
      * @return mixed
      */
-    public function actionSearchindex()
+    public function actionSearchredirect()
     {
        	
     }
@@ -64,26 +64,5 @@ class SearchController extends Controller
     		
     	}
     	echo '完成';
-    }
-
-    /**
-     * Finds the BankAccount model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return BankAccount the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findFarm($str)
-    {
-        $result = Farms::find()->andFilterWhere(['like', 'pinyin', $str])->all();
-
-        return $result;
-    }
-    
-    protected function findFarmer($str)
-    {
-    	$result = Farmer::find()->andFilterWhere(['like', 'pinyin', $str])->all();
-
-        return $result;
     }
 }
