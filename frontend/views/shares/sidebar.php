@@ -92,6 +92,7 @@ $script = <<<JS
 
 $('#sidebarSearch').autocomplete({
     serviceUrl: 'index.php?r=search/getsearch',
+    paramName : 'search',
     params: {search: $(this).val()},
     dataType: 'json',
     transformResult: function(response, originalQuery) {
