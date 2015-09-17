@@ -22,6 +22,12 @@ use app\models\Plantpesticides;
 
 <div class="farms-menu">
 <?php $form = ActiveFormrdiv::begin(); ?>
+    <style>
+        .info-box-content {
+            width: 160px;
+
+        }
+    </style>
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
@@ -229,6 +235,15 @@ use app\models\Plantpesticides;
     </span>
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box --></td>
+
+
+
+
+
+
+
+
+
     <td width="5%" align="center"></td>    
     <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
@@ -246,7 +261,7 @@ use app\models\Plantpesticides;
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box --></td>
     <td width="5%" align="center"></td>
-    <td width="20%" align="center">><!-- Apply any bg-* class to to the info-box to color it -->
+    <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
   <a href='<?= Url::to('index.php?r=fireprevention/firepreventioncreate&farms_id='.$_GET['farms_id']) ?>'><span class="info-box-icon"><i class="fa fa-fire-extinguisher"></i></span></a>
   <div class="info-box-content">
@@ -261,6 +276,32 @@ use app\models\Plantpesticides;
     </span>
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box --></td>
+
+      <td width="5%" align="center"></td>
+      <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
+          <div class="info-box bg-blue">
+              <a href='<?= Url::to('index.php?r=fireprevention/firepreventioncreate&farms_id='.$_GET['farms_id']) ?>'><span class="info-box-icon"><i class="fa fa-fire-extinguisher"></i></span></a>
+              <div class="info-box-content">
+                  <span class="info-box-number">防火工作 </span>
+                  <span class="info-box-text"><?php if(Fireprevention::find()->where(['farms_id'=>$_GET['farms_id']])->count()) echo '完成防火工作'; else echo '未完成防火工作';?></span>
+                  <!-- The progress section is optional -->
+                  <div class="progress">
+                      <div class="progress-bar" style="width: 100%"></div>
+                  </div>
+    <span class="progress-description">
+     防火合同的签订
+    </span>
+              </div><!-- /.info-box-content -->
+          </div><!-- /.info-box --></td>
+
+
+
+
+
+
+
+
+
   </tr>
   </table>
 
