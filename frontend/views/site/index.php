@@ -79,7 +79,6 @@ $this->title = '岭南管委会';
       </div>
     </div><!-- ./col -->
   </div><!-- /.row -->
-  <input type="text" name="q" id="abc" class="form-control" placeholder="搜索">
 
 </section><!-- /.content -->
 
@@ -89,30 +88,3 @@ s.farms();
 s.area();
 s.payment();
 </script>
-<?php
-$script = <<<JS
-
-var countries = [
-    { value: 'Andorra', data: 'AD' },
-    // ...
-    { value: 'Zimbabwe', data: 'ZZ' }
-];
-
-$('#abc').autocomplete({
-    serviceUrl: 'index.php?r=search/getsearch',
-    params: {search: $(this).val()},
-    lookup: function (query, done) {
-        console.log(query);
-
-    },
-    onSelect: function (suggestion) {
-        alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
-    }
-
-});
-
-
-JS;
-$this->registerJs($script);
-?>
-

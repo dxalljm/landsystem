@@ -49,26 +49,6 @@ class SearchController extends Controller
        	
     }
 
-    public function actionGetsearch()
-    {
-    	$farm = Farms::find()->all();
-    	//var_dump($farm);
-    	$farmData = NULL;
-    	foreach($farm as $key=>$val){
-    		$searchData[] = [$val['pinyin'] => $val['farmname']];
-    	}
-    	$farmer = Farmer::find()->all();
-    	$farmerData = NULL;
-    	foreach ($farmer as $key => $val) {
-    		$searchData[] = [$val['pinyin'] => $val['farmername']];
-    	}
-    	echo json_encode(['status'=>1,'searchdata'=>$searchData]);
-    }
-    
-    public function geturl()
-    {
-    	
-    }
     
     public function actionSetpinyin()
     {
