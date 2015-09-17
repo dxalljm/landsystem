@@ -51,13 +51,13 @@ class SearchController extends Controller
 
     public function actionGetsearch()
     {
-    	$farm = $this->findFarm($_GET['search']);
+    	$farm = Farms::find()->all();
     	//var_dump($farm);
     	$farmData = NULL;
     	foreach($farm as $key=>$val){
     		$searchData[] = [$val['pinyin'] => $val['farmname']];
     	}
-    	$farmer = $this->findFarmer($_GET['search']);
+    	$farmer = Farmer::find()->all();
     	$farmerData = NULL;
     	foreach ($farmer as $key => $val) {
     		$searchData[] = [$val['pinyin'] => $val['farmername']];
