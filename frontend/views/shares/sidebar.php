@@ -95,7 +95,6 @@ $('#sidebarSearch').autocomplete({
     params: {search: $(this).val()},
     dataType: 'json',
     transformResult: function(response, originalQuery) {
-        console.log(response);
         return {
             suggestions: $.map(response.farmdata, function(dataItem) {
                 return { value: dataItem, data: dataItem};
