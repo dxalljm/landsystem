@@ -234,15 +234,6 @@ use app\models\Plantpesticides;
     </span>
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box --></td>
-
-
-
-
-
-
-
-
-
     <td width="5%" align="center"></td>    
     <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
@@ -277,7 +268,19 @@ use app\models\Plantpesticides;
 </div><!-- /.info-box --></td>
 
       <td width="5%" align="center"></td>
-      <td width="20%" align="center"></td>
+      <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
+<div class="info-box bg-blue">
+  <span class="info-box-icon"><i class="fa fa-ban"></i></span>
+  <div class="info-box-content">
+  <span class="info-box-number"></span>
+    <span class="info-box-text"></span>
+    <!-- The progress section is optional -->
+
+    <span class="progress-description">
+     
+    </span>
+  </div><!-- /.info-box-content -->
+</div><!-- /.info-box --></td>
   </tr>
   </table>
 
