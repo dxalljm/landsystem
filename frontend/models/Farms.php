@@ -106,9 +106,13 @@ class Farms extends \yii\db\ActiveRecord
         foreach ($result as $farm) {
             $data[] = ['value' => $farm['pinyin'], 'data' => $farm['farmname']];
         }
-
+		$farmer = Farmer::find()->all();
+		foreach ($farmer as $farm) {
+			$data[] = ['value' => $farm['pinyin'], 'data' => $farm['farmername']];
+		}
         $jsonData = Json::encode($data);
-        Yii::$app->cache->set($cacheKey, $jsonData, 3600);
+        Yii::$app->cache->set($cacheKey, $jsonData, 3);
+        
         return $jsonData;
     }
     
