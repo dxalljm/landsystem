@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\Json;
 use app\models\ManagementArea;
 /**
  * This is the model class for table "{{%farms}}".
@@ -67,6 +68,48 @@ class Farms extends \yii\db\ActiveRecord
     public function getmanagementarea()
     {
     	return $this->hasOne(ManagementArea::className(), ['id' => 'management_area']);
+    }
+
+    /**
+     * 修改农场保存之后
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        // 调用父级afterSave
+        parent::afterSave($insert, $changedAttributes);
+
+        // 删除指定缓存
+        $cacheKeyList = [
+            'farms-search-all'
+        ];
+        foreach ($cacheKeyList as $cacheName) {
+            Yii::$app->cache->delete($cacheKey);
+        }
+    }
+
+    /**
+     * 搜索所有农场信息
+     * @author wubaiqing <wubaiqing@vip.qq.com>
+     */
+    public static function searchAll()
+    {
+        $cacheKey = 'farms-search-all';
+
+        $result = Yii::$app->cache->get($cacheKey);
+        if (!empty($result)) {
+            return $result;
+        }
+
+        // 所有农场
+        $data = [];
+        $result = Farms::find()->all();
+        foreach ($result as $farm) {
+            $data[] = ['value' => $farm['pinyin'], 'data' => $farm['farmname']];
+        }
+
+        $jsonData = Json::encode($data);
+        Yii::$app->cache->set($cacheKey, $jsonData, 3600);
+        return $jsonData;
     }
     
     

@@ -87,28 +87,15 @@ use app\models\Mainmenu;
 <datalist id="search_list">
 
 </datalist>
-<?php
-$script = <<<JS
-
-$('#sidebarSearch').autocomplete({
-    serviceUrl: 'index.php?r=search/getsearch',
-    paramName : 'search',
-    params: {search: $(this).val()},
-    dataType: 'json',
-    transformResult: function(response, originalQuery) {
-        return {
-            suggestions: $.map(response.farmdata, function(dataItem) {
-                return { value: dataItem, data: dataItem};
-            })
-        };
-    },
-    onSelect: function (suggestion) {
-        alert('You selected: ' + suggestion.value);
-    }
-
-});
-
-
-JS;
-$this->registerJs($script);
-?>
+<script type="text/javascript" charset="utf-8">
+  var json = <?= Farms::searchAll() ?>;
+  $('#sidebarSearch').autocomplete({
+      lookup: json,
+      formatResult: function (json) {
+        return json.data
+      },
+      onSelect: function (suggestion) {
+          alert('You selected: ' + suggestion.data);
+      }
+  });
+</script>
