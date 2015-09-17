@@ -90,16 +90,12 @@ use app\models\Mainmenu;
 <?php
 $script = <<<JS
 
-var countries = [
-    { value: 'Andorra', data: 'AD' },
-    // ...
-    { value: 'Zimbabwe', data: 'ZZ' }
-];
-
 $('#sidebarSearch').autocomplete({
-    //serviceUrl: 'index.php?r=search/getsearch',
-    //params: {search: $(this).val()},
-    lookup: countries,
+    serviceUrl: 'index.php?r=search/getsearch',
+    params: {search: $(this).val()},
+    lookup: function (query, done) {
+        console.log(query);
+    },
     onSelect: function (suggestion) {
         alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
     }
