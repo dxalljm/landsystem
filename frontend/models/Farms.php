@@ -96,6 +96,7 @@ class Farms extends \yii\db\ActiveRecord
         $cacheKey = 'farms-search-all';
 
         $result = Yii::$app->cache->get($cacheKey);
+        $result = false;
         if (!empty($result)) {
             return $result;
         }

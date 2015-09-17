@@ -95,7 +95,7 @@ use app\models\Mainmenu;
         return json.data;
       },
       onSelect: function (suggestion) {
-        return suggestion.data;
+        this.value = suggestion.data;
       }
   });
 </script>
