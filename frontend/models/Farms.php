@@ -38,7 +38,7 @@ class Farms extends \yii\db\ActiveRecord
         return [
             [['farmname'], 'required'],
             [['measure'], 'number'],
-            [['farmname', 'address', 'zongdi', 'cooperative_id', 'groundsign', 'investigator', 'farmersign'], 'string', 'max' => 500]
+            [['farmname', 'address', 'zongdi', 'cooperative_id', 'groundsign', 'investigator', 'farmersign','pinyin'], 'string', 'max' => 500]
         ];
     }
 
@@ -60,6 +60,7 @@ class Farms extends \yii\db\ActiveRecord
             'groundsign' => '地产科签字',
             'investigator' => '地星调查员',
             'farmersign' => '农场法人签字',
+        	'pinyin' => '农场名称拼音首字母',
         ];
     }
     

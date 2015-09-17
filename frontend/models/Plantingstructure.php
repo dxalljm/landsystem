@@ -55,6 +55,8 @@ class Plantingstructure extends \yii\db\ActiveRecord
             'zongdi' => '宗地',
             'farms_id' => '农场ID',
         	'lease_id' => '承租人ID',
+        	'create_at' => '创建日期',
+        	'update_at' => '更新日期',
         ];
     }
 }

@@ -62,6 +62,8 @@ class Plantinputproduct extends \yii\db\ActiveRecord
             'pconsumption' => '农药用量',
             'zongdi' => '宗地',
             'plant_id' => '种植结构',
+        	'create_at' => '创建日期',
+        	'update_at' => '更新日期',
         ];
     }
 }

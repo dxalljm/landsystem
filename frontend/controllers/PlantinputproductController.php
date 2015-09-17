@@ -77,6 +77,8 @@ class PlantinputproductController extends Controller
         		$model->son_id = $parmembers['son_id'][$i];
         		$model->inputproduct_id = $parmembers['inputproduct_id'][$i];
         		$model->pconsumption = $parmembers['pconsumption'][$i];
+        		$model->create_at = time();
+        		$model->update_at = time();
         		$model->save();
         		$new = $model->attributes;
         		Logs::writeLog('添加投入品',$model->id,'',$new);
@@ -101,7 +103,9 @@ class PlantinputproductController extends Controller
     {
         $model = $this->findModel($id);
 		$old = $model->attributes;
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->update_at = time();
+        	$model->save();
         	$new = $model->attributes;
         	Logs::writeLog('更新投入品使用情况',$id,$old,$new);
             return $this->redirect(['plantinputproductview', 'id' => $model->id]);

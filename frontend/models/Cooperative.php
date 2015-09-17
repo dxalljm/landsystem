@@ -52,6 +52,8 @@ class Cooperative extends \yii\db\ActiveRecord
             'finance' => '财务报表',
             'registered_capital' => '注册资金',
             'dividendmode' => '分红模式',
+        	'create_at' => '创建日期',
+        	'update_at' => '更新日期',
         ];
     }
 }

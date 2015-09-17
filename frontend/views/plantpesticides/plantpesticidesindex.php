@@ -1,8 +1,16 @@
 <?php
 namespace backend\controllers;
+use yii;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\Lease;
+use app\models\Plant;
+use app\models\Goodseed;
+use app\models\Plantinputproduct;
+use app\models\Inputproduct;
+use app\models\Plantpesticides;
+use app\models\Pesticides;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\plantpesticidesSearch */
@@ -14,27 +22,75 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="plantpesticides-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <?= $this->title ?>
+                    </h3>
+                </div>
+                <div class="box-body">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('添加', ['plantpesticidescreate'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <table class="table table-bordered table-hover">
+	    <tr>
+	    	<td align="center">承租人</td>
+	    	<td align="center">宗地</td>
+	    	<td align="center">承包面积</td>
+	    	<td align="center">作物</td>
+	    	<td align="center">良种型号</td>
+	    	<td align="center">操作</td>
+	    </tr>
+	    <?php foreach ($plantings as $planting) {?>
+	    <tr>
+	    	<td align="center"><?= Lease::find()->where(['id'=>$planting->lease_id])->one()['lessee']?></td>
+	    	<td align="center"><?= $planting->zongdi;?></td>
+	    	<td align="center"><?= $planting->area;?></td>
+	    	<td align="center"><?= Plant::find()->where(['id'=>$planting->plant_id])->one()['cropname']?></td>
+	    	<td align="center"><?= Goodseed::find()->where(['id'=>$planting->goodseed_id])->one()['plant_model']?></td>
+	    	<td align="center"><?= Html::a('添加', ['plantpesticidescreate','lease_id'=>$planting->lease_id,'plant_id'=>$planting->plant_id,'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?></td>
+	    </tr>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'farms_id',
-            'lessee_id',
-            'pesticides_id',
-            'pconsumption',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-
+<?php foreach (Plantpesticides::find()->where(['farms_id'=>$planting->farms_id,'lessee_id'=>$planting->lease_id,'plant_id'=>$planting->plant_id])->all() as $value) {?>
+<tr>
+  <td align='center'>&nbsp;&nbsp;|_&nbsp;&nbsp;</td>
+  <td colspan="2" align='center'><?= Pesticides::find()->where(['id'=>$value['pesticides_id']])->one()['pesticidename']?></td>
+  <td colspan="2" align="center"><?= $value['pconsumption'].'斤/亩'?></td>
+  <td align="center"><?= Html::a('<span class="glyphicon glyphicon-eye-open"></span>', '#', [
+                    'title' => Yii::t('yii', '查看'),
+                    'data-pjax' => '0',
+                    //'data-target' => '#plantinputproductview-modal',
+                    //'data-toggle' => 'modal',
+                   // 'data-keyboard' => 'false',
+                    
+                    //'onclick'=> 'plantinputproductview('.$value['id'].','.$_GET['lease_id'].','.$_GET['farms_id'].')',
+                ]);?>
+    <?= Html::a('<span class="glyphicon glyphicon-pencil"></span>', '#', [
+                    'title' => Yii::t('yii', '更新'),
+                    'data-pjax' => '0',
+                    //'data-target' => '#plantinputproductupdate-modal',
+                    //'data-toggle' => 'modal',
+                    //'data-keyboard' => 'false',
+                    //'data-backdrop' => 'static',
+                    //'onclick'=> 'plantinputproductupdate('.$value['id'].','.$_GET['lease_id'].','.$_GET['farms_id'].')',
+                ]);?>
+    <?= Html::a('<span class="glyphicon glyphicon-trash"></span>', 'index.php?r=plantingstructure/plantingstructuredelete&id='.$value['id'].'&farms_id='.$_GET['farms_id'], [
+                    'title' => Yii::t('yii', '删除'),
+                    'data-pjax' => '0',
+                    'data' => [
+		                'confirm' => '您确定要删除这项吗？',
+		                //'method' => 'post',
+           			 ],
+                ]);?></td>
+</tr>
+<?php }?>
+	    <?php }?>
+    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>

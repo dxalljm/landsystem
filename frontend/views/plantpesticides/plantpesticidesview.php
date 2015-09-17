@@ -3,6 +3,10 @@ namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\Farms;
+use app\models\Lease;
+use app\models\Plant;
+use app\models\Pesticides;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Plantpesticides */
@@ -14,11 +18,20 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="plantpesticides-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <?= $this->title ?>
+                    </h3>
+                </div>
+                <div class="box-body">
 
     <p>
-    	 <?= Html::a('添加', ['plantpesticidescreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('更新', ['plantpesticidesupdate', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+    <?= Html::a('添加', ['plantpesticidescreate', 'id' => $model->id,'plant_id'=>$model->plant_id,'lease_id'=>$model->lessee_id,'farms_id'=>$model->farms_id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('更新', ['plantpesticidesupdate', 'id' => $model->id,'plant_id'=>$model->plant_id,'lease_id'=>$model->lessee_id,'farms_id'=>$model->farms_id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('删除', ['plantpesticidesdelete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -32,11 +45,39 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'farms_id',
-            'lessee_id',
-            'pesticides_id',
+            [
+            	'label' => '农场名称',
+            	'attribute' => 'farms_id',
+            	'value' => Farms::find()->where(['id'=>$model->farms_id])->one()['farmname'],
+            ],
+			[
+			'label' => '承租人',
+				'attribute' => 'lessee_id',
+				'value' => Lease::find()->where(['id'=>$model->lessee_id])->one()['lessee'],
+			],
+            [
+            'label' => '作物名称',
+            	'attribute' => 'plant_id',
+            	'value' => Plant::find()->where(['id'=>$model->plant_id])->one()['cropname'],
+            ],
+            [
+            	'attribute' => 'pesticides_id',
+            	'value' => Pesticides::findOne($model->pesticides_id)['pesticidename'],
+            ],
             'pconsumption',
+           	[
+           		'attribute' => 'create_at',
+           		'value' => date('Y-m-d H:i:s',$model->create_at),
+           	],
+           	[
+           		'attribute' => 'update_at',
+           		'value' => date('Y-m-d H:i:s',$model->update_at),
+           	],
         ],
     ]) ?>
-
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>

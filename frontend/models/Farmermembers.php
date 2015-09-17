@@ -49,6 +49,8 @@ public function rules()
             'cardid' => '身份证号',
             'remarks' => '备注',
             'isupdate' => '是否可更新',
+        	'create_at' => '创建日期',
+        	'update_at' => '更新日期',
         ]; 
     }
 

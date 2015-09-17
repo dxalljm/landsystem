@@ -49,7 +49,7 @@ class Farmer extends \yii\db\ActiveRecord
     {
         return [
             [['farms_id', 'isupdate', 'years', 'state'], 'integer'],
-            [['farmername', 'cardid', 'farmerbeforename', 'nickname', 'gender', 'nation', 'political_outlook', 'cultural_degree', 'domicile', 'nowlive', 'telephone', 'living_room', 'photo', 'cardpic', 'contractnumber', 'begindate', 'enddate'], 'string', 'max' => 500]
+            [['farmername', 'cardid', 'farmerbeforename', 'nickname', 'gender', 'nation', 'political_outlook', 'cultural_degree', 'domicile', 'nowlive', 'telephone', 'living_room', 'photo', 'cardpic', 'contractnumber', 'begindate', 'enddate','pinyin'], 'string', 'max' => 500]
         ];
     }
 
@@ -83,6 +83,7 @@ class Farmer extends \yii\db\ActiveRecord
             'begindate' => '开始日期',
             'enddate' => '结束日期',
             'state' => '状态',
+        	'pinyin' => '法人拼音首字母',
         ];
     }
     public function getfarms()

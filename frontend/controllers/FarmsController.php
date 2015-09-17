@@ -126,6 +126,8 @@ class FarmsController extends Controller
     				$farmsmodel->groundsign =  $loadxls->getActiveSheet()->getCell('G'.$i)->getValue();
     				$farmsmodel->investigator =  $loadxls->getActiveSheet()->getCell('H'.$i)->getValue();
     				$farmsmodel->farmersign =  $loadxls->getActiveSheet()->getCell('I'.$i)->getValue();
+    				$farmsmodel->create_at = time();
+    				$farmsmodel->update_at = time();
      				$farmsmodel->save();
 //     				print_r($farmsmodel->getErrors());
     			}
@@ -189,7 +191,10 @@ class FarmsController extends Controller
     {
         $model = new farms();
         
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->create_at = time();
+        	$model->update_at = time();
+        	$model->save();
         	$newAttr = $model->attributes;
         	Logs::writeLog('创建农场',$model->id,'',$newAttr);
             return $this->redirect(['farmsview', 'id' => $model->id]);
@@ -211,7 +216,9 @@ class FarmsController extends Controller
     {
         $model = $this->findModel($id);
 		$oldAttr = $model->attributes;
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->update_at = time();
+        	$model->save();
         	$newAttr = $model->attributes;
         	Logs::writeLog('更新农场信息',$id,$oldAttr,$newAttr);
             

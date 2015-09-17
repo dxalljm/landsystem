@@ -17,7 +17,7 @@ use yii\web\View;
 <div class="form-group">
         <?= Html::button('增加投入品', ['class' => 'btn btn-info','title'=>'点击可增加一行投入品', 'id' => 'add-plantinputproduct']) ?>
     </div>
-<table class="table table-striped table-bordered table-hover table-condensed" id="plantinputproduct">
+<table class="table table-bordered table-hover" id="plantinputproduct">
 	
  <!-- 模板 -->
 

@@ -64,7 +64,10 @@ class CooperativeoffarmController extends Controller
     {
         $model = new CooperativeOfFarm();
 		
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->create_at = time();
+        	$model->update_at = time();
+        	$model->save();
         	$newAttr = $model->attributes;
         	Logs::writeLog('创建农场合作社信息',$model->id,'',$newAttr);
             return $this->redirect(['cooperativeoffarmview', 'id' => $model->id,'farms_id'=>$farms_id]);
@@ -85,7 +88,9 @@ class CooperativeoffarmController extends Controller
     {
         $model = $this->findModel($id);
 		$oldAttr = $model->attributes;
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->update_at = time();
+        	$model->save();
         	$newAttr = $model->attributes;
         	Logs::writeLog('更新农场合作社信息',$id,$oldAttr,$newAttr);
             return $this->redirect(['cooperativeoffarmview', 'id' => $model->id,'farms_id'=>$farms_id]);

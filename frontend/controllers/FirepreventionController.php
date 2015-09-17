@@ -72,17 +72,22 @@ class FirepreventionController extends Controller
     	$oldAttr = '';
     	if($this->findFarmsModel($farms_id)) {
     		$model = $this->findFarmsModel($farms_id);
+    		$model->update_at = time();
     		$oldAttr = $model->attributes;
     	}
-    	else
+    	else {
     		$model = new Fireprevention();
+    		$model->create_at = time();
+    		$model->update_at = time();
+    	}
 
         $lease = Lease::find()->where(['farms_id'=>$farms_id])->all();
 		foreach($lease as $val) {
 			$employees[] = Employee::find()->where(['father_id'=>$val['id']])->all();
 		}
 		
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) { 	
+        	$model->save();
         	$newAttr = $model->attributes;
         	Logs::writeLog('添加防火信息',$model->id,$oldAttr,$newAttr);
         $ArrEmployeesFire = Yii::$app->request->post('ArrEmployeesFire');

@@ -64,6 +64,8 @@ class Parcel extends \yii\db\ActiveRecord
             'piecemealarea' => '零星地类面积',
             'netarea' => '净面积',
             'figurenumber' => '图幅号',
+        	'create_at' => '创建日期',
+        	'update_at' => '更新日期',
         ];
     }
     

@@ -77,7 +77,10 @@ class EmployeeController extends Controller
     {
         $model = new Employee();
         
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->create_at = time();
+        	$model->update_at = time();
+        	$model->save();
         	$newAttr = $model->attributes;
         	Logs::writeLog('创建雇工',$model->id,'',$newAttr);
             return $this->redirect(['employeefathers', 'farms_id' => $farms_id]);
@@ -118,7 +121,9 @@ class EmployeeController extends Controller
     {
         $model = $this->findModel($id);
 		$oldAttr = $model->attributes;
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->update_at = time();
+        	$model->save();
         	$newAttr = $model->attributes;
         	Logs::writeLog('更新雇工信息',$id,$oldAttr,$newAttr);
             return $this->redirect(['employeefathers', 'farms_id' => $farms_id]);

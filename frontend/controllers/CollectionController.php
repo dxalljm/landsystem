@@ -152,7 +152,8 @@ class CollectionController extends Controller
         		$model->owe = $owe+$model->amounts_receivable-$model->real_income_amount;
         	else
         		$model->owe = $model->ypaymoney;
-			//print_r($model);
+			$model->create_at = time();
+			$model->update_at = time();
         	if($model->save()) {
         		$newAttr = $model->attributes;
         		Logs::writeLog('收缴一笔承包费',$model->id,'',$newAttr);

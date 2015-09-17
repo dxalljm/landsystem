@@ -103,7 +103,8 @@ class FarmerController extends Controller
     				$farmermodel->farmername = $loadxls->getActiveSheet()->getCell('B'.$i)->getValue();
     				$farmermodel->cardid =  $loadxls->getActiveSheet()->getCell('C'.$i)->getValue();
     				$farmermodel->telephone =  $loadxls->getActiveSheet()->getCell('D'.$i)->getValue();
-  
+  					$farmermodel->create_at = time();
+  					$farmermodel->update_at = time();
     				$farmermodel->save();
     				$newAttr = $farmermodel->attributes;
     				Logs::writeLog('xls批量导入农场主信息',$farmermodel->id,'',$newAttr);

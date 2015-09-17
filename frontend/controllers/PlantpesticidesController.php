@@ -9,7 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Logs;
-
+use app\models\Plantingstructure;
 /**
  * PlantpesticidesController implements the CRUD actions for Plantpesticides model.
  */
@@ -31,14 +31,12 @@ class PlantpesticidesController extends Controller
      * Lists all Plantpesticides models.
      * @return mixed
      */
-    public function actionPlantpesticidesindex()
+    public function actionPlantpesticidesindex($farms_id)
     {
-        $searchModel = new plantpesticidesSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $planting = Plantingstructure::find()->where(['farms_id'=>$farms_id])->all();
 		Logs::writeLog('农药使用情况');
         return $this->render('plantpesticidesindex', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'plantings' => $planting,
         ]);
     }
 
@@ -60,14 +58,17 @@ class PlantpesticidesController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionPlantpesticidescreate()
+    public function actionPlantpesticidescreate($lease_id,$plant_id,$farms_id)
     {
         $model = new Plantpesticides();
 		
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->create_at = time();
+        	$model->update_at = time();
+        	$model->save();
         	$new = $model->attributes;
         	Logs::writeLog('添加农药情况情况',$model->id,'',$new);
-            return $this->redirect(['plantpesticidesview', 'id' => $model->id]);
+            return $this->redirect(['plantpesticidesview', 'id' => $model->id,'farms_id'=>$farms_id]);
         } else {
             return $this->render('plantpesticidescreate', [
                 'model' => $model,
@@ -81,14 +82,16 @@ class PlantpesticidesController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionPlantpesticidesupdate($id)
+    public function actionPlantpesticidesupdate($id,$farms_id)
     {
         $model = $this->findModel($id);
 		$old = $model->attributes;
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->update_at = time();
+        	$model->save();
         	$new = $model->attributes;
         	Logs::writeLog('更新农药使用情况',$id,$old,$new);
-            return $this->redirect(['plantpesticidesview', 'id' => $model->id]);
+            return $this->redirect(['plantpesticidesview', 'id' => $model->id,'farms_id'=>$farms_id]);
         } else {
             return $this->render('plantpesticidesupdate', [
                 'model' => $model,

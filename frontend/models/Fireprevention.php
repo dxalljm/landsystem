@@ -75,6 +75,8 @@ class Fireprevention extends \yii\db\ActiveRecord
             'equipmentpic' => '设备照片',
             'peoplepic' => '人员照片',
             'facilitiespic' => '设施照片',
+        	'create_at' => '创建日期',
+        	'update_at' => '更新日期',
         ];
     }
 }

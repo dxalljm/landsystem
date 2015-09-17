@@ -91,6 +91,8 @@ class Collection extends \yii\db\ActiveRecord
             'owe' => '剩余欠缴金额',
             'isupdate' => '是否可更新',
         	'cardid' => '法人身份证',
+        	'create_at' => '创建日期',
+        	'update_at' => '更新日期',
         ]; 
     } 
     public function getfarms()

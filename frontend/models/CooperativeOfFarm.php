@@ -48,6 +48,8 @@ class CooperativeOfFarm extends \yii\db\ActiveRecord
             'proportion' => '占比',
             'bonus' => '分红',
             'cooperative_id' => '合作社',
+        	'create_at' => '创建日期',
+        	'update_at' => '更新日期',
         ];
     }
 }

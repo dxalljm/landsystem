@@ -73,6 +73,8 @@ class PlantingstructureController extends Controller
 		
         if ($model->load(Yii::$app->request->post())) {
             $model->zongdi = Lease::getZongdi($model->zongdi);
+            $model->create_at = time();
+            $model->update_at = time();
         	$model->save();
         	$new = $model->attributes;
         	Logs::writeLog('为'.Lease::find()->where(['id'=>$lease_id])->one()['lessee'].'创建种植结构信息',$model->id,'',$new);
@@ -176,7 +178,9 @@ class PlantingstructureController extends Controller
         foreach($zongdiarr as $value) {
         	$zongdi[]['unifiedserialnumber'] = $value;
         }
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->update_at = time();
+        	$model->save();
         	$new = $model->attributes;
         	Logs::writeLog('更新租赁信息',$id,$old,$new);
             return $this->redirect(['plantingstructureview', 'id' => $model->id]);

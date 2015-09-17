@@ -3,14 +3,15 @@
 namespace frontend\controllers;
 
 use Yii;
-use app\models\BankAccount;
-use frontend\models\bankaccountSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use app\models\Logs;
 use app\models\Farms;
 use app\models\Farmer;
+use frontend\helpers;
+use frontend\helpers\Pinyin;
+use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
 /**
  * BankAccountController implements the CRUD actions for BankAccount model.
  */
@@ -29,15 +30,15 @@ class SearchController extends Controller
     }
 
     
-    public function beforeAction($action)
-    {
-    	$action = Yii::$app->controller->action->id;
-    	if(\Yii::$app->user->can($action)){
-    		return true;
-    	}else{
-    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
-    	}
-    }
+//     public function beforeAction($action)
+//     {
+//     	$action = Yii::$app->controller->action->id;
+//     	if(\Yii::$app->user->can($action)){
+//     		return true;
+//     	}else{
+//     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+//     	}
+//     }
     
     /**
      * Lists all BankAccount models.
@@ -50,7 +51,18 @@ class SearchController extends Controller
 
     public function actionGetsearch()
     {
-    	$farm = $this->findFarm($str);
+    	$farm = $this->findFarm($_GET['search']);
+    	//var_dump($farm);
+    	$farmData = NULL;
+    	foreach($farm as $key=>$val){
+    		$farmData[] = $val['farmname'];
+    	}
+    	$farmer = $this->findFarmer($_GET['search']);
+    	$farmerData = NULL;
+    	foreach ($farmer as $key => $val) {
+    		$farmerData[] = $val['farmername'];
+    	}
+    	echo json_encode(['status'=>1,'farmdata'=>$farmData,'farmerdata'=>$farmerData]);
     }
     
     public function geturl()
@@ -58,6 +70,21 @@ class SearchController extends Controller
     	
     }
     
+    public function actionSetpinyin()
+    {
+    	set_time_limit(0);
+    	$farms = Farms::find()->all();
+    	//var_dump($farms);
+    	foreach ($farms as $value) {
+
+    		$model = Farms::findOne($value['id']);
+    		//var_dump($value['farmname']);
+    		$model->pinyin = Pinyin::encode($value['farmname']);
+    		$model->save();
+    		
+    	}
+    	echo '完成';
+    }
 
     /**
      * Finds the BankAccount model based on its primary key value.
@@ -68,21 +95,15 @@ class SearchController extends Controller
      */
     protected function findFarm($str)
     {
-        $query = Farms::find();
-        $dataProvider = new ActiveDataProvider([
-        		'query' => $query,
-        ]);
-        $query->andFilterWhere(['like', 'farmname', $str]);
-        return $dataProvider;
+        $result = Farms::find()->andFilterWhere(['like', 'pinyin', $str])->all();
+
+        return $result;
     }
     
     protected function findFarmer($str)
     {
-    	$query = Farmer::find();
-    	$dataProvider = new ActiveDataProvider([
-    			'query' => $query,
-    	]);
-    	$query->andFilterWhere(['like', 'farmername', $str]);
-    	return $dataProvider;
+    	$result = Farmer::find()->andFilterWhere(['like', 'pinyin', $str])->all();
+
+        return $result;
     }
 }
