@@ -55,14 +55,14 @@ class SearchController extends Controller
     	//var_dump($farm);
     	$farmData = NULL;
     	foreach($farm as $key=>$val){
-    		$farmData[] = $val['farmname'];
+    		$searchData[] = [$val['pinyin'] => $val['farmname']];
     	}
     	$farmer = $this->findFarmer($_GET['search']);
     	$farmerData = NULL;
     	foreach ($farmer as $key => $val) {
-    		$farmerData[] = $val['farmername'];
+    		$searchData[] = [$val['pinyin'] => $val['farmername']];
     	}
-    	echo json_encode(['status'=>1,'farmdata'=>$farmData,'farmerdata'=>$farmerData]);
+    	echo json_encode(['status'=>1,'searchdata'=>$searchData]);
     }
     
     public function geturl()

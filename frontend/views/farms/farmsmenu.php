@@ -146,7 +146,6 @@ use app\models\Plantpesticides;
 </div><!-- /.info-box --></td>
     </tr>
   </table>
-  <br>
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
         
@@ -278,30 +277,7 @@ use app\models\Plantpesticides;
 </div><!-- /.info-box --></td>
 
       <td width="5%" align="center"></td>
-      <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
-          <div class="info-box bg-blue">
-              <a href='<?= Url::to('index.php?r=fireprevention/firepreventioncreate&farms_id='.$_GET['farms_id']) ?>'><span class="info-box-icon"><i class="fa fa-fire-extinguisher"></i></span></a>
-              <div class="info-box-content">
-                  <span class="info-box-number">防火工作 </span>
-                  <span class="info-box-text"><?php if(Fireprevention::find()->where(['farms_id'=>$_GET['farms_id']])->count()) echo '完成防火工作'; else echo '未完成防火工作';?></span>
-                  <!-- The progress section is optional -->
-                  <div class="progress">
-                      <div class="progress-bar" style="width: 100%"></div>
-                  </div>
-    <span class="progress-description">
-     防火合同的签订
-    </span>
-              </div><!-- /.info-box-content -->
-          </div><!-- /.info-box --></td>
-
-
-
-
-
-
-
-
-
+      <td width="20%" align="center"></td>
   </tr>
   </table>
 

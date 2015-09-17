@@ -99,6 +99,7 @@ class farmsSearch extends farms
             ->andFilterWhere(['like', 'groundsign', $this->groundsign])
             ->andFilterWhere(['like', 'investigator', $this->investigator])
             ->andFilterWhere(['like', 'farmersign', $this->farmersign])
+            ->andFilterWhere(['like', 'pinyin', $this->pinyin])
         	->andFilterWhere(['like', 'land_management_area.areaname', $this->areaname]);
          //
 
