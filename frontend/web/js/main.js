@@ -152,7 +152,6 @@ var statis = function () {
         // 农场管理
         farms : function () {
             $.getJSON('index.php?r=farms/getfarmrows', function (data) {
-                console.log(data);
                 if (data.status == 1) {
                     $('#statis-farms').html(data.count);
                 }

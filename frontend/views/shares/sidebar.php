@@ -21,9 +21,6 @@ use app\models\Mainmenu;
           <form action="#" method="get" class="sidebar-form">
             <div class="input-group">
               <input type="text" name="q" id="sidebarSearch"  list="search_list" class="form-control" placeholder="搜索">
-              <span class="input-group-btn">
-                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
-              </span>
             </div>
           </form>
           <!-- /.search form -->
@@ -92,21 +89,24 @@ use app\models\Mainmenu;
 </datalist>
 <?php
 $script = <<<JS
-$("#sidebarSearch").keyup(function (event) {
-		
-    var search = $(this).val();
-    $.getJSON('index.php?r=search/getsearch', {search: search}, function (data) {
-        if (data.status == 1) {
-			//alert(data.farmdata[0]);
-			data.farmdata.forEach(function(e){  
-	    		$('#search_list').append(('<option value="'+e+'">'+e+'</option>')); 
-			});
-			data.farmerdata.forEach(function(e){  
-	    		$('#search_list').append(('<option value="'+e+'">'+e+'</option>')); 
-			}); 
-		}
-    });
+
+var countries = [
+    { value: 'Andorra', data: 'AD' },
+    // ...
+    { value: 'Zimbabwe', data: 'ZZ' }
+];
+
+$('#sidebarSearch').autocomplete({
+    //serviceUrl: 'index.php?r=search/getsearch',
+    //params: {search: $(this).val()},
+    lookup: countries,
+    onSelect: function (suggestion) {
+        alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+    }
+
 });
+
+
 JS;
 $this->registerJs($script);
 ?>
