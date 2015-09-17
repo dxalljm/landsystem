@@ -93,11 +93,17 @@ $script = <<<JS
 $('#sidebarSearch').autocomplete({
     serviceUrl: 'index.php?r=search/getsearch',
     params: {search: $(this).val()},
-    lookup: function (query, done) {
-        console.log(query);
+    dataType: 'json',
+    transformResult: function(response, originalQuery) {
+        console.log(response);
+        return {
+            suggestions: $.map(response.farmdata, function(dataItem) {
+                return { value: dataItem, data: dataItem};
+            })
+        };
     },
     onSelect: function (suggestion) {
-        alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+        alert('You selected: ' + suggestion.value);
     }
 
 });
