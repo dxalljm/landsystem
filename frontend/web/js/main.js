@@ -61,7 +61,7 @@ function collectioncreate(farmsid,cardid) {
         'index.php',         
         {
             r: 'collection/collectioncreate',
-            farmsid: farmsid,
+            farms_id: farmsid,
             cardid:cardid,
 
         },

@@ -46,12 +46,12 @@ use app\models\Theyear;
             'format'=>'raw',
             //'class' => 'btn btn-primary btn-lg',
             'value' => function($model,$key){
-            	return Html::a('缴费','#', [
+            	return Html::a('缴费','index.php?r=collection/collectioncreate&farms_id='.$model->farms_id.'&cardid='.$model->cardid, [
             			'id' => 'collectionindex',
             			'title' => '农场相关业务办理',
-            			'data-toggle' => 'modal',
-            			'data-target' => '#collectioncreate-modal',
-            			'onclick' => 'collectioncreate('.$model->farms_id.','.$model->cardid.')',
+            			//'data-toggle' => 'modal',
+            			//'data-target' => '#collectioncreate-modal',
+            			//'onclick' => 'collectioncreate('.$model->farms_id.','.$model->cardid.')',
             			//'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/collection/collectioncreate','id'=>$key,'year'=>$years])."','','width=700,height=600,top=50,left=380, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
             	]);
             }

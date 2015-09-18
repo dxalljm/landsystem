@@ -118,15 +118,18 @@ class CollectionController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCollectioncreate($farmsid,$cardid)
+    public function actionCollectioncreate($farms_id,$cardid,$year)
     {
     	//$this->layout='@app/views/layouts/nomain.php';
-    	$year = Theyear::findOne(1)['years'];
-    	$collection = Collection::find()->where(['farms_id'=>$farmsid,'cardid'=>$cardid,'ypayyear'=>$year])->one();
+    	//$year = Theyear::findOne(1)['years'];
+    	$farms = Farms::find()->where(['id'=>$farms_id])->one();
+    	$collection = Collection::find()->where(['farms_id'=>$farms_id,'cardid'=>$cardid,'ypayyear'=>$year])->one();
+    	$old_area = 0;
     	if($collection) {
     		$model = $this->findModel($collection->id);
     		$old_real_income_amount = $collection->real_income_amount;
     		$old_ypaymoney = $collection->ypaymoney;
+    		$old_area = sprintf("%.2f",$collection->real_income_amount/30/PlantPrice::find()->where(['years'=>$model->ypayyear])->one()['price']);
     	}
     	else {
     		$model = new Collection();
@@ -134,8 +137,8 @@ class CollectionController extends Controller
     	}
     	
         
-        $collectiondataProvider = Collection::find()->where(['farms_id'=>$farmsid,'cardid'=>$cardid])->andWhere('ypayyear<'.$year)->all();
-        $owe = $model->getOwe($cardid, $farmsid,$year);
+        $collectiondataProvider = Collection::find()->where(['farms_id'=>$farms_id,'cardid'=>$cardid])->andWhere('ypayyear<'.$year)->all();
+        $owe = $model->getOwe($cardid, $farms_id,$year);
 //         if($owe)
 //         	$collectiondataProvider['owe'] = $owe+$collectiondataProvider['amounts_receivable']-$collectiondataProvider['real_income_amount'];
 //         else
@@ -154,25 +157,110 @@ class CollectionController extends Controller
         		$model->owe = $model->ypaymoney;
 			$model->create_at = time();
 			$model->update_at = time();
-        	if($model->save()) {
-        		$newAttr = $model->attributes;
-        		Logs::writeLog('收缴一笔承包费',$model->id,'',$newAttr);
-        		return $this->redirect(['collectionview', 'id' => $model->id]);
-        	}
+        	$model->save();
+        	//var_dump($model->getErrors());
+        	$newAttr = $model->attributes;
+        	Logs::writeLog('收缴一笔承包费',$model->id,'',$newAttr);
+        	return $this->redirect(['collectioncreate', 
+        			'model' => $model,
+    					'year' => $year,
+    					'cardid' => $cardid,
+    					'farms_id' => $farms_id,
+    					'farms' => $farms,
+    					'collectiondataProvider' => $collectiondataProvider,
+    					'owe' => $owe,
+        				'overarea' => $old_area,
+        	]);
+        	
         } else {
-            return $this->renderAjax('collectioncreate', [
+            return $this->render('collectioncreate', [
                 'model' => $model,
             	'year' => $year,
             	'cardid' => $cardid,
-            	'farmsid' => $farmsid,
+            	'farms_id' => $farms_id,
+            	'farms' => $farms,
             	'collectiondataProvider' => $collectiondataProvider,
             	'owe' => $owe,
+            	'overarea' => $old_area,
             ]);
         }
     }
 	
-   
+    public function actionCollectionsearch($farms_id,$cardid)
+    {
+    	//$this->layout='@app/views/layouts/nomain.php';
+    	$year = Theyear::findOne(1)['years'];
+    	$farms = Farms::find()->where(['id'=>$farms_id])->one();
+    	$collection = Collection::find()->where(['farms_id'=>$farms_id,'cardid'=>$cardid])->one();
+    	//echo '<br><br><br><br><br><br><br><br><br><br><br>';
+    	//var_dump($collection);
+    	if($collection) {
+    		$model = $this->findModel($collection->id);
+    		$old_real_income_amount = $collection->real_income_amount;
+    		$old_ypaymoney = $collection->ypaymoney;
+    	}
+    	else {
+    		$model = new Collection();
+    		$old_real_income_amount = 0;
+    	}
+    	 
     
+    	$collectiondataProvider = Collection::find()->where(['farms_id'=>$farms_id,'cardid'=>$cardid])->andWhere('ypayyear<'.$year)->all();
+    	$owe = $model->getOwe($cardid, $farms_id,$year);
+    	//         if($owe)
+    		//         	$collectiondataProvider['owe'] = $owe+$collectiondataProvider['amounts_receivable']-$collectiondataProvider['real_income_amount'];
+    		//         else
+    			//         	$collectiondataProvider['owe'] = $collectiondataProvider['ypaymoney'];
+    		//$collectiondataProvider = Collection::findAll("");
+    		//print_r($collectiondataProvider);
+    		if ($model->load(Yii::$app->request->post())) {
+    			$model->amounts_receivable = $model->getAR($year);
+    			$model->real_income_amount = $model->real_income_amount + $old_real_income_amount;
+    			$model->ypayarea = $model->getYpayarea($year, $model->real_income_amount);
+    			$model->ypaymoney = $model->getYpaymoney($year, $model->real_income_amount);
+    			//$owe = $model->getOwe($farmerid, $farmsid,$year);
+    			if($owe)
+    				$model->owe = $owe+$model->amounts_receivable-$model->real_income_amount;
+    			else
+    				$model->owe = $model->ypaymoney;
+    			$model->create_at = time();
+    			$model->update_at = time();
+    			$model->save();
+    			$newAttr = $model->attributes;
+    			Logs::writeLog('收缴一笔承包费',$model->id,'',$newAttr);
+    			return $this->redirect(['collectionsearch', 
+    					'model' => $model,
+    					'year' => $year,
+    					'cardid' => $cardid,
+    					'farms_id' => $farms_id,
+    					'farms' => $farms,
+    					'collectiondataProvider' => $collectiondataProvider,
+    					'owe' => $owe,]);
+    			
+    		} else {
+    			return $this->render('collectionsearch', [
+    					'model' => $model,
+    					'year' => $year,
+    					'cardid' => $cardid,
+    					'farms_id' => $farms_id,
+    					'farms' => $farms,
+    					'collectiondataProvider' => $collectiondataProvider,
+    					'owe' => $owe,
+    			]);
+    		}
+    }
+   
+    public function actionGetplantprice($formyear)
+    {
+    	$plantprice = PlantPrice::find()->where(['years'=>$formyear])->one();
+    	echo json_encode($plantprice['price']);
+    }
+    
+    public function actionGetar($year)
+    {
+    	$result = new Collection();
+    	echo json_encode($result->getAR($year));
+    }
     /**
      * Updates an existing Collection model.
      * If update is successful, the browser will be redirected to the 'view' page.

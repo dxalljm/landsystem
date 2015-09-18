@@ -99,15 +99,26 @@ class Farms extends \yii\db\ActiveRecord
         if (!empty($result)) {
             return $result;
         }
-
+        $departmentid = User::find()->where(['id'=>Yii::$app->getUser()->id])->one()['department_id'];
+        $keshi = Department::find()->where(['id'=>$departmentid])->one()['departmentname'];
+        switch ($keshi)
+        {
+        	case '财务科';
+        		$url = 'index.php?r=collection/collectioncreate&farms_id=';
+        		break;
+        	default:
+        		$url = 'index.php?r=farms/farmsmenu&farms_id=';
+        }
+        
         // 所有农场
         $data = [];
         $result = Farms::find()->all();
         foreach ($result as $farm) {
+        	
           $data[] = [
             'value' => $farm['pinyin'], // 拼音
             'data' => $farm['farmname'], // 下拉框显示的名称
-            'url' => Url::to('index.php?r=farms/farmsmenu&farms_id='.$farm['id']), // 角色 
+            'url' => Url::to($url.$farm['id']), 
           ];
         }
 		$farmers = Farmer::find()->all();
@@ -115,7 +126,7 @@ class Farms extends \yii\db\ActiveRecord
 			$data[] = [
 				'value' => $farmer['pinyin'], 
 				'data' => $farmer['farmername'],
-				'url' => Url::to('index.php?r=farms/farmsmenu&farms_id='.$farmer['farms_id']),
+				'url' => Url::to($url.$farmer['farms_id'].'&cardid='.$farmer['cardid']),
 					
 			];
 		}

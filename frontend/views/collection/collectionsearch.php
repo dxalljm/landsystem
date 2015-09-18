@@ -34,7 +34,6 @@ $this->title = $title."(".Farms::find()->where(['id'=>$farms_id])->one()['farmna
     	'farms' => $farms,
     	'collectiondataProvider' => $collectiondataProvider,
     	'owe' => $owe,
-    	'overarea' => $overarea,
     ]) ?>
                 </div>
             </div>

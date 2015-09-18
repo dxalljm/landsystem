@@ -35,8 +35,8 @@ class Collection extends \yii\db\ActiveRecord
 	public function rules() 
     { 
         return [
-            [['farms_id', 'amounts_receivable', 'real_income_amount', 'ypayyear', 'isupdate'], 'integer'],
-            [['ypayarea', 'ypaymoney', 'owe'], 'number'],
+            [['farms_id', 'real_income_amount', 'ypayyear', 'isupdate'], 'integer'],
+            [['ypayarea', 'amounts_receivable', 'real_income_amount', 'ypaymoney', 'owe'], 'number'],
             [['payyear', 'billingtime','cardid'], 'string', 'max' => 500]
         ]; 
     } 
@@ -44,7 +44,7 @@ class Collection extends \yii\db\ActiveRecord
     public function getAR($year)  //当年应收金额
     {
     	
-    	$farm = Farms::find()->where(['id'=>$_GET['farmsid']])->one();
+    	$farm = Farms::find()->where(['id'=>$_GET['farms_id']])->one();
     	$plantprice = PlantPrice::find()->where(['years'=>$year])->one();
     	$result = $farm['measure']*30*$plantprice['price'];
     	return $result;
@@ -63,16 +63,17 @@ class Collection extends \yii\db\ActiveRecord
     		return $this->getAR($year)-$real_income_amount;
     }
     
-    public function getOwe($cardid,$farmsid,$year)   //剩余欠缴金额
+    public function getOwe($cardid,$farms_id,$year)   //剩余欠缴金额
     {
     	$result = 0;
-    	$collections = Collection::find()->where(['farms_id'=>$farmsid,'cardid'=>$cardid])->andWhere('ypayyear<'.$year)->all();
+    	$collections = Collection::find()->where(['farms_id'=>$farms_id,'cardid'=>$cardid])->andWhere('ypayyear<'.$year)->all();
     	//print_r($collections);
     	foreach($collections as $val){
     		$result+=$val['ypaymoney'];
     	}
     	return $result;
     }
+    
     /** 
      * @inheritdoc 
      */ 
