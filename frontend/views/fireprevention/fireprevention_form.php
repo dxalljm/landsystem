@@ -120,6 +120,7 @@ use app\models\Firepreventionemployee;
 <?php 
 
 $i=0;
+if(is_array($employees)) {
 foreach($employees as $emp) {
 	foreach($emp as $val) {
 		$efire = Firepreventionemployee::find()->where(['employee_id'=>$val['id']])->one();
@@ -139,6 +140,7 @@ foreach($employees as $emp) {
 </tr>
 <?php $i++;}}?>
 </table>
+<?php }?>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

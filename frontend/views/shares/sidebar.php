@@ -72,7 +72,9 @@ use app\models\Mainmenu;
                 if(yii::$app->user->identity->username != 'admin') {
                     $menuliststr = MenuToUser::find()->where(['user_id'=>\Yii::$app->user->id])->one()['menulist'];
                     $menulistarr = explode(',', $menuliststr);
-
+// 					if($menu['menuurl'] == 'dropdown') {
+						
+// 					}
                     foreach($menulistarr as $val) {
                         $menu = Mainmenu::find()->where(['id'=>$val])->one();
                         echo "<li ><a href=" . Url::to('index.php?r='.$menu['menuurl']) . "><i class='fa fa-dashboard'></i><span>". $menu['menuname'] . "</span></a></li>";

@@ -82,6 +82,7 @@ class FirepreventionController extends Controller
     	}
 
         $lease = Lease::find()->where(['farms_id'=>$farms_id])->all();
+        $employees = '';
 		foreach($lease as $val) {
 			$employees[] = Employee::find()->where(['father_id'=>$val['id']])->all();
 		}

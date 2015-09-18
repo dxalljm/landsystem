@@ -142,6 +142,8 @@ class FarmsController extends Controller
     
     public function actionFarmsbusiness()
     {
+    	$departmentid = User::find()->where(\Yii::$app->getUser()->id)->one()['department_id'];
+    	
     	$searchModel = new farmsSearch();
     	$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
     	Logs::writeLog('业务办理');

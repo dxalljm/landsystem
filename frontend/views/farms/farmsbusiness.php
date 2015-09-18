@@ -4,7 +4,7 @@ use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\ManagementArea;
-
+use app\models\Farmer;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\farmsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -27,16 +27,23 @@ use app\models\ManagementArea;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             [
             	'attribute' => 'farmname',
 
             ],
             [
-            	'label' => '管理区',
-              	'attribute' => 'areaname',      						
-            	'value' => 'managementarea.areaname',
+            	'label' => '法人姓名',
+            	'value' => function($model){
+            		return Farmer::find()->where(['farms_id'=>$model->id])->one()['farmername'];
+            	}
             ],
+            'measure',
+//             [
+//             	'label' => '管理区',
+//               	'attribute' => 'areaname',      						
+//             	'value' => 'managementarea.areaname',
+//             ],
             [
             
             'format'=>'raw',

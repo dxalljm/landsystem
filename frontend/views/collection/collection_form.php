@@ -26,7 +26,7 @@ use yii\helpers\Url;
     <td align="right">农场名称</td>
     <td><?= $farms->farmname?></td>
     <td align="right">法人名称</td>
-    <td><?= $overarea?></td>
+    <td><?= Farmer::find()->where(['farms_id'=>$farms->id])->one()['farmername']?></td>
     <td>面积</td>
     <td><?= $farms->measure ?>亩</td>
   </tr>
@@ -119,6 +119,7 @@ $(document).ready(function () {
 		var input = $(this).val();		
 		$.getJSON('index.php?r=collection/getar', {year: input,farms_id: <?= $_GET['farms_id'] ?>}, function (data) {
 			if(data === 0) {
+				alert(input);
 				alert(input+'年度没有缴费基数，请添加缴费基数再试。');
 				var d = new Date();
 				$('#collection-payyear').val(d.getFullYear());

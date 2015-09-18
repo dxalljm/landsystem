@@ -126,7 +126,7 @@ class Farms extends \yii\db\ActiveRecord
 			$data[] = [
 				'value' => $farmer['pinyin'], 
 				'data' => $farmer['farmername'],
-				'url' => Url::to($url.$farmer['farms_id'].'&cardid='.$farmer['cardid']),
+				'url' => Url::to($url.$farmer['farms_id'].'&cardid='.$farmer['cardid'].'&year='.date('Y')),
 					
 			];
 		}
