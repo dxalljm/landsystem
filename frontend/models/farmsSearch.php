@@ -44,8 +44,8 @@ class farmsSearch extends farms
      */
     public function search($params)
     {
-        $query = farms::find();
-        $query->joinWith(['managementarea']);
+        $query = farms::find()->where($params);
+        //$query->joinWith(['farmer']);
         
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -53,11 +53,7 @@ class farmsSearch extends farms
 		
        $dataProvider->setSort([
         		'attributes' => [
-        				 'areaname' => [
-        						'asc' => ['land_management_area.areaname' => SORT_ASC],
-        						'desc' => ['land_management_area.areaname' => SORT_DESC],
-        						'label' => '管理区',
-        				],
+        				 
         				'id' => [
         						'asc' => ['id' => SORT_ASC],
         						'desc' => ['id' => SORT_DESC],
@@ -67,6 +63,11 @@ class farmsSearch extends farms
         						'asc' => ['farmname' => SORT_ASC],
         						'desc' => ['farmname' => SORT_DESC],
         						//'label' => '管理区',
+        				],
+        				'farmername' => [
+        						'asc' => ['land_farmer.farmername' => SORT_ASC],
+        						'desc' => ['land_farmer.farmername' => SORT_DESC],
+        						'label' => '法人姓名',
         				],
         				'spyear' => [
         						'asc' => ['spyear' => SORT_ASC],
@@ -98,8 +99,8 @@ class farmsSearch extends farms
             ->andFilterWhere(['like', 'groundsign', $this->groundsign])
             ->andFilterWhere(['like', 'investigator', $this->investigator])
             ->andFilterWhere(['like', 'farmersign', $this->farmersign])
-            ->andFilterWhere(['like', 'pinyin', $this->pinyin])
-        	->andFilterWhere(['like', 'land_management_area.areaname', $this->areaname]);
+            ->andFilterWhere(['like', 'pinyin', $this->pinyin]);
+        	//->andFilterWhere(['like', 'land_management_area.areaname', $this->areaname]);
          //
 
         return $dataProvider;

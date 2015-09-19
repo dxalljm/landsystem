@@ -45,12 +45,12 @@ $this->params['breadcrumbs'][] = $this->title;
             	'attribute' => 'farmname',
 
             ],
-            [
-            	'label' => '管理区',
-              	'attribute' => 'areaname',      						
-            	'value' => 'managementarea.areaname',
-            ],
-            'spyear',
+//             [
+//             	'label' => '管理区',
+//               	'attribute' => 'areaname',      						
+//             	'value' => 'managementarea.areaname',
+//             ],
+            'measure',
             // 'iscontract',
             // 'contractlife',
 

@@ -68,22 +68,20 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-      //echo Pinyin::encode('钊安平');
+      //echo Pinyin::encode('杨淑华');
 
       //exit;
     	Logs::writeLog('访问首页');
-    	$dep_id = User::findByUsername(yii::$app->user->identity->username)['department_id'];
+    	$dep_id = User::find()->where(['id'=>yii::$app->getUser()->id])->one()['department_id'];
     	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
-
-    	$whereArray = explode(',', $departmentData['membership']);
-    	$areaname = '';
-    	foreach ($whereArray as $value) {
-    		$areaname[] = ManagementArea::find()->where(['id' => $value])->one()['areaname'];
-    	}
-
+    	$areaname = ManagementArea::find()->where(['id' => $departmentData['membership']])->one()['areaname'];
+		if(is_array($areaname))
+			$result = implode(',', $areaname);
+		else 
+			$result = $areaname;
         $areaname = [];
         return $this->render('index',[
-            'areaname' => implode(',', $areaname)
+            'areaname' => $result,
         ]);
     }
 

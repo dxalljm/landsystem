@@ -19,6 +19,7 @@ use yii\web\UploadedFile;
 use frontend\models\parcelSearch;
 use app\models\Parcel;
 use app\models\Logs;
+
 /**
  * FarmsController implements the CRUD actions for farms model.
  */
@@ -51,8 +52,11 @@ class FarmsController extends Controller
      */
     public function actionFarmsindex()
     {
+    	$departmentid = User::find()->where(['id'=>\Yii::$app->getUser()->id])->one()['department_id'];
+    	$strdepartment = Department::find()->where(['id'=>$departmentid])->one()['membership'];
+    	$where = explode(',', $strdepartment);
         $searchModel = new farmsSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(['management_area'=>$where]);
         Logs::writeLog('农场管理');
         return $this->render('farmsindex', [
             'searchModel' => $searchModel,
@@ -66,6 +70,7 @@ class FarmsController extends Controller
     	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
     	$whereArray = explode(',', $departmentData['membership']);
     	$farmsRows = Farms::find()->where(['management_area'=>$whereArray])->count();
+    	//echo $departmentData['membership'];
 		echo Json::encode(['status' => 1, 'count' => $farmsRows]);
 		Yii::$app->end();
     }
@@ -142,10 +147,12 @@ class FarmsController extends Controller
     
     public function actionFarmsbusiness()
     {
-    	$departmentid = User::find()->where(\Yii::$app->getUser()->id)->one()['department_id'];
     	
+    	$departmentid = User::find()->where(['id'=>\Yii::$app->getUser()->id])->one()['department_id'];
+    	$strdepartment = Department::find()->where(['id'=>$departmentid])->one()['membership'];
+    	$where = explode(',', $strdepartment);
     	$searchModel = new farmsSearch();
-    	$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    	$dataProvider = $searchModel->search(['management_area'=>$where]);
     	Logs::writeLog('业务办理');
     	return $this->render('farmsbusiness', [
     			'searchModel' => $searchModel,

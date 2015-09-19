@@ -72,13 +72,27 @@ use app\models\Mainmenu;
                 if(yii::$app->user->identity->username != 'admin') {
                     $menuliststr = MenuToUser::find()->where(['user_id'=>\Yii::$app->user->id])->one()['menulist'];
                     $menulistarr = explode(',', $menuliststr);
-// 					if($menu['menuurl'] == 'dropdown') {
-						
-// 					}
-                    foreach($menulistarr as $val) {
-                        $menu = Mainmenu::find()->where(['id'=>$val])->one();
-                        echo "<li ><a href=" . Url::to('index.php?r='.$menu['menuurl']) . "><i class='fa fa-dashboard'></i><span>". $menu['menuname'] . "</span></a></li>";
-                    }
+	                   foreach($menulistarr as $val) {
+	                   $menu = Mainmenu::find()->where(['id'=>$val])->one();
+	                   if($menu['menuurl'] == 'dropdown') {
+	                   		echo '<li class="treeview">';
+              				echo '<a href="#">';
+                			echo '<i class="fa fa-dashboard"></i> <span>数据管理</span> <i class="fa fa-angle-left pull-right"></i>';
+              				echo '</a>';
+              				echo '<ul class="treeview-menu">';
+                			echo '<li><a href="'.Url::to('index.php?r=nation/nationindex').'"><i class="fa fa-circle-o"></i>民族管理</a></li>';
+	                       	echo '<li><a href="'.Url::to('index.php?r=plant/plantindex').'"><i class="fa fa-circle-o"></i>作物管理</a></li>';
+	                       	echo '<li><a href="'.Url::to('index.php?r=inputproduct/inputproductindex').'"><i class="fa fa-circle-o"></i>投入品管理</a></li>';
+	                       	echo '<li><a href="'.Url::to('index.php?r=pesticides/pesticidesindex').'"><i class="fa fa-circle-o"></i>农药管理</a></li>';
+	                       	echo '<li><a href="'.Url::to('index.php?r=goodseed/goodseedindex').'"><i class="fa fa-circle-o"></i>良种管理</a></li>';
+	                       	echo '<li><a href="'.Url::to('index.php?r=cooperative/cooperativeindex').'"><i class="fa fa-circle-o"></i>合作社管理</a></li>';
+	                       	echo '<li><a href="'.Url::to('index.php?r=disputetype/disputetypeindex').'"><i class="fa fa-circle-o"></i>纠纷类型</a></li>';
+              				echo '</ul>';
+            				echo '</li>';
+	                     	
+	                   } else 
+	                       	echo "<li ><a href=" . Url::to('index.php?r='.$menu['menuurl']) . "><i class='fa fa-dashboard'></i><span>". $menu['menuname'] . "</span></a></li>";
+					}
                 }
                 ?>
 	            

@@ -33,17 +33,12 @@ use app\models\Farmer;
 
             ],
             [
-            	'label' => '法人姓名',
-            	'value' => function($model){
-            		return Farmer::find()->where(['farms_id'=>$model->id])->one()['farmername'];
-            	}
+            	'label'=>'法人姓名',
+            	'attribute' => 'farmername',
+            	'value' => 'farmer.farmername',
             ],
             'measure',
-//             [
-//             	'label' => '管理区',
-//               	'attribute' => 'areaname',      						
-//             	'value' => 'managementarea.areaname',
-//             ],
+            //'management_area',
             [
             
             'format'=>'raw',
