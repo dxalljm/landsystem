@@ -38,11 +38,12 @@ class Farms extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['farmname'], 'required'],
+            [['farmname', 'farmername'], 'required'],
             [['measure'], 'number'],
-            [['farmname', 'address', 'groundsign', 'investigator', 'farmersign','pinyin'], 'string', 'max' => 500],
-        	//[['zongdi'],'string']
-        ];
+            [['zongdi'], 'string'],
+            [['create_at', 'update_at'], 'integer'],
+            [['farmname', 'farmername', 'cardid', 'telephone', 'address', 'management_area', 'spyear', 'cooperative_id', 'surveydate', 'groundsign', 'investigator', 'farmersign', 'pinyin','farmerpinyin'], 'string', 'max' => 500]
+        ]; 
     }
 
     /**
@@ -50,20 +51,26 @@ class Farms extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
-			'id' => 'ID',
+        return [ 
+            'id' => 'ID',
             'farmname' => '农场名称',
+            'farmername' => '承包人姓名',
+            'cardid' => '身份证号',
+            'telephone' => '电话号码',
             'address' => '农场位置',
             'management_area' => '管理区',
             'spyear' => '审批年度',
             'measure' => '面积',
             'zongdi' => '宗地',
+            'cooperative_id' => '合作社',
             'surveydate' => '调查日期',
             'groundsign' => '地产科签字',
             'investigator' => '地星调查员',
             'farmersign' => '农场法人签字',
-        	'pinyin' => '农场名称拼音首字母',
-        ];
+            'create_at' => '创建日期',
+            'update_at' => '更新日期',
+            'pinyin' => '农场名称拼音首字母',
+        ]; 
     }
     
     public function getfarmer()

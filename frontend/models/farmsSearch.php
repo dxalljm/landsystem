@@ -21,10 +21,9 @@ class farmsSearch extends farms
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-        	[['measure'],'number'],
-        	//[['zongdi'],'string'],
-            [['farmname', 'farmername', 'address', 'management_area', 'spyear', 'surveydate', 'groundsign', 'investigator', 'farmersign'], 'safe'],
+            [['id', 'create_at', 'update_at'], 'integer'],
+            [['farmname', 'farmername', 'address', 'management_area', 'spyear', 'zongdi', 'cooperative_id', 'surveydate', 'groundsign', 'investigator', 'farmersign', 'pinyin','farmerpinyin'], 'safe'],
+            [['measure'], 'number'],
         ];
     }
 
@@ -92,11 +91,15 @@ class farmsSearch extends farms
             'id' => $this->id,
         ]);
 
-         $query->andFilterWhere(['like', 'farmname', $this->farmname])
+          $query->andFilterWhere(['like', 'farmname', $this->farmname])
+            ->andFilterWhere(['like', 'farmername', $this->farmername])
+            ->andFilterWhere(['like', 'cardid', $this->cardid])
+            ->andFilterWhere(['like', 'telephone', $this->telephone])
             ->andFilterWhere(['like', 'address', $this->address])
             ->andFilterWhere(['like', 'management_area', $this->management_area])
             ->andFilterWhere(['like', 'spyear', $this->spyear])
             ->andFilterWhere(['like', 'zongdi', $this->zongdi])
+            ->andFilterWhere(['like', 'cooperative_id', $this->cooperative_id])
             ->andFilterWhere(['like', 'surveydate', $this->surveydate])
             ->andFilterWhere(['like', 'groundsign', $this->groundsign])
             ->andFilterWhere(['like', 'investigator', $this->investigator])

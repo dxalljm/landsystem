@@ -22,6 +22,18 @@ use app\models\ManagementArea;
 			<td align='left'><?= $form->field($model, 'farmname')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
+			<td width=15% align='right'>承包人姓名</td>
+			<td align='left'><?= $form->field($model, 'farmername')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+			</tr>
+			<tr>
+			<td width=15% align='right'>身份证号</td>
+			<td align='left'><?= $form->field($model, 'cardid')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+			</tr>
+			<tr>
+			<td width=15% align='right'>电话号码</td>
+			<td align='left'><?= $form->field($model, 'telephone')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+			</tr>
+		<tr>
 			<td width=15% align='right'>农场位置</td>
 			<td align='left'><?= $form->field($model, 'address')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>

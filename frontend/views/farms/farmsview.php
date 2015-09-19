@@ -66,6 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			<td width=15% align='right'>宗地</td>
 			<td align='left'> 
 			<?php 
+			if($model->zongdi !== '') {
 			$zongdiarr = explode('、',$model->zongdi);
 			foreach($zongdiarr as $zongdi){
 				$zongdiinfo = Parcel::find()->where(['unifiedserialnumber'=>$zongdi])->one();
@@ -85,6 +86,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			   </div>
 			<?php }?>
 			<?= Html::a('明细','index.php?r=parcel/parcellist&zongdi='.$model->zongdi) ?>
+			<?php }?>
       </td>
 		</tr>
 		<tr>
