@@ -105,8 +105,8 @@ class farmsSearch extends farms
             ->andFilterWhere(['like', 'investigator', $this->investigator])
             ->andFilterWhere(['like', 'farmersign', $this->farmersign])
             ->andFilterWhere(['like', 'pinyin', $this->pinyin])
-        	->andFilterWhere(['like', 'land_farmer.farmername', $this->farmername]);
-         //
+        	->andFilterWhere(['like', 'land_farmer.farmername', $this->farmername])
+            ->andFilterWhere(['like', 'measure', $this->measure]);
 
         return $dataProvider;
     }
