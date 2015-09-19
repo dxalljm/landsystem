@@ -5,6 +5,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\ManagementArea;
 use app\models\Farmer;
+use app\models\Dispute;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\farmsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -45,9 +46,19 @@ use app\models\Farmer;
             //'class' => 'btn btn-primary btn-lg',
             'value' => function($model,$key){
             	$url = ['/farms/farmsmenu','farms_id'=>$model->id];
-            	return Html::a('进入业务办理',$url, [
+            	$disputerows = Dispute::find()->where(['farms_id'=>$model->id])->count();
+            	if($disputerows) {
+            		$option = '进入业务办理<i class="fa fa-commenting"></i>';
+            		$title = '此农场有'.$disputerows.'条纠纷';
+            	}
+            	else { 
+            		$option = '进入业务办理';
+            		$title = '农场相关业务办理';
+            	}
+            	return Html::a($option,$url, [
             			'id' => 'farmermenu',
-            			'title' => '农场相关业务办理',
+            			'title' => $title,
+            			
             	]);
             }
             ],

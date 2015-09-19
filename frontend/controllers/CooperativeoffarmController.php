@@ -31,10 +31,10 @@ class CooperativeoffarmController extends Controller
      * Lists all CooperativeOfFarm models.
      * @return mixed
      */
-    public function actionCooperativeoffarmindex()
+    public function actionCooperativeoffarmindex($farms_id)
     {
         $searchModel = new cooperativeoffarmSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(['farms_id'=>$farms_id]);
 		Logs::writeLog('农场合作社信息');
         return $this->render('cooperativeoffarmindex', [
             'searchModel' => $searchModel,

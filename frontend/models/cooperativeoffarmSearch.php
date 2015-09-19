@@ -42,7 +42,7 @@ class cooperativeoffarmSearch extends CooperativeOfFarm
      */
     public function search($params)
     {
-        $query = CooperativeOfFarm::find();
+        $query = CooperativeOfFarm::find()->where($params);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

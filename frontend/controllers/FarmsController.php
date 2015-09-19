@@ -19,6 +19,7 @@ use yii\web\UploadedFile;
 use frontend\models\parcelSearch;
 use app\models\Parcel;
 use app\models\Logs;
+use app\models\CooperativeOfFarm;
 
 /**
  * FarmsController implements the CRUD actions for farms model.
@@ -178,7 +179,7 @@ class FarmsController extends Controller
     public function actionFarmsview($id)
     {
     	$model = $this->findModel($id);
-    	
+    	$cooperativeoffarm = CooperativeOfFarm::find()->where(['farms_id'=>$id])->all();
     	$zongdiarr = explode(' ', $model->zongdi);
     	foreach($zongdiarr as $zongdi) {
     		$dataProvider[] = Parcel::find()->where(['unifiedserialnumber' => $zongdi])->one();
@@ -187,6 +188,7 @@ class FarmsController extends Controller
         return $this->render('farmsview', [
             'model' => $model,
         	'dataProvider' => $dataProvider,
+        	'cooperativeoffarm' => $cooperativeoffarm,
         ]);
     }
 

@@ -83,7 +83,7 @@ class Farms extends \yii\db\ActiveRecord
             'farms-search-all'
         ];
         foreach ($cacheKeyList as $cacheName) {
-            Yii::$app->cache->delete($cacheKey);
+            Yii::$app->cache->delete($cacheName);
         }
     }
 
