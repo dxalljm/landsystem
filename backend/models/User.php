@@ -53,7 +53,7 @@ class User extends \yii\db\ActiveRecord
             [['status', 'created_at', 'updated_at'], 'integer'],
             [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
-			
+        	[['realname'], 'string', 'max' => 200],
 			['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
 
@@ -69,6 +69,7 @@ class User extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'username' => '用户名',
+        	'realname' => '姓名',
             'auth_key' => '认证密钥',
             'password_hash' => '密码散列',
             'password_reset_token' => '密码重置令牌',

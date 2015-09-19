@@ -1,6 +1,4 @@
 function assign(key) {
-	// $('#createassign').click(function() {
-		// alert(key);
 		$.get(
 		    'index.php',         
 		    {
@@ -13,7 +11,6 @@ function assign(key) {
 		        
 		    }  
 		);
-	// });
 }
 
 function businessupdate(key) {

@@ -13,7 +13,7 @@ use app\models\Mainmenu;
               <img src="images/xaioren.gif" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-              <p>欢迎您 <?= yii::$app->user->identity->username?></p>
+              <p>欢迎您 <?= yii::$app->user->identity->realname?></p>
               <a href="<?= Url::to('index.php?r=site/logout') ?>"><i class="fa fa-circle text-success"></i> 退出</a>
             </div>
           </div>
