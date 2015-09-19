@@ -153,7 +153,7 @@ class FarmsController extends Controller
     	$strdepartment = Department::find()->where(['id'=>$departmentid])->one()['membership'];
     	$where = explode(',', $strdepartment);
     	$searchModel = new farmsSearch();
-    	$dataProvider = $searchModel->search(['management_area'=>$where]);
+    	$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
     	Logs::writeLog('业务办理');
     	return $this->render('farmsbusiness', [
     			'searchModel' => $searchModel,

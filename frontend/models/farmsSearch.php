@@ -13,7 +13,7 @@ use app\models\ManagementArea;
  */
 class farmsSearch extends farms
 {
-	public $areaname;
+	public $farmername;
 	
     /**
      * @inheritdoc
@@ -21,8 +21,9 @@ class farmsSearch extends farms
     public function rules()
     {
         return [
-            [['id', 'measure'], 'integer'],
-            [['farmname', 'address', 'management_area', 'spyear', 'zongdi', 'surveydate', 'groundsign', 'investigator', 'farmersign'], 'safe'],
+            [['id'], 'integer'],
+        	[['measure'],'number'],
+            [['farmname', 'farmername', 'address', 'management_area', 'spyear', 'zongdi', 'surveydate', 'groundsign', 'investigator', 'farmersign'], 'safe'],
         ];
     }
 
@@ -44,8 +45,8 @@ class farmsSearch extends farms
      */
     public function search($params)
     {
-        $query = farms::find()->where($params);
-        //$query->joinWith(['farmer']);
+        $query = farms::find();
+        $query->joinWith(['farmer']);
         
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -69,9 +70,9 @@ class farmsSearch extends farms
         						'desc' => ['land_farmer.farmername' => SORT_DESC],
         						'label' => '法人姓名',
         				],
-        				'spyear' => [
-        						'asc' => ['spyear' => SORT_ASC],
-        						'desc' => ['spyear' => SORT_DESC],
+        				'measure' => [
+        						'asc' => ['measure' => SORT_ASC],
+        						'desc' => ['measure' => SORT_DESC],
         						//'label' => '管理区',
         				],
         		] 
@@ -99,8 +100,8 @@ class farmsSearch extends farms
             ->andFilterWhere(['like', 'groundsign', $this->groundsign])
             ->andFilterWhere(['like', 'investigator', $this->investigator])
             ->andFilterWhere(['like', 'farmersign', $this->farmersign])
-            ->andFilterWhere(['like', 'pinyin', $this->pinyin]);
-        	//->andFilterWhere(['like', 'land_management_area.areaname', $this->areaname]);
+            ->andFilterWhere(['like', 'pinyin', $this->pinyin])
+        	->andFilterWhere(['like', 'land_farmer.farmername', $this->farmername]);
          //
 
         return $dataProvider;
