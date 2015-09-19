@@ -18,6 +18,7 @@ use app\models\Plantingstructure;
 use app\models\Fireprevention;
 use app\models\Plantinputproduct;
 use app\models\Plantpesticides;
+use app\models\Collection;
 ?>
 
 <div class="farms-menu">
@@ -268,14 +269,16 @@ use app\models\Plantpesticides;
       <td width="5%" align="center"></td>
       <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
-  <span class="info-box-icon"><i class="fa fa-ban"></i></span>
+  <a href='<?= Url::to('index.php?r=Collection/Collectioncreate&farms_id='.$_GET['farms_id']) ?>'><span class="info-box-icon"><i class="fa fa-cny"></i></span></a>
   <div class="info-box-content">
-  <span class="info-box-number"></span>
+  <span class="info-box-number">缴费业务</span>
     <span class="info-box-text"></span>
     <!-- The progress section is optional -->
-
+    <div class="progress">
+      <div class="progress-bar" style="width: 100%"></div>
+    </div>
     <span class="progress-description">
-     
+     防火合同的签订
     </span>
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box --></td>

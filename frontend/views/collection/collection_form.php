@@ -31,7 +31,7 @@ use yii\helpers\Url;
     <td><?= $farms->measure ?>亩</td>
   </tr>
   <tr>
-    <td align="right">缴费年度</td><?php $model->payyear = date('Y')?>
+    <td align="right">缴费年度</td><?php if(isset($_GET['year'])) $model->payyear = $_GET['year']; else $model->payyear = date('Y');?>
     <td><?= $form->field($model, 'payyear')->textInput(['disabled'=>'disabled'])->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
@@ -59,10 +59,10 @@ use yii\helpers\Url;
     <td>&nbsp;</td>
   </tr>
   <tr>
-    <td align="right">缴费金额</td><?php if(!($model->getAR($year)-$model->real_income_amount)) $realoption = ['value'=>'','disabled'=>'disabled']; else $realoption = ['value'=>'']?>
+    <td align="right">缴费金额</td><?php if(!($model->getAR($year)-$model->real_income_amount)) $realoption = ['value'=>$model->getYpaymoney($year, $model->real_income_amount),'disabled'=>'disabled']; else $realoption = ['value'=>$model->getYpaymoney($year, $model->real_income_amount)]?>
     <td><?= $form->field($model, 'real_income_amount')->textInput($realoption)->label(false)->error(false) ?></td>
     <td align="right">缴费面积</td><?php if(!($model->getAR($year)-$model->real_income_amount)) $areaoption = ['id'=>'collection_realarea','class'=>'form-control','disabled'=>'disabled']; else $areaoption = ['id'=>'collection_realarea','class'=>'form-control']?>
-    <td><?= html::textInput('real_area','',$areaoption)?></td>
+    <td><?= html::textInput('real_area',$model->getYpayarea($year, $model->real_income_amount),$areaoption)?></td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
@@ -76,21 +76,27 @@ use yii\helpers\Url;
 <table class="table table-striped table-bordered table-hover table-condensed">
   <tr>
     <td align="center">应追缴年度</td>
+    <td align="center">实收金额</td>
     <td align="center">应追缴费面积</td>
     <td align="center">应追缴费金额</td>
     <td align="center">剩余欠缴金额</td>
 
   </tr>
+  <?php if(!$collectiondataProvider) {?>
   <tr>
     <td align="center"><?= $year?></td>
+    <td align="center"><?= $model->real_income_amount;?></td>
     <td align="center"><?= $model->getYpayarea($year, $model->real_income_amount)?></td>
     <td align="center"><?= $model->getYpaymoney($year, $model->real_income_amount)?></td>
     <td align="center"><?= $owe+$model->getAR($year)-$model->real_income_amount?></td>
 
   </tr>
+  <?php }?>
+  <?php //var_dump($collectiondataProvider);?>
   <?php foreach($collectiondataProvider as $val) {?>
   <tr>
     <td align="center"><?= $val['ypayyear']?></td>
+    <td align="center"><?= $val['real_income_amount']?></td>
     <td align="center"><?= $val['ypayarea']?></td>
     <td align="center"><?= $val['ypaymoney']?></td>
     <td align="center"><?= $owe?></td>
@@ -115,22 +121,39 @@ function submittype(v) {
 
 $(document).ready(function () {
 
-	$('#collection-payyear').change(function(){
-		var input = $(this).val();		
-		$.getJSON('index.php?r=collection/getar', {year: input,farms_id: <?= $_GET['farms_id'] ?>}, function (data) {
+// 	$('#collection-payyear').change(function(){
+// 		var input = $(this).val();		
+		//$.getJSON('index.php?r=collection/getar', {year: input,farms_id: <?= $_GET['farms_id'] ?>}, function (data) {
+// 			if(data === 0) {
+// 				alert(input);
+// 				alert(input+'年度没有缴费基数，请添加缴费基数再试。');
+// 				var d = new Date();
+// 				$('#collection-payyear').val(d.getFullYear());
+				//$.getJSON('index.php?r=collection/getar', {year: d.getFullYear(),farms_id: <?= $_GET['farms_id'] ?>}, function (data) {
+// 					$('#collection-amounts_receivable').val(data);
+// 				});
+// 			}
+// 			else
+// 				$('#collection-amounts_receivable').val(data);
+// 		});
+// 	});
+
+jQuery('#collection-payyear').change(function(){
+    var year = $(this).val();
+    $.getJSON('index.php?r=collection/getar', {year: year,farms_id: <?= $_GET['farms_id'] ?>}, function (data) {
 			if(data === 0) {
-				alert(input);
-				alert(input+'年度没有缴费基数，请添加缴费基数再试。');
+				alert(year+'年度没有缴费基数，请添加缴费基数再试。');
 				var d = new Date();
 				$('#collection-payyear').val(d.getFullYear());
-				$.getJSON('index.php?r=collection/getar', {year: d.getFullYear(),farms_id: <?= $_GET['farms_id'] ?>}, function (data) {
+			$.getJSON('index.php?r=collection/getar', {year: d.getFullYear(),farms_id: <?= $_GET['farms_id'] ?>}, function (data) {
 					$('#collection-amounts_receivable').val(data);
 				});
 			}
-			else
-				$('#collection-amounts_receivable').val(data);
-		});
+    });
+    $.get('/landsystem/frontend/web/index.php?r=collection/collectioncreate',{year:year,farms_id:<?= $_GET['farms_id']?>,cardid:<?= $_GET['cardid'] ?>},function (data) {
+		$('body').html(data);
 	});
+});
 
 	
 	$('#collection_realarea').keyup(function(event){

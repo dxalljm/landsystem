@@ -124,9 +124,11 @@ class CollectionController extends Controller
     	//$year = Theyear::findOne(1)['years'];
     	$farms = Farms::find()->where(['id'=>$farms_id])->one();
     	$collection = Collection::find()->where(['farms_id'=>$farms_id,'cardid'=>$cardid,'ypayyear'=>$year])->one();
+    	//var_dump($collection);
     	$old_area = 0;
     	if($collection) {
     		$model = $this->findModel($collection->id);
+    		$old = $model->attributes;
     		$old_real_income_amount = $collection->real_income_amount;
     		$old_ypaymoney = $collection->ypaymoney;
     		$old_area = sprintf("%.2f",$collection->real_income_amount/30/PlantPrice::find()->where(['years'=>$model->ypayyear])->one()['price']);
@@ -134,10 +136,11 @@ class CollectionController extends Controller
     	else {
     		$model = new Collection();
     		$old_real_income_amount = 0;
+    		$old = '';
     	}
     	
         
-        $collectiondataProvider = Collection::find()->where(['farms_id'=>$farms_id,'cardid'=>$cardid])->andWhere('ypayyear<'.$year)->all();
+        $collectiondataProvider = Collection::find()->where(['farms_id'=>$farms_id,'cardid'=>$cardid])->andWhere('ypayyear<='.$year)->all();
         $owe = $model->getOwe($cardid, $farms_id,$year);
 //         if($owe)
 //         	$collectiondataProvider['owe'] = $owe+$collectiondataProvider['amounts_receivable']-$collectiondataProvider['real_income_amount'];
@@ -145,7 +148,9 @@ class CollectionController extends Controller
 //         	$collectiondataProvider['owe'] = $collectiondataProvider['ypaymoney'];
         //$collectiondataProvider = Collection::findAll("");
         //print_r($collectiondataProvider);
+
         if ($model->load(Yii::$app->request->post())) {
+        	
         	$model->amounts_receivable = $model->getAR($year);
         	$model->real_income_amount = $model->real_income_amount + $old_real_income_amount;
         	$model->ypayarea = $model->getYpayarea($year, $model->real_income_amount);
@@ -160,7 +165,7 @@ class CollectionController extends Controller
         	$model->save();
         	//var_dump($model->getErrors());
         	$newAttr = $model->attributes;
-        	Logs::writeLog('收缴一笔承包费',$model->id,'',$newAttr);
+        	Logs::writeLog('收缴一笔承包费',$model->id,$old,$newAttr);
         	return $this->redirect(['collectioncreate', 
         			'model' => $model,
     					'year' => $year,
@@ -171,7 +176,7 @@ class CollectionController extends Controller
     					'owe' => $owe,
         				'overarea' => $old_area,
         	]);
-        	
+        	//exit;
         } else {
             return $this->render('collectioncreate', [
                 'model' => $model,
@@ -205,7 +210,8 @@ class CollectionController extends Controller
     	}
     	 
     
-    	$collectiondataProvider = Collection::find()->where(['farms_id'=>$farms_id,'cardid'=>$cardid])->andWhere('ypayyear<'.$year)->all();
+    	$collectiondataProvider = Collection::find()->where(['farms_id'=>$farms_id,'cardid'=>$cardid])->all();
+    	$plantprace = PlantPrice::find()->all();
     	$owe = $model->getOwe($cardid, $farms_id,$year);
     	//         if($owe)
     		//         	$collectiondataProvider['owe'] = $owe+$collectiondataProvider['amounts_receivable']-$collectiondataProvider['real_income_amount'];
@@ -235,7 +241,9 @@ class CollectionController extends Controller
     					'farms_id' => $farms_id,
     					'farms' => $farms,
     					'collectiondataProvider' => $collectiondataProvider,
-    					'owe' => $owe,]);
+    					'owe' => $owe,
+						'plantpreace' => $plantprace,   				
+    			]);
     			
     		} else {
     			return $this->render('collectionsearch', [
@@ -246,6 +254,7 @@ class CollectionController extends Controller
     					'farms' => $farms,
     					'collectiondataProvider' => $collectiondataProvider,
     					'owe' => $owe,
+    					'plantpreace' => $plantprace,
     			]);
     		}
     }

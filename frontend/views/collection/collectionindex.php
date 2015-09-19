@@ -8,6 +8,7 @@ use yii\grid\GridView;
 use app\models\ManagementArea;
 use dosamigos\datetimepicker\DateTimePicker;
 use app\models\Theyear;
+use app\models\Collection;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\farmsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -39,14 +40,32 @@ use app\models\Theyear;
               	'attribute' => 'farmname',
             	'value' => 'farms.farmname',
             ],
-            'cardid',
-            'telephone',
+            [
+            	'label' => '应收金额',
+            	'value' => function($model) {
+            		return Collection::find()->where(['farms_id'=>$model->farms_id,'cardid'=>$model->cardid,'ypayyear'=>date('Y')])->one()['amounts_receivable'].'元';
+            	}
+            ],
+            [
+            'label' => '实收金额',
+            'value' => function($model) {
+            	return Collection::find()->where(['farms_id'=>$model->farms_id,'cardid'=>$model->cardid,'ypayyear'=>date('Y')])->one()['real_income_amount'].'元';
+            }
+            ],
+            [
+            'label' => '差额',
+            'value' => function($model) {
+            	return Collection::find()->where(['farms_id'=>$model->farms_id,'cardid'=>$model->cardid,'ypayyear'=>date('Y')])->one()['ypaymoney'].'元';
+            }
+            ],
+            //'cardid',
+            //'telephone',
             [
 
             'format'=>'raw',
             //'class' => 'btn btn-primary btn-lg',
             'value' => function($model,$key){
-            	return Html::a('缴费','index.php?r=collection/collectioncreate&farms_id='.$model->farms_id.'&cardid='.$model->cardid, [
+            	return Html::a('缴费','index.php?r=collection/collectioncreate&farms_id='.$model->farms_id.'&cardid='.$model->cardid.'&year='.date('Y'), [
             			'id' => 'collectionindex',
             			'title' => '农场相关业务办理',
             			//'data-toggle' => 'modal',

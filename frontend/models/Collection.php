@@ -35,7 +35,7 @@ class Collection extends \yii\db\ActiveRecord
 	public function rules() 
     { 
         return [
-            [['farms_id', 'real_income_amount', 'ypayyear', 'isupdate'], 'integer'],
+            [['farms_id', 'ypayyear', 'isupdate'], 'integer'],
             [['ypayarea', 'amounts_receivable', 'real_income_amount', 'ypaymoney', 'owe'], 'number'],
             [['payyear', 'billingtime','cardid'], 'string', 'max' => 500]
         ]; 

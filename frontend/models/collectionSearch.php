@@ -20,9 +20,9 @@ class collectionSearch extends Collection
 	public function rules()
     {
         return [
-            [['id', 'farms_id', 'amounts_receivable', 'real_income_amount', 'ypayyear', 'isupdate'], 'integer'],
-            [['payyear', 'billingtime','cardid'], 'safe'],
-            [['ypayarea', 'ypaymoney', 'owe'], 'number'],
+            [['id', 'farms_id', 'ypayyear', 'isupdate'], 'integer'],
+            [['farmname','payyear', 'billingtime','cardid'], 'safe'],
+            [['ypayarea', 'amounts_receivable', 'real_income_amount', 'ypaymoney', 'owe'], 'number'],
         ];
     }
 
@@ -75,8 +75,6 @@ class collectionSearch extends Collection
        $query->andFilterWhere([
             'id' => $this->id,
             'farms_id' => $this->farms_id,
-            'amounts_receivable' => $this->amounts_receivable,
-            'real_income_amount' => $this->real_income_amount,
             'ypayyear' => $this->ypayyear,
             'ypayarea' => $this->ypayarea,
             'ypaymoney' => $this->ypaymoney,
@@ -86,6 +84,8 @@ class collectionSearch extends Collection
 
         $query->andFilterWhere(['like', 'payyear', $this->payyear])
             ->andFilterWhere(['like', 'billingtime', $this->billingtime])
+            ->andFilterWhere(['like', 'amounts_receivable', $this->amounts_receivable])
+            ->andFilterWhere(['like', 'real_income_amount', $this->real_income_amount])
             ->andFilterWhere(['like', 'cardid', $this->cardid])
             ->andFilterWhere(['like', 'land_farms.farmname', $this->farmname]);
 

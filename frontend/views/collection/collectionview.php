@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         缴费业务(<?= Theyear::findOne(1)['years']?>年度)
                     </h3>
                 </div>
-                <div class="box-body"
+                <div class="box-body">
 
     <p>
     	 <?= Html::a('添加', ['collectioncreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>

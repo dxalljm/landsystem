@@ -40,7 +40,8 @@ class Farms extends \yii\db\ActiveRecord
         return [
             [['farmname'], 'required'],
             [['measure'], 'number'],
-            [['farmname', 'address', 'zongdi', 'groundsign', 'investigator', 'farmersign','pinyin'], 'string', 'max' => 500]
+            [['farmname', 'address', 'groundsign', 'investigator', 'farmersign','pinyin'], 'string', 'max' => 500],
+        	//[['zongdi'],'string']
         ];
     }
 
@@ -131,7 +132,7 @@ class Farms extends \yii\db\ActiveRecord
 			];
 		}
         $jsonData = Json::encode($data);
-        Yii::$app->cache->set($cacheKey, $jsonData, 3);
+        Yii::$app->cache->set($cacheKey, $jsonData, 3600);
         
         return $jsonData;
     }

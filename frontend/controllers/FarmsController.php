@@ -20,6 +20,7 @@ use frontend\models\parcelSearch;
 use app\models\Parcel;
 use app\models\Logs;
 use app\models\CooperativeOfFarm;
+use frontend\helpers\Pinyin;
 
 /**
  * FarmsController implements the CRUD actions for farms model.
@@ -134,13 +135,55 @@ class FarmsController extends Controller
     				$farmsmodel->farmersign =  $loadxls->getActiveSheet()->getCell('I'.$i)->getValue();
     				$farmsmodel->create_at = time();
     				$farmsmodel->update_at = time();
+    				$farmsmodel->pinyin = Pinyin::encode($loadxls->getActiveSheet()->getCell('C'.$i)->getValue());
      				$farmsmodel->save();
-//     				print_r($farmsmodel->getErrors());
+     				print_r($farmsmodel->getErrors());
     			}
     		}
     	}
     	Logs::writeLog('农场XLS批量导入');
     	return $this->render('farmsxls',[
+    			'model' => $model,
+    			'rows' => $rows,
+    	]);
+    }
+    
+    public function actionFarmszdxls()
+    {
+    	set_time_limit(0);
+    	$model = new UploadForm();
+    	$rows = 0;
+    	if (Yii::$app->request->isPost) {
+    
+    		$model->file = UploadedFile::getInstance($model, 'file');
+    		if($model->file == null)
+    			throw new \yii\web\UnauthorizedHttpException('对不起，请先选择xls文件');
+    		if ($model->file && $model->validate()) {
+    			 
+    			$xlsName = time().rand(100,999);
+    			$model->file->name = $xlsName;
+    			$model->file->saveAs('uploads/' . $model->file->name . '.' . $model->file->extension);
+    			$path = 'uploads/' . $model->file->name . '.' . $model->file->extension;
+    			$loadxls = \PHPExcel_IOFactory::load($path);
+    			$rows = $loadxls->getActiveSheet()->getHighestRow();
+    			for($i=1;$i<=$rows;$i++) {
+    				//echo $loadxls->getActiveSheet()->getCell('F'.$i)->getValue()."<br>";
+    				//echo  ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];"<br>";
+    				$farms_id = Farms::find()->where(['farmname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];
+       				$farmer_farms_id = Farmer::find()->where(['farmername'=>$loadxls->getActiveSheet()->getCell('C'.$i)->getValue()])->one()['farms_id'];
+    				if($farms_id == $farmer_farms_id) {
+    					$farmsmodel = $this->findModel($farms_id);
+    					$farmsmodel->zongdi .= $loadxls->getActiveSheet()->getCell('D'.$i)->getValue().'、';
+    					$farmsmodel->measure += Parcel::find()->where(['unifiedserialnumber' => $loadxls->getActiveSheet()->getCell('D'.$i)->getValue()])->one()['grossarea'];
+    					$farmsmodel->save();
+    					echo $loadxls->getActiveSheet()->getCell('A'.$i)->getValue().'-------'.$farms_id.'-------'.$loadxls->getActiveSheet()->getCell('D'.$i)->getValue().'<br>';
+    				}
+  				//print_r($farmsmodel->getErrors());
+    			}
+    		}
+    	}
+    	Logs::writeLog('宗地XLS批量导入');
+    	return $this->render('farmszdxls',[
     			'model' => $model,
     			'rows' => $rows,
     	]);

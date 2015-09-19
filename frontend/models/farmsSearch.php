@@ -23,7 +23,8 @@ class farmsSearch extends farms
         return [
             [['id'], 'integer'],
         	[['measure'],'number'],
-            [['farmname', 'farmername', 'address', 'management_area', 'spyear', 'zongdi', 'surveydate', 'groundsign', 'investigator', 'farmersign'], 'safe'],
+        	//[['zongdi'],'string'],
+            [['farmname', 'farmername', 'address', 'management_area', 'spyear', 'surveydate', 'groundsign', 'investigator', 'farmersign'], 'safe'],
         ];
     }
 
