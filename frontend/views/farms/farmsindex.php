@@ -41,16 +41,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             [
             	'attribute' => 'farmname',
 
             ],
+            'farmername',
 //             [
 //             	'label' => '管理区',
 //               	'attribute' => 'areaname',      						
 //             	'value' => 'managementarea.areaname',
 //             ],
+			//'management_area',
             'measure',
             // 'iscontract',
             // 'contractlife',

@@ -45,48 +45,49 @@ class farmsSearch extends farms
      */
     public function search($params)
     {
+    	print_r($params);
         $query = farms::find();
-        $query->joinWith(['farmer']);
+        //$query->joinWith(['farmer']);
         
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 		
-       $dataProvider->setSort([
-        		'attributes' => [
+//        $dataProvider->setSort([
+//         		'attributes' => [
         				 
-        				'id' => [
-        						'asc' => ['id' => SORT_ASC],
-        						'desc' => ['id' => SORT_DESC],
-        						//'label' => '管理区',
-        				],
-        				'farmname' => [
-        						'asc' => ['farmname' => SORT_ASC],
-        						'desc' => ['farmname' => SORT_DESC],
-        						//'label' => '管理区',
-        				],
-        				'farmername' => [
-        						'asc' => ['land_farmer.farmername' => SORT_ASC],
-        						'desc' => ['land_farmer.farmername' => SORT_DESC],
-        						'label' => '法人姓名',
-        				],
-        				'measure' => [
-        						'asc' => ['measure' => SORT_ASC],
-        						'desc' => ['measure' => SORT_DESC],
-        						//'label' => '管理区',
-        				],
-        		] 
-        ]);
+//         				'id' => [
+//         						'asc' => ['id' => SORT_ASC],
+//         						'desc' => ['id' => SORT_DESC],
+//         						//'label' => '管理区',
+//         				],
+//         				'farmname' => [
+//         						'asc' => ['farmname' => SORT_ASC],
+//         						'desc' => ['farmname' => SORT_DESC],
+//         						//'label' => '管理区',
+//         				],
+//         				'farmername' => [
+//         						'asc' => ['land_farmer.farmername' => SORT_ASC],
+//         						'desc' => ['land_farmer.farmername' => SORT_DESC],
+//         						'label' => '法人姓名',
+//         				],
+//         				'measure' => [
+//         						'asc' => ['measure' => SORT_ASC],
+//         						'desc' => ['measure' => SORT_DESC],
+//         						//'label' => '管理区',
+//         				],
+//         		] 
+//         ]);
 
         
         $this->load($params);
-
+		
         if (!$this->validate()) {
             // uncomment the following line if you do not want to any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
         }
-        
+        //var_dump($dataProvider);
         $query->andFilterWhere([
             'id' => $this->id,
         ]);
@@ -105,7 +106,7 @@ class farmsSearch extends farms
             ->andFilterWhere(['like', 'investigator', $this->investigator])
             ->andFilterWhere(['like', 'farmersign', $this->farmersign])
             ->andFilterWhere(['like', 'pinyin', $this->pinyin])
-        	->andFilterWhere(['like', 'land_farmer.farmername', $this->farmername])
+            ->andFilterWhere(['like', 'farmerpinyin', $this->farmerpinyin])
             ->andFilterWhere(['like', 'measure', $this->measure]);
 
         return $dataProvider;

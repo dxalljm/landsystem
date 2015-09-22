@@ -68,9 +68,9 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-      //echo Pinyin::encode('杨淑华');
+//       echo Pinyin::encode('杨淑华');
 
-      //exit;
+//       exit;
     	Logs::writeLog('访问首页');
     	$dep_id = User::find()->where(['id'=>yii::$app->getUser()->id])->one()['department_id'];
     	$departmentData = Department::find()->where(['id'=>$dep_id])->one();

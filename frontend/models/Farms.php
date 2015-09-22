@@ -41,8 +41,8 @@ class Farms extends \yii\db\ActiveRecord
             [['farmname', 'farmername'], 'required'],
             [['measure'], 'number'],
             [['zongdi'], 'string'],
-            [['create_at', 'update_at'], 'integer'],
-            [['farmname', 'farmername', 'cardid', 'telephone', 'address', 'management_area', 'spyear', 'cooperative_id', 'surveydate', 'groundsign', 'investigator', 'farmersign', 'pinyin','farmerpinyin'], 'string', 'max' => 500]
+            [['management_area'], 'integer'],
+            [['farmname', 'farmername', 'cardid', 'telephone', 'address', 'cooperative_id', 'surveydate', 'groundsign', 'investigator', 'farmersign', 'pinyin','farmerpinyin'], 'string', 'max' => 500]
         ]; 
     }
 
@@ -70,6 +70,7 @@ class Farms extends \yii\db\ActiveRecord
             'create_at' => '创建日期',
             'update_at' => '更新日期',
             'pinyin' => '农场名称拼音首字母',
+        	'farmerpinyin' => '法人姓名简单首字母',
         ]; 
     }
     
@@ -122,22 +123,18 @@ class Farms extends \yii\db\ActiveRecord
         $data = [];
         $result = Farms::find()->all();
         foreach ($result as $farm) {
-        	
           $data[] = [
             'value' => $farm['pinyin'], // 拼音
             'data' => $farm['farmname'], // 下拉框显示的名称
             'url' => Url::to($url.$farm['id']), 
           ];
+          $data[] = [
+          		'value' => $farm['farmerpinyin'],
+          		'data' => $farm['farmername'],
+          		'url' => Url::to($url.$farm['id'].'&cardid='.$farm['cardid'].'&year='.date('Y')),
+          			
+          ];
         }
-		$farmers = Farmer::find()->all();
-		foreach ($farmers as $farmer) {
-			$data[] = [
-				'value' => $farmer['pinyin'], 
-				'data' => $farmer['farmername'],
-				'url' => Url::to($url.$farmer['farms_id'].'&cardid='.$farmer['cardid'].'&year='.date('Y')),
-					
-			];
-		}
         $jsonData = Json::encode($data);
         Yii::$app->cache->set($cacheKey, $jsonData, 3600);
         

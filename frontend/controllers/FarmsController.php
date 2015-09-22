@@ -58,12 +58,26 @@ class FarmsController extends Controller
     	$strdepartment = Department::find()->where(['id'=>$departmentid])->one()['membership'];
     	$where = explode(',', $strdepartment);
         $searchModel = new farmsSearch();
-        $dataProvider = $searchModel->search(['management_area'=>$where]);
+        //$searchModel->find()->where(['management_area'=>$where]);
+        $params = Yii::$app->request->queryParams;
+        //var_dump($params);
+        
+        $dataProvider = $searchModel->search($params);
         Logs::writeLog('农场管理');
         return $this->render('farmsindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+    
+    public function actionFarmszongdi()
+    {
+    	$farms = Farms::find()->all();
+    	foreach ($farms as $val) {
+    		$model = $this->findModel($val['id']);
+    		$model->zongdi = substr($val['zongdi'],0,strlen($val['zongdi'])-1); 
+    		$model->save();
+    	}
     }
     
     public function actionGetfarmrows()
@@ -138,10 +152,11 @@ class FarmsController extends Controller
     				$farmsmodel->farmersign =  $loadxls->getActiveSheet()->getCell('L'.$i)->getValue();
     				$farmsmodel->create_at = time();
     				$farmsmodel->update_at = time();
+					//var_dump(Pinyin::encode($loadxls->getActiveSheet()->getCell('D'.$i)->getValue()));
     				$farmsmodel->pinyin = Pinyin::encode($loadxls->getActiveSheet()->getCell('C'.$i)->getValue());
     				$farmsmodel->farmerpinyin = Pinyin::encode($loadxls->getActiveSheet()->getCell('D'.$i)->getValue());
      				$farmsmodel->save();
-     				var_dump($farmsmodel->getErrors());
+     				//var_dump($farmsmodel->getErrors());
     			}
     		}
     	}
@@ -171,21 +186,27 @@ class FarmsController extends Controller
     			$loadxls = \PHPExcel_IOFactory::load($path);
     			$rows = $loadxls->getActiveSheet()->getHighestRow();
     			for($i=1;$i<=$rows;$i++) {
+    				//echo $loadxls->getActiveSheet()->getCell('A'.$i)->getValue().'-----'.$loadxls->getActiveSheet()->getCell('B'.$i)->getValue().'-----'.$loadxls->getActiveSheet()->getCell('C'.$i)->getValue().'<br>';
     				//echo $loadxls->getActiveSheet()->getCell('F'.$i)->getValue()."<br>";
     				//echo  ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];"<br>";
-    				$farms_id = Farms::find()->where(['farmname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];
-       				$farmer_farms_id = Farmer::find()->where(['farmername'=>$loadxls->getActiveSheet()->getCell('C'.$i)->getValue()])->one()['farms_id'];
-    				if($farms_id == $farmer_farms_id) {
-    					$farmsmodel = $this->findModel($farms_id);
-    					$farmsmodel->zongdi .= $loadxls->getActiveSheet()->getCell('D'.$i)->getValue().'、';
-    					$farmsmodel->measure += Parcel::find()->where(['unifiedserialnumber' => $loadxls->getActiveSheet()->getCell('D'.$i)->getValue()])->one()['grossarea'];
-    					$farmsmodel->save();
-    					echo $loadxls->getActiveSheet()->getCell('A'.$i)->getValue().'-------'.$farms_id.'-------'.$loadxls->getActiveSheet()->getCell('D'.$i)->getValue().'<br>';
+    				$isFarm = Farms::find()->where(['farmname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue(),'farmername'=>$loadxls->getActiveSheet()->getCell('C'.$i)->getValue()])->one()['id'];
+    				//echo $loadxls->getActiveSheet()->getCell('A'.$i)->getValue().'-------'.$isFarm.'-------'.$loadxls->getActiveSheet()->getCell('B'.$i)->getValue().'<br>';
+    				if($isFarm) {
+    					$farmsmodel = $this->findModel($isFarm);
+    					//if($farmsmodel->zongdi == '') {
+	    					$farmsmodel->zongdi .= $loadxls->getActiveSheet()->getCell('D'.$i)->getValue().'、';
+	    					$farmsmodel->measure += Parcel::find()->where(['unifiedserialnumber' => $loadxls->getActiveSheet()->getCell('D'.$i)->getValue()])->one()['grossarea'];
+	    					$farmsmodel->save();
+	    					echo $loadxls->getActiveSheet()->getCell('A'.$i)->getValue().'-------'.$isFarm.'-------'.$loadxls->getActiveSheet()->getCell('C'.$i)->getValue().'<br>';
+    					//}
+    					
     				}
   				//print_r($farmsmodel->getErrors());
     			}
     		}
+    		echo '完成';
     	}
+    	
     	Logs::writeLog('宗地XLS批量导入');
     	return $this->render('farmszdxls',[
     			'model' => $model,

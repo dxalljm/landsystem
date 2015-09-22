@@ -12,7 +12,7 @@ use app\models\farmer;
  */
 class farmerSearch extends farmer
 {
-	public $farmname;
+	//public $farmname;
     /**
      * @inheritdoc
      */
@@ -84,7 +84,7 @@ public function search($params)
             ->andFilterWhere(['like', 'begindate', $this->begindate])
             ->andFilterWhere(['like', 'enddate', $this->enddate])
             ->andFilterWhere(['like', 'pinyin', $this->pinyin])
-        ->andFilterWhere(['like', 'land_farms.farmname', $this->farmname]);
+        	->andFilterWhere(['like', 'farmerpinyin', $this->farmerpinyin]);
         return $dataProvider;
     }
 }
