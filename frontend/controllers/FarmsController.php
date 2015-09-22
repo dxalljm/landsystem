@@ -54,12 +54,17 @@ class FarmsController extends Controller
      */
     public function actionFarmsindex()
     {
-    	$departmentid = User::find()->where(['id'=>\Yii::$app->getUser()->id])->one()['department_id'];
-    	$strdepartment = Department::find()->where(['id'=>$departmentid])->one()['membership'];
-    	$where = explode(',', $strdepartment);
+        $departmentid = User::find()->where(['id'=>\Yii::$app->getUser()->id])->one()['department_id'];
+        $strdepartment = Department::find()->where(['id'=>$departmentid])->one()['membership'];
+        $where = explode(',', $strdepartment);
         $searchModel = new farmsSearch();
+
         $params = Yii::$app->request->queryParams;
-        $params['farmsSearch']['management_area'] = $where;
+
+        // 管理区域是否是数组
+        if (!empty($where) && count($where) > 0) {
+          $params['farmsSearch']['management_area'] = $where;
+        }
         
         $dataProvider = $searchModel->search($params);
         Logs::writeLog('农场管理');
