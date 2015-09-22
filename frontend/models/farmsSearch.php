@@ -45,7 +45,6 @@ class farmsSearch extends farms
      */
     public function search($params)
     {
-    	print_r($params);
         $query = farms::find();
         //$query->joinWith(['farmer']);
         
@@ -81,7 +80,7 @@ class farmsSearch extends farms
 
         
         $this->load($params);
-		
+
         if (!$this->validate()) {
             // uncomment the following line if you do not want to any records when validation fails
             // $query->where('0=1');

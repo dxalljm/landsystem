@@ -58,9 +58,8 @@ class FarmsController extends Controller
     	$strdepartment = Department::find()->where(['id'=>$departmentid])->one()['membership'];
     	$where = explode(',', $strdepartment);
         $searchModel = new farmsSearch();
-        //$searchModel->find()->where(['management_area'=>$where]);
         $params = Yii::$app->request->queryParams;
-        //var_dump($params);
+        $params['farmsSearch']['management_area'] = $where;
         
         $dataProvider = $searchModel->search($params);
         Logs::writeLog('农场管理');
