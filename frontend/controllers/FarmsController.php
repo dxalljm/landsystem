@@ -198,22 +198,23 @@ class FarmsController extends Controller
     			
 				
     		}
-    		$k = 0;
-    		print_r($data);
+    		//$k = 0;
+    		var_dump($data);
 //     		foreach ($data as $key => $value) {
+//     			echo $key.'<br>';
 //     			$model = $this->findModel($key);
 //     			if($model) {
 //     			$model->zongdi = implode('、', $value);
 //     			foreach($value as $val)
 //     				$model->measure += Parcel::find()->where(['unifiedserialnumber'=>$val])->one()['grossarea'];
 //     			$model->save();
-//     			$k++;
-//     			//echo $key.'<br>';
+//     			//$k++;
+//     			exit;
 //     			}		
 //     		}
 			
-    		echo count($data).'<br>';
-    		echo $k.'<br>';
+//     		echo count($data).'<br>';
+    		
     	}
     	
     	Logs::writeLog('宗地XLS批量导入');
