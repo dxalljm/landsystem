@@ -190,26 +190,30 @@ class FarmsController extends Controller
     			$loadxls = \PHPExcel_IOFactory::load($path);
     			$rows = $loadxls->getActiveSheet()->getHighestRow();
     			for($i=1;$i<=$rows;$i++) {
-    				//echo $loadxls->getActiveSheet()->getCell('A'.$i)->getValue().'-----'.$loadxls->getActiveSheet()->getCell('B'.$i)->getValue().'-----'.$loadxls->getActiveSheet()->getCell('C'.$i)->getValue().'<br>';
-    				//echo $loadxls->getActiveSheet()->getCell('F'.$i)->getValue()."<br>";
-    				//echo  ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];"<br>";
-    				$isFarm = Farms::find()->where(['farmname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue(),'farmername'=>$loadxls->getActiveSheet()->getCell('C'.$i)->getValue()])->one()['id'];
-    				//echo $loadxls->getActiveSheet()->getCell('A'.$i)->getValue().'-------'.$isFarm.'-------'.$loadxls->getActiveSheet()->getCell('B'.$i)->getValue().'<br>';
-    				if($isFarm) {
-    					$farmsmodel = $this->findModel($isFarm);
-    						$zongdistr = '';
-	    					$zongdistr .= $loadxls->getActiveSheet()->getCell('D'.$i)->getValue().'、';
-	    					$farmsmodel->zongdi = substr($zongdistr,0,strlen($zongdistr)-1);
-	    					$farmsmodel->measure += Parcel::find()->where(['unifiedserialnumber' => $loadxls->getActiveSheet()->getCell('D'.$i)->getValue()])->one()['grossarea'];
-	    					$farmsmodel->save();
-	    					echo $loadxls->getActiveSheet()->getCell('A'.$i)->getValue().'-------'.$isFarm.'-------'.$loadxls->getActiveSheet()->getCell('C'.$i)->getValue().'<br>';
-    					//}
-    					
-    				}
-  				//print_r($farmsmodel->getErrors());
+    				$id = Farms::find()->where(['farmname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue(),'farmername'=>$loadxls->getActiveSheet()->getCell('C'.$i)->getValue()])->one()['id'];
+    				//if(!$id)
+    					//echo '-------------'.$i.'---------<br>';
+    					$data[$id][] = $loadxls->getActiveSheet()->getCell('D'.$i)->getValue();
     			}
+    			
+				
     		}
-    		echo '完成';
+    		$k = 0;
+    		print_r($data);
+//     		foreach ($data as $key => $value) {
+//     			$model = $this->findModel($key);
+//     			if($model) {
+//     			$model->zongdi = implode('、', $value);
+//     			foreach($value as $val)
+//     				$model->measure += Parcel::find()->where(['unifiedserialnumber'=>$val])->one()['grossarea'];
+//     			$model->save();
+//     			$k++;
+//     			//echo $key.'<br>';
+//     			}		
+//     		}
+			
+    		echo count($data).'<br>';
+    		echo $k.'<br>';
     	}
     	
     	Logs::writeLog('宗地XLS批量导入');
