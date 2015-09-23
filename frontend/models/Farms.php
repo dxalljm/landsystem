@@ -41,7 +41,7 @@ class Farms extends \yii\db\ActiveRecord
             [['farmname', 'farmername'], 'required'],
             [['measure'], 'number'],
             [['zongdi'], 'string'],
-            [['management_area'], 'integer'],
+            [['management_area','state'], 'integer'],
             [['farmname', 'farmername', 'cardid', 'telephone', 'address', 'cooperative_id', 'surveydate', 'groundsign', 'investigator', 'farmersign', 'pinyin','farmerpinyin'], 'string', 'max' => 500]
         ]; 
     }
@@ -71,6 +71,7 @@ class Farms extends \yii\db\ActiveRecord
             'update_at' => '更新日期',
             'pinyin' => '农场名称拼音首字母',
         	'farmerpinyin' => '法人姓名简单首字母',
+        	'state' => '状态',
         ]; 
     }
     
@@ -109,8 +110,8 @@ class Farms extends \yii\db\ActiveRecord
             return $result;
         }
         $departmentid = User::find()->where(['id'=>Yii::$app->getUser()->id])->one()['department_id'];
-        $keshi = Department::find()->where(['id'=>$departmentid])->one()['departmentname'];
-        switch ($keshi)
+        $keshi = Department::find()->where(['id'=>$departmentid])->one();
+        switch ($keshi['departmentname'])
         {
         	case '财务科';
         		$url = 'index.php?r=collection/collectioncreate&farms_id=';
@@ -121,7 +122,8 @@ class Farms extends \yii\db\ActiveRecord
         
         // 所有农场
         $data = [];
-        $result = Farms::find()->all();
+        $where = explode(',', $keshi['membership']);
+        $result = Farms::find()->where(['management_area'=>$where])->all();
         foreach ($result as $farm) {
           $data[] = [
             'value' => $farm['pinyin'], // 拼音
@@ -136,7 +138,7 @@ class Farms extends \yii\db\ActiveRecord
           ];
         }
         $jsonData = Json::encode($data);
-        Yii::$app->cache->set($cacheKey, $jsonData, 3600);
+        Yii::$app->cache->set($cacheKey, $jsonData, 3);
         
         return $jsonData;
     }

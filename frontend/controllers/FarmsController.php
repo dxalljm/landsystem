@@ -197,8 +197,9 @@ class FarmsController extends Controller
     				//echo $loadxls->getActiveSheet()->getCell('A'.$i)->getValue().'-------'.$isFarm.'-------'.$loadxls->getActiveSheet()->getCell('B'.$i)->getValue().'<br>';
     				if($isFarm) {
     					$farmsmodel = $this->findModel($isFarm);
-    					//if($farmsmodel->zongdi == '') {
-	    					$farmsmodel->zongdi .= $loadxls->getActiveSheet()->getCell('D'.$i)->getValue().'、';
+    						$zongdistr = '';
+	    					$zongdistr .= $loadxls->getActiveSheet()->getCell('D'.$i)->getValue().'、';
+	    					$farmsmodel->zongdi = substr($zongdistr,0,strlen($zongdistr)-1);
 	    					$farmsmodel->measure += Parcel::find()->where(['unifiedserialnumber' => $loadxls->getActiveSheet()->getCell('D'.$i)->getValue()])->one()['grossarea'];
 	    					$farmsmodel->save();
 	    					echo $loadxls->getActiveSheet()->getCell('A'.$i)->getValue().'-------'.$isFarm.'-------'.$loadxls->getActiveSheet()->getCell('C'.$i)->getValue().'<br>';
@@ -225,7 +226,14 @@ class FarmsController extends Controller
     	$strdepartment = Department::find()->where(['id'=>$departmentid])->one()['membership'];
     	$where = explode(',', $strdepartment);
     	$searchModel = new farmsSearch();
-    	$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    	$params = Yii::$app->request->queryParams;
+
+        // 管理区域是否是数组
+        if (!empty($where) && count($where) > 0) {
+          $params['farmsSearch']['management_area'] = $where;
+        }
+        
+        $dataProvider = $searchModel->search($params);
     	Logs::writeLog('业务办理');
     	return $this->render('farmsbusiness', [
     			'searchModel' => $searchModel,

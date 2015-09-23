@@ -15,7 +15,7 @@ use app\models\Lease;
 ?>
 
 <div class="lease-form">
-<?php $farms = Farms::find()->where(['id'=>$_GET['farms_id']])->one();?>
+<?php //$farms = Farms::find()->where(['id'=>$_GET['farms_id']])->one();?>
     <?php $form = ActiveFormrdiv::begin(); ?>
     <?= html::hiddenInput('farms_id',$_GET['farms_id'],['id'=>'farms_id'])?>
     
@@ -26,7 +26,7 @@ use app\models\Lease;
     <td width="20%" align="center">农场名称</td>
     <td colspan="2" align="center" width="20%"><?= $farm->farmname?></td>
     <td align="center" width="10%">法人</td>
-    <td colspan="2" align="center"><?= $farmer->farmername?></td>
+    <td colspan="2" align="center"><?= $farm->farmername?></td>
     <td width="107" align="center">宜农林地面积</td>
     <td width="20%" align="center"><?= $farm->measure.'(已经租凭'.$overarea.')'?></td>
   </tr>
@@ -35,16 +35,16 @@ use app\models\Lease;
   </tr>
   <tr>
     <td align="center">承租人姓名</td>
-    <td colspan="6" align="center"><?= $form->field($model, 'lessee')->textInput(['value'=>$farmer->farmername])->label(false)->error(false) ?></td>
+    <td colspan="6" align="center"><?= $form->field($model, 'lessee')->textInput()->label(false)->error(false) ?></td>
     <td rowspan="5" align="center">&nbsp;</td>
   </tr>
   <tr>
     <td align="center">身份证号</td>
-    <td colspan="6" align="center"><?= $form->field($model, 'lessee_cardid')->textInput(['value' =>$farmer->cardid])->label(false)->error(false) ?></td>
+    <td colspan="6" align="center"><?= $form->field($model, 'lessee_cardid')->textInput()->label(false)->error(false) ?></td>
     </tr>
   <tr>
     <td align="center">电话</td>
-    <td colspan="6" align="center"><?= $form->field($model, 'lessee_telephone')->textInput(['value'=>$farmer->telephone])->label(false)->error(false) ?></td>
+    <td colspan="6" align="center"><?= $form->field($model, 'lessee_telephone')->textInput()->label(false)->error(false) ?></td>
     </tr>
   <tr>
     <td align="center">租赁面积</td>
@@ -125,9 +125,12 @@ use app\models\Lease;
     	<tr>
     		<td align='center'><?php 
 			$zongdiarr = Lease::scanOverZongdi($_GET['farms_id']);
-			//var_dump($zongdiarr);
+			$i=0;
     		foreach($zongdiarr as $value) {
     			echo html::button($value,['onclick'=>'toParcellist("'.$value.'")','value'=>$value,'id'=>'parcelbutton','class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
+    			$i++;
+    			if($i%4 == 0)
+    				echo '<br><br>';
     		}
     		?></td>
 

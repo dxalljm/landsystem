@@ -79,13 +79,13 @@ use app\models\Collection;
   <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
         
         ?>
-    <td width="20%" align="center">
+    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=farmer/farmercreate&farms_id='.$_GET['farms_id']) ?>'>
     <!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
-  <a href='<?= Url::to('index.php?r=farmer/farmercreate&farms_id='.$_GET['farms_id']) ?>'><span class="info-box-icon"><i class="fa fa-user"></i></span></a>
+  <span class="info-box-icon"><i class="fa fa-user"></i></span>
   <div class="info-box-content">
   <span class="info-box-number">承包 </span>
-    <span class="info-box-text">法人：<?= Farmer::find()->where(['farms_id'=>$_GET['farms_id']])->one()['farmername'] ?></span>
+    <span class="info-box-text">法人：<?= $farm->farmername ?></span>
     <!-- The progress section is optional -->
     <div class="progress">
       <div class="progress-bar" style="width: 100%"></div>
@@ -94,7 +94,7 @@ use app\models\Collection;
       填写法人相关信息
     </span>
   </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></td>
+</div><!-- /.info-box --></a></td>
     <td width="5%" align="center"></td>
     <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">

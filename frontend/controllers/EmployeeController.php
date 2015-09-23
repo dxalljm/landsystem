@@ -12,6 +12,7 @@ use app\models\Farmer;
 use app\models\Lease;
 use frontend\models\leaseSearch;
 use app\models\Logs;
+use app\models\Farms;
 /**
  * EmployeeController implements the CRUD actions for Employee model.
  */
@@ -33,10 +34,12 @@ class EmployeeController extends Controller
     {
     	
     	$lease = Lease::find()->where(['farms_id'=>$farms_id])->all();
+    	$farms = Farms::find()->where(['id'=>$farms_id])->one();
 		//$this->getView()->registerJsFile($url)
 		Logs::writeLog('雇工信息');
         return $this->render('employeefathers', [
-             'lease' => $lease,
+            'lease' => $lease,
+        	'farms' => $farms,
         ]);
     }
     

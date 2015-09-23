@@ -33,11 +33,7 @@ use app\models\Dispute;
             	'attribute' => 'farmname',
 
             ],
-            [
-            	'label'=>'法人姓名',
-            	'attribute' => 'farmername',
-            	'value' => 'farmer.farmername',
-            ],
+            'farmername',
             'measure',
             //'management_area',
             [
