@@ -19,7 +19,8 @@ use app\models\Lease;
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">
-                        <?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']; ?> 的种植结构
+                    <?php $farms = Farms::find()->where(['id'=>$_GET['farms_id']])->one();?>
+                        <?= $farms['farmname']; ?> 的种植结构
                     </h3>
                 </div>
                 <div class="box-body">
@@ -31,16 +32,86 @@ use app\models\Lease;
 		self.close();
 	}
 	</script>
+	<?php 
+		$leaseSumArea = 0;
+		$strArea = '';
+		$arrayArea = [];
+		
+		foreach ($leases as $value) {	
+			$arrayArea = array_merge($arrayArea,explode('、',$value['lease_area']));
+			$leaseSumArea += Lease::getListArea($value['lease_area']);
+		}
+		$isView = round($farms['measure'] - $leaseSumArea);
+		if($isView) {
+			$arrayZongdi = Lease::getNOZongdi($_GET['farms_id']);
+	?>
+<table class="table table-bordered table-hover">
+  <tr>
+    <td width="20%" colspan="2" align="center">法人</td>
+    <td width="40%" align="center">宗地</td>
+    <td width="12%" align="center">总面积</td>
+    <td width="12%" align="center">操作</td>
+    </tr>
+  <tr>
+    <td colspan="2" align="center"><?= $farms['farmername'] ?></td>
+    <td align="center"><?= implode('、',$arrayZongdi)?></td>
+    <?php 
+    	  $plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id']])->all();
+    	  $sumArea = 0;
+    	  foreach($plantings as $value) {
+    	  	$sumArea += $value['area'];
+    	  }
+    	  
+    	  //echo $val['lease_area'];
+    ?>
+    <td align="center"><?= round($farms['measure'] - $leaseSumArea)?>亩</td>
+    <td align="center"><?php if($isView) {?><?= Html::a('添加','index.php?r=plantingstructure/plantingstructurecreate&lease_id=0&farms_id='.$_GET['farms_id'], [
+            			'id' => 'employeecreate',
+            			'title' => '给'.$farms['farmername'].'添加',
+            			'class' => 'btn btn-primary',
+            			]);?><?php }?></td>
+    </tr>
+  <?php 
+  		
+	  	foreach($plantings as $v) {
+  ?>
+  <tr>
+    <td colspan="2" width="15%" align="center">|_</td>
+    
+    <td width="15%" align="center">种植面积：<?= $v['area']?>亩</td>
+    <td width="15%" align="center">作物：<?= Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname']?></td>
+    <td width="15%" align="center"><?= Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 'index.php?r=plantingstructure/plantingstructureview&id='.$v['id'].'&farms_id='.$_GET['farms_id'], [
+                    'title' => Yii::t('yii', '查看'),
+                    'data-pjax' => '0',
+                ]);?>&nbsp;&nbsp;<?= Html::a('<span class="glyphicon glyphicon-pencil"></span>', 'index.php?r=plantingstructure/plantingstructureupdate&id='.$v['id'].'&farms_id='.$_GET['farms_id'], [
+                    'title' => Yii::t('yii', '更新'),
+                    'data-pjax' => '0',
+                ]);?>&nbsp;&nbsp;<?= Html::a('<span class="glyphicon glyphicon-trash"></span>', 'index.php?r=plantingstructure/plantingstructuredelete&id='.$v['id'].'&farms_id='.$_GET['farms_id'], [
+                    'title' => Yii::t('yii', '删除'),
+                    'data-pjax' => '0',
+                    'data' => [
+		                'confirm' => '您确定要删除这项吗？',
+		                //'method' => 'post',
+           			 ],
+                ]);?></td>
+    </tr>
+  <?php }?>
+</table>
+<?php }
+if($leases) {
+?>
 <table class="table table-bordered table-hover">
   <tr>
     <td width="20%" colspan="2" align="center">承租人</td>
-    <td colspan="2" align="center">租赁面积</td>
-    <td align="center">操作</td>
+    <td align="center">宗地</td>
+    <td width="12%" align="center">总面积</td>
+    <td width="12%" align="center">操作</td>
     </tr>
   <?php foreach($leases as $val) {?>
   <tr>
     <td colspan="2" align="center"><?= $val['lessee'] ?></td>
-    <td colspan="2" align="center"><?= $val['lease_area'] ?></td>
+    <td align="center"><?= $val['lease_area'] ?></td>
+     <td align="center"><?= Lease::getListArea($val['lease_area'])?>亩</td>
     <?php 
     	  $plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id'],'lease_id'=>$val['id']])->all();
     	  $sumArea = 0;
@@ -82,6 +153,7 @@ use app\models\Lease;
     </tr>
   <?php }}?>
 </table>
+<?php }?>
                 </div>
             </div>
         </div>

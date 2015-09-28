@@ -137,7 +137,7 @@ class FarmerController extends Controller
     		 $old = $model->attributes;
 			 //$membermodel = Farmermembers::find()->where(['farmer_id' => $farmerid])->all();
 			 if ($model->load(Yii::$app->request->post())) {
-			 		
+			 		//var_dump($_FILES);
 			 		//if($model->photo !== '') {
 			 			$upload = new UploadedFile();
 			 			$photo =  $upload->getInstance($model,'photo');
@@ -211,22 +211,22 @@ class FarmerController extends Controller
     		
     		$membermodel = Farmermembers::find()->where(['farmer_id' => $farmerid])->all();
     		if ($model->load(Yii::$app->request->post())) {
-	    	 	$model->update_at = $model->create_at;
-	    	 	if($model->photo != '') {
+	    	 	var_dump($_FILES);
+	    	 	//if($model->photo !== '') {
 	    	 		$upload = new UploadedFile();
 		    	 	$photo =  $upload->getInstance($model,'photo');
 	 	    	 	$extphoto = $photo->getExtension();
 	 	    	 	$photoName = time().rand(100,999).'.'.$extphoto;
 	 	    	 	$photo->saveAs('uploads/'.$photoName);
 	 	    	 	$model->photo = 'uploads/'.$photoName;
-	    	 	}
-	    	 	if($model->cardpic != '') {
+	    	 	//}
+	    	 	//if($model->cardpic !== '') {
 	 	    	 	$cardpic =  UploadedFile::getInstance($model,'cardpic');
 	 	    	 	$extcardpic = $cardpic->getExtension();
 		    	 	$cardpicName = time().rand(100,999).'.'.$extcardpic;
 		    	 	$cardpic->saveAs('uploads/'.$cardpicName);
 		    	 	$model->cardpic = 'uploads/'.$cardpicName;
-	    	 	}
+	    	 	//}
 	    	 	$model->create_at = time();
 	    	 	$model->update_at = time();
 	    	 	$model->years = $year;
@@ -249,7 +249,7 @@ class FarmerController extends Controller
 	    	 		Logs::writeLog('添加家庭成员',$membermodel->id,'',$new);
 	    	 	}
 	    	 	if($issave)
-	            	return $this->redirect(['farms/farmsmenu','id'=>$id,'areaid'=>$farm->management_area]);
+	            	return $this->redirect(['farms/farmsmenu','farms_id'=>$farms_id,'areaid'=>$farm->management_area]);
 		        } else {
 		            return $this->render('farmercreate', [
 		                'model' => $model,

@@ -4,6 +4,7 @@ use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\Farms;
+use app\models\Lease;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\leaseSearch */
@@ -22,7 +23,7 @@ use app\models\Farms;
                 <div class="box-body">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 	<?php if($areas) {?>
-    <p>
+    <p><?php //echo $areas;?>
     	<?= Html::a('添加', ['leasecreate','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?>
          <?php //echo Html::a('添加', 'javascript:void(0)', ['onclick'=>'lease.create('.$_GET['id'].')', 'class' => 'btn btn-success', 'id' => 'wubaiqing']) ?>
     </p>
@@ -45,9 +46,18 @@ use app\models\Farms;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'lease_area',
             'lessee',
+            [
+            	'attribute' => 'lease_area',
+            	'label' => '宗地',
+            ],
+            
+            [
+            	'label' => '总面积',
+            	'value' => function ($model) {
+            		return Lease::getListArea($model->lease_area).'亩';
+           		},
+            ],
             //'plant_id',
             //'farms_id',
 

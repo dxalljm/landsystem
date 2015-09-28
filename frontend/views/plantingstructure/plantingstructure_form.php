@@ -26,15 +26,19 @@ use app\models\Lease;
 <td width=15% align='right'>农场名称</td>
 <td align='left'><?= $farm->farmname?></td>
 <td align='right'>法人</td>
-<td align='left'><?= Farmer::find()->where(['farms_id'=>$farm->id])->one()['farmername']?></td>
+<?php if($_GET['lease_id'] == 0) {?>
+<td colspan="3" align='left'><?= $farm->farmername?></td>
+<?php } else {?>
+<td align='left'><?= $farm->farmername?></td>
 <td align='right'>承租人</td>
 <td align='right'><?= Lease::find()->where(['id'=>$_GET['lease_id']])->one()['lessee'] ?></td>
+<?php }?>
 <td align='right'>宜农林地面积</td>
 <td align='left'><?= $farm->measure.' 亩'?></td>
 </tr>
 <tr>
   <td align='right'>宗地</td>
-  <td colspan="3" align='left'><?= $form->field($model, 'zongdi')->dropDownList($zongdi, ['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
+  <td colspan="3" align='left'><?= $form->field($model, 'zongdi')->textInput(['data-target' => '#myModal','data-toggle' => 'modal','data-keyboard' => 'false', 'data-backdrop' => 'static',])->label(false)->error(false) ?></td>
   <?php if(isset($_GET['zongdi'])) $value = Parcel::find()->where(['id'=>$_GET['zongdi']->one()['grossarea']]); else $value = 0;?>
   <td colspan="2" align='right'>种植面积</td>
   <td colspan="2" align='right'><?= $form->field($model, 'area')->textInput(['value'=>$value])->label(false)->error(false) ?></td>
@@ -54,7 +58,83 @@ use app\models\Lease;
     </div>
 
     <?php ActiveFormrdiv::end(); ?>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               请选择宗地（面积），如所租赁地块不是整块，可修改面积数值。
+            </h4>
+         </div>
+         <div class="modal-body">
+            <table class="table table-bordered table-hover">
+    
+    	<tr>
+    		<td align='center'>租赁面积（宗地）</td>
+    	</tr>
+    	<tr>
+    		<td align='center'><?= Html::textInput('parcellist','',['id'=>'model-parcellist','class'=>'form-control'])?></td>
 
+    	</tr>
+    	<tr>
+    		<td align='center'><?php 
+			$zongdiarr = $zongdi;
+			//var_dump($zongdiarr);
+			$i=0;
+//     		foreach($zongdiarr as $value) {
+//     			echo html::button($value,['onclick'=>'toParcellist("'.$value.'","'.Lease::getZongdi($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
+//     			$i++;
+//     			if($i%6 == 0)
+//     				echo '<br><br>';
+//     		}
+    		?></td>
+
+    	</tr>
+    </table>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭  </button>
+            <button type="button" class="btn btn-primary" id="getParcellist" onclick="reset()">重置 </button>
+            <button type="button" class="btn btn-success" id="getParcellist" onclick="setLeasearea()">提交 </button>
+<script type="text/javascript">
+function toParcellist(zdarea,id){
+	if($('#model-parcellist').val() == '') {
+		$('#'+id).attr('disabled',true);
+		$('#model-parcellist').val(zdarea);
+		
+	}
+	else {
+		$('#'+id).attr('disabled',true);
+		//alert($('#model-parcellist').val());
+		var value = $('#model-parcellist').val()+'、'+zdarea;
+		$('#model-parcellist').val(value);
+		
+	}
+}
+function reset()
+{
+	$('#model-parcellist').val('');
+	$('button').attr('disabled',false);
+}
+function setLeasearea() {
+	$('#myModal').modal('hide');
+	$('#plantingstructure-zongdi').val($('#model-parcellist').val());
+	$.getJSON('index.php?r=plantingstructure/plantingstructuregetarea', {zongdi: $('#model-parcellist').val()}, function (data) {
+		if (data.status == 1) {
+			$('#plantingstructure-area').val(data.area);
+		}
+	});
+}
+</script>
+         </div>
+      </div><!-- /.modal-content -->
+</div><!-- /.modal -->
 <?php $this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
 <script type="text/javascript">
 function plantinputproductcreate(lease_id,farms_id) {
@@ -106,6 +186,7 @@ function plantinputproductupdate(id,lease_id,farms_id) {
 }
 $('#plantingstructure-zongdi').change(function(){
 	zongdi = $(this).val();
+	alert(zongdi);
 	$.getJSON('index.php?r=plantingstructure/plantingstructuregetarea', {zongdi: zongdi}, function (data) {
 		if (data.status == 1) {
 			$('#plantingstructure-area').val(data.area);

@@ -34,9 +34,10 @@ class Lease extends \yii\db\ActiveRecord
     }
     public static function getArea($Leasearea) 
     {
+    	//print_r($Leasearea);
     	$areas = 0;
-    	preg_match_all('/-([0-9]+)\(([0-9.]+?)\)/', $Leasearea, $area);
-    	$areas = (float)$area[2][0];
+//     	preg_match_all('/-([0-9]+)\(([0-9.]+?)\)/', $Leasearea, $area);
+//     	$areas = (float)$area[2][0];
     	return $areas;
     }
     public static function getZongdi($Leasearea) {
@@ -55,18 +56,26 @@ class Lease extends \yii\db\ActiveRecord
 //     	print_r($zongdi);
     	return $zongdi;
     }
-    //
-    public static function scanOverZongdi($farms_id) {
-    	
+    //农场所有宗地（面积）
+    public static function getFarmsZdarea($farms_id)
+    {
+    	$zdarea = false;
     	$farm = Farms::find()->where(['id'=>$farms_id])->one();
     	$farmzongdi = explode('、', $farm['zongdi']);
     	foreach($farmzongdi as $zongdi) {
     		$parcel = Parcel::find()->where(['unifiedserialnumber'=>$zongdi])->one()['grossarea'];
     		$zdarea[] = $zongdi.'('.$parcel.')';
     	}
+    	return $zdarea;
+    }
+    //
+    public static function scanOverZongdi($farms_id) 
+    {
     	//$zdarea——农场所有宗地（面积）
-    	$lease = self::find()->where(['farms_id'=>$farms_id])->all();
+    	$zdarea = self::getFarmsZdarea($farms_id);
     	//$lease——已经被租赁的所有宗地（面积）
+    	$lease = self::find()->where(['farms_id'=>$farms_id])->all();
+    	
     	if($lease) {
     		foreach ($lease as $value) {
     			$leasearea = explode('、',$value['lease_area']);
@@ -109,9 +118,36 @@ class Lease extends \yii\db\ActiveRecord
     		return $zdarea;
     	return false;
     }
-    
+    //处理种植结构剩余宗地面积
+    public static function getLastArea($zdarea,$lease_id,$farms_id)
+    {
+    	var_dump($zdarea);
+    	$data = Plantingstructure::find()->where(['lease_id'=>$lease_id,'farms_id'=>$farms_id])->all();
+    	//$area = self::getArea($zdarea);
+    	$result = '';
+    	$i = 0;
+//     	foreach($data as $value) {
+//     		$zongdiArray = explode('、', $value['zongdi']);
+//     		if(strpos($zdarea,'、'))
+//     			$zdareaArray = explode('、', $zdarea);
+//     		else 
+//     			$zdareaArray = $zdarea;
+//     		foreach ($zongdiArray as $val) {
+//     			foreach ($zdareaArray as $v) {
+//     				$area = self::getArea($v);
+//     				if(self::getZongdi($v) == self::getZongdi($val)) {
+//     					$area -= self::getArea($val);
+//     				}
+//     				$result[$i] = self::getZongdi($v).'('.$area.')';
+//     			}
+//     		}
+//     	}
+    	return $result;
+    }
+    //把相同宗地面积进行累加，返回处理后的数组
     public static function zdareaChuLi($arrayArea)
     {
+    	//var_dump($arrayArea);
     	for($i=0;$i<count($arrayArea);$i++) {
     		for($j=$i+1;$j<count($arrayArea);$j++) {
     			//echo self::getZongdi($arrayArea[$i]) .'=='. self::getZongdi($arrayArea[$j]).'<br>';
@@ -126,6 +162,14 @@ class Lease extends \yii\db\ActiveRecord
     		}
     	}
     	return $arrayArea;
+    }
+    
+    public static function getNOZongdi($farms_id)
+    {
+    	$zongdiarr = Lease::scanOverZongdi($farms_id);
+		//$arrayArea = [];
+    	//$arrayArea = implode('、', $zongdiarr);
+    	return $zongdiarr;
     }
     
     //得到已经租赁的面积
@@ -147,7 +191,7 @@ class Lease extends \yii\db\ActiveRecord
     public static function getNoArea($farms_id)
     {
     	$farms = Farms::find()->where(['id'=>$farms_id])->one()['measure'];
-    	return $farms - self::getOverArea($farms_id);
+    	return round($farms - self::getOverArea($farms_id));
     }
 	public function rules() 
     { 

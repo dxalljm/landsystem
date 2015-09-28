@@ -20,7 +20,7 @@ class farmerSearch extends farmer
     {
        return [
             [['id', 'farms_id', 'isupdate', 'years', 'state'], 'integer'],
-            [['farmername', 'cardid', 'farmerbeforename', 'nickname', 'gender', 'nation', 'political_outlook', 'cultural_degree', 'domicile', 'nowlive', 'telephone', 'living_room', 'photo', 'cardpic', 'create_at', 'update_at', 'contractnumber', 'begindate', 'enddate','pinyin'], 'safe'],
+            [['farmerbeforename', 'nickname', 'gender', 'nation', 'political_outlook', 'cultural_degree', 'domicile', 'nowlive', 'living_room', 'photo', 'cardpic', 'create_at', 'update_at', 'contractnumber', 'begindate', 'enddate'], 'safe'],
         ];
     }
 
@@ -64,9 +64,7 @@ public function search($params)
             'years' => $this->years,
         ]);
 
-        $query->andFilterWhere(['like', 'farmername', $this->farmername])
-            ->andFilterWhere(['like', 'cardid', $this->cardid])
-            ->andFilterWhere(['like', 'farmerbeforename', $this->farmerbeforename])
+        $query->andFilterWhere(['like', 'farmerbeforename', $this->farmerbeforename])
             ->andFilterWhere(['like', 'nickname', $this->nickname])
             ->andFilterWhere(['like', 'gender', $this->gender])
             ->andFilterWhere(['like', 'nation', $this->nation])
@@ -74,7 +72,6 @@ public function search($params)
             ->andFilterWhere(['like', 'cultural_degree', $this->cultural_degree])
             ->andFilterWhere(['like', 'domicile', $this->domicile])
             ->andFilterWhere(['like', 'nowlive', $this->nowlive])
-            ->andFilterWhere(['like', 'telephone', $this->telephone])
             ->andFilterWhere(['like', 'living_room', $this->living_room])
             ->andFilterWhere(['like', 'photo', $this->photo])
             ->andFilterWhere(['like', 'cardpic', $this->cardpic])
@@ -82,9 +79,7 @@ public function search($params)
             ->andFilterWhere(['like', 'update_at', $this->update_at])
             ->andFilterWhere(['like', 'contractnumber', $this->contractnumber])
             ->andFilterWhere(['like', 'begindate', $this->begindate])
-            ->andFilterWhere(['like', 'enddate', $this->enddate])
-            ->andFilterWhere(['like', 'pinyin', $this->pinyin])
-        	->andFilterWhere(['like', 'farmerpinyin', $this->farmerpinyin]);
+            ->andFilterWhere(['like', 'enddate', $this->enddate]);
         return $dataProvider;
     }
 }

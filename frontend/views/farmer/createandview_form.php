@@ -22,7 +22,7 @@ use dosamigos\datetimepicker\DateTimePicker;
     <table width="662"  class="table table-bordered table-hover">
       <tr>
         <td width="12%" height="25" align="right" valign="middle">承包人姓名</td>
-        <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'farmername')->textInput(['maxlength' => 10])->label(false)->error(false); else echo '&nbsp;'.$model->farmername; ?></td>
+        <td colspan="2" valign="middle"><?= $farm->farmername?></td>
         <td width="9%" height="25" align="right" valign="middle">曾用名</td>
         <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'farmerbeforename')->textInput(['maxlength' => 8])->label(false)->error(false); else echo '&nbsp;'.$model->farmerbeforename; ?></td>
         <td width="19%" rowspan="6" align="center" valign="middle"><p>
@@ -31,7 +31,7 @@ use dosamigos\datetimepicker\DateTimePicker;
      </tr>
       <tr>
         <td align="right" valign="middle">身份证号</td>
-        <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'cardid')->textInput(['maxlength' => 18])->label(false)->error(false); else echo '&nbsp;'.$model->cardid; ?></td>
+        <td colspan="2" valign="middle"><?= $farm->cardid?></td>
         <td align="right" valign="middle">性别</td>
         <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'gender')->dropDownList(['男'=>'男','女'=>'女'])->label(false)->error(false); else echo '&nbsp;'.$model->gender; ?></td>
       </tr>
@@ -45,7 +45,7 @@ use dosamigos\datetimepicker\DateTimePicker;
         <td align="right" valign="middle">文化程度</td>
         <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'cultural_degree')->dropDownList(['研究生'=>'研究生','本科'=>'本科','大专'=>'大专','高中'=>'高中','初中'=>'初中','小学'=>'小学','文盲'=>'文盲'])->label(false)->error(false); else echo '&nbsp;'.$model->cultural_degree; ?></td>
         <td align="right" valign="middle">电话</td>
-        <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'telephone')->textInput(['size' => 11])->label(false)->error(false); else echo '&nbsp;'.$model->telephone; ?></td>
+        <td colspan="2" valign="middle"><?= $farm->telephone?></td>
       </tr>
       <tr>
         <td align="right" valign="middle">现住地</td>

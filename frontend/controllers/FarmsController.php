@@ -200,18 +200,13 @@ class FarmsController extends Controller
     		}
     		//$k = 0;
     		var_dump($data);
-//     		foreach ($data as $key => $value) {
-//     			echo $key.'<br>';
-//     			$model = $this->findModel($key);
-//     			if($model) {
-//     			$model->zongdi = implode('、', $value);
-//     			foreach($value as $val)
-//     				$model->measure += Parcel::find()->where(['unifiedserialnumber'=>$val])->one()['grossarea'];
-//     			$model->save();
-//     			//$k++;
-//     			exit;
-//     			}		
-//     		}
+    		foreach ($data as $key => $value) {
+    			$model = $this->findModel($key);
+    			$model->zongdi = implode('、', $value);
+    			foreach($value as $val)
+    				$model->measure += Parcel::find()->where(['unifiedserialnumber'=>$val])->one()['grossarea'];
+    			$model->save();	
+    		}
 			
 //     		echo count($data).'<br>';
     		
@@ -350,7 +345,7 @@ class FarmsController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = farms::findOne($id)) !== null) {
+        if (($model = Farms::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

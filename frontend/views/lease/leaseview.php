@@ -3,6 +3,7 @@ namespace frontend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\Lease;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Lease */
@@ -42,9 +43,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <td width="80" align="center">农场名称</td>
     <td colspan="2" align="center"><?= $farm->farmname?></td>
     <td align="center">法人</td>
-    <td colspan="2" align="center"><?= $farmer->farmername?></td>
+    <td colspan="2" align="center"><?= $farm->farmername?></td>
     <td width="107" align="center">宜农林地面积</td>
-    <td width="106" align="center"><?= $farm->measure?></td>
+    <td width="106" align="center"><?= $farm->measure?>亩</td>
   </tr>
   <tr>
     <td colspan="8" align="center"><h4>承租人基础信息</h4></td>
@@ -64,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </tr>
   <tr>
     <td align="center">租赁面积</td>
-    <td colspan="6"><?= $model->lease_area ?></td>
+    <td colspan="6"><?= $model->lease_area.'&nbsp;&nbsp;&nbsp;&nbsp;共'.Lease::getListArea($model->lease_area).'亩' ?></td>
     </tr>
   <tr>
     <td align="center">租赁期限</td>

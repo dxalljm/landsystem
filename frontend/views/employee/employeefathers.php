@@ -6,6 +6,7 @@ use yii\grid\GridView;
 use app\models\Employee;
 use yii\grid\ActionColumn;
 use Yii;
+use app\models\Lease;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\employeeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -27,16 +28,31 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <div class="box-body">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+<?php 
+		$leaseSumArea = 0;
+		$strArea = '';
+		$arrayArea = [];
+		
+		foreach ($lease as $value) {	
+			$arrayArea = array_merge($arrayArea,explode('、',$value['lease_area']));
+			$leaseSumArea += Lease::getListArea($value['lease_area']);
+		}
+		$isView = round($farms['measure'] - $leaseSumArea);
+		if($isView) {
+			$arrayZongdi = Lease::getNOZongdi($_GET['farms_id']);
+	?>
 <table class="table table-bordered table-hover">
   <tr>
-    <td width="20%" colspan="2" align="center">承租人</td>
-    <td colspan="2" align="center">租赁面积</td>
-    <td align="center">操作</td>
+    <td width="20%" colspan="2" align="center">法人</td>
+    <td align="center">宗地</td>
+    <td width="12%" align="center">总面积</td>
+    <td width="12%" align="center">操作</td>
   </tr>
   <tr>
     <td width="20%" colspan="2" align="center"><?= $farms->farmername?></td>
-    <td colspan="2" align="center"><?= $farms->measure ?></td>
+    <td align="center"><?= implode('、',$arrayZongdi)?></td>
+    <td align="center"><?= round($farms['measure'] - $leaseSumArea)?>亩</td>
+    
     <td align="center"><?= Html::a('雇佣','index.php?r=employee/employeecreate&father_id=0&farms_id='.$_GET['farms_id'], [
             			'id' => 'employeecreate',
             			'title' => '给'.$farms->farmername.'添加雇工人员',
@@ -51,6 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
   		$employee = Employee::find()->where(['father_id'=>0])->all();
 	  	foreach($employee as $emp) {
   ?>
+  
   <tr>
     <td align="right">|_</td>
     <td width="9%" align="center"><?= $emp['employeename']?></td>
@@ -68,10 +85,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]);?></td>
     </tr>
     <?php }?>
+    <?php }?>
+    <table class="table table-bordered table-hover">
+  <tr>
+    <td width="20%" colspan="2" align="center">承租人</td>
+    <td align="center">宗地</td>
+    <td width="12%" align="center">总面积</td>
+    <td width="12%" align="center">操作</td>
+  </tr>
   <?php foreach($lease as $val) {?>
   <tr>
     <td colspan="2" align="center"><?= $val['lessee'] ?></td>
-    <td colspan="2" align="center"><?= $val['lease_area'] ?></td>
+    <td align="center"><?= $val['lease_area'] ?></td>
+    <td align="center"><?= Lease::getListArea($val['lease_area'])?>亩</td>
     <td align="center"><?= Html::a('雇佣','index.php?r=employee/employeecreate&father_id='.$val['id'].'&farms_id='.$_GET['farms_id'], [
             			'id' => 'employeecreate',
             			'title' => '给'.$val['lessee'].'添加雇工人员',
