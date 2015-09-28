@@ -127,7 +127,7 @@ use app\models\Lease;
 			$zongdiarr = Lease::scanOverZongdi($_GET['farms_id']);
 			$i=0;
     		foreach($zongdiarr as $value) {
-    			echo html::button($value,['onclick'=>'toParcellist("'.$value.'")','value'=>$value,'id'=>'parcelbutton','class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
+    			echo html::button($value,['onclick'=>'toParcellist("'.$value.'","'.Lease::getZongdi($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
     			$i++;
     			if($i%4 == 0)
     				echo '<br><br>';
@@ -138,17 +138,18 @@ use app\models\Lease;
     </table>
          </div>
          <div class="modal-footer">
-            <button type="button" class="btn btn-default" 
-               data-dismiss="modal">关闭
-            </button>
-            <button type="button" class="btn btn-primary" id="getParcellist" onclick="setLeasearea()">
-               提交
-            </button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭  </button>
+            <button type="button" class="btn btn-primary" id="getParcellist" onclick="reset()">重置 </button>
+            <button type="button" class="btn btn-success" id="getParcellist" onclick="setLeasearea()">提交 </button>
+            <?php $this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
 <script type="text/javascript">
-function toParcellist(zdarea){
-	if($('#model-parcellist').val() == '')
+function toParcellist(zdarea,id){
+	if($('#model-parcellist').val() == '') {
+		$('#'+id).attr('disabled',true);
 		$('#model-parcellist').val(zdarea);
+	}
 	else {
+		$('#'+id).attr('disabled',true);
 		var value = $('#model-parcellist').val()+'、'+zdarea;
 		$('#model-parcellist').val(value);
 	}
