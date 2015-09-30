@@ -14,9 +14,7 @@ use app\models\Parcel;
 use app\models\ManagementArea;
 use app\models\Farms;
 use app\models\Collection;
-
-
-
+use frontend\models\tempprintbillSearch;
 use frontend\helpers\Pinyin;
 
 
@@ -71,18 +69,26 @@ class SiteController extends Controller
 //       echo Pinyin::encode('杨淑华');
 
 //       exit;
-    	Logs::writeLog('访问首页');
-    	$dep_id = User::find()->where(['id'=>yii::$app->getUser()->id])->one()['department_id'];
-    	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
-    	$areaname = ManagementArea::find()->where(['id' => $departmentData['membership']])->one()['areaname'];
-		if(is_array($areaname))
-			$result = implode(',', $areaname);
-		else 
-			$result = $areaname;
-        $areaname = [];
-        return $this->render('index',[
-            'areaname' => $result,
-        ]);
+    	if(\Yii::$app->user->identity->username == 'cwk01') {
+    		Logs::writeLog('票据打印');
+    		$searchModel = new tempprintbillSearch();
+    		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    		return $this->redirect(['tempprintbill/tempprintbillindex', 'searchModel' => $searchModel,'dataProvider'=>$dataProvider]);
+    		
+    	} else {
+	    	Logs::writeLog('访问首页');
+	    	$dep_id = User::find()->where(['id'=>yii::$app->getUser()->id])->one()['department_id'];
+	    	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
+	    	$areaname = ManagementArea::find()->where(['id' => $departmentData['membership']])->one()['areaname'];
+			if(is_array($areaname))
+				$result = implode(',', $areaname);
+			else 
+				$result = $areaname;
+	        $areaname = [];
+	        return $this->render('index',[
+	            'areaname' => $result,
+	        ]);
+    	}
     }
 
     public function actionLogin()
@@ -96,7 +102,7 @@ class SiteController extends Controller
         	if($model->username == 'admin')
         		throw new \yii\web\UnauthorizedHttpException('对不起，此用户不能在前台页面登录。');
         	
-            return $this->goBack();
+            	return $this->goBack();
         } else {
             $this->layout='@app/views/layouts/main2.php';
             return $this->render('login', [

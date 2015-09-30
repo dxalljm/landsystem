@@ -19,10 +19,11 @@ use yii\helpers\Url;
         </a>
         <div class="">
             <ul class="nav navbar-nav">
+            <?php if(Yii::$app->user->identity->username !== 'cwk01') {?>
                 <li >
                     <a href="<?= Url::to('index.php?r=site/index')?>">首页</a>
                 </li>
-
+			<?php }?>
                 <?php
                 if(yii::$app->user->identity->username != 'admin') {
                     $menuliststr = MenuToUser::find()->where(['user_id'=>\Yii::$app->user->id])->one()['menulist'];
