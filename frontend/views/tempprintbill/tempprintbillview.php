@@ -27,53 +27,113 @@ $this->params['breadcrumbs'][] = $this->title;
                     </h3>
                 </div>
                 <div class="box-body">
-<script language="javascript" type="text/javascript">   
-        var LODOP; //声明为全局变量 
-	function prn1_preview() {	
-		CreateOneFormPage();	
-		LODOP.PREVIEW();	
-	};
-	function prn1_print() {		
-		CreateOneFormPage();
-		LODOP.PRINT();	
-	};
-	function prn1_printA() {		
-		CreateOneFormPage();
-		LODOP.PRINTA(); 	
-	};	
-	function CreateOneFormPage(){
-		LODOP=getLodop();  
-		LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
-		LODOP.SET_PRINT_STYLE("FontSize",18);
-		LODOP.SET_PRINT_STYLE("Bold",1);
-		LODOP.ADD_PRINT_TEXT(50,231,260,39,"打印页面部分内容");
-		LODOP.ADD_PRINT_HTM(88,200,350,600,document.getElementById("form1").innerHTML);
-	};	                     
-	function prn2_preview() {	
-		CreateTwoFormPage();	
-		LODOP.PREVIEW();	
-	};
-	function prn2_manage() {	
-		CreateTwoFormPage();
-		LODOP.PRINT_SETUP();	
-	};	
-	function CreateTwoFormPage(){
-		LODOP=getLodop();  
-		LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单二");
-		LODOP.ADD_PRINT_RECT(70,27,634,242,0,1);
-		LODOP.ADD_PRINT_TEXT(29,236,279,38,"页面内容改变布局打印");
-		LODOP.SET_PRINT_STYLEA(2,"FontSize",18);
-		LODOP.SET_PRINT_STYLEA(2,"Bold",1);
-		LODOP.ADD_PRINT_HTM(88,40,321,185,document.getElementById("form1").innerHTML);
-		LODOP.ADD_PRINT_HTM(87,355,285,187,document.getElementById("form2").innerHTML);
-		LODOP.ADD_PRINT_TEXT(319,58,500,30,"注：其中《表单一》按显示大小，《表单二》在程序控制宽度(285px)内自适应调整");
-	};              
-	function prn3_preview(){
-		LODOP=getLodop();  
-		LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_全页");
-		LODOP.ADD_PRINT_HTM(0,0,"100%","100%",document.documentElement.innerHTML);
-		LODOP.PREVIEW();	
-	};	
+     <p>
+        <?= Html::a('缴费', ['tempprintbillcreate'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('打印', '#', ['class' => 'btn btn-success','onclick'=>'myPREVIEW()']) ?>
+        <?= Html::a('打印设计','#', ['class' => 'btn btn-success','onclick'=>'myDesign()']) ?>
+    </p>
+    开票时间：<?= date('Y年m月d日 H时s分i秒',$model->create_at) ?>
+ <table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td colspan="3" align="center"><h3>大兴安岭岭南宜农林地承包费专用票据</h3></td>
+    </tr>
+  <tr>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo date('Y年m月d日',$model->create_at)?></td>
+    <td align="right">NO:</td>
+    <td width="30%"><?= $model->nonumber?></td>
+  </tr>
+</table>
+<table width="100%" border="1">
+  <tr>
+    <td width="14%" height="31" align="center">&nbsp;收款单位（缴款人）      </td>
+    <td height="31" colspan="5">&nbsp;&nbsp;<?= $model->farmername?></td>
+    </tr>
+  <tr>
+    <td height="31" colspan="2" align="center">收费项目</td>
+    <td width="13%" align="center">单位</td>
+    <td width="18%" align="center">数量</td>
+    <td width="17%" align="center">标准</td>
+    <td width="21%" align="center">金额</td>
+  </tr>
+  <tr>
+    <td height="23" colspan="2" align="center" valign="middle">      宜农林地承包费</td>
+    <td align="center" valign="middle">      元/亩<br /></td>
+    <td align="center" valign="middle"><?= $model->number?></td>
+    <td align="center" valign="middle"><?= $model->standard?></td>
+    <td align="center" valign="middle"><?= $model->amountofmoney?></td>
+  </tr>
+  <tr>
+    <td align="center">金额合计（大写）</td>
+    <td colspan="3">&nbsp;&nbsp;<?= $model->bigamountofmoney?></td>
+    <td align="right">￥：</td>
+    <td>&nbsp;&nbsp;<?= $model->amountofmoney?></td>
+  </tr>
+  <tr>
+    <td colspan="6">备注：</td>
+    </tr>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="60%">收款单位（盖章）大兴安岭林业管理局岭南管委会</td>
+    <td width="13%">收款人：王丽静</td>
+    <td width="27%" align="right">（微机专用 手填无效）</td>
+  </tr>
+</table>
+<script language="javascript" type="text/javascript"> 
+var LODOP; //声明为全局变量
+window.onload = function() { 
+	CreatePage();
+	LODOP.PREVIEW();
+};
+function myPREVIEW() {	
+	CreatePage();
+	LODOP.PREVIEW();
+};
+function myDesign() {	 	
+	CreatePage();
+	LODOP.PRINT_DESIGN();
+
+};
+function CreatePage() {
+	LODOP=getLodop(); 
+	LODOP.PRINT_INITA(10,10,"190mm","100.01mm","打印控件功能演示_Lodop功能_移动公司发票全样");
+	LODOP.ADD_PRINT_SETUP_BKIMG("D:\\wamp\\www\\landsystem\\frontend\\web\\images\\IMG_2015.jpg");
+	LODOP.SET_SHOW_MODE("BKIMG_LEFT",8);
+	LODOP.SET_SHOW_MODE("BKIMG_TOP",-29);
+	LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW",true);
+	LODOP.SET_PRINT_STYLE("FontColor","#0000FF");
+	LODOP.ADD_PRINT_TEXT(51,134,40,20,"<?= date('Y',$model->create_at)?>");
+	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+	LODOP.ADD_PRINT_TEXT(51,188,23,20,"<?= date('m',$model->create_at)?>");
+	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+	LODOP.ADD_PRINT_TEXT(52,231,25,20,"<?= date('d',$model->create_at)?>");
+	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+	LODOP.ADD_PRINT_TEXT(-8,67,290,20,"注：电子票号与纸质票号不一致则为无效票");
+	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+	LODOP.ADD_PRINT_TEXT(76,212,100,21,"<?= $model->farmername?>");
+	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+	LODOP.ADD_PRINT_TEXT(136,146,115,20,"宜林农地承包费");
+	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+	LODOP.ADD_PRINT_TEXT(136,293,44,20,"元/亩");
+	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+	LODOP.ADD_PRINT_TEXT(136,363,54,20,"<?= $model->number?>");
+	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+	LODOP.ADD_PRINT_TEXT(136,482,38,20,"<?= $model->standard?>");
+	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+	LODOP.ADD_PRINT_TEXT(136,582,100,20,"<?= $model->amountofmoney?>");
+	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+	LODOP.ADD_PRINT_TEXT(254,544,100,20,"<?= $model->amountofmoney?>");
+	LODOP.SET_PRINT_STYLEA(0,"FontSize",11);
+	LODOP.ADD_PRINT_TEXT(254,205,290,20,"<?= $model->bigamountofmoney?>");
+	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+	LODOP.ADD_PRINT_TEXT(309,199,202,20,"大兴安岭林业管理局岭南管委会");
+	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+	LODOP.ADD_PRINT_TEXT(310,450,69,20,"王丽静");
+	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+	LODOP.ADD_PRINT_TEXT(-8,506,185,20,"电子票号：<?= $model->nonumber?>");
+	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+	
+};
 </script> 
                 
                 </div>

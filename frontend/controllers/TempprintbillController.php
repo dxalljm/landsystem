@@ -8,7 +8,8 @@ use frontend\models\tempprintbillSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use frontend\helpers\MoneyFormat;
+use app\models\Logs;
 /**
  * TempprintbillController implements the CRUD actions for Tempprintbill model.
  */
@@ -34,10 +35,14 @@ class TempprintbillController extends Controller
     {
         $searchModel = new tempprintbillSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $create_at = Tempprintbill::find()->orderBy('id DESC','LIMIT=1')->one()['create_at'];
+		$billSum = Tempprintbill::find()->sum('amountofmoneys');
+		//var_dump($billSum);
         return $this->render('tempprintbillindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+        	'billSum' => $billSum,
+        	'create_at' => $create_at,
         ]);
     }
 
@@ -61,16 +66,32 @@ class TempprintbillController extends Controller
     public function actionTempprintbillcreate()
     {
         $model = new Tempprintbill();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+		$nonumber = Tempprintbill::find()->orderBy('id DESC','LIMIT=1')->one()['nonumber'];
+		//var_dump(++$nonumber);
+		//exit;
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->create_at = time();
+        	$model->update_at = time();
+        	$model->save();
+        	//var_dump($model->getErrors());
+        	$new = $model->attributes;
+        	Logs::writeLog('新增票据打印',$model->id,'',$new);
             return $this->redirect(['tempprintbillview', 'id' => $model->id]);
         } else {
             return $this->render('tempprintbillcreate', [
                 'model' => $model,
+            	'nonumber' => ++$nonumber,
             ]);
         }
     }
 
+    public function actionFormat($number)
+    {
+    	$cny = MoneyFormat::cny($number);
+    	$numformat = MoneyFormat::num_format($number);
+    	echo json_encode(['cny'=>$cny,'num'=>$numformat]);
+    }
+    
     /**
      * Updates an existing Tempprintbill model.
      * If update is successful, the browser will be redirected to the 'view' page.
