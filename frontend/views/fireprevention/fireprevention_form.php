@@ -151,3 +151,11 @@ foreach($employees as $emp) {
     <?php ActiveFormrdiv::end(); ?>
 
 </div>
+<script>
+$('#rowjump').keyup(function(event){
+	input = $(this).val();
+	$.getJSON('index.php?r=farms/getfarmid', {id: input}, function (data) {
+		$('#setFarmsid').val(data.farmsid);
+	});
+});
+</script>

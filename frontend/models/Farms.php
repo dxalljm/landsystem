@@ -146,15 +146,21 @@ class Farms extends \yii\db\ActiveRecord
         return $jsonData;
     }
 
-    public static function showRow($farms_id)
+    public static function getFarmArray()
     {
     	$departmentid = User::find()->where(['id'=>\Yii::$app->getUser()->id])->one()['department_id'];
     	$strdepartment = Department::find()->where(['id'=>$departmentid])->one()['membership'];
     	$farms = self::find()->where(['management_area'=>$strdepartment])->all();
-    	
+    	 
     	foreach ($farms as $key=>$value) {
     		$arrayFarmsid[] = $value['id'];
     	}
+    	return $arrayFarmsid;
+    }
+    
+    public static function showRow($farms_id)
+    {
+    	$arrayFarmsid = self::getFarmArray();
     	$top = $arrayFarmsid[0];
     	$last = $arrayFarmsid[count($arrayFarmsid)-1];
     	$up = 0;
@@ -163,22 +169,25 @@ class Farms extends \yii\db\ActiveRecord
 
     		if($farms_id == $arrayFarmsid[$i]) {
     			$nownum = $i+1;
+    			$farmsid = $arrayFarmsid[$i];
     			if($i !== 0)
     				$up = $arrayFarmsid[$i-1];
     			if($i !== count($arrayFarmsid)-1)
     				$down = $arrayFarmsid[$i+1];
     		}
     	}
+		$action = Yii::$app->controller->id.'/'.yii::$app->controller->action->id;
+		//echo $action;
     	echo '<table class="table table-bordered table-hover">';
     	echo '<tr>';
     	echo '<td width="10%" align="center"><a href='.Url::to('index.php?r='.Yii::$app->controller->id.'/'.yii::$app->controller->action->id.'&farms_id='.$top).'><font size="5"><i class="fa fa-fast-backward"></i></font><a></td>';
     	echo '<td width="10%" align="center"><a href='.Url::to('index.php?r='.Yii::$app->controller->id.'/'.yii::$app->controller->action->id.'&farms_id='.$up).'><font size="5"><i class="fa fa-backward"></i></font><a></td>';
     	echo '<td width="10%" align="center"><a href='.Url::to('index.php?r='.Yii::$app->controller->id.'/'.yii::$app->controller->action->id.'&farms_id='.$down).'><font size="5"><i class="fa fa-forward"></i></font><a></td>';
     	echo '<td width="10%" align="center"><a href='.Url::to('index.php?r='.Yii::$app->controller->id.'/'.yii::$app->controller->action->id.'&farms_id='.$last).'><font size="5"><i class="fa fa-fast-forward"></i></font><a></td>';
-    	echo '<td width="10%">'.html::textInput('jump',$nownum,['class'=>'form-control']).'</td>';
-    	echo '<td></td>';
+    	echo '<td width="10%">'.html::textInput('jump',$nownum,['class'=>'form-control','id'=>'rowjump']).'</td>';
+    	echo '<td>'.html::button('跳转',['class' => 'btn btn-success','onclick'=>'jumpurl("'.$action.'")']).'</td>';
     	echo '</tr>';
-    	
+    	echo html::hiddenInput('famsid','',['id'=>'setFarmsid']);
     }
     
 }

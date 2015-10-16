@@ -20,6 +20,7 @@ use app\models\Lease;
                         <?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']; ?>
                     </h3>
                 </div>
+                <?php Farms::showRow($_GET['farms_id']);?>
                 <div class="box-body">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 	<?php if($areas) {?>
@@ -131,10 +132,18 @@ use app\models\Lease;
         ],
     ]); ?>
 <?php }?>
+
 	                </div>
             </div>
         </div>
     </div>
 </section>
 </div>
-
+<script>
+$('#rowjump').keyup(function(event){
+	input = $(this).val();
+	$.getJSON('index.php?r=farms/getfarmid', {id: input}, function (data) {
+		$('#setFarmsid').val(data.farmsid);
+	});
+});
+</script>

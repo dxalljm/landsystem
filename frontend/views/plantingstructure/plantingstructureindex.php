@@ -24,7 +24,7 @@ use app\models\Lease;
                     </h3>
                 </div>
                 <div class="box-body">
-
+<?php Farms::showRow($_GET['farms_id']);?>
 	<script type="text/javascript">
 	function openwindows(url)
 	{
@@ -159,4 +159,11 @@ if($leases) {
     </div>
 </section>
 </div>
-
+<script>
+$('#rowjump').keyup(function(event){
+	input = $(this).val();
+	$.getJSON('index.php?r=farms/getfarmid', {id: input}, function (data) {
+		$('#setFarmsid').val(data.farmsid);
+	});
+});
+</script>

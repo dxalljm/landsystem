@@ -22,6 +22,7 @@ use app\models\Lease;
 <div class="farmer-form">
 
   <p>农场信息 </p>
+  <?php Farms::showRow($_GET['farms_id']);?>
     <table class="table table-bordered table-hover">
       <tr>
         <td width="174" align="right">农场名称：</td>
@@ -112,6 +113,7 @@ foreach($lease as $val) {?>
   <tr>
 <?php }}?>
 </table>
+<?php Farms::showRow($_GET['farms_id']);?>
 </div>
 <script type="text/javascript">
 
@@ -120,4 +122,11 @@ function submittype(v) {
 }
 
 </script>
-
+<script>
+$('#rowjump').keyup(function(event){
+	input = $(this).val();
+	$.getJSON('index.php?r=farms/getfarmid', {id: input}, function (data) {
+		$('#setFarmsid').val(data.farmsid);
+	});
+});
+</script>

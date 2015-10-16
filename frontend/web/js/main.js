@@ -177,3 +177,19 @@ var statis = function () {
     }
 }
 
+function jumpurl(action)
+{
+	
+	$.get(
+	        'index.php',         
+	        {
+	            r: action,
+	            farms_id: $('#setFarmsid').val(),
+	        },
+	        function (data) {
+	            $('body').html(data);
+
+	        }  
+	    );
+}
+

@@ -241,6 +241,18 @@ class FarmsController extends Controller
     	]);
     }
 
+    public function actionGetfarmid($id)
+    {
+    	$arrayFarmsid = Farms::getFarmArray();
+    	for($i=0;$i<count($arrayFarmsid);$i++) {
+    	
+    		if(($i+1) == $id) {
+    			$result = $arrayFarmsid[$i];
+    		}
+    	}
+    	echo json_encode(['farmsid'=>$result]);
+    }
+    
     public function actionFarmsmenu($farms_id)
     {
     	$farm = $this->findModel($farms_id);

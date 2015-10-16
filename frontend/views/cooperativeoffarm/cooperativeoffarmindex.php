@@ -4,7 +4,7 @@ use Yii;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
-
+use app\models\Farms;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\cooperativeoffarmSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('添加', ['cooperativeoffarmcreate','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?>
     </p>
-
+<?php Farms::showRow($_GET['farms_id']);?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -88,3 +88,11 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </section>
 </div>
+<script>
+$('#rowjump').keyup(function(event){
+	input = $(this).val();
+	$.getJSON('index.php?r=farms/getfarmid', {id: input}, function (data) {
+		$('#setFarmsid').val(data.farmsid);
+	});
+});
+</script>

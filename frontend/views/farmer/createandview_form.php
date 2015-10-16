@@ -8,6 +8,7 @@ use yii\widgets\DetailView;
 use app\models\Theyear;
 use yii\web\View;
 use dosamigos\datetimepicker\DateTimePicker;
+use app\models\Farms;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\farmer */
@@ -16,6 +17,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 <div class="farmer-form">
 <h3><?= $farm->farmname.'('.Theyear::findOne(1)['years'].'年度)' ?></h3>
 <?php //echo Html::a('XLS导入', ['farmerxls'], ['class' => 'btn btn-success']) ?>
+<?php Farms::showRow($_GET['farms_id']);?>
 <?php $form = ActiveFormrdiv::begin(['id' => "farmer-form",'enableAjaxValidation' => false,'options' => ['enctype' => 'multipart/form-data'],]); ?>
       <?= $form->field($model, 'isupdate')->hiddenInput()->label(false);?>
       <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false);?>
@@ -170,7 +172,9 @@ use dosamigos\datetimepicker\DateTimePicker;
 		  </tr>
 <?php }?>
   </table>
+  
 <?php }?>
+<?php Farms::showRow($_GET['farms_id']);?>
 <?php if(!$model->isupdate) {?>
 <div class="form-group">
 
@@ -223,6 +227,11 @@ function submittype(v) {
             return alert('请填写正确的身份证号码');
         }
 	});
-
+	$('#rowjump').keyup(function(event){
+		input = $(this).val();
+		$.getJSON('index.php?r=farms/getfarmid', {id: input}, function (data) {
+			$('#setFarmsid').val(data.farmsid);
+		});
+	});
 </script>
 </div>

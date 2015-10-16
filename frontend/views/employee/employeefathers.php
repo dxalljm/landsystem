@@ -7,6 +7,7 @@ use app\models\Employee;
 use yii\grid\ActionColumn;
 use Yii;
 use app\models\Lease;
+use app\models\Farms;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\employeeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -28,6 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <div class="box-body">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php Farms::showRow($_GET['farms_id']);?>
 <?php 
 		$leaseSumArea = 0;
 		$strArea = '';
@@ -136,3 +138,11 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </section>
 </div>
+<script>
+$('#rowjump').keyup(function(event){
+	input = $(this).val();
+	$.getJSON('index.php?r=farms/getfarmid', {id: input}, function (data) {
+		$('#setFarmsid').val(data.farmsid);
+	});
+});
+</script>

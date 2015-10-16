@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('添加', ['disputecreate','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?>
     </p>
-
+<?php Farms::showRow($_GET['farms_id']);?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
@@ -102,3 +102,11 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </section>
 </div>
+<script>
+$('#rowjump').keyup(function(event){
+	input = $(this).val();
+	$.getJSON('index.php?r=farms/getfarmid', {id: input}, function (data) {
+		$('#setFarmsid').val(data.farmsid);
+	});
+});
+</script>
