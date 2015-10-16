@@ -48,7 +48,7 @@ use app\models\Lease;
 <table class="table table-bordered table-hover">
   <tr>
     <td width="20%" colspan="2" align="center">法人</td>
-    <td width="40%" align="center">宗地</td>
+    <td align="center">宗地</td>
     <td width="12%" align="center">总面积</td>
     <td width="12%" align="center">操作</td>
     </tr>
@@ -56,7 +56,7 @@ use app\models\Lease;
     <td colspan="2" align="center"><?= $farms['farmername'] ?></td>
     <td align="center"><?= implode('、',$arrayZongdi)?></td>
     <?php 
-    	  $plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id']])->all();
+    	  $plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id'],'lease_id'=>0])->all();
     	  $sumArea = 0;
     	  foreach($plantings as $value) {
     	  	$sumArea += $value['area'];
@@ -64,8 +64,8 @@ use app\models\Lease;
     	  
     	  //echo $val['lease_area'];
     ?>
-    <td align="center"><?= round($farms['measure'] - $leaseSumArea)?>亩</td>
-    <td align="center"><?php if($isView) {?><?= Html::a('添加','index.php?r=plantingstructure/plantingstructurecreate&lease_id=0&farms_id='.$_GET['farms_id'], [
+    <td align="center"><?= $isView?>亩</td>
+    <td align="center"><?php if($isView - $sumArea) {?><?= Html::a('添加','index.php?r=plantingstructure/plantingstructurecreate&lease_id=0&farms_id='.$_GET['farms_id'], [
             			'id' => 'employeecreate',
             			'title' => '给'.$farms['farmername'].'添加',
             			'class' => 'btn btn-primary',
@@ -76,14 +76,14 @@ use app\models\Lease;
 	  	foreach($plantings as $v) {
   ?>
   <tr>
-    <td colspan="2" width="15%" align="center">|_</td>
+    <td colspan="2" width="20%" align="center">|_</td>
     
-    <td width="15%" align="center">种植面积：<?= $v['area']?>亩</td>
-    <td width="15%" align="center">作物：<?= Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname']?></td>
-    <td width="15%" align="center"><?= Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 'index.php?r=plantingstructure/plantingstructureview&id='.$v['id'].'&farms_id='.$_GET['farms_id'], [
+    <td align="center">种植面积：<?= $v['area']?>亩</td>
+    <td width="12%" align="center">作物：<?= Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname']?></td>
+    <td width="12%" align="center"><?= Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 'index.php?r=plantingstructure/plantingstructureview&id='.$v['id'].'&farms_id='.$_GET['farms_id'], [
                     'title' => Yii::t('yii', '查看'),
                     'data-pjax' => '0',
-                ]);?>&nbsp;&nbsp;<?= Html::a('<span class="glyphicon glyphicon-pencil"></span>', 'index.php?r=plantingstructure/plantingstructureupdate&id='.$v['id'].'&farms_id='.$_GET['farms_id'], [
+                ]);?>&nbsp;&nbsp;<?= Html::a('<span class="glyphicon glyphicon-pencil"></span>', 'index.php?r=plantingstructure/plantingstructureupdate&id='.$v['id'].'&lease_id=0&farms_id='.$_GET['farms_id'], [
                     'title' => Yii::t('yii', '更新'),
                     'data-pjax' => '0',
                 ]);?>&nbsp;&nbsp;<?= Html::a('<span class="glyphicon glyphicon-trash"></span>', 'index.php?r=plantingstructure/plantingstructuredelete&id='.$v['id'].'&farms_id='.$_GET['farms_id'], [
@@ -132,11 +132,10 @@ if($leases) {
 	  	foreach($plantings as $v) {
   ?>
   <tr>
-    <td align="right">|_</td>
-    <td width="9%" align="center">宗地：<?= $v['zongdi']?></td>
-    <td width="15%" align="center">种植面积：<?= $v['area']?>亩</td>
-    <td width="15%" align="center">作物：<?= Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname']?></td>
-    <td width="15%" align="center"><?= Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 'index.php?r=plantingstructure/plantingstructureview&id='.$v['id'].'&farms_id='.$_GET['farms_id'], [
+    <td colspan="2" width="20%" align="center">|_</td>
+    <td align="center">种植面积：<?= $v['area']?>亩</td>
+    <td width="12%" align="center">作物：<?= Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname']?></td>
+    <td width="12%" align="center"><?= Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 'index.php?r=plantingstructure/plantingstructureview&id='.$v['id'].'&farms_id='.$_GET['farms_id'], [
                     'title' => Yii::t('yii', '查看'),
                     'data-pjax' => '0',
                 ]);?>&nbsp;&nbsp;<?= Html::a('<span class="glyphicon glyphicon-pencil"></span>', 'index.php?r=plantingstructure/plantingstructureupdate&id='.$v['id'].'&lease_id='.$val['id'].'&farms_id='.$_GET['farms_id'], [

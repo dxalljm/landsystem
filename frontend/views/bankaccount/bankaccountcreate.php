@@ -28,6 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('bankaccount_form', [
         'model' => $model,
+    	
     ]) ?>
                 </div>
             </div>

@@ -25,8 +25,9 @@ $this->params['breadcrumbs'][] = '更新';
                 </div>
                 <div class="box-body">
 
-    <?= $this->render('tempprintbill_form', [
+    <?= $this->render('tempprintbillupdate_form', [
         'model' => $model,
+    	'nonumber' => $nonumber,
     ]) ?>
                 </div>
             </div>

@@ -42,7 +42,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-
+	<?php 
+		$label = '承租人';
+		
+	?>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -66,16 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
             	'attribute'=>'goodseed_id',
             	'value'=>Goodseed::find()->where(['id'=>$model->goodseed_id])->one()['plant_model']
-            ],
-            [
-            	'attribute'=>'inputproduct_id',
-            	'value'=>Inputproduct::find()->where(['id'=>$model->inputproduct_id])->one()['fertilizer']	
-            ],
-            [
-            	'attribute' => 'pesticides_id',
-            	'value' => Pesticides::find()->where(['id'=>$model->pesticides_id])->one()['pesticidename']
-            ],
-            'pconsumption',    
+            ],  
         ],
     ]) ?>
                 </div>

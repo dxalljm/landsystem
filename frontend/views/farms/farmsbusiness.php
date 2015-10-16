@@ -31,7 +31,6 @@ use app\models\Dispute;
             //'id',
             [
             	'attribute' => 'farmname',
-
             ],
             'farmername',
             'measure',

@@ -31,7 +31,7 @@ class Employee extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['father_id', 'create_at', 'update_at'], 'integer'],
+            [['father_id', 'farms_id', 'create_at', 'update_at'], 'integer'],
             [['employeetype', 'employeename', 'cardid'], 'string', 'max' => 500]
         ];
     }
@@ -43,6 +43,7 @@ class Employee extends \yii\db\ActiveRecord
     {
         return [
 			'id' => 'ID',
+        	'farms_id' => '农场ID',
             'father_id' => '类别',
             'employeetype' => '雇工类型',
             'employeename' => '雇工姓名',
@@ -75,6 +76,7 @@ class Employee extends \yii\db\ActiveRecord
                 $model->create_at = time();
                 $model->update_at = time();
             }
+            $model->farms_id = $employeesPost['farms_id'][$k];
             $model->father_id = $employeesPost['father_id'][$k];
             $model->employeename = $employeesPost['employeename'][$k];
             $model->employeetype = $employeesPost['employeetype'][$k];

@@ -113,6 +113,12 @@ class CollectionController extends Controller
         ]);
     }
 
+    public function actionCollectiondck($farms_id)
+    {
+    	$model = new Collection();
+    	$farms = Farms::find()->where(['id'=>$farms_id])->all();
+    }
+    
     /**
      * Creates a new Collection model.
      * If creation is successful, the browser will be redirected to the 'view' page.

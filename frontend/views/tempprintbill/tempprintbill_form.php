@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveFormrdiv;
-
+use dosamigos\datetimepicker\DateTimePicker;
 /* @var $this yii\web\View */
 /* @var $model app\models\Tempprintbill */
 /* @var $form yii\widgets\ActiveForm */
@@ -16,12 +16,27 @@ use yii\widgets\ActiveFormrdiv;
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
-    <td colspan="3" align="center"><h3>大兴安岭岭南宜农林地承包费专用票据</h3></td>
+    <td colspan="5" align="center"><h3>大兴安岭岭南宜农林地承包费专用票据</h3></td>
     </tr>
   <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo date('Y').'年'.date('m').'月'.date('d').'日'; ?></td>
-    <td align="right">NO:</td><?php $model->nonumber = $nonumber?>
-    <td width="30%"><?= $form->field($model, 'nonumber')->textInput()->label(false)->error(false) ?></td>
+    <td width="15%" align="right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;开票日期：</td><?php $model->create_at = date('Y-m-d');?>
+    <td width="12%"><?= $form->field($model, 'create_at')->textInput()->label(false)->error(false)->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+            'autoclose' => true,
+        	'minView' => 3,
+        	'maxView' => 3,
+            'format' => 'yyyy-mm-dd'
+        ]
+]);?></td>
+    <td width="13%">&nbsp;</td>
+    <td width="24%" align="right">NO:</td><?php $model->nonumber = $nonumber?>
+    <td width="29%"><?= $form->field($model, 'nonumber')->textInput()->label(false)->error(false) ?></td>
   </tr>
 </table>
 <?= $form->field($model, 'amountofmoneys')->hiddenInput()->label(false)->error(false)?>
@@ -51,7 +66,8 @@ use yii\widgets\ActiveFormrdiv;
     <td><?= html::textInput('money','',['id'=>'viewmoney','class'=>'form-control','readonly'=>'readonly']) ?></td>
   </tr>
   <tr>
-    <td colspan="6">备注：</td>
+    <td align="right">备注：</td>
+    <td colspan="5"><?= $form->field($model, 'remarks')->textInput()->label(false)->error(false) ?></td>
     </tr>
 </table>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">

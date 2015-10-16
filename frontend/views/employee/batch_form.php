@@ -22,6 +22,7 @@ use yii\web\View;
       <thead id="employee-template" class="d-none">
           <tr><?php echo Html::hiddenInput('EmployeesPost[id][]', '', ['class' => 'form-control']); ?>
               <?php echo Html::hiddenInput('EmployeesPost[father_id][]', $_GET['father_id'], ['class' => 'form-control']); ?>
+              <?php echo Html::hiddenInput('EmployeesPost[farms_id][]', $_GET['farms_id'], ['class' => 'form-control']); ?>
               <td><?php echo Html::dropDownList('EmployeesPost[employeetype][]', '', ['长期工'=>'长期工','短期工'=>'短期工','临时工'=>'临时工'],['class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('EmployeesPost[employeename][]', '', ['class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('EmployeesPost[cardid][]', '', ['class' => 'form-control']); ?></td>
@@ -38,6 +39,7 @@ use yii\web\View;
 		<?php 
 		foreach($employees as $val) {
             $model->id = $val['id'];
+            $model->farms_id = $val['farms_id'];
             $model->father_id = $val['father_id'];
 			$model->employeetype = $val['employeetype'];
 			$model->employeename = $val['employeename'];
@@ -47,6 +49,7 @@ use yii\web\View;
 			<td width=15% align='center'>
                 <?= $form->field($model, 'id')->hiddenInput(['name' => 'EmployeesPost[id][]'])->label(false)->error(false) ?>
                 <?= $form->field($model, 'father_id')->hiddenInput(['name' => 'EmployeesPost[father_id][]'])->label(false)->error(false) ?>
+                <?= $form->field($model, 'farms_id')->hiddenInput(['name' => 'EmployeesPost[farms_id][]'])->label(false)->error(false) ?>
                 <?= $form->field($model, 'employeetype')->dropDownList(['长期工'=>'长期工','短期工'=>'短期工','临时工'=>'临时工'], ['name' => 'EmployeesPost[employeetype][]'])->label(false)->error(false) ?>
             </td>
 			<td align='center'><?= $form->field($model, 'employeename')->textInput(['maxlength' => 500, 'name' => 'EmployeesPost[employeename][]'])->label(false)->error(false) ?></td>

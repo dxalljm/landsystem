@@ -31,8 +31,9 @@ class Tempprintbill extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+        	[['state'],'integer'],
         	[['amountofmoneys'], 'number'],
-            [['standard', 'number', 'nonumber','amountofmoney','farmername', 'bigamountofmoney'], 'string', 'max' => 500]
+            [['standard', 'number', 'nonumber','amountofmoney','farmername', 'bigamountofmoney','remarks'], 'string', 'max' => 500]
         ];
     }
 
@@ -44,6 +45,7 @@ class Tempprintbill extends \yii\db\ActiveRecord
         return [
 			'id' => 'ID',
             'farmername' => '法人姓名',
+        	'remarks' => '备注',
             'standard' => '标准',
             'number' => '数量',
             'amountofmoney' => '金额',
@@ -51,7 +53,8 @@ class Tempprintbill extends \yii\db\ActiveRecord
             'nonumber' => '票号',
 			'create_at' => '创建日期',
         	'update_at' => '更新日期',  
-        	'amountofmoneys' => '金额计算',      		
+        	'amountofmoneys' => '金额计算', 
+        	'state' => '状态',     		
         ];
     }
 }

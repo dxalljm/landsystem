@@ -13,7 +13,7 @@ use yii\widgets\ActiveFormrdiv;
     <?php $form = ActiveFormrdiv::begin(); ?>
 <table class="table table-bordered table-hover">
 	<?= $form->field($model, 'father_id')->hiddenInput(['value'=>$_GET['father_id']])->label(false)->error(false) ?>
-
+	<?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false)->error(false) ?>
 <tr>
 
 <td width=15% align='right'>雇工类型</td>

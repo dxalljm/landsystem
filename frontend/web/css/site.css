@@ -104,7 +104,7 @@ margin: 275px 0 0 -860px; /* PLAY THE WITH THE VALUES TO SEE GET THE DESIRED EFF
 
 .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
 .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
-.autocomplete-selected { background: #ECF0F5; }
+.autocomplete-selected { background: #3C8DBC; }
 .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
 .autocomplete-group { padding: 2px 5px; }
 .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }

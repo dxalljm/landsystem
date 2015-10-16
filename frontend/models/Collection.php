@@ -35,7 +35,7 @@ class Collection extends \yii\db\ActiveRecord
 	public function rules() 
     { 
         return [
-            [['farms_id', 'ypayyear', 'isupdate'], 'integer'],
+            [['farms_id', 'ypayyear', 'isupdate','dckpay'], 'integer'],
             [['ypayarea', 'amounts_receivable', 'real_income_amount', 'ypaymoney', 'owe'], 'number'],
             [['payyear', 'billingtime','cardid'], 'string', 'max' => 500]
         ]; 
@@ -94,6 +94,7 @@ class Collection extends \yii\db\ActiveRecord
         	'cardid' => '法人身份证',
         	'create_at' => '创建日期',
         	'update_at' => '更新日期',
+        	'dckpay' => '地产科提交缴费',
         ]; 
     } 
     public function getfarms()

@@ -20,7 +20,7 @@ class collectionSearch extends Collection
 	public function rules()
     {
         return [
-            [['id', 'farms_id', 'ypayyear', 'isupdate'], 'integer'],
+            [['id', 'farms_id', 'ypayyear', 'isupdate','dckpay'], 'integer'],
             [['farmname','payyear', 'billingtime','cardid'], 'safe'],
             [['ypayarea', 'amounts_receivable', 'real_income_amount', 'ypaymoney', 'owe'], 'number'],
         ];
@@ -79,6 +79,7 @@ class collectionSearch extends Collection
             'ypayarea' => $this->ypayarea,
             'ypaymoney' => $this->ypaymoney,
             'owe' => $this->owe,
+       		'dckpay' => $this->dckpay,
             'isupdate' => $this->isupdate,
         ]);
 

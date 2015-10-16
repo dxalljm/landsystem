@@ -64,47 +64,7 @@ class PlantingstructureController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionPlantingstructurecreate($lease_id,$farms_id)
-    {
-        $model = new Plantingstructure();
-
-		$farm = Farms::find()->where(['id'=>$farms_id])->one();
-		
-		if($lease_id == 0) {
-			$zongdi = Lease::getNOZongdi($farms_id);
-		}
-		else {
-			$zongdi = $this->getListZongdi($lease_id,$farms_id);
-		}
-		$plantings = Plantingstructure::find()->where(['lease_id'=>$lease_id,'farms_id'=>$farms_id])->all();
-		//var_dump($plantings);
-		if($plantings) {
-			$plantingzongdi = [];
-			foreach ($plantings as $value) {
-				$plantingzongdi = array_merge($plantingzongdi,explode('、',$value['zongdi']));
-			}
-			var_dump($plantingzongdi);
-			var_dump($zongdi);
-			$zongdi = array_diff($zongdi,$plantingzongdi);
-			
-			//$zongdi = Lease::getLastArea($zongdi, $_GET['lease_id'], $_GET['farms_id']);
-		}
-        if ($model->load(Yii::$app->request->post())) {
-            //$model->zongdi = Lease::getZongdi($model->zongdi);
-            $model->create_at = time();
-            $model->update_at = time();
-        	$model->save();
-        	$new = $model->attributes;
-        	Logs::writeLog('为'.Lease::find()->where(['id'=>$lease_id])->one()['lessee'].'创建种植结构信息',$model->id,'',$new);
-            return $this->redirect(['plantingstructureindex', 'farms_id' => $farms_id]);
-        } else {
-            return $this->render('plantingstructurecreate', [
-                'model' => $model,
-            	'farm' => $farm,
-            	'zongdi' => $zongdi,
-            ]);
-        }
-    }
+    
 
     //获取承租人的宗地信息，如果已经添加过，则过滤掉
     public function getListZongdi($lease_id)
@@ -114,34 +74,32 @@ class PlantingstructureController extends Controller
     	$zongdiarr = explode('、', $lease['lease_area']);
     	$plantings = Plantingstructure::find()->where(['lease_id'=>$lease_id])->all();
     	
-    	if(count($plantings)>=1) {
-    		$plantings = $this->zongdiAreaSum($plantings);
-	    	foreach ($plantings as $value) {
-	    		$ps[$value['zongdi'].'('.$value['area'].')'] = $value['zongdi'].'('.$value['area'].')';
-	    	}
-	    	$zongdiarr = array_diff($zongdiarr,$ps);
-    	}
-    	
-    	//echo 'ps='.var_dump($ps);
-    	
-    	//var_dump($zongdi);
+    	$zongdi = [];
     	if($plantings) {
 	    	foreach($zongdiarr as $value) {
 	    		foreach ($plantings as $plants) {
-	    			if(Lease::getZongdi($value) == $plants['zongdi']){
-	    				echo Lease::getArea($value) .'-'. $plants['area'].'<br>';
-	    				if(Lease::getArea($value) !== $plants['area']){
-	    					echo Lease::getArea($value) .'-'. $plants['area'].'<br>';
-	    					$areac = Lease::getArea($value) - $plants['area'];
-	    					$zongdi[Lease::getZongdi($value).'('.$areac.')'] = Lease::getZongdi($value).'('.$areac.')';
-	    					//echo 'zongdi_l=';var_dump($zongdi);
-	    				}
-	    			} else {
-	    				$zongdi[$value] = $value;
-	    				$zongdi = array_diff($zongdi,$zongdiarr);
-	    			}
+	    			$plantArray = explode('、', $plants['zongdi']);
+	    			foreach($plantArray as $plant) {
+	    				//echo Lease::getArea($value) .'-'. Lease::getArea($plant).'<br>';
+		    			if(Lease::getZongdi($value) == Lease::getZongdi($plant)){		
+		    				if(Lease::getArea($value) !== Lease::getArea($plant)){
+		    					//echo Lease::getArea($value) .'-'. Lease::getArea($plant).'<br>';
+		    					$areac = Lease::getArea($value) - Lease::getArea($plant);
+		    					$v = Lease::getZongdi($value).'('.$areac.')';
+		    					//var_dump($v);
+		    					$zongdi[$v] = $v;
+		    					//echo 'zongdi_l=';var_dump($zongdi);
+		    				}
+		    			} else {
+		    				//var_dump($zongdiarr);
+		    				$zongdi[$value] = $value;
+		    				//var_dump($zongdi);
+		    				//$zongdi = array_diff($zongdi,$zongdiarr);
+		    			}
+		    		}
 	    		}
 	    	}	
+	    	//var_dump($zongdi);
 	    	return $zongdi;
     	}
     	else {
@@ -180,22 +138,66 @@ class PlantingstructureController extends Controller
     	echo json_encode(['status'=>1,'area'=>$area]);
     }
     
+    
+    public function actionPlantingstructurecreate($lease_id,$farms_id)
+    {
+    	$model = new Plantingstructure();
+    
+    	$farm = Farms::find()->where(['id'=>$farms_id])->one();
+    	$zongdi = Plantingstructure::getNoZongdi($lease_id, $farms_id);
+
+    	//exit;
+    	if ($model->load(Yii::$app->request->post())) {
+    		
+    		//$model->zongdi = Lease::getZongdi($model->zongdi);
+    		$model->create_at = time();
+    		$model->update_at = time();
+    		$model->save();
+    		
+    		$new = $model->attributes;
+    		Logs::writeLog('为'.Lease::find()->where(['id'=>$lease_id])->one()['lessee'].'创建种植结构信息',$model->id,'',$new);
+    		return $this->redirect(['plantingstructureindex', 'farms_id' => $farms_id]);
+    	} else {
+    		return $this->render('plantingstructurecreate', [
+    				'model' => $model,
+    				'farm' => $farm,
+    				'zongdi' => $zongdi,
+    		]);
+    	}
+    }
     /**
      * Updates an existing Plantingstructure model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionPlantingstructureupdate($id)
+    public function actionPlantingstructureupdate($id,$lease_id,$farms_id)
     {
         $model = $this->findModel($id);
         $old = $model->attributes;
         $farm = Farms::find()->where(['id'=>$model->farms_id])->one();
-        $lease = Lease::find()->where(['id'=>$model->lease_id])->one();
-        $zongdiarr = explode('、', $lease['lease_area']);
-        foreach($zongdiarr as $value) {
-        	$zongdi[]['unifiedserialnumber'] = $value;
+        if($lease_id == 0) {
+        	$zongdi = Lease::getNOZongdi($farms_id);
         }
+        else {
+        	$zongdi = $this->getListZongdi($lease_id,$farms_id);
+        }
+        //var_dump($zongdi);
+        $plantings = Plantingstructure::find()->where(['lease_id'=>$lease_id,'farms_id'=>$farms_id])->all();
+    	if($plantings) {
+    		$plantingzongdi = [];
+    		foreach ($plantings as $value) {
+    			$plantingzongdi = array_merge($plantingzongdi,explode('、',$value['zongdi']));
+    		}
+    		 			var_dump($plantingzongdi);
+    		 			var_dump($zongdi);
+    		$zongdi = array_diff($zongdi,$plantingzongdi);
+    		//var_dump($zongdi);
+    		exit;
+    		sort($zongdi);
+    		$zongdi = Lease::getLastArea($zongdi, $_GET['lease_id'], $_GET['farms_id']);
+    	}
+        
         if ($model->load(Yii::$app->request->post())) {
         	$model->update_at = time();
         	$model->save();
@@ -207,6 +209,7 @@ class PlantingstructureController extends Controller
                 'model' => $model,
             	'farm' => $farm,
             	'zongdi' => $zongdi,
+            	//'leases' => $lease,
             ]);
         }
     }

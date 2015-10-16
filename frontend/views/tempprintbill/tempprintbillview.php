@@ -69,7 +69,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <td>&nbsp;&nbsp;<?= $model->amountofmoney?></td>
   </tr>
   <tr>
-    <td colspan="6">备注：</td>
+  	<td align="right">备注：</td>
+    <td colspan="5">&nbsp;&nbsp;<?= $model->remarks?></td>
     </tr>
 </table>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -110,7 +111,7 @@ function CreatePage() {
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
 	LODOP.ADD_PRINT_TEXT(-8,67,290,20,"注：电子票号与纸质票号不一致则为无效票");
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
-	LODOP.ADD_PRINT_TEXT(76,212,100,21,"<?= $model->farmername?>");
+	LODOP.ADD_PRINT_TEXT(76,212,200,21,"<?= $model->farmername?>");
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
 	LODOP.ADD_PRINT_TEXT(136,146,115,20,"宜林农地承包费");
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
@@ -132,7 +133,8 @@ function CreatePage() {
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
 	LODOP.ADD_PRINT_TEXT(-8,506,185,20,"电子票号：<?= $model->nonumber?>");
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
-	
+	LODOP.ADD_PRINT_TEXT(288,136,518,20,"<?= $model->remarks?>");
+	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
 };
 </script> 
                 

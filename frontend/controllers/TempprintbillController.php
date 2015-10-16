@@ -34,9 +34,12 @@ class TempprintbillController extends Controller
     public function actionTempprintbillindex()
     {
         $searchModel = new tempprintbillSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $params = Yii::$app->request->queryParams;
+        $params['tempprintbillSearch']['state'] = 0;
+        
+        $dataProvider = $searchModel->search($params);
         $create_at = Tempprintbill::find()->orderBy('id DESC','LIMIT=1')->one()['create_at'];
-		$billSum = Tempprintbill::find()->sum('amountofmoneys');
+		$billSum = Tempprintbill::find()->where(['state'=>0])->sum('amountofmoneys');
 		//var_dump($billSum);
         return $this->render('tempprintbillindex', [
             'searchModel' => $searchModel,
@@ -46,6 +49,24 @@ class TempprintbillController extends Controller
         ]);
     }
 
+    public function actionTempprintbillscrap()
+    {
+    	$searchModel = new tempprintbillSearch();
+    	$params = Yii::$app->request->queryParams;
+    	$params['tempprintbillSearch']['state'] = 1;
+    
+    	$dataProvider = $searchModel->search($params);
+    	$create_at = Tempprintbill::find()->orderBy('id DESC','LIMIT=1')->one()['create_at'];
+    	//$billSum = Tempprintbill::find()->where(['state'=>1])->sum('amountofmoneys');
+    	//var_dump($billSum);
+    	return $this->render('tempprintbillscrap', [
+    			'searchModel' => $searchModel,
+    			'dataProvider' => $dataProvider,
+    			//'billSum' => $billSum,
+    			'create_at' => $create_at,
+    	]);
+    }
+    
     /**
      * Displays a single Tempprintbill model.
      * @param integer $id
@@ -56,6 +77,13 @@ class TempprintbillController extends Controller
         return $this->render('tempprintbillview', [
             'model' => $this->findModel($id),
         ]);
+    }
+    
+    public function actionTempprintbillsview($id)
+    {
+    	return $this->render('tempprintbillsview', [
+    			'model' => $this->findModel($id),
+    	]);
     }
 
     /**
@@ -70,7 +98,7 @@ class TempprintbillController extends Controller
 		//var_dump(++$nonumber);
 		//exit;
         if ($model->load(Yii::$app->request->post())) {
-        	$model->create_at = time();
+        	$model->create_at = strtotime($model->create_at.' '.date("H:m:s"));
         	$model->update_at = time();
         	$model->save();
         	//var_dump($model->getErrors());
@@ -101,12 +129,18 @@ class TempprintbillController extends Controller
     public function actionTempprintbillupdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['tempprintbillview', 'id' => $model->id]);
+		$old = $model->attributes;
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->update_at = time();
+        	$model->state = 1;
+        	$model->save();
+        	$new = $model->attributes;
+        	Logs::writeLog('报废',$id,$old,$new);
+            return $this->redirect(['tempprintbillindex']);
         } else {
             return $this->render('tempprintbillupdate', [
                 'model' => $model,
+            	'nonumber' => $model->nonumber,
             ]);
         }
     }
@@ -119,8 +153,10 @@ class TempprintbillController extends Controller
      */
     public function actionTempprintbilldelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id);
+        $model->state = 1;
+        $model->save();
+		
         return $this->redirect(['tempprintbillindex']);
     }
 

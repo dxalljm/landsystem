@@ -25,36 +25,53 @@ class Lease extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    //处理租赁面积格式
-    public static function explodeArea($leasearea)
-    {
-    	$arrayLeasearea = explode('、',$leasearea);
-    	
-    	return $arrayLeasearea;
-    }
+
+    //得到1-100（123）中的面积123
     public static function getArea($Leasearea) 
     {
-    	//print_r($Leasearea);
+    	//var_dump($Leasearea);
     	$areas = 0;
     	preg_match_all('/-([0-9]+)\(([0-9.]+?)\)/', $Leasearea, $area);
     	$areas = (float)$area[2][0];
     	return $areas;
     }
+    //得到1-100（123）中的宗地号1-100
     public static function getZongdi($Leasearea) {
    		$zongdi = preg_replace('/\(  [^\)]+?  \)/x', '', $Leasearea);
     	return $zongdi;
     }
-    //得到famrs_id农场已经租赁的情况，返回数组
-    public static function getLeaseArea($farms_id) 
+    
+    //得到承租人的宗地信息
+    public static function getLeaseArea($lease_id) 
     {
-    	$zongdi = null;
-    	$zongdiarr = self::find()->where(['farms_id'=>$_GET['farms_id']])->all();
-    	foreach($zongdiarr as $value) {
-    		$zongdi[] = $value['lease_area'];
+    	$strLeaseArea = self::find()->where(['id'=>$lease_id])->one()['lease_area'];
+    	if(strstr($strLeaseArea, '、')) {
+    		$arrayLeaseArea = explode('、', $strLeaseArea);
+    	} else 
+    		$arrayLeaseArea[] = $strLeaseArea;
+    	return $arrayLeaseArea;
+    }
+    //得到所有当前农场已经租赁的信息
+    public static function getAllLeaseArea($farms_id)
+    {
+    	$result = [];
+    	$leases = self::find()->where(['farms_id'=>$farms_id])->all();
+    	foreach($leases as $value) {
+    		if(strstr($value['lease_area'], '、')) {
+    			$array = explode('、', $value['lease_area']);
+    			foreach ($array as $val) {
+    				$result[] = $val;
+    			}
+    		}
+    		else
+    			$result[] = $value['lease_area'];
     	}
-//     	echo "<br><br><br><br><br><br><br><br><br><br>";
-//     	print_r($zongdi);
-    	return $zongdi;
+    	return $result;
+    }
+    //所有getAllLeaseArea返回的宗地面积累加
+    public static function AddAllLeaseArea($arrayZongdiArea)
+    {
+    	return self::zdareaChuLi($arrayZongdiArea);
     }
     //农场所有宗地（面积）
     public static function getFarmsZdarea($farms_id)
@@ -68,7 +85,9 @@ class Lease extends \yii\db\ActiveRecord
     	}
     	return $zdarea;
     }
-    //
+    
+   
+    
     public static function scanOverZongdi($farms_id) 
     {
     	//$zdarea——农场所有宗地（面积）
@@ -118,32 +137,7 @@ class Lease extends \yii\db\ActiveRecord
     		return $zdarea;
     	return false;
     }
-    //处理种植结构剩余宗地面积
-    public static function getLastArea($zdarea,$lease_id,$farms_id)
-    {
-    	var_dump($zdarea);
-    	$data = Plantingstructure::find()->where(['lease_id'=>$lease_id,'farms_id'=>$farms_id])->all();
-    	//$area = self::getArea($zdarea);
-    	$result = '';
-    	$i = 0;
-//     	foreach($data as $value) {
-//     		$zongdiArray = explode('、', $value['zongdi']);
-//     		if(strpos($zdarea,'、'))
-//     			$zdareaArray = explode('、', $zdarea);
-//     		else 
-//     			$zdareaArray = $zdarea;
-//     		foreach ($zongdiArray as $val) {
-//     			foreach ($zdareaArray as $v) {
-//     				$area = self::getArea($v);
-//     				if(self::getZongdi($v) == self::getZongdi($val)) {
-//     					$area -= self::getArea($val);
-//     				}
-//     				$result[$i] = self::getZongdi($v).'('.$area.')';
-//     			}
-//     		}
-//     	}
-    	return $result;
-    }
+   
     //把相同宗地面积进行累加，返回处理后的数组
     public static function zdareaChuLi($arrayArea)
     {
@@ -161,6 +155,7 @@ class Lease extends \yii\db\ActiveRecord
     			}
     		}
     	}
+    	//var_dump($arrayArea);
     	return $arrayArea;
     }
     
@@ -176,10 +171,11 @@ class Lease extends \yii\db\ActiveRecord
     public static function getOverArea($farms_id)
     {
     	$area = 0;
-    	$arraylearearea = self::getLeaseArea($farms_id);
+    	$arraylearearea = self::getAllLeaseArea($farms_id);
+    	//var_dump($arraylearearea);
     	if(!empty($arraylearearea)) {
 	    	foreach($arraylearearea as $value) {
-	    		$arrayzongdiarea = self::explodeArea($value);
+	    		$arrayzongdiarea = explode('、', $value);
 	    		foreach ($arrayzongdiarea as $val) {
 	    			$area += self::getArea($val);
 	    		}
@@ -202,11 +198,14 @@ class Lease extends \yii\db\ActiveRecord
         ]; 
     } 
     //将数组中1-100(10),1-200(123)的面积进行累加
-    public static function getListArea($strArea)
+    public static function getListArea($Area)
     {
     	$result = 0;
-    	$arrayArea = explode('、', $strArea);
-    	foreach($arrayArea as $value) {
+    	if(is_array($Area))
+    		$arrayArea = $Area;
+    	else    	
+    		$arrayArea = explode('、', $Area);
+    	foreach($arrayArea as $value) {	
     		$result += self::getArea($value);
     	}
     	return $result;

@@ -30,10 +30,13 @@ use app\models\Mainmenu;
           	$action = yii::$app->controller->action->id;
 	    	if($action == 'farmsmenu' or $controller == 'plantpesticides' or $controller == 'farmer' or $controller == 'lease' or $controller == 'fireprevention' or $controller == 'dispute' or $controller == 'lease' or $controller == 'cooperativeoffarm' or $controller == 'employee' or $controller == 'plantingstructure' or $controller == 'plantinputproduct'){?>
 	    	<?php if(isset($_GET['farms_id'])) {?>
-	    	<li class="header text-light-blue"><?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']?></li>
+	    	<li class="header text-light-blue"><h4><?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']?></h4></li>
 	    	<?php }?>
+	    		<li class="treeview">
+                	<a href="<?= Url::to('index.php?r=farms/farmsmenu&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-list"></i><span>业务菜单</span></a>
+           		</li>
 				<li class="treeview">
-                	<a href="<?= Url::to('index.php?r=farmer/farmercreate&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-user"></i><span>承包</span></a>
+                	<a href="<?= Url::to('index.php?r=farmer/farmercreate&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-user"></i><span>法人信息</span></a>
            		</li>
            		<li class="treeview">
                 	<a href="#"><i class="fa fa-users"></i><span>转让</span></a>
@@ -75,7 +78,10 @@ use app\models\Mainmenu;
 	                   foreach($menulistarr as $val) {
 	                   $menu = Mainmenu::find()->where(['id'=>$val])->one();
 	                   if($menu['menuurl'] == 'dropdown') {
-	                   		echo '<li class="treeview">';
+	                   		if(yii::$app->controller->id == 'nation' or yii::$app->controller->id == 'plant' or yii::$app->controller->id == 'inputproduct' or yii::$app->controller->id == 'pesticides' or yii::$app->controller->id == 'goodseed' or yii::$app->controller->id == 'cooperative' or yii::$app->controller->id == 'disputetype')
+	                   			echo '<li class="active treeview">';
+	                   		else 
+	                   			echo '<li class="treeview">';
               				echo '<a href="#">';
                 			echo '<i class="fa fa-dashboard"></i> <span>数据管理</span> <i class="fa fa-angle-left pull-right"></i>';
               				echo '</a>';

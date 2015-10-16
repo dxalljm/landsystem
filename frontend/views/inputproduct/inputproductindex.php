@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </h3>
                 </div>
                 <div class="box-body">
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php // echo $this->render('inputproduct_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a('添加', ['inputproductcreate'], ['class' => 'btn btn-success']) ?>

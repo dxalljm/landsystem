@@ -51,10 +51,7 @@ class FirepreventionController extends Controller
      */
     public function actionFirepreventionview($id,$farms_id)
     {
-    	$lease = Lease::find()->where(['farms_id'=>$farms_id])->all();
-    	foreach($lease as $val) {
-    		$employees[] = Employee::find()->where(['father_id'=>$val['id']])->all();
-    	}
+    	$employees[] = Employee::find()->where(['farms_id'=>$farms_id])->all();
     	Logs::writeLog('查看防火工作',$id);
         return $this->render('firepreventionview', [
             'model' => $this->findModel($id),
@@ -81,11 +78,9 @@ class FirepreventionController extends Controller
     		$model->update_at = time();
     	}
 
-        $lease = Lease::find()->where(['farms_id'=>$farms_id])->all();
-        $employees = '';
-		foreach($lease as $val) {
-			$employees[] = Employee::find()->where(['father_id'=>$val['id']])->all();
-		}
+        //$lease = Lease::find()->where(['farms_id'=>$farms_id])->all();
+		$employees[] = Employee::find()->where(['farms_id'=>$farms_id])->all();
+
 		
         if ($model->load(Yii::$app->request->post())) { 	
         	$model->save();

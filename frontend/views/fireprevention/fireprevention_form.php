@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Firepreventionemployee;
+use app\models\Farms;
 /* @var $this yii\web\View */
 /* @var $model app\models\Fireprevention */
 /* @var $form yii\widgets\ActiveForm */
@@ -12,7 +13,8 @@ use app\models\Firepreventionemployee;
 
     <?php $form = ActiveFormrdiv::begin(); ?>
     <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false)->error(false) ?>
-<table width="57%" class="table table-bordered table-hover">
+<?php Farms::showRow($_GET['farms_id']);?>
+    <table width="57%" class="table table-bordered table-hover">
 		<tr>
 
 <td colspan="3" align='center'><h4>防火、安全、环保合同</h4></td>
@@ -118,7 +120,7 @@ use app\models\Firepreventionemployee;
 
 </tr>
 <?php 
-
+//var_dump($employees);
 $i=0;
 if(is_array($employees)) {
 foreach($employees as $emp) {
@@ -141,6 +143,7 @@ foreach($employees as $emp) {
 <?php $i++;}}?>
 </table>
 <?php }?>
+<?php Farms::showRow($_GET['farms_id']);?>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

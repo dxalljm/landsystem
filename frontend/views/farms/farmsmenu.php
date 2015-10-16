@@ -84,7 +84,7 @@ use app\models\Collection;
 <div class="info-box bg-blue">
   <span class="info-box-icon"><i class="fa fa-user"></i></span>
   <div class="info-box-content">
-  <span class="info-box-number">承包 </span>
+  <span class="info-box-number">法人信息 </span>
     <span class="info-box-text">法人：<?= $farm->farmername ?></span>
     <!-- The progress section is optional -->
     <div class="progress">
@@ -96,9 +96,9 @@ use app\models\Collection;
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box --></a></td>
     <td width="5%" align="center"></td>
-    <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
+    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=farmer/farmercreate&farms_id='.$_GET['farms_id']) ?>'>
 <div class="info-box bg-blue">
-  <a href='<?= Url::to('index.php?r=farmer/farmercreate&farms_id='.$_GET['farms_id']) ?>'><span class="info-box-icon"><i class="fa fa-users"></i></span></a>
+  <span class="info-box-icon"><i class="fa fa-users"></i></span>
   <div class="info-box-content">
   <span class="info-box-number">转让 </span>
     <span class="info-box-text">无转让信息</span>
@@ -110,11 +110,11 @@ use app\models\Collection;
       转让、分户、合并
     </span>
   </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></td>
+</div><!-- /.info-box --></a></td>
     <td width="5%" align="center">&nbsp;</td>
-    <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
+    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=lease/leaseindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
-  <a href='<?= Url::to('index.php?r=lease/leaseindex&farms_id='.$_GET['farms_id']) ?>'><span class="info-box-icon"><i class="fa fa-street-view"></i></span></a>
+  <span class="info-box-icon"><i class="fa fa-street-view"></i></span>
   <div class="info-box-content">
   <span class="info-box-number">租赁 </span>
     <span class="info-box-text">现共<?= Lease::find()->where(['farms_id'=>$_GET['farms_id']])->count(); ?>人租赁</span>
@@ -126,11 +126,11 @@ use app\models\Collection;
       承租人信息及年限
     </span>
   </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></td>
+</div><!-- /.info-box --></a></td>
     <td width="5%" align="center">&nbsp;</td>
-    <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
+    <td width="20%" align="center"> <a href='<?= Url::to('index.php?r=lease/leaseindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
-  <a href='<?= Url::to('index.php?r=lease/leaseindex&farms_id='.$_GET['farms_id']) ?>'><span class="info-box-icon"><i class="fa fa-university"></i></span></a>
+ <span class="info-box-icon"><i class="fa fa-university"></i></span>
   <div class="info-box-content">
   <span class="info-box-number">贷款 </span>
     <span class="info-box-text">现无贷款</span>
@@ -142,16 +142,16 @@ use app\models\Collection;
      贷款相关信息
     </span>
   </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></td>
+</div><!-- /.info-box --></a></td>
     </tr>
   </table>
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
         
         ?>
-    <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
+    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=dispute/disputeindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
-  <a href='<?= Url::to('index.php?r=dispute/disputeindex&farms_id='.$_GET['farms_id']) ?>'><span class="info-box-icon"><i class="fa fa-commenting"></i></span></a>
+  <span class="info-box-icon"><i class="fa fa-commenting"></i></span>
   <div class="info-box-content">
   <span class="info-box-number">纠纷 </span>
     <span class="info-box-text">现有<?= Dispute::find()->where(['farms_id'=>$_GET['farms_id']])->count() ?>个纠纷</span>
@@ -163,11 +163,11 @@ use app\models\Collection;
      纠纷具体事项
     </span>
   </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></td>
+</div><!-- /.info-box --></a></td>
     <td width="5%" align="center">&nbsp;</td>    
-    <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
+    <td width="20%" align="center"> <a href='<?= Url::to('index.php?r=cooperativeoffarm/cooperativeoffarmindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
-  <a href='<?= Url::to('index.php?r=cooperativeoffarm/cooperativeoffarmindex&farms_id='.$_GET['farms_id']) ?>'><span class="info-box-icon"><i class="fa fa-briefcase"></i></span></a>
+ <span class="info-box-icon"><i class="fa fa-briefcase"></i></span>
   <div class="info-box-content">
   <span class="info-box-number">合作社信息 </span>
     <span class="info-box-text">参加了<?= Cooperativeoffarm::find()->where(['farms_id'=>$_GET['farms_id']])->count() ?>个合作社</span>
@@ -179,11 +179,11 @@ use app\models\Collection;
      注册资金等信息
     </span>
   </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></td>
+</div><!-- /.info-box --></a></td>
     <td width="5%" align="center">&nbsp;</td>
-    <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
+    <td width="20%" align="center"> <a href='<?= Url::to('index.php?r=employee/employeefathers&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
-  <a href='<?= Url::to('index.php?r=employee/employeefathers&farms_id='.$_GET['farms_id']) ?>'><span class="info-box-icon"><i class="fa fa-user-plus"></i></span></a>
+ <span class="info-box-icon"><i class="fa fa-user-plus"></i></span>
   <div class="info-box-content">
   <span class="info-box-number">雇工 </span>
     <span class="info-box-text">雇佣了<?php $lease = Lease::find()->where(['farms_id'=>$_GET['farms_id']])->all();$rows=0;foreach($lease as $value) {$rows += Employee::find()->where(['father_id'=>$value['id']])->count();}echo $rows ?>人</span>
@@ -195,11 +195,11 @@ use app\models\Collection;
      雇佣人员的详细信息
     </span>
   </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></td>
+</div><!-- /.info-box --></a></td>
     <td width="5%" align="center">&nbsp;</td>
-    <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
+    <td width="20%" align="center"> <a href='<?= Url::to('index.php?r=plantingstructure/plantingstructureindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
-  <a href='<?= Url::to('index.php?r=plantingstructure/plantingstructureindex&farms_id='.$_GET['farms_id']) ?>'><span class="info-box-icon"><i class="fa fa-sun-o"></i></span></a>
+ <span class="info-box-icon"><i class="fa fa-sun-o"></i></span>
   <div class="info-box-content">
   <span class="info-box-number">种植结构 </span>
     <span class="info-box-text">种植了<?= Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id']])->count()?>种作物</span>
@@ -211,16 +211,16 @@ use app\models\Collection;
      承租人种植作物信息
     </span>
   </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></td>
+</div><!-- /.info-box --></a></td>
   </tr>
   </table>
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
         
         ?>
-    <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
+    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=plantinputproduct/plantinputproductindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
-  <a href='<?= Url::to('index.php?r=plantinputproduct/plantinputproductindex&farms_id='.$_GET['farms_id']) ?>'><span class="info-box-icon"><i class="fa fa-tint"></i></span></a>
+  <span class="info-box-icon"><i class="fa fa-tint"></i></span>
   <div class="info-box-content">
   <span class="info-box-number">投入品 </span>
     <span class="info-box-text">投放了<?= Plantinputproduct::find()->where(['farms_id'=>$_GET['farms_id']])->count()?>种投入品</span>
@@ -232,11 +232,11 @@ use app\models\Collection;
      农场投入品信息
     </span>
   </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></td>
+</div><!-- /.info-box --></a></td>
     <td width="5%" align="center"></td>    
-    <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
+    <td width="20%" align="center"> <a href='<?= Url::to('index.php?r=plantpesticides/plantpesticidesindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
-  <a href='<?= Url::to('index.php?r=plantpesticides/plantpesticidesindex&farms_id='.$_GET['farms_id']) ?>'><span class="info-box-icon"><i class="fa fa-exclamation-triangle"></i></span></a>
+ <span class="info-box-icon"><i class="fa fa-exclamation-triangle"></i></span>
   <div class="info-box-content">
   <span class="info-box-number">农药 </span>
     <span class="info-box-text">使用了<?= Plantpesticides::find()->where(['farms_id'=>$_GET['farms_id']])->count()?>种农药</span>
@@ -248,11 +248,11 @@ use app\models\Collection;
      农药使用情况
     </span>
   </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></td>
+</div><!-- /.info-box --></a></td>
     <td width="5%" align="center"></td>
-    <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
+    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=fireprevention/firepreventioncreate&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
-  <a href='<?= Url::to('index.php?r=fireprevention/firepreventioncreate&farms_id='.$_GET['farms_id']) ?>'><span class="info-box-icon"><i class="fa fa-fire-extinguisher"></i></span></a>
+  <span class="info-box-icon"><i class="fa fa-fire-extinguisher"></i></span>
   <div class="info-box-content">
   <span class="info-box-number">防火工作 </span>
     <span class="info-box-text"><?php if(Fireprevention::find()->where(['farms_id'=>$_GET['farms_id']])->count()) echo '完成防火工作'; else echo '未完成防火工作';?></span>
@@ -264,12 +264,12 @@ use app\models\Collection;
      防火合同的签订
     </span>
   </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></td>
+</div><!-- /.info-box --></a></td>
 
       <td width="5%" align="center"></td>
-      <td width="20%" align="center"><!-- Apply any bg-* class to to the info-box to color it -->
+      <td width="20%" align="center"><a href='<?= Url::to('index.php?r=Collection/Collectiondck&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
-  <a href='<?= Url::to('index.php?r=Collection/Collectioncreate&farms_id='.$_GET['farms_id']) ?>'><span class="info-box-icon"><i class="fa fa-cny"></i></span></a>
+  <span class="info-box-icon"><i class="fa fa-cny"></i></span>
   <div class="info-box-content">
   <span class="info-box-number">缴费业务</span>
     <span class="info-box-text"></span>
@@ -281,7 +281,7 @@ use app\models\Collection;
      防火合同的签订
     </span>
   </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></td>
+</div><!-- /.info-box --></a></td>
   </tr>
   </table>
 

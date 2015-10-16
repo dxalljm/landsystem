@@ -11,6 +11,7 @@ use app\models\Goodseed;
 use app\models\Plantingstructure;
 use app\models\Plantinputproduct;
 use app\models\Inputproduct;
+use app\models\Farms;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\plantinputproductSearch */
@@ -36,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <table class="table table-bordered table-hover">
 	    <tr>
-	    	<td align="center">承租人</td>
+	    	<td align="center">承租人/法人</td>
 	    	<td align="center">宗地</td>
 	    	<td align="center">承包面积</td>
 	    	<td align="center">作物</td>
@@ -44,8 +45,9 @@ $this->params['breadcrumbs'][] = $this->title;
 	    	<td align="center">操作</td>
 	    </tr>
 	    <?php foreach ($plantings as $planting) {?>
+	    <?php $name = Lease::find()->where(['id'=>$planting->lease_id])->one()['lessee'];?>
 	    <tr>
-	    	<td align="center"><?= Lease::find()->where(['id'=>$planting->lease_id])->one()['lessee']?></td>
+	    	<td align="center"><?php if($name == '') echo Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmername']; else echo $name;?></td>
 	    	<td align="center"><?= $planting->zongdi;?></td>
 	    	<td align="center"><?= $planting->area;?></td>
 	    	<td align="center"><?= Plant::find()->where(['id'=>$planting->plant_id])->one()['cropname']?></td>

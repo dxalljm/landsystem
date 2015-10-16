@@ -33,8 +33,8 @@ use app\models\Lease;
 <td align='right'>承租人</td>
 <td align='right'><?= Lease::find()->where(['id'=>$_GET['lease_id']])->one()['lessee'] ?></td>
 <?php }?>
-<td align='right'>宜农林地面积</td>
-<td align='left'><?= $farm->measure.' 亩'?></td>
+<td align='right'>农场面积：<?= $farm->measure.' 亩'?></td>
+<td align='left'>种植面积：<?= Lease::getListArea($zongdi)?>亩</td>
 </tr>
 <tr>
   <td align='right'>宗地</td>
@@ -87,12 +87,12 @@ use app\models\Lease;
 			$zongdiarr = $zongdi;
 			//var_dump($zongdiarr);
 			$i=0;
-//     		foreach($zongdiarr as $value) {
-//     			echo html::button($value,['onclick'=>'toParcellist("'.$value.'","'.Lease::getZongdi($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
-//     			$i++;
-//     			if($i%6 == 0)
-//     				echo '<br><br>';
-//     		}
+    		foreach($zongdiarr as $value) {
+    			echo html::button($value,['onclick'=>'toParcellist("'.$value.'","'.Lease::getZongdi($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
+    			$i++;
+    			if($i%6 == 0)
+    				echo '<br><br>';
+    		}
     		?></td>
 
     	</tr>

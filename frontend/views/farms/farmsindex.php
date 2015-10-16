@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('XLS导入宗地', ['farmszdxls'], ['class' => 'btn btn-success']) ?>
     </p>
 </section>
-
+<?php  //echo $this->render('farms_search', ['model' => $searchModel]); ?>
     
 <section class="content">
     <div class="row">

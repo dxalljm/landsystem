@@ -284,6 +284,8 @@ class FarmsController extends Controller
         if ($model->load(Yii::$app->request->post())) {
         	$model->create_at = time();
         	$model->update_at = time();
+        	$model->pinyin = Pinyin::encode($model->farmname);
+        	$model->farmerpinyin = Pinyin::encode($model->farmername);
         	$model->save();
         	$newAttr = $model->attributes;
         	Logs::writeLog('创建农场',$model->id,'',$newAttr);
@@ -308,6 +310,8 @@ class FarmsController extends Controller
 		$oldAttr = $model->attributes;
         if ($model->load(Yii::$app->request->post())) {
         	$model->update_at = time();
+        	$model->pinyin = Pinyin::encode($model->farmname);
+        	$model->farmerpinyin = Pinyin::encode($model->farmername);
         	$model->save();
         	$newAttr = $model->attributes;
         	Logs::writeLog('更新农场信息',$id,$oldAttr,$newAttr);

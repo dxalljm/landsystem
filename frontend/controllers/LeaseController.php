@@ -47,6 +47,12 @@ class LeaseController extends Controller
     {
     	//$this->layout='@app/views/layouts/nomain.php';
     	//$lease = Lease::find()->where(['farms_id'=>$id,'years'=>Theyear::findOne(1)['years']])->all();
+//     	$allLeaseArea = Lease::getAllLeaseArea($farms_id);
+//     	$farmsArea = Lease::getFarmsZdarea($farms_id);
+//     	var_dump(Lease::zdareaChuLi($allLeaseArea));
+//     	var_dump($farmsArea);
+//     	var_dump($allLeaseArea);
+//     	exit;
          $searchModel = new leaseSearch();
          $dataProvider = $searchModel->search(['farms_id'=>$farms_id]);
 		//$this->getView()->registerJsFile($url)
@@ -107,7 +113,7 @@ class LeaseController extends Controller
     	$farmer = Farmer::find()->where(['farms_id'=>$farms_id])->one();
         $model = new lease();
         
-		$overarea = $model::getOverArea($farms_id);
+		$overarea = Lease::getOverArea($farms_id);
 		$noarea = $model::getNoArea($farms_id);
         if ($model->load(Yii::$app->request->post())) {
         	$model->farms_id = $farms_id;

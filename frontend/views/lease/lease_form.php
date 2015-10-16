@@ -68,7 +68,7 @@ use app\models\Lease;
         ]
 ]);?></td>
     <td width="22" align="center">至</td>
-    <td width="64" align="center"><?= $form->field($model, 'enddate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+    <td width="80" align="center"><?= $form->field($model, 'enddate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
         'inline' => false, 
@@ -118,13 +118,23 @@ use app\models\Lease;
     	<tr>
     		<td align='center'>租赁面积（宗地）</td>
     	</tr>
-    	<tr>
-    		<td align='center'><?= Html::textInput('parcellist','',['id'=>'model-parcellist','class'=>'form-control'])?></td>
+    	<tr><?php 
+    	if(isset($_GET['id'])) {
+    		$result = Lease::getLeaseArea($_GET['id']);
+	    	if(is_array($result))
+	    		$parcellistvalue = implode('、', $result);
+	    	else 
+	    		$parcellistvalue = $result;
+		} else {
+			$parcellistvalue = '';
+		}?>
+    		<td align='center'><?= Html::textInput('parcellist',$parcellistvalue,['id'=>'model-parcellist','class'=>'form-control'])?></td>
 
     	</tr>
     	<tr>
     		<td align='center'><?php 
-			$zongdiarr = Lease::scanOverZongdi($_GET['farms_id']);
+    		//$arrayParcelValue = explode('、', $parcellistvalue);
+			$zongdiarr = Lease::getNOZongdi($_GET['farms_id']);
 			$i=0;
     		foreach($zongdiarr as $value) {
     			echo html::button($value,['onclick'=>'toParcellist("'.$value.'","'.Lease::getZongdi($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
@@ -159,10 +169,16 @@ function setLeasearea() {
 	if($('#lease-lease_area').val() == '')
 		$('#lease-lease_area').val($('#model-parcellist').val());
 	else {
-		alert($('#lease-lease_area').val());
-		var value = $('#lease-lease_area').val()+'、'+$('#model-parcellist').val();
+		//alert($('#lease-lease_area').val());
+		var value = $('#model-parcellist').val();
 		$('#lease-lease_area').val(value);	
 	}	
+}
+
+function reset()
+{
+	$('#model-parcellist').val('');
+	$('button').attr('disabled',false);
 }
 </script>
          </div>

@@ -18,9 +18,9 @@ class tempprintbillSearch extends Tempprintbill
     public function rules()
     {
         return [
-            [['id', 'nonumber'], 'integer'],
-            [['farmername', 'bigamountofmoney'], 'safe'],
-            [['standard', 'number', 'amountofmoney'], 'number'],
+            [['id','state'], 'integer'],
+            [['farmername','remarks', 'nonumber','bigamountofmoney','standard', 'number', 'amountofmoney','create_at','update_at'], 'safe'],
+            
         ];
     }
 
@@ -42,6 +42,7 @@ class tempprintbillSearch extends Tempprintbill
      */
     public function search($params)
     {
+    	//var_dump($params);
         $query = Tempprintbill::find();
 
         $dataProvider = new ActiveDataProvider([
@@ -59,13 +60,17 @@ class tempprintbillSearch extends Tempprintbill
         $query->andFilterWhere([
             'id' => $this->id,
             'standard' => $this->standard,
-            'number' => $this->number,
-            'amountofmoney' => $this->amountofmoney,
-            'nonumber' => $this->nonumber,
+        	'state' => $this->state,
         ]);
 
         $query->andFilterWhere(['like', 'farmername', $this->farmername])
-            ->andFilterWhere(['like', 'bigamountofmoney', $this->bigamountofmoney]);
+        ->andFilterWhere(['like', 'remarks', $this->remarks])
+            ->andFilterWhere(['like', 'bigamountofmoney', $this->bigamountofmoney])
+        	->andFilterWhere(['like', 'number', $this->number])
+        	->andFilterWhere(['like', 'amountofmoney', $this->amountofmoney])
+        	->andFilterWhere(['like', 'nonumber', $this->nonumber])
+        	->andFilterWhere(['like', 'create_at', $this->create_at])
+        	->andFilterWhere(['like', 'update_at', $this->update_at]);
 
         return $dataProvider;
     }

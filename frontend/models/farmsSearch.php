@@ -11,7 +11,7 @@ use app\models\ManagementArea;
 /**
  * farmsSearch represents the model behind the search form about `app\models\farms`.
  */
-class farmsSearch extends farms
+class farmsSearch extends Farms
 {
 	public $farmername;
 	
@@ -22,8 +22,8 @@ class farmsSearch extends farms
     {
         return [
             [['id', 'create_at', 'update_at','state'], 'integer'],
-            [['farmname', 'farmername', 'address', 'management_area', 'spyear', 'zongdi', 'cooperative_id', 'surveydate', 'groundsign', 'investigator', 'farmersign', 'pinyin','farmerpinyin'], 'safe'],
-            [['measure'], 'number'],
+            [['farmname', 'farmername', 'address','measure', 'management_area', 'spyear', 'zongdi', 'cooperative_id', 'surveydate', 'groundsign', 'investigator', 'farmersign', 'pinyin','farmerpinyin'], 'safe'],
+            //[['measure'], 'number'],
         ];
     }
 
@@ -36,6 +36,46 @@ class farmsSearch extends farms
         return Model::scenarios();
     }
 
+    
+    public function betweenSearch()
+    {
+    	if(!empty($this->measure)) {
+			preg_match_all('/(.*)([0-9]+?)/iU', $this->measure, $where);
+			//print_r($where);
+	
+	// 		string(2) ">="
+	// 		string(3) "300"
+	    	if($where[1][0] == '>' or $where[1][0] == '>=')
+	    		$tj = ['between', 'measure', (float)$where[2][0],(float)99999.0];
+	    	if($where[1][0] == '<' or $where[1][0] == '<=')
+	    		$tj = ['between', 'measure', (float)0.0,(float)$where[2][0]];
+	    	if($where[1][0] == '')
+	    		$tj = ['like', 'measure', $this->measure];
+    	} else
+    		$tj = ['like', 'measure', $this->measure];
+    	//var_dump($tj);
+    	return $tj;
+    }
+    
+    public function pinyinSearch()
+    {
+    	if (preg_match ("/^[A-Za-z]/", $this->farmname)) {
+    		$tj = ['like','pinyin',$this->farmname];
+    	} else {
+    		$tj = ['like','farmname',$this->farmname];
+    	}
+		return $tj;
+    }
+    
+    public function farmerpinyinSearch()
+    {
+    	if (preg_match ("/^[A-Za-z]/", $this->farmername)) {
+    		$tj = ['like','farmerpinyin',$this->farmername];
+    	} else {
+    		$tj = ['like','farmername',$this->farmername];
+    	}
+    	return $tj;
+    }
     /**
      * Creates data provider instance with search query applied
      *
@@ -51,7 +91,9 @@ class farmsSearch extends farms
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-		
+		//var_dump($params['farmsSearch']['measure']);
+//         print_r($params['farmsSearch']);
+//         $this->betweenSearch($params['farmsSearch']['measure']);
 //        $dataProvider->setSort([
 //         		'attributes' => [
         				 
@@ -91,8 +133,8 @@ class farmsSearch extends farms
             'id' => $this->id,
         ]);
 
-          $query->andFilterWhere(['like', 'farmname', $this->farmname])
-            ->andFilterWhere(['like', 'farmername', $this->farmername])
+          $query->andFilterWhere($this->pinyinSearch())
+            ->andFilterWhere($this->farmerpinyinSearch())
             ->andFilterWhere(['like', 'cardid', $this->cardid])
             ->andFilterWhere(['like', 'telephone', $this->telephone])
             ->andFilterWhere(['like', 'address', $this->address])
@@ -106,7 +148,8 @@ class farmsSearch extends farms
             ->andFilterWhere(['like', 'farmersign', $this->farmersign])
             ->andFilterWhere(['like', 'pinyin', $this->pinyin])
             ->andFilterWhere(['like', 'farmerpinyin', $this->farmerpinyin])
-            ->andFilterWhere(['like', 'measure', $this->measure]);
+            ->andFilterWhere($this->betweenSearch());
+          	//->andFilterWhere(['between', 'measure', $this->measure,$this->measure]);
 
         return $dataProvider;
     }

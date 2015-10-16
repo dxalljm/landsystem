@@ -6,6 +6,7 @@ use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use frontend\helpers\MoneyFormat;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\tempprintbillSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -46,27 +47,48 @@ $this->params['breadcrumbs'][] = $this->title;
             'amountofmoney',
             // 'bigamountofmoney',
             'nonumber',
-			[
-				'attribute' => 'create_at',
-				'label' => '开票时间',
-				'value' => function($model)
-				{
-					return date('Y年d月d日 H时s分i秒',$model->create_at);
-				}
-			],
+            //'state',
+// 			[
+// 				'attribute' => 'create_at',
+// 				'label' => '开票时间',
+// 				'value' => function($model)
+// 				{
+// 					return date('Y-m-d',$model->create_at);
+// 				}
+// 			],
             [
             'class' => 'yii\grid\ActionColumn',
-            'template' => '{view}',
+            'template' => '{view} {print} {update}',
             'buttons' => [
+            		'view' => function ($url, $model, $key) {
+            		$url = Url::to('index.php?r=tempprintbill/tempprintbillsview&id='.$model->id);
+            			$options = [
+            					'title' => Yii::t('yii', '查看并打印'),
+            					'aria-label' => Yii::t('yii', 'View'),
+            					'data-pjax' => '0',
+            			];
+            		
+            			return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, $options);
+            		},
                 // 下面代码来自于 yii\grid\ActionColumn 简单修改了下
-                'view' => function ($url, $model, $key) {
+                'print' => function ($url, $model, $key) {
+                	
                     $options = [
                         'title' => Yii::t('yii', '查看并打印'),
                         'aria-label' => Yii::t('yii', 'View'),
                         'data-pjax' => '0',
                     ];
                     
-                    return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, $options);
+                    return Html::a('<span class="fa fa-print"></span>', $url, $options);
+                },
+                'update' => function ($url, $model, $key) {
+                	$options = [
+                			'title' => Yii::t('yii', '报废'),
+                			'aria-label' => Yii::t('yii', 'delete'),
+                			'data-pjax' => '0',
+                	];
+                
+                	return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, $options);
                 },
                	]
        	 	],
