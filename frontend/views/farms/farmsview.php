@@ -47,6 +47,19 @@ $this->params['breadcrumbs'][] = $this->title;
 			<td align='left'><?= $model->farmname; ?></td>
 		</tr>
 		<tr>
+			<td width=15% align='right'>承包人姓名</td>
+			<td align='left'><?= $model->farmername?></td>
+		</tr>
+		<tr>
+			<td width=15% align='right'>身份证号</td>
+			<td align='left'><?= $model->cardid?></td>
+		</tr>
+			<tr>
+			<td width=15% align='right'>电话号码</td>
+			<td align='left'><?= $model->telephone ?></td>
+		</tr>
+		<tr>
+		<tr>
 			<td width=15% align='right'>农场位置</td>
 			<td align='left'><?= $model->address?></td>
 		</tr>
@@ -88,6 +101,10 @@ $this->params['breadcrumbs'][] = $this->title;
 			<?= Html::a('明细','index.php?r=parcel/parcellist&zongdi='.$model->zongdi) ?>
 			<?php }?>
       </td>
+		</tr>
+		<tr>
+			<td width=15% align='right'>未明确地块</td>
+			<td align='left'><?= $model->notclear?>亩</td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>合作社</td>

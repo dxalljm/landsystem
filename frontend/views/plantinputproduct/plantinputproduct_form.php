@@ -107,4 +107,3 @@ use yii\web\View;
 
 </script>
 
-</div>

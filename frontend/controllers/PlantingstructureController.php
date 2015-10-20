@@ -141,12 +141,13 @@ class PlantingstructureController extends Controller
     
     public function actionPlantingstructurecreate($lease_id,$farms_id)
     {
+    	
     	$model = new Plantingstructure();
     
     	$farm = Farms::find()->where(['id'=>$farms_id])->one();
     	$zongdi = Plantingstructure::getNoZongdi($lease_id, $farms_id);
-
-    	//exit;
+    	$plantinputproductModel = new Plantinputproduct();
+    	$plantpesticidesModel = new Plantpesticides();
     	if ($model->load(Yii::$app->request->post())) {
     		
     		//$model->zongdi = Lease::getZongdi($model->zongdi);
@@ -155,10 +156,59 @@ class PlantingstructureController extends Controller
     		$model->save();
     		
     		$new = $model->attributes;
+    		//var_dump($model);
     		Logs::writeLog('为'.Lease::find()->where(['id'=>$lease_id])->one()['lessee'].'创建种植结构信息',$model->id,'',$new);
+    		
+    		
+    		//$plantinputproducts = Plantinputproduct::find()->where(['farms_id'=>$planting->farms_id,'lessee_id'=>$planting->lease_id,'plant_id'=>$planting->plant_id,'zongdi'=>$planting->zongdi])->all();
+    		$parmembersInputproduct = Yii::$app->request->post('PlantInputproductPost');
+    		//var_dump($parmembersInputproduct);
+    		if ($parmembersInputproduct) {
+    			//var_dump($parmembers);
+    			for($i=1;$i<count($parmembersInputproduct['inputproduct_id']);$i++) {
+    				$plantinputproductModel = new Plantinputproduct();
+    				$plantinputproductModel->farms_id = $model->farms_id;
+    				$plantinputproductModel->lessee_id = $model->lease_id;
+    				$plantinputproductModel->zongdi = $model->zongdi;
+    				$plantinputproductModel->plant_id = $model->plant_id;
+    				$plantinputproductModel->planting_id = $model->id;
+    				$plantinputproductModel->father_id = $parmembersInputproduct['father_id'][$i];
+    				$plantinputproductModel->son_id = $parmembersInputproduct['son_id'][$i];
+    				$plantinputproductModel->inputproduct_id = $parmembersInputproduct['inputproduct_id'][$i];
+    				$plantinputproductModel->pconsumption = $parmembersInputproduct['pconsumption'][$i];
+    				$plantinputproductModel->create_at = time();
+    				$plantinputproductModel->update_at = time();
+    				$plantinputproductModel->save();
+    				$new = $plantinputproductModel->attributes;
+    				//var_dump($new);
+    				Logs::writeLog('添加投入品',$plantinputproductModel->id,'',$new);
+    			}
+    		}
+    		$parmembersPesticides = Yii::$app->request->post('PlantpesticidesPost');
+    		//var_dump($parmembersPesticides);
+    		if($parmembersPesticides) {
+    			for($i=1;$i<count($parmembersPesticides['pesticides_id']);$i++) {
+    				$plantpesticidesModel = new Plantpesticides();
+    				$plantpesticidesModel->farms_id = $model->farms_id;
+    				$plantpesticidesModel->lessee_id = $model->lease_id;
+    				$plantpesticidesModel->plant_id = $model->plant_id;
+    				$plantpesticidesModel->planting_id = $model->id;
+    				$plantpesticidesModel->pesticides_id = $parmembersPesticides['pesticides_id'][$i];
+    				$plantpesticidesModel->pconsumption = $parmembersPesticides['pconsumption'][$i];
+    				$plantpesticidesModel->create_at = time();
+    				$plantpesticidesModel->update_at = time();
+    				$plantpesticidesModel->save();
+    				$new = $plantpesticidesModel->attributes;
+    				Logs::writeLog('添加投入品',$plantpesticidesModel->id,'',$new);
+    			}
+    		}
+    		
+    		
     		return $this->redirect(['plantingstructureindex', 'farms_id' => $farms_id]);
     	} else {
     		return $this->render('plantingstructurecreate', [
+    				'plantinputproductModel' => $plantinputproductModel,
+    				'plantpesticidesModel' => $plantpesticidesModel,
     				'model' => $model,
     				'farm' => $farm,
     				'zongdi' => $zongdi,
@@ -184,16 +234,18 @@ class PlantingstructureController extends Controller
         }
         //var_dump($zongdi);
         $plantings = Plantingstructure::find()->where(['lease_id'=>$lease_id,'farms_id'=>$farms_id])->all();
+        $plantinputproductModel = Plantinputproduct::find()->where(['planting_id' => $id])->all();
+        $plantpesticidesModel = Plantpesticides::find()->where(['planting_id'=>$id])->all();
     	if($plantings) {
     		$plantingzongdi = [];
     		foreach ($plantings as $value) {
     			$plantingzongdi = array_merge($plantingzongdi,explode('、',$value['zongdi']));
     		}
-    		 			var_dump($plantingzongdi);
-    		 			var_dump($zongdi);
+//     		 			var_dump($plantingzongdi);
+//     		 			var_dump($zongdi);
     		$zongdi = array_diff($zongdi,$plantingzongdi);
     		//var_dump($zongdi);
-    		exit;
+    		//exit;
     		sort($zongdi);
     		$zongdi = Lease::getLastArea($zongdi, $_GET['lease_id'], $_GET['farms_id']);
     	}
@@ -203,9 +255,52 @@ class PlantingstructureController extends Controller
         	$model->save();
         	$new = $model->attributes;
         	Logs::writeLog('更新租赁信息',$id,$old,$new);
+        	$parmembersInputproduct = Yii::$app->request->post('PlantInputproductPost');
+        	//var_dump($parmembersInputproduct);
+        	if ($parmembersInputproduct) {
+        		//var_dump($parmembers);
+        		for($i=1;$i<count($parmembersInputproduct['inputproduct_id']);$i++) {
+        			$plantinputproductModel = Plantingstructure::findOne($parmembersInputproduct['id'][$i]);
+        			$plantinputproductModel->farms_id = $plantinputproductModel['farms_id'][$i];
+        			$plantinputproductModel->lessee_id = $plantinputproductModel['lessee_id'][$i];
+        			$plantinputproductModel->zongdi = $plantinputproductModel['zongdi'][$i];
+        			$plantinputproductModel->plant_id = $plantinputproductModel['plant_id'][$i];
+        			$plantinputproductModel->planting_id = $plantinputproductModel['planting_id'][$i];
+        			$plantinputproductModel->father_id = $parmembersInputproduct['father_id'][$i];
+        			$plantinputproductModel->son_id = $parmembersInputproduct['son_id'][$i];
+        			$plantinputproductModel->inputproduct_id = $parmembersInputproduct['inputproduct_id'][$i];
+        			$plantinputproductModel->pconsumption = $parmembersInputproduct['pconsumption'][$i];
+        			$plantinputproductModel->create_at = time();
+        			$plantinputproductModel->update_at = time();
+        			$plantinputproductModel->save();
+        			$new = $plantinputproductModel->attributes;
+        			//var_dump($new);
+        			Logs::writeLog('添加投入品',$plantinputproductModel->id,'',$new);
+        		}
+        	}
+        	$parmembersPesticides = Yii::$app->request->post('PlantpesticidesPost');
+        	//var_dump($parmembersPesticides);
+        	if($parmembersPesticides) {
+        		for($i=1;$i<count($parmembersPesticides['pesticides_id']);$i++) {
+        			$plantpesticidesModel = Plantingstructure::findOne($parmembersPesticides['id'][$i]);
+        			$plantpesticidesModel->farms_id = $parmembersPesticides['farms_id'][$i];
+        			$plantpesticidesModel->lessee_id = $parmembersPesticides['lessee_id'][$i];
+        			$plantpesticidesModel->plant_id = $parmembersPesticides['plant_id'][$i];
+        			$plantpesticidesModel->planting_id = $parmembersPesticides['planting_id'][$i];
+        			$plantpesticidesModel->pesticides_id = $parmembersPesticides['pesticides_id'][$i];
+        			$plantpesticidesModel->pconsumption = $parmembersPesticides['pconsumption'][$i];
+        			$plantpesticidesModel->create_at = time();
+        			$plantpesticidesModel->update_at = time();
+        			$plantpesticidesModel->save();
+        			$new = $plantpesticidesModel->attributes;
+        			Logs::writeLog('添加投入品',$plantpesticidesModel->id,'',$new);
+        		}
+        	}
             return $this->redirect(['plantingstructureview', 'id' => $model->id]);
         } else {
             return $this->render('plantingstructureupdate', [
+            	'plantinputproductModel' => $plantinputproductModel,
+            	'plantpesticidesModel' => $plantpesticidesModel,
                 'model' => $model,
             	'farm' => $farm,
             	'zongdi' => $zongdi,

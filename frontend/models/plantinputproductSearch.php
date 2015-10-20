@@ -18,7 +18,7 @@ class plantinputproductSearch extends Plantinputproduct
     public function rules()
     {
         return [
-            [['id', 'farms_id', 'lessee_id', 'father_id', 'son_id', 'inputproduct_id', 'plant_id'], 'integer'],
+            [['id', 'farms_id', 'lessee_id', 'father_id', 'son_id', 'inputproduct_id', 'plant_id','planting_id'], 'integer'],
             [['pconsumption'], 'number'],
             [['zongdi'], 'safe'],
         ];
@@ -60,6 +60,7 @@ class plantinputproductSearch extends Plantinputproduct
             'id' => $this->id,
             'farms_id' => $this->farms_id,
             'lessee_id' => $this->lessee_id,
+        	'planting_id' => $this->planting_id,
             'father_id' => $this->father_id,
             'son_id' => $this->son_id,
             'inputproduct_id' => $this->inputproduct_id,

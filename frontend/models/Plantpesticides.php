@@ -29,7 +29,7 @@ class Plantpesticides extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['farms_id', 'lessee_id', 'pesticides_id','plant_id'], 'integer'],
+            [['farms_id', 'lessee_id', 'pesticides_id','plant_id','planting_id'], 'integer'],
             [['pconsumption'], 'number']
         ];
     }
@@ -41,6 +41,7 @@ class Plantpesticides extends \yii\db\ActiveRecord
     {
         return [
 			'id' => 'ID',
+        	'planting_id' => '种植结构ID',
             'farms_id' => '农场ID',
             'lessee_id' => '承租人ID',
         	'plant_id' => '作物ID',

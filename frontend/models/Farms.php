@@ -43,7 +43,8 @@ class Farms extends \yii\db\ActiveRecord
             //[['measure'], 'number'],
             [['zongdi'], 'string'],
             [['management_area','state'], 'integer'],
-            [['farmname', 'farmername', 'cardid', 'telephone', 'address', 'cooperative_id', 'surveydate', 'groundsign', 'investigator', 'farmersign', 'pinyin','farmerpinyin'], 'string', 'max' => 500]
+            [['farmname', 'farmername', 'cardid', 'telephone', 'address', 'cooperative_id', 'surveydate', 'groundsign', 'notclear','investigator', 'farmersign', 'pinyin','farmerpinyin'], 'string', 'max' => 500],
+        	[['measure','spyear'],'safe'],
         ]; 
     }
 
@@ -73,6 +74,7 @@ class Farms extends \yii\db\ActiveRecord
             'pinyin' => '农场名称拼音首字母',
         	'farmerpinyin' => '法人姓名简单首字母',
         	'state' => '状态',
+        	'notclear' => '未明确地块',
         ]; 
     }
     
@@ -180,10 +182,10 @@ class Farms extends \yii\db\ActiveRecord
 		//echo $action;
     	echo '<table class="table table-bordered table-hover">';
     	echo '<tr>';
-    	echo '<td width="10%" align="center"><a href='.Url::to('index.php?r='.Yii::$app->controller->id.'/'.yii::$app->controller->action->id.'&farms_id='.$top).'><font size="5"><i class="fa fa-fast-backward"></i></font><a></td>';
-    	echo '<td width="10%" align="center"><a href='.Url::to('index.php?r='.Yii::$app->controller->id.'/'.yii::$app->controller->action->id.'&farms_id='.$up).'><font size="5"><i class="fa fa-backward"></i></font><a></td>';
-    	echo '<td width="10%" align="center"><a href='.Url::to('index.php?r='.Yii::$app->controller->id.'/'.yii::$app->controller->action->id.'&farms_id='.$down).'><font size="5"><i class="fa fa-forward"></i></font><a></td>';
-    	echo '<td width="10%" align="center"><a href='.Url::to('index.php?r='.Yii::$app->controller->id.'/'.yii::$app->controller->action->id.'&farms_id='.$last).'><font size="5"><i class="fa fa-fast-forward"></i></font><a></td>';
+    	echo '<td width="10%" align="center"><a href='.Url::to('index.php?r='.Yii::$app->controller->id.'/'.yii::$app->controller->action->id.'&farms_id='.$top).'><font size="5">第一条<a></td>';
+    	echo '<td width="10%" align="center"><a href='.Url::to('index.php?r='.Yii::$app->controller->id.'/'.yii::$app->controller->action->id.'&farms_id='.$up).'><font size="5">上一条</font><a></td>';
+    	echo '<td width="10%" align="center"><a href='.Url::to('index.php?r='.Yii::$app->controller->id.'/'.yii::$app->controller->action->id.'&farms_id='.$down).'><font size="5">下一条</font><a></td>';
+    	echo '<td width="15%" align="center"><a href='.Url::to('index.php?r='.Yii::$app->controller->id.'/'.yii::$app->controller->action->id.'&farms_id='.$last).'><font size="5">最后一条</font><a></td>';
     	echo '<td width="10%">'.html::textInput('jump',$nownum,['class'=>'form-control','id'=>'rowjump']).'</td>';
     	echo '<td>'.html::button('跳转',['class' => 'btn btn-success','onclick'=>'jumpurl("'.$action.'")']).'</td>';
     	echo '</tr>';
