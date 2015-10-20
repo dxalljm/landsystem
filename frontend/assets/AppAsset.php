@@ -36,6 +36,7 @@ class AppAsset extends AssetBundle
         'vendor/bower/AdminLTE/dist/js/app.min.js',
         'vendor/bower/devbridge-autocomplete/dist/jquery.autocomplete.min.js',
     	'js/vendor/bower/lodop/LodopFuncs.js',
+        'vendor/bower/highcharts/highcharts.js',
     ];
 
     // 依赖
