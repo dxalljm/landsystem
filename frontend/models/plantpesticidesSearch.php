@@ -18,7 +18,7 @@ class plantpesticidesSearch extends Plantpesticides
     public function rules()
     {
         return [
-            [['id', 'farms_id', 'lessee_id', 'pesticides_id'], 'integer'],
+            [['id', 'farms_id', 'lessee_id', 'pesticides_id','plant_id','planting_id'], 'integer'],
             [['pconsumption'], 'number'],
         ];
     }
@@ -58,6 +58,8 @@ class plantpesticidesSearch extends Plantpesticides
         $query->andFilterWhere([
             'id' => $this->id,
             'farms_id' => $this->farms_id,
+        	'plant_id' => $this->plant_id,
+        	'planting_id' => $this->planting_id,
             'lessee_id' => $this->lessee_id,
             'pesticides_id' => $this->pesticides_id,
             'pconsumption' => $this->pconsumption,

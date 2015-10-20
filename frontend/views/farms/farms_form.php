@@ -59,11 +59,15 @@ use app\models\ManagementArea;
 		</tr>
 		<tr>
 			<td width=15% align='right'>面积</td>
-			<td align='left'><?= $form->field($model, 'measure')->textInput(['readonly'=>'readonly'])->label(false)->error(false) ?></td>
+			<td align='left'><?= $form->field($model, 'measure')->textInput()->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>宗地</td>
 			<td align='left'><?= $form->field($model, 'zongdi')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+		</tr>
+		<tr>
+			<td width=15% align='right'>未明确地块</td>
+			<td align='left'><?= $form->field($model, 'notclear')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>调查日期</td>

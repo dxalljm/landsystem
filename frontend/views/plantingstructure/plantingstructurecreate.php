@@ -27,9 +27,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="box-body">
 
     <?= $this->render('plantingstructure_form', [
-        'model' => $model,
-    	'farm' => $farm,
-    	'zongdi' => $zongdi,
+        			'plantinputproductModel' => $plantinputproductModel,
+    				'model' => $model,
+    				'farm' => $farm,
+    				'zongdi' => $zongdi,
 
     ]) ?>
                 </div>

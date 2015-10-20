@@ -68,7 +68,7 @@ class PlantpesticidesController extends Controller
         	$model->save();
         	$new = $model->attributes;
         	Logs::writeLog('添加农药情况情况',$model->id,'',$new);
-            return $this->redirect(['plantpesticidesview', 'id' => $model->id,'farms_id'=>$farms_id]);
+            return $this->redirect(['plantpesticidesindex', 'farms_id'=>$farms_id]);
         } else {
             return $this->render('plantpesticidescreate', [
                 'model' => $model,
@@ -91,7 +91,7 @@ class PlantpesticidesController extends Controller
         	$model->save();
         	$new = $model->attributes;
         	Logs::writeLog('更新农药使用情况',$id,$old,$new);
-            return $this->redirect(['plantpesticidesview', 'id' => $model->id,'farms_id'=>$farms_id]);
+            return $this->redirect(['plantpesticidesindex', 'farms_id'=>$farms_id]);
         } else {
             return $this->render('plantpesticidesupdate', [
                 'model' => $model,
@@ -105,14 +105,14 @@ class PlantpesticidesController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionPlantpesticidesdelete($id)
+    public function actionPlantpesticidesdelete($id,$farms_id)
     {
         $model = $this->findModel($id);
     	$old = $model->attributes;
     	Logs::writeLog('删除农药使用情况',$id,$old);
         $model->delete();
 
-        return $this->redirect(['plantpesticidesindex']);
+        return $this->redirect(['plantpesticidesindex','farms_id'=>$farms_id]);
     }
 
     /**

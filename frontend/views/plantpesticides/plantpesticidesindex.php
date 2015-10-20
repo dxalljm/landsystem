@@ -50,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	    	<td align="center"><?= $planting->area;?></td>
 	    	<td align="center"><?= Plant::find()->where(['id'=>$planting->plant_id])->one()['cropname']?></td>
 	    	<td align="center"><?= Goodseed::find()->where(['id'=>$planting->goodseed_id])->one()['plant_model']?></td>
-	    	<td align="center"><?= Html::a('添加', ['plantpesticidescreate','lease_id'=>$planting->lease_id,'plant_id'=>$planting->plant_id,'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?></td>
+	    	<td align="center"><?= Html::a('添加', ['plantpesticidescreate','planting_id'=>$planting->id,'lease_id'=>$planting->lease_id,'plant_id'=>$planting->plant_id,'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?></td>
 	    </tr>
 
 <?php foreach (Plantpesticides::find()->where(['farms_id'=>$planting->farms_id,'lessee_id'=>$planting->lease_id,'plant_id'=>$planting->plant_id])->all() as $value) {?>
@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
   <td align='center'>&nbsp;&nbsp;|_&nbsp;&nbsp;</td>
   <td colspan="2" align='center'><?= Pesticides::find()->where(['id'=>$value['pesticides_id']])->one()['pesticidename']?></td>
   <td colspan="2" align="center"><?= $value['pconsumption'].'斤/亩'?></td>
-  <td align="center"><?= Html::a('<span class="glyphicon glyphicon-eye-open"></span>', '#', [
+  <td align="center"><?= Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 'index.php?r=plantpesticides/plantpesticidesview&id='.$value['id'].'&farms_id='.$_GET['farms_id'], [
                     'title' => Yii::t('yii', '查看'),
                     'data-pjax' => '0',
                     //'data-target' => '#plantinputproductview-modal',
@@ -67,7 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     
                     //'onclick'=> 'plantinputproductview('.$value['id'].','.$_GET['lease_id'].','.$_GET['farms_id'].')',
                 ]);?>
-    <?= Html::a('<span class="glyphicon glyphicon-pencil"></span>', '#', [
+    <?= Html::a('<span class="glyphicon glyphicon-pencil"></span>', 'index.php?r=plantpesticides/plantpesticidesupdate&id='.$value['id'].'&lease_id='.$value['lessee_id'].'&plant_id='.$value['plant_id'].'&farms_id='.$_GET['farms_id'], [
                     'title' => Yii::t('yii', '更新'),
                     'data-pjax' => '0',
                     //'data-target' => '#plantinputproductupdate-modal',
@@ -76,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     //'data-backdrop' => 'static',
                     //'onclick'=> 'plantinputproductupdate('.$value['id'].','.$_GET['lease_id'].','.$_GET['farms_id'].')',
                 ]);?>
-    <?= Html::a('<span class="glyphicon glyphicon-trash"></span>', 'index.php?r=plantingstructure/plantingstructuredelete&id='.$value['id'].'&farms_id='.$_GET['farms_id'], [
+    <?= Html::a('<span class="glyphicon glyphicon-trash"></span>', 'index.php?r=plantpesticides/plantpesticidesdelete&id='.$value['id'].'&farms_id='.$_GET['farms_id'], [
                     'title' => Yii::t('yii', '删除'),
                     'data-pjax' => '0',
                     'data' => [
