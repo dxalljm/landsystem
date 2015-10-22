@@ -21,54 +21,16 @@ $this->title = '岭南管委会';
 <section class="content">
   <!-- Small boxes (Stat box) -->
   <div class="row">
-    <div class="col-lg-3 col-xs-6">
-      <!-- small box -->
-      <div class="small-box bg-aqua">
-        <div id="statis-farms" style="min-width: 262px; height: 150px; margin: 0 auto"></div>
-        
-      </div>
-    </div><!-- ./col -->
-    <div class="col-lg-3 col-xs-6">
-      <!-- small box -->
-      <div class="small-box bg-green">
-        <div class="inner">
-          <h3><span id="statis-area"></span><sup style="font-size: 20px">亩</sup></h3>
-          <p>面积</p>
-        </div>
-        <div class="icon">
-          <i class="fa fa-map"></i>
-        </div>
-        <i class="fa"></i>
-      </div>
-    </div><!-- ./col -->
-    <div class="col-lg-3 col-xs-6">
-      <!-- small box -->
-      <div class="small-box bg-yellow">
-        <div class="inner">
-          <h4>实收：<span id="statis-real"></span><sup style="font-size: 10px">元</sup></h4>
-          <h4>应收：<span id="statis-mounts"></span><sup style="font-size: 10px">元</sup></h4>
-          <p>缴费情况</p>
-        </div>
-        <div class="icon">
-          <i class="fa fa-yen"></i>
-        </div>
+    <div class="col-lg-6 col-xs-6">
 
-      </div>
-    </div><!-- ./col -->
-    <div class="col-lg-3 col-xs-6">
-      <!-- small box -->
-      <div class="small-box bg-red">
-        <div class="inner">
-          <h3>65</h3>
-          <p>Unique Visitors</p>
-        </div>
-        <div class="icon">
-          <i class="ion ion-pie-graph"></i>
-        </div>
-        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-      </div>
-    </div><!-- ./col -->
-  </div><!-- /.row -->
+        <div id="statis-farms" style="min-width: 262px; height: 200px; margin: 0 auto"></div>
+    </div>
+
+    <div class="col-lg-6 col-xs-6">
+
+    </div>
+
+  </div>
   <div>
     <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
     <div id="container2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>

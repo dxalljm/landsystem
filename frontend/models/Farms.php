@@ -143,7 +143,7 @@ class Farms extends \yii\db\ActiveRecord
           ];
         }
         $jsonData = Json::encode($data);
-        Yii::$app->cache->set($cacheKey, $jsonData, 3);
+        Yii::$app->cache->set($cacheKey, $jsonData, 3600);
         
         return $jsonData;
     }
