@@ -218,37 +218,9 @@ use app\models\Collection;
   <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
         
         ?>
-    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=plantinputproduct/plantinputproductindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-blue">
-  <span class="info-box-icon"><i class="fa fa-tint"></i></span>
-  <div class="info-box-content">
-  <span class="info-box-number">投入品 </span>
-    <span class="info-box-text">投放了<?= Plantinputproduct::find()->where(['farms_id'=>$_GET['farms_id']])->count()?>种投入品</span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
-    </div>
-    <span class="progress-description">
-     农场投入品信息
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
+    <td width="20%" align="center"></td>
     <td width="5%" align="center"></td>    
-    <td width="20%" align="center"> <a href='<?= Url::to('index.php?r=plantpesticides/plantpesticidesindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-blue">
- <span class="info-box-icon"><i class="fa fa-exclamation-triangle"></i></span>
-  <div class="info-box-content">
-  <span class="info-box-number">农药 </span>
-    <span class="info-box-text">使用了<?= Plantpesticides::find()->where(['farms_id'=>$_GET['farms_id']])->count()?>种农药</span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
-    </div>
-    <span class="progress-description">
-     农药使用情况
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
+    <td width="20%" align="center"></td>
     <td width="5%" align="center"></td>
     <td width="20%" align="center"><a href='<?= Url::to('index.php?r=fireprevention/firepreventioncreate&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">

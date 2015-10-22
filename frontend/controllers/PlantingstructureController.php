@@ -156,7 +156,7 @@ class PlantingstructureController extends Controller
     		$model->save();
     		
     		$new = $model->attributes;
-    		//var_dump($model);
+    		var_dump($new);
     		Logs::writeLog('为'.Lease::find()->where(['id'=>$lease_id])->one()['lessee'].'创建种植结构信息',$model->id,'',$new);
     		
     		
@@ -203,7 +203,6 @@ class PlantingstructureController extends Controller
     			}
     		}
     		
-    		
     		return $this->redirect(['plantingstructureindex', 'farms_id' => $farms_id]);
     	} else {
     		return $this->render('plantingstructurecreate', [
@@ -236,36 +235,28 @@ class PlantingstructureController extends Controller
         $plantings = Plantingstructure::find()->where(['lease_id'=>$lease_id,'farms_id'=>$farms_id])->all();
         $plantinputproductModel = Plantinputproduct::find()->where(['planting_id' => $id])->all();
         $plantpesticidesModel = Plantpesticides::find()->where(['planting_id'=>$id])->all();
-    	if($plantings) {
-    		$plantingzongdi = [];
-    		foreach ($plantings as $value) {
-    			$plantingzongdi = array_merge($plantingzongdi,explode('、',$value['zongdi']));
-    		}
-//     		 			var_dump($plantingzongdi);
-//     		 			var_dump($zongdi);
-    		$zongdi = array_diff($zongdi,$plantingzongdi);
-    		//var_dump($zongdi);
-    		//exit;
-    		sort($zongdi);
-    		$zongdi = Lease::getLastArea($zongdi, $_GET['lease_id'], $_GET['farms_id']);
-    	}
         
         if ($model->load(Yii::$app->request->post())) {
         	$model->update_at = time();
         	$model->save();
         	$new = $model->attributes;
         	Logs::writeLog('更新租赁信息',$id,$old,$new);
+//         	var_dump($model->farms_id);
+//         	exit;
         	$parmembersInputproduct = Yii::$app->request->post('PlantInputproductPost');
-        	//var_dump($parmembersInputproduct);
+        	$this->deletePlantinput($plantinputproductModel, $parmembersInputproduct['id']);
         	if ($parmembersInputproduct) {
         		//var_dump($parmembers);
         		for($i=1;$i<count($parmembersInputproduct['inputproduct_id']);$i++) {
-        			$plantinputproductModel = Plantingstructure::findOne($parmembersInputproduct['id'][$i]);
-        			$plantinputproductModel->farms_id = $plantinputproductModel['farms_id'][$i];
-        			$plantinputproductModel->lessee_id = $plantinputproductModel['lessee_id'][$i];
-        			$plantinputproductModel->zongdi = $plantinputproductModel['zongdi'][$i];
-        			$plantinputproductModel->plant_id = $plantinputproductModel['plant_id'][$i];
-        			$plantinputproductModel->planting_id = $plantinputproductModel['planting_id'][$i];
+        			$plantinputproductModel = Plantinputproduct::findOne($parmembersInputproduct['id'][$i]);
+        			if(empty($plantinputproductModel))
+        				$plantinputproductModel = new Plantinputproduct();
+        			$plantinputproductModel->id = $parmembersInputproduct['id'][$i];
+        			$plantinputproductModel->farms_id = $model->farms_id;
+        			$plantinputproductModel->lessee_id = $model->lease_id;
+        			$plantinputproductModel->zongdi = $model->zongdi;
+        			$plantinputproductModel->plant_id = $model->plant_id;
+        			$plantinputproductModel->planting_id = $model->id;
         			$plantinputproductModel->father_id = $parmembersInputproduct['father_id'][$i];
         			$plantinputproductModel->son_id = $parmembersInputproduct['son_id'][$i];
         			$plantinputproductModel->inputproduct_id = $parmembersInputproduct['inputproduct_id'][$i];
@@ -278,15 +269,18 @@ class PlantingstructureController extends Controller
         			Logs::writeLog('添加投入品',$plantinputproductModel->id,'',$new);
         		}
         	}
+        	//exit;
         	$parmembersPesticides = Yii::$app->request->post('PlantpesticidesPost');
-        	//var_dump($parmembersPesticides);
+        	$this->deletePlantpesticides($plantpesticidesModel, $parmembersPesticides['id']);
         	if($parmembersPesticides) {
         		for($i=1;$i<count($parmembersPesticides['pesticides_id']);$i++) {
-        			$plantpesticidesModel = Plantingstructure::findOne($parmembersPesticides['id'][$i]);
-        			$plantpesticidesModel->farms_id = $parmembersPesticides['farms_id'][$i];
-        			$plantpesticidesModel->lessee_id = $parmembersPesticides['lessee_id'][$i];
-        			$plantpesticidesModel->plant_id = $parmembersPesticides['plant_id'][$i];
-        			$plantpesticidesModel->planting_id = $parmembersPesticides['planting_id'][$i];
+        			$plantpesticidesModel = Plantpesticides::findOne($parmembersPesticides['id'][$i]);
+        			if(empty($plantpesticidesModel))
+        				$plantpesticidesModel = new Plantpesticides();
+        			$plantpesticidesModel->farms_id = $model->farms_id;
+        			$plantpesticidesModel->lessee_id = $model->lease_id;
+        			$plantpesticidesModel->plant_id = $model->plant_id;
+        			$plantpesticidesModel->planting_id = $model->id;
         			$plantpesticidesModel->pesticides_id = $parmembersPesticides['pesticides_id'][$i];
         			$plantpesticidesModel->pconsumption = $parmembersPesticides['pconsumption'][$i];
         			$plantpesticidesModel->create_at = time();
@@ -296,7 +290,7 @@ class PlantingstructureController extends Controller
         			Logs::writeLog('添加投入品',$plantpesticidesModel->id,'',$new);
         		}
         	}
-            return $this->redirect(['plantingstructureview', 'id' => $model->id]);
+            return $this->redirect(['plantingstructureindex', 'farms_id' => $model->farms_id]);
         } else {
             return $this->render('plantingstructureupdate', [
             	'plantinputproductModel' => $plantinputproductModel,
@@ -309,6 +303,43 @@ class PlantingstructureController extends Controller
         }
     }
 
+    private function deletePlantinput($nowdatabase,$postdataidarr) {
+    	$databaseid = array();
+    	foreach($nowdatabase as $value) {
+    		$databaseid[] = $value['id'];
+    	}
+    	$result = array_diff($databaseid,$postdataidarr);
+    	if($result) {
+    		foreach($result as $val) {
+    			$model = Plantinputproduct::findOne($val);
+    			//var_dump($model->attributes);
+    			$oldAttr = $model->attributes;
+    			Logs::writeLog('删除投入品',$val,$oldAttr);
+    			$model->delete();
+    		}
+    		return true;
+    	} else
+    		return false;
+    }
+    
+    private function deletePlantpesticides($nowdatabase,$postdataidarr) {
+    	$databaseid = array();
+    	foreach($nowdatabase as $value) {
+    		$databaseid[] = $value['id'];
+    	}
+    	$result = array_diff($databaseid,$postdataidarr);
+    	if($result) {
+    		foreach($result as $val) {
+    			$model = Plantpesticides::findOne($val);
+    			$oldAttr = $model->attributes;
+    			Logs::writeLog('删除投入品',$val,$oldAttr);
+    			$model->delete();
+    		}
+    		return true;
+    	} else
+    		return false;
+    }
+    
     /**
      * Deletes an existing Plantingstructure model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -321,7 +352,20 @@ class PlantingstructureController extends Controller
     	$old = $model->attributes;
     	Logs::writeLog('删除租赁信息',$id,$old);
         $model->delete();
-
+		$plantInput = Plantinputproduct::find()->where(['planting_id'=>$id])->all();
+		foreach ($plantInput as $value) {
+			$plantinputModel = Plantinputproduct::findOne($value['id']);
+			$old = $plantinputModel->attributes;
+			Logs::writeLog('删除种植结构的关联投入品',$id,$old);
+			$plantinputModel->delete();
+		}
+		$plantpesticides = Plantpesticides::find()->where(['planting_id'=>$id])->all();
+		foreach ($plantpesticides as $value) {
+			$plantpesticidesModel = Plantpesticides::findOne($value['id']);
+			$old = $plantpesticidesModel->attributes;
+			Logs::writeLog('删除种植结构的关联农药',$id,$old);
+			$plantpesticidesModel->delete();
+		}
         return $this->redirect(['plantingstructureindex','farms_id'=>$farms_id]);
     }
 

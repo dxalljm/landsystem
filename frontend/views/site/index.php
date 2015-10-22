@@ -5,11 +5,7 @@ use Yii;
 use yii\helpers\Html;
 use app\models\Farms;
 use yii\helpers\Url;
-
 $this->title = '岭南管委会';
-
-
-
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -28,53 +24,8 @@ $this->title = '岭南管委会';
     <div class="col-lg-3 col-xs-6">
       <!-- small box -->
       <div class="small-box bg-aqua">
-        <div id="farmer" style="min-width: 262px; height: 150px; margin: 0 auto"></div>
-        <script type="text/javascript">
-          $(function () {
-        	    $('#farmer').highcharts({
-        	        chart: {
-        	            plotBackgroundColor: null,
-        	            plotBorderWidth: null,
-        	            plotShadow: false
-        	        },
-        	        title: {
-        	            text: 'Browser market shares at a specific website, 2010'
-        	        },
-        	        tooltip: {
-        	    	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        	        },
-        	        plotOptions: {
-        	            pie: {
-        	                allowPointSelect: true,
-        	                cursor: 'pointer',
-        	                dataLabels: {
-        	                    enabled: true,
-        	                    color: '#000000',
-        	                    connectorColor: '#000000',
-        	                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-        	                }
-        	            }
-        	        },
-        	        series: [{
-        	            type: 'pie',
-        	            name: 'Browser share',
-        	            data: [
-        	                ['Firefox',   45.0],
-        	                ['IE',       26.8],
-        	                {
-        	                    name: 'Chrome',
-        	                    y: 12.8,
-        	                    sliced: true,
-        	                    selected: true
-        	                },
-        	                ['Safari',    8.5],
-        	                ['Opera',     6.2],
-        	                ['Others',   0.7]
-        	            ]
-        	        }]
-        	    });
-        	});
-          </script>
+        <div id="statis-farms" style="min-width: 262px; height: 150px; margin: 0 auto"></div>
+        
       </div>
     </div><!-- ./col -->
     <div class="col-lg-3 col-xs-6">
@@ -120,6 +71,7 @@ $this->title = '岭南管委会';
   </div><!-- /.row -->
   <div>
     <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    <div id="container2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
   </div>
 
 </section><!-- /.content -->
@@ -129,22 +81,15 @@ var s = statis();
 s.farms();
 s.area();
 s.payment();
-
-
-
-
-
-
-
 $(function () {
-    $('#container').highcharts({
+    $('#container2').highcharts({
         chart: {
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false
         },
         title: {
-            text: 'Browser market shares at a specific website, 2010'
+            text: '农场'
         },
         tooltip: {
     	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -165,27 +110,18 @@ $(function () {
             type: 'pie',
             name: 'Browser share',
             data: [
-                ['Firefox',   45.0],
-                ['IE',       26.8],
+                ['Firefox',   100.0],
+                ['IE',       10.0],
                 {
                     name: 'Chrome',
-                    y: 12.8,
+                    y: 20.0,
                     sliced: true,
                     selected: true
                 },
-                ['Safari',    8.5],
-                ['Opera',     6.2],
-                ['Others',   0.7]
+
             ]
         }]
     });
 });
-
-
-
-
-
-
-
 
 </script>

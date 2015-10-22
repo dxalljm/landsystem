@@ -89,9 +89,18 @@ class FarmsController extends Controller
     	$dep_id = User::findByUsername(yii::$app->user->identity->username)['department_id'];
     	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
     	$whereArray = explode(',', $departmentData['membership']);
+    	$all = Farms::find()->count();
+    	
+    	foreach($whereArray as $value) {
+    		$resultName = ManagementArea::find()->where(['id'=>$value])->one()['areaname'];
+    		$resultValue = (float)Farms::find()->where(['management_area'=>$value])->count();
+    		$result[] = [$resultName,$resultValue];
+    		$allvalue = $all-$resultValue;
+    		$result[] = ['岭南',(float)$allvalue];
+    	}
     	$farmsRows = Farms::find()->where(['management_area'=>$whereArray])->count();
     	//echo $departmentData['membership'];
-		echo Json::encode(['status' => 1, 'count' => $farmsRows]);
+		echo Json::encode(['status' => 1, 'result' => $result]);
 		Yii::$app->end();
     }
     

@@ -35,7 +35,8 @@ class Plantingstructure extends \yii\db\ActiveRecord
         return [
             [['plant_id', 'plant_father','farms_id', 'lease_id'], 'integer'],
             [['area'], 'number'],
-            [['zongdi'], 'string']
+            [['zongdi'], 'string'],
+        	[['goodseed_id'],'safe'],
         ]; 
     }
 

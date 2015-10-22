@@ -28,6 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('plantingstructure_form', [
         			'plantinputproductModel' => $plantinputproductModel,
+    				'plantpesticidesModel' => $plantpesticidesModel,
     				'model' => $model,
     				'farm' => $farm,
     				'zongdi' => $zongdi,

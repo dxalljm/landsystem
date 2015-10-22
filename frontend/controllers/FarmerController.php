@@ -272,7 +272,7 @@ class FarmerController extends Controller
 	    		$model = Farmermembers::findOne($val);
 	    		$oldAttr = $model->attirbutes;
 	    		Logs::writeLog('删除家庭成员',$val,$oldAttr);
-	    		Farmermembers::memeberDelete($val);
+	    		$model->delete();
 	    	}
 	    	return true;
     	} else

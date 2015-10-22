@@ -11,6 +11,7 @@ use app\models\Plant;
 use app\models\Inputproduct;
 use app\models\Pesticides;
 use app\models\Lease;
+use app\models\Goodseed;
 /* @var $this yii\web\View */
 /* @var $model app\models\Plantingstructure */
 /* @var $form yii\widgets\ActiveForm */
@@ -40,15 +41,15 @@ use app\models\Lease;
   <td align='right'>宗地</td>
   <td colspan="3" align='left'><?= $form->field($model, 'zongdi')->textInput(['data-target' => '#myModal','data-toggle' => 'modal','data-keyboard' => 'false', 'data-backdrop' => 'static',])->label(false)->error(false) ?></td>
   <?php if(isset($_GET['zongdi'])) $value = Parcel::find()->where(['id'=>$_GET['zongdi']->one()['grossarea']]); else $value = 0;?>
-  <td colspan="2" align='right'>种植面积</td>
+  <td colspan="2" align='right'>种植面积</td><?php if($model->area !== 0.0) $value = $model->area;?>
   <td colspan="2" align='right'><?= $form->field($model, 'area')->textInput(['value'=>$value])->label(false)->error(false) ?></td>
   </tr>
 <tr>
-  <td align='right'>种植作物</td>
-  <td align='left'><?= html::dropDownList('plant-father','',ArrayHelper::map(Plant::find()->where(['father_id'=>1])->all(), 'id', 'cropname'),['prompt'=>'请选择...','class'=>'form-control','id'=>'plantfather']) ?></td>
-  <td colspan="2" align='right'><?= $form->field($model, 'plant_id')->dropDownList(['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
+  <td align='right'>种植作物</td><?php $fatherid = Plant::find()->where(['id'=>$model->plant_id])->one()['father_id'];?>
+  <td align='left'><?= html::dropDownList('plant-father',$fatherid,ArrayHelper::map(Plant::find()->where(['father_id'=>1])->all(), 'id', 'cropname'),['prompt'=>'请选择...','class'=>'form-control','id'=>'plantfather']) ?></td>
+  <td colspan="2" align='right'><?= $form->field($model, 'plant_id')->dropDownList(ArrayHelper::map(Plant::find()->where(['father_id'=>$fatherid])->all(), 'id', 'cropname'),['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
   <td colspan="2" align="right">良种型号</td>
-  <td colspan="2"><?= $form->field($model, 'goodseed_id')->dropDownList(['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
+  <td colspan="2"><?= $form->field($model, 'goodseed_id')->dropDownList(ArrayHelper::map(Goodseed::find()->where(['plant_id'=>$model->plant_id])->all(), 'id', 'plant_model'),['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
 </tr>
 
 </table>
@@ -81,20 +82,22 @@ use app\models\Lease;
             <td align='center'>投入品用量</td>
 			<td align='center'>操作</td>
 		</tr>
-		<?php foreach ($plantinputproductModel as $value) {?>
+		<?php 
+		if(is_array($plantinputproductModel)) {
+		foreach ($plantinputproductModel as $value) {?>
 		<tr>
 			  <?php echo Html::hiddenInput('PlantInputproductPost[id][]', $value['id'], ['class' => 'form-control']); ?>
               <?php echo Html::hiddenInput('PlantInputproductPost[farms_id][]', $value['farms_id'], ['class' => 'form-control']); ?>
               <?php echo Html::hiddenInput('PlantInputproductPost[lessee_id][]',  $value['lessee_id'], ['class' => 'form-control']); ?>
               <?php echo Html::hiddenInput('PlantInputproductPost[zongdi][]',  $value['zongdi'], ['class' => 'form-control']); ?>
               <?php echo Html::hiddenInput('PlantInputproductPost[plant_id][]', $value['plant_id'], ['class' => 'form-control']); ?>
-              <td><?php echo Html::dropDownList('PlantInputproductPost[father_id][]',  $value['father_id'], ArrayHelper::map(Inputproduct::find()->where(['father_id'=>1])->all(), 'id', 'fertilizer'),['prompt'=>'请选择...', 'class'=>'plantinputproduct-father_id','class' => 'form-control']); ?></td>
-              <td><?php echo Html::dropDownList('PlantInputproductPost[son_id][]',  $value['son_id'],['prompt'=>'请选择...'], ['id'=>'plantinputproduct-son_id', 'class' => 'form-control']); ?></td>
-              <td><?php echo Html::dropDownList('PlantInputproductPost[inputproduct_id][]',  $value['inputproduct_id'],['prompt'=>'请选择...'] ,['id'=>'plantinputproduct-inputproduct_id','class' => 'form-control']); ?></td>
+              <td><?php echo Html::dropDownList('PlantInputproductPost[father_id][]',  $value['father_id'], ArrayHelper::map(Inputproduct::find()->where(['father_id'=>1])->all(), 'id', 'fertilizer'),['prompt'=>'请选择...', 'id'=>'plantinputproduct-father_id','class' => 'form-control']); ?></td>
+              <td><?php echo Html::dropDownList('PlantInputproductPost[son_id][]',  $value['son_id'],ArrayHelper::map(Inputproduct::find()->where(['father_id'=>$value['father_id']])->all(), 'id', 'fertilizer'),['prompt'=>'请选择...', 'id'=>'plantinputproduct-son_id', 'class' => 'form-control']); ?></td>
+              <td><?php echo Html::dropDownList('PlantInputproductPost[inputproduct_id][]',  $value['inputproduct_id'],ArrayHelper::map(Inputproduct::find()->where(['father_id'=>$value['son_id']])->all(), 'id', 'fertilizer'),['prompt'=>'请选择...','id'=>'plantinputproduct-inputproduct_id','class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('PlantInputproductPost[pconsumption][]',  $value['pconsumption'], ['id'=>'plantinputproduct-pconsumption','class' => 'form-control']); ?></td>
               <td valign="middle" align="center"><?php echo Html::button('-', ['class' => 'btn btn-warning delete-employee']) ?></td>
           </tr>
-<?php }?>
+<?php }}?>
 		
 	</tbody>
 </table>
@@ -122,7 +125,9 @@ use app\models\Lease;
 			<td align='center'>农药用量</td>
 			<td align='center'>操作</td>
 		</tr>
-		<?php foreach ($plantpesticidesModel as $value) {?>
+		<?php 
+		if(is_array($plantpesticidesModel)) {
+		foreach ($plantpesticidesModel as $value) {?>
 		 <tr>
 				<?php echo Html::hiddenInput('PlantpesticidesPost[id][]', $value['id'], ['class' => 'form-control']); ?>
               <?php echo Html::hiddenInput('PlantpesticidesPost[farms_id][]',$value['farms_id'], ['class' => 'form-control']); ?>
@@ -132,7 +137,7 @@ use app\models\Lease;
               <td><?php echo Html::textInput('PlantpesticidesPost[pconsumption][]', $value['pconsumption'], ['id'=>'plantinputproduct-pconsumption','class' => 'form-control']); ?></td>
               <td valign="middle" align="center"><?php echo Html::button('-', ['class' => 'btn btn-warning delete-pesticides']) ?></td>
           </tr>
-<?php }?>
+<?php }}?>
 		
 	</tbody>
 </table>

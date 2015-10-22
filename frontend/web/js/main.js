@@ -153,7 +153,39 @@ var statis = function () {
         farms : function () {
             $.getJSON('index.php?r=farms/getfarmrows', function (data) {
                 if (data.status == 1) {
-                    $('#statis-farms').html(data.count);
+                    //$('#statis-farms').html(data.count);
+                    $(function () {
+                        $('#container').highcharts({
+                            chart: {
+                                plotBackgroundColor: null,
+                                plotBorderWidth: null,
+                                plotShadow: false
+                            },
+                            title: {
+                                text: '农场'
+                            },
+                            tooltip: {
+                        	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                            },
+                            plotOptions: {
+                                pie: {
+                                    allowPointSelect: true,
+                                    cursor: 'pointer',
+                                    dataLabels: {
+                                        enabled: true,
+                                        color: '#000000',
+                                        connectorColor: '#000000',
+                                        format: '<b>{point.name}</b>: {point.total:f}'
+                                    }
+                                }
+                            },
+                            series: [{
+                                type: 'pie',
+                                name: '占比',
+                                data: data.result,
+                            }]
+                        });
+                    });
                 }
             });
         },

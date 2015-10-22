@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = '更新';
                 </div>
                 <div class="box-body">
 
-    <?= $this->render('plantingstructureview_form', [
+    <?= $this->render('plantingstructure_form', [
     		'plantinputproductModel' => $plantinputproductModel,
     		'plantpesticidesModel' => $plantpesticidesModel,
 	        'model' => $model,
