@@ -81,47 +81,5 @@ var s = statis();
 s.farms();
 s.area();
 s.payment();
-$(function () {
-    $('#container2').highcharts({
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false
-        },
-        title: {
-            text: '农场'
-        },
-        tooltip: {
-//    	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    color: '#000000',
-                    connectorColor: '#000000',
-                    format: '<b>{point.name}</b>:adfasdfsd %'
-                }
-            }
-        },
-        series: [{
-            type: 'pie',
-            name: 'Browser share',
-            data: [
-                ['Firefox',   100.0],
-                ['IE',       10.0],
-                {
-                    name: 'Chrome',
-                    y: 20.0,
-                    sliced: true,
-                    selected: true
-                },
-
-            ]
-        }]
-    });
-});
 
 </script>
