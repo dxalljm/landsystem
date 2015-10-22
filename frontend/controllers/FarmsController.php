@@ -86,6 +86,11 @@ class FarmsController extends Controller
     
     public function actionGetfarmrows()
     {
+    	$cacheKey = 'farms-hcharts';
+    	$result = Yii::$app->cache->get($cacheKey);
+    	if (!empty($result)) {
+    		return $result;
+    	}
     	$dep_id = User::findByUsername(yii::$app->user->identity->username)['department_id'];
     	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
     	$whereArray = explode(',', $departmentData['membership']);
@@ -96,12 +101,13 @@ class FarmsController extends Controller
     		$resultValue = (float)Farms::find()->where(['management_area'=>$value])->count();
     		$result[] = [$resultName,$resultValue];
     		$allvalue = $all-$resultValue;
-    		$result[] = ['岭南',(float)$allvalue];
+    		$result[] = ['其他管理区',(float)$allvalue];
     	}
-    	$farmsRows = Farms::find()->where(['management_area'=>$whereArray])->count();
-    	//echo $departmentData['membership'];
-		echo Json::encode(['status' => 1, 'result' => $result]);
-		Yii::$app->end();
+    	
+		$jsonData = Json::encode(['status' => 1, 'result' => $result]);
+        Yii::$app->cache->set($cacheKey, $jsonData, 36000);
+        
+        return $jsonData;
     }
     
     public function actionGetfarmarea()

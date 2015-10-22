@@ -155,7 +155,7 @@ var statis = function () {
                 if (data.status == 1) {
                     //$('#statis-farms').html(data.count);
                     $(function () {
-                        $('#container').highcharts({
+                        $('#statis-farms').highcharts({
                             chart: {
                                 plotBackgroundColor: null,
                                 plotBorderWidth: null,
@@ -175,7 +175,7 @@ var statis = function () {
                                         enabled: true,
                                         color: '#000000',
                                         connectorColor: '#000000',
-                                        format: '<b>{point.name}</b>: {point.y} <br> <b>占比</b>:{point.percentage:.1f}%'
+                                        format: '<b>{point.name}</b>: {point.y}个农场 <br> <b>占比</b>:{point.percentage:.1f}%'
                                     }
                                 }
                             },
