@@ -162,7 +162,7 @@ var statis = function () {
                                 plotShadow: false
                             },
                             title: {
-                                text: '农场'
+                                text: '农场' 
                             },
                             tooltip: {
                         	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -175,7 +175,7 @@ var statis = function () {
                                         enabled: true,
                                         color: '#000000',
                                         connectorColor: '#000000',
-                                        format: '<b>{point.name}</b>: {point.total:f}'
+                                        format: '<b>{point.name}</b>: {point.y}'
                                     }
                                 }
                             },
