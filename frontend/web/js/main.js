@@ -161,6 +161,11 @@ var statis = function () {
                                 plotBorderWidth: null,
                                 plotShadow: false
                             },
+                            subtitle: {
+                                text: "总数:10000",
+                                x: -100,
+                                y: 50
+                            },
                             title: {
                                 text: '农场'
                             },
