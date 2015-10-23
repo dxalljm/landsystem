@@ -23,11 +23,11 @@ $this->title = '岭南管委会';
   <div class="row">
     <div class="col-lg-6 col-xs-6">
 
-        <div id="statis-farms" style="min-width: 262px; height: 200px; margin: 0 auto"></div>
+        <div id="statis-farms" style="min-width: 262px; height: 262px; margin: 0 auto"; ></div>
     </div>
 
     <div class="col-lg-6 col-xs-6">
-
+		<div id="statis-area" style="min-width: 262px; height: 262px; margin: 0 auto"; ></div>
     </div>
 
   </div>

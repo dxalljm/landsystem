@@ -86,13 +86,13 @@ class FarmsController extends Controller
     
     public function actionGetfarmrows()
     {
-    	$cacheKey = 'farms-hcharts';
+    	$cacheKey = 'farms-hcharts2';
     	$result = Yii::$app->cache->get($cacheKey);
     	if (!empty($result)) {
     		return $result;
     	}
-
-
+		
+		$sum = 0;
     	$dep_id = User::findByUsername(yii::$app->user->identity->username)['department_id'];
     	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
     	$whereArray = explode(',', $departmentData['membership']);
@@ -102,36 +102,41 @@ class FarmsController extends Controller
     		$resultName = ManagementArea::find()->where(['id'=>$value])->one()['areaname'];
     		$resultValue = (float)Farms::find()->where(['management_area'=>$value])->count();
     		$result[] = [$resultName,$resultValue];
-    		$allvalue = $all-$resultValue;
-    		$result[] = ['其他管理区',(float)$allvalue];
+    		$sum += $resultValue;
     	}
-    	
+    	$allvalue = $all-$sum;
+    	if($allvalue !== 0)
+    		$result[] = ['其他管理区',(float)$allvalue];
 		$jsonData = Json::encode(['status' => 1, 'result' => $result]);
-        Yii::$app->cache->set($cacheKey, $jsonData, 36000);
+        Yii::$app->cache->set($cacheKey, $jsonData, 1);
         
         return $jsonData;
     }
     
     public function actionGetfarmarea()
     {
-    	$sumMeasure = 0;
+    	$cacheKey = 'farmsarea-hcharts2';
+    	$result = Yii::$app->cache->get($cacheKey);
+    	if (!empty($result)) {
+    		return $result;
+    	}
+    	$sum = 0;
     	$dep_id = User::findByUsername(yii::$app->user->identity->username)['department_id'];
     	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
     	$whereArray = explode(',', $departmentData['membership']);
-    	$farms = Farms::find()->where(['management_area'=>$whereArray])->all();
-    	foreach ($farms as $value) {
-    		if(is_array($value)) {
-    			foreach ($value as $k => $v) {
-    				$arrayID[] = $v['id'];
-    				$sumMeasure += $v['measure'];
-    			}
-    		} else {
-    			$arrayID[] = $value['id'];
-    			$sumMeasure += $value['measure'];
-    		}
+    	$all = Farms::find()->sum('measure');
+    	foreach ($whereArray as $value) {
+    		$resultName = ManagementArea::find()->where(['id'=>$value])->one()['areaname'];
+    		$resultValue = (float)Farms::find()->where(['management_area'=>$value])->sum('measure');
+    		$result[] = [$resultName,$resultValue];
+    		$sum += $resultValue;
     	}
-		echo Json::encode(['status' => 1, 'count' => $sumMeasure]);
-		Yii::$app->end();
+    	$allvalue = $all-$sum;
+    	$result[] = ['其他管理区',(float)$allvalue];
+		$jsonData = Json::encode(['status' => 1, 'result' => $result]);
+        Yii::$app->cache->set($cacheKey, $jsonData, 36000);
+        
+        return $jsonData;
     }
     
     public function actionFarmsxls()
