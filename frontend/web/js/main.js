@@ -409,7 +409,7 @@ var statis = function () {
         farms : function () {
             $.getJSON('index.php?r=farms/getfarmrows', function (data) {
 
-                data.total = '吴佰清测试总数:' + 101011;
+                
                 if (data.status == 1) {
                     //$('#statis-farms').html(data.count);
                     $(function () {
@@ -418,13 +418,13 @@ var statis = function () {
                                  plotBorderWidth: null,
                                  plotShadow: false
                             },
-                            subtitle: {
-                                text: "总数:10000",
-                                x: -100,
-                                y: 150
-                            },
+//                            subtitle: {
+//                                text: "总数:10000",
+//                                x: -100,
+//                                y: 150
+//                            },
                             title: {
-                                text: '农场' + data.total
+                                text: '农场,共' + data.total + '个农场'
                             },
                             tooltip: {
                         	    pointFormat: '{point.y}个农场 <br>{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -436,9 +436,9 @@ var statis = function () {
                                     cursor: 'pointer',
                                     dataLabels: {
                                         enabled: true,
-                                        color: '#000000',
-                                        connectorColor: '#000000',
-                                        format: '<b>{point.name}</b>: {point.y}个农场 <br> <b>占比</b>:{point.percentage:.1f}%'
+                                        color: '#ffffff',
+                                        connectorColor: '#ffffff',
+                                        format: '<b>{point.name}</b><br>{point.y}个农场 <br> <b>占比</b>:{point.percentage:.1f}%'
                                     }
                                 }
                             },
@@ -468,7 +468,7 @@ var statis = function () {
 //                                y: 50
 //                            },
                             title: {
-                                text: '面积'
+                                text: '面积,共' + data.total + '亩'
                             },
                             tooltip: {
                         	    pointFormat: '{point.y}个农场 <br>{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -479,9 +479,9 @@ var statis = function () {
                                     cursor: 'pointer',
                                     dataLabels: {
                                         enabled: true,
-                                        color: '#000000',
-                                        connectorColor: '#000000',
-                                        format: '<b>{point.name}</b>: {point.y}亩 <br> <b>占比</b>:{point.percentage:.1f}%'
+                                        color: '#ffffff',
+                                        connectorColor: '#ffffff',
+                                        format: '<b>{point.name}</b><br>{point.y}亩 <br> <b>占比</b>:{point.percentage:.1f}%'
                                     }
                                 }
                             },

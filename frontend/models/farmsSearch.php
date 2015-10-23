@@ -85,6 +85,7 @@ class farmsSearch extends Farms
      */
     public function search($params)
     {
+    	var_dump($params);
         $query = farms::find();
         //$query->joinWith(['farmer']);
         

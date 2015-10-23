@@ -55,17 +55,18 @@ class FarmsController extends Controller
     public function actionFarmsindex()
     {
         $departmentid = User::find()->where(['id'=>\Yii::$app->getUser()->id])->one()['department_id'];
-        $strdepartment = Department::find()->where(['id'=>$departmentid])->one()['membership'];
-        $where = explode(',', $strdepartment);
+       	$departmentData = Department::find()->where(['id'=>$departmentid])->one();
+    	$whereArray = explode(',', $departmentData['membership']);
+       	
         $searchModel = new farmsSearch();
 
         $params = Yii::$app->request->queryParams;
 
         // 管理区域是否是数组
-        if (!empty($where) && count($where) > 0) {
-          $params['farmsSearch']['management_area'] = $where;
+        if (!empty($whereArray) && count($whereArray) > 0) {
+          $params['farmsSearch']['management_area'] = $whereArray;
         }
-        
+        //var_dump($whereArray);
         $dataProvider = $searchModel->search($params);
         Logs::writeLog('农场管理');
         return $this->render('farmsindex', [
@@ -107,7 +108,7 @@ class FarmsController extends Controller
     	$allvalue = $all-$sum;
     	if($allvalue !== 0)
     		$result[] = ['其他管理区',(float)$allvalue];
-		$jsonData = Json::encode(['status' => 1, 'result' => $result]);
+		$jsonData = Json::encode(['status' => 1, 'result' => $result,'total'=>$all]);
         Yii::$app->cache->set($cacheKey, $jsonData, 1);
         
         return $jsonData;
@@ -115,7 +116,7 @@ class FarmsController extends Controller
     
     public function actionGetfarmarea()
     {
-    	$cacheKey = 'farmsarea-hcharts2';
+    	$cacheKey = 'farmsarea-hcharts3';
     	$result = Yii::$app->cache->get($cacheKey);
     	if (!empty($result)) {
     		return $result;
@@ -133,7 +134,7 @@ class FarmsController extends Controller
     	}
     	$allvalue = $all-$sum;
     	$result[] = ['其他管理区',(float)$allvalue];
-		$jsonData = Json::encode(['status' => 1, 'result' => $result]);
+		$jsonData = Json::encode(['status' => 1, 'result' => $result,'total'=>$all]);
         Yii::$app->cache->set($cacheKey, $jsonData, 36000);
         
         return $jsonData;
