@@ -408,6 +408,8 @@ var statis = function () {
         // 农场管理
         farms : function () {
             $.getJSON('index.php?r=farms/getfarmrows', function (data) {
+
+                data.total = '吴佰清测试总数:' + 101011;
                 if (data.status == 1) {
                     //$('#statis-farms').html(data.count);
                     $(function () {
@@ -422,7 +424,7 @@ var statis = function () {
                                 y: 150
                             },
                             title: {
-                                text: '农场{poing.y}'
+                                text: '农场' + data.total
                             },
                             tooltip: {
                         	    pointFormat: '{point.y}个农场 <br>{series.name}: <b>{point.percentage:.1f}%</b>'
