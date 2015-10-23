@@ -409,21 +409,21 @@ var statis = function () {
                     //$('#statis-farms').html(data.count);
                     $(function () {
                         $('#statis-farms').highcharts({
-                            chart: {
-                                plotBackgroundColor: null,
-                                plotBorderWidth: null,
-                                plotShadow: false
+                        	chart: {
+                        		 plotBackgroundColor: '#00C0EF',
+                                 plotBorderWidth: null,
+                                 plotShadow: false
                             },
                             subtitle: {
                                 text: "总数:10000",
                                 x: -100,
-                                y: 50
+                                y: 150
                             },
                             title: {
-                                text: '农场'
+                                text: '农场{poing.y}'
                             },
                             tooltip: {
-                        	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                        	    pointFormat: '{point.y}个农场 <br>{series.name}: <b>{point.percentage:.1f}%</b>'
                             },
                             plotOptions: {
 
@@ -452,7 +452,43 @@ var statis = function () {
         area : function () {
             $.getJSON('index.php?r=farms/getfarmarea', function (data) {
                 if (data.status == 1) {
-                    $('#statis-area').html(data.count);
+                	$(function () {
+                        $('#statis-area').highcharts({
+                        	chart: {
+                        		 plotBackgroundColor: '#00C0EF',
+                                 plotBorderWidth: null,
+                                 plotShadow: false
+                            },
+//                            subtitle: {
+//                                text: "总数:10000",
+//                                x: -100,
+//                                y: 50
+//                            },
+                            title: {
+                                text: '面积'
+                            },
+                            tooltip: {
+                        	    pointFormat: '{point.y}个农场 <br>{series.name}: <b>{point.percentage:.1f}%</b>'
+                            },
+                            plotOptions: {
+                                pie: {
+                                    allowPointSelect: true,
+                                    cursor: 'pointer',
+                                    dataLabels: {
+                                        enabled: true,
+                                        color: '#000000',
+                                        connectorColor: '#000000',
+                                        format: '<b>{point.name}</b>: {point.y}亩 <br> <b>占比</b>:{point.percentage:.1f}%'
+                                    }
+                                }
+                            },
+                            series: [{
+                                type: 'pie',
+                                name: '占比',
+                                data: data.result,
+                            }]
+                        });
+                    });
                 }
             });
         },

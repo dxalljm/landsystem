@@ -79,11 +79,18 @@ class SiteController extends Controller
 	    	Logs::writeLog('访问首页');
 	    	$dep_id = User::find()->where(['id'=>yii::$app->getUser()->id])->one()['department_id'];
 	    	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
-	    	$areaname = ManagementArea::find()->where(['id' => $departmentData['membership']])->one()['areaname'];
-			if(is_array($areaname))
-				$result = implode(',', $areaname);
+	    	$arrayDepartment = explode(',',$departmentData['membership']);
+	    	$management = ManagementArea::find()->where(['id' =>$arrayDepartment])->all();
+// 	    	var_dump($management);
+// 	    	exit;
+			if(is_array($management)) {
+				foreach($management as $value) {
+					$arrayResult[] = $value['areaname'];
+				}
+				$result = implode(',',$arrayResult);	
+			}				
 			else 
-				$result = $areaname;
+				$result = $management;
 	        $areaname = [];
 	        return $this->render('index',[
 	            'areaname' => $result,
