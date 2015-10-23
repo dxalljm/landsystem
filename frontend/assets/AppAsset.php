@@ -31,12 +31,12 @@ class AppAsset extends AssetBundle
 
     // 注册JS
     public $js = [
-        'js/main.js',
         'vendor/bower/AdminLTE/bootstrap/js/bootstrap.min.js',
         'vendor/bower/AdminLTE/dist/js/app.min.js',
         'vendor/bower/devbridge-autocomplete/dist/jquery.autocomplete.min.js',
     	'js/vendor/bower/lodop/LodopFuncs.js',
         'vendor/bower/highcharts/highcharts.js',
+        'js/main.js',
     ];
 
     // 依赖
