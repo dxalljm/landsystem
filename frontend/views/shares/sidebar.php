@@ -28,7 +28,7 @@ use app\models\Mainmenu;
           <?php 
           	$controller = Yii::$app->controller->id;
           	$action = yii::$app->controller->action->id;
-	    	if($action == 'farmsmenu' or $controller == 'plantpesticides' or $controller == 'farmer' or $controller == 'lease' or $controller == 'fireprevention' or $controller == 'dispute' or $controller == 'lease' or $controller == 'cooperativeoffarm' or $controller == 'employee' or $controller == 'plantingstructure' or $controller == 'plantinputproduct'){?>
+	    	if($action == 'farmsmenu' or $controller == 'plantpesticides' or $controller == 'breed' or $controller == 'sales' or $controller == 'yields' or $controller == 'farmer' or $controller == 'lease' or $controller == 'fireprevention' or $controller == 'dispute' or $controller == 'lease' or $controller == 'cooperativeoffarm' or $controller == 'employee' or $controller == 'plantingstructure' or $controller == 'plantinputproduct'){?>
 	    	<?php if(isset($_GET['farms_id'])) {?>
 	    	<li class="header text-light-blue"><h4><?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']?></h4></li>
 	    	<?php }?>
@@ -60,14 +60,15 @@ use app\models\Mainmenu;
                 	<a href="<?= Url::to('index.php?r=plantingstructure/plantingstructureindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-sun-o"></i><span>种植结构</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="<?= Url::to('index.php?r=plantinputproduct/plantinputproductindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-tint"></i><span>投入品</span></a>
-           		</li>
-           		<li class="treeview">
-                	<a href="<?= Url::to('index.php?r=plantpesticides/plantpesticidesindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-exclamation-triangle"></i><span>农药</span></a>
-           		</li>
-           		<li class="treeview">
                 	<a href="<?= Url::to('index.php?r=fireprevention/firepreventioncreate&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-fire-extinguisher"></i><span>防火工作</span></a>
            		</li>
+           		<li class="treeview">
+                	<a href="<?= Url::to('index.php?r=yields/yieldsindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-balance-scale"></i><span>产量信息</span></a>
+           		</li>
+           		<li class="treeview">
+                	<a href="<?= Url::to('index.php?r=sales/salesindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-cart-arrow-down"></i><span>销售信息</span></a>
+           		</li>
+           		
            		
 	    	<?php } else {?>
           
@@ -93,6 +94,7 @@ use app\models\Mainmenu;
 	                       	echo '<li><a href="'.Url::to('index.php?r=goodseed/goodseedindex').'"><i class="fa fa-circle-o"></i>良种管理</a></li>';
 	                       	echo '<li><a href="'.Url::to('index.php?r=cooperative/cooperativeindex').'"><i class="fa fa-circle-o"></i>合作社管理</a></li>';
 	                       	echo '<li><a href="'.Url::to('index.php?r=disputetype/disputetypeindex').'"><i class="fa fa-circle-o"></i>纠纷类型</a></li>';
+	                       	echo '<li><a href="'.Url::to('index.php?r=breedtype/breedtypeindex').'"><i class="fa fa-circle-o"></i>养殖种类</a></li>';
               				echo '</ul>';
             				echo '</li>';
 	                     	

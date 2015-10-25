@@ -85,7 +85,7 @@ class farmsSearch extends Farms
      */
     public function search($params)
     {
-    	var_dump($params);
+    	//var_dump($params);
 //        exit;
         $query = farms::find();
         //$query->joinWith(['farmer']);
@@ -134,7 +134,7 @@ class farmsSearch extends Farms
         $query->andFilterWhere([
             'id' => $this->id,
         ]);
-        $this->management_area = [1, 4, 5];
+        //$this->management_area = [1, 4, 5];
 
           $query->andFilterWhere($this->pinyinSearch())
             ->andFilterWhere($this->farmerpinyinSearch())

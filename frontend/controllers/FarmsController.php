@@ -246,14 +246,14 @@ class FarmsController extends Controller
     {
     	
     	$departmentid = User::find()->where(['id'=>\Yii::$app->getUser()->id])->one()['department_id'];
-    	$strdepartment = Department::find()->where(['id'=>$departmentid])->one()['membership'];
-    	$where = explode(',', $strdepartment);
+    	$departmentData = Department::find()->where(['id'=>$departmentid])->one();
+    	$whereArray = explode(',', $departmentData['membership']);
     	$searchModel = new farmsSearch();
     	$params = Yii::$app->request->queryParams;
 
         // 管理区域是否是数组
-        if (!empty($where) && count($where) > 0) {
-          $params['farmsSearch']['management_area'] = $where;
+        if (!empty($whereArray) && count($whereArray) > 0) {
+          $params['farmsSearch']['management_area'] = $whereArray;
         }
         
         $dataProvider = $searchModel->search($params);

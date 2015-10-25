@@ -302,18 +302,20 @@ class FarmerController extends Controller
      * @param integer $id
      * @return mixed
      */
-//     public function actionFarmerupdate($id)
-//     {
-//         $model = $this->findModel($id);
+    public function actionFarmerupdate($farms_id)
+    {
+    	$farmModel = Farms::findOne($farms_id);
+    	
+        $model = Farmer::find()->where(['farms_id'=>$farms_id])->one();
 
-//         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-//             return $this->redirect(['farmerview', 'id' => $model->id]);
-//         } else {
-//             return $this->render('farmerupdate', [
-//                 'model' => $model,
-//             ]);
-//         }
-//     }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['farmerview', 'id' => $model->id]);
+        } else {
+            return $this->render('farmerupdate', [
+                'model' => $model,
+            ]);
+        }
+    }
     
 //     public function addtime()
 //     {

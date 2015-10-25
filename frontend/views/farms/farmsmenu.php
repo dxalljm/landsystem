@@ -218,10 +218,6 @@ use app\models\Collection;
   <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
         
         ?>
-    <td width="20%" align="center"></td>
-    <td width="5%" align="center"></td>    
-    <td width="20%" align="center"></td>
-    <td width="5%" align="center"></td>
     <td width="20%" align="center"><a href='<?= Url::to('index.php?r=fireprevention/firepreventioncreate&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
   <span class="info-box-icon"><i class="fa fa-fire-extinguisher"></i></span>
@@ -237,9 +233,8 @@ use app\models\Collection;
     </span>
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box --></a></td>
-
-      <td width="5%" align="center"></td>
-      <td width="20%" align="center"><a href='<?= Url::to('index.php?r=Collection/Collectiondck&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
+    <td width="5%" align="center"></td>    
+    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=Collection/Collectiondck&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
   <span class="info-box-icon"><i class="fa fa-cny"></i></span>
   <div class="info-box-content">
@@ -254,9 +249,181 @@ use app\models\Collection;
     </span>
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box --></a></td>
+    <td width="5%" align="center"></td>
+    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=yields/yieldsindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
+<div class="info-box bg-blue">
+  <span class="info-box-icon"><i class="fa fa-balance-scale"></i></span>
+  <div class="info-box-content">
+  <span class="info-box-number">产品产量信息</span>
+    <span class="info-box-text"></span>
+    <!-- The progress section is optional -->
+    <div class="progress">
+      <div class="progress-bar" style="width: 100%"></div>
+    </div>
+    <span class="progress-description">
+     农产品的产量信息
+    </span>
+  </div><!-- /.info-box-content -->
+</div><!-- /.info-box --></a></td>
+
+      <td width="5%" align="center"></td>
+      <td width="20%" align="center"><a href='<?= Url::to('index.php?r=sales/salesindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
+<div class="info-box bg-blue">
+  <span class="info-box-icon"><i class="fa fa-cart-arrow-down"></i></span>
+  <div class="info-box-content">
+  <span class="info-box-number">农产品销售信息</span>
+    <span class="info-box-text"></span>
+    <!-- The progress section is optional -->
+    <div class="progress">
+      <div class="progress-bar" style="width: 100%"></div>
+    </div>
+    <span class="progress-description">
+     农产品的销售情况
+    </span>
+  </div><!-- /.info-box-content -->
+</div><!-- /.info-box --></a></td>
   </tr>
   </table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
+        
+        ?>
+    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=breed/breedindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
+<div class="info-box bg-blue">
+  <span class="info-box-icon"><i class="fa fa-fire-extinguisher"></i></span>
+  <div class="info-box-content">
+  <span class="info-box-number">养殖情况 </span>
+    <span class="info-box-text"><?php if(Fireprevention::find()->where(['farms_id'=>$_GET['farms_id']])->count()) echo '完成防火工作'; else echo '未完成防火工作';?></span>
+    <!-- The progress section is optional -->
+    <div class="progress">
+      <div class="progress-bar" style="width: 100%"></div>
+    </div>
+    <span class="progress-description">
+     养殖相关的
+    </span>
+  </div><!-- /.info-box-content -->
+</div><!-- /.info-box --></a></td>
+    <td width="5%" align="center"></td>    
+    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=Collection/Collectiondck&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
+<div class="info-box bg-blue">
+  <span class="info-box-icon"><i class="fa fa-cny"></i></span>
+  <div class="info-box-content">
+  <span class="info-box-number">缴费业务</span>
+    <span class="info-box-text"></span>
+    <!-- The progress section is optional -->
+    <div class="progress">
+      <div class="progress-bar" style="width: 100%"></div>
+    </div>
+    <span class="progress-description">
+     防火合同的签订
+    </span>
+  </div><!-- /.info-box-content -->
+</div><!-- /.info-box --></a></td>
+    <td width="5%" align="center"></td>
+    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=yields/yieldsindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
+<div class="info-box bg-blue">
+  <span class="info-box-icon"><i class="fa fa-balance-scale"></i></span>
+  <div class="info-box-content">
+  <span class="info-box-number">产品产量信息</span>
+    <span class="info-box-text"></span>
+    <!-- The progress section is optional -->
+    <div class="progress">
+      <div class="progress-bar" style="width: 100%"></div>
+    </div>
+    <span class="progress-description">
+     农产品的产量信息
+    </span>
+  </div><!-- /.info-box-content -->
+</div><!-- /.info-box --></a></td>
 
+      <td width="5%" align="center"></td>
+      <td width="20%" align="center"><a href='<?= Url::to('index.php?r=sales/salesindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
+<div class="info-box bg-blue">
+  <span class="info-box-icon"><i class="fa fa-cart-arrow-down"></i></span>
+  <div class="info-box-content">
+  <span class="info-box-number">农产品销售信息</span>
+    <span class="info-box-text"></span>
+    <!-- The progress section is optional -->
+    <div class="progress">
+      <div class="progress-bar" style="width: 100%"></div>
+    </div>
+    <span class="progress-description">
+     农产品的销售情况
+    </span>
+  </div><!-- /.info-box-content -->
+</div><!-- /.info-box --></a></td>
+  </tr>
+  </table>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
+        
+        ?>
+    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=fireprevention/firepreventioncreate&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
+<div class="info-box bg-blue">
+  <span class="info-box-icon"><i class="fa fa-fire-extinguisher"></i></span>
+  <div class="info-box-content">
+  <span class="info-box-number">防火工作 </span>
+    <span class="info-box-text"><?php if(Fireprevention::find()->where(['farms_id'=>$_GET['farms_id']])->count()) echo '完成防火工作'; else echo '未完成防火工作';?></span>
+    <!-- The progress section is optional -->
+    <div class="progress">
+      <div class="progress-bar" style="width: 100%"></div>
+    </div>
+    <span class="progress-description">
+     防火合同的签订
+    </span>
+  </div><!-- /.info-box-content -->
+</div><!-- /.info-box --></a></td>
+    <td width="5%" align="center"></td>    
+    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=Collection/Collectiondck&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
+<div class="info-box bg-blue">
+  <span class="info-box-icon"><i class="fa fa-cny"></i></span>
+  <div class="info-box-content">
+  <span class="info-box-number">缴费业务</span>
+    <span class="info-box-text"></span>
+    <!-- The progress section is optional -->
+    <div class="progress">
+      <div class="progress-bar" style="width: 100%"></div>
+    </div>
+    <span class="progress-description">
+     防火合同的签订
+    </span>
+  </div><!-- /.info-box-content -->
+</div><!-- /.info-box --></a></td>
+    <td width="5%" align="center"></td>
+    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=yields/yieldsindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
+<div class="info-box bg-blue">
+  <span class="info-box-icon"><i class="fa fa-balance-scale"></i></span>
+  <div class="info-box-content">
+  <span class="info-box-number">产品产量信息</span>
+    <span class="info-box-text"></span>
+    <!-- The progress section is optional -->
+    <div class="progress">
+      <div class="progress-bar" style="width: 100%"></div>
+    </div>
+    <span class="progress-description">
+     农产品的产量信息
+    </span>
+  </div><!-- /.info-box-content -->
+</div><!-- /.info-box --></a></td>
+
+      <td width="5%" align="center"></td>
+      <td width="20%" align="center"><a href='<?= Url::to('index.php?r=sales/salesindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
+<div class="info-box bg-blue">
+  <span class="info-box-icon"><i class="fa fa-cart-arrow-down"></i></span>
+  <div class="info-box-content">
+  <span class="info-box-number">农产品销售信息</span>
+    <span class="info-box-text"></span>
+    <!-- The progress section is optional -->
+    <div class="progress">
+      <div class="progress-bar" style="width: 100%"></div>
+    </div>
+    <span class="progress-description">
+     农产品的销售情况
+    </span>
+  </div><!-- /.info-box-content -->
+</div><!-- /.info-box --></a></td>
+  </tr>
+  </table>
  <?php ActiveFormrdiv::end(); ?>
               </div>
             </div>
