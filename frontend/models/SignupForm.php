@@ -11,9 +11,10 @@ use Yii;
 class SignupForm extends Model
 {
     public $username;
-    public $email;
+    public $realname;
     public $password;
-	public $groups;
+    public $password_again;
+	public $isNewRecord;
 
     /**
      * @inheritdoc
@@ -23,18 +24,18 @@ class SignupForm extends Model
         return [
             ['username', 'filter', 'filter' => 'trim'],
             ['username', 'required'],
-            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
+            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => '这个用户名已经被使用了.'],
             ['username', 'string', 'min' => 2, 'max' => 255],
 
-            ['email', 'filter', 'filter' => 'trim'],
-            ['email', 'required'],
-            ['email', 'email'],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+            ['realname', 'filter', 'filter' => 'trim'],
+            ['realname', 'required'],
 
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
-			
-			['groups', 'string', 'max' => 20],
+        		
+        	['password_again', 'required'],
+        	['password_again', 'string', 'min' => 6],
+
         ];
     }
 
@@ -48,7 +49,7 @@ class SignupForm extends Model
         if ($this->validate()) {
             $user = new User();
             $user->username = $this->username;
-            $user->email = $this->email;
+            //$user->email = $this->email;
             $user->setPassword($this->password);
             $user->generateAuthKey();
             if ($user->save()) {
@@ -57,5 +58,24 @@ class SignupForm extends Model
         }
 
         return null;
+    }
+    
+    public function signmod()
+    {
+    	//if ($this->validate()) {
+    		$user = User::findOne(\Yii::$app->getUser()->id);
+    		//var_dump($user);
+    		$user->username = $this->username;
+    		//$user->email = $this->email;
+    		$user->setPassword($this->password);
+    		$user->generateAuthKey();
+    		if ($user->save()) {
+    			var_dump($user->getErrors());
+    			exit;
+    			return $user;
+    		}
+    	//}
+    	
+    	return null;
     }
 }
