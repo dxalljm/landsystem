@@ -20,7 +20,7 @@
   </head>
   <body class="skin-blue sidebar-mini">
 
-    <div class="wrapper">
+    <div class="fixed">
 
       <?php $this->beginBody() ?>
 
