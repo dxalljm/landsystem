@@ -108,3 +108,7 @@ margin: 275px 0 0 -860px; /* PLAY THE WITH THE VALUES TO SEE GET THE DESIRED EFF
 .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
 .autocomplete-group { padding: 2px 5px; }
 .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+
+.sidebar-menu>li>a {
+    padding: 5px 5px 5px 15px;
+}

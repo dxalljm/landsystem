@@ -23,10 +23,10 @@ class AppAsset extends AssetBundle
 
     // 注册CSS
     public $css = [
-        'css/site.css',
         'vendor/bower/font-awesome/css/font-awesome.min.css',
         'vendor/bower/AdminLTE/dist/css/AdminLTE.min.css',
         'vendor/bower/AdminLTE/dist/css/skins/_all-skins.min.css',
+        'css/site.css',
     ];
 
     // 注册JS
