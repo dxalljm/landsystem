@@ -8,6 +8,7 @@ use frontend\models\breedSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Breedtype;
 
 /**
  * BreedController implements the CRUD actions for Breed model.
@@ -33,12 +34,14 @@ class BreedController extends Controller
     public function actionBreedindex()
     {
     	$model = new Breed();
-		
+    	$breedtypeFather = Breedtype::find()->where(['father_id'=>1])->all();
+    	
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['breedview', 'id' => $model->id]);
         } else {
             return $this->render('breedcreate', [
                 'model' => $model,
+            	'breedtypeFather' => $breedtypeFather,
             ]);
         }
     }
@@ -63,16 +66,30 @@ class BreedController extends Controller
     public function actionBreedcreate()
     {
         $model = new Breed();
-
+        $breedtypeFather = Breedtype::find()->where(['father_id'=>1])->all();
+		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['breedview', 'id' => $model->id]);
         } else {
             return $this->render('breedcreate', [
                 'model' => $model,
+            	'breedtypeFather' => $breedtypeFather,
             ]);
         }
     }
 
+    public function actionGetbreedtypeson($father_id)
+    {
+    	$result = Breedtype::find()->where(['father_id'=>$father_id])->all();
+    	foreach ($result as $value) {
+    		$arraySon[] = [
+    			'id'=>$value['id'],
+    			'father_id'=>$value['father_id'],
+    			'typename'=>$value['typename'],
+    		];
+    	}
+    	echo json_encode(['status'=>1,'breedtypeSon'=>$arraySon]);
+    }
     /**
      * Updates an existing Breed model.
      * If update is successful, the browser will be redirected to the 'view' page.

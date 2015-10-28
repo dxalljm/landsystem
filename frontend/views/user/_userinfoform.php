@@ -15,7 +15,7 @@ use app\models\Department;
     <?php $form = ActiveForm::begin(); ?>
 	<?php $model->username = Yii::$app->user->identity->username?>
     <?= $form->field($model, 'username')->textInput(['readonly' => true])->label('用户名') ?>
-    
+    <?php if(!empty(Yii::$app->user->identity->realname)) $model->realname = Yii::$app->user->identity->realname;?>
     <?= $form->field($model, 'realname')->textInput(['maxlength' => 255])->label('真实姓名') ?>
 	
 	<?= $form->field($model, 'password')->passwordInput()->label('新密码') ?>

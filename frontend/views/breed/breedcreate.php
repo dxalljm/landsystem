@@ -28,6 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('breed_form', [
         'model' => $model,
+    	'breedtypeFather' => $breedtypeFather,
     ]) ?>
                 </div>
             </div>

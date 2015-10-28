@@ -63,15 +63,14 @@ class SignupForm extends Model
     public function signmod()
     {
     	//if ($this->validate()) {
-    		$user = User::findOne(\Yii::$app->getUser()->id);
+    		$user = User::findIdentity(\Yii::$app->getUser()->id);
     		//var_dump($user);
     		$user->username = $this->username;
     		//$user->email = $this->email;
+    		
     		$user->setPassword($this->password);
     		$user->generateAuthKey();
     		if ($user->save()) {
-    			var_dump($user->getErrors());
-    			exit;
     			return $user;
     		}
     	//}

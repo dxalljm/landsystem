@@ -288,7 +288,7 @@ use app\models\Collection;
   <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
         
         ?>
-    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=breed/breedindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
+    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=breed/breedcreate&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
   <span class="info-box-icon"><i class="fa fa-fire-extinguisher"></i></span>
   <div class="info-box-content">
