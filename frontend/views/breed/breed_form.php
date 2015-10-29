@@ -122,13 +122,15 @@ $(document).on("click", ".add-breedtype", function () {
 
 $(document).on("click", "#ajax-create", function () {
     var typename = $('#breedtype-typename').val();
-    var father_id = $('#breedtype-father_id').val():
+    var father_id = $('#breedtype-father_id').val();
+    alert(father_id);
     $.getJSON('index.php?r=breedtype/breedtypecreateajax', {typename: typename,father_id:father_id}, function (data) {
         if (data.status == 1) {
 			$('#breedtype-form').modal('hide');
-			$('#breedtype-breedtype_id').append('<option selected="selected" value="'+data.data[0]+'">'+data.data[1]+'</option>');
+			var select = $(this).parent().prev().prev().children();
+			select.append('<option selected="selected" value="'+data.data[0]+'">'+data.data[1]+'</option>');
         } else {
-            alert('合作社类型添加失败');
+            alert('养殖种类类型添加失败');
         }
     });
 });

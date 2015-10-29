@@ -39,15 +39,15 @@ class FarmsController extends Controller
         ];
     }
 
-    public function beforeAction($action)
-    {
-    	$action = Yii::$app->controller->action->id;
-    	if(\Yii::$app->user->can($action)){
-    		return true;
-    	}else{
-    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
-    	}
-    }
+//     public function beforeAction($action)
+//     {
+//     	$action = Yii::$app->controller->action->id;
+//     	if(\Yii::$app->user->can($action)){
+//     		return true;
+//     	}else{
+//     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+//     	}
+//     }
     /**
      * Lists all farms models.
      * @return mixed
@@ -255,7 +255,7 @@ class FarmsController extends Controller
         if (!empty($whereArray) && count($whereArray) > 0) {
           $params['farmsSearch']['management_area'] = $whereArray;
         }
-        
+        $params['farmsSearch']['state'] = 1;
         $dataProvider = $searchModel->search($params);
     	Logs::writeLog('业务办理');
     	return $this->render('farmsbusiness', [
@@ -291,15 +291,15 @@ class FarmsController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionFarmsview($id)
+    public function actionFarmsview($farms_id)
     {
-    	$model = $this->findModel($id);
-    	$cooperativeoffarm = CooperativeOfFarm::find()->where(['farms_id'=>$id])->all();
+    	$model = $this->findModel($farms_id);
+    	$cooperativeoffarm = CooperativeOfFarm::find()->where(['farms_id'=>$farms_id])->all();
     	$zongdiarr = explode(' ', $model->zongdi);
     	foreach($zongdiarr as $zongdi) {
     		$dataProvider[] = Parcel::find()->where(['unifiedserialnumber' => $zongdi])->one();
     	}
-    	Logs::writeLog('查看农场信息',$id);
+    	Logs::writeLog('查看农场信息',$farms_id);
         return $this->render('farmsview', [
             'model' => $model,
         	'dataProvider' => $dataProvider,
@@ -307,6 +307,69 @@ class FarmsController extends Controller
         ]);
     }
 
+    public function actionFarmsttpomenu($farms_id)
+    {
+    	$model = $this->findModel($farms_id);
+    	$cooperativeoffarm = CooperativeOfFarm::find()->where(['farms_id'=>$farms_id])->all();
+    	$zongdiarr = explode(' ', $model->zongdi);
+    	foreach($zongdiarr as $zongdi) {
+    		$dataProvider[] = Parcel::find()->where(['unifiedserialnumber' => $zongdi])->one();
+    	}
+    	Logs::writeLog('查看农场信息',$farms_id);
+    	return $this->render('farmsttpomenu', [
+    			'model' => $model,
+    			'dataProvider' => $dataProvider,
+    			'cooperativeoffarm' => $cooperativeoffarm,
+    	]);
+    }
+    //state状态：0为已经失效，1为当前正用
+    public function actionFarmstransfer($farms_id)
+    {
+    	$model = $this->findModel($farms_id);
+    	$oldAttr = $model->attributes;
+    	$ttpoModel = new Farms();
+    	if ($ttpoModel->load(Yii::$app->request->post())) {
+    		$ttpoModel->address = $model->address;
+    		$ttpoModel->management_area = $model->management_area;
+    		$ttpoModel->spyear = $model->spyear;
+    		$ttpoModel->measure = $model->measure;
+    		$ttpoModel->zongdi = $model->zongdi;
+    		$ttpoModel->cooperative_id = $model->cooperative_id;
+    		$ttpoModel->surveydate = $model->surveydate;
+    		$ttpoModel->groundsign = $model->groundsign;
+    		$ttpoModel->investigator = $model->investigator;
+    		$ttpoModel->notclear = $model->notclear;
+    		$ttpoModel->create_at = time();
+    		$ttpoModel->update_at = time();
+    		$ttpoModel->pinyin = Pinyin::encode($ttpoModel->farmname);
+    		$ttpoModel->farmerpinyin = Pinyin::encode($ttpoModel->farmername);
+    		$ttpoModel->state = 1;
+    		$ttpoModel->save();
+    		$model->state = 0;
+    		$model->update_at = time();
+    		$model->save();
+    		$newAttr = $ttpoModel->attributes;
+    		Logs::writeLog('农场转让信息',$ttpoModel->id,$oldAttr,$newAttr);
+    		
+    		return $this->redirect(['farmsview', 'id' => $ttpoModel->id]);
+    	} else {
+    		return $this->render('farmstransfer', [
+    				'model' => $model,
+    				'ttpoModel' => $ttpoModel,
+    		]);
+    	}
+    }
+    
+    public function actionAllstate()
+    {
+    	$allfarms = Farms::find()->all();
+    	foreach($allfarms as $value) {
+    		$model = $this->findModel($value['id']);
+    		$model->state = 1;
+    		$model->save();
+    	}
+    	
+    }
     /**
      * Creates a new farms model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -334,6 +397,28 @@ class FarmsController extends Controller
         }
     }
 
+    public function actionFarmsttpo($farms_id)
+    {
+    	$model = $this->findModel($farms_id);
+    	$ttpoModel = new Farms();
+    	if ($ttpoModel->load(Yii::$app->request->post())) {
+    		$ttpoModel->create_at = time();
+    		$ttpoModel->update_at = time();
+    		$ttpoModel->pinyin = Pinyin::encode($ttpoModel->farmname);
+    		$ttpoModel->farmerpinyin = Pinyin::encode($ttpoModel->farmername);
+    		$ttpoModel->save();
+    		$newAttr = $ttpoModel->attributes;
+    		Logs::writeLog('农场转让信息',$id,$oldAttr,$newAttr);
+    	
+    		return $this->redirect(['farmsview', 'id' => $ttpoModel->id]);
+    	} else {
+	    	return $this->render('farmsttpo', [
+	    			'model' => $model,
+	    			'ttpoModel' => $ttpoModel,
+	    	]);
+    	}
+    }
+    
     /**
      * Updates an existing Farms model.
      * If update is successful, the browser will be redirected to the 'view' page.

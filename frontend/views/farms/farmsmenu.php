@@ -96,7 +96,7 @@ use app\models\Collection;
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box --></a></td>
     <td width="5%" align="center"></td>
-    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=farmer/farmercreate&farms_id='.$_GET['farms_id']) ?>'>
+    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=farms/farmsttpomenu&farms_id='.$_GET['farms_id']) ?>'>
 <div class="info-box bg-blue">
   <span class="info-box-icon"><i class="fa fa-users"></i></span>
   <div class="info-box-content">

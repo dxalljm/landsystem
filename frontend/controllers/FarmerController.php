@@ -278,6 +278,8 @@ class FarmerController extends Controller
     	} else
     		return false;
     }
+    
+    
     /**
      * Creates a new farmer model.
      * If creation is successful, the browser will be redirected to the 'view' page.

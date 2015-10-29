@@ -85,7 +85,7 @@ class farmsSearch extends Farms
      */
     public function search($params)
     {
-    	//var_dump($params);
+//     	var_dump($params);
 //        exit;
         $query = farms::find();
         //$query->joinWith(['farmer']);
@@ -141,7 +141,7 @@ class farmsSearch extends Farms
             ->andFilterWhere(['like', 'cardid', $this->cardid])
             ->andFilterWhere(['like', 'telephone', $this->telephone])
             ->andFilterWhere(['like', 'address', $this->address])
-
+            ->andFilterWhere(['like', 'state', $this->state])
             ->andWhere(['management_area' => $this->management_area])
 
 

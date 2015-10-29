@@ -8,7 +8,7 @@ use frontend\models\breedtypeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use app\models\Logs;
 /**
  * BreedtypeController implements the CRUD actions for Breedtype model.
  */
@@ -73,13 +73,17 @@ class BreedtypeController extends Controller
         }
     }
 
-    public function actionBreedtypecreateajax($father_id)
+    public function actionBreedtypecreateajax()
     {
     	$model = new Breedtype();
     	$father = Breedtype::find()->where(['father_id'=>[0,1]])->all();
     	$typeName = Yii::$app->request->get('typename');
+    	$father_id = Yii::$app->request->get('father_id');
+    	var_dump(Yii::$app->request->get('father_id'));
+//     	exit;
     	if (!empty($typeName)) {
             $model->typename = $typeName;
+            $model->father_id = $father_id;
             $model->save();
             $newAttr = $model->attributes;
             Logs::writeLog('创建养殖种类',$model->id,'',$newAttr);
