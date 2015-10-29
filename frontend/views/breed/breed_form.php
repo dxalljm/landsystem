@@ -112,10 +112,6 @@ $(document).on("click", ".add-breedtype", function () {
     });
 });
 
-//$('#breedtype-form').on('show.bs.modal', function (e) {
-//	father_id = $("select[name='breedtypePost[father_id][]']").val();
-//});
-
 $(document).on("click", "#ajax-create", function () {
     var typename = $('#breedtype-typename').val();
     $.getJSON('index.php?r=breedtype/breedtypecreateajax', {typename: typename}, function (data) {
