@@ -116,6 +116,7 @@ $(document).on("click", ".add-breedtype", function () {
         // 填充内容
 		$('.modal-body').html(body);
     });
+
 });
 
 
