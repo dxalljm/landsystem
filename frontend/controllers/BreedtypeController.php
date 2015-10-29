@@ -79,8 +79,6 @@ class BreedtypeController extends Controller
     	$father = Breedtype::find()->where(['father_id'=>[0,1]])->all();
     	$typeName = Yii::$app->request->get('typename');
     	$father_id = Yii::$app->request->get('father_id');
-    	var_dump(Yii::$app->request->get('father_id'));
-//     	exit;
     	if (!empty($typeName)) {
             $model->typename = $typeName;
             $model->father_id = $father_id;

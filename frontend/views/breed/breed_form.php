@@ -103,11 +103,14 @@ $(document).on("change", "select[name='breedtypePost[father_id][]']", function (
 });
 
 
+var category_level_2;
+
 // 添加养殖种植
 $(document).on("click", ".add-breedtype", function () {
 
     // 找到select获取ID
     var select = $(this).parent().prev().prev().children();
+    category_level_2 = $(this).parent().prev().children();
     var father_id = select.val();
 
     $.get('index.php?r=breedtype/breedtypecreateajax', {ajax: true,father_id:father_id}, function (body) {
@@ -124,11 +127,11 @@ $(document).on("click", "#ajax-create", function () {
     var typename = $('#breedtype-typename').val();
     var father_id = $('#breedtype-father_id').val();
 
+    console.log(category_level_2);
     $.getJSON('index.php?r=breedtype/breedtypecreateajax', {typename: typename,father_id:father_id}, function (data) {
         if (data.status == 1) {
 			$('#breedtype-form').modal('hide');
-			var select = $(this).parent().prev().prev().children();
-			select.append('<option selected="selected" value="'+data.data[0]+'">'+data.data[1]+'</option>');
+            category_level_2.append('<option selected="selected" value="'+data.data[0]+'">'+data.data[1]+'</option>');
         } else {
             alert('养殖种类类型添加失败');
         }
