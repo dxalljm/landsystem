@@ -68,10 +68,32 @@ class BreedtypeController extends Controller
             return $this->render('breedtypecreate', [
                 'model' => $model,
             	'father' => $father,
+            	'father_id' => 0,
             ]);
         }
     }
 
+    public function actionBreedtypecreateajax($father_id)
+    {
+    	$model = new Breedtype();
+    	$father = Breedtype::find()->where(['father_id'=>[0,1]])->all();
+    	$typeName = Yii::$app->request->get('typename');
+    	if (!empty($typeName)) {
+            $model->typename = $typeName;
+            $model->save();
+            $newAttr = $model->attributes;
+            Logs::writeLog('创建养殖种类',$model->id,'',$newAttr);
+            echo json_encode(['status' => 1, 'data' => [$model->id, $model->typename]]);
+            Yii::$app->end();
+        } else {
+            return $this->renderAjax('breedtypecreate', [
+                'model' => $model,
+            	'father' => $father,
+            	'father_id' => $father_id,
+            ]);
+        }
+    }
+    
     /**
      * Updates an existing Breedtype model.
      * If update is successful, the browser will be redirected to the 'view' page.

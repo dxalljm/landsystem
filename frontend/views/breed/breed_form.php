@@ -88,18 +88,35 @@ $(document).on("change", "select[name='breedtypePost[father_id][]']", function (
 	// 投入品子类，投入品
 	var fertilizerChild = $(this).parent().next().children(),
 		father_id = $(this).val();
-	// 请求二级分类
-	$.getJSON('index.php?r=breedtype/getbreedtypeson', {father_id: father_id}, function (data) {
-		alert('55555');
+
+	$.getJSON('index.php?r=breed/getbreedtypeson', {father_id: father_id}, function (data) {
+		
 		fertilizerChild.html(null);
 		fertilizerChild.append('<option value="prompt">请选择</option>');
 		if (data.status == 1) {
-			alert('3334');
 			for(i = 0; i < data.breedtypeSon.length; i++) {
-				alert(data.breedtypeSon[i]['typename']);
 				fertilizerChild.append('<option value="'+data.breedtypeSon[i]['id']+'">'+data.breedtypeSon[i]['typename']+'</option>');
 			}
 		}
 	});
+});
+$('#breedtype-form').on('show.bs.modal', function (e) {
+	father_id = $("select[name='breedtypePost[father_id][]']").val();
+	alert(father_id);
+    $.get('index.php?r=breedtype/breedtypecreateajax', {ajax: true,father_id:father_id}, function (body) {
+		$('.modal-body').html(body);
+    });
+});
+
+$(document).on("click", "#ajax-create", function () {
+    var typename = $('#breedtype-typename').val();
+    $.getJSON('index.php?r=breedtype/breedtypecreateajax', {typename: typename}, function (data) {
+        if (data.status == 1) {
+			$('#breedtype-form').modal('hide');
+			$('#breedtype-breedtype_id').append('<option selected="selected" value="'+data.data[0]+'">'+data.data[1]+'</option>');
+        } else {
+            alert('合作社类型添加失败');
+        }
+    });
 });
 </script>
