@@ -34,7 +34,7 @@ use yii\helpers\ArrayHelper;
 			  <?php echo Html::hiddenInput('breedtypePost[id][]', '', ['class' => 'form-control']); ?>
               <?php echo Html::hiddenInput('breedtypePost[breed_id][]', '', ['class' => 'form-control']); ?>
 
-              <td width="15%"><?php echo Html::dropDownList('breedtypePost[father_id][]', '', ArrayHelper::map($breedtypeFather, 'id', 'typename'),['prompt'=>'请选择...', 'id'=>'breedtype-father_id','class' => 'form-control']); ?></td>
+              <td width="15%"><?php echo Html::dropDownList('breedtypePost[father_id][]', '', ArrayHelper::map($breedtypeFather, 'id', 'typename'),['prompt'=>'请选择...','class' => 'form-control']); ?></td>
               <td><?php echo Html::dropDownList('breedtypePost[breedtype_id][]', '',['prompt'=>'请选择...'], ['id'=>'breedtype-breedtype_id', 'class' => 'form-control']); ?></td>
               <td><?php echo Html::a('+', 'javascript:void(0);',['class' => 'btn btn-warning add-breedtype']) ?></td>
               <td><?php echo Html::textInput('breedtypePost[number][]', '',['id'=>'breedtype-number', 'class' => 'form-control']); ?></td>
@@ -123,7 +123,7 @@ $(document).on("click", ".add-breedtype", function () {
 $(document).on("click", "#ajax-create", function () {
     var typename = $('#breedtype-typename').val();
     var father_id = $('#breedtype-father_id').val();
-    alert(father_id);
+
     $.getJSON('index.php?r=breedtype/breedtypecreateajax', {typename: typename,father_id:father_id}, function (data) {
         if (data.status == 1) {
 			$('#breedtype-form').modal('hide');
