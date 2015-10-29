@@ -103,14 +103,21 @@ $(document).on("change", "select[name='breedtypePost[father_id][]']", function (
 });
 
 
+// 添加养殖种植
 $(document).on("click", ".add-breedtype", function () {
+
+    // 找到select获取ID
     var select = $(this).parent().prev().prev().children();
     var father_id = select.val();
+
     $.get('index.php?r=breedtype/breedtypecreateajax', {ajax: true,father_id:father_id}, function (body) {
+        // 显示modal
         $('#breedtype-form').modal('show');
+        // 填充内容
 		$('.modal-body').html(body);
     });
 });
+
 
 $(document).on("click", "#ajax-create", function () {
     var typename = $('#breedtype-typename').val();
