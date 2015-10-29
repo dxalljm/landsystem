@@ -36,7 +36,7 @@ use yii\helpers\ArrayHelper;
 
               <td width="15%"><?php echo Html::dropDownList('breedtypePost[father_id][]', '', ArrayHelper::map($breedtypeFather, 'id', 'typename'),['prompt'=>'请选择...', 'id'=>'breedtype-father_id','class' => 'form-control']); ?></td>
               <td><?php echo Html::dropDownList('breedtypePost[breedtype_id][]', '',['prompt'=>'请选择...'], ['id'=>'breedtype-breedtype_id', 'class' => 'form-control']); ?></td>
-              <td><?php echo Html::a('+', '',['class' => 'btn btn-warning', 'data-toggle' => 'modal', 'data-target' => '#breedtype-form']) ?></td>
+              <td><?php echo Html::a('+', 'javascript:void(0);',['class' => 'btn btn-warning add-breedtype']) ?></td>
               <td><?php echo Html::textInput('breedtypePost[number][]', '',['id'=>'breedtype-number', 'class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('breedtypePost[basicinvestment][]', '',['id'=>'breedtype-basicinvestment','class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('breedtypePost[housingarea][]', '', ['id'=>'breedtype-housingarea','class' => 'form-control']); ?></td>
@@ -73,6 +73,7 @@ use yii\helpers\ArrayHelper;
     ]);
     \yii\bootstrap\Modal::end(); ?>
 <script>
+var father_id = '';
 //添加养殖种类
 $('#add-breedtype').click(function () {
     var template = $('#breedtype-template').html();
@@ -100,13 +101,20 @@ $(document).on("change", "select[name='breedtypePost[father_id][]']", function (
 		}
 	});
 });
-$('#breedtype-form').on('show.bs.modal', function (e) {
-	father_id = $("select[name='breedtypePost[father_id][]']").val();
-	alert(father_id);
+
+
+$(document).on("click", ".add-breedtype", function () {
+    var select = $(this).parent().prev().prev().children();
+    var father_id = select.val();
     $.get('index.php?r=breedtype/breedtypecreateajax', {ajax: true,father_id:father_id}, function (body) {
+        $('#breedtype-form').modal('show');
 		$('.modal-body').html(body);
     });
 });
+
+//$('#breedtype-form').on('show.bs.modal', function (e) {
+//	father_id = $("select[name='breedtypePost[father_id][]']").val();
+//});
 
 $(document).on("click", "#ajax-create", function () {
     var typename = $('#breedtype-typename').val();
