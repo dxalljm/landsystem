@@ -14,7 +14,7 @@ use yii\helpers\ArrayHelper;
     <?php $form = ActiveFormrdiv::begin(); ?>
 <table class="table table-striped table-bordered table-hover table-condensed">
 		<tr>
-<td width=15% align='right'>类别</td><?php if(!$father_id) $model->father_id = $father_id;var_dump($father_id);?>
+<td width=15% align='right'>类别</td><?php if($father_id) $model->father_id = $father_id;?>
 <td align='left'><?= $form->field($model, 'father_id')->dropDownList(ArrayHelper::map($father, 'id', 'typename'))->label(false)->error(false) ?></td>
 </tr>
 <tr>

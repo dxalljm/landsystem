@@ -122,7 +122,8 @@ $(document).on("click", ".add-breedtype", function () {
 
 $(document).on("click", "#ajax-create", function () {
     var typename = $('#breedtype-typename').val();
-    $.getJSON('index.php?r=breedtype/breedtypecreateajax', {typename: typename}, function (data) {
+    var father_id = $('#breedtype-father_id').val():
+    $.getJSON('index.php?r=breedtype/breedtypecreateajax', {typename: typename,father_id:father_id}, function (data) {
         if (data.status == 1) {
 			$('#breedtype-form').modal('hide');
 			$('#breedtype-breedtype_id').append('<option selected="selected" value="'+data.data[0]+'">'+data.data[1]+'</option>');
