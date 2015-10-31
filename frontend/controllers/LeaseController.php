@@ -56,7 +56,7 @@ class LeaseController extends Controller
          $searchModel = new leaseSearch();
          $dataProvider = $searchModel->search(['farms_id'=>$farms_id]);
 		//$this->getView()->registerJsFile($url)
-        //echo Lease::getNoArea($farms_id);
+        //$notclear = Farms::find()->where(['id'=>$farms_id])->one()['notclear'];
 		Logs::writeLog('租赁');
         return $this->render('leaseindex', [
              'searchModel' => $searchModel,

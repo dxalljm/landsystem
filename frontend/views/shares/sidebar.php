@@ -40,7 +40,7 @@ use app\models\Mainmenu;
                 	<a href="<?= Url::to('index.php?r=farmer/farmercreate&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-user"></i><span>法人信息</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="#"><i class="fa fa-users"></i><span>转让</span></a>
+                	<a href="<?= Url::to('index.php?r=farms/farmsttpomenu&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-users"></i><span>转让</span></a>
            		</li>
            		<li class="treeview">
                 	<a href="<?= Url::to('index.php?r=lease/leaseindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-street-view"></i><span>租赁</span></a>

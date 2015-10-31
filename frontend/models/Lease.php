@@ -31,8 +31,8 @@ class Lease extends \yii\db\ActiveRecord
     {
     	//var_dump($Leasearea);
     	$areas = 0;
-    	preg_match_all('/-([0-9]+)\(([0-9.]+?)\)/', $Leasearea, $area);
-    	$areas = (float)$area[2][0];
+    	preg_match_all('/-([\s\S]*)\(([0-9.]+?)\)/', $Leasearea, $area);
+		$areas = (float)$area[2][0];
     	return $areas;
     }
     //得到1-100（123）中的宗地号1-100
@@ -86,11 +86,15 @@ class Lease extends \yii\db\ActiveRecord
     {
     	$zdarea = false;
     	$farm = Farms::find()->where(['id'=>$farms_id])->one();
+    	//var_dump($farm);
     	$farmzongdi = explode('、', $farm['zongdi']);
     	foreach($farmzongdi as $zongdi) {
     		$parcel = Parcel::find()->where(['unifiedserialnumber'=>$zongdi])->one()['grossarea'];
     		$zdarea[] = $zongdi.'('.$parcel.')';
     	}
+    	//var_dump($farm->notclear);
+    	if(!empty($farm->notclear))
+    		$zdarea[] = 'not-clear('.$farm->notclear.')';
     	return $zdarea;
     }
     
@@ -189,13 +193,14 @@ class Lease extends \yii\db\ActiveRecord
 	    		}
 	    	}
     	}
+		//var_dump($area);
     	return $area;
     }
     //返回还没有租赁面积
     public static function getNoArea($farms_id)
     {
-    	$farms = Farms::find()->where(['id'=>$farms_id])->one()['measure'];
-    	return round($farms - self::getOverArea($farms_id));
+    	$farms = Farms::find()->where(['id'=>$farms_id])->one();
+    	return $farms->measure - self::getOverArea($farms_id);
     }
 	public function rules() 
     { 

@@ -22,7 +22,7 @@ use app\models\Lease;
                 </div>
                 <?php Farms::showRow($_GET['farms_id']);?>
                 <div class="box-body">
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    
 	<?php if($areas) {?>
     <p><?php //echo $areas;?>
     	<?= Html::a('添加', ['leasecreate','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?>
