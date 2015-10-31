@@ -21,6 +21,8 @@ use app\models\Parcel;
 use app\models\Logs;
 use app\models\CooperativeOfFarm;
 use frontend\helpers\Pinyin;
+use app\models\Ttpo;
+use app\models\Ttpozongdi;
 
 /**
  * FarmsController implements the CRUD actions for farms model.
@@ -306,57 +308,186 @@ class FarmsController extends Controller
         	'cooperativeoffarm' => $cooperativeoffarm,
         ]);
     }
-
+//转让主页面
     public function actionFarmsttpomenu($farms_id)
     {
-    	$model = $this->findModel($farms_id);
-    	$cooperativeoffarm = CooperativeOfFarm::find()->where(['farms_id'=>$farms_id])->all();
-    	$zongdiarr = explode(' ', $model->zongdi);
-    	foreach($zongdiarr as $zongdi) {
-    		$dataProvider[] = Parcel::find()->where(['unifiedserialnumber' => $zongdi])->one();
-    	}
-    	Logs::writeLog('查看农场信息',$farms_id);
+    	$ttpoModel = Ttpo::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
+    	$ttpozongdiModel = Ttpozongdi::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
+    	Logs::writeLog('农场转让信息',$farms_id);
     	return $this->render('farmsttpomenu', [
-    			'model' => $model,
-    			'dataProvider' => $dataProvider,
-    			'cooperativeoffarm' => $cooperativeoffarm,
+    			'ttpoModel' => $ttpoModel,
+    			'ttpozongdiModel' => $ttpozongdiModel,
+    			'farms_id'=>$farms_id,
+    	]);
+    }
+    //查年垸户信息
+    public function actionFarmsttpoview($id)
+    {
+    	$ttpoModel = Ttpo::findOne($id);
+    	$oldFarm = Farms::find()->where(['id'=>$ttpoModel->oldfarms_id])->one();
+    	$newFarm = Farms::find()->where(['id'=>$ttpoModel->newfarms_id])->one();
+    	return $this->render('farmsttpoview',[
+    			'ttpoModel' => $ttpoModel,
+    			'oldFarm' => $oldFarm,
+    			'newFarm' => $newFarm,
+    	]);
+    }
+    
+    public function actionFarmsttpozongdiview($id)
+    {
+    	$ttpoModel = Ttpozongdi::findOne($id);
+    	$oldFarm = Farms::find()->where(['id'=>$ttpoModel->oldfarms_id])->one();
+    	$newFarm = Farms::find()->where(['id'=>$ttpoModel->newfarms_id])->one();
+    	return $this->render('farmsttpozongdiview',[
+    			'ttpoModel' => $ttpoModel,
+    			'oldFarm' => $oldFarm,
+    			'newFarm' => $newFarm,
     	]);
     }
     //state状态：0为已经失效，1为当前正用
     public function actionFarmstransfer($farms_id)
     {
+    	
     	$model = $this->findModel($farms_id);
     	$oldAttr = $model->attributes;
-    	$ttpoModel = new Farms();
-    	if ($ttpoModel->load(Yii::$app->request->post())) {
-    		$ttpoModel->address = $model->address;
-    		$ttpoModel->management_area = $model->management_area;
-    		$ttpoModel->spyear = $model->spyear;
-    		$ttpoModel->measure = $model->measure;
-    		$ttpoModel->zongdi = $model->zongdi;
-    		$ttpoModel->cooperative_id = $model->cooperative_id;
-    		$ttpoModel->surveydate = $model->surveydate;
-    		$ttpoModel->groundsign = $model->groundsign;
-    		$ttpoModel->investigator = $model->investigator;
-    		$ttpoModel->notclear = $model->notclear;
-    		$ttpoModel->create_at = time();
-    		$ttpoModel->update_at = time();
-    		$ttpoModel->pinyin = Pinyin::encode($ttpoModel->farmname);
-    		$ttpoModel->farmerpinyin = Pinyin::encode($ttpoModel->farmername);
-    		$ttpoModel->state = 1;
-    		$ttpoModel->save();
+    	$nowModel = new Farms();
+    	if ($nowModel->load(Yii::$app->request->post())) {
+    		$nowModel->address = $model->address;
+    		$nowModel->management_area = $model->management_area;
+    		$nowModel->spyear = $model->spyear;
+    		$nowModel->measure = $model->measure;
+    		$nowModel->zongdi = $model->zongdi;
+    		$nowModel->cooperative_id = $model->cooperative_id;
+    		$nowModel->surveydate = $model->surveydate;
+    		$nowModel->groundsign = $model->groundsign;
+    		$nowModel->investigator = $model->investigator;
+    		$nowModel->notclear = $model->notclear;
+    		$nowModel->create_at = time();
+    		$nowModel->update_at = time();
+    		$nowModel->pinyin = Pinyin::encode($nowModel->farmname);
+    		$nowModel->farmerpinyin = Pinyin::encode($nowModel->farmername);
+    		$nowModel->state = 1;
+    		$nowModel->save();
     		$model->state = 0;
     		$model->update_at = time();
     		$model->save();
-    		$newAttr = $ttpoModel->attributes;
-    		Logs::writeLog('农场转让信息',$ttpoModel->id,$oldAttr,$newAttr);
+    		$ttpoModel = new Ttpo();
+    		$ttpoModel->oldfarms_id = $model->id;
+    		$ttpoModel->newfarms_id = $nowModel->id;
+    		$ttpoModel->create_at = time();
+    		$ttpoModel->save();
+    		$newAttr = $nowModel->attributes;
+    		Logs::writeLog('农场转让信息',$nowModel->id,$oldAttr,$newAttr);
     		
-    		return $this->redirect(['farmsview', 'id' => $ttpoModel->id]);
+    		return $this->redirect(['farmsttpomenu', 'farms_id' => $nowModel->id]);
     	} else {
     		return $this->render('farmstransfer', [
     				'model' => $model,
-    				'ttpoModel' => $ttpoModel,
+    				'nowModel' => $nowModel,
     		]);
+    	}
+    }
+    
+    //分户
+    public function actionFarmssplit($farms_id)
+    {
+    	$oldfarm = $this->findModel($farms_id);
+    	$model = new Farms();
+    	//$ttpoModel = Ttpo::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
+    	//$ttpozongdiModel = Ttpozongdi::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
+    	 
+    	if ($oldfarm->load(Yii::$app->request->post())) {
+    		$oldfarm->update_at = time();
+    		$oldfarm->zongdi = Yii::$app->request->post('oldzongdi');
+    		$oldfarm->measure = Yii::$app->request->post('oldmeasure');
+    		$oldfarm->notclear = Yii::$app->request->post('oldnotclear');
+    		if(empty(Yii::$app->request->post('oldzongdi')))
+    			$oldfarm->state = 0;
+    		$oldfarm->save();
+    		
+    		if ($model->load(Yii::$app->request->post())) {
+    			$model->update_at = $oldfarm->update_at;
+    			$model->save();
+    		}
+    		 
+    		$ttpozongdi = new Ttpozongdi();
+    		$ttpozongdi->oldfarms_id = $oldfarm->id;
+    		$ttpozongdi->newfarms_id = $model->id;
+    		$ttpozongdi->zongdi = $model->zongdi;
+    		$ttpozongdi->oldzongdi = $oldfarm->zongdi;
+    		$ttpozongdi->create_at = $oldfarm->update_at;
+    		$ttpozongdi->ttpozongdi = Yii::$app->request->post('ttpozongdi');
+    		$ttpozongdi->ttpoarea = Yii::$app->request->post('ttpoarea');
+    	
+    		$ttpozongdi->save();
+    	
+    		return $this->redirect(['farmsttpomenu', 'farms_id' => $farms_id]);
+    	} else {
+    		 
+    		return $this->render('farmssplit',[
+    				'oldFarm' => $oldfarm,
+    				'model' => $model,
+    		]);
+    	}
+    }
+    
+    public function actionFarmsttpozongdi($farms_id)
+    {
+    	$search = Yii::$app->request->post('farmSearch');
+    	$farmsSearch = null;
+    	$dataProvider = null;
+    	if($search) {
+    		$farmsSearch = new farmsSearch();
+    		$params = Yii::$app->request->queryParams;
+    		$params['farmsSearch']['farmname'] = $search;
+    		$params['farmsSearch']['farmername'] = $search;
+    		$params['farmsSearch']['state'] = 1;
+    		$dataProvider = $farmsSearch->ttposearch($params);
+    	}
+    	return $this->render('farmsttpozongdi',[
+    			'searchModel' => $farmsSearch,
+    			'dataProvider' => $dataProvider,
+    			'oldfarms_id' => $farms_id,
+    	]);
+    }
+    
+    public function actionFarmstozongdi($farms_id,$oldfarms_id)
+    {
+    	$oldfarm = $this->findModel($oldfarms_id);
+    	$model = $this->findModel($farms_id);
+    	//$ttpoModel = Ttpo::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
+    	//$ttpozongdiModel = Ttpozongdi::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
+    	
+    	if ($oldfarm->load(Yii::$app->request->post())) {
+    		$oldfarm->update_at = time();
+    		$oldfarm->zongdi = Yii::$app->request->post('oldzongdi');
+    		$oldfarm->measure = Yii::$app->request->post('oldmeasure');
+    		$oldfarm->notclear = Yii::$app->request->post('oldnotclear');
+			
+    		$oldfarm->save();
+    		if ($model->load(Yii::$app->request->post())) {
+    			$model->update_at = $oldfarm->update_at;
+    			$model->save();
+    		}
+    		 
+    		$ttpozongdi = new Ttpozongdi();
+    		$ttpozongdi->oldfarms_id = $oldfarm->id;
+    		$ttpozongdi->newfarms_id = $model->id;
+    		$ttpozongdi->zongdi = $model->zongdi;
+    		$ttpozongdi->oldzongdi = $oldfarm->zongdi;
+    		$ttpozongdi->create_at = $oldfarm->update_at;
+    		$ttpozongdi->ttpozongdi = Yii::$app->request->post('ttpozongdi');
+    		$ttpozongdi->ttpoarea = Yii::$app->request->post('ttpoarea');
+    		
+			$ttpozongdi->save();
+    		
+    		return $this->redirect(['farmsttpomenu', 'farms_id' => $oldfarms_id]);
+    	} else {  	
+    	
+	    	return $this->render('farmstozongdi',[
+	    			'oldFarm' => $oldfarm,
+	    			'model' => $model,
+	    	]);
     	}
     }
     
@@ -400,21 +531,21 @@ class FarmsController extends Controller
     public function actionFarmsttpo($farms_id)
     {
     	$model = $this->findModel($farms_id);
-    	$ttpoModel = new Farms();
-    	if ($ttpoModel->load(Yii::$app->request->post())) {
-    		$ttpoModel->create_at = time();
-    		$ttpoModel->update_at = time();
-    		$ttpoModel->pinyin = Pinyin::encode($ttpoModel->farmname);
-    		$ttpoModel->farmerpinyin = Pinyin::encode($ttpoModel->farmername);
-    		$ttpoModel->save();
-    		$newAttr = $ttpoModel->attributes;
+    	$nowModel = new Farms();
+    	if ($nowModel->load(Yii::$app->request->post())) {
+    		$nowModel->create_at = time();
+    		$nowModel->update_at = time();
+    		$nowModel->pinyin = Pinyin::encode($nowModel->farmname);
+    		$nowModel->farmerpinyin = Pinyin::encode($nowModel->farmername);
+    		$nowModel->save();
+    		$newAttr = $nowModel->attributes;
     		Logs::writeLog('农场转让信息',$id,$oldAttr,$newAttr);
     	
-    		return $this->redirect(['farmsview', 'id' => $ttpoModel->id]);
+    		return $this->redirect(['farmsview', 'id' => $nowModel->id]);
     	} else {
 	    	return $this->render('farmsttpo', [
 	    			'model' => $model,
-	    			'ttpoModel' => $ttpoModel,
+	    			'nowModel' => $nowModel,
 	    	]);
     	}
     }

@@ -68,6 +68,14 @@ class Lease extends \yii\db\ActiveRecord
     	}
     	return $result;
     }
+    
+    //宗地转面积
+    public static function zongdiToArea($zongdi)
+    {
+    	$area = Parcel::find()->where(['unifiedserialnumber'=>$zongdi])->one()['grossarea'];
+    	return $area;
+    }
+    
     //所有getAllLeaseArea返回的宗地面积累加
     public static function AddAllLeaseArea($arrayZongdiArea)
     {
