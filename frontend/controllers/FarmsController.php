@@ -539,7 +539,7 @@ class FarmsController extends Controller
     		$nowModel->farmerpinyin = Pinyin::encode($nowModel->farmername);
     		$nowModel->save();
     		$newAttr = $nowModel->attributes;
-    		Logs::writeLog('农场转让信息',$id,$oldAttr,$newAttr);
+    		Logs::writeLog('农场转让信息',$farms_id,$oldAttr,$newAttr);
     	
     		return $this->redirect(['farmsview', 'id' => $nowModel->id]);
     	} else {
@@ -568,7 +568,7 @@ class FarmsController extends Controller
         	$newAttr = $model->attributes;
         	Logs::writeLog('更新农场信息',$id,$oldAttr,$newAttr);
             
-            return $this->redirect(['farmsview', 'id' => $model->id]);
+            return $this->redirect(['farmsview', 'farms_id' => $model->id]);
         } else {
         	//Logs::writeLog('农场更新表单');
             return $this->render('farmsupdate', [

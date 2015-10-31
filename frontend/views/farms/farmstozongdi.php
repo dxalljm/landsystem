@@ -81,7 +81,7 @@ use app\models\Lease;
     <td width="50%"><table width="99%" height="458px"
 		class="table table-bordered table-hover">
       <tr>
-        <td width="15%" align='right'>农场名称</td>
+        <td width="30%" align='right'>农场名称</td>
         <td align='left'><?= $model->farmname ?></td>
         </tr>
       <tr>
@@ -105,13 +105,18 @@ use app\models\Lease;
         <td align='left'><?= $form->field($model, 'zongdi')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
         </tr>
       <tr>
-        <td align='right'>面积</td>
+        <td align='right'>面积</td><?= html::hiddenInput('tempmeasure',$model->measure,['id'=>'temp_measure']) ?>
+												<?= html::hiddenInput('tempnotclear',$model->notclear,['id'=>'temp_notclear']) ?>
         <td align='left'><?= $form->field($model, 'measure')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
         </tr>
       <tr>
-        <td align='right'>未明确地块</td>
-        <td align='left'><?= $form->field($model, 'notclear')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
-        </tr>
+        <td align='right'>未明确地块面积</td>
+        <td align='left'><?= $form->field($model, 'notclear')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
+       </tr>
+       <tr>
+        <td align='right'>转让未明确地块面积</td>
+        <td align='left'><?= html::textInput('inputnotclear','',['id'=>'input-notclear','class'=>'form-control']) ?></td>
+       </tr>
       <tr>
         <td align='right'>法人签字</td>
         <td align='left'><?= $model->farmersign ?></td>
@@ -170,6 +175,90 @@ $('#reset').click(function() {
 	 
     location.reload();
 
+});
+$('#input-notclear').keyup(function (event) {
+	var input=$(this).val();
+
+	if (event.keyCode == 8 || event.keyCode == 13 || event.keyCode == 48 || event.keyCode == 49 || event.keyCode == 50 || event.keyCode == 51 || event.keyCode == 52 || event.keyCode == 53 || event.keyCode == 54 || event.keyCode == 55 || event.keyCode == 56 || event.keyCode == 57 || event.keyCode == 110 || event.keyCode == 190 || event.keyCode == 96 || event.keyCode == 97 || event.keyCode == 98 || event.keyCode == 99 || event.keyCode == 100 || event.keyCode == 101 || event.keyCode == 102 || event.keyCode == 103 || event.keyCode == 104 || event.keyCode == 105) { 
+		if(input*1 > $('#oldfarms-notclear').val()*1)
+			alert('输入的面积不能大于原农场未明确地块面积');
+		else {
+			if(event.keyCode == 8) {
+				$(this).val('');
+				$('#farms-measure').val($('#temp_measure').val());
+				$('#farms-notclear').val($('#temp_notclear').val());
+// 				if($('#temp_notclear').val() !== '') {
+// 					$('#farms-measure').val($('#farms-measure').val()-$('#temp_notclear').val());
+// 				}
+			} else {
+				if(event.keyCode == 13) {
+					measure = $('#farms-measure').val();
+					if($('#temp_notclear').val() == '') {
+						$('#farms-measure').val(measure*1+input*1);
+						$('#farms-notclear').val($('#farms-notclear').val()*1+input*1)
+						$('#oldfarms-measure').val($('#oldfarms-measure').val()*1-input*1);
+						$('#oldfarms-notclear').val($('#oldfarms-notclear').val()*1-input*1)
+						
+						var ttpozongdi = $('#ttpozongdi-zongdi').val();
+						ttpozongdi = ttpozongdi + '、' + '未明确地块(' + input + ')';
+						var first = ttpozongdi.substr(0,1);
+						if(first == '、') {
+							$('#ttpozongdi-zongdi').val(ttpozongdi.substring(1));
+						}
+						else
+							$('#ttpozongdi-zongdi').val(ttpozongdi);
+						
+						var ttpoarea = $('#ttpozongdi-area').val();
+						ttpoarea = input*1 + ttpoarea*1;
+						$('#ttpozongdi-area').val(ttpoarea);
+					} else {
+					
+// 						if(input == $('#temp_notclear').val()){
+// 							$('#farms-measure').val($('#temp_measure').val());
+// 							$('#farms-notclear').val($('#temp_notclear').val());
+// 							var ttpozongdi = $('#ttpozongdi-zongdi').val();
+// 							ttpozongdi = ttpozongdi + '、' + '未明确地块(' + input + ')';
+// 							var first = ttpozongdi.substr(0,1);
+// 							if(first == '、') {
+// 								$('#ttpozongdi-zongdi').val(ttpozongdi.substring(1));
+// 							}
+// 							else
+// 								$('#ttpozongdi-zongdi').val(ttpozongdi);
+							
+// 							var ttpoarea = $('#ttpozongdi-area').val();
+// 							ttpoarea = input*1 + ttpoarea*1;
+// 							$('#ttpozongdi-area').val(ttpoarea);
+// 						}
+// 						else {
+							$('#farms-measure').val(measure*1+input*1);
+							$('#farms-notclear').val($('#farms-notclear').val()*1+input*1);
+							$('#oldfarms-measure').val($('#oldfarms-measure').val()*1-input*1);
+							$('#oldfarms-notclear').val($('#oldfarms-notclear').val()*1-input*1);
+							var ttpozongdi = $('#ttpozongdi-zongdi').val();
+							ttpozongdi = ttpozongdi + '、' + '未明确地块(' + input + ')';
+							var first = ttpozongdi.substr(0,1);
+							if(first == '、') {
+								$('#ttpozongdi-zongdi').val(ttpozongdi.substring(1));
+							}
+							else
+								$('#ttpozongdi-zongdi').val(ttpozongdi);
+							
+							var ttpoarea = $('#ttpozongdi-area').val();
+							ttpoarea = input*1 + ttpoarea*1;
+							$('#ttpozongdi-area').val(ttpoarea);
+// 						}
+					}
+				}
+			}
+			//$('#oldfarms-notclear').val($('#oldfarms-notclear').val()-input);
+		}
+	}
+	else {
+		alert('输入的必须为数字');
+		var last = input.substr(input.length-1,1);
+		$('#farms-notclear').val(input.substring(0,input.length-1));
+		
+	}
 });
 </script>
 <?php
