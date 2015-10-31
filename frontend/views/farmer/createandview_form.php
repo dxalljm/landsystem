@@ -57,46 +57,7 @@ use app\models\Farms;
         <td align="right" valign="middle">户籍所在地</td>
         <td colspan="5" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'domicile')->textInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.$model->domicile; ?></td>
       </tr>
-      <tr>
-        <td align="right" valign="middle">合同号</td>
-        <td colspan="5" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'contractnumber')->textInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.$model->contractnumber; ?></td>
-        <td valign="middle">&nbsp;</td>
-      </tr>
-      <tr>
-        <td align="right" valign="middle">承包年限</td>
-        <td width="5%" align="center" valign="middle">自        </td>
-        <td width="27%" align="center" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'begindate')->label(false)->error(false)->widget(
-    DateTimePicker::className(), [
-        // inline too, not bad
-        'inline' => false, 
-    	'language'=>'zh-CN',
-        
-        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
-        'clientOptions' => [
-            'autoclose' => true,
-        	'minView' => 3,
-        	'maxView' => 3,
-            'format' => 'yyyy-mm-dd'
-        ]
-]); else echo '&nbsp;'.$model->begindate; ?></td>
-        <td align="center" valign="middle">至</td>
-        <td width="27%" align="center" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'enddate')->label(false)->error(false)->widget(
-    DateTimePicker::className(), [
-        // inline too, not bad
-        'inline' => false, 
-    	'language'=>'zh-CN',
-        
-        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
-        'clientOptions' => [
-            'autoclose' => true,
-        	'minView' => 3,
-        	'maxView' => 3,
-            'format' => 'yyyy-mm-dd'
-        ]
-]); else echo '&nbsp;'.$model->enddate; ?></td>
-        <td width="5%" align="center" valign="middle">止</td>
-        <td align="center" valign="middle">&nbsp;</td>
-      </tr>
+      
       <tr>
         <td align="right" valign="middle">身份证扫描件</td>
         <td colspan="6" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'cardpic')->fileInput(['maxlength' => 200])->label(false)->error(false);  echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px']); ?></td>
