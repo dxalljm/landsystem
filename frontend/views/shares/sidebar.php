@@ -29,7 +29,7 @@ use app\models\Mainmenu;
           <?php 
           	$controller = Yii::$app->controller->id;
           	$action = yii::$app->controller->action->id;
-	    	if($action == 'farmsmenu' or $action == 'farmsttpomenu' or $controller == 'plantpesticides' or $controller == 'breed' or $controller == 'sales' or $controller == 'yields' or $controller == 'farmer' or $controller == 'lease' or $controller == 'fireprevention' or $controller == 'dispute' or $controller == 'lease' or $controller == 'cooperativeoffarm' or $controller == 'employee' or $controller == 'plantingstructure' or $controller == 'plantinputproduct'){?>
+	    	if($action == 'farmsmenu' or $action == 'farmsttpomenu' or $action == 'farmsttpozongdi' or $action == 'farmstozongdi'  or $controller == 'plantpesticides' or $controller == 'prevention' or $controller == 'breed' or $controller == 'loan' or  $controller == 'sales' or $controller == 'yields' or $controller == 'farmer' or $controller == 'lease' or $controller == 'fireprevention' or $controller == 'dispute' or $controller == 'lease' or $controller == 'cooperativeoffarm' or $controller == 'employee' or $controller == 'plantingstructure' or $controller == 'plantinputproduct'){?>
 	    	<?php if(isset($_GET['farms_id'])) {?>
 	    	<li class="header text-light-blue"><h4><?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']?></h4></li>
 	    	<?php }?>
@@ -46,7 +46,7 @@ use app\models\Mainmenu;
                 	<a href="<?= Url::to('index.php?r=lease/leaseindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-street-view"></i><span>租赁</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="#"><i class="fa fa-university"></i><span>贷款</span></a>
+                	<a href="<?= Url::to('index.php?r=loan/loanindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-university"></i><span>贷款</span></a>
            		</li>
            		<li class="treeview">
                 	<a href="<?= Url::to('index.php?r=dispute/disputeindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-commenting"></i><span>纠纷</span></a>
@@ -69,7 +69,12 @@ use app\models\Mainmenu;
            		<li class="treeview">
                 	<a href="<?= Url::to('index.php?r=sales/salesindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-cart-arrow-down"></i><span>销售信息</span></a>
            		</li>
-           		
+           		<li class="treeview">
+                	<a href="<?= Url::to('index.php?r=breed/breedcreate&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-cart-arrow-down"></i><span>养殖信息</span></a>
+           		</li>
+           		<li class="treeview">
+                	<a href="<?= Url::to('index.php?r=prevention/preventionindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-cart-arrow-down"></i><span>防疫信息</span></a>
+           		</li>
            		
 	    	<?php } else {?>
           

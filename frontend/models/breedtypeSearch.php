@@ -19,7 +19,7 @@ class breedtypeSearch extends Breedtype
     {
         return [
             [['id', 'father_id'], 'integer'],
-            [['typename'], 'safe'],
+            [['typename','unit'], 'safe'],
         ];
     }
 
@@ -60,7 +60,8 @@ class breedtypeSearch extends Breedtype
             'father_id' => $this->father_id,
         ]);
 
-        $query->andFilterWhere(['like', 'typename', $this->typename]);
+        $query->andFilterWhere(['like', 'typename', $this->typename])
+        	->andFilterWhere(['like', 'unit', $this->unit]);
 
         return $dataProvider;
     }

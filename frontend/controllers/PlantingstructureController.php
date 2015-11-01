@@ -53,9 +53,16 @@ class PlantingstructureController extends Controller
      */
     public function actionPlantingstructureview($id)
     {
+    	$model = $this->findModel($id);
+    	$farm = Farms::find()->where(['id'=>$model->farms_id])->one();
+    	$plantinputproductModel = Plantinputproduct::find()->where(['planting_id' => $id])->all();
+    	$plantpesticidesModel = Plantpesticides::find()->where(['planting_id'=>$id])->all();
     	Logs::writeLog('查看种植结构',$id);
         return $this->render('plantingstructureview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+        	'plantinputproductModel' => $plantinputproductModel,
+        	'plantpesticidesModel' => $plantpesticidesModel,
+        	'farm' => $farm,
         ]);
     }
 
@@ -156,7 +163,7 @@ class PlantingstructureController extends Controller
     		$model->save();
     		
     		$new = $model->attributes;
-    		var_dump($new);
+    		//var_dump($new);
     		Logs::writeLog('为'.Lease::find()->where(['id'=>$lease_id])->one()['lessee'].'创建种植结构信息',$model->id,'',$new);
     		
     		

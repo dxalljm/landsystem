@@ -45,14 +45,7 @@ class LeaseController extends Controller
      */
     public function actionLeaseindex($farms_id)
     {
-    	//$this->layout='@app/views/layouts/nomain.php';
-    	//$lease = Lease::find()->where(['farms_id'=>$id,'years'=>Theyear::findOne(1)['years']])->all();
-//     	$allLeaseArea = Lease::getAllLeaseArea($farms_id);
-//     	$farmsArea = Lease::getFarmsZdarea($farms_id);
-//     	var_dump(Lease::zdareaChuLi($allLeaseArea));
-//     	var_dump($farmsArea);
-//     	var_dump($allLeaseArea);
-//     	exit;
+    	//$farmerarea = Plantingstructure::find()->where(['farms_id'=>$farms_id,'lease_id'=>0])->one()['area'];
          $searchModel = new leaseSearch();
          $dataProvider = $searchModel->search(['farms_id'=>$farms_id]);
 		//$this->getView()->registerJsFile($url)
@@ -62,6 +55,7 @@ class LeaseController extends Controller
              'searchModel' => $searchModel,
              'dataProvider' => $dataProvider,
         	 'areas' => Lease::getNoArea($farms_id),
+        	//'farmerarea' => $farmerarea,
         ]);
     }
 	

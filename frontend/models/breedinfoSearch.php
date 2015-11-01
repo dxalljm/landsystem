@@ -41,6 +41,7 @@ class breedinfoSearch extends Breedinfo
      */
     public function search($params)
     {
+    	
         $query = Breedinfo::find();
 
         $dataProvider = new ActiveDataProvider([

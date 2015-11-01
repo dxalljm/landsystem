@@ -26,7 +26,9 @@ $this->params['breadcrumbs'][] = '更新';
                 <div class="box-body">
 
     <?= $this->render('breedtype_form', [
-        'model' => $model,
+        	'model' => $model,
+            'father' => $father,
+            'father_id' => 0,
     ]) ?>
                 </div>
             </div>

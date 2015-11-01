@@ -146,6 +146,7 @@ foreach($employees as $emp) {
 <?php Farms::showRow($_GET['farms_id']);?>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        
     </div>
 
     <?php ActiveFormrdiv::end(); ?>

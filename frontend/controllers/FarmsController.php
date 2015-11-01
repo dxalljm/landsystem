@@ -118,7 +118,7 @@ class FarmsController extends Controller
     
     public function actionGetfarmarea()
     {
-    	$cacheKey = 'farmsarea-hcharts3';
+    	$cacheKey = 'farmsarea-hcharts2';
     	$result = Yii::$app->cache->get($cacheKey);
     	if (!empty($result)) {
     		return $result;
@@ -137,7 +137,7 @@ class FarmsController extends Controller
     	$allvalue = $all-$sum;
     	$result[] = ['其他管理区',(float)$allvalue];
 		$jsonData = Json::encode(['status' => 1, 'result' => $result,'total'=>$all]);
-        Yii::$app->cache->set($cacheKey, $jsonData, 36000);
+        Yii::$app->cache->set($cacheKey, $jsonData, 1);
         
         return $jsonData;
     }

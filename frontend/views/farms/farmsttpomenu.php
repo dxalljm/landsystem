@@ -30,7 +30,7 @@ use app\models\Farms;
     	 <?= Html::a('过户', ['farmstransfer', 'farms_id' => $farms_id], ['class' => 'btn btn-success']) ?>
         <?= Html::a('宗地转让', ['farmsttpozongdi', 'farms_id' => $farms_id],['class' => 'btn btn-primary']) ?>
         <?= Html::a('分户', ['farmssplit', 'farms_id' => $farms_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('合并', ['farmsmerge', 'farms_id' => $farms_id], ['class' => 'btn btn-primary']) ?>
+        
     </p>
     <?php if(!empty($ttpoModel)) {?>
     <h3>过户信息</h3>

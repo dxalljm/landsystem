@@ -3,7 +3,7 @@ namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-
+use yii;
 /* @var $this yii\web\View */
 /* @var $model app\models\CooperativeOfFarm */
 
@@ -35,6 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+        <?= Html::a('返回', [Yii::$app->controller->id.'index','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
     </p>
 
     <?= DetailView::widget([

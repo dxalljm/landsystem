@@ -5,6 +5,7 @@ use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\Farms;
+use frontend\helpers\MoneyFormat;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\cooperativeoffarmSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -33,13 +34,26 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php Farms::showRow($_GET['farms_id']);?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        //'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'farms_id',
-            'cia',
+            //'id',
+            [
+            	'label'=>'农场名称',
+            	'attribute' => 'farms_id',
+            	'value' => function($model) {
+            		return Farms::find()->where(['id'=>$model->farms_id])->one()['farmname'];
+            	}
+            ],
+             [
+            	//'label'=>'农场名称',
+            	'attribute' => 'cia',
+            	'value' => function($model) {
+            		return MoneyFormat::num_format($model->cia).'元';
+            	}
+            ],
+            
             'proportion',
             'bonus',
             // 'cooperative_id',

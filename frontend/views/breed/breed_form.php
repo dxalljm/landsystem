@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveFormrdiv;
 use yii\helpers\ArrayHelper;
+use app\models\Farms;
+use app\models\Breedtype;
 /* @var $this yii\web\View */
 /* @var $model app\models\Breed */
 /* @var $form yii\widgets\ActiveForm */
@@ -14,12 +16,12 @@ use yii\helpers\ArrayHelper;
 <table class="table table-bordered table-hover">
 		<?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false)->error(false) ?>
 	<tr>
-		<td width=15% align='right'>养殖场名称</td>
+		<td width=15% align='right'>养殖场名称</td><?php $farm = Farms::find()->where(['id'=>$_GET['farms_id']])->one();if($model->breedname !== '') $model->breedname = $farm['farmname'];if($model->breedname !== '') $model->breedaddress = $farm['address'];?>
 		<td align='right'><?= $form->field($model, 'breedname')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		<td align='right'>养殖位置</td>
 		<td align='right'><?= $form->field($model, 'breedaddress')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		<td align='right'>是否示范户</td>
-		<td align='right'><?= $form->field($model, 'is_demonstration')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
+		<td align='left'><?= $form->field($model, 'is_demonstration')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
 	</tr>
 </table>
 <div class="form-group">
@@ -52,7 +54,23 @@ use yii\helpers\ArrayHelper;
 			<td align='center'>圈舍面积</td>
 			<td align='center'>操作</td>
 		</tr>
-		
+	<?php if($breedinfo) {
+	foreach ($breedinfo as $value) {
+	?>
+	<tr>
+			  <?php echo Html::hiddenInput('breedtypePost[id][]', $value['id'] , ['class' => 'form-control']); ?>
+              <?php echo Html::hiddenInput('breedtypePost[breed_id][]', $value['breed_id'], ['class' => 'form-control']); ?>
+			  <?php $fatherid = Breedtype::find()->where(['id'=>$value['breedtype_id']])->one()['father_id'];?>
+              <td width="15%"><?php echo Html::dropDownList('breedtypePost[father_id][]', $fatherid , ArrayHelper::map($breedtypeFather, 'id', 'typename'),['prompt'=>'请选择...','class' => 'form-control']); ?></td>
+              <td><?php echo Html::dropDownList('breedtypePost[breedtype_id][]', $value['breedtype_id'],ArrayHelper::map(Breedtype::find()->where(['father_id'=>$fatherid])->all(), 'id', 'typename'), ['id'=>'breedtype-breedtype_id', 'class' => 'form-control']); ?></td>
+              <td><?php echo Html::a('+', 'javascript:void(0);',['class' => 'btn btn-warning add-breedtype']) ?></td>
+              <td><?php echo Html::textInput('breedtypePost[number][]', $value['number'],['id'=>'breedtype-number', 'class' => 'form-control']); ?></td>
+              <td><?php echo Html::textInput('breedtypePost[basicinvestment][]', $value['basicinvestment'],['id'=>'breedtype-basicinvestment','class' => 'form-control']); ?></td>
+              <td><?php echo Html::textInput('breedtypePost[housingarea][]', $value['housingarea'], ['id'=>'breedtype-housingarea','class' => 'form-control']); ?></td>
+              <td valign="middle" align="center"><?php echo Html::button('-', ['class' => 'btn btn-warning delete-breedtype']) ?></td>
+              <td valign="middle" align="center">&nbsp;</td>
+          </tr>
+	<?php }}?>
 
 		
 	</tbody>

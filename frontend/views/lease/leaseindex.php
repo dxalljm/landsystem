@@ -5,6 +5,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\Farms;
 use app\models\Lease;
+use app\models\Plantingstructure;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\leaseSearch */

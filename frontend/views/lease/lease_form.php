@@ -95,6 +95,7 @@ use app\models\Lease;
 </datalist>
 <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['onclick'=>'setFarmsid('.$_GET['farms_id'].')','class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::a('返回', [Yii::$app->controller->id.'index','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
   </div>
     <?php ActiveFormrdiv::end(); ?>
 

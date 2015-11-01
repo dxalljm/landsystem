@@ -144,6 +144,7 @@ use app\models\Goodseed;
     <div class="form-group">
     <?php ?>
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::a('返回', [Yii::$app->controller->id.'index','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
     </div>
 
     <?php ActiveFormrdiv::end(); ?>
@@ -172,15 +173,15 @@ use app\models\Goodseed;
 
     	</tr>
     	<tr>
-    		<td align='center'><?php 
+    		<td align='left'><?php 
 			$zongdiarr = $zongdi;
 			//var_dump($zongdiarr);
 			$i=0;
     		foreach($zongdiarr as $value) {
     			echo html::button($value,['onclick'=>'toParcellist("'.$value.'","'.Lease::getZongdi($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
     			$i++;
-    			if($i%6 == 0)
-    				echo '<br><br>';
+    			if($i%5 == 0)
+    				echo '<br>';
     		}
     		?></td>
 

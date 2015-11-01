@@ -26,8 +26,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="box-body">
 
     <p>
-    	 <?= Html::a('添加', ['breedcreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('更新', ['breedupdate', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+    	 <?= Html::a('添加', ['breedcreate', 'id' => $model->id,'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('更新', ['breedupdate', 'id' => $model->id,'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('删除', ['breeddelete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [

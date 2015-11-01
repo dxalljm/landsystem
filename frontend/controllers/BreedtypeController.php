@@ -105,12 +105,14 @@ class BreedtypeController extends Controller
     public function actionBreedtypeupdate($id)
     {
         $model = $this->findModel($id);
-
+        $father = Breedtype::find()->where(['father_id'=>[0,1]])->all();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['breedtypeview', 'id' => $model->id]);
+            return $this->redirect(['breedtypeindex']);
         } else {
             return $this->render('breedtypeupdate', [
                 'model' => $model,
+            	'father' => $father,
+            	'father_id' => 0,
             ]);
         }
     }

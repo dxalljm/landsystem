@@ -161,15 +161,20 @@ $('#farms-notclear').keyup(function (event) {
 			if(event.keyCode == 13) {
 				measure = $('#farms-measure').val();
 				if($('#temp_notclear').val() == '') {
-					$('#farms-measure').val(measure*1+input*1);
+					result = measure*1+input*1;
+		
+					$('#farms-measure').val(result.toFixed(2));
 				}
 				
 				if(input == $('#temp_notclear').val()){
-
-					$('#farms-measure').val($('#temp_measure').val());
+					result = $('#temp_measure').val();
+					$('#farms-measure').val(result.toFixed(2));
 				}
-				else
-					$('#farms-measure').val(measure*1+input*1);
+				else {
+					result = measure*1+input*1;
+					$('#farms-measure').val(result.toFixed(2));
+					
+				}
 			}
 		}
 	} else {

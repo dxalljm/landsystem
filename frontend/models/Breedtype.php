@@ -28,7 +28,7 @@ class Breedtype extends \yii\db\ActiveRecord
     {
         return [
             [['father_id'], 'integer'],
-            [['typename'], 'string', 'max' => 500]
+            [['typename','unit'], 'string', 'max' => 500]
         ];
     }
 
@@ -41,6 +41,7 @@ class Breedtype extends \yii\db\ActiveRecord
 			'id' => 'ID',
             'father_id' => '类别',
             'typename' => '类型名称',
+        	'unit' => '单位',
         ];
     }
 }

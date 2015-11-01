@@ -3,6 +3,7 @@ namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\Breedtype;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\breedtypeSearch */
@@ -36,10 +37,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'father_id',
+            //'id',
+            [
+            	'label' => '大类名称',
+            	'attribute' => 'father_id',
+            	'value' => function($model) {
+            		return Breedtype::find()->where(['id'=>$model->father_id])->one()['typename'];            		
+            	}
+            ],
+            //'father_id',
             'typename',
-
+			'unit',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
