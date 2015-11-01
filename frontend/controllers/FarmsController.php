@@ -293,15 +293,15 @@ class FarmsController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionFarmsview($farms_id)
+    public function actionFarmsview($id)
     {
-    	$model = $this->findModel($farms_id);
-    	$cooperativeoffarm = CooperativeOfFarm::find()->where(['farms_id'=>$farms_id])->all();
+    	$model = $this->findModel($id);
+    	$cooperativeoffarm = CooperativeOfFarm::find()->where(['farms_id'=>$id])->all();
     	$zongdiarr = explode(' ', $model->zongdi);
     	foreach($zongdiarr as $zongdi) {
     		$dataProvider[] = Parcel::find()->where(['unifiedserialnumber' => $zongdi])->one();
     	}
-    	Logs::writeLog('查看农场信息',$farms_id);
+    	Logs::writeLog('查看农场信息',$id);
         return $this->render('farmsview', [
             'model' => $model,
         	'dataProvider' => $dataProvider,

@@ -42,7 +42,9 @@ $this->params['breadcrumbs'][] = $this->title;
 	    	<td align="center">总产量</td>
 	    	<td align="center">操作</td>
 	    </tr>
-	    <?php foreach ($plantings as $planting) {?>
+	    <?php foreach ($plantings as $planting) {
+	    	if(Sales::getVolume($planting->id)) {
+	    	?>
 	    <?php $name = Lease::find()->where(['id'=>$planting->lease_id])->one()['lessee'];
 	    $yields = Yields::find()->where(['planting_id'=>$planting->id])->one();
 	    ?>
@@ -73,7 +75,9 @@ $this->params['breadcrumbs'][] = $this->title;
            			 ],
                 ]);?></td>
 	    </tr>
-	    <?php }}}?>
+	    <?php }}} else {?>
+	    <tr><td colspan="6"><h3>必须先添加“产量信息”后，才可以添加“销量信息”。</h3></td></tr>
+	    <?php }}?>
     </table>
 
     

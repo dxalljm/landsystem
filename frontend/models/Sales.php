@@ -54,7 +54,10 @@ class Sales extends \yii\db\ActiveRecord
     {
     	$addSingle = 0;
     	$yields = Yields::find()->where(['planting_id'=>$planting_id])->one();
-    	$allSingle = $yields->single*Plantingstructure::find()->where(['id'=>$planting_id])->one()['area'];
+    	if($yields)
+    		$allSingle = $yields->single*Plantingstructure::find()->where(['id'=>$planting_id])->one()['area'];
+    	else
+    		$allSingle = 0;
     	$sales = Sales::find()->where(['planting_id'=>$planting_id])->all();
     	if($sales) {
     		foreach ($sales as $value) {

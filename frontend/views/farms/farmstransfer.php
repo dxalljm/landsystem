@@ -89,6 +89,7 @@ use app\models\ManagementArea;
 </table>
 <div class="form-group">
       <?= Html::submitButton($nowModel->isNewRecord ? '添加' : '更新', ['class' => $nowModel->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+      <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
 </div>
 
     <?php ActiveFormrdiv::end(); ?>

@@ -71,6 +71,7 @@ use app\models\Dispute;
         ],
     ]); ?>
     <?php }?>
+    <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
               </div>
             </div>
         </div>

@@ -327,10 +327,10 @@ use app\models\Prevention;
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box --></a></td>
     <td width="5%" align="center"></td>
-    <td width="20%" align="center"></td>
+    <td width="30%" align="center"></td>
 
       <td width="5%" align="center"></td>
-      <td width="20%" align="center"></td>
+      <td width="30%" align="center"></td>
   </tr>
   </table>
 

@@ -154,10 +154,9 @@ class BreedController extends Controller
         			}
         		}
         		//return $this->redirect(['breedview', 'id' => $model->id,'farms_id'=>$farms_id]);
-        		if($loadBreed)
-    				$breedinfo = Breedinfo::find()->where(['breed_id'=>$loadBreed->id])->all();
-	    		else 
-	    			$breedinfo = '';
+        		
+    				$breedinfo = Breedinfo::find()->where(['breed_id'=>$model->id])->all();
+	    		
         		return $this->render('breedcreate', [
         				'model' => $model,
         				'breedtypeFather' => $breedtypeFather,
