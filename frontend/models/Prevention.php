@@ -1,0 +1,57 @@
+<?php
+
+namespace app\models;
+
+use Yii;
+
+/**
+ * This is the model class for table "{{%prevention}}".
+ *
+ * @property integer $id
+ * @property integer $farms_id
+ * @property integer $breedinfo_id
+ * @property integer $preventionnumber
+ * @property integer $breedinfonumber
+ * @property double $preventionrate
+ * @property integer $isepidemic
+ * @property string $vaccine
+ */
+class Prevention extends \yii\db\ActiveRecord
+{
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return '{{%prevention}}';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['farms_id', 'breedinfo_id', 'preventionnumber', 'breedinfonumber'], 'integer'],
+            
+            [['vaccine','preventionrate', 'isepidemic'], 'string']
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+			'id' => 'ID',
+            'farms_id' => '农场ID',
+            'breedinfo_id' => '养殖信息ID',
+            'preventionnumber' => '免疫数量',
+            'breedinfonumber' => '应免数量',
+            'preventionrate' => '免疫率',
+            'isepidemic' => '有无疫情',
+            'vaccine' => '疫苗接种情况',
+        ];
+    }
+}
