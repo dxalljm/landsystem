@@ -50,6 +50,10 @@ use app\models\Lease;
         <td align='left' valign="middle"><?= $oldFarm->address?></td>
       </tr>
       <tr>
+        <td width="20%" align='right' valign="middle">农场位置</td>
+        <td align='left' valign="middle"><?= $oldFarm->address?></td>
+      </tr>
+      <tr>
         <td width="20%" align='right' valign="middle">宗地</td>
         <td align='left' valign="middle"><?php $arrayZongdi = explode('、', $oldFarm->zongdi);
         $i=0;
@@ -81,36 +85,72 @@ use app\models\Lease;
     <td width="50%" valign="top"><table class="table table-bordered table-hover">
       <tr>
         <td width="25%" align='right'>农场名称</td>
-        <td align='left'>
+        <td colspan="5" align='left'>
           <?= $form->field($model, 'farmname')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
       </tr>
       <tr>
         <td width="25%" align='right'>承包人姓名</td>
-        <td align='left'><?= $form->field($model, 'farmername')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+        <td colspan="5" align='left'><?= $form->field($model, 'farmername')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
       </tr>
       <tr>
         <td width="25%" align='right'>身份证号</td>
-        <td align='left'><?= $form->field($model, 'cardid')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+        <td colspan="5" align='left'><?= $form->field($model, 'cardid')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
       </tr>
       <tr>
         <td align='right'>电话号码</td>
-        <td align='left'><?= $form->field($model, 'telephone')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+        <td colspan="5" align='left'><?= $form->field($model, 'telephone')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
       </tr>
       <tr>
-        <td align='right'>宗地</td>
-        <td align='left'><?= $form->field($model, 'zongdi')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
+			<td width=15% align='right'>合同号</td>
+			<td colspan="5" align='left'><?= $form->field($model, 'contractnumber')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+		</tr>
+		<tr>
+			<td width=15% align='right'>承包年限</td>
+			<td align='center'>自</td>
+			<td align='center'><?= $form->field($model, 'begindate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+            'autoclose' => true,
+        	'minView' => 3,
+        	'maxView' => 3,
+            'format' => 'yyyy-mm-dd'
+        ]]) ?></td>
+			<td align='center'>至</td>
+			<td align='center'><?= $form->field($model, 'enddate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+            'autoclose' => true,
+        	'minView' => 3,
+        	'maxView' => 3,
+            'format' => 'yyyy-mm-dd'
+        ]])?></td>
+			<td align='center'>止</td>
+		</tr>
+      <tr>
+        <td align='right'>宗地</td><li class="select2-selection__choice" title="Delaware"><span class="select2-selection__choice__remove" role="presentation">×</span>Delaware</li>
+        <td colspan="5" align='left'><?= $form->field($model, 'zongdi')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
       </tr>
       <tr>
         <td align='right'>面积</td>
-        <td align='left'><?= $form->field($model, 'measure')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
+        <td colspan="5" align='left'><?= $form->field($model, 'measure')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
       </tr>
       <tr>
         <td align='right'>未明确地块</td>
-        <td align='left'><?= $form->field($model, 'notclear')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+        <td colspan="5" align='left'><?= $form->field($model, 'notclear')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
       </tr>
       <tr>
         <td align='right'>法人签字</td>
-        <td align='left'><?= $form->field($model, 'farmersign')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+        <td colspan="5" align='left'><?= $form->field($model, 'farmersign')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
       </tr>
     </table></td>
   </tr>

@@ -96,7 +96,7 @@ use app\models\ManagementArea;
 		<tr>
 			<td width=15% align='right'>面积</td><?= html::hiddenInput('tempmeasure',$model->measure,['id'=>'temp_measure']) ?>
 												<?= html::hiddenInput('tempnotclear',$model->notclear,['id'=>'temp_notclear']) ?>
-			<td colspan="5" align='left'><?= $form->field($model, 'measure')->textInput()->label(false)->error(false) ?></td>
+			<td colspan="5" align='left'><?= $form->field($model, 'measure')->textInput(['readonly'=>true])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>宗地</td>
@@ -145,45 +145,62 @@ use app\models\ManagementArea;
 <?php
 
 $script = <<<JS
+$('#farms-notclear').blur(function(){
+	var input = $(this).val();
+	//$('#farms-measure').val(input);
+	if(input > $('#temp_notclear').val()) {
+		var tempmeasure = $('#temp_measure').val();
+		var farmsmeasure = $('#farms-measure').val();
+		if(farmsmeasure < tempmeasure) {
+			var result = farmsmeasure*1 + input*1;
+			$('#temp_measure').val(result.toFixed(2));
+			$('#farms-measure').val(result.toFixed(2));
+			$('#temp_notclear').val(input);	
+			
+		} else {
+			var cha = input*1 - $('#temp_notclear').val()*1;
+			var result = tempmeasure*1 + cha*1;
+			$('#temp_measure').val(result.toFixed(2));
+			$('#farms-measure').val(result.toFixed(2));
+			$('#temp_notclear').val(input);	
+		}
+	} 
+	if(input < $('#temp_notclear').val()) {
+		var tempmeasure = $('#temp_measure').val();
+		var farmsmeasure = $('#farms-measure').val();
+		if(farmsmeasure < tempmeasure) {
+			var result = farmsmeasure*1 + input*1;
+			$('#temp_measure').val(result.toFixed(2));
+			$('#farms-measure').val(result.toFixed(2));
+			
+			$('#temp_notclear').val(input);	
+		} else {
+			var cha = $('#temp_notclear').val()*1 - input*1;
+			var result = tempmeasure*1 - cha*1;
+			$('#temp_measure').val(result.toFixed(2));
+			$('#farms-measure').val(result.toFixed(2));
+			$('#temp_notclear').val(input);	
+		}
+	}
 
+});
 $('#farms-notclear').keyup(function (event) {
-	var input=$(this).val();
-	
-	//alert(event.keyCode);
-	if (event.keyCode == 8 || event.keyCode == 13 || event.keyCode == 48 || event.keyCode == 49 || event.keyCode == 50 || event.keyCode == 51 || event.keyCode == 52 || event.keyCode == 53 || event.keyCode == 54 || event.keyCode == 55 || event.keyCode == 56 || event.keyCode == 57 || event.keyCode == 110 || event.keyCode == 190 || event.keyCode == 96 || event.keyCode == 97 || event.keyCode == 98 || event.keyCode == 99 || event.keyCode == 100 || event.keyCode == 101 || event.keyCode == 102 || event.keyCode == 103 || event.keyCode == 104 || event.keyCode == 105) {  
+	var input = $(this).val();
+	if(/^\d+(\.\d+)?$/.test(input)) {
 		if(event.keyCode == 8) {
 			$(this).val('');
-			$('#farms-measure').val($('#temp_measure').val());
+			
 			if($('#temp_notclear').val() !== '') {
-				$('#farms-measure').val($('#farms-measure').val()-$('#temp_notclear').val());
+				var result = $('#farms-measure').val()-$('#temp_notclear').val();
+				$('#farms-measure').val(result.toFixed(2));
 			}
-		} else {
-			if(event.keyCode == 13) {
-				measure = $('#farms-measure').val();
-				if($('#temp_notclear').val() == '') {
-					result = measure*1+input*1;
 		
-					$('#farms-measure').val(result.toFixed(2));
-				}
-				
-				if(input == $('#temp_notclear').val()){
-					result = $('#temp_measure').val();
-					$('#farms-measure').val(result.toFixed(2));
-				}
-				else {
-					result = measure*1+input*1;
-					$('#farms-measure').val(result.toFixed(2));
-					
-				}
-			}
 		}
 	} else {
 		alert('输入的必须为数字');
 		var last = input.substr(input.length-1,1);
 		$('#farms-notclear').val(input.substring(0,input.length-1));
-		
 	}
-	
 });
 
 $("#farms-zongdi").keyup(function (event) {

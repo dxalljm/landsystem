@@ -66,23 +66,59 @@ use app\models\ManagementArea;
     <table class="table table-bordered table-hover">
       <tr>
         <td width="25%" align='right'>农场名称</td>
-        <td align='left'><?= $form->field($nowModel, 'farmname')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+        <td  colspan="5" align='left'><?= $form->field($nowModel, 'farmname')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
         </tr>
       <tr>
         <td width="20%" align='right'>承包人姓名</td>
-        <td align='left'><?= $form->field($nowModel, 'farmername')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+        <td  colspan="5" align='left'><?= $form->field($nowModel, 'farmername')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
         </tr>
       <tr>
         <td width="20%" align='right'>身份证号</td>
-        <td align='left'><?= $form->field($nowModel, 'cardid')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+        <td  colspan="5" align='left'><?= $form->field($nowModel, 'cardid')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
         </tr>
       <tr>
         <td align='right'>电话号码</td>
-        <td align='left'><?= $form->field($nowModel, 'telephone')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+        <td  colspan="5" align='left'><?= $form->field($nowModel, 'telephone')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
         </tr>
+        <tr>
+			<td width=15% align='right'>合同号</td>
+			<td colspan="5" align='left'><?= $form->field($nowModel, 'contractnumber')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+		</tr>
+		<tr>
+			<td width=15% align='right'>承包年限</td>
+			<td align='center'>自</td>
+			<td align='center'><?= $form->field($nowModel, 'begindate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+            'autoclose' => true,
+        	'minView' => 3,
+        	'maxView' => 3,
+            'format' => 'yyyy-mm-dd'
+        ]]) ?></td>
+			<td align='center'>至</td>
+			<td align='center'><?= $form->field($nowModel, 'enddate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+            'autoclose' => true,
+        	'minView' => 3,
+        	'maxView' => 3,
+            'format' => 'yyyy-mm-dd'
+        ]])?></td>
+			<td align='center'>止</td>
+		</tr>
       <tr>
         <td align='right'>法人签字</td>
-        <td align='left'><?= $form->field($nowModel, 'farmersign')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+        <td  colspan="5" align='left'><?= $form->field($nowModel, 'farmersign')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
         </tr>
     </table></td>
   </tr>

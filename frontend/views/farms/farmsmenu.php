@@ -95,7 +95,7 @@ use app\models\Prevention;
     <span class="info-box-text">法人：<?= $farm->farmername ?></span>
     <!-- The progress section is optional -->
     <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
+      <div class="progress-bar" style="width: 200%"></div>
     </div>
     <span class="progress-description">
       填写法人相关信息
@@ -292,9 +292,7 @@ use app\models\Prevention;
   </tr>
   </table>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
-        
-        ?>
+  <tr>
     <td width="20%" align="center"><a href='<?= Url::to('index.php?r=breed/breedcreate&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
   <span class="info-box-icon"><i class="fa fa-github-alt"></i></span>
@@ -313,7 +311,7 @@ use app\models\Prevention;
     <td width="5%" align="center"></td>    
     <td width="20%" align="center"><a href='<?= Url::to('index.php?r=prevention/preventionindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
-  <span class="info-box-icon"><i class="fa fa-plus-circle"></i></span>
+  <span class="info-box-icon"><i class="fa fa-plus"></i></span>
   <div class="info-box-content">
   <span class="info-box-number">防疫情况</span>
     <span class="info-box-text">有<?= Prevention::find()->where(['farms_id'=>$_GET['farms_id']])->count()?>条防疫信息</span>
@@ -327,10 +325,10 @@ use app\models\Prevention;
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box --></a></td>
     <td width="5%" align="center"></td>
-    <td width="30%" align="center"></td>
+    <td width="20%" align="center"></td>
 
       <td width="5%" align="center"></td>
-      <td width="30%" align="center"></td>
+      <td width="20%" align="center"></td>
   </tr>
   </table>
 

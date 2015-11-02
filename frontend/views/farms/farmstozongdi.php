@@ -65,7 +65,7 @@ use app\models\Lease;
       <tr><?= Html::hiddenInput('oldzongdi',$oldFarm->zongdi,['id'=>'oldfarm-zongdi']) ?>
       <?= Html::hiddenInput('ttpozongdi','',['id'=>'ttpozongdi-zongdi']) ?>
       <?= Html::hiddenInput('ttpoarea',0,['id'=>'ttpozongdi-area']) ?>
-        <td align='right' valign="middle">面积</td>
+        <td align='right' valign="middle">面积</td><?= html::hiddenInput('tempoldnotclear',$oldFarm->measure,['id'=>'temp_oldnotclear']) ?>
         <td align='left' valign="middle"><?= html::textInput('oldmeasure',$oldFarm->measure,['readonly' => true,'id'=>'oldfarms-measure','class'=>'form-control']) ?></td>
         </tr>
       <tr>
@@ -82,44 +82,80 @@ use app\models\Lease;
 		class="table table-bordered table-hover">
       <tr>
         <td width="30%" align='right'>农场名称</td>
-        <td align='left'><?= $model->farmname ?></td>
+        <td colspan="5" align='left'><?= $model->farmname ?></td>
         </tr>
       <tr>
         <td width="20%" align='right'>承包人姓名</td>
-        <td align='left'><?= $model->farmername ?></td>
+        <td colspan="5" align='left'><?= $model->farmername ?></td>
         </tr>
       <tr>
         <td width="20%" align='right'>身份证号</td>
-        <td align='left'><?= $model->cardid?></td>
+        <td colspan="5" align='left'><?= $model->cardid?></td>
         </tr>
       <tr>
         <td width="20%" align='right'>电话号码</td>
-        <td align='left'><?= $model->telephone?></td>
+        <td colspan="5" align='left'><?= $model->telephone?></td>
         </tr>
       <tr>
         <td width="20%" align='right'>农场位置</td>
-        <td align='left'><?= $model->address ?></td>
+        <td colspan="5" align='left'><?= $model->address ?></td>
         </tr>
       <tr>
-        <td width="20%" align='right'>宗地</td>
-        <td align='left'><?= $form->field($model, 'zongdi')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
+        <td width="20%" align='right'>宗地</td><?php $model->zongdi = '';?>
+        <td colspan="5" align='left'><?= $form->field($model, 'zongdi')->textarea(['readonly' => true])->label(false)->error(false) ?></td>
         </tr>
       <tr>
+      <tr>
+			<td width=15% align='right'>合同号</td>
+			<td colspan="5" align='left'><?= $form->field($model, 'contractnumber')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+		</tr>
+		<tr>
+			<td width=15% align='right'>承包年限</td>
+			<td align='center'>自</td>
+			<td align='center'><?= $form->field($model, 'begindate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+            'autoclose' => true,
+        	'minView' => 3,
+        	'maxView' => 3,
+            'format' => 'yyyy-mm-dd'
+        ]]) ?></td>
+			<td align='center'>至</td>
+			<td align='center'><?= $form->field($model, 'enddate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+            'autoclose' => true,
+        	'minView' => 3,
+        	'maxView' => 3,
+            'format' => 'yyyy-mm-dd'
+        ]])?></td>
+			<td align='center'>止</td>
+		</tr><?php $model->notclear = '';$model->measure = '';?>
         <td align='right'>面积</td><?= html::hiddenInput('tempmeasure',$model->measure,['id'=>'temp_measure']) ?>
-												<?= html::hiddenInput('tempnotclear',$model->notclear,['id'=>'temp_notclear']) ?>
-        <td align='left'><?= $form->field($model, 'measure')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
+								  <?= html::hiddenInput('tempnotclear',$model->notclear,['id'=>'temp_notclear']) ?>
+        <td colspan="5" align='left'><?= $form->field($model, 'measure')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
         </tr>
       <tr>
         <td align='right'>未明确地块面积</td>
-        <td align='left'><?= $form->field($model, 'notclear')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
+        <td colspan="5" align='left'><?= $form->field($model, 'notclear')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
        </tr>
        <tr>
         <td align='right'>转让未明确地块面积</td>
-        <td align='left'><?= html::textInput('inputnotclear','',['id'=>'input-notclear','class'=>'form-control']) ?></td>
+        <td colspan="5" align='left'><?= html::textInput('inputnotclear','',['id'=>'input-notclear','class'=>'form-control']) ?></td>
        </tr>
       <tr>
         <td align='right'>法人签字</td>
-        <td align='left'><?= $model->farmersign ?></td>
+        <td colspan="5" align='left'><?= $form->field($model, 'farmersign')->textInput()->label(false)->error(false) ?></td>
         </tr>
     </table></td>
   </tr>
@@ -127,10 +163,11 @@ use app\models\Lease;
 <div class="form-group">
       <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
       <?= Html::button('重置', ['class' => 'btn btn-primary','id'=>'reset']) ?>
+      <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
 </div>
 
     <?php ActiveFormrdiv::end(); ?>
-    <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
+    
                 </div>
             </div>
         </div>
@@ -144,8 +181,13 @@ function toZongdi(zongdi,area){
 	$('#oldfarms-measure').val(value.toFixed(2));
 	var newvalue = $('#farms-measure').val()*1 + area*1;
 	$('#farms-measure').val(newvalue.toFixed(2));
+	$('#temp_measure').val(newvalue.toFixed(2));
 	var newzongdi = $('#farms-zongdi').val()+'、'+zongdi;
-	$('#farms-zongdi').val(newzongdi);
+	var first = newzongdi.substr(0,1);
+	if(first == '、') {
+		$('#farms-zongdi').val(newzongdi.substring(1));
+	} else
+		$('#farms-zongdi').val(newzongdi);
 	var oldzongdi = $('#oldfarm-zongdi').val();
 	$('#oldfarm-zongdi').val(oldzongdi.replace(zongdi, ""));
 	oldzongdistr = $('#oldfarm-zongdi').val();
@@ -177,88 +219,75 @@ $('#reset').click(function() {
     location.reload();
 
 });
-$('#input-notclear').keyup(function (event) {
-	var input=$(this).val();
-
-	if (event.keyCode == 8 || event.keyCode == 13 || event.keyCode == 48 || event.keyCode == 49 || event.keyCode == 50 || event.keyCode == 51 || event.keyCode == 52 || event.keyCode == 53 || event.keyCode == 54 || event.keyCode == 55 || event.keyCode == 56 || event.keyCode == 57 || event.keyCode == 110 || event.keyCode == 190 || event.keyCode == 96 || event.keyCode == 97 || event.keyCode == 98 || event.keyCode == 99 || event.keyCode == 100 || event.keyCode == 101 || event.keyCode == 102 || event.keyCode == 103 || event.keyCode == 104 || event.keyCode == 105) { 
-		if(input*1 > $('#oldfarms-notclear').val()*1)
-			alert('输入的面积不能大于原农场未明确地块面积');
-		else {
-			if(event.keyCode == 8) {
-				$(this).val('');
-				$('#farms-measure').val($('#temp_measure').val());
-				$('#farms-notclear').val($('#temp_notclear').val());
-// 				if($('#temp_notclear').val() !== '') {
-// 					$('#farms-measure').val($('#farms-measure').val()-$('#temp_notclear').val());
-// 				}
+$('#input-notclear').blur(function(){
+	var input = $(this).val();
+	if(input*1 > $('#temp-oldnotclear').val()*1) {
+		
+		alert('输入的数值不能大于'+$('#temp-oldnotclear').val());
+		$('#input-notclear').focus();
+	} else {
+		if(input > $('#temp_notclear').val()) {
+			var tempmeasure = $('#temp_measure').val();
+			var farmsmeasure = $('#farms-measure').val();
+			if(farmsmeasure < tempmeasure) {
+				var result = farmsmeasure*1 + input*1;
+				$('#temp_measure').val(result.toFixed(2));
+				$('#farms-measure').val(result.toFixed(2));
+				$('#temp_notclear').val(input);	
+				
 			} else {
-				if(event.keyCode == 13) {
-					measure = $('#farms-measure').val();
-					if($('#temp_notclear').val() == '') {
-						$('#farms-measure').val(measure*1+input*1);
-						$('#farms-notclear').val($('#farms-notclear').val()*1+input*1)
-						$('#oldfarms-measure').val($('#oldfarms-measure').val()*1-input*1);
-						$('#oldfarms-notclear').val($('#oldfarms-notclear').val()*1-input*1)
-						
-						var ttpozongdi = $('#ttpozongdi-zongdi').val();
-						ttpozongdi = ttpozongdi + '、' + '未明确地块(' + input + ')';
-						var first = ttpozongdi.substr(0,1);
-						if(first == '、') {
-							$('#ttpozongdi-zongdi').val(ttpozongdi.substring(1));
-						}
-						else
-							$('#ttpozongdi-zongdi').val(ttpozongdi);
-						
-						var ttpoarea = $('#ttpozongdi-area').val();
-						ttpoarea = input*1 + ttpoarea*1;
-						$('#ttpozongdi-area').val(ttpoarea);
-					} else {
-					
-// 						if(input == $('#temp_notclear').val()){
-// 							$('#farms-measure').val($('#temp_measure').val());
-// 							$('#farms-notclear').val($('#temp_notclear').val());
-// 							var ttpozongdi = $('#ttpozongdi-zongdi').val();
-// 							ttpozongdi = ttpozongdi + '、' + '未明确地块(' + input + ')';
-// 							var first = ttpozongdi.substr(0,1);
-// 							if(first == '、') {
-// 								$('#ttpozongdi-zongdi').val(ttpozongdi.substring(1));
-// 							}
-// 							else
-// 								$('#ttpozongdi-zongdi').val(ttpozongdi);
-							
-// 							var ttpoarea = $('#ttpozongdi-area').val();
-// 							ttpoarea = input*1 + ttpoarea*1;
-// 							$('#ttpozongdi-area').val(ttpoarea);
-// 						}
-// 						else {
-							$('#farms-measure').val(measure*1+input*1);
-							$('#farms-notclear').val($('#farms-notclear').val()*1+input*1);
-							$('#oldfarms-measure').val($('#oldfarms-measure').val()*1-input*1);
-							$('#oldfarms-notclear').val($('#oldfarms-notclear').val()*1-input*1);
-							var ttpozongdi = $('#ttpozongdi-zongdi').val();
-							ttpozongdi = ttpozongdi + '、' + '未明确地块(' + input + ')';
-							var first = ttpozongdi.substr(0,1);
-							if(first == '、') {
-								$('#ttpozongdi-zongdi').val(ttpozongdi.substring(1));
-							}
-							else
-								$('#ttpozongdi-zongdi').val(ttpozongdi);
-							
-							var ttpoarea = $('#ttpozongdi-area').val();
-							ttpoarea = input*1 + ttpoarea*1;
-							$('#ttpozongdi-area').val(ttpoarea);
-// 						}
-					}
-				}
+				var cha = input*1 - $('#temp_notclear').val()*1;
+				var result = tempmeasure*1 + cha*1;
+				var oldmeasure = $('#oldfarms-measure').val();
+				var oldresult = oldmeasure*1 - cha*1;
+				$('#oldfarms-measure').val(oldresult.toFixed(2));
+				var oldnotclear = $('#oldfarms-notclear').val();
+				var notclearresult = oldnotclear*1 - cha*1;
+				$('#oldfarms-notclear').val(notclearresult.toFixed(2));
+				$('#temp_measure').val(result.toFixed(2));
+				$('#farms-measure').val(result.toFixed(2));
+				$('#temp_notclear').val(input);	
 			}
-			//$('#oldfarms-notclear').val($('#oldfarms-notclear').val()-input);
+		} 
+		if(input < $('#temp_notclear').val()) {
+			var tempmeasure = $('#temp_measure').val();
+			var farmsmeasure = $('#farms-measure').val();
+			if(farmsmeasure < tempmeasure) {
+				var result = farmsmeasure*1 + input*1;
+				$('#temp_measure').val(result.toFixed(2));
+				$('#farms-measure').val(result.toFixed(2));
+				
+				$('#temp_notclear').val(input);	
+			} else {
+				var cha = $('#temp_notclear').val()*1 - input*1;
+				var result = tempmeasure*1 - cha*1;
+				$('#temp_measure').val(result.toFixed(2));
+				$('#farms-measure').val(result.toFixed(2));
+				$('#temp_notclear').val(input);	
+			}
 		}
 	}
-	else {
+});
+$('#input-notclear').keyup(function (event) {
+	var input = $(this).val();
+	if(/^\d+(\.\d+)?$/.test(input)) {
+		if(event.keyCode == 8) {
+			$(this).val('');
+			
+			if($('#temp_notclear').val() !== '') {
+				var result = $('#farms-measure').val()-$('#temp_notclear').val();
+				$('#farms-measure').val(result.toFixed(2));
+				$('#oldfarms-measure').val($('#oldfarms-measure').val()*1+$('#temp_notclear').val()*1);
+				$('#oldfarms-notclear').val($('#oldfarms-notclear').val()*1+$('#temp_notclear').val()*1);	
+				$('#temp_notclear').val('');
+				$('#temp_measure').val('');
+			}
+		
+		}
+	} else {
 		alert('输入的必须为数字');
 		var last = input.substr(input.length-1,1);
-		$('#farms-notclear').val(input.substring(0,input.length-1));
-		
+		$('#input-notclear').val(input.substring(0,input.length-1));
 	}
 });
 </script>

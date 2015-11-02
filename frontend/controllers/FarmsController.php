@@ -63,7 +63,7 @@ class FarmsController extends Controller
         $searchModel = new farmsSearch();
 
         $params = Yii::$app->request->queryParams;
-
+		$params['farmsSearch']['state'] = 1;
         // 管理区域是否是数组
         if (!empty($whereArray) && count($whereArray) > 0) {
           $params['farmsSearch']['management_area'] = $whereArray;
@@ -392,6 +392,9 @@ class FarmsController extends Controller
     public function actionFarmssplit($farms_id)
     {
     	$oldfarm = $this->findModel($farms_id);
+    	$oldfarm->state = 0;
+    	$oldfarm->update_at = time();
+    	$oldfarm->save();
     	$model = new Farms();
     	//$ttpoModel = Ttpo::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
     	//$ttpozongdiModel = Ttpozongdi::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
@@ -403,11 +406,15 @@ class FarmsController extends Controller
     		$oldfarm->notclear = Yii::$app->request->post('oldnotclear');
     		if(empty(Yii::$app->request->post('oldzongdi')))
     			$oldfarm->state = 0;
+    		else 
+    			$oldfarm->state = 1;
     		$oldfarm->save();
+    		
     		
     		if ($model->load(Yii::$app->request->post())) {
     			$model->update_at = $oldfarm->update_at;
     			$model->save();
+    			
     		}
     		 
     		$ttpozongdi = new Ttpozongdi();
@@ -568,7 +575,7 @@ class FarmsController extends Controller
         	$newAttr = $model->attributes;
         	Logs::writeLog('更新农场信息',$id,$oldAttr,$newAttr);
             
-            return $this->redirect(['farmsview', 'farms_id' => $model->id]);
+            return $this->redirect(['farmsview', 'id' => $model->id]);
         } else {
         	//Logs::writeLog('农场更新表单');
             return $this->render('farmsupdate', [

@@ -1,11 +1,12 @@
 <?php
 namespace frontend\controllers;
-
+use yii;
 use app\models\Farms;
 use yii\helpers\Html;
 use yii\widgets\ActiveFormrdiv;
 use yii\grid\GridView;
 use app\models\Dispute;
+use app\models\ManagementArea;
 /* @var $this yii\web\View */
 /* @var $model app\models\farms */
 
@@ -44,6 +45,12 @@ use app\models\Dispute;
             	'attribute' => 'farmname',
             ],
             'farmername',
+            [
+            	'attribute' => 'management_area',
+            	'value' => function($model) {
+            		return ManagementArea::find()->where(['id'=>$model->management_area])->one()['areaname'];
+            	}
+            ],
             'measure',
             //'management_area',
             [
