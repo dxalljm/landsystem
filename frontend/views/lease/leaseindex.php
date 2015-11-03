@@ -24,7 +24,7 @@ use app\models\Plantingstructure;
                 <?php Farms::showRow($_GET['farms_id']);?>
                 <div class="box-body">
     
-	<?php if($areas) {?>
+	<?php if((int)$areas) {?>
     <p><?php //echo $areas;?>
     	<?= Html::a('添加', ['leasecreate','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?>
          <?php //echo Html::a('添加', 'javascript:void(0)', ['onclick'=>'lease.create('.$_GET['id'].')', 'class' => 'btn btn-success', 'id' => 'wubaiqing']) ?>
@@ -52,6 +52,13 @@ use app\models\Plantingstructure;
             [
             	'attribute' => 'lease_area',
             	'label' => '宗地',
+            	'value' => function ($model) {
+            		if(strlen($model->lease_area)>70){ 
+            			return substr($model->lease_area,0,70).'......';
+            		} else 
+            			return $model->lease_area;
+            		
+            	}
             ],
             
             [

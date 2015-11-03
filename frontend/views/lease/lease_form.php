@@ -136,6 +136,7 @@ use app\models\Lease;
     		<td align='center'><?php 
     		//$arrayParcelValue = explode('、', $parcellistvalue);
 			$zongdiarr = Lease::getNOZongdi($_GET['farms_id']);
+			echo html::hiddenInput('tempZongdiList',implode('、', $zongdiarr),['id'=>'temp-ZongdiList']);
 			$i=0;
     		foreach($zongdiarr as $value) {
     			echo html::button($value,['onclick'=>'toParcellist("'.$value.'","'.Lease::getZongdi($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
@@ -143,6 +144,7 @@ use app\models\Lease;
     			if($i%4 == 0)
     				echo '<br><br>';
     		}
+    		echo html::button('全选',['onclick'=>'toAll()','class'=>'btn btn-primary']);
     		?></td>
 
     	</tr>
@@ -164,6 +166,9 @@ function toParcellist(zdarea,id){
 		var value = $('#model-parcellist').val()+'、'+zdarea;
 		$('#model-parcellist').val(value);
 	}
+}
+function toAll() {
+	$('#model-parcellist').val($('#temp-ZongdiList').val());
 }
 function setLeasearea() {
 	$('#myModal').modal('hide');

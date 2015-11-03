@@ -29,7 +29,7 @@ class Lease extends \yii\db\ActiveRecord
     //得到1-100（123）中的面积123
     public static function getArea($Leasearea) 
     {
-    	if(preg_match('/[0-9.]+?/',$Leasearea)) {
+    	if(preg_match('/^(([0-9]+.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*.[0-9]+)|([0-9]*[1-9][0-9]*))$/',$Leasearea)) {
     		$areas = $Leasearea;
     	} else {
 	    	$areas = 0;
@@ -40,12 +40,13 @@ class Lease extends \yii\db\ActiveRecord
     }
     //得到1-100（123）中的宗地号1-100
     public static function getZongdi($Leasearea) {
-    	if(preg_match('/[0-9.]+?/',$Leasearea)) {
+    	if(preg_match('/^(([0-9]+.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*.[0-9]+)|([0-9]*[1-9][0-9]*))$/',$Leasearea)) {
     		$zongdi = $Leasearea;
     	} else {
 	   		$zongdi = preg_replace('/\(  [^\)]+?  \)/x', '', $Leasearea);
-	    	return $zongdi;
+	    	
     	}
+    	return $zongdi;
     }
     
     //得到承租人的宗地信息
@@ -207,7 +208,8 @@ class Lease extends \yii\db\ActiveRecord
     public static function getNoArea($farms_id)
     {
     	$farms = Farms::find()->where(['id'=>$farms_id])->one();
-    	return $farms->measure - self::getOverArea($farms_id);
+    	
+    	return bcsub($farms->measure, self::getOverArea($farms_id),2);
     }
 	public function rules() 
     { 

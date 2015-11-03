@@ -175,13 +175,13 @@ use app\models\Goodseed;
     	<tr>
     		<td align='left'><?php 
 			$zongdiarr = $zongdi;
-			//var_dump($zongdiarr);
+			echo html::hiddenInput('tempAllZongdi',implode('、', $zongdiarr),['id'=>'temp-allzongdi']);
 			$i=0;
     		foreach($zongdiarr as $value) {
     			echo html::button($value,['onclick'=>'toParcellist("'.$value.'","'.Lease::getZongdi($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
     			$i++;
-    			if($i%5 == 0)
-    				echo '<br>';
+    			if($i%4 == 0)
+    				echo '<br><br>';
     		}
     		echo html::button('全选',['onclick'=>'toAll()','','id'=>'allzongdi','class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
     		?></td>
@@ -273,10 +273,8 @@ function toParcellist(zdarea,id){
 		
 	}
 }
-function toAll(arrzongdi) {
-	$('button').each(function(){
-		alert($(this).text());
-	});
+function toAll() {
+	$('#model-parcellist').val($('#temp-allzongdi').val());
 }
 function reset()
 {
