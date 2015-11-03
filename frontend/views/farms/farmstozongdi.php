@@ -8,6 +8,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 use app\models\Parcel;
 use app\models\ManagementArea;
 use app\models\Lease;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\Farms */
 /* @var $form yii\widgets\ActiveForm */
@@ -51,6 +52,42 @@ use app\models\Lease;
         <td align='left' valign="middle"><?= $oldFarm->address?></td>
         </tr>
       <tr>
+      <tr>
+			<td width=15% align='right'>合同号</td>
+			<td colspan="5" align='left'><?= html::textInput('oldcontractnumber','',['id'=>'oldfarms-contractnumber','class'=>'form-control'])?></td>
+		</tr>
+		<tr>
+			<td width=15% align='right'>承包年限</td>
+			<td align='center'>自</td>
+			<td align='center'><?= html::textInput('oldbegindate','',['id'=>'oldfarms-oldbegindate','class'=>'form-control'])->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+            'autoclose' => true,
+        	'minView' => 3,
+        	'maxView' => 3,
+            'format' => 'yyyy-mm-dd'
+        ]]) ?></td>
+			<td align='center'>至</td>
+			<td align='center'><?= html::textInput('oldenddate','',['id'=>'oldfarms-oldenddate','class'=>'form-control'])->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+            'autoclose' => true,
+        	'minView' => 3,
+        	'maxView' => 3,
+            'format' => 'yyyy-mm-dd'
+        ]])?></td>
+			<td align='center'>止</td>
+		</tr>
         <td width="20%" align='right' valign="middle">宗地</td>
         <td align='left' valign="middle"><?php $arrayZongdi = explode('、', $oldFarm->zongdi);
         $i=0;
