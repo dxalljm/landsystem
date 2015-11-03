@@ -227,10 +227,6 @@ $this->params['breadcrumbs'][] = $this->title;
             <td align='left'><?= $newFarm->groundsign ?></td>
           </tr>
           <tr>
-            <td width="15%" align='right'>地星调查员</td>
-            <td align='left'><?= $newFarm->investigator ?></td>
-          </tr>
-          <tr>
             <td width="15%" align='right'>法人签字</td>
             <td align='left'><?= $newFarm->farmersign ?></td>
           </tr>

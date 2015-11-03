@@ -458,6 +458,19 @@ class FarmsController extends Controller
     	]);
     }
     
+    private function deleteZongdiDH($zongdiStr)
+    {
+    	$arrayZongdi = explode('、', $zongdiStr);
+    	
+    	foreach ($arrayZongdi as $key => $value) {
+    		if($value == '') {
+    			unset($arrayZongdi[$key]);
+    		}
+    	}
+    	sort($arrayZongdi);
+    	return implode('、', $arrayZongdi);
+    }
+    
     public function actionFarmstozongdi($farms_id,$oldfarms_id)
     {
     	$oldfarm = $this->findModel($oldfarms_id);
@@ -467,7 +480,7 @@ class FarmsController extends Controller
     	$model = $this->findModel($farms_id);
     	//$ttpoModel = Ttpo::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
     	//$ttpozongdiModel = Ttpozongdi::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
-    	
+    	//原农场转让宗地后，重新签订合同后，生成新的农场信息
     	if ($oldfarm->load(Yii::$app->request->post())) {
     		$newfarm = new Farms();
     		$newfarm->farmname = $oldfarm->farmname;
@@ -475,34 +488,51 @@ class FarmsController extends Controller
     		$newfarm->cardid = $oldfarm->cardid;
     		$newfarm->telephone = $oldfarm->telephone;
     		$newfarm->address = $oldfarm->address;
-    		$newfarm->management_area = $oldfarm->menagement_area;
+    		$newfarm->management_area = $oldfarm->management_area;
     		$newfarm->spyear = $oldfarm->spyear;
     		$newfarm->measure = Yii::$app->request->post('oldmeasure');
-    		$newfarm->zongdi = Yii::$app->request->post('oldzongdi');
+    		$newfarm->zongdi = $this->deleteZongdiDH(Yii::$app->request->post('oldzongdi'));
     		$newfarm->cooperative_id = $oldfarm->cooperative_id;
     		$newfarm->surveydate = $oldfarm->surveydate;
     		$newfarm->groundsign = $oldfarm->groundsign;
-    		$newfarm->investigator = $oldfarm->investigator;
+    		
     		$newfarm->farmersign = $oldfarm->farmersign;
     		$newfarm->create_at = time();
     		$newfarm->update_at = time();
     		$newfarm->pinyin = $oldfarm->pinyin;
-    		$newfarm->farmerpinyin = $oldfarm->parmerpinyin;
+    		$newfarm->farmerpinyin = $oldfarm->farmerpinyin;
     		$newfarm->state = 1;
     		$newfarm->notclear = Yii::$app->request->post('oldnotclear');
-//     		$newfarm->contractnumber = 
-//     		$newfarm->begindate = 
-//     		$newfarm->enddate
-//     		$newfarm->oldfarms_id
-//     		$oldfarm->update_at = time();
-//     		$oldfarm->zongdi = Yii::$app->request->post('oldzongdi');
-//     		$oldfarm->measure = Yii::$app->request->post('oldmeasure');
-//     		$oldfarm->notclear = Yii::$app->request->post('oldnotclear');
-			
-    		$oldfarm->save();
+    		$newfarm->oldfarms_id = $oldfarms_id;
+			var_dump($newfarm);
+			exit;
+    		//$newfarm->save();
+    		
     		if ($model->load(Yii::$app->request->post())) {
-    			$model->update_at = $oldfarm->update_at;
-    			$model->save();
+    			$newfarm = new Farms();
+    			$newfarm->farmname = $model->farmname;
+    			$newfarm->farmername = $model->farmername;
+    			$newfarm->cardid = $model->cardid;
+    			$newfarm->telephone = $model->telephone;
+    			$newfarm->address = $model->address;
+    			$newfarm->management_area = $model->management_area;
+    			$newfarm->spyear = $model->spyear;
+    			$newfarm->measure = $model->measure;
+    			$newfarm->zongdi = $model->zongdi;
+    			$newfarm->cooperative_id = $model->cooperative_id;
+    			$newfarm->surveydate = $model->surveydate;
+    			$newfarm->groundsign = $model->groundsign;
+    			
+    			$newfarm->farmersign = $model->farmersign;
+    			$newfarm->create_at = time();
+    			$newfarm->update_at = time();
+    			$newfarm->pinyin = $model->pinyin;
+    			$newfarm->farmerpinyin = $model->farmerpinyin;
+    			$newfarm->state = 1;
+    			$newfarm->notclear = $model->notclear;
+    			$newfarm->oldfarms_id = $oldfarms_id;
+    				
+    			//$newfarm->save();
     		}
     		 
     		$ttpozongdi = new Ttpozongdi();
@@ -514,9 +544,9 @@ class FarmsController extends Controller
     		$ttpozongdi->ttpozongdi = Yii::$app->request->post('ttpozongdi');
     		$ttpozongdi->ttpoarea = Yii::$app->request->post('ttpoarea');
     		
-			$ttpozongdi->save();
+			//$ttpozongdi->save();
     		
-    		return $this->redirect(['farmsttpomenu', 'farms_id' => $oldfarms_id]);
+    		return $this->redirect(['farmsttpomenu', 'farms_id' => $newfarm->id]);
     	} else {  	
     	
 	    	return $this->render('farmstozongdi',[

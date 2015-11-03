@@ -107,7 +107,7 @@ use app\models\ManagementArea;
 			<td colspan="5" align='left'><?= $form->field($model, 'notclear')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
-			<td width=15% align='right'>调查日期</td>
+			<td width=15% align='right'>合同更换日期</td>
 			<td colspan="5" align='left'><?= $form->field($model, 'surveydate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
@@ -125,10 +125,6 @@ use app\models\ManagementArea;
 		<tr>
 			<td width=15% align='right'>地产科签字</td>
 			<td colspan="5" align='left'><?= $form->field($model, 'groundsign')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
-		</tr>
-		<tr>
-			<td width=15% align='right'>地星调查员</td>
-			<td colspan="5" align='left'><?= $form->field($model, 'investigator')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>农场法人签字</td>

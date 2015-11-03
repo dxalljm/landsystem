@@ -43,7 +43,7 @@ class Farms extends \yii\db\ActiveRecord
             //[['measure'], 'number'],
             [['zongdi'], 'string'],
             [['management_area','state','oldfarms_id'], 'integer'],
-            [['farmname', 'farmername', 'cardid', 'telephone', 'address', 'cooperative_id', 'surveydate', 'groundsign', 'notclear','investigator', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate'], 'string', 'max' => 500],
+            [['farmname', 'farmername', 'cardid', 'telephone', 'address', 'cooperative_id', 'surveydate', 'groundsign', 'notclear', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate'], 'string', 'max' => 500],
         	[['measure','spyear'],'safe'],
         ]; 
     }
@@ -65,9 +65,8 @@ class Farms extends \yii\db\ActiveRecord
             'measure' => '面积',
             'zongdi' => '宗地',
             'cooperative_id' => '合作社',
-            'surveydate' => '调查日期',
+            'surveydate' => '合同更换日期',
             'groundsign' => '地产科签字',
-            'investigator' => '地星调查员',
             'farmersign' => '农场法人签字',
             'create_at' => '创建日期',
             'update_at' => '更新日期',

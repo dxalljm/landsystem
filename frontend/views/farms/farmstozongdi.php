@@ -33,23 +33,28 @@ use app\models\Lease;
 		class="table table-bordered table-hover">
       <tr>
         <td width="15%" align='right' valign="middle">农场名称</td>
-        <td align='left' valign="middle"><?= $oldFarm->farmname?></td>
+        <td colspan="5" align='left' valign="middle"><?= $oldFarm->farmname?></td>
         </tr>
       <tr>
         <td width="20%" align='right' valign="middle">承包人姓名</td>
-        <td align='left' valign="middle"><?= $oldFarm->farmername ?></td>
+        <td colspan="5" align='left' valign="middle"><?= $oldFarm->farmername ?></td>
         </tr>
       <tr>
         <td width="20%" align='right' valign="middle">身份证号</td>
-        <td align='left' valign="middle"><?= $oldFarm->cardid ?></td>
+        <td colspan="5" align='left' valign="middle"><?= $oldFarm->cardid ?></td>
         </tr>
       <tr>
         <td width="20%" align='right' valign="middle">电话号码</td>
-        <td align='left' valign="middle"><?= $oldFarm->telephone ?></td>
+        <td colspan="5" align='left' valign="middle"><?= $oldFarm->telephone ?></td>
         </tr>
       <tr>
         <td width="20%" align='right' valign="middle">农场位置</td>
-        <td align='left' valign="middle"><?= $oldFarm->address?></td>
+        <td colspan="5" align='left' valign="middle"><?= $oldFarm->address?></td>
+        </tr>
+      <tr>
+      <tr>
+        <td width="20%" align='right' valign="middle">管理区</td>
+        <td colspan="5" align='left' valign="middle"><?= ManagementArea::find()->where(['id'=>$oldFarm->management_area])->one()['areaname']?></td>
         </tr>
       <tr>
       <tr>
@@ -59,37 +64,42 @@ use app\models\Lease;
 		<tr>
 			<td width=15% align='right'>承包年限</td>
 			<td align='center'>自</td>
-			<td align='center'><?= html::textInput('oldbegindate','',['id'=>'oldfarms-oldbegindate','class'=>'form-control'])->widget(
-    DateTimePicker::className(), [
-        // inline too, not bad
-        'inline' => false, 
-    	'language'=>'zh-CN',
-        
-        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
-        'clientOptions' => [
-            'autoclose' => true,
-        	'minView' => 3,
-        	'maxView' => 3,
-            'format' => 'yyyy-mm-dd'
-        ]]) ?></td>
+			<td align='center'><?php echo DateTimePicker::widget([
+				'name' => 'oldbegindate',
+				'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+				'options' => [
+					'readonly' => true
+				],
+				'clientOptions' => [
+					'language' => 'zh-CN',
+					'format' => 'yyyy-mm-dd',
+					'todayHighlight' => true,
+					'autoclose' => true,
+					'minView' => 3,
+					'maxView' => 3,
+				]
+			]);?></td>
 			<td align='center'>至</td>
-			<td align='center'><?= html::textInput('oldenddate','',['id'=>'oldfarms-oldenddate','class'=>'form-control'])->widget(
-    DateTimePicker::className(), [
-        // inline too, not bad
-        'inline' => false, 
-    	'language'=>'zh-CN',
-        
-        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
-        'clientOptions' => [
-            'autoclose' => true,
-        	'minView' => 3,
-        	'maxView' => 3,
-            'format' => 'yyyy-mm-dd'
-        ]])?></td>
+			<td align='center'><?php echo DateTimePicker::widget([
+				'name' => 'oldenddate',
+				'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+				//'type' => DatePicker::TYPE_COMPONENT_APPEND,
+				'options' => [
+					'readonly' => true
+				],
+				'clientOptions' => [
+					'language' => 'zh-CN',
+					'format' => 'yyyy-mm-dd',
+					//'todayHighlight' => true,
+					'autoclose' => true,
+					'minView' => 3,
+					'maxView' => 3,
+				]
+			]);?></td>
 			<td align='center'>止</td>
 		</tr>
         <td width="20%" align='right' valign="middle">宗地</td>
-        <td align='left' valign="middle"><?php $arrayZongdi = explode('、', $oldFarm->zongdi);
+        <td colspan="5" align='left' valign="middle"><?php $arrayZongdi = explode('、', $oldFarm->zongdi);
         $i=0;
         foreach($arrayZongdi as $value) {
         	echo html::button($value,['onclick'=>'toZongdi("'.$value.'","'.Lease::zongdiToArea($value).'")','value'=>$value,'id'=>$value,'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
@@ -103,15 +113,15 @@ use app\models\Lease;
       <?= Html::hiddenInput('ttpozongdi','',['id'=>'ttpozongdi-zongdi']) ?>
       <?= Html::hiddenInput('ttpoarea',0,['id'=>'ttpozongdi-area']) ?>
         <td align='right' valign="middle">面积</td><?= html::hiddenInput('tempoldnotclear',$oldFarm->measure,['id'=>'temp_oldnotclear']) ?>
-        <td align='left' valign="middle"><?= html::textInput('oldmeasure',$oldFarm->measure,['readonly' => true,'id'=>'oldfarms-measure','class'=>'form-control']) ?></td>
+        <td colspan="5" align='left' valign="middle"><?= html::textInput('oldmeasure',$oldFarm->measure,['readonly' => true,'id'=>'oldfarms-measure','class'=>'form-control']) ?></td>
         </tr>
       <tr>
         <td align='right' valign="middle">未明确地块</td>
-        <td align='left' valign="middle"><?= html::textInput('oldnotclear',$oldFarm->notclear,['readonly' => true,'id'=>'oldfarms-notclear','class'=>'form-control']) ?></td>
+        <td colspan="5" align='left' valign="middle"><?= html::textInput('oldnotclear',$oldFarm->notclear,['readonly' => true,'id'=>'oldfarms-notclear','class'=>'form-control']) ?></td>
         </tr>
       <tr>
         <td align='right' valign="middle">法人签字</td>
-        <td align='left' valign="middle"><?= $oldFarm->farmersign ?></td>
+        <td colspan="5" align='left' valign="middle"><?= html::textInput('oldfarmersign', $oldFarm->farmersign ,['class'=>'form-control'])?></td>
         </tr>
     </table></td>
     <td width="4%" align="center"><font size="5"><i class="fa fa-arrow-right"></i></font></td>
@@ -119,7 +129,7 @@ use app\models\Lease;
 		class="table table-bordered table-hover">
       <tr>
         <td width="30%" align='right'>农场名称</td>
-        <td colspan="5" align='left'><?= $model->farmname ?></td>
+        <td colspan="5" align='left'><?= html::textInput('farmname',$model->farmname,['class'=>'form-control'])  ?></td>
         </tr>
       <tr>
         <td width="20%" align='right'>承包人姓名</td>
@@ -136,6 +146,10 @@ use app\models\Lease;
       <tr>
         <td width="20%" align='right'>农场位置</td>
         <td colspan="5" align='left'><?= $model->address ?></td>
+        </tr>
+       <tr>
+        <td width="20%" align='right' valign="middle">管理区</td>
+        <td colspan="5" align='left' valign="middle"><?= ManagementArea::find()->where(['id'=>$model->management_area])->one()['areaname']?></td>
         </tr>
       <tr>
         <td width="20%" align='right'>宗地</td><?php $model->zongdi = '';?>
@@ -236,7 +250,7 @@ function toZongdi(zongdi,area){
 	if(last == '、') {
 		$('#oldfarm-zongdi').val(oldzongdistr.substring(0,oldzongdistr.length-1));
 	}
-	
+	//alert($('#oldfarm-zongdi').val());
 	var ttpozongdi = $('#ttpozongdi-zongdi').val();
 	ttpozongdi = ttpozongdi + '、' + zongdi;
 	var first = ttpozongdi.substr(0,1);

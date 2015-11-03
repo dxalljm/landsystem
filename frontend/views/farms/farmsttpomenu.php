@@ -28,7 +28,7 @@ use app\models\Farms;
                 <div class="box-body">
 	<p>
     	 <?= Html::a('过户', ['farmstransfer', 'farms_id' => $farms_id], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('宗地转让', ['farmsttpozongdi', 'farms_id' => $farms_id],['class' => 'btn btn-primary']) ?>
+        <?= Html::a('转让', ['farmsttpozongdi', 'farms_id' => $farms_id],['class' => 'btn btn-primary']) ?>
         <?= Html::a('分户', ['farmssplit', 'farms_id' => $farms_id], ['class' => 'btn btn-primary']) ?>
         
     </p>
