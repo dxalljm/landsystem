@@ -29,16 +29,23 @@ class Lease extends \yii\db\ActiveRecord
     //得到1-100（123）中的面积123
     public static function getArea($Leasearea) 
     {
-    	//var_dump($Leasearea);
-    	$areas = 0;
-    	preg_match_all('/-([\s\S]*)\(([0-9.]+?)\)/', $Leasearea, $area);
-		$areas = (float)$area[2][0];
+    	if(preg_match('/[0-9.]+?/',$Leasearea)) {
+    		$areas = $Leasearea;
+    	} else {
+	    	$areas = 0;
+	    	preg_match_all('/-([\s\S]*)\(([0-9.]+?)\)/', $Leasearea, $area);
+			$areas = (float)$area[2][0];
+    	}
     	return $areas;
     }
     //得到1-100（123）中的宗地号1-100
     public static function getZongdi($Leasearea) {
-   		$zongdi = preg_replace('/\(  [^\)]+?  \)/x', '', $Leasearea);
-    	return $zongdi;
+    	if(preg_match('/[0-9.]+?/',$Leasearea)) {
+    		$zongdi = $Leasearea;
+    	} else {
+	   		$zongdi = preg_replace('/\(  [^\)]+?  \)/x', '', $Leasearea);
+	    	return $zongdi;
+    	}
     }
     
     //得到承租人的宗地信息

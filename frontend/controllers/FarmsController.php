@@ -461,15 +461,43 @@ class FarmsController extends Controller
     public function actionFarmstozongdi($farms_id,$oldfarms_id)
     {
     	$oldfarm = $this->findModel($oldfarms_id);
+    	$oldfarm->state = 0;
+    	$oldfarm->update_at = time();
+    	$oldfarm->save();
     	$model = $this->findModel($farms_id);
     	//$ttpoModel = Ttpo::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
     	//$ttpozongdiModel = Ttpozongdi::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
     	
     	if ($oldfarm->load(Yii::$app->request->post())) {
-    		$oldfarm->update_at = time();
-    		$oldfarm->zongdi = Yii::$app->request->post('oldzongdi');
-    		$oldfarm->measure = Yii::$app->request->post('oldmeasure');
-    		$oldfarm->notclear = Yii::$app->request->post('oldnotclear');
+    		$newfarm = new Farms();
+    		$newfarm->farmname = $oldfarm->farmname;
+    		$newfarm->farmername = $oldfarm->farmername;
+    		$newfarm->cardid = $oldfarm->cardid;
+    		$newfarm->telephone = $oldfarm->telephone;
+    		$newfarm->address = $oldfarm->address;
+    		$newfarm->management_area = $oldfarm->menagement_area;
+    		$newfarm->spyear = $oldfarm->spyear;
+    		$newfarm->measure = Yii::$app->request->post('oldmeasure');
+    		$newfarm->zongdi = Yii::$app->request->post('oldzongdi');
+    		$newfarm->cooperative_id = $oldfarm->cooperative_id;
+    		$newfarm->surveydate = $oldfarm->surveydate;
+    		$newfarm->groundsign = $oldfarm->groundsign;
+    		$newfarm->investigator = $oldfarm->investigator;
+    		$newfarm->farmersign = $oldfarm->farmersign;
+    		$newfarm->create_at = time();
+    		$newfarm->update_at = time();
+    		$newfarm->pinyin = $oldfarm->pinyin;
+    		$newfarm->farmerpinyin = $oldfarm->parmerpinyin;
+    		$newfarm->state = 1;
+    		$newfarm->notclear = Yii::$app->request->post('oldnotclear');
+//     		$newfarm->contractnumber = 
+//     		$newfarm->begindate = 
+//     		$newfarm->enddate
+//     		$newfarm->oldfarms_id
+//     		$oldfarm->update_at = time();
+//     		$oldfarm->zongdi = Yii::$app->request->post('oldzongdi');
+//     		$oldfarm->measure = Yii::$app->request->post('oldmeasure');
+//     		$oldfarm->notclear = Yii::$app->request->post('oldnotclear');
 			
     		$oldfarm->save();
     		if ($model->load(Yii::$app->request->post())) {

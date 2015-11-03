@@ -21,7 +21,7 @@ class farmsSearch extends Farms
     public function rules()
     {
         return [
-            [['id', 'create_at', 'update_at','state'], 'integer'],
+            [['id', 'create_at', 'update_at','state','oldfarms_id'], 'integer'],
             [['farmname', 'farmername', 'address','measure', 'management_area', 'spyear', 'zongdi', 'cooperative_id','notclear','surveydate', 'groundsign', 'investigator', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate'], 'safe'],
             //[['measure'], 'number'],
         ];
@@ -142,6 +142,7 @@ class farmsSearch extends Farms
             ->andFilterWhere(['like', 'telephone', $this->telephone])
             ->andFilterWhere(['like', 'address', $this->address])
             ->andFilterWhere(['like', 'state', $this->state])
+            ->andFilterWhere(['like', 'oldfarms_id', $this->oldfarms_id])
             ->andWhere(['management_area' => $this->management_area])
 
 

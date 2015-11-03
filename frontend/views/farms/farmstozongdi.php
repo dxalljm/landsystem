@@ -161,7 +161,7 @@ use app\models\Lease;
   </tr>
 </table>
 <div class="form-group">
-      <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+      <?= Html::submitButton('提交', ['class' =>  'btn btn-success']) ?>
       <?= Html::button('重置', ['class' => 'btn btn-primary','id'=>'reset']) ?>
       <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
 </div>

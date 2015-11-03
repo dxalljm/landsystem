@@ -116,9 +116,12 @@ class Plantingstructure extends \yii\db\ActiveRecord
     			}
     		}
     	}
+    	
     	foreach ($result as $key=>$value) {
-    		if($value !== 0.0)
+    		if($value !== 0.0 and $key !== '')
     			$zongdi[] = $key.'('.$value.')';
+    		else 
+    			$zongdi[] = $value;
     	}
     	//var_dump($zongdi);
     	return $zongdi;

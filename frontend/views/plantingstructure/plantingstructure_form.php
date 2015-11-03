@@ -183,6 +183,7 @@ use app\models\Goodseed;
     			if($i%5 == 0)
     				echo '<br>';
     		}
+    		echo html::button('全选',['onclick'=>'toAll()','','id'=>'allzongdi','class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
     		?></td>
 
     	</tr>
@@ -271,6 +272,11 @@ function toParcellist(zdarea,id){
 		$('#model-parcellist').val(value);
 		
 	}
+}
+function toAll(arrzongdi) {
+	$('button').each(function(){
+		alert($(this).text());
+	});
 }
 function reset()
 {
