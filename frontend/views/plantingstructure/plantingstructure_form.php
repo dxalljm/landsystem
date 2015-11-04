@@ -175,14 +175,23 @@ use app\models\Goodseed;
     	<tr>
     		<td align='left'><?php 
 			$zongdiarr = $zongdi;
-			echo html::hiddenInput('tempAllZongdi',implode('、', $zongdiarr),['id'=>'temp-allzongdi']);
-			$i=0;
-    		foreach($zongdiarr as $value) {
-    			echo html::button($value,['onclick'=>'toParcellist("'.$value.'","'.Lease::getZongdi($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
-    			$i++;
-    			if($i%4 == 0)
-    				echo '<br><br>';
-    		}
+			//var_dump($zongdiarr);
+			if(is_array($zongdiarr)) {
+				echo html::hiddenInput('tempAllZongdi',implode('、', $zongdiarr),['id'=>'temp-allzongdi']);
+				$i=0;
+				foreach($zongdiarr as $value) {
+					echo html::button($value,['onclick'=>'toParcellist("'.$value.'","'.Lease::getZongdi($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
+					
+					$i++;
+					if($i%4 == 0)
+						echo '<br><br>';
+				}
+			} else {
+				//var_dump(bcsub($farm->measure,$zongdiarr,2));
+				echo html::hiddenInput('tempAllZongdi',bcsub($farm->measure,$zongdiarr,2),['id'=>'temp-allzongdi']);
+				echo html::button(bcsub($farm->measure,$zongdiarr,2),['onclick'=>'toParcellist("'.bcsub($farm->measure,$zongdiarr,2).'","'.bcsub($farm->measure,$zongdiarr,2).'")','value'=>bcsub($farm->measure,$zongdiarr,2),'id'=>bcsub($farm->measure,$zongdiarr,2),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
+			}
+			
     		echo html::button('全选',['onclick'=>'toAll()','','id'=>'allzongdi','class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
     		?></td>
 

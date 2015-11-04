@@ -34,15 +34,17 @@ class Lease extends \yii\db\ActiveRecord
 //		$Leasearea = '2.1';
 //		$Leasearea = '3.';
 
-    	if(preg_match('/^\d+\.?/iU', $Leasearea)) {
-	    	$areas = (float)$Leasearea;
-//			var_dump($areas);
-//			exit;
-    	} else {
-	    	preg_match_all('/-([\s\S]*)\(([0-9.]+?)\)/', $Leasearea, $area);
+    	//if(preg_match('/^\d+\.?/iU', $Leasearea)) {
+    	if(strstr($Leasearea,'-')) {
+	    	
+			preg_match_all('/-([\s\S]*)\(([0-9.]+?)\)/', $Leasearea, $area);
+// 			var_dump($area);
+// 			exit;
 			$areas = (float)$area[2][0];
+    	} else {
+    		$areas = (float)$Leasearea;
     	}
-    	
+    	//var_dump($areas);
     	return $areas;
     }
     //得到1-100（123）中的宗地号1-100
@@ -117,11 +119,12 @@ class Lease extends \yii\db\ActiveRecord
     
     public static function scanOverZongdi($farms_id) 
     {
+    	
     	//$zdarea——农场所有宗地（面积）
     	$zdarea = self::getFarmsZdarea($farms_id);
     	//$lease——已经被租赁的所有宗地（面积）
     	$lease = self::find()->where(['farms_id'=>$farms_id])->all();
-    	
+    	$result = 0;
     	if($lease) {
     		foreach ($lease as $value) {
     			$leasearea = explode('、',$value['lease_area']);
@@ -129,40 +132,45 @@ class Lease extends \yii\db\ActiveRecord
     				$OneArrayArea[] = $val;
     			}
     		}
-    		//已经租赁的宗地与农场宗地进行比较，得到已经租赁的宗地，但不包括租赁一部分面积的宗地
-    		$result = array_diff($zdarea,$OneArrayArea);
-    		//var_dump($OneArrayArea);
-    		//把相同宗地的面積進行累加
-    		//var_dump($newOneArrayArea);
-    		if(count($OneArrayArea)>1) {
-	    		$lastLeaseArea = self::zdareaChuLi($OneArrayArea);
-    		}
-    		else
-    			$lastLeaseArea = $OneArrayArea;
-    		//var_dump($lastLeaseArea);
-    		//得到需要顯示的地塊和剩余面积
-    		foreach($lastLeaseArea as $key=>$value ) {
-				foreach ( $zdarea as $k=>$za ) {
-					// 判断宗地号是否一致，如果一致则判断面积是否相等，如果不相等则面积相减
-					if (self::getZongdi ( $za ) == self::getZongdi ( $value )) {
-						
-						if (self::getArea ( $za ) !== self::getArea ( $value )) {
-							//echo self::getArea ( $za ) .'=='. self::getArea ( $value ).'<br>';
-							$areac = self::getArea ( $za ) - self::getArea ( $value );
-							//echo $areac;
-							$result [$k] = self::getZongdi ( $za ) . "(" . $areac . ")";
-							//var_dump($result);
-						}	
-		    		}
-	    		}
-    		}
-    		$result = array_diff($result,$lastLeaseArea);
-    		//var_dump($result);
-    		return $result;
+    		foreach ($OneArrayArea as $value) {
+    			if(!strstr($value,'-')) {
+    				$result += $value;
+    				//echo 'ooooo';
+    			} else {
+    				//已经租赁的宗地与农场宗地进行比较，得到已经租赁的宗地，但不包括租赁一部分面积的宗地
+    				$result = array_diff($zdarea,$OneArrayArea);
+    				if(count($OneArrayArea)>1) {
+    					$lastLeaseArea = self::zdareaChuLi($OneArrayArea);
+    				}
+    				else
+    					$lastLeaseArea = $OneArrayArea;
+    				//var_dump($lastLeaseArea);
+    				//得到需要顯示的地塊和剩余面积
+	    				foreach($lastLeaseArea as $key=>$value ) {
+	    					foreach ( $zdarea as $k=>$za ) {
+	    						// 判断宗地号是否一致，如果一致则判断面积是否相等，如果不相等则面积相减
+	    						if (self::getZongdi ( $za ) == self::getZongdi ( $value )) {
+	    				
+	    							if (self::getArea ( $za ) !== self::getArea ( $value )) {
+	    								//echo self::getArea ( $za ) .'=='. self::getArea ( $value ).'<br>';
+	    								$areac = self::getArea ( $za ) - self::getArea ( $value );
+	    								//echo $areac;
+	    								$result [$k] = self::getZongdi ( $za ) . "(" . $areac . ")";
+	    								//var_dump($result);
+	    							}
+	    						}
+	    					}
+	    				}
+	    				$result = array_diff($result,$lastLeaseArea);
+	    				//     		var_dump($result);
+	    				//     		exit;
+	    				return $result;
+	    			}
+	    		}    		
     	}
     	else 
     		return $zdarea;
-    	return false;
+    	return $result;
     }
    
     //把相同宗地面积进行累加，返回处理后的数组

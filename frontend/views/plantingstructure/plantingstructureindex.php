@@ -41,9 +41,13 @@ use app\models\Lease;
 			$arrayArea = array_merge($arrayArea,explode('、',$value['lease_area']));
 			$leaseSumArea += Lease::getListArea($value['lease_area']);
 		}
-		$isView = round($farms['measure'] - $leaseSumArea);
+		$isView = bcsub($farms['measure'] , $leaseSumArea,2);
 		if($isView) {
 			$arrayZongdi = Lease::getNOZongdi($_GET['farms_id']);
+		if(is_array($arrayZongdi))
+			$zongdilist = implode('、',$arrayZongdi);
+		else 
+			$zongdilist =  bcsub($farms['measure'] , $arrayZongdi,2);
 	?>
 <table class="table table-bordered table-hover">
   <tr>
@@ -54,12 +58,12 @@ use app\models\Lease;
     </tr>
   <tr>
     <td colspan="2" align="center"><?= $farms['farmername'] ?></td>
-    <td align="center"><?= implode('、',$arrayZongdi)?></td>
+    <td align="center"><?= $zongdilist?></td>
     <?php 
     	  $plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id'],'lease_id'=>0])->all();
     	  $sumArea = 0;
     	  foreach($plantings as $value) {
-    	  	$sumArea += $value['area'];
+    	  	$sumArea += (float)$value['area'];
     	  }
     	  
     	  //echo $val['lease_area'];

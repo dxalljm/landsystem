@@ -65,12 +65,18 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	$plantings = Plantingstructure::find()->where(['lease_id'=>$lease_id,'farms_id'=>$farms_id])->all();
     	if($plantings) {
     		foreach ($plantings as $value) {
-    			$arrZongdi = explode('、', $value['zongdi']);
-    			foreach ($arrZongdi as $val) {
-    				$result[] = $val;
+    			if(!strstr($value['zongdi'],'-')) {
+	    			$result[$value['zongdi']] = $value['area'];
+    			} else {
+	    			$arrZongdi = explode('、', $value['zongdi']);
+	    			foreach ($arrZongdi as $val) {
+	    				$result[] = $val;
+	    			}
     			}
     		}
     	}
+//     	var_dump($result);
+//     	exit;
     	return $result;
     }
     
@@ -102,28 +108,39 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	}
 // 		var_dump($result);
 // 		var_dump($over);
+// 		exit;
     	foreach($result as $key => $value) {
-    		foreach ($over as $v) {
-    			//echo $key.'==='.Lease::getZongdi($v)."<br>";
-    			if($key == Lease::getZongdi($v)) {
-    				
-    				if($value == Lease::getArea($v)) {
-    					unset($result[$key]);
-    				} else {
-    					$area = $result[$key] - Lease::getArea($v);
-						$result[$key] = $area;
-    				}
+    		
+	    	foreach ($over as $k => $v) {
+	    		if(preg_match('/^\d+\.?/iU', $v)) {
+    				$result[$k] = $k - $v;
+    			} else {
+	    			if($key == Lease::getZongdi($v)) {
+	    				
+	    				if($value == Lease::getArea($v)) {
+	    					unset($result[$key]);
+	    				} else {
+	    					$area = $result[$key] - Lease::getArea($v);
+							$result[$key] = $area;
+	    				}
+	    			}
     			}
+	    	}		
+    	}
+//     	var_dump($result);
+//     	exit;
+    	foreach ($result as $key=>$value) {
+    		if(preg_match('/^\d+\.?/iU', $value)) {
+    			$zongdi[0] = $value;
+    		} else {
+	    		if($value !== 0.0 and $key !== '')
+	    			$zongdi[] = $key.'('.$value.')';
+	    		else 
+	    			$zongdi[] = $value;
     		}
     	}
-    	
-    	foreach ($result as $key=>$value) {
-    		if($value !== 0.0 and $key !== '')
-    			$zongdi[] = $key.'('.$value.')';
-    		else 
-    			$zongdi[] = $value;
-    	}
-    	//var_dump($zongdi);
+//     	var_dump($zongdi);
+//     	exit;
     	return $zongdi;
     }
 

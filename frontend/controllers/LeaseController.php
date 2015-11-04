@@ -111,6 +111,7 @@ class LeaseController extends Controller
 		$noarea = $model::getNoArea($farms_id);
         if ($model->load(Yii::$app->request->post())) {
         	$model->farms_id = $farms_id;
+        	
         	$model->create_at = time();
         	$model->update_at = time();
         	$model->save();

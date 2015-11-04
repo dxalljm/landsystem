@@ -136,6 +136,8 @@ use app\models\Lease;
     		<td align='center'><?php 
     		//$arrayParcelValue = explode('、', $parcellistvalue);
 			$zongdiarr = Lease::getNOZongdi($_GET['farms_id']);
+			//var_dump($zongdiarr);
+			//exit;
 			echo html::hiddenInput('tempZongdiList',implode('、', $zongdiarr),['id'=>'temp-ZongdiList']);
 			$i=0;
     		foreach($zongdiarr as $value) {
