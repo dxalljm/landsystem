@@ -30,8 +30,11 @@ class Lease extends \yii\db\ActiveRecord
     public static function getArea($Leasearea)
     {
     	$areas = 0;
-    	if(preg_match('/^(\d\.)+$/iU', $Leasearea)) {
+//		$Leasearea = '10.';
+    	if(preg_match('/^(\d|\.)+$/iU', $Leasearea)) {
 	    	$areas = (float)$Leasearea;
+//			var_dump($areas);
+//			exit;
     	} else {
 	    	preg_match_all('/-([\s\S]*)\(([0-9.]+?)\)/', $Leasearea, $area);
 			$areas = (float)$area[2][0];
