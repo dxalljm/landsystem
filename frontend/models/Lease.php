@@ -29,13 +29,17 @@ class Lease extends \yii\db\ActiveRecord
     //得到1-100（123）中的面积123
     public static function getArea($Leasearea) 
     {
-    	if(preg_match('/^(([0-9]+.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*.[0-9]+)|([0-9]*[1-9][0-9]*))$/',$Leasearea)) {
-    		$areas = $Leasearea;
+    	$areas = 0;
+    	if(is_numeric($Leasearea)) {
+	    	var_dump((float)$Leasearea);
+	    	$areas = (float)$Leasearea;
+    	
     	} else {
-	    	$areas = 0;
+	    	
 	    	preg_match_all('/-([\s\S]*)\(([0-9.]+?)\)/', $Leasearea, $area);
 			$areas = (float)$area[2][0];
     	}
+    	
     	return $areas;
     }
     //得到1-100（123）中的宗地号1-100

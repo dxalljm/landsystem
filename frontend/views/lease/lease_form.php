@@ -167,13 +167,15 @@ function toParcellist(zdarea,id){
 		$('#model-parcellist').val(value);
 	}
 }
+
 function toAll() {
 	$('#model-parcellist').val($('#temp-ZongdiList').val());
 }
 function setLeasearea() {
 	$('#myModal').modal('hide');
-	if($('#lease-lease_area').val() == '')
+	if($('#lease-lease_area').val() == '') {
 		$('#lease-lease_area').val($('#model-parcellist').val());
+	}
 	else {
 		//alert($('#lease-lease_area').val());
 		var value = $('#model-parcellist').val();
