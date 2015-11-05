@@ -43,7 +43,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 <table width="100%" border="1">
   <tr>
     <td width="14%" height="31" align="center">&nbsp;收款单位（缴款人）      </td>
-    <td height="31" colspan="5"><?= $form->field($model, 'farmername')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+    <td height="31" colspan="5"><?= $form->field($model, 'farmername')->textInput(['readonly'=>true])->label(false)->error(false) ?></td>
     </tr>
   <tr>
     <td height="31" colspan="2" align="center">收费项目</td>
@@ -55,7 +55,7 @@ use dosamigos\datetimepicker\DateTimePicker;
   <tr>
     <td height="23" colspan="2" align="center" valign="middle">      宜农林地承包费</td>
     <td align="center" valign="middle">      元/亩<br /></td>
-    <td align="center" valign="middle"><?= $form->field($model, 'number')->textInput()->label(false)->error(false) ?></td>
+    <td align="center" valign="middle"><?= $form->field($model, 'number')->textInput(['readonly'=>true])->label(false)->error(false) ?></td>
     <td align="center" valign="middle"><?= $form->field($model, 'standard')->textInput(['value'=>30,'readonly'=>'readonly'])->label(false)->error(false) ?></td>
     <td align="center" valign="middle"><?= $form->field($model, 'amountofmoney')->textInput(['readonly'=>'readonly'])->label(false)->error(false) ?></td>
   </tr>
@@ -63,7 +63,7 @@ use dosamigos\datetimepicker\DateTimePicker;
     <td align="center">金额合计（大写）</td>
     <td colspan="3"><?= $form->field($model, 'bigamountofmoney')->textInput(['readonly'=>'readonly'])->label(false)->error(false) ?></td>
     <td align="right">￥：</td>
-    <td><?= html::textInput('money','',['id'=>'viewmoney','class'=>'form-control','readonly'=>'readonly']) ?></td>
+    <td><?= html::textInput('money',$model->amountofmoney,['id'=>'viewmoney','class'=>'form-control','readonly'=>'readonly']) ?></td>
   </tr>
   <tr>
     <td align="right">备注：</td>

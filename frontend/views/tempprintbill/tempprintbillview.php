@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <div class="box-body">
      <p>
-        <?= Html::a('缴费', ['tempprintbillcreate'], ['class' => 'btn btn-success']) ?>
+        
         <?= Html::a('打印', '#', ['class' => 'btn btn-success','onclick'=>'myPREVIEW()']) ?>
         <?= Html::a('打印设计','#', ['class' => 'btn btn-success','onclick'=>'myDesign()']) ?>
     </p>

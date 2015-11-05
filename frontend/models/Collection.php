@@ -35,9 +35,9 @@ class Collection extends \yii\db\ActiveRecord
 	public function rules() 
     { 
         return [
-            [['farms_id', 'ypayyear', 'isupdate','dckpay'], 'integer'],
+            [['farms_id', 'ypayyear', 'isupdate','dckpay','payyear'], 'integer'],
             [['ypayarea', 'amounts_receivable', 'real_income_amount', 'ypaymoney', 'owe'], 'number'],
-            [['payyear', 'billingtime','cardid'], 'string', 'max' => 500]
+            [['billingtime'], 'string', 'max' => 500]
         ]; 
     } 
 
@@ -46,27 +46,29 @@ class Collection extends \yii\db\ActiveRecord
     	
     	$farm = Farms::find()->where(['id'=>$_GET['farms_id']])->one();
     	$plantprice = PlantPrice::find()->where(['years'=>$year])->one();
-    	$result = $farm['measure']*30*$plantprice['price'];
-    	return $result;
+    	$result = $farm['measure']*$plantprice['price'];
+    	return (float)$result;
     }
     
     public function getYpayarea($year,$real_income_amount)   //应追缴面积
     {
     	$plantprice = PlantPrice::find()->where(['years'=>$year])->one();
-    	$result = sprintf("%.2f", ($this->getAR($year)-$real_income_amount)/30/$plantprice['price']);
+    	$result = sprintf("%.2f", ($this->getAR($year)-$real_income_amount)/$plantprice['price']);
     	return $result;
     }
     
     public function getYpaymoney($year,$real_income_amount)  	//应追缴金额
     {
-
-    		return $this->getAR($year)-$real_income_amount;
+//     	var_dump($this->getAR($year));
+//     	var_dump($real_income_amount);
+// 		var_dump(bcsub($this->getAR($year),(float)$real_income_amount,2));
+    		return bcsub($this->getAR($year),$real_income_amount,2);
     }
     
-    public function getOwe($cardid,$farms_id,$year)   //剩余欠缴金额
+    public function getOwe($farms_id,$year)   //剩余欠缴金额
     {
     	$result = 0;
-    	$collections = Collection::find()->where(['farms_id'=>$farms_id,'cardid'=>$cardid])->andWhere('ypayyear<'.$year)->all();
+    	$collections = Collection::find()->where(['farms_id'=>$farms_id])->andWhere('ypayyear<'.$year)->all();
     	//print_r($collections);
     	foreach($collections as $val){
     		$result+=$val['ypaymoney'];
@@ -91,7 +93,6 @@ class Collection extends \yii\db\ActiveRecord
             'ypaymoney' => '应追缴费金额',
             'owe' => '剩余欠缴金额',
             'isupdate' => '是否可更新',
-        	'cardid' => '法人身份证',
         	'create_at' => '创建日期',
         	'update_at' => '更新日期',
         	'dckpay' => '地产科提交缴费',

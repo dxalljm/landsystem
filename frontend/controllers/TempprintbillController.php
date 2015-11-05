@@ -10,6 +10,9 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use frontend\helpers\MoneyFormat;
 use app\models\Logs;
+use app\models\Collection;
+use app\models\Farms;
+use app\models\PlantPrice;
 /**
  * TempprintbillController implements the CRUD actions for Tempprintbill model.
  */
@@ -86,16 +89,32 @@ class TempprintbillController extends Controller
     	]);
     }
 
+    public function actionTempprintbillsearch()
+    {
+    	
+    }
+    
     /**
      * Creates a new Tempprintbill model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionTempprintbillcreate()
+    public function actionTempprintbillcreate($id)
     {
         $model = new Tempprintbill();
 		$nonumber = Tempprintbill::find()->orderBy('id DESC','LIMIT=1')->one()['nonumber'];
-		//var_dump(++$nonumber);
+		$collectionModel = Collection::findOne($id);
+		$collectionModel->dckpay = 1;
+		
+		$collectionModel->save();
+		
+		$farm =  Farms::find()->where(['id'=>$collectionModel->farms_id])->one();
+		$model->farmername = $farm->farmername;
+		$model->number = $farm->measure;
+		$model->standard = PlantPrice::find()->where(['years'=>$collectionModel->ypayyear])->one()['price'];
+		$model->amountofmoney = MoneyFormat::num_format($collectionModel->real_income_amount);
+		$model->bigamountofmoney = MoneyFormat::cny($collectionModel->real_income_amount);
+		$model->amountofmoneys = $collectionModel->real_income_amount;
 		//exit;
         if ($model->load(Yii::$app->request->post())) {
         	$model->create_at = strtotime($model->create_at.' '.date("H:m:s"));
@@ -109,6 +128,7 @@ class TempprintbillController extends Controller
             return $this->render('tempprintbillcreate', [
                 'model' => $model,
             	'nonumber' => ++$nonumber,
+            	'collectionModel' => $collectionModel,
             ]);
         }
     }

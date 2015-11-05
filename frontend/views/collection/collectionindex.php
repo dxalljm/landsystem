@@ -9,6 +9,8 @@ use app\models\ManagementArea;
 use dosamigos\datetimepicker\DateTimePicker;
 use app\models\Theyear;
 use app\models\Collection;
+use frontend\helpers\MoneyFormat;
+use app\models\Farms;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\farmsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -28,35 +30,42 @@ use app\models\Collection;
 <br />
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        //'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
           // 'id',
-            'farmername',
             
             [
-            	'label' => '农场',
+            	'label' => '农场名称',
               	'attribute' => 'farmname',
             	'value' => 'farms.farmname',
             ],
             [
-            	'label' => '应收金额',
-            	'value' => function($model) {
-            		return Collection::find()->where(['farms_id'=>$model->farms_id,'cardid'=>$model->cardid,'ypayyear'=>date('Y')])->one()['amounts_receivable'].'元';
+	            'label' => '法人姓名',
+	            'value' => function ($model){
+            		return Farms::find()->where(['id'=>$model->farms_id])->one()['farmername'];
             	}
             ],
             [
-            'label' => '实收金额',
-            'value' => function($model) {
-            	return Collection::find()->where(['farms_id'=>$model->farms_id,'cardid'=>$model->cardid,'ypayyear'=>date('Y')])->one()['real_income_amount'].'元';
-            }
+            	//'label' => '应收金额',
+            	'attribute' => 'amounts_receivable',
+            	'value' => function($model) {
+            		return MoneyFormat::num_format($model->amounts_receivable).'元';
+            	}
             ],
             [
-            'label' => '差额',
-            'value' => function($model) {
-            	return Collection::find()->where(['farms_id'=>$model->farms_id,'cardid'=>$model->cardid,'ypayyear'=>date('Y')])->one()['ypaymoney'].'元';
-            }
+	            //'label' => '实收金额',
+	            'attribute' => 'real_income_amount',
+	            'value' => function($model) {
+	            	return MoneyFormat::num_format($model->real_income_amount).'元';
+	            }
+            ],
+            [
+	            'label' => '差额',
+	            'value' => function($model) {
+	            	return MoneyFormat::num_format(bcsub($model->amounts_receivable, $model->real_income_amount,2)).'元';
+	            }
             ],
             //'cardid',
             //'telephone',
@@ -65,31 +74,15 @@ use app\models\Collection;
             'format'=>'raw',
             //'class' => 'btn btn-primary btn-lg',
             'value' => function($model,$key){
-            	return Html::a('缴费','index.php?r=collection/collectioncreate&farms_id='.$model->farms_id.'&cardid='.$model->cardid.'&year='.date('Y'), [
-            			'id' => 'collectionindex',
-            			'title' => '农场相关业务办理',
+            	return Html::a('确认缴费','index.php?r=tempprintbill/tempprintbillcreate&id='.$model->id, [
+            			'id' => 'collectioncreate',
+            			'class' => 'btn btn-success',
+            			'title' => '地产科确认提交的缴费申请，点击按钮确认缴费并打印发票',
+            			
             			//'data-toggle' => 'modal',
             			//'data-target' => '#collectioncreate-modal',
             			//'onclick' => 'collectioncreate('.$model->farms_id.','.$model->cardid.')',
             			//'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/collection/collectioncreate','id'=>$key,'year'=>$years])."','','width=700,height=600,top=50,left=380, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
-            	]);
-            }
-            ],
-            [
-
-            'format'=>'raw',
-            //'class' => 'btn btn-primary btn-lg',
-            'value' => function($model,$key){
-            	// $url = ['/user/userassign','id'=>$model->id];
-            	return Html::a('详细信息','#', [
-            			'id' => 'farmercreate',
-            			'title' => '填写承包信息',
-            			'data-toggle' => 'modal',
-            			'data-target' => '#farmercontract-modal',
-            			'onclick' => 'farmercontract('.$model->farms_id.')',
-            			//'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/farmer/farmercontract','id'=>$key])."','','width=1200,height=600,top=50,left=80, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
-
-
             	]);
             }
             ],

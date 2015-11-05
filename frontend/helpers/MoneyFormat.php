@@ -6,6 +6,8 @@ class MoneyFormat
 		if(!is_numeric($num)){
 			return false;
 		}
+		if($num == 0.0)
+			return $num;
 		$rvalue='';
 		$num = explode('.',$num);//把整数和小数分开
 		$rl = !isset($num['1']) ? '' : $num['1'];//小数部分的值
@@ -23,6 +25,7 @@ class MoneyFormat
 		if($rvalue[0]==0){
 			array_shift($rvalue);//如果第一个元素为0，删除第一个元素
 		}
+		
 		$rv = $rvalue[0];//前面不满三位的数
 		for($i = 1; $i < count($rvalue); $i++){
 			$rv = $rv.','.$rvalue[$i];

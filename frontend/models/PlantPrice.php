@@ -42,7 +42,7 @@ class PlantPrice extends \yii\db\ActiveRecord
         return [
 			'id' => 'ID',
             'plant' => '小麦',
-            'price' => '价格',
+            'price' => '价格/亩',
             'years' => '年度',
         ];
     }

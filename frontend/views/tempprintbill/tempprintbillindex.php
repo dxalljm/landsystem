@@ -30,7 +30,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('缴费', ['tempprintbillcreate'], ['class' => 'btn btn-success']) ?>
         <h3>截止<?= date('Y年m月d日',$create_at)?>止已经收缴<?= MoneyFormat::num_format($billSum)?>元整</h3>
     </p>
 
@@ -63,7 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
             		'view' => function ($url, $model, $key) {
             		$url = Url::to('index.php?r=tempprintbill/tempprintbillsview&id='.$model->id);
             			$options = [
-            					'title' => Yii::t('yii', '查看并打印'),
+            					'title' => Yii::t('yii', '查看'),
             					'aria-label' => Yii::t('yii', 'View'),
             					'data-pjax' => '0',
             			];
@@ -72,7 +71,7 @@ $this->params['breadcrumbs'][] = $this->title;
             		},
                 // 下面代码来自于 yii\grid\ActionColumn 简单修改了下
                 'print' => function ($url, $model, $key) {
-                	
+                	$url = Url::to('index.php?r=tempprintbill/tempprintbillview&id='.$model->id);
                     $options = [
                         'title' => Yii::t('yii', '查看并打印'),
                         'aria-label' => Yii::t('yii', 'View'),
