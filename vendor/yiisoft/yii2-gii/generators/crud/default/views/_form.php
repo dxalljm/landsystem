@@ -27,7 +27,7 @@ use yii\widgets\ActiveFormrdiv;
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-form">
 
     <?= "<?php " ?>$form = ActiveFormrdiv::begin(); ?>
-<table class="table table-striped table-bordered table-hover table-condensed">
+<table class="table table-bordered table-hover">
 		<?php foreach ($generator->getColumnNames() as $attribute) {
 		    if (in_array($attribute, $safeAttributes)) {
 		    	echo "<tr>\n";

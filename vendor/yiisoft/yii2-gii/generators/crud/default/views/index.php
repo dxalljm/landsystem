@@ -26,7 +26,16 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-index">
 
-    <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
+    <section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <?= $this->title ?>
+                    </h3>
+                </div>
+                <div class="box-body">
 <?php if(!empty($generator->searchModelClass)): ?>
 <?= "    <?php " . ($generator->indexWidgetType === 'grid' ? "// " : "") ?>echo $this->render('_search', ['model' => $searchModel]); ?>
 <?php endif; ?>
@@ -75,5 +84,9 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         },
     ]) ?>
 <?php endif; ?>
-
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>
