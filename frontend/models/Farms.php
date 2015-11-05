@@ -195,4 +195,23 @@ class Farms extends \yii\db\ActiveRecord
     	echo html::hiddenInput('famsid','',['id'=>'setFarmsid']);
     }
     
+    public static function getContractnumber($farms_id,$new=null)
+    {
+    	$farm = Farms::find()->where(['id'=>$farms_id])->one();
+    	$contractnumber = Contractnumber::findOne(1);
+    	if($new == 'new')
+    		$cn1 = str_pad($contractnumber->contractnumber+1,4,'0',STR_PAD_LEFT);
+    	else
+    		$cn1 = str_pad($contractnumber->contractnumber,4,'0',STR_PAD_LEFT);
+    	
+    	if(date('Y') <= $contractnumber->lifeyear)
+    		$cn2 = substr('2010',2);
+    	else 
+    		$cn2 = substr($contractnumber->lifeyear, 2);
+    	$cn3 = $farm->measure;
+    	$cn4 = $farm->management_area;
+    	$contractnumber = $cn1.'-'.$cn2.'-'.$cn3.'-'.$cn4;
+    	return $contractnumber;
+    }
+    
 }

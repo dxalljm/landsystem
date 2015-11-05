@@ -8,6 +8,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 use app\models\Parcel;
 use app\models\ManagementArea;
 use app\models\Lease;
+use app\models\Farms;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Farms */
@@ -58,14 +59,15 @@ use app\models\Lease;
         </tr>
       <tr>
       <tr>
-			<td width=15% align='right'>合同号</td>
-			<td colspan="5" align='left'><?= html::textInput('oldcontractnumber','',['id'=>'oldfarms-contractnumber','class'=>'form-control'])?></td>
+			<td width=15% align='right'>合同号</td><?php if($oldFarm->contractnumber == '') $oldFarm->contractnumber = Farms::getContractnumber($_GET['farms_id']);?>
+			<td colspan="5" align='left'><?= html::textInput('oldcontractnumber',$oldFarm->contractnumber,['id'=>'oldfarms-contractnumber','class'=>'form-control'])?></td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>承包年限</td>
 			<td align='center'>自</td>
 			<td align='center'><?php echo DateTimePicker::widget([
 				'name' => 'oldbegindate',
+				'value' => $oldFarm->begindate,
 				'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
 				'options' => [
 					'readonly' => true
@@ -82,6 +84,7 @@ use app\models\Lease;
 			<td align='center'>至</td>
 			<td align='center'><?php echo DateTimePicker::widget([
 				'name' => 'oldenddate',
+				'value' => $oldFarm->enddate,
 				'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
 				//'type' => DatePicker::TYPE_COMPONENT_APPEND,
 				'options' => [
@@ -98,6 +101,7 @@ use app\models\Lease;
 			]);?></td>
 			<td align='center'>止</td>
 		</tr>
+		<tr>
         <td width="20%" align='right' valign="middle">宗地</td>
         <td colspan="5" align='left' valign="middle"><?php $arrayZongdi = explode('、', $oldFarm->zongdi);
         $i=0;
@@ -125,34 +129,34 @@ use app\models\Lease;
         </tr>
     </table></td>
     <td width="4%" align="center"><font size="5"><i class="fa fa-arrow-right"></i></font></td>
-    <td width="50%"><table width="99%" height="458px"
-		class="table table-bordered table-hover">
+    <td width="50%">
+    <table width="99%" height="458px" class="table table-bordered table-hover">
       <tr>
         <td width="30%" align='right'>农场名称</td>
-        <td colspan="5" align='left'><?= html::textInput('farmname',$model->farmname,['class'=>'form-control'])  ?></td>
+        <td colspan="5" align='left'><?=  $form->field($model, 'farmname')->textInput(['maxlength' => 500])->label(false)->error(false)?></td>
         </tr>
       <tr>
         <td width="20%" align='right'>承包人姓名</td>
-        <td colspan="5" align='left'><?= $model->farmername ?></td>
+        <td colspan="5" align='left'><?=  $form->field($model, 'farmername')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
         </tr>
       <tr>
         <td width="20%" align='right'>身份证号</td>
-        <td colspan="5" align='left'><?= $model->cardid?></td>
+        <td colspan="5" align='left'><?=  $form->field($model, 'cardid')->textInput(['maxlength' => 500])->label(false)->error(false)?></td>
         </tr>
       <tr>
         <td width="20%" align='right'>电话号码</td>
-        <td colspan="5" align='left'><?= $model->telephone?></td>
+        <td colspan="5" align='left'><?=  $form->field($model, 'telephone')->textInput(['maxlength' => 500])->label(false)->error(false)?></td>
         </tr>
       <tr>
         <td width="20%" align='right'>农场位置</td>
-        <td colspan="5" align='left'><?= $model->address ?></td>
+        <td colspan="5" align='left'><?=  $oldFarm->address?></td>
         </tr>
        <tr>
         <td width="20%" align='right' valign="middle">管理区</td>
-        <td colspan="5" align='left' valign="middle"><?= ManagementArea::find()->where(['id'=>$model->management_area])->one()['areaname']?></td>
+        <td colspan="5" align='left' valign="middle"><?=  ManagementArea::find()->where(['id'=>$oldFarm->management_area])->one()['areaname']?></td>
         </tr>
       <tr>
-        <td width="20%" align='right'>宗地</td><?php $model->zongdi = '';?>
+        <td width="20%" align='right'>宗地</td>
         <td colspan="5" align='left'><?= $form->field($model, 'zongdi')->textarea(['readonly' => true])->label(false)->error(false) ?></td>
         </tr>
       <tr>
@@ -163,7 +167,7 @@ use app\models\Lease;
 		<tr>
 			<td width=15% align='right'>承包年限</td>
 			<td align='center'>自</td>
-			<td align='center'><?= $form->field($model, 'begindate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+			<td align='center'><?= $form->field($model, 'begindate')->textInput(['value' => $oldFarm->begindate])->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
         'inline' => false, 
@@ -177,7 +181,7 @@ use app\models\Lease;
             'format' => 'yyyy-mm-dd'
         ]]) ?></td>
 			<td align='center'>至</td>
-			<td align='center'><?= $form->field($model, 'enddate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+			<td align='center'><?= $form->field($model, 'enddate')->textInput(['value' => $oldFarm->enddate])->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
         'inline' => false, 
@@ -192,6 +196,7 @@ use app\models\Lease;
         ]])?></td>
 			<td align='center'>止</td>
 		</tr><?php $model->notclear = '';$model->measure = '';?>
+		<tr>
         <td align='right'>面积</td><?= html::hiddenInput('tempmeasure',$model->measure,['id'=>'temp_measure']) ?>
 								  <?= html::hiddenInput('tempnotclear',$model->notclear,['id'=>'temp_notclear']) ?>
         <td colspan="5" align='left'><?= $form->field($model, 'measure')->textInput(['readonly' => true])->label(false)->error(false) ?></td>

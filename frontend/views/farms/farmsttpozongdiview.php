@@ -1,5 +1,6 @@
 <?php
 namespace frontend\controllers;
+use yii;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;

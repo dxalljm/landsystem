@@ -57,25 +57,25 @@ use app\models\Dispute;
             	]);
             }
             ],
-            [
+//             [
             
-            'format'=>'raw',
-            //'class' => 'btn btn-primary btn-lg',
-            'value' => function($model,$key){
-            	// $url = ['/user/userassign','id'=>$model->id];
-            	return Html::a('详细信息','#', [
-            			'id' => 'farmercreate',
-            			'title' => '填写承包信息',
-            			//'class' => 'btn btn-primary btn-lg',
-            			'data-toggle' => 'modal',
-            			'data-target' => '#farmercontract-modal',
-            			//'data-id' => $key,
-            			'onclick'=> 'farmercontract('.$key.')',
-            			//'data-pjax' => '0',
+//             'format'=>'raw',
+//             //'class' => 'btn btn-primary btn-lg',
+//             'value' => function($model,$key){
+//             	// $url = ['/user/userassign','id'=>$model->id];
+//             	return Html::a('详细信息','#', [
+//             			'id' => 'farmercreate',
+//             			'title' => '填写承包信息',
+//             			//'class' => 'btn btn-primary btn-lg',
+//             			'data-toggle' => 'modal',
+//             			'data-target' => '#farmercontract-modal',
+//             			//'data-id' => $key,
+//             			'onclick'=> 'farmercontract('.$key.')',
+//             			//'data-pjax' => '0',
             
-            	]);
-            }
-            ],
+//             	]);
+//             }
+//             ],
         ],
     ]); ?>
 	                </div>

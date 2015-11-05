@@ -7,6 +7,8 @@ use app\models\Cooperative;
 use dosamigos\datetimepicker\DateTimePicker;
 use app\models\Parcel;
 use app\models\ManagementArea;
+use app\models\Farms;
+use app\models\Contractnumber;
 /* @var $this yii\web\View */
 /* @var $model app\models\Farms */
 /* @var $form yii\widgets\ActiveForm */
@@ -81,12 +83,12 @@ use app\models\ManagementArea;
         <td  colspan="5" align='left'><?= $form->field($nowModel, 'telephone')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
         </tr>
         <tr>
-			<td width=15% align='right'>合同号</td>
+			<td width=15% align='right'>合同号</td><?php $nowModel->contractnumber = Farms::getContractnumber($_GET['farms_id']);?>
 			<td colspan="5" align='left'><?= $form->field($nowModel, 'contractnumber')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>承包年限</td>
-			<td align='center'>自</td>
+			<td align='center'>自</td><?php $nowModel->begindate = '2010-09-13';$nowModel->enddate='2025-09-13';?>
 			<td align='center'><?= $form->field($nowModel, 'begindate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad

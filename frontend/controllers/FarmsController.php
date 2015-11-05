@@ -196,6 +196,18 @@ class FarmsController extends Controller
     	]);
     }
     
+    public function actionFarmsma($mid,$nid)
+    {
+    	$farms = Farms::find()->where(['management_area'=>$mid])->all();
+    	foreach ($farms as $value) {
+    		$model = $this->findModel($value['id']);
+    		$model->management_area = $nid;
+    		$model->save();
+    	}
+    	//var_dump($farms);
+    	echo 'yes';
+    }
+    
     public function actionFarmszdxls()
     {
     	set_time_limit(0);
@@ -392,29 +404,47 @@ class FarmsController extends Controller
     public function actionFarmssplit($farms_id)
     {
     	$oldfarm = $this->findModel($farms_id);
-    	$oldfarm->state = 0;
-    	$oldfarm->update_at = time();
-    	$oldfarm->save();
+    	
     	$model = new Farms();
     	//$ttpoModel = Ttpo::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
     	//$ttpozongdiModel = Ttpozongdi::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
-    	 
+    	//原农场转让宗地后，重新签订合同后，生成新的农场信息
     	if ($oldfarm->load(Yii::$app->request->post())) {
+    		$oldfarm->state = 0;
     		$oldfarm->update_at = time();
-    		$oldfarm->zongdi = Yii::$app->request->post('oldzongdi');
-    		$oldfarm->measure = Yii::$app->request->post('oldmeasure');
-    		$oldfarm->notclear = Yii::$app->request->post('oldnotclear');
-    		if(empty(Yii::$app->request->post('oldzongdi')))
-    			$oldfarm->state = 0;
-    		else 
-    			$oldfarm->state = 1;
-    		$oldfarm->save();
     		
+    		$oldfarm->measure = Yii::$app->request->post('oldmeasure');
+    		$oldfarm->zongdi = $this->deleteZongdiDH(Yii::$app->request->post('oldzongdi'));
+    		$oldfarm->notclear = Yii::$app->request->post('oldnotclear');
+    		$oldfarm->save();
+			
+    		//$newfarm->save();
     		
     		if ($model->load(Yii::$app->request->post())) {
-    			$model->update_at = $oldfarm->update_at;
-    			$model->save();
     			
+    			$model->farmname = $model->farmname;
+    			$model->farmername = $model->farmername;
+    			$model->cardid = $model->cardid;
+    			$model->telephone = $model->telephone;
+    			$model->address = $model->address;
+    			$model->management_area = $model->management_area;
+    			$model->spyear = $model->spyear;
+    			$model->measure = $model->measure;
+    			$model->zongdi = $model->zongdi;
+    			$model->cooperative_id = $model->cooperative_id;
+    			$model->surveydate = $model->surveydate;
+    			$model->groundsign = $model->groundsign;
+    			
+    			$model->farmersign = $model->farmersign;
+    			$model->create_at = time();
+    			$model->update_at = time();
+    			$model->pinyin = $model->pinyin;
+    			$model->farmerpinyin = $model->farmerpinyin;
+    			$model->state = 1;
+    			$model->notclear = $model->notclear;
+    			$model->oldfarms_id = $farms_id;
+    				
+    			$model->save();
     		}
     		 
     		$ttpozongdi = new Ttpozongdi();
@@ -425,16 +455,16 @@ class FarmsController extends Controller
     		$ttpozongdi->create_at = $oldfarm->update_at;
     		$ttpozongdi->ttpozongdi = Yii::$app->request->post('ttpozongdi');
     		$ttpozongdi->ttpoarea = Yii::$app->request->post('ttpoarea');
+    		
+			//$ttpozongdi->save();
+    		
+    		return $this->redirect(['farmsttpomenu', 'farms_id' => $newfarm->id]);
+    	} else {  	
     	
-    		$ttpozongdi->save();
-    	
-    		return $this->redirect(['farmsttpomenu', 'farms_id' => $farms_id]);
-    	} else {
-    		 
-    		return $this->render('farmssplit',[
-    				'oldFarm' => $oldfarm,
-    				'model' => $model,
-    		]);
+	    	return $this->render('farmssplit',[
+	    			'oldFarm' => $oldfarm,
+	    			'model' => $model,
+	    	]);
     	}
     }
     

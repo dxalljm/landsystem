@@ -29,6 +29,9 @@ use app\models\ManagementArea;
     		<td align="center" valign="middle"><?= html::textInput('farmSearch','',['class'=>'form-control']) ?></td>
 			<td align="center" valign="middle"><?= Html::submitButton('查询', ['class' => 'btn btn-primary']) ?></td>
     	</tr>
+    	<tr>
+    		<td colspan="3" align="center" valign="middle">注：被转让法人如果是已经存在，可以在查询框中输入法人或农场名称的简写拼音或中文进行查询。</td>
+    	</tr>
 
   </table>
 <?php ActiveFormrdiv::end(); ?>
