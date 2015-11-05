@@ -68,7 +68,7 @@ class FarmsController extends Controller
         if (!empty($whereArray) && count($whereArray) > 0) {
           $params['farmsSearch']['management_area'] = $whereArray;
         }
-        //var_dump($whereArray);
+        //var_dump($params);exit;
         $dataProvider = $searchModel->search($params);
         Logs::writeLog('农场管理');
         return $this->render('farmsindex', [

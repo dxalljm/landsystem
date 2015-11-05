@@ -19,7 +19,7 @@ use app\models\ManagementArea;
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">
-                        宗地转让</h3>
+                        转让</h3>
                 </div>
                 <div class="box-body">
                   <?php $form = ActiveFormrdiv::begin(); ?>
@@ -78,6 +78,7 @@ use app\models\ManagementArea;
         ],
     ]); ?>
     <?php }?>
+    <?= Html::a('新建', ['farmssplit', 'farms_id' => $_GET['farms_id']], ['class' => 'btn btn-primary']) ?>
     <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
               </div>
             </div>

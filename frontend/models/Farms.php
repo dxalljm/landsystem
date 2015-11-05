@@ -111,7 +111,7 @@ class Farms extends \yii\db\ActiveRecord
      */
     public static function searchAll()
     {
-        $cacheKey = 'farms-search-all';
+        $cacheKey = 'farms-search-all2';
 
         $result = Yii::$app->cache->get($cacheKey);
         if (!empty($result)) {
@@ -122,7 +122,7 @@ class Farms extends \yii\db\ActiveRecord
         switch ($keshi['departmentname'])
         {
         	case '财务科';
-        		$url = 'index.php?r=collection/collectioncreate&farms_id=';
+        		$url = 'index.php?r=collection/collectionindex&farms_id=';
         		break;
         	default:
         		$url = 'index.php?r=farms/farmsmenu&farms_id=';
@@ -141,7 +141,7 @@ class Farms extends \yii\db\ActiveRecord
           $data[] = [
           		'value' => $farm['farmerpinyin'],
           		'data' => $farm['farmername'],
-          		'url' => Url::to($url.$farm['id'].'&cardid='.$farm['cardid'].'&year='.date('Y')),
+          		'url' => Url::to($url.$farm['id']),
           			
           ];
         }

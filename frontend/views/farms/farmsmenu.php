@@ -241,12 +241,12 @@ use app\models\Prevention;
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box --></a></td>
     <td width="5%" align="center"></td>    
-    <td width="20%" align="center"><a href='#'><!-- Apply any bg-* class to to the info-box to color it -->
+    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=collection/collectionsend&farms_id='.$_GET['farms_id']).'&year='.date('Y') ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
   <span class="info-box-icon"><i class="fa fa-cny"></i></span>
   <div class="info-box-content">
   <span class="info-box-number">缴费业务</span>
-    <span class="info-box-text">已经收缴0元承包费</span>
+    <span class="info-box-text"><?php $isCollection = Collection::find()->where(['farms_id'=>$_GET['farms_id'],'ypayyear'=>date('Y')])->count();if($isCollection) echo '已收缴本年度承包费'; else echo '本年度承包佛未收缴'?></span>
     <!-- The progress section is optional -->
     <div class="progress">
       <div class="progress-bar" style="width: 100%"></div>

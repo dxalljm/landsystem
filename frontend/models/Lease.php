@@ -29,6 +29,8 @@ class Lease extends \yii\db\ActiveRecord
     //得到1-100（123）中的面积123
     public static function getArea($Leasearea)
     {
+//     	var_dump($Leasearea);
+//     	exit;
     	$areas = 0;
 //		$Leasearea = '200';
 //		$Leasearea = '2.1';
@@ -38,8 +40,8 @@ class Lease extends \yii\db\ActiveRecord
     	if(strstr($Leasearea,'-')) {
 	    	
 			preg_match_all('/-([\s\S]*)\(([0-9.]+?)\)/', $Leasearea, $area);
-// 			var_dump($area);
-// 			exit;
+			var_dump($area[2][0]);
+
 			$areas = (float)$area[2][0];
     	} else {
     		$areas = (float)$Leasearea;

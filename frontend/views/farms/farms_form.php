@@ -46,7 +46,7 @@ use app\models\ManagementArea;
 			<td colspan="5" align='left'><?= $form->field($model, 'contractnumber')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
-			<td width=15% align='right'>承包年限</td>
+			<td width=15% align='right'>承包年限</td><?php $model->begindate = '2010-09-13'?>
 			<td align='center'>自</td>
 			<td align='center'><?= $form->field($model, 'begindate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
     DateTimePicker::className(), [
@@ -61,7 +61,7 @@ use app\models\ManagementArea;
         	'maxView' => 3,
             'format' => 'yyyy-mm-dd'
         ]]) ?></td>
-			<td align='center'>至</td>
+			<td align='center'>至</td><?php $model->enddate = '2025-09-13'?>
 			<td align='center'><?= $form->field($model, 'enddate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
@@ -107,7 +107,7 @@ use app\models\ManagementArea;
 			<td colspan="5" align='left'><?= $form->field($model, 'notclear')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
-			<td width=15% align='right'>合同更换日期</td>
+			<td width=15% align='right'>合同更换日期</td><?php $model->surveydate = '2010-09-13'?>
 			<td colspan="5" align='left'><?= $form->field($model, 'surveydate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
