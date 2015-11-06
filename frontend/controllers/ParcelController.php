@@ -14,6 +14,7 @@ use yii\web\UploadedFile;
 use app\models\UploadForm;
 use app\models\Farms;
 use app\models\Logs;
+use app\models\Lease;
 /**
  * ParcelController implements the CRUD actions for Parcel model.
  */
@@ -205,20 +206,59 @@ class ParcelController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    
+    //得到宗的面积（累加值）$zongdi='1-100、2-100'
     public  function  actionParcelarea($zongdi)
     {
     	$grossarea = 0;
+    	$farmname = false;
+    	$iszongdi = 0;
 	    $zongdiarr = explode('、',$zongdi);
-	    if(!empty($zongdi)) {
-	    	foreach ($zongdiarr as $zd) {
-	    		$grossarea += Parcel::find()->where(['unifiedserialnumber' => $zd])->one()['grossarea'];
+	    foreach ($zongdiarr as $zd) {
+	    	$area = Parcel::find()->where(['unifiedserialnumber' => $zd])->one()['grossarea'];
+	    	if($area) {
+	    		$status = 1;
+	    		$grossarea += $area;
+	    		$zongdistate = $this->scanzongdi($zd);
 	    	}
+	    	else 
+	    		$status = 0;
+	    	
+	    }
+    	echo json_encode(['status' => $status, 'area' => $grossarea,'zongdistate' => $zongdistate]);
+
+    }
+    //格式化宗地$zongdi='1-100、2-100'转换为'1-100(123)、2-100(200)
+    public function actionGetformatzongdi($zongdi)
+    {
+    	$str = '';
+    	$zongdiarr = explode('、',$zongdi);
+    	foreach ($zongdiarr as $key => $value) {
+    		if($value == '')
+    			unset($key);
+    		else {
+	    		$area = Parcel::find()->where(['unifiedserialnumber' => $value])->one()['grossarea'];
+	    		$format[] = $value.'('.$area.')';	
+    		}
     	}
-    	else 
-    		throw new NotFoundHttpException('对不起，您输入宗地号的地块不存在');
-    	echo json_encode(['status' => 1, 'area' => $grossarea]);
-    	//print_r($zongdiarr);
-    	//return $this->render('parcelarea');
+    	$str = implode('、', $format);
+    	echo json_encode(['status' => 1, 'formatzongdi'=>$str]);
+    }
+    //检索是否为已经添加过的地块$zongdi='1-100、2-100'
+    public function scanzongdi($zongdi)
+    {
+    	
+    	$Allfarms = Farms::find()->all();
+    	foreach ($Allfarms as $farm) {
+    		if($farm['zongdi'] !== '') {
+	    		$farmZongdiArray = explode('、', $farm['zongdi']);
+	    		foreach ($farmZongdiArray as $farmzongdi) {
+	    			if($zongdi == Lease::getZongdi($farmzongdi)) {
+	    				$result = [1,$farm['farmname']];
+	    				return $result;
+	    			}
+	    		}
+    		}
+    	}
+    	return [0,false];
     }
 }

@@ -32,36 +32,52 @@ use app\models\Contractnumber;
     <table width="100%" height="408px" class="table table-bordered table-hover">
       <tr>
         <td width="20%" align='right' valign="middle">农场名称</td>
-        <td width="30%" align='left' valign="middle"><?= $model->farmname?></td>
-        <td width="20%" align='left' valign="middle">承包人姓名</td>
-        <td width="30%" align='left' valign="middle"><?= $model->farmername ?></td>
-      </tr>
+        <td width="30%" colspan="5" align='left' valign="middle"><?= $model->farmname?></td>
+        </tr>
       <tr>
-        <td width="20%" align='right' valign="middle">身份证号</td>
-        <td align='left' valign="middle"><?= $model->cardid ?></td>
-        <td align='left' valign="middle">电话号码</td>
-        <td align='left' valign="middle"><?= $model->telephone ?></td>
-      </tr>
+        <td width="20%" align='right' valign="middle">承包人姓名</td>
+        <td colspan="5" align='left' valign="middle"><?= $model->farmername ?></td>
+        </tr>
+      <tr>
+        <td align='right' valign="middle">身份证号</td>
+        <td colspan="5" align='left' valign="middle"><?= $model->cardid ?></td>
+        </tr>
+      <tr>
+        <td align='right' valign="middle">电话号码</td>
+        <td colspan="5" align='left' valign="middle"><?= $model->telephone ?></td>
+        </tr>
+      <tr>
+        <td width="20%" align='right' valign="middle">合同号</td><?php if($model->contractnumber == '') $model->contractnumber = Farms::getContractnumber($_GET['farms_id']);?>
+        <td colspan="5" align='left' valign="middle"><?= $model->contractnumber ?></td>
+        </tr>
+      <tr>
+        <td width="20%" align='right' valign="middle">承包年限</td>
+        <td align='center'>自</td>
+        <td align='center'><?= $model->begindate ?></td>
+        <td align='center'>至</td>
+        <td align='center'><?= $model->enddate?></td>
+        <td align='center'>止</td>
+        </tr>
       <tr>
         <td width="20%" align='right' valign="middle">农场位置</td>
-        <td colspan="3" align='left' valign="middle"><?= $model->address?></td>
+        <td colspan="5" align='left' valign="middle"><?= $model->address?></td>
         </tr>
       <tr>
         <td width="20%" align='right' valign="middle">宗地</td>
-        <td colspan="3" align='left' valign="middle"><?= $model->zongdi?></td>
+        <td colspan="5" align='left' valign="middle"><?= $model->zongdi?></td>
         </tr>
       <tr>
-        <td width="20%" align='right' valign="middle">面积</td>
-        <td align='left' valign="middle"><?= $model->measure ?></td>
-        <td align='left' valign="middle">未明确地块</td>
-        <td align='left' valign="middle"><?= $model->notclear?></td>
-      </tr>
+        <td align='right' valign="middle">面积</td>
+        <td colspan="5" align='left' valign="middle"><?= $model->measure ?></td>
+        </tr>
       <tr>
-        <td width="20%" align='right' valign="middle">法人签字</td>
-        <td align='left' valign="middle"><?= $model->farmersign ?></td>
-        <td align='left' valign="middle">&nbsp;</td>
-        <td align='left' valign="middle">&nbsp;</td>
-      </tr>
+        <td align='right' valign="middle">未明确地块</td>
+        <td colspan="5" align='left' valign="middle"><?= $model->notclear?></td>
+        </tr>
+      <tr>
+        <td align='right' valign="middle">法人签字</td>
+        <td colspan="5" align='left' valign="middle"><?= $model->farmersign ?></td>
+        </tr>
     </table></td>
     <td width="4%" align="center"><font size="5"><i class="fa fa-arrow-right"></i></font></td>
     <td width="50%" valign="top">

@@ -106,7 +106,7 @@ use app\models\Farms;
         <td colspan="5" align='left' valign="middle"><?php $arrayZongdi = explode('、', $oldFarm->zongdi);
         $i=0;
         foreach($arrayZongdi as $value) {
-        	echo html::button($value,['onclick'=>'toZongdi("'.$value.'","'.Lease::zongdiToArea($value).'")','value'=>$value,'id'=>$value,'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
+        	echo html::button(Lease::ZongdiFormat($value),['onclick'=>'toZongdi("'.$value.'","'.Lease::zongdiToArea($value).'")','value'=>Lease::ZongdiFormat($value),'id'=>$value,'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
         	$i++;
         	if($i%5 == 0)
         		echo '<br><br>';
@@ -157,7 +157,7 @@ use app\models\Farms;
         </tr>
       <tr>
         <td width="20%" align='right'>宗地</td>
-        <td colspan="5" align='left'><?= $form->field($model, 'zongdi')->textarea(['readonly' => true])->label(false)->error(false) ?></td>
+        <td colspan="5" align='left'><?= $form->field($model, 'zongdi')->textarea(['readonly' => false])->label(false)->error(false) ?></td>
         </tr>
       <tr>
       <tr>
@@ -238,7 +238,7 @@ function toZongdi(zongdi,area){
 	var newvalue = $('#farms-measure').val()*1 + area*1;
 	$('#farms-measure').val(newvalue.toFixed(2));
 	$('#temp_measure').val(newvalue.toFixed(2));
-	var newzongdi = $('#farms-zongdi').val()+'、'+zongdi;
+	var newzongdi = $('#farms-zongdi').val()+'、'+zongdi+'('+area+')';
 	var first = newzongdi.substr(0,1);
 	if(first == '、') {
 		$('#farms-zongdi').val(newzongdi.substring(1));

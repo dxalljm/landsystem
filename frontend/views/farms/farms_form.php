@@ -99,7 +99,7 @@ use app\models\ManagementArea;
 			<td colspan="5" align='left'><?= $form->field($model, 'measure')->textInput(['readonly'=>true])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
-			<td width=15% align='right'>宗地</td>
+			<td width=15% align='right'>宗地</td><?= html::hiddenInput('tempzongdi','',['id'=>'temp-zongdi'])?>
 			<td colspan="5" align='left'><?= $form->field($model, 'zongdi')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
@@ -201,18 +201,40 @@ $('#farms-notclear').keyup(function (event) {
 
 $("#farms-zongdi").keyup(function (event) {
     var input = $(this).val();
-	if (event.keyCode == 32) {  
-		input = $.trim(input)+'、';  
-		$("#farms-zongdi").val(input);
+	if (event.keyCode == 32) { 
+		
+		$.getJSON('index.php?r=parcel/parcelarea', {zongdi: input}, function (data) {
+		alert(data.zongdistate[1]);
+			
+			if (data.status == 1) {
+				if(data.zongdistate[0] == 1) {
+					alert('对不起，您输入的地块已经被“'+data.zongdistate[1]+'”占用');
+					$("#farms-zongdi").val($('#temp-zongdi').val());
+				} else {
+					$('#farms-measure').val(data.area);
+					$('#temp_measure').val(data.area);
+					$('#temp-zongdi').val($.trim(input)+'、');
+					$("#farms-zongdi").val($.trim(input)+'、');
+				}
+			}
+			if(data.status == 0) {
+				alert('对不起，您输入的地块不存在！');
+				$("#farms-zongdi").val($('#temp-zongdi').val());
+			}
+		});
+		//$("#farms-zongdi").val($.trim(input)+'、');
 	}
-	$.getJSON('index.php?r=parcel/parcelarea', {zongdi: input}, function (data) {
-		if (data.status == 1) {
-			$('#farms-measure').val(data.area);
-			$('#temp_measure').val(data.area);
-		}
-	});
  });
 
+$('#farms-zongdi').blur(function(){
+	var input = $(this).val();
+	$.getJSON('index.php?r=parcel/getformatzongdi', {zongdi: input}, function (data) {
+		if (data.status == 1) {
+			$("#farms-zongdi").val($.trim(data.formatzongdi));	
+				
+		}	
+	});
+});
 JS;
 $this->registerJs($script);
 

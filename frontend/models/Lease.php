@@ -108,8 +108,7 @@ class Lease extends \yii\db\ActiveRecord
     	//var_dump($farm);
     	$farmzongdi = explode('、', $farm['zongdi']);
     	foreach($farmzongdi as $zongdi) {
-    		$parcel = Parcel::find()->where(['unifiedserialnumber'=>$zongdi])->one()['grossarea'];
-    		$zdarea[] = $zongdi.'('.$parcel.')';
+    		$zdarea[] = self::ZongdiFormat($zongdi);
     	}
     	//var_dump($farm->notclear);
     	if(!empty($farm->notclear))
@@ -117,7 +116,12 @@ class Lease extends \yii\db\ActiveRecord
     	return $zdarea;
     }
     
-   
+   //通过给定的宗地号，返回宗地（面积）
+   public static function ZongdiFormat($zongdi)
+   {
+   		$zdarea = $zongdi.'('.self::zongdiToArea($zongdi).')';
+   		return $zdarea;
+   }
     
     public static function scanOverZongdi($farms_id) 
     {
