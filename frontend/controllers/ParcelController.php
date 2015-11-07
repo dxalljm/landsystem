@@ -210,21 +210,33 @@ class ParcelController extends Controller
     public  function  actionParcelarea($zongdi)
     {
     	$grossarea = 0;
-    	$farmname = false;
-    	$iszongdi = 0;
 	    $zongdiarr = explode('、',$zongdi);
-	    foreach ($zongdiarr as $zd) {
+	    $count = count($zongdiarr);
+	    
+	    $zd = $zongdiarr[$count-1];
+	    //foreach ($zongdiarr as $zd) {
 	    	$area = Parcel::find()->where(['unifiedserialnumber' => $zd])->one()['grossarea'];
-	    	if($area) {
-	    		$status = 1;
-	    		$grossarea += $area;
+	    	if($area) {	
 	    		$zongdistate = $this->scanzongdi($zd);
+	    		//var_dump($zongdistate[0]);
+	    		if($zongdistate[0]) {
+	    			$status = 0;
+	    			$grossarea = 0;
+	    			$message = '对不起，您输入的地块已经被“'.$zongdistate[1].'”占用';
+	    		} else {
+		    		$status = 1;
+		    		$grossarea += $area;
+		    		$message = true;
+	    		}
 	    	}
-	    	else 
+	    	else {
 	    		$status = 0;
+	    		$message = '对不起，您输入的地块不存在！';
+	    	}
 	    	
-	    }
-    	echo json_encode(['status' => $status, 'area' => $grossarea,'zongdistate' => $zongdistate]);
+	    //}
+	    //var_dump($message);
+    	echo json_encode(['status' => $status, 'area' => $grossarea,'message' => $message]);
 
     }
     //格式化宗地$zongdi='1-100、2-100'转换为'1-100(123)、2-100(200)
@@ -253,12 +265,12 @@ class ParcelController extends Controller
 	    		$farmZongdiArray = explode('、', $farm['zongdi']);
 	    		foreach ($farmZongdiArray as $farmzongdi) {
 	    			if($zongdi == Lease::getZongdi($farmzongdi)) {
-	    				$result = [1,$farm['farmname']];
+	    				$result = [true,$farm['farmname']];
 	    				return $result;
 	    			}
 	    		}
     		}
     	}
-    	return [0,false];
+    	return [false,false];
     }
 }

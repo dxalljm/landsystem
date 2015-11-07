@@ -96,6 +96,7 @@ use app\models\ManagementArea;
 		<tr>
 			<td width=15% align='right'>面积</td><?= html::hiddenInput('tempmeasure',$model->measure,['id'=>'temp_measure']) ?>
 												<?= html::hiddenInput('tempnotclear',$model->notclear,['id'=>'temp_notclear']) ?>
+												<?php if($model->measure == '') $model->measure = 0.0?>
 			<td colspan="5" align='left'><?= $form->field($model, 'measure')->textInput(['readonly'=>true])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
@@ -204,25 +205,19 @@ $("#farms-zongdi").keyup(function (event) {
 	if (event.keyCode == 32) { 
 		
 		$.getJSON('index.php?r=parcel/parcelarea', {zongdi: input}, function (data) {
-		alert(data.zongdistate[1]);
-			
+			//alert(data.area);
 			if (data.status == 1) {
-				if(data.zongdistate[0] == 1) {
-					alert('对不起，您输入的地块已经被“'+data.zongdistate[1]+'”占用');
-					$("#farms-zongdi").val($('#temp-zongdi').val());
-				} else {
-					$('#farms-measure').val(data.area);
-					$('#temp_measure').val(data.area);
-					$('#temp-zongdi').val($.trim(input)+'、');
-					$("#farms-zongdi").val($.trim(input)+'、');
-				}
+				var value = $('#farms-measure').val()*1+data.area*1;
+				$('#farms-measure').val(value.toFixed(2));
+				$('#temp_measure').val($(value.toFixed(2));
+				$('#temp-zongdi').val($.trim(input)+'、');
+				$("#farms-zongdi").val($.trim(input)+'、');
 			}
-			if(data.status == 0) {
-				alert('对不起，您输入的地块不存在！');
+			else {
+				alert(data.message);
 				$("#farms-zongdi").val($('#temp-zongdi').val());
 			}
 		});
-		//$("#farms-zongdi").val($.trim(input)+'、');
 	}
  });
 
