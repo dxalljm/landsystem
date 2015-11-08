@@ -81,17 +81,17 @@ use app\models\Contractnumber;
     </table></td>
     <td width="4%" align="center"><font size="5"><i class="fa fa-arrow-right"></i></font></td>
     <td width="50%" valign="top">
-    <table class="table table-bordered table-hover">
+    <table width="411" class="table table-bordered table-hover">
       <tr>
         <td width="25%" align='right'>农场名称</td>
         <td  colspan="5" align='left'><?= $form->field($nowModel, 'farmname')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
         </tr>
       <tr>
-        <td width="20%" align='right'>承包人姓名</td>
+        <td width="25%" align='right'>承包人姓名</td>
         <td  colspan="5" align='left'><?= $form->field($nowModel, 'farmername')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
         </tr>
       <tr>
-        <td width="20%" align='right'>身份证号</td>
+        <td width="25%" align='right'>身份证号</td>
         <td  colspan="5" align='left'><?= $form->field($nowModel, 'cardid')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
         </tr>
       <tr>
@@ -99,11 +99,11 @@ use app\models\Contractnumber;
         <td  colspan="5" align='left'><?= $form->field($nowModel, 'telephone')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
         </tr>
         <tr>
-			<td width=15% align='right'>合同号</td><?php $nowModel->contractnumber = Farms::getContractnumber($_GET['farms_id']);?>
+			<td width=25% align='right'>合同号</td><?php $nowModel->contractnumber = Farms::getContractnumber($_GET['farms_id']);?>
 			<td colspan="5" align='left'><?= $form->field($nowModel, 'contractnumber')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
-			<td width=15% align='right'>承包年限</td>
+			<td width=25% align='right'>承包年限</td>
 			<td align='center'>自</td><?php $nowModel->begindate = '2010-09-13';$nowModel->enddate='2025-09-13';?>
 			<td align='center'><?= $form->field($nowModel, 'begindate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
     DateTimePicker::className(), [
@@ -134,10 +134,26 @@ use app\models\Contractnumber;
         ]])?></td>
 			<td align='center'>止</td>
 		</tr>
+		<tr>
+		  <td align='right' valign="middle">农场位置</td>
+		  <td colspan="5" align='left' valign="middle"><?= $model->address?></td>
+		  </tr>
+		<tr>
+		  <td align='right' valign="middle">宗地</td>
+		  <td colspan="5" align='left' valign="middle"><?= $model->zongdi?></td>
+		  </tr>
+		<tr>
+		  <td align='right' valign="middle">面积</td>
+		  <td colspan="5" align='left' valign="middle"><?= $model->measure ?></td>
+		  </tr>
+		<tr>
+		  <td align='right' valign="middle">未明确地块</td>
+		  <td colspan="5" align='left' valign="middle"><?= $model->notclear?></td>
+		  </tr>
       <tr>
         <td align='right'>法人签字</td>
         <td  colspan="5" align='left'><?= $form->field($nowModel, 'farmersign')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
-        </tr>
+      </tr>
     </table></td>
   </tr>
 </table>

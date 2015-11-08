@@ -106,7 +106,7 @@ use app\models\Farms;
         <td colspan="5" align='left' valign="middle"><?php $arrayZongdi = explode('、', $oldFarm->zongdi);
         $i=0;
         foreach($arrayZongdi as $value) {
-        	echo html::button(Lease::ZongdiFormat($value),['onclick'=>'toZongdi("'.$value.'","'.Lease::zongdiToArea($value).'")','value'=>Lease::ZongdiFormat($value),'id'=>$value,'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
+        	echo html::button($value,['onclick'=>'toZongdi("'.Lease::getZongdi($value).'","'.Lease::getArea($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
         	$i++;
         	if($i%5 == 0)
         		echo '<br><br>';
@@ -136,36 +136,31 @@ use app\models\Farms;
         <td colspan="5" align='left'><?=  $form->field($model, 'farmname')->textInput(['maxlength' => 500])->label(false)->error(false)?></td>
         </tr>
       <tr>
-        <td width="20%" align='right'>承包人姓名</td>
+        <td width="30%" align='right'>承包人姓名</td>
         <td colspan="5" align='left'><?=  $form->field($model, 'farmername')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
         </tr>
       <tr>
-        <td width="20%" align='right'>身份证号</td>
+        <td width="30%" align='right'>身份证号</td>
         <td colspan="5" align='left'><?=  $form->field($model, 'cardid')->textInput(['maxlength' => 500])->label(false)->error(false)?></td>
         </tr>
       <tr>
-        <td width="20%" align='right'>电话号码</td>
+        <td width="30%" align='right'>电话号码</td>
         <td colspan="5" align='left'><?=  $form->field($model, 'telephone')->textInput(['maxlength' => 500])->label(false)->error(false)?></td>
         </tr>
       <tr>
-        <td width="20%" align='right'>农场位置</td>
+        <td width="30%" align='right'>农场位置</td>
         <td colspan="5" align='left'><?=  $oldFarm->address?></td>
         </tr>
        <tr>
-        <td width="20%" align='right' valign="middle">管理区</td>
+        <td width="30%" align='right' valign="middle">管理区</td>
         <td colspan="5" align='left' valign="middle"><?=  ManagementArea::find()->where(['id'=>$oldFarm->management_area])->one()['areaname']?></td>
         </tr>
-      <tr>
-        <td width="20%" align='right'>宗地</td>
-        <td colspan="5" align='left'><?= $form->field($model, 'zongdi')->textarea(['readonly' => false])->label(false)->error(false) ?></td>
-        </tr>
-      <tr>
-      <tr>
-			<td width=15% align='right'>合同号</td>
+       <tr>
+			<td width=30% align='right'>合同号</td><?php $model->contractnumber = Farms::getContractnumber($_GET['farms_id']);?>
 			<td colspan="5" align='left'><?= $form->field($model, 'contractnumber')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
-			<td width=15% align='right'>承包年限</td>
+			<td width=30% align='right'>承包年限</td>
 			<td align='center'>自</td>
 			<td align='center'><?= $form->field($model, 'begindate')->textInput(['value' => $oldFarm->begindate])->label(false)->error(false)->widget(
     DateTimePicker::className(), [
@@ -195,7 +190,12 @@ use app\models\Farms;
             'format' => 'yyyy-mm-dd'
         ]])?></td>
 			<td align='center'>止</td>
-		</tr><?php $model->notclear = '';$model->measure = '';?>
+		</tr>
+		<tr>
+		  <td align='right'>宗地</td>
+		  <td colspan="5" align='left'><?= $form->field($model, 'zongdi')->textarea(['readonly' => false])->label(false)->error(false) ?></td>
+		  </tr>
+		<?php $model->notclear = '';$model->measure = '';?>
 		<tr>
         <td align='right'>面积</td><?= html::hiddenInput('tempmeasure',$model->measure,['id'=>'temp_measure']) ?>
 								  <?= html::hiddenInput('tempnotclear',$model->notclear,['id'=>'temp_notclear']) ?>
@@ -268,7 +268,16 @@ function toZongdi(zongdi,area){
 	var ttpoarea = $('#ttpozongdi-area').val();
 	ttpoarea = area*1 + ttpoarea*1;
 	$('#ttpozongdi-area').val(ttpoarea);
+	//生成合同号
+	var hth = $('#farms-contractnumber').val();
+	var arrayhth = hth.split('-');
+	arrayhth[2] = $('#farms-measure').val();
+	$('#farms-contractnumber').val(arrayhth.join('-'));
 	
+	var hth = $('#oldfarms-contractnumber').val();
+	var arrayhth = hth.split('-');
+	arrayhth[2] = $('#oldfarms-measure').val();
+	$('#oldfarms-contractnumber').val(arrayhth.join('-'));
 }
 $('#reset').click(function() {
 	 
