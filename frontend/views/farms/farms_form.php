@@ -201,9 +201,10 @@ $('#farms-notclear').keyup(function (event) {
 });
 
 $("#farms-zongdi").keyup(function (event) {
+
     var input = $(this).val();
-	if (event.keyCode == 32) { 
-		
+	if (event.keyCode == 32) {
+		input = $.trim(input);
 		$.getJSON('index.php?r=parcel/parcelarea', {zongdi: input}, function (data) {
 			//alert(data.area);
 			if (data.status == 1) {
@@ -223,6 +224,7 @@ $("#farms-zongdi").keyup(function (event) {
 
 $('#farms-zongdi').blur(function(){
 	var input = $(this).val();
+    input = $.trim(input);
 	$.getJSON('index.php?r=parcel/getformatzongdi', {zongdi: input}, function (data) {
 		if (data.status == 1) {
 			$("#farms-zongdi").val($.trim(data.formatzongdi));	
