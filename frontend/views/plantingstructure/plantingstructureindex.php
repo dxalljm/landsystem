@@ -41,7 +41,8 @@ use app\models\Lease;
 			$arrayArea = array_merge($arrayArea,explode('、',$value['lease_area']));
 			$leaseSumArea += Lease::getListArea($value['lease_area']);
 		}
-		$isView = bcsub($farms['measure'] , $leaseSumArea,2);
+		$allarea = $farms['measure'] + $farms['notclear'];
+		$isView = bcsub($allarea , $leaseSumArea,2);
 		if($isView) {
 			$arrayZongdi = Lease::getNOZongdi($_GET['farms_id']);
 		if(is_array($arrayZongdi))

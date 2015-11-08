@@ -234,8 +234,6 @@ class ParcelController extends Controller
 	    		$message = '对不起，您输入的地块不存在！';
 	    	}
 	    	
-	    //}
-	    //var_dump($message);
     	echo json_encode(['status' => $status, 'area' => $grossarea,'message' => $message]);
 
     }
@@ -248,8 +246,12 @@ class ParcelController extends Controller
     		if($value == '')
     			unset($key);
     		else {
-	    		$area = Parcel::find()->where(['unifiedserialnumber' => $value])->one()['grossarea'];
-	    		$format[] = $value.'('.$area.')';	
+    			if(Lease::getArea($value)) {
+		    		$area = Parcel::find()->where(['unifiedserialnumber' => $value])->one()['grossarea'];
+		    		$format[] = $value.'('.$area.')';
+    			}	
+	    		else 
+	    			$format[] = $value;
     		}
     	}
     	$str = implode('、', $format);

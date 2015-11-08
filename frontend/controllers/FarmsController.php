@@ -672,6 +672,18 @@ class FarmsController extends Controller
         }
     }
 
+    public function actionTempzongdichuli()
+    {
+    	set_time_limit(0);
+    	$farms = Farms::find()->all();
+    	foreach($farms as $key=>$value) {
+    		$model = $this->findModel($value['id']);
+    		$model->measure = Parcel::getFormatzongdi($model->zongdi);
+    		$model->save();
+    	}
+    	echo 'yes';
+    }
+    
     /**
      * Deletes an existing Farms model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

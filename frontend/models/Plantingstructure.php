@@ -112,7 +112,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	foreach($result as $key => $value) {
     		
 	    	foreach ($over as $k => $v) {
-	    		if(preg_match('/^\d+\.?/iU', $v)) {
+	    		if(!strstr($v,'(')) {
     				$result[$k] = $k - $v;
     			} else {
 	    			if($key == Lease::getZongdi($v)) {
@@ -130,14 +130,15 @@ class Plantingstructure extends \yii\db\ActiveRecord
 //     	var_dump($result);
 //     	exit;
     	foreach ($result as $key=>$value) {
-    		if(preg_match('/^\d+\.?/iU', $value)) {
-    			$zongdi[0] = $value;
-    		} else {
-	    		if($value !== 0.0 and $key !== '')
-	    			$zongdi[] = $key.'('.$value.')';
-	    		else 
-	    			$zongdi[] = $value;
-    		}
+//     		if(preg_match('/^\d+\.?/iU', $value)) {
+//     			$zongdi[0] = $value;
+//     		} else {
+// 	    		if($value !== 0.0 and $key !== '')
+// 	    			$zongdi[] = $key.'('.$value.')';
+// 	    		else 
+// 	    			$zongdi[] = $value;
+//     		}
+			$zongdi[] = $key.'('.$value.')';
     	}
 //     	var_dump($zongdi);
 //     	exit;

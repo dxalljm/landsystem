@@ -37,10 +37,10 @@ class Lease extends \yii\db\ActiveRecord
 //		$Leasearea = '3.';
 
     	//if(preg_match('/^\d+\.?/iU', $Leasearea)) {
-    	if(strstr($Leasearea,'-')) {
+    	if(strstr($Leasearea,'(')) {
 	    	
 			preg_match_all('/-([\s\S]*)\(([0-9.]+?)\)/', $Leasearea, $area);
-			var_dump($area[2][0]);
+			//var_dump($area[2][0]);
 
 			$areas = (float)$area[2][0];
     	} else {
@@ -103,17 +103,14 @@ class Lease extends \yii\db\ActiveRecord
     //农场所有宗地（面积）
     public static function getFarmsZdarea($farms_id)
     {
-    	$zdarea = false;
+    	//$zdarea = false;
     	$farm = Farms::find()->where(['id'=>$farms_id])->one();
     	//var_dump($farm);
     	$farmzongdi = explode('、', $farm['zongdi']);
-    	foreach($farmzongdi as $zongdi) {
-    		$zdarea[] = self::ZongdiFormat($zongdi);
-    	}
     	//var_dump($farm->notclear);
     	if(!empty($farm->notclear))
-    		$zdarea[] = 'not-clear('.$farm->notclear.')';
-    	return $zdarea;
+    		$farmzongdi[] = 'not-clear('.$farm->notclear.')';
+    	return $farmzongdi;
     }
     
    //通过给定的宗地号，返回宗地（面积）
@@ -176,7 +173,7 @@ class Lease extends \yii\db\ActiveRecord
     	}
     	else 
     		return $zdarea;
-    	return $result;
+    	
     }
    
     //把相同宗地面积进行累加，返回处理后的数组
@@ -203,8 +200,7 @@ class Lease extends \yii\db\ActiveRecord
     public static function getNOZongdi($farms_id)
     {
     	$zongdiarr = Lease::scanOverZongdi($farms_id);
-		//$arrayArea = [];
-    	//$arrayArea = implode('、', $zongdiarr);
+		//var_dump($zongdiarr);
     	return $zongdiarr;
     }
     
@@ -229,7 +225,7 @@ class Lease extends \yii\db\ActiveRecord
     public static function getNoArea($farms_id)
     {
     	$farms = Farms::find()->where(['id'=>$farms_id])->one();
-    	
+    	$allarea = $farms->measure + $farms->notclear;
     	return bcsub($farms->measure, self::getOverArea($farms_id),2);
     }
 	public function rules() 

@@ -209,7 +209,7 @@ $("#farms-zongdi").keyup(function (event) {
 			if (data.status == 1) {
 				var value = $('#farms-measure').val()*1+data.area*1;
 				$('#farms-measure').val(value.toFixed(2));
-				$('#temp_measure').val($(value.toFixed(2));
+				$('#temp_measure').val(value.toFixed(2));
 				$('#temp-zongdi').val($.trim(input)+'、');
 				$("#farms-zongdi").val($.trim(input)+'、');
 			}

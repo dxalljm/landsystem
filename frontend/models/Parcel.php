@@ -69,6 +69,18 @@ class Parcel extends \yii\db\ActiveRecord
         ];
     }
     
+    public static function getFormatzongdi($zongdi)
+    {
+    	$grossarea = 0;
+	    $zongdiarr = explode('、',$zongdi);
+
+	    foreach ($zongdiarr as $zd) {
+	    	$area = Lease::getArea($zd);
+	    	$grossarea += $area;
+	    }
+	    return $grossarea;
+    }
+    
     public static function getAllGrossarea()
     {
     	$all = 0;

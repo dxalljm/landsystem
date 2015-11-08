@@ -32,7 +32,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <div class="box-body">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+ 
+<h4>必须先添加“产量信息”后，才可以添加“销量信息”。</h4>
 <table class="table table-bordered table-hover">
 	    <tr>
 	    	<td align="center">承租人/法人</td>
@@ -43,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	    	<td align="center">操作</td>
 	    </tr>
 	    <?php foreach ($plantings as $planting) {
-	    	if(Sales::getVolume($planting->id)) {
+	   
 	    	?>
 	    <?php $name = Lease::find()->where(['id'=>$planting->lease_id])->one()['lessee'];
 	    $yields = Yields::find()->where(['planting_id'=>$planting->id])->one();
@@ -75,9 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
            			 ],
                 ]);?></td>
 	    </tr>
-	    <?php }}} else {?>
-	    <tr><td colspan="6"><h3>必须先添加“产量信息”后，才可以添加“销量信息”。</h3></td></tr>
-	    <?php }}?>
+	    <?php }}}?>
     </table>
 
     
