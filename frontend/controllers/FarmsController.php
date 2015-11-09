@@ -208,6 +208,52 @@ class FarmsController extends Controller
     	echo 'yes';
     }
     
+    public function actionXlsbj()
+    {
+    	set_time_limit(0);
+    	$cw_loadxls = \PHPExcel_IOFactory::load('uploads/cw.xlsx');
+    	$ht_loadxls = \PHPExcel_IOFactory::load('uploads/ht.xlsx');
+    	$cw_rows = $cw_loadxls->getActiveSheet()->getHighestRow();
+    	$ht_rows = $ht_loadxls->getActiveSheet()->getHighestRow();
+
+    	for($i=1;$i<=$cw_rows;$i++) {
+    		for($j=1;$j<=$ht_rows;$j++) {
+	    		if($cw_loadxls->getActiveSheet()->getCell('D'.$i)->getValue() == $ht_loadxls->getActiveSheet()->getCell('B'.$j)->getValue()) {
+	    			$result[$cw_loadxls->getActiveSheet()->getCell('D'.$i)->getValue()]['cw'][] = $cw_loadxls->getActiveSheet()->getCell('E'.$i)->getValue();
+	    			$result[$cw_loadxls->getActiveSheet()->getCell('D'.$i)->getValue()]['ht'][] = $ht_loadxls->getActiveSheet()->getCell('D'.$j)->getValue();
+	    		}
+    		}
+    	}
+    	foreach($result as $key=>$value) {
+    		foreach ($value['cw'] as $cw) {
+    			$last[$key] = ['cw' =>$cw];
+    		}
+    		$area = 0;
+    		$i = 1;
+    		foreach ($value['ht'] as $ht) {
+    			$area += $ht; 
+    			$last[$key]['ht'] = $area;
+				$i++;
+    		}
+    		$last[$key]['num'] = $i;
+    	}
+    	$objPHPExcel = new PHPExcel();
+    	$objWriter = PHPExcel_IOFactory::createWriter($objExcel, 'Excel5');
+    	for ($i = 1; $i <= count($last); $i++) {
+    		$objPHPExcel->getActiveSheet()->setCellValue('A' . $i, key($last[$i]));
+    		$objPHPExcel->getActiveSheet()->setCellValue('B' . $i, $last['cw']);
+    		$objPHPExcel->getActiveSheet()->setCellValue('C' . $i, $last['ht']);
+    		$objPHPExcel->getActiveSheet()->setCellValue('D' . $i, $last['num']);
+    	}
+    	
+//     	在默认sheet后，创建一个worksheet
+    	echo date('H:i:s') . " Create new Worksheet object\n";
+    	$objPHPExcel->createSheet();
+    	$objWriter = PHPExcel_IOFactory::createWriter($objExcel, 'Excel5');
+    	$objWriter-save('php://output');
+//     	var_dump($last);
+    }
+    
     public function actionFarmszdxls()
     {
     	set_time_limit(0);
@@ -434,7 +480,6 @@ class FarmsController extends Controller
     			$model->cooperative_id = $model->cooperative_id;
     			$model->surveydate = $model->surveydate;
     			$model->groundsign = $model->groundsign;
-    			
     			$model->farmersign = $model->farmersign;
     			$model->create_at = time();
     			$model->update_at = time();

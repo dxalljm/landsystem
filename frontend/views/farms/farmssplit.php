@@ -162,8 +162,8 @@ use app\models\Farms;
 		</tr>
 		<tr>
 			<td width=30% align='right'>承包年限</td>
-			<td align='center'>自</td><?php if($oldFarm->begindate == '') $oldFarm->begindate='2010-09-13';if($oldFarm->enddate == '') $oldFarm->enddate = '2025-09-13';?>
-			<td align='center'><?= $form->field($model, 'begindate')->textInput(['value' => $oldFarm->begindate])->label(false)->error(false)->widget(
+			<td align='center'>自</td><?php if($oldFarm->begindate == '') $model->begindate='2010-09-13'; else $model->begindate = $oldFarm->begindate;if($oldFarm->enddate == '') $model->enddate = '2025-09-13';else $model->enddate = $oldFarm->enddate;?>
+			<td align='center'><?= $form->field($model, 'begindate')->textInput()->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
         'inline' => false, 
@@ -177,7 +177,7 @@ use app\models\Farms;
             'format' => 'yyyy-mm-dd'
         ]]) ?></td>
 			<td align='center'>至</td>
-			<td align='center'><?= $form->field($model, 'enddate')->textInput(['value' => $oldFarm->enddate])->label(false)->error(false)->widget(
+			<td align='center'><?= $form->field($model, 'enddate')->textInput()->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
         'inline' => false, 
