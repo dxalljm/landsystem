@@ -237,6 +237,17 @@ class ParcelController extends Controller
     	echo json_encode(['status' => $status, 'area' => $grossarea,'message' => $message]);
 
     }
+    
+	//面积总和（farmssplit方法用）
+    public function actionAreasum($zongdi)
+    {
+    	$sum = 0;
+    	$array = explode('、', $zongdi);
+    	foreach ($array as $value) {
+    		$sum += Lease::getArea($value);
+    	}
+    	echo json_encode(['status'=>1,'sum'=>$sum]);
+    }
     //格式化宗地$zongdi='1-100、2-100'转换为'1-100(123)、2-100(200)
     public function actionGetformatzongdi($zongdi)
     {

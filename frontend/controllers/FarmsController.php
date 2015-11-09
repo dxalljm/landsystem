@@ -678,7 +678,7 @@ class FarmsController extends Controller
     	$farms = Farms::find()->all();
     	foreach($farms as $key=>$value) {
     		$model = $this->findModel($value['id']);
-    		$model->measure = Parcel::getFormatzongdi($model->zongdi);
+    		$model->measure = $model->measure + $model->notclear;
     		$model->save();
     	}
     	echo 'yes';

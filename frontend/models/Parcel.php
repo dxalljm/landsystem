@@ -90,4 +90,5 @@ class Parcel extends \yii\db\ActiveRecord
     	}
     	return $all;
     }
+
 }

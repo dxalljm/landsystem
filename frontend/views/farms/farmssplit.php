@@ -30,7 +30,7 @@ use app\models\Farms;
                 <div class="box-body">
   <table width="100%" border="0">
     <tr>
-    <td width="46%"><table width="104%" height="458px"
+    <td width="46%" valign="top"><table width="104%" height="458px"
 		class="table table-bordered table-hover">
       <tr>
         <td width="15%" align='right' valign="middle">农场名称</td>
@@ -116,7 +116,8 @@ use app\models\Farms;
       <tr><?= Html::hiddenInput('oldzongdi',$oldFarm->zongdi,['id'=>'oldfarm-zongdi']) ?>
       <?= Html::hiddenInput('ttpozongdi','',['id'=>'ttpozongdi-zongdi']) ?>
       <?= Html::hiddenInput('ttpoarea',0,['id'=>'ttpozongdi-area']) ?>
-        <td align='right' valign="middle">面积</td><?= html::hiddenInput('tempoldnotclear',$oldFarm->measure,['id'=>'temp_oldnotclear']) ?>
+        <td align='right' valign="middle">面积</td><?= html::hiddenInput('tempoldmeasure',$oldFarm->measure,['id'=>'temp_oldmeasure']) ?>
+        										 <?= html::hiddenInput('tempoldnotclear',$oldFarm->notclear,['id'=>'temp_oldnotclear']) ?>
         <td colspan="5" align='left' valign="middle"><?= html::textInput('oldmeasure',$oldFarm->measure,['readonly' => true,'id'=>'oldfarms-measure','class'=>'form-control']) ?></td>
         </tr>
       <tr>
@@ -156,12 +157,12 @@ use app\models\Farms;
         <td colspan="5" align='left' valign="middle"><?=  ManagementArea::find()->where(['id'=>$oldFarm->management_area])->one()['areaname']?></td>
         </tr>
        <tr>
-			<td width=30% align='right'>合同号</td><?php $model->contractnumber = Farms::getContractnumber($_GET['farms_id']);?>
+			<td width=30% align='right'>合同号</td><?php $model->contractnumber = Farms::getContractnumber($_GET['farms_id'],'new');?>
 			<td colspan="5" align='left'><?= $form->field($model, 'contractnumber')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
 			<td width=30% align='right'>承包年限</td>
-			<td align='center'>自</td>
+			<td align='center'>自</td><?php if($oldFarm->begindate == '') $oldFarm->begindate='2010-09-13';if($oldFarm->enddate == '') $oldFarm->enddate = '2025-09-13';?>
 			<td align='center'><?= $form->field($model, 'begindate')->textInput(['value' => $oldFarm->begindate])->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
@@ -195,7 +196,7 @@ use app\models\Farms;
 		  <td align='right'>宗地</td>
 		  <td colspan="5" align='left'><?= $form->field($model, 'zongdi')->textarea(['readonly' => false])->label(false)->error(false) ?></td>
 		  </tr>
-		<?php $model->notclear = '';$model->measure = '';?>
+		<?php $model->notclear = 0;$model->measure = 0;?>
 		<tr>
         <td align='right'>面积</td><?= html::hiddenInput('tempmeasure',$model->measure,['id'=>'temp_measure']) ?>
 								  <?= html::hiddenInput('tempnotclear',$model->notclear,['id'=>'temp_notclear']) ?>
@@ -268,6 +269,15 @@ function toZongdi(zongdi,area){
 	var ttpoarea = $('#ttpozongdi-area').val();
 	ttpoarea = area*1 + ttpoarea*1;
 	$('#ttpozongdi-area').val(ttpoarea);
+	toHTH();
+}
+$('#reset').click(function() {
+	 
+    location.reload();
+
+});
+function toHTH()
+{
 	//生成合同号
 	var hth = $('#farms-contractnumber').val();
 	var arrayhth = hth.split('-');
@@ -279,17 +289,13 @@ function toZongdi(zongdi,area){
 	arrayhth[2] = $('#oldfarms-measure').val();
 	$('#oldfarms-contractnumber').val(arrayhth.join('-'));
 }
-$('#reset').click(function() {
-	 
-    location.reload();
-
-});
 $('#input-notclear').blur(function(){
 	var input = $(this).val();
-	if(input*1 > $('#temp-oldnotclear').val()*1) {
+	if(input*1 > $('#temp_oldnotclear').val()*1) {
 		
-		alert('输入的数值不能大于'+$('#temp-oldnotclear').val());
-		$('#input-notclear').focus();
+		alert('输入的数值不能大于'+$('#temp_oldnotclear').val());
+		$(this).val(0);
+		$(this).focus();
 	} else {
 		if(input > $('#temp_notclear').val()) {
 			var tempmeasure = $('#temp_measure').val();
@@ -298,11 +304,13 @@ $('#input-notclear').blur(function(){
 				var result = farmsmeasure*1 + input*1;
 				$('#temp_measure').val(result.toFixed(2));
 				$('#farms-measure').val(result.toFixed(2));
+				$('#farms-notclear').val(input);
 				$('#temp_notclear').val(input);	
 				
 			} else {
+				
 				var cha = input*1 - $('#temp_notclear').val()*1;
-				var result = tempmeasure*1 + cha*1;
+				var result = farmsmeasure*1 + cha*1;
 				var oldmeasure = $('#oldfarms-measure').val();
 				var oldresult = oldmeasure*1 - cha*1;
 				$('#oldfarms-measure').val(oldresult.toFixed(2));
@@ -311,7 +319,9 @@ $('#input-notclear').blur(function(){
 				$('#oldfarms-notclear').val(notclearresult.toFixed(2));
 				$('#temp_measure').val(result.toFixed(2));
 				$('#farms-measure').val(result.toFixed(2));
+				$('#farms-notclear').val(input);
 				$('#temp_notclear').val(input);	
+				
 			}
 		} 
 		if(input < $('#temp_notclear').val()) {
@@ -321,24 +331,41 @@ $('#input-notclear').blur(function(){
 				var result = farmsmeasure*1 + input*1;
 				$('#temp_measure').val(result.toFixed(2));
 				$('#farms-measure').val(result.toFixed(2));
-				
+				$('#farms-notclear').val(input);	
 				$('#temp_notclear').val(input);	
+				
 			} else {
 				var cha = $('#temp_notclear').val()*1 - input*1;
-				var result = tempmeasure*1 - cha*1;
+				var result = farmsmeasure*1 - cha*1;
+				var oldmeasure = $('#oldfarms-measure').val();
+				var oldresult = oldmeasure*1 + cha*1;
+				$('#oldfarms-measure').val(oldresult.toFixed(2));
+				var oldnotclear = $('#oldfarms-notclear').val();
+				var notclearresult = oldnotclear*1 + cha*1;
+				$('#oldfarms-notclear').val(notclearresult.toFixed(2));
 				$('#temp_measure').val(result.toFixed(2));
 				$('#farms-measure').val(result.toFixed(2));
+				$('#farms-notclear').val(input);
 				$('#temp_notclear').val(input);	
+				
 			}
 		}
 	}
+	toHTH();
 });
 $('#input-notclear').keyup(function (event) {
 	var input = $(this).val();
-	if(/^\d+(\.\d+)?$/.test(input)) {
-		if(event.keyCode == 8) {
-			$(this).val('');
-			
+	if(event.keyCode == 8) {
+		$(this).val('');
+		$('#farms-notclear').val(0);
+		var result = $('#farms-measure').val()-$('#temp_notclear').val();
+		$('#farms-measure').val(result.toFixed(2));
+		$('#oldfarms-measure').val($('#oldfarms-measure').val()*1+$('#temp_notclear').val()*1);
+		$('#oldfarms-notclear').val($('#oldfarms-notclear').val()*1+$('#temp_notclear').val()*1);	
+		$('#temp_notclear').val('');
+		$('#temp_measure').val('');
+	} else {
+		if(/^\d+(\.\d+)?$/.test(input)) {
 			if($('#temp_notclear').val() !== '') {
 				var result = $('#farms-measure').val()-$('#temp_notclear').val();
 				$('#farms-measure').val(result.toFixed(2));
@@ -347,14 +374,14 @@ $('#input-notclear').keyup(function (event) {
 				$('#temp_notclear').val('');
 				$('#temp_measure').val('');
 			}
-		
+		} else {
+			alert('输入的必须为数字');
+			var last = input.substr(input.length-1,1);
+			$('#input-notclear').val(input.substring(0,input.length-1));
 		}
-	} else {
-		alert('输入的必须为数字');
-		var last = input.substr(input.length-1,1);
-		$('#input-notclear').val(input.substring(0,input.length-1));
 	}
 });
+
 </script>
 <?php
 
@@ -373,7 +400,27 @@ $("#farms-zongdi").keyup(function (event) {
 		}
 	});
  });
-
+$('#farms-zongdi').blur(function(){
+	var input = $(this).val();
+    input = $.trim(input);
+	$.getJSON('index.php?r=parcel/areasum', {zongdi: input}, function (data) {
+		if (data.status == 1) {
+			$("#farms-measure").val(data.sum);	
+			var zarea = $("#temp_oldmeasure").val();
+			var result = zarea*1-data.sum*1-$("#farms-notclear").val()*1;
+			$('#oldfarms-measure').val(result.toFixed(2));
+			var hth = $('#farms-contractnumber').val();
+			var arrayhth = hth.split('-');
+			arrayhth[2] = $('#farms-measure').val();
+			$('#farms-contractnumber').val(arrayhth.join('-'));
+			
+			var hth = $('#oldfarms-contractnumber').val();
+			var arrayhth = hth.split('-');
+			arrayhth[2] = $('#oldfarms-measure').val();
+			$('#oldfarms-contractnumber').val(arrayhth.join('-'));
+		}	
+	});
+});
 JS;
 $this->registerJs($script);
 
