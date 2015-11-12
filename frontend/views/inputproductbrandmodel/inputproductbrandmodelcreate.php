@@ -5,34 +5,28 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Inputproduct */
+/* @var $model app\models\Inputproductbrandmodel */
 
-$this->title = 'inputproduct' ;
+$this->title = 'inputproductbrandmodel' ;
 $title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctablename'];
 $this->title = '添加'.$title;
-$this->params['breadcrumbs'][] = ['label' => $title, 'url' => ['inputproductindex']];
+$this->params['breadcrumbs'][] = ['label' => $title, 'url' => ['inputproductbrandmodelindex']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="inputproduct-create">
+<div class="inputproductbrandmodel-create">
 
-<section class="content">
+    <section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">
-                        <?= $this->title ?>
-                    </h3>
+                                            </h3>
                 </div>
                 <div class="box-body">
 
-    <?= $this->render('inputproduct_form', [
+    <?= $this->render('inputproductbrandmodel_form', [
         'model' => $model,
-    	'brandModel' => $brandModel,
     ]) ?>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+
 </div>

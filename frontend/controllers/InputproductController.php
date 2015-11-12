@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Logs;
+use app\models\Inputproductbrandmodel;
 
 /**
  * InputproductController implements the CRUD actions for Inputproduct model.
@@ -73,7 +74,7 @@ class InputproductController extends Controller
     public function actionInputproductcreate()
     {
         $model = new Inputproduct();
-
+		$brandModel = new Inputproductbrandmodel();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
         	$new = $model->attributes;
         	Logs::writeLog('创建投入品',$model->id,'',$new);
@@ -81,6 +82,7 @@ class InputproductController extends Controller
         } else {
             return $this->render('inputproductcreate', [
                 'model' => $model,
+            	'brandModel' => $brandModel,
             ]);
         }
     }

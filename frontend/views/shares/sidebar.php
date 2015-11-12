@@ -96,6 +96,7 @@ use app\models\Mainmenu;
                 			echo '<li><a href="'.Url::to('index.php?r=nation/nationindex').'"><i class="fa fa-circle-o"></i>民族管理</a></li>';
 	                       	echo '<li><a href="'.Url::to('index.php?r=plant/plantindex').'"><i class="fa fa-circle-o"></i>作物管理</a></li>';
 	                       	echo '<li><a href="'.Url::to('index.php?r=inputproduct/inputproductindex').'"><i class="fa fa-circle-o"></i>投入品管理</a></li>';
+	                       	echo '<li><a href="'.Url::to('index.php?r=inputproductbrandmodel/inputproductbrandmodelindex').'"><i class="fa fa-circle-o"></i>投入品品牌类型</a></li>';
 	                       	echo '<li><a href="'.Url::to('index.php?r=pesticides/pesticidesindex').'"><i class="fa fa-circle-o"></i>农药管理</a></li>';
 	                       	echo '<li><a href="'.Url::to('index.php?r=goodseed/goodseedindex').'"><i class="fa fa-circle-o"></i>良种管理</a></li>';
 	                       	echo '<li><a href="'.Url::to('index.php?r=cooperative/cooperativeindex').'"><i class="fa fa-circle-o"></i>合作社管理</a></li>';

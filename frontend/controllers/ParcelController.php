@@ -51,7 +51,7 @@ class ParcelController extends Controller
     {
     	$zongdiarr = explode('、', $zongdi);
     	foreach($zongdiarr as $value) {
-    		$parcels[] = Parcel::find()->where(['unifiedserialnumber'=>$value])->one();
+    		$parcels[] = Parcel::find()->where(['unifiedserialnumber'=>Lease::getZongdi($value)])->one();
     	}
     	
     	return $this->render('parcellist', [

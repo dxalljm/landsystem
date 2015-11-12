@@ -41,6 +41,8 @@ use yii\helpers\Url;
                         <li class="divider"></li>
                         <li><a href="<?= Url::to('index.php?r=inputproduct/inputproductindex')?>">投入品管理</a></li>
                         <li class="divider"></li>
+                        <li><a href="<?= Url::to('index.php?r=inputproductbrandmodel/inputproductbrandmodelindex')?>">投入品品牌型号</a></li>
+                        <li class="divider"></li>
                         <li><a href="<?= Url::to('index.php?r=pesticides/pesticidesindex')?>">农药管理</a></li>
                         <li class="divider"></li>
                         <li><a href="<?= Url::to('index.php?r=goodseed/goodseedindex')?>">良种管理</a></li>
@@ -50,6 +52,7 @@ use yii\helpers\Url;
                         <li><a href="<?= Url::to('index.php?r=disputetype/disputetypeindex')?>">纠纷类型</a></li>
                         <li class="divider"></li>
                         <li><a href="<?= Url::to('index.php?r=breedtype/breedtypeindex')?>">养殖种类</a></li>
+                        
                     </ul>
                         <?php } else {
                         echo "<li ><a href=" . Url::to('index.php?r='.$menu['menuurl']) . ">". $menu['menuname'] . "</a></li>";
