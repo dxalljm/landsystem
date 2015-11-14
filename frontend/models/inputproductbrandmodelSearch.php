@@ -19,7 +19,7 @@ class inputproductbrandmodelSearch extends Inputproductbrandmodel
     {
         return [
             [['id', 'inputproduct_id'], 'integer'],
-            [['brand', 'model'], 'safe'],
+            [['brand', 'model', 'brandpinyin'], 'safe'],
         ];
     }
 
@@ -61,8 +61,8 @@ class inputproductbrandmodelSearch extends Inputproductbrandmodel
         ]);
 
         $query->andFilterWhere(['like', 'brand', $this->brand])
-            ->andFilterWhere(['like', 'model', $this->model]);
-
+            ->andFilterWhere(['like', 'model', $this->model])
+        	->andFilterWhere(['like', 'brandpinyin', $this->brandpinyin]);
         return $dataProvider;
     }
 }

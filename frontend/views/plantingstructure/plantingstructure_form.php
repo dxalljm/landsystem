@@ -12,6 +12,8 @@ use app\models\Inputproduct;
 use app\models\Pesticides;
 use app\models\Lease;
 use app\models\Goodseed;
+use app\models\Inputproductbrandmodel;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\Plantingstructure */
 /* @var $form yii\widgets\ActiveForm */
@@ -70,7 +72,7 @@ use app\models\Goodseed;
               <td><?php echo Html::dropDownList('PlantInputproductPost[father_id][]', '', ArrayHelper::map(Inputproduct::find()->where(['father_id'=>1])->all(), 'id', 'fertilizer'),['prompt'=>'请选择...', 'class'=>'plantinputproduct-father_id','class' => 'form-control']); ?></td>
               <td><?php echo Html::dropDownList('PlantInputproductPost[son_id][]', '',['prompt'=>'请选择...'], ['id'=>'plantinputproduct-son_id', 'class' => 'form-control']); ?></td>
               <td><?php echo Html::dropDownList('PlantInputproductPost[inputproduct_id][]', '',['prompt'=>'请选择...'] ,['id'=>'plantinputproduct-inputproduct_id','class' => 'form-control']); ?></td>
-              <td>&nbsp;</td>
+              <td><?php echo Html::textInput('BrandmodelPost[brand][]','',['class'=>'form-control'])?></td>
               <td valign="middle" align="center"><?php echo Html::textInput('PlantInputproductPost[pconsumption][]', '', ['id'=>'plantinputproduct-pconsumption','class' => 'form-control']); ?></td>
               <td valign="middle" align="center"><?php echo Html::button('-', ['class' => 'btn btn-warning delete-employee']) ?></td>
           </tr>
@@ -96,7 +98,7 @@ use app\models\Goodseed;
               <td><?php echo Html::dropDownList('PlantInputproductPost[father_id][]',  $value['father_id'], ArrayHelper::map(Inputproduct::find()->where(['father_id'=>1])->all(), 'id', 'fertilizer'),['prompt'=>'请选择...', 'id'=>'plantinputproduct-father_id','class' => 'form-control']); ?></td>
               <td><?php echo Html::dropDownList('PlantInputproductPost[son_id][]',  $value['son_id'],ArrayHelper::map(Inputproduct::find()->where(['father_id'=>$value['father_id']])->all(), 'id', 'fertilizer'),['prompt'=>'请选择...', 'id'=>'plantinputproduct-son_id', 'class' => 'form-control']); ?></td>
               <td><?php echo Html::dropDownList('PlantInputproductPost[inputproduct_id][]',  $value['inputproduct_id'],ArrayHelper::map(Inputproduct::find()->where(['father_id'=>$value['son_id']])->all(), 'id', 'fertilizer'),['prompt'=>'请选择...','id'=>'plantinputproduct-inputproduct_id','class' => 'form-control']); ?></td>
-              <td>&nbsp;</td>
+              <td><?php echo Html::textInput('BrandmodelPost[brand][]','',['class'=>'form-control'])?></td>
               <td valign="middle" align="center"><?php echo Html::textInput('PlantInputproductPost[pconsumption][]',  $value['pconsumption'], ['id'=>'plantinputproduct-pconsumption','class' => 'form-control']); ?></td>
               <td valign="middle" align="center"><?php echo Html::button('-', ['class' => 'btn btn-warning delete-employee']) ?></td>
           </tr>
@@ -439,5 +441,18 @@ $('#inputproductson').change(function(){
 	});
 });
 </script>
-
+<script type="text/javascript" charset="utf-8">
+  var brandjson = <?= Inputproductbrandmodel::getBrandmodel() ?>;
+  $(document).on("autocomplete", "select[name='BrandmodelPost[brand][]']", function () {
+  //$('#brandmodel-brand').autocomplete({
+      lookup: brandjson,
+      Result: function (brandjson) {
+        return brandjson.data;
+      },
+      onSelect: function (suggestion) {
+          $(this).val(suggestion.data);
+          
+        }
+  });
+</script>
 </div>

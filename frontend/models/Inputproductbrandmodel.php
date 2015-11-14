@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-
+use yii\helpers\Json;
 /**
  * This is the model class for table "{{%Inputproductbrandmodel}}".
  *
@@ -29,7 +29,7 @@ class Inputproductbrandmodel extends \yii\db\ActiveRecord
     {
         return [
             [['inputproduct_id'], 'integer'],
-            [['brand', 'model'], 'string', 'max' => 500]
+            [['brand', 'model', 'brandpinyin'], 'string', 'max' => 500]
         ];
     }
 
@@ -43,6 +43,20 @@ class Inputproductbrandmodel extends \yii\db\ActiveRecord
             'inputproduct_id' => '化肥使用情况',
             'brand' => '品牌',
             'model' => '型号',
+        	'brandpinyin' => '品牌拼音',
         ];
+    }
+    
+    public static function getBrandmodel()
+    {
+    	$result = '';
+    	$brandmodel = Inputproductbrandmodel::find()->all();
+    	foreach ($brandmodel as $value) {
+    		$result[] = [
+    			'pinyin' => $value['brandpinyin'],
+    			'data' => $value['brand'].'-'.$value['model'],
+    		];
+    	}
+    	return $jsonData = Json::encode($result);
     }
 }

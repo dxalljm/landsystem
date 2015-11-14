@@ -8,7 +8,7 @@ use frontend\models\inputproductbrandmodelSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use frontend\helpers\Pinyin;
 /**
  * InputproductbrandmodelController implements the CRUD actions for Inputproductbrandmodel model.
  */
@@ -62,7 +62,9 @@ class InputproductbrandmodelController extends Controller
     {
         $model = new Inputproductbrandmodel();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->brandpinyin = Pinyin::encode($model->brand);
+        	$model->save();
             return $this->redirect(['inputproductbrandmodelview', 'id' => $model->id]);
         } else {
             return $this->render('inputproductbrandmodelcreate', [
@@ -81,7 +83,9 @@ class InputproductbrandmodelController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->brandpinyin = Pinyin::encode($model->brand);
+        	$model->save();
             return $this->redirect(['inputproductbrandmodelview', 'id' => $model->id]);
         } else {
             return $this->render('inputproductbrandmodelupdate', [
@@ -118,4 +122,6 @@ class InputproductbrandmodelController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    
+   
 }
