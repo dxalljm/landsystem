@@ -19,11 +19,7 @@ use yii\helpers\Url;
         </a>
         <div class="">
             <ul class="nav navbar-nav">
-            <?php if(Yii::$app->user->identity->username !== 'cwk01') {?>
-                <li >
-                    <a href="<?= Url::to('index.php?r=site/index')?>">首页</a>
-                </li>
-			<?php }?>
+
                 <?php
                 if(yii::$app->user->identity->username != 'admin') {
                     $menuliststr = MenuToUser::find()->where(['user_id'=>\Yii::$app->user->id])->one()['menulist'];
@@ -52,6 +48,10 @@ use yii\helpers\Url;
                         <li><a href="<?= Url::to('index.php?r=disputetype/disputetypeindex')?>">纠纷类型</a></li>
                         <li class="divider"></li>
                         <li><a href="<?= Url::to('index.php?r=breedtype/breedtypeindex')?>">养殖种类</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<?= Url::to('index.php?r=infrastructuretype/infrastructuretypeindex')?>">基础设施类型</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<?= Url::to('index.php?r=projecttype/projecttypeindex')?>">项目类型</a></li>
                         
                     </ul>
                         <?php } else {
