@@ -70,7 +70,8 @@ use app\models\Goodseed;
               <td><?php echo Html::dropDownList('PlantInputproductPost[father_id][]', '', ArrayHelper::map(Inputproduct::find()->where(['father_id'=>1])->all(), 'id', 'fertilizer'),['prompt'=>'请选择...', 'class'=>'plantinputproduct-father_id','class' => 'form-control']); ?></td>
               <td><?php echo Html::dropDownList('PlantInputproductPost[son_id][]', '',['prompt'=>'请选择...'], ['id'=>'plantinputproduct-son_id', 'class' => 'form-control']); ?></td>
               <td><?php echo Html::dropDownList('PlantInputproductPost[inputproduct_id][]', '',['prompt'=>'请选择...'] ,['id'=>'plantinputproduct-inputproduct_id','class' => 'form-control']); ?></td>
-              <td><?php echo Html::textInput('PlantInputproductPost[pconsumption][]', '', ['id'=>'plantinputproduct-pconsumption','class' => 'form-control']); ?></td>
+              <td>&nbsp;</td>
+              <td valign="middle" align="center"><?php echo Html::textInput('PlantInputproductPost[pconsumption][]', '', ['id'=>'plantinputproduct-pconsumption','class' => 'form-control']); ?></td>
               <td valign="middle" align="center"><?php echo Html::button('-', ['class' => 'btn btn-warning delete-employee']) ?></td>
           </tr>
       </thead>
@@ -79,7 +80,8 @@ use app\models\Goodseed;
 			<td width=15% align='center'>投入品父类</td>
 			<td align='center'>投入品子类</td>
 			<td align='center'>投入品</td>
-            <td align='center'>投入品用量</td>
+            <td align='center'>品牌型号</td>
+			<td align='center'>投入品用量</td>
 			<td align='center'>操作</td>
 		</tr>
 		<?php 
@@ -94,7 +96,8 @@ use app\models\Goodseed;
               <td><?php echo Html::dropDownList('PlantInputproductPost[father_id][]',  $value['father_id'], ArrayHelper::map(Inputproduct::find()->where(['father_id'=>1])->all(), 'id', 'fertilizer'),['prompt'=>'请选择...', 'id'=>'plantinputproduct-father_id','class' => 'form-control']); ?></td>
               <td><?php echo Html::dropDownList('PlantInputproductPost[son_id][]',  $value['son_id'],ArrayHelper::map(Inputproduct::find()->where(['father_id'=>$value['father_id']])->all(), 'id', 'fertilizer'),['prompt'=>'请选择...', 'id'=>'plantinputproduct-son_id', 'class' => 'form-control']); ?></td>
               <td><?php echo Html::dropDownList('PlantInputproductPost[inputproduct_id][]',  $value['inputproduct_id'],ArrayHelper::map(Inputproduct::find()->where(['father_id'=>$value['son_id']])->all(), 'id', 'fertilizer'),['prompt'=>'请选择...','id'=>'plantinputproduct-inputproduct_id','class' => 'form-control']); ?></td>
-              <td><?php echo Html::textInput('PlantInputproductPost[pconsumption][]',  $value['pconsumption'], ['id'=>'plantinputproduct-pconsumption','class' => 'form-control']); ?></td>
+              <td>&nbsp;</td>
+              <td valign="middle" align="center"><?php echo Html::textInput('PlantInputproductPost[pconsumption][]',  $value['pconsumption'], ['id'=>'plantinputproduct-pconsumption','class' => 'form-control']); ?></td>
               <td valign="middle" align="center"><?php echo Html::button('-', ['class' => 'btn btn-warning delete-employee']) ?></td>
           </tr>
 <?php }}?>
