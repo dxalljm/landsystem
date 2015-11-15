@@ -104,6 +104,7 @@ use app\models\Mainmenu;
 	                       	echo '<li><a href="'.Url::to('index.php?r=breedtype/breedtypeindex').'"><i class="fa fa-circle-o"></i>养殖种类</a></li>';
 	                       	echo '<li><a href="'.Url::to('index.php?r=infrastructuretype/infrastructuretypeindex').'"><i class="fa fa-circle-o"></i>基础设施类型</a></li>';
 	                       	echo '<li><a href="'.Url::to('index.php?r=projecttype/projecttypeindex').'"><i class="fa fa-circle-o"></i>项目类型</a></li>';
+	                       	echo '<li><a href="'.Url::to('index.php?r=disasterypte/disastertypeindex').'"><i class="fa fa-circle-o"></i>灾害类型</a></li>';
               				echo '</ul>';
             				echo '</li>';
 	                     	

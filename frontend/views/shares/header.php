@@ -36,9 +36,9 @@ use yii\helpers\Url;
                         <li><a href="<?= Url::to('index.php?r=plant/plantindex')?>">作物管理</a></li>
                         <li class="divider"></li>
                         <li><a href="<?= Url::to('index.php?r=inputproduct/inputproductindex')?>">投入品管理</a></li>
-                        <li class="divider"></li>
+                        
                         <li><a href="<?= Url::to('index.php?r=inputproductbrandmodel/inputproductbrandmodelindex')?>">投入品品牌型号</a></li>
-                        <li class="divider"></li>
+                        
                         <li><a href="<?= Url::to('index.php?r=pesticides/pesticidesindex')?>">农药管理</a></li>
                         <li class="divider"></li>
                         <li><a href="<?= Url::to('index.php?r=goodseed/goodseedindex')?>">良种管理</a></li>
@@ -52,7 +52,8 @@ use yii\helpers\Url;
                         <li><a href="<?= Url::to('index.php?r=infrastructuretype/infrastructuretypeindex')?>">基础设施类型</a></li>
                         <li class="divider"></li>
                         <li><a href="<?= Url::to('index.php?r=projecttype/projecttypeindex')?>">项目类型</a></li>
-                        
+                        <li class="divider"></li>
+                        <li><a href="<?= Url::to('index.php?r=disastertype/disastertypeindex')?>">灾害类型</a></li>
                     </ul>
                         <?php } else {
                         echo "<li ><a href=" . Url::to('index.php?r='.$menu['menuurl']) . ">". $menu['menuname'] . "</a></li>";
