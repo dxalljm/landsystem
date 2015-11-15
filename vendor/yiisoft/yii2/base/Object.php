@@ -85,6 +85,20 @@ class Object
         return get_called_class();
     }
 
+    public static function actionName()
+    {
+    	$actionArray = get_class_methods(self::className());
+    	$result = [];
+    	foreach ($actionArray as $value) {
+    		if(strstr($value,'action')) {
+    			$result[] = $value;
+    		}
+    	}
+    	unset($result[count($result)-1]);
+    	unset($result[count($result)-1]);
+    	return $result;
+    }
+    
     /**
      * Constructor.
      * The default implementation does two things:

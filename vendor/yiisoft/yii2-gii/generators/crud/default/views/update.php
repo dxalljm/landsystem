@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = <?= $generator->generateString('更新') ?>;
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">
-                        <?= $this->title ?>
+                         <?= ' <?= $this->title ?>'?>
                     </h3>
                 </div>
                 <div class="box-body">
