@@ -164,6 +164,7 @@ if($leases) {
     </div>
 </section>
 </div>
+<?php var_dump(Plantingstructure::getAllaction())?>
 <script>
 $('#rowjump').keyup(function(event){
 	input = $(this).val();

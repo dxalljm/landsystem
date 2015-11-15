@@ -342,11 +342,11 @@ use app\models\Prevention;
 </div><!-- /.info-box --></a></td>
 
       <td width="5%" align="center"></td>
-      <td width="20%" align="center"><a href='<?= Url::to('index.php?r=prevention/preventionindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
+      <td width="20%" align="center"><a href='<?= Url::to('index.php?r=disaster/disasterindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
 <div class="info-box bg-blue">
   <span class="info-box-icon"><i class="fa fa-plus"></i></span>
   <div class="info-box-content">
-  <span class="info-box-number">防疫情况</span>
+  <span class="info-box-number">灾害情况</span>
     <span class="info-box-text">有<?= Prevention::find()->where(['farms_id'=>$_GET['farms_id']])->count()?>条防疫信息</span>
     <!-- The progress section is optional -->
     <div class="progress">

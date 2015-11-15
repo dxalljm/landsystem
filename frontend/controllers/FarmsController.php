@@ -40,6 +40,12 @@ class FarmsController extends Controller
             ],
         ];
     }
+    
+    public function actionGetallaction()
+    {
+    	$result = self::actionName();
+    	var_dump($result);
+    }
 
 //     public function beforeAction($action)
 //     {

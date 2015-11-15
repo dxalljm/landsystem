@@ -32,6 +32,12 @@ class PlantingstructureController extends Controller
         ];
     }
 
+    public function actionGetallaction()
+    {
+    	$result = self::actionName();
+    	var_dump($result);
+    }
+    
     /**
      * Lists all Plantingstructure models.
      * @return mixed
@@ -145,6 +151,15 @@ class PlantingstructureController extends Controller
     	echo json_encode(['status'=>1,'area'=>$area]);
     }
     
+    public function actionGetplantarea($farms_id,$plant_id)
+    {
+    	$area = 0;
+    	$planting = Plantingstructure::find()->where(['farms_id'=>$farms_id,'plant_id'=>$plant_id])->all();
+    	foreach ($planting as $value) {
+    		$area += $value['area'];
+    	}
+    	echo json_encode(['status'=>1,'area'=>$area]);
+    }
     
     public function actionPlantingstructurecreate($lease_id,$farms_id)
     {

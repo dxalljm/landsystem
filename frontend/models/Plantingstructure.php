@@ -58,6 +58,8 @@ class Plantingstructure extends \yii\db\ActiveRecord
         	'update_at' => '更新日期',
         ];
     }
+   
+    
     //得到已经填写种植信息的宗地
     public static function getOverZongdi($lease_id,$farms_id)
     {
