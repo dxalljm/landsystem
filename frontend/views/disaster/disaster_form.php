@@ -90,7 +90,7 @@ $('#disaster-disasterarea').blur(function(){
 	}
 });
 $('#disaster-isinsurance').click(function(){
-	alert($(this).attr("checked"));
+	alert($(this).is(":checked"));
 //	if($(this).attr("checked")==false) {
 		var template = $('#disaster-temp').html();
  		$('#disaster > tbody').append(template);
