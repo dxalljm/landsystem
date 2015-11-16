@@ -94,7 +94,7 @@ $('#disaster-disasterarea').blur(function(){
 $('#disaster-isinsurance').click(function(){
 	//alert($(this).is(":checked"));
 	if($(this).is(":checked")==true) {
-		$('.temp-isinsurance').css('display', 'block')
+		$('.temp-isinsurance').css('display', 'table-row')
 	} else {
 		$('.temp-isinsurance').css('display', 'none')
 	}
