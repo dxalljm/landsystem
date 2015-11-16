@@ -45,18 +45,15 @@ use yii\helpers\ArrayHelper;
 
 $('#infrastructure-father_id').change(function(){
 	var input = $(this).val();
-	var template = $('#infrastructuretype-template').html();
+
 	$.getJSON('index.php?r=infrastructuretype/getson', {father_id: input}, function (data) {
-		
 		if (data.son == 1) {
 			var Child = $("#fatherid");
-			alert(Child.html);
-			Child.html(null);
-			Child.append('<option value="prompt">请选择...</option>');
+			$('#fatherid').append('<option>123</option>');
 			for(i=0;i<data.data.length;i++) {
-				alert(data.data[i]['typename']);
 				Child.append('<option value="'+data.data[i]['id']+'">'+data.data[i]['typename']+'</option>');
 			}
+			var template = $('#infrastructuretype-template').html();
 			$('#infrastructuretype-table > tbody').append(template);
 		}
 	});
