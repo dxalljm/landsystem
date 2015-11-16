@@ -47,7 +47,8 @@ use app\models\Farms;
 		];
 		
 	}
-	sort($plantValue);
+	if(is_array($plantValue))
+		sort($plantValue);
 ?>
 <td align='left'><?= $form->field($model, 'disasterplant')->dropDownList(ArrayHelper::map($plantValue, 'id', 'cropname'),['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
 </tr>

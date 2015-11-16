@@ -46,7 +46,7 @@ class Lease extends \yii\db\ActiveRecord
     	} else {
     		$areas = (float)$Leasearea;
     	}
-    	//var_dump($areas);
+//     	var_dump($areas);
     	return $areas;
     }
     //得到1-100（123）中的宗地号1-100
@@ -245,8 +245,10 @@ class Lease extends \yii\db\ActiveRecord
     	else    	
     		$arrayArea = explode('、', $Area);
     	foreach($arrayArea as $value) {	
+    		//var_dump($value);
     		$result += self::getArea($value);
     	}
+//     	var_dump($result);
     	return $result;
     }
 

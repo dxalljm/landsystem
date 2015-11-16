@@ -35,7 +35,7 @@ class PlantingstructureController extends Controller
     public function actionGetallaction()
     {
     	$result = self::actionName();
-    	var_dump($result);
+    	//var_dump($result);
     }
     
     /**

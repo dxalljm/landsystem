@@ -41,7 +41,8 @@ use app\models\Lease;
 			$arrayArea = array_merge($arrayArea,explode('、',$value['lease_area']));
 			$leaseSumArea += Lease::getListArea($value['lease_area']);
 		}
-		$allarea = $farms['measure'] + $farms['notclear'];
+		$allarea = $farms['measure'];
+		
 		$isView = bcsub($allarea , $leaseSumArea,2);
 		if($isView) {
 			$arrayZongdi = Lease::getNOZongdi($_GET['farms_id']);
@@ -62,6 +63,7 @@ use app\models\Lease;
     <td align="center"><?= $zongdilist?></td>
     <?php 
     	  $plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id'],'lease_id'=>0])->all();
+//     	  var_dump($plantings);
     	  $sumArea = 0;
     	  foreach($plantings as $value) {
     	  	$sumArea += (float)$value['area'];
@@ -164,7 +166,6 @@ if($leases) {
     </div>
 </section>
 </div>
-<?php var_dump(Plantingstructure::getAllaction())?>
 <script>
 $('#rowjump').keyup(function(event){
 	input = $(this).val();
