@@ -49,7 +49,6 @@ $('#infrastructure-father_id').change(function(){
 	$.getJSON('index.php?r=infrastructuretype/getson', {father_id: input}, function (data) {
 		if (data.son == 1) {
 			var Child = $("#fatherid");
-			$('#fatherid').append('<option>123</option>');
 			for(i=0;i<data.data.length;i++) {
 				Child.append('<option value="'+data.data[i]['id']+'">'+data.data[i]['typename']+'</option>');
 			}
