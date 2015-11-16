@@ -53,7 +53,7 @@ class Inputproductbrandmodel extends \yii\db\ActiveRecord
     	$brandmodel = Inputproductbrandmodel::find()->all();
     	foreach ($brandmodel as $value) {
     		$result[] = [
-    			'pinyin' => $value['brandpinyin'],
+    			'value' => $value['brandpinyin'],
     			'data' => $value['brand'].'-'.$value['model'],
     		];
     	}
