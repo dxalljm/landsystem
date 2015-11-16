@@ -12,23 +12,17 @@ use app\models\Farms;
 /* @var $model app\models\Disaster */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
+<style type="text/css">
+	.temp-isinsurance{ display:none }
+</style>
 <div class="disaster-form">
 
     <?php $form = ActiveFormrdiv::begin(); ?>
 <table class="table table-bordered table-hover" id="disaster">
 <thead id="disaster-temp" class="d-none">
-	<tr>
-		<td width=15% align='right'>受保面积</td>
-		<td align='left'><?= $form->field($model, 'insurancearea')->textInput()->label(false)->error(false) ?></td>
-	</tr>
-	<tr>
-		<td width=15% align='right'>理赔金额</td>
-		<td align='left'><?= $form->field($model, 'socmoney')->textInput()->label(false)->error(false) ?></td>
-	</tr>
+	
 </thead>
 <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false)->error(false) ?>
-<tbody>
 <tr>
 <td width=15% align='right'>灾害类型</td>
 <td align='left'><?= $form->field($model, 'disastertype_id')->dropDownList(ArrayHelper::map(Disastertype::find()->all(), 'id', 'typename'))->label(false)->error(false) ?></td>
@@ -64,7 +58,14 @@ use app\models\Farms;
 <td width=15% align='right'>是否参加保险</td>
 <td align='left'><?= $form->field($model, 'isinsurance')->checkbox()->label(false)->error(false) ?></td>
 </tr>
-</tbody>
+<tr class="temp-isinsurance">
+	<td width=15% align='right'>受保面积</td>
+	<td align='left'><?= $form->field($model, 'insurancearea')->textInput()->label(false)->error(false) ?></td>
+</tr>
+<tr class="temp-isinsurance">
+	<td width=15% align='right'>理赔金额</td>
+	<td align='left'><?= $form->field($model, 'socmoney')->textInput()->label(false)->error(false) ?></td>
+</tr>
 </table>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
@@ -91,11 +92,12 @@ $('#disaster-disasterarea').blur(function(){
 	}
 });
 $('#disaster-isinsurance').click(function(){
-	alert($(this).is(":checked"));
-//	if($(this).attr("checked")==false) {
-		var template = $('#disaster-temp').html();
- 		$('#disaster > tbody').append(template);
-//	} 
+	//alert($(this).is(":checked"));
+	if($(this).is(":checked")==true) {
+		$('.temp-isinsurance').css('display', 'block')
+	} else {
+		$('.temp-isinsurance').css('display', 'none')
+	}
 });
 // $('#disaster-yieldreduction').blur(function(){
 // 	var input = $(this).val();
