@@ -18,12 +18,25 @@ use app\models\ItemChild;
     <?= $form->field($model, 'parent')->textInput(['disabled'=>"disabled" ,'maxlength' => 64,'value'=>$model->parent]) ?>
     <?php $parents = ItemChild::find()->where(['parent'=>$model->parent])->all();?>
 	<?php 
-		//print_r($parents);
-		$data = Item::find()->all();
-		$items =ArrayHelper::map($data,'name', 'name');
-		$model->child = ArrayHelper::map($parents,'child', 'child');
+		
+ 		$model->child = ArrayHelper::map($parents,'child', 'child');
 	?>
-    <?= $form->field($model, 'child')->checkboxList($items); ?>
+	<table class="table table-bordered table-hover">
+	<?php foreach ($allController as $value) {
+		$itemall = Item::find()->where(['rule_name'=>$value['classname']])->all();
+		if($itemall) {
+			$title =  Item::find()->where(['rule_name'=>$value['classname']])->one()['data'];
+			$items =ArrayHelper::map($itemall,'name', 'description');
+	?>
+		<tr>
+			<td><?= $title?></td>
+		</tr>
+		<tr>
+			<td><?= html::checkboxList('childPost[child][]',$model->child,$items,['class'=>'form-control'])?></td>
+		</tr>
+	<?php }}?>
+	</table>
+    
 	
 	
 

@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_childform', [
         'model' => $model,
+    	'allController' => $allController,
     ]) ?>
 
 </div>

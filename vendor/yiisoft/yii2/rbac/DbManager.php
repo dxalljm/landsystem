@@ -185,7 +185,8 @@ class DbManager extends BaseManager
                 'type' => $item->type,
                 'description' => $item->description,
                 'rule_name' => $item->ruleName,
-                'data' => $item->data === null ? null : serialize($item->data),
+                //'data' => $item->data === null ? null : serialize($item->data),
+            	'data' => $item->data,
                 'created_at' => $item->createdAt,
                 'updated_at' => $item->updatedAt,
             ])->execute();

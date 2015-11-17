@@ -37,8 +37,8 @@ class Item extends \yii\db\ActiveRecord
         return [
             [['name', 'type'], 'required'],
             [['type', 'created_at', 'updated_at'], 'integer'],
-            [['description', 'data'], 'string'],
-            [['name', 'rule_name'], 'string', 'max' => 64]
+            [['description'], 'string'],
+            [['name', 'rule_name','data'], 'string', 'max' => 64]
         ];
     }
 

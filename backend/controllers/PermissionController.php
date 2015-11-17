@@ -52,76 +52,61 @@ class PermissionController extends Controller
 //     	}
 //     }
     
-	public function actionPermissioncreate()
+	public function actionPermissioncreate($classname = null)
 	{
-		$permission = new Permission();
+		
 		$model = new PermissionForm();
 		//echo '<br><br><br><br><br><br><br>';
-		$allClassInfo = $this->allClass();
-// 		$classname = 'backend\controllers\GroupsController';
-// 		$actions = $classname::actionName();
+		$allClassInfo = PermissionForm::allClass();
+		if($classname) {
+			$actions = $this->getactions($classname);
+			$model->rule_name = $classname;
+		}
+		else
+			$actions = [];
 		if ($model->load(Yii::$app->request->post()))
 		{
-		    $permission->name = $model->name;
-		    $permission->type = $model->type;
+			$itemPost = Yii::$app->request->post('itemPost');
+			for($i=0;$i<count($itemPost['actionName']);$i++) {
+				$permission = new Permission();
+				$permission->name = $this->getActionName($itemPost['actionName'][$i]);
+				$permission->description = $itemPost['description'][$i];
+				$permission->ruleName = $model->rule_name;
+				$permission->data = $model->data;
+				$permission->type = $model->type;
+				$permission->createdAt = time();
+				$permission->updatedAt = time();
+				//var_dump($permission);exit;
+				yii::$app->authManager->add($permission);
+			}
+		    
 		    //这里将权限添加到auth_item中
-		    $bool = yii::$app->authManager->add($permission);
-		    if($bool)
-		    	return $this->redirect(['permissionview', 'id' => $model->name]);    
+		   
+		    	return $this->redirect(['permissionindex']);  
 	    	
 	    } else {
 	    	return $this->render('permissioncreate', [
 	    			'model' => $model,
 	    			'controllerAllDir' => $allClassInfo,
+	    			'actions' => $actions,
+	    			
 	    	]);
 	    }
 	}
 	
-	public function getFile($dir,$path) {
-		$fileArray[]=NULL;
-		if (false != ($handle = opendir ( $dir ))) {
-			$i=0;
-			while ( false !== ($file = readdir ( $handle )) ) {
-				//去掉"“.”、“..”以及带“.xxx”后缀的文件
-				if ($file != "." && $file != ".."&&strpos($file,".")) {
-					$fileArray[$i]="./imageroot/current/".$file;
-					if($i==100){
-						break;
-					}
-					$i++;
-				}
-			}
-			//关闭句柄
-			closedir ( $handle );
-		}
-		$i=0;
-		foreach ($fileArray as $value) {
-			$filenameArray = explode('/', $value);
-			$strArray = explode('.',  $filenameArray[3]);
-			$result[$strArray[0]] = [
-					'classname' => $strArray[0],
-					'path' => $path.'\\controllers\\',
-			];
-			$i++;
-		}
-		return $result;
+	public function getActionName($action)
+	{
+		$result = str_replace('action','',$action);
+		return strtolower($result);
 	}
 	
-	public function allClass()
+	public function getactions($classname)
 	{
-		$backendControllerDir = $this->getFile('../controllers/','backend');
-		$frontendControllerDir = $this->getFile('../../frontend/controllers/','frontend');
-		$allClassInfo = array_merge($frontendControllerDir,$backendControllerDir);
-		return $allClassInfo;
-	}
-	
-	public function actionGetactions($id)
-	{
-		$allClassInfo = $this->allClass();
-		$classname = $allClassInfo[$id]['path'].$allClassInfo[$id]['classname'];
+		$allClassInfo = PermissionForm::allClass();
+		$c = $allClassInfo[$classname]['path'].$allClassInfo[$classname]['classname'];
 		//var_dump($classname);
-		$actions = $classname::actionName();
-		echo json_encode(['data' => $actions]);
+		$actions = $c::actionName();
+		return $actions;
 	}
 	
 	public function actionPermissionindex()
