@@ -27,7 +27,7 @@ class Infrastructuretype extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['father_id'], 'integer'],
+            //[['father_id'], 'integer'],
             [['typename'], 'string', 'max' => 500]
         ];
     }

@@ -49,15 +49,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format'=>'raw',
             	//'class' => 'btn btn-primary btn-lg',
                 'value' => function($model,$key){
-                   // $url = ['/user/userassign','id'=>$model->id];
+                    $url = ['/groups/groupsrole','id'=>$model->id];
                     return Html::a('权限分配','#', [
                     'id' => 'createassign',
                     'title' => '给用户组分配权限',
-                    //'class' => 'btn btn-primary btn-lg',
-                    'data-toggle' => 'modal',
-                    'data-target' => '#activity-modal',
-                    //'data-id' => $key,
-                    'onclick'=> 'assign('.$key.')',
                     //'data-pjax' => '0',
 
                 ]);
