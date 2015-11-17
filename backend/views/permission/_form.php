@@ -14,7 +14,7 @@ use yii\web\View;
 <div class="auth-item-form">
 
     <?php $form = ActiveForm::begin(); ?>
-<table class="table table-bordered table-hover" id="itmp-table">
+<table class="table table-bordered table-hover" id="temp-table">
 <thead id="temp-tr" class="d-none">
   <tr>
     <td><?= html::textInput('itemPost[actionName][]','',['class'=>'form-control','id'=>'action-name']) ?></td>
@@ -22,13 +22,13 @@ use yii\web\View;
   </tr>
 </thead>
 <tbody>
-  
+	<tr>
+	    <td>类名称</td>
+	    <td><?= html::dropDownList('controllerDirList','',ArrayHelper::map($controllerAllDir, 'classname', 'classname'),['prompt'=>'请选择...','class'=>'form-control','id'=>'controllerList']) ?></td>
+	</tr>
 </tbody>
 <tfoot>
-<tr>
-    <td>类名称</td>
-    <td><?= html::dropDownList('controllerDirList','',ArrayHelper::map($controllerAllDir, 'classname', 'classname'),['prompt'=>'请选择...','class'=>'form-control','id'=>'controllerList']) ?></td>
-  </tr>
+	
 </tfoot>
 </table>
     
@@ -49,8 +49,7 @@ $('#controllerList').change(function(){
 	$.getJSON('index.php?r=permission/getactions', {id: input}, function (data) {
 			for(i=0;i<data.data.length;i++) {
 				var template = $('#temp-tr').html();
-				
-		        $('#itmp-table > tbody').append(template);
+		        $('#temp-table > tfoot').append(template);
 				$(":text[name='itemPost[actionName][]']").val(data.data[i]);
 			}		
 	});
