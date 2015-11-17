@@ -27,7 +27,7 @@ class PermissionController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['permissioncreate', 'permissionupdate', 'permissionview', 'permissionindex', 'permissiondelete'],
+                        //'actions' => ['permissioncreate', 'permissionupdate', 'permissionview', 'permissionindex', 'permissiondelete'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -42,21 +42,24 @@ class PermissionController extends Controller
         ];
     }
     
-    public function beforeAction($action)
-    {
-    	$action = Yii::$app->controller->action->id;
-    	if(\Yii::$app->user->can($action)){
-    		return true;
-    	}else{
-    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
-    	}
-    }
+//     public function beforeAction($action)
+//     {
+//     	$action = Yii::$app->controller->action->id;
+//     	if(\Yii::$app->user->can($action)){
+//     		return true;
+//     	}else{
+//     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+//     	}
+//     }
     
 	public function actionPermissioncreate()
 	{
 		$permission = new Permission();
 		$model = new PermissionForm();
-		//$db = new DbManager();
+		//echo '<br><br><br><br><br><br><br>';
+		$allClassInfo = $this->allClass();
+// 		$classname = 'backend\controllers\GroupsController';
+// 		$actions = $classname::actionName();
 		if ($model->load(Yii::$app->request->post()))
 		{
 		    $permission->name = $model->name;
@@ -69,8 +72,56 @@ class PermissionController extends Controller
 	    } else {
 	    	return $this->render('permissioncreate', [
 	    			'model' => $model,
+	    			'controllerAllDir' => $allClassInfo,
 	    	]);
 	    }
+	}
+	
+	public function getFile($dir,$path) {
+		$fileArray[]=NULL;
+		if (false != ($handle = opendir ( $dir ))) {
+			$i=0;
+			while ( false !== ($file = readdir ( $handle )) ) {
+				//去掉"“.”、“..”以及带“.xxx”后缀的文件
+				if ($file != "." && $file != ".."&&strpos($file,".")) {
+					$fileArray[$i]="./imageroot/current/".$file;
+					if($i==100){
+						break;
+					}
+					$i++;
+				}
+			}
+			//关闭句柄
+			closedir ( $handle );
+		}
+		$i=0;
+		foreach ($fileArray as $value) {
+			$filenameArray = explode('/', $value);
+			$strArray = explode('.',  $filenameArray[3]);
+			$result[$strArray[0]] = [
+					'classname' => $strArray[0],
+					'path' => $path.'\\controllers\\',
+			];
+			$i++;
+		}
+		return $result;
+	}
+	
+	public function allClass()
+	{
+		$backendControllerDir = $this->getFile('../controllers/','backend');
+		$frontendControllerDir = $this->getFile('../../frontend/controllers/','frontend');
+		$allClassInfo = array_merge($frontendControllerDir,$backendControllerDir);
+		return $allClassInfo;
+	}
+	
+	public function actionGetactions($id)
+	{
+		$allClassInfo = $this->allClass();
+		$classname = $allClassInfo[$id]['path'].$allClassInfo[$id]['classname'];
+		//var_dump($classname);
+		$actions = $classname::actionName();
+		echo json_encode(['data' => $actions]);
 	}
 	
 	public function actionPermissionindex()

@@ -49,8 +49,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format'=>'raw',
             	//'class' => 'btn btn-primary btn-lg',
                 'value' => function($model,$key){
-                    $url = ['/groups/groupsrole','id'=>$model->id];
-                    return Html::a('权限分配','#', [
+                    $url = ['/groups/groupsrole'];
+                    return Html::a('权限分配',$url, [
                     'id' => 'createassign',
                     'title' => '给用户组分配权限',
                     //'data-pjax' => '0',

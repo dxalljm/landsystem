@@ -53,6 +53,13 @@ class GroupsController extends Controller
         ]);
     }
 
+    public function actionGroupsrole()
+    {
+    	return $this->render('groupsrole', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+    
     /**
      * Creates a new Groups model.
      * If creation is successful, the browser will be redirected to the 'view' page.

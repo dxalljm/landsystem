@@ -44,7 +44,7 @@ class FarmsController extends Controller
     public function actionGetallaction()
     {
     	$result = self::actionName();
-    	var_dump($result);
+    	return $result;
     }
 
 //     public function beforeAction($action)
