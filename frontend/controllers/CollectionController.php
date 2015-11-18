@@ -135,12 +135,12 @@ class CollectionController extends Controller
             ]);
         }
     }
-    
+    //地产科发送完成提示页面
     public function actionCollectionfinished($farms_id)
     {
     	return $this->render('collectionfinished',['farms_id'=>$farms_id]);
     }
-    
+    //承包费陈欠	
     public function actionCollectioncq($year=null)
     {
     	if($year === null)
@@ -150,7 +150,7 @@ class CollectionController extends Controller
     			'model' => $model,
     	]);
     }
-	
+	//通过js获取当前农场的应收与实收金额
     public function actionGetamounts()
     {
     	$real = 0;
@@ -178,7 +178,7 @@ class CollectionController extends Controller
     	echo json_encode(['status' => 1, 'count' => $resault]);
 		Yii::$app->end();
     }
-    
+    //确认承包费收缴并打印发票
     public function actionCollectionconfirm($id)
     {
     	Logs::writeLog('确认并打印',$id);
@@ -200,12 +200,6 @@ class CollectionController extends Controller
         return $this->render('collectionview', [
             'model' => $this->findModel($id),
         ]);
-    }
-
-    public function actionCollectiondck($farms_id)
-    {
-    	$model = new Collection();
-    	$farms = Farms::find()->where(['id'=>$farms_id])->all();
     }
     
     /**
@@ -353,13 +347,13 @@ class CollectionController extends Controller
     			]);
     		}
     }
-   
+   //获取年度缴费基数
     public function actionGetplantprice($formyear)
     {
     	$plantprice = PlantPrice::find()->where(['years'=>$formyear])->one();
     	echo json_encode($plantprice['price']);
     }
-    
+    //获取当年应收金额
     public function actionGetar($year)
     {
     	$result = new Collection();
@@ -371,20 +365,20 @@ class CollectionController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionCollectionupdate($id)
-    {
-        $model = $this->findModel($id);
-        $oldAttr = $model->attributes;
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$newAttr = $model->attributes;
-        	Logs::writeLog('更新农场信息',$id,$oldAttr,$newAttr);
-            return $this->redirect(['collectionview', 'id' => $model->id]);
-        } else {
-            return $this->render('collectionupdate', [
-                'model' => $model,
-            ]);
-        }
-    }
+//     public function actionCollectionupdate($id)
+//     {
+//         $model = $this->findModel($id);
+//         $oldAttr = $model->attributes;
+//         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//         	$newAttr = $model->attributes;
+//         	Logs::writeLog('更新农场信息',$id,$oldAttr,$newAttr);
+//             return $this->redirect(['collectionview', 'id' => $model->id]);
+//         } else {
+//             return $this->render('collectionupdate', [
+//                 'model' => $model,
+//             ]);
+//         }
+//     }
 
     /**
      * Deletes an existing Collection model.
@@ -392,12 +386,12 @@ class CollectionController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionCollectiondelete($id)
-    {
-        $this->findModel($id)->delete();
+//     public function actionCollectiondelete($id)
+//     {
+//         $this->findModel($id)->delete();
 
-        return $this->redirect(['collectionindex']);
-    }
+//         return $this->redirect(['collectionindex']);
+//     }
 
     /**
      * Finds the Collection model based on its primary key value.

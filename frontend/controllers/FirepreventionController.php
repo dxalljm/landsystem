@@ -126,18 +126,18 @@ class FirepreventionController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionFirepreventionupdate($id)
-    {
-        $model = $this->findModel($id);
+//     public function actionFirepreventionupdate($id)
+//     {
+//         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['firepreventionview', 'id' => $model->id]);
-        } else {
-            return $this->render('firepreventionupdate', [
-                'model' => $model,
-            ]);
-        }
-    }
+//         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//             return $this->redirect(['firepreventionview', 'id' => $model->id]);
+//         } else {
+//             return $this->render('firepreventionupdate', [
+//                 'model' => $model,
+//             ]);
+//         }
+//     }
 
     /**
      * Deletes an existing Fireprevention model.
@@ -145,12 +145,12 @@ class FirepreventionController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionFirepreventiondelete($id)
-    {
-        $this->findModel($id)->delete();
+//     public function actionFirepreventiondelete($id)
+//     {
+//         $this->findModel($id)->delete();
 
-        return $this->redirect(['firepreventionindex']);
-    }
+//         return $this->redirect(['firepreventionindex']);
+//     }
 
     /**
      * Finds the Fireprevention model based on its primary key value.

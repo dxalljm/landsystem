@@ -83,16 +83,16 @@ class FarmsController extends Controller
         ]);
     }
     
-    public function actionFarmszongdi()
-    {
-    	$farms = Farms::find()->all();
-    	foreach ($farms as $val) {
-    		$model = $this->findModel($val['id']);
-    		$model->zongdi = substr($val['zongdi'],0,strlen($val['zongdi'])-1); 
-    		$model->save();
-    	}
-    }
-    
+//     public function actionFarmszongdi()
+//     {
+//     	$farms = Farms::find()->all();
+//     	foreach ($farms as $val) {
+//     		$model = $this->findModel($val['id']);
+//     		$model->zongdi = substr($val['zongdi'],0,strlen($val['zongdi'])-1); 
+//     		$model->save();
+//     	}
+//     }
+    //得到所属农场的记录数
     public function actionGetfarmrows()
     {
     	$cacheKey = 'farms-hcharts2';
@@ -121,7 +121,7 @@ class FarmsController extends Controller
         
         return $jsonData;
     }
-    
+    //得到所属农场的所有面积
     public function actionGetfarmarea()
     {
     	$cacheKey = 'farmsarea-hcharts2';
@@ -147,7 +147,7 @@ class FarmsController extends Controller
         
         return $jsonData;
     }
-    
+    //xls导入
     public function actionFarmsxls()
     {
     	set_time_limit(0);
@@ -201,113 +201,113 @@ class FarmsController extends Controller
     			'rows' => $rows,
     	]);
     }
+    //
+//     public function actionFarmsma($mid,$nid)
+//     {
+//     	$farms = Farms::find()->where(['management_area'=>$mid])->all();
+//     	foreach ($farms as $value) {
+//     		$model = $this->findModel($value['id']);
+//     		$model->management_area = $nid;
+//     		$model->save();
+//     	}
+//     	//var_dump($farms);
+//     	echo 'yes';
+//     }
     
-    public function actionFarmsma($mid,$nid)
-    {
-    	$farms = Farms::find()->where(['management_area'=>$mid])->all();
-    	foreach ($farms as $value) {
-    		$model = $this->findModel($value['id']);
-    		$model->management_area = $nid;
-    		$model->save();
-    	}
-    	//var_dump($farms);
-    	echo 'yes';
-    }
-    
-    public function actionXlsbj()
-    {
-    	set_time_limit(0);
-    	$cw_loadxls = \PHPExcel_IOFactory::load('uploads/cw.xlsx');
-    	$ht_loadxls = \PHPExcel_IOFactory::load('uploads/ht.xlsx');
-    	$cw_rows = $cw_loadxls->getActiveSheet()->getHighestRow();
-    	$ht_rows = $ht_loadxls->getActiveSheet()->getHighestRow();
+//     public function actionXlsbj()
+//     {
+//     	set_time_limit(0);
+//     	$cw_loadxls = \PHPExcel_IOFactory::load('uploads/cw.xlsx');
+//     	$ht_loadxls = \PHPExcel_IOFactory::load('uploads/ht.xlsx');
+//     	$cw_rows = $cw_loadxls->getActiveSheet()->getHighestRow();
+//     	$ht_rows = $ht_loadxls->getActiveSheet()->getHighestRow();
 
-    	for($i=1;$i<=$cw_rows;$i++) {
-    		for($j=1;$j<=$ht_rows;$j++) {
-	    		if($cw_loadxls->getActiveSheet()->getCell('D'.$i)->getValue() == $ht_loadxls->getActiveSheet()->getCell('B'.$j)->getValue()) {
-	    			$result[$cw_loadxls->getActiveSheet()->getCell('D'.$i)->getValue()]['cw'][] = $cw_loadxls->getActiveSheet()->getCell('E'.$i)->getValue();
-	    			$result[$cw_loadxls->getActiveSheet()->getCell('D'.$i)->getValue()]['ht'][] = $ht_loadxls->getActiveSheet()->getCell('D'.$j)->getValue();
-	    		}
-    		}
-    	}
-    	foreach($result as $key=>$value) {
-    		foreach ($value['cw'] as $cw) {
-    			$last[$key] = ['cw' =>$cw];
-    		}
-    		$area = 0;
-    		$i = 1;
-    		foreach ($value['ht'] as $ht) {
-    			$area += $ht; 
-    			$last[$key]['ht'] = $area;
-				$i++;
-    		}
-    		$last[$key]['num'] = $i;
-    	}
-    	$objPHPExcel = new PHPExcel();
-    	$objWriter = PHPExcel_IOFactory::createWriter($objExcel, 'Excel5');
-    	for ($i = 1; $i <= count($last); $i++) {
-    		$objPHPExcel->getActiveSheet()->setCellValue('A' . $i, key($last[$i]));
-    		$objPHPExcel->getActiveSheet()->setCellValue('B' . $i, $last['cw']);
-    		$objPHPExcel->getActiveSheet()->setCellValue('C' . $i, $last['ht']);
-    		$objPHPExcel->getActiveSheet()->setCellValue('D' . $i, $last['num']);
-    	}
+//     	for($i=1;$i<=$cw_rows;$i++) {
+//     		for($j=1;$j<=$ht_rows;$j++) {
+// 	    		if($cw_loadxls->getActiveSheet()->getCell('D'.$i)->getValue() == $ht_loadxls->getActiveSheet()->getCell('B'.$j)->getValue()) {
+// 	    			$result[$cw_loadxls->getActiveSheet()->getCell('D'.$i)->getValue()]['cw'][] = $cw_loadxls->getActiveSheet()->getCell('E'.$i)->getValue();
+// 	    			$result[$cw_loadxls->getActiveSheet()->getCell('D'.$i)->getValue()]['ht'][] = $ht_loadxls->getActiveSheet()->getCell('D'.$j)->getValue();
+// 	    		}
+//     		}
+//     	}
+//     	foreach($result as $key=>$value) {
+//     		foreach ($value['cw'] as $cw) {
+//     			$last[$key] = ['cw' =>$cw];
+//     		}
+//     		$area = 0;
+//     		$i = 1;
+//     		foreach ($value['ht'] as $ht) {
+//     			$area += $ht; 
+//     			$last[$key]['ht'] = $area;
+// 				$i++;
+//     		}
+//     		$last[$key]['num'] = $i;
+//     	}
+//     	$objPHPExcel = new PHPExcel();
+//     	$objWriter = PHPExcel_IOFactory::createWriter($objExcel, 'Excel5');
+//     	for ($i = 1; $i <= count($last); $i++) {
+//     		$objPHPExcel->getActiveSheet()->setCellValue('A' . $i, key($last[$i]));
+//     		$objPHPExcel->getActiveSheet()->setCellValue('B' . $i, $last['cw']);
+//     		$objPHPExcel->getActiveSheet()->setCellValue('C' . $i, $last['ht']);
+//     		$objPHPExcel->getActiveSheet()->setCellValue('D' . $i, $last['num']);
+//     	}
     	
-//     	在默认sheet后，创建一个worksheet
-    	echo date('H:i:s') . " Create new Worksheet object\n";
-    	$objPHPExcel->createSheet();
-    	$objWriter = PHPExcel_IOFactory::createWriter($objExcel, 'Excel5');
-    	$objWriter-save('php://output');
-//     	var_dump($last);
-    }
+// //     	在默认sheet后，创建一个worksheet
+//     	echo date('H:i:s') . " Create new Worksheet object\n";
+//     	$objPHPExcel->createSheet();
+//     	$objWriter = PHPExcel_IOFactory::createWriter($objExcel, 'Excel5');
+//     	$objWriter-save('php://output');
+// //     	var_dump($last);
+//     }
     
-    public function actionFarmszdxls()
-    {
-    	set_time_limit(0);
-    	$model = new UploadForm();
-    	$rows = 0;
-    	if (Yii::$app->request->isPost) {
+//     public function actionFarmszdxls()
+//     {
+//     	set_time_limit(0);
+//     	$model = new UploadForm();
+//     	$rows = 0;
+//     	if (Yii::$app->request->isPost) {
     
-    		$model->file = UploadedFile::getInstance($model, 'file');
-    		if($model->file == null)
-    			throw new \yii\web\UnauthorizedHttpException('对不起，请先选择xls文件');
-    		if ($model->file && $model->validate()) {
+//     		$model->file = UploadedFile::getInstance($model, 'file');
+//     		if($model->file == null)
+//     			throw new \yii\web\UnauthorizedHttpException('对不起，请先选择xls文件');
+//     		if ($model->file && $model->validate()) {
     			 
-    			$xlsName = time().rand(100,999);
-    			$model->file->name = $xlsName;
-    			$model->file->saveAs('uploads/' . $model->file->name . '.' . $model->file->extension);
-    			$path = 'uploads/' . $model->file->name . '.' . $model->file->extension;
-    			$loadxls = \PHPExcel_IOFactory::load($path);
-    			$rows = $loadxls->getActiveSheet()->getHighestRow();
-    			for($i=1;$i<=$rows;$i++) {
-    				$id = Farms::find()->where(['farmname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue(),'farmername'=>$loadxls->getActiveSheet()->getCell('C'.$i)->getValue()])->one()['id'];
-    				//if(!$id)
-    					//echo '-------------'.$i.'---------<br>';
-    					$data[$id][] = $loadxls->getActiveSheet()->getCell('D'.$i)->getValue();
-    			}
+//     			$xlsName = time().rand(100,999);
+//     			$model->file->name = $xlsName;
+//     			$model->file->saveAs('uploads/' . $model->file->name . '.' . $model->file->extension);
+//     			$path = 'uploads/' . $model->file->name . '.' . $model->file->extension;
+//     			$loadxls = \PHPExcel_IOFactory::load($path);
+//     			$rows = $loadxls->getActiveSheet()->getHighestRow();
+//     			for($i=1;$i<=$rows;$i++) {
+//     				$id = Farms::find()->where(['farmname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue(),'farmername'=>$loadxls->getActiveSheet()->getCell('C'.$i)->getValue()])->one()['id'];
+//     				//if(!$id)
+//     					//echo '-------------'.$i.'---------<br>';
+//     					$data[$id][] = $loadxls->getActiveSheet()->getCell('D'.$i)->getValue();
+//     			}
     			
 				
-    		}
-    		//$k = 0;
-    		var_dump($data);
-    		foreach ($data as $key => $value) {
-    			$model = $this->findModel($key);
-    			$model->zongdi = implode('、', $value);
-    			foreach($value as $val)
-    				$model->measure += Parcel::find()->where(['unifiedserialnumber'=>$val])->one()['grossarea'];
-    			$model->save();	
-    		}
+//     		}
+//     		//$k = 0;
+//     		var_dump($data);
+//     		foreach ($data as $key => $value) {
+//     			$model = $this->findModel($key);
+//     			$model->zongdi = implode('、', $value);
+//     			foreach($value as $val)
+//     				$model->measure += Parcel::find()->where(['unifiedserialnumber'=>$val])->one()['grossarea'];
+//     			$model->save();	
+//     		}
 			
-//     		echo count($data).'<br>';
+// //     		echo count($data).'<br>';
     		
-    	}
+//     	}
     	
-    	Logs::writeLog('宗地XLS批量导入');
-    	return $this->render('farmszdxls',[
-    			'model' => $model,
-    			'rows' => $rows,
-    	]);
-    }
-    
+//     	Logs::writeLog('宗地XLS批量导入');
+//     	return $this->render('farmszdxls',[
+//     			'model' => $model,
+//     			'rows' => $rows,
+//     	]);
+//     }
+    //业务办理列表页面
     public function actionFarmsbusiness()
     {
     	
@@ -329,7 +329,7 @@ class FarmsController extends Controller
     			'dataProvider' => $dataProvider,
     	]);
     }
-
+	//得到所有农场ID
     public function actionGetfarmid($id)
     {
     	$arrayFarmsid = Farms::getFarmArray();
@@ -341,7 +341,7 @@ class FarmsController extends Controller
     	}
     	echo json_encode(['farmsid'=>$result]);
     }
-    
+    //业务办理菜单页面
     public function actionFarmsmenu($farms_id)
     {
     	$farm = $this->findModel($farms_id);
@@ -384,7 +384,7 @@ class FarmsController extends Controller
     			'farms_id'=>$farms_id,
     	]);
     }
-    //查年垸户信息
+    //查看过户信息
     public function actionFarmsttpoview($id)
     {
     	$ttpoModel = Ttpo::findOne($id);
@@ -396,7 +396,7 @@ class FarmsController extends Controller
     			'newFarm' => $newFarm,
     	]);
     }
-    
+    //查看转让信息
     public function actionFarmsttpozongdiview($id)
     {
     	$ttpoModel = Ttpozongdi::findOne($id);
@@ -408,7 +408,7 @@ class FarmsController extends Controller
     			'newFarm' => $newFarm,
     	]);
     }
-    //state状态：0为已经失效，1为当前正用
+    //农场过户，state状态：0为已经失效，1为当前正用
     public function actionFarmstransfer($farms_id)
     {
     	
@@ -452,7 +452,7 @@ class FarmsController extends Controller
     	}
     }
     
-    //分户
+    //农场转让——新增
     public function actionFarmssplit($farms_id)
     {
     	$oldfarm = $this->findModel($farms_id);
@@ -518,7 +518,7 @@ class FarmsController extends Controller
 	    	]);
     	}
     }
-    
+    //农场转让
     public function actionFarmsttpozongdi($farms_id)
     {
     	$search = Yii::$app->request->post('farmSearch');
@@ -538,7 +538,7 @@ class FarmsController extends Controller
     			'oldfarms_id' => $farms_id,
     	]);
     }
-    
+    //删除已经分配转让出去的空数组
     private function deleteZongdiDH($zongdiStr)
     {
     	$arrayZongdi = explode('、', $zongdiStr);
@@ -551,7 +551,7 @@ class FarmsController extends Controller
     	sort($arrayZongdi);
     	return implode('、', $arrayZongdi);
     }
-    
+    //转让给现有法人
     public function actionFarmstozongdi($farms_id,$oldfarms_id)
     {
     	$oldfarm = $this->findModel($oldfarms_id);
@@ -637,16 +637,16 @@ class FarmsController extends Controller
     	}
     }
     
-    public function actionAllstate()
-    {
-    	$allfarms = Farms::find()->all();
-    	foreach($allfarms as $value) {
-    		$model = $this->findModel($value['id']);
-    		$model->state = 1;
-    		$model->save();
-    	}
+//     public function actionAllstate()
+//     {
+//     	$allfarms = Farms::find()->all();
+//     	foreach($allfarms as $value) {
+//     		$model = $this->findModel($value['id']);
+//     		$model->state = 1;
+//     		$model->save();
+//     	}
     	
-    }
+//     }
     /**
      * Creates a new farms model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -674,27 +674,27 @@ class FarmsController extends Controller
         }
     }
 
-    public function actionFarmsttpo($farms_id)
-    {
-    	$model = $this->findModel($farms_id);
-    	$nowModel = new Farms();
-    	if ($nowModel->load(Yii::$app->request->post())) {
-    		$nowModel->create_at = time();
-    		$nowModel->update_at = time();
-    		$nowModel->pinyin = Pinyin::encode($nowModel->farmname);
-    		$nowModel->farmerpinyin = Pinyin::encode($nowModel->farmername);
-    		$nowModel->save();
-    		$newAttr = $nowModel->attributes;
-    		Logs::writeLog('农场转让信息',$farms_id,$oldAttr,$newAttr);
+//     public function actionFarmsttpo($farms_id)
+//     {
+//     	$model = $this->findModel($farms_id);
+//     	$nowModel = new Farms();
+//     	if ($nowModel->load(Yii::$app->request->post())) {
+//     		$nowModel->create_at = time();
+//     		$nowModel->update_at = time();
+//     		$nowModel->pinyin = Pinyin::encode($nowModel->farmname);
+//     		$nowModel->farmerpinyin = Pinyin::encode($nowModel->farmername);
+//     		$nowModel->save();
+//     		$newAttr = $nowModel->attributes;
+//     		Logs::writeLog('农场转让信息',$farms_id,$oldAttr,$newAttr);
     	
-    		return $this->redirect(['farmsview', 'id' => $nowModel->id]);
-    	} else {
-	    	return $this->render('farmsttpo', [
-	    			'model' => $model,
-	    			'nowModel' => $nowModel,
-	    	]);
-    	}
-    }
+//     		return $this->redirect(['farmsview', 'id' => $nowModel->id]);
+//     	} else {
+// 	    	return $this->render('farmsttpo', [
+// 	    			'model' => $model,
+// 	    			'nowModel' => $nowModel,
+// 	    	]);
+//     	}
+//     }
     
     /**
      * Updates an existing Farms model.
@@ -723,17 +723,17 @@ class FarmsController extends Controller
         }
     }
 
-    public function actionTempzongdichuli()
-    {
-    	set_time_limit(0);
-    	$farms = Farms::find()->all();
-    	foreach($farms as $key=>$value) {
-    		$model = $this->findModel($value['id']);
-    		$model->measure = $model->measure + $model->notclear;
-    		$model->save();
-    	}
-    	echo 'yes';
-    }
+//     public function actionTempzongdichuli()
+//     {
+//     	set_time_limit(0);
+//     	$farms = Farms::find()->all();
+//     	foreach($farms as $key=>$value) {
+//     		$model = $this->findModel($value['id']);
+//     		$model->measure = $model->measure + $model->notclear;
+//     		$model->save();
+//     	}
+//     	echo 'yes';
+//     }
     
     /**
      * Deletes an existing Farms model.

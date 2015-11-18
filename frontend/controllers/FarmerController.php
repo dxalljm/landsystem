@@ -58,22 +58,22 @@ class FarmerController extends Controller
         ]);
     }
 
-    public function actionFarmercontract($id)
-    {
-    	//$this->layout='@app/views/layouts/nomain.php';
-    	$farm = Farms::find()->where(['id'=>$id])->one(); 
-    	$lease = Lease::find()->where(['farms_id'=>$id])->all();
-    	//$farmer = Farmer::find()->where(['farms_id'=>$id])->one();
-    	$farmerid = farmer::find()->where(['farms_id'=>$id])->one()['id'];
-    	$model = $this->findModel($farmerid);
-		Logs::writeLog('农场详细信息',$id);
-            return $this->renderAjax('farmercontract', [
-                'model' => $model,
-            	'farm' => $farm,
-            	'lease' => $lease,
-            ]);
+//     public function actionFarmercontract($id)
+//     {
+//     	//$this->layout='@app/views/layouts/nomain.php';
+//     	$farm = Farms::find()->where(['id'=>$id])->one(); 
+//     	$lease = Lease::find()->where(['farms_id'=>$id])->all();
+//     	//$farmer = Farmer::find()->where(['farms_id'=>$id])->one();
+//     	$farmerid = farmer::find()->where(['farms_id'=>$id])->one()['id'];
+//     	$model = $this->findModel($farmerid);
+// 		Logs::writeLog('农场详细信息',$id);
+//             return $this->renderAjax('farmercontract', [
+//                 'model' => $model,
+//             	'farm' => $farm,
+//             	'lease' => $lease,
+//             ]);
         
-    }
+//     }
     
     public function actionFarmerxls()
     {
@@ -304,20 +304,20 @@ class FarmerController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionFarmerupdate($farms_id)
-    {
-    	$farmModel = Farms::findOne($farms_id);
+//     public function actionFarmerupdate($farms_id)
+//     {
+//     	$farmModel = Farms::findOne($farms_id);
     	
-        $model = Farmer::find()->where(['farms_id'=>$farms_id])->one();
+//         $model = Farmer::find()->where(['farms_id'=>$farms_id])->one();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['farmerview', 'id' => $model->id]);
-        } else {
-            return $this->render('farmerupdate', [
-                'model' => $model,
-            ]);
-        }
-    }
+//         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//             return $this->redirect(['farmerview', 'id' => $model->id]);
+//         } else {
+//             return $this->render('farmerupdate', [
+//                 'model' => $model,
+//             ]);
+//         }
+//     }
     
 //     public function addtime()
 //     {
@@ -341,12 +341,12 @@ class FarmerController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionFarmerdelete($id)
-    {
-        $this->findModel($id)->delete();
+//     public function actionFarmerdelete($id)
+//     {
+//         $this->findModel($id)->delete();
 
-        return $this->redirect(['farmerindex']);
-    }
+//         return $this->redirect(['farmerindex']);
+//     }
 
     /**
      * Finds the farmer model based on its primary key value.
