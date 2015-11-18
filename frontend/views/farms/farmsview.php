@@ -65,6 +65,10 @@ $this->params['breadcrumbs'][] = $this->title;
 			<td align='left'><?= $model->address?></td>
 		</tr>
 		<tr>
+			<td width=15% align='right'>地理坐标</td>
+			<td align='left'><?= $model->longitude.'&nbsp;&nbsp;&nbsp;&nbsp;'.$model->latitude?></td>
+		</tr>
+		<tr>
 			<td width=15% align='right'>管理区</td>
 			<td align='left'><?= ManagementArea::findOne($model->management_area)['areaname'] ?></td>
 		</tr>
@@ -73,14 +77,22 @@ $this->params['breadcrumbs'][] = $this->title;
 			<td align='left'><?= $model->spyear ?></td>
 		</tr>
 		<tr>
+			<td width=15% align='right'>合同号</td>
+			<td align='left'><?= $model->contractnumber ?></td>
+		</tr>
+		<tr>
+			<td width=15% align='right'>承包年限</td>
+			<td align='left'><?= '自&nbsp;'.$model->begindate.'&nbsp;至&nbsp;'.$model->enddate.'&nbsp;止' ?></td>
+		</tr>
+		<tr>
 			<td width=15% align='right'>面积</td>
-			<td align='left'><?= $model->measure ?></td>
+			<td align='left'><?= $model->measure ?>亩</td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>宗地</td>
 			<td align='left'> 
 			<?php 
-			if($model->zongdi !== '') {
+			if(!empty($model->zongdi)) {
 			$zongdiarr = explode('、',$model->zongdi);
 			foreach($zongdiarr as $zongdi){
 				$zongdiinfo = Parcel::find()->where(['unifiedserialnumber'=>Lease::getZongdi($zongdi)])->one();

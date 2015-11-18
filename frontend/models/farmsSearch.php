@@ -22,7 +22,7 @@ class farmsSearch extends Farms
     {
         return [
             [['id', 'create_at', 'update_at','state','oldfarms_id'], 'integer'],
-            [['farmname', 'farmername', 'address','measure', 'management_area', 'spyear', 'zongdi', 'cooperative_id','notclear','surveydate', 'groundsign', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate'], 'safe'],
+            [['farmname', 'farmername', 'address','measure', 'management_area', 'spyear', 'zongdi', 'cooperative_id','notclear','surveydate', 'groundsign', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate','latitude','longitude'], 'safe'],
             //[['measure'], 'number'],
         ];
     }
@@ -156,6 +156,8 @@ class farmsSearch extends Farms
             ->andFilterWhere(['like', 'pinyin', $this->pinyin])
             ->andFilterWhere(['like', 'farmerpinyin', $this->farmerpinyin])
             ->andFilterWhere(['like', 'contractnumber', $this->contractnumber])
+            ->andFilterWhere(['like', 'latitude', $this->latitude])
+            ->andFilterWhere(['like', 'longitude', $this->longitude])
             ->andFilterWhere($this->betweenSearch());
           	//->andFilterWhere(['between', 'measure', $this->measure,$this->measure]);
 

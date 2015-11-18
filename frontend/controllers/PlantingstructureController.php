@@ -31,12 +31,6 @@ class PlantingstructureController extends Controller
             ],
         ];
     }
-
-    public function actionGetallaction()
-    {
-    	$result = self::actionName();
-    	//var_dump($result);
-    }
     
     /**
      * Lists all Plantingstructure models.
@@ -145,12 +139,13 @@ class PlantingstructureController extends Controller
     	}
     	return $arrayArea;
     }
+    //已经使用投入品的面积
     public function actionPlantingstructuregetarea($zongdi) 
     {
     	$area = Lease::getListArea($zongdi);
     	echo json_encode(['status'=>1,'area'=>$area]);
     }
-    
+    //获取作物面积
     public function actionGetplantarea($farms_id,$plant_id)
     {
     	$area = 0;

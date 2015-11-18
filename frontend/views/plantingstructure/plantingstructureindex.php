@@ -50,6 +50,7 @@ use app\models\Lease;
 			$zongdilist = implode('、',$arrayZongdi);
 		else 
 			$zongdilist =  bcsub($farms['measure'] , $arrayZongdi,2);
+		//var_dump($arrayZongdi);
 	?>
 <table class="table table-bordered table-hover">
   <tr>

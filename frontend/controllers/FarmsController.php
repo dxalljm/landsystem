@@ -166,40 +166,62 @@ class FarmsController extends Controller
     			$path = 'uploads/' . $model->file->name . '.' . $model->file->extension;
     			$loadxls = \PHPExcel_IOFactory::load($path);
     			$rows = $loadxls->getActiveSheet()->getHighestRow();
-    			for($i=1;$i<=$rows;$i++) {
-    				//echo $loadxls->getActiveSheet()->getCell('F'.$i)->getValue()."<br>";
+    			for($i=4;$i<=$rows;$i++) {
+    				//var_dump($loadxls->getActiveSheet()->getCell('H'.$i)->getValue())."<br>";exit;
     				//echo  ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];"<br>";
     				$farmsmodel = new Farms();
 					//$farmsmodel = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
-    				$farmsmodel->id = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
-    				$farmsmodel->management_area = ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];
-    				$farmsmodel->farmname =  $loadxls->getActiveSheet()->getCell('C'.$i)->getValue();
-    				$farmsmodel->farmername = $loadxls->getActiveSheet()->getCell('D'.$i)->getValue();
-    				$farmsmodel->address =  $loadxls->getActiveSheet()->getCell('E'.$i)->getValue();
-    				$farmsmodel->cardid = $loadxls->getActiveSheet()->getCell('F'.$i)->getValue();
-    				$farmsmodel->telephone = $loadxls->getActiveSheet()->getCell('G'.$i)->getValue();
-    				$farmsmodel->spyear =  $loadxls->getActiveSheet()->getCell('H'.$i)->getValue();
-					$time = ($loadxls->getActiveSheet()->getCell('I'.$i)->getValue() - 25569)*24*60*60;
-    				$farmsmodel->surveydate =  date('Y-m-d',$time);
+    				$farmsmodel->id = (int)$loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
+    				$farmsmodel->management_area = (int)$loadxls->getActiveSheet()->getCell('B'.$i)->getValue();
+    				$farmsmodel->contractnumber = $loadxls->getActiveSheet()->getCell('C'.$i)->getValue();
+    				$farmsmodel->farmname = $loadxls->getActiveSheet()->getCell('D'.$i)->getValue();
+    				$farmsmodel->farmername = $loadxls->getActiveSheet()->getCell('E'.$i)->getValue();
+    				$farmsmodel->measure = $loadxls->getActiveSheet()->getCell('F'.$i)->getValue();
+    				$farmsmodel->address = $loadxls->getActiveSheet()->getCell('G'.$i)->getValue();
+    				$farmsmodel->longitude = $this->formatLongLat($loadxls->getActiveSheet()->getCell('H'.$i)->getValue(),'E');
+    				$farmsmodel->latitude = $this->formatLongLat($loadxls->getActiveSheet()->getCell('I'.$i)->getValue(),'N');
+    				$farmsmodel->cardid = $loadxls->getActiveSheet()->getCell('J'.$i)->getValue();
+    				$farmsmodel->telephone = (string)$loadxls->getActiveSheet()->getCell('K'.$i)->getValue();
+    				//$farmsmodel->spyear = '';
+					$farmsmodel->begindate = '2010-09-13';
+					$farmsmodel->enddate = '2025-09-13';
+    				//$farmsmodel->surveydate =  date('Y-m-d',$time);
+    				$farmsmodel->state = 1;
+    				$farmsmodel->notclear = $loadxls->getActiveSheet()->getCell('F'.$i)->getValue();
     				//echo $farmsmodel->surveydate;
-    				$farmsmodel->groundsign =  $loadxls->getActiveSheet()->getCell('J'.$i)->getValue();
-    				$farmsmodel->investigator =  $loadxls->getActiveSheet()->getCell('K'.$i)->getValue();
-    				$farmsmodel->farmersign =  $loadxls->getActiveSheet()->getCell('L'.$i)->getValue();
+    				//$farmsmodel->groundsign =  
+    				//$farmsmodel->investigator =  
+    				//$farmsmodel->farmersign =  $loadxls->getActiveSheet()->getCell('L'.$i)->getValue();
     				$farmsmodel->create_at = time();
     				$farmsmodel->update_at = time();
 					//var_dump(Pinyin::encode($loadxls->getActiveSheet()->getCell('D'.$i)->getValue()));
-    				$farmsmodel->pinyin = Pinyin::encode($loadxls->getActiveSheet()->getCell('C'.$i)->getValue());
-    				$farmsmodel->farmerpinyin = Pinyin::encode($loadxls->getActiveSheet()->getCell('D'.$i)->getValue());
+    				$farmsmodel->pinyin = Pinyin::encode($loadxls->getActiveSheet()->getCell('D'.$i)->getValue());
+    				$farmsmodel->farmerpinyin = Pinyin::encode($loadxls->getActiveSheet()->getCell('E'.$i)->getValue());
      				$farmsmodel->save();
-     				//var_dump($farmsmodel->getErrors());
+//      				var_dump($farmsmodel);
+//      				exit;
     			}
     		}
     	}
+    	//exit;
     	Logs::writeLog('农场XLS批量导入');
     	return $this->render('farmsxls',[
     			'model' => $model,
     			'rows' => $rows,
     	]);
+    }
+    
+    private function formatLongLat($str,$l)
+    {
+    	$miao = substr($str,-4);
+    	$fen = substr($str,-6,2);
+    	$du = '';
+    	if(strlen($str) == 9)
+    		$du = substr($str,0,3);
+    	if(strlen($str) == 8)
+    		$du = substr($str,0,2);
+    	$result = $l.$du.'°'.$fen."'".$miao.'"';
+    	return $result;
     }
     //
 //     public function actionFarmsma($mid,$nid)

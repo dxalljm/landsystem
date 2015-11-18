@@ -105,11 +105,13 @@ class Lease extends \yii\db\ActiveRecord
     {
     	//$zdarea = false;
     	$farm = Farms::find()->where(['id'=>$farms_id])->one();
-    	//var_dump($farm);
-    	$farmzongdi = explode('、', $farm['zongdi']);
+    	if(!empty($farm['zongdi']))
+    		$farmzongdi = explode('、', $farm['zongdi']);
+    	
     	//var_dump($farm->notclear);
     	if(!empty($farm->notclear))
     		$farmzongdi[] = 'not-clear('.$farm->notclear.')';
+    	
     	return $farmzongdi;
     }
     

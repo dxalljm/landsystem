@@ -59,23 +59,23 @@ class ParcelController extends Controller
     	]);
     }
 	
-    public function actionParcellistajax()
-    {
-    	$farms_id = Yii::$app->request->get('farms_id');
-    	//if (!empty($farms_id)) {
-    		$zongdi = Farms::find()->where(['id'=>$farms_id])->one()['zongdi'];
-    		$zongdiarr = explode('、', $zongdi);
-    		foreach($zongdiarr as $value) {
-    			$zd_area[] = $value.'('.Parcel::find()->where(['unifiedserialnumber'=> $value])->one()['grossarea'].')';
-    		}
-//     		echo json_encode(['status' => 1]);
-//     		Yii::$app->end();
-    	//} else {
-    		return $this->renderAjax('parcellistajax', [
-    				'zdarea' => $zd_area,
-    		]);
-    	//}
-    }
+//     public function actionParcellistajax()
+//     {
+//     	$farms_id = Yii::$app->request->get('farms_id');
+//     	//if (!empty($farms_id)) {
+//     		$zongdi = Farms::find()->where(['id'=>$farms_id])->one()['zongdi'];
+//     		$zongdiarr = explode('、', $zongdi);
+//     		foreach($zongdiarr as $value) {
+//     			$zd_area[] = $value.'('.Parcel::find()->where(['unifiedserialnumber'=> $value])->one()['grossarea'].')';
+//     		}
+// //     		echo json_encode(['status' => 1]);
+// //     		Yii::$app->end();
+//     	//} else {
+//     		return $this->renderAjax('parcellistajax', [
+//     				'zdarea' => $zd_area,
+//     		]);
+//     	//}
+//     }
     
     /**
      * Displays a single Parcel model.

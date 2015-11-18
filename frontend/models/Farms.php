@@ -40,10 +40,10 @@ class Farms extends \yii\db\ActiveRecord
     {
         return [
             [['farmname', 'farmername'], 'required'],
-            //[['measure'], 'number'],
+            [['measure','notclear'], 'number'],
             [['zongdi'], 'string'],
             [['management_area','state','oldfarms_id'], 'integer'],
-            [['farmname', 'farmername', 'cardid', 'telephone', 'address', 'cooperative_id', 'surveydate', 'groundsign', 'notclear', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate'], 'string', 'max' => 500],
+            [['farmname', 'farmername', 'cardid', 'telephone', 'address', 'cooperative_id', 'surveydate', 'groundsign', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate','latitude','longitude'], 'string', 'max' => 500],
         	[['measure','spyear'],'safe'],
         ]; 
     }
@@ -78,6 +78,8 @@ class Farms extends \yii\db\ActiveRecord
         	'begindate' => '开始日期',
         	'enddate' => '结束日期',
         	'oldfarms_id' => '变更前ID',
+        	'latitude' => '纬度',
+        	'longitude' => '经度'
         ]; 
     }
     
