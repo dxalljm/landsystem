@@ -20,7 +20,7 @@ class collectionSearch extends Collection
 	public function rules()
     {
         return [
-            [['id', 'payyear','farms_id', 'ypayyear', 'isupdate','dckpay'], 'integer'],
+            [['id', 'payyear','farms_id', 'ypayyear', 'isupdate','dckpay','create_at','update_at'], 'integer'],
             [['farmname', 'billingtime'], 'safe'],
             [['ypayarea', 'amounts_receivable', 'real_income_amount', 'ypaymoney', 'owe'], 'number'],
         ];
@@ -87,7 +87,8 @@ class collectionSearch extends Collection
         $query->andFilterWhere(['like', 'billingtime', $this->billingtime])
             ->andFilterWhere(['like', 'amounts_receivable', $this->amounts_receivable])
             ->andFilterWhere(['like', 'real_income_amount', $this->real_income_amount])
-            ->andFilterWhere(['like', 'land_farms.farmname', $this->farmname]);
+            ->andFilterWhere(['like', 'land_farms.farmname', $this->farmname])
+            ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

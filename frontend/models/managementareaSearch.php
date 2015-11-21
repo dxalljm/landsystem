@@ -59,7 +59,8 @@ class managementareaSearch extends ManagementArea
             'id' => $this->id,
         ]);
 
-        $query->andFilterWhere(['like', 'areaname', $this->areaname]);
+        $query->andFilterWhere(['like', 'areaname', $this->areaname])
+        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

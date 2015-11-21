@@ -19,7 +19,7 @@ use yii\web\View;
 	<tr>
 	    <td>类名称</td>
 	    <td><?= html::dropDownList('controllerDirList','',ArrayHelper::map($controllerAllDir, 'classname', 'classname'),['prompt'=>'请选择...','class'=>'form-control','id'=>'controllerList']) ?></td>
-	</tr><?php var_dump($actions);?>
+	</tr>
 <?php foreach($actions as $key => $value) {?>
 	<tr>
     <td><?= html::textInput('itemPost[actionName]['.$key.']',$value['action'],['class'=>'form-control','id'=>'action-name']) ?></td>

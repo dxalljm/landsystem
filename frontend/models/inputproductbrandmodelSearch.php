@@ -62,7 +62,8 @@ class inputproductbrandmodelSearch extends Inputproductbrandmodel
 
         $query->andFilterWhere(['like', 'brand', $this->brand])
             ->andFilterWhere(['like', 'model', $this->model])
-        	->andFilterWhere(['like', 'brandpinyin', $this->brandpinyin]);
+        	->andFilterWhere(['like', 'brandpinyin', $this->brandpinyin])
+        	->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
         return $dataProvider;
     }
 }

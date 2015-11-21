@@ -27,10 +27,10 @@ use app\models\ItemChild;
 	<?php 
 		$i=0;
 		foreach ($allController as $value) {
-		$itemall = Item::find()->where(['rule_name'=>$value['classname']])->all();
+		$itemall = Item::find()->where(['cname'=>$value['classname']])->all();
 		
 		if($itemall) {
-			$title =  Item::find()->where(['rule_name'=>$value['classname']])->one()['data'];
+			$title =  Item::find()->where(['cname'=>$value['classname']])->one()['classdescription'];
 			$items = ArrayHelper::map($itemall,'name', 'description');
 			//var_dump($items);
 	?>

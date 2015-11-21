@@ -29,6 +29,16 @@ class BreedController extends Controller
         ];
     }
 
+    public function beforeAction($action)
+    {
+    	$action = Yii::$app->controller->action->id;
+    	if(\Yii::$app->user->can($action)){
+    		return true;
+    	}else{
+    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+    	}
+    }
+    
     /**
      * Lists all Breed models.
      * @return mixed
@@ -100,7 +110,9 @@ class BreedController extends Controller
     	if($loadBreed) {
     		$model = $this->findModel($loadBreed->id);
     		$old = $model->attributes;
-    		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+    		if ($model->load(Yii::$app->request->post())) {
+    			$model->update_at = time();
+    			$model->save();
     			$new = $model->attributes;
 	    		Logs::writeLog('更新养殖信息',$loadBreed->id,$old,$new);
 	    		
@@ -111,15 +123,21 @@ class BreedController extends Controller
 	    				if(Breedinfo::findOne($breedtypePost['id'][$i])) {
 	    					$breedinfoModel = Breedinfo::findOne($breedtypePost['id'][$i]);
 	    					$old = $breedinfoModel->attributes;
+	    					$breedinfoModel->update_at = time();
 	    				}
-	    				else
+	    				else {
 	    					$breedinfoModel = new Breedinfo();
+	    					$breedinfoModel->create_at = time();
+	    					$breedinfoModel->update_at = $breedinfoModel->create_at;
+	    				}
 	    				
 	    				$breedinfoModel->breed_id = $model->id;
 	    				$breedinfoModel->number = (int)$breedtypePost['number'][$i];
 	    				$breedinfoModel->basicinvestment = (float)$breedtypePost['basicinvestment'][$i];
 	    				$breedinfoModel->housingarea = (float)$breedtypePost['housingarea'][$i];
 	    				$breedinfoModel->breedtype_id = (int)$breedtypePost['breedtype_id'][$i];
+	    				$breedinfoModel->create_at = time();
+	    				$breedinfoModel->update_at = $breedinfoModel->create_at;
 	    				$breedinfoModel->save();
 	    				Logs::writeLog('更新养殖种类信息',$breedinfoModel->id,$old,$breedinfoModel->attributes);
 	    			}
@@ -138,7 +156,10 @@ class BreedController extends Controller
     	}
     	else { 
         	$model = new Breed();
-        	if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	if ($model->load(Yii::$app->request->post())) {
+        		$model->create_at = time();
+        		$model->update_at = $model->create_at;
+        		$model->save();
         		Logs::writeLog('创建养殖信息',$model->id,'',$model->attributes);
         		if ($breedtypePost) {
         			//var_dump($parmembers);
@@ -149,6 +170,8 @@ class BreedController extends Controller
         				$breedinfoModel->basicinvestment = (float)$breedtypePost['basicinvestment'][$i];
         				$breedinfoModel->housingarea = (float)$breedtypePost['housingarea'][$i];
         				$breedinfoModel->breedtype_id = (int)$breedtypePost['breedtype_id'][$i];
+        				$breedinfoModel->create_at = time();
+        				$breedinfoModel->update_at = $breedinfoModel->create_at;
         				$breedinfoModel->save();
         				Logs::writeLog('新增养殖各类信息',$breedinfoModel->id,'',$breedinfoModel->attributes);
         			}

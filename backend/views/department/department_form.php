@@ -21,10 +21,7 @@ use app\models\ManagementArea;
 <td width=15% align='right'>隶属权限</td><?php $model->membership = explode(',', $model->membership);?>
 <td align='left'><?= $form->field($model, 'membership')->checkboxList(ArrayHelper::map(ManagementArea::find()->all(), 'id', 'areaname'))->label(false)->error(false) ?></td>
 </tr>
-<tr>
-<td width=15% align='right'>可操作的动作</td><?php $model->operableaction = explode(',', $model->operableaction);?>
-<td align='left'><?= $form->field($model, 'operableaction')->checkboxList(['update'=>'更新','view'=>'查看','delete'=>'删除'])->label(false)->error(false) ?></td>
-</tr>
+
 </table>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

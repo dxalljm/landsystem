@@ -11,8 +11,13 @@ use yii\widgets\ActiveForm;
 <div class="theyear-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'years')->textInput() ?>
+	<table class="table table-bordered table-hover">
+		<tr>
+			<td align="right">年度</td>
+			<td><?= $form->field($model, 'years')->textInput()->label(false) ?></td>
+		</tr>
+	</table>
+    
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

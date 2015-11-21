@@ -59,7 +59,8 @@ class cooperativetypeSearch extends Cooperativetype
             'id' => $this->id,
         ]);
 
-        $query->andFilterWhere(['like', 'typename', $this->typename]);
+        $query->andFilterWhere(['like', 'typename', $this->typename])
+        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

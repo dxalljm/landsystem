@@ -64,7 +64,8 @@ class farmermembersSearch extends Farmermembers
         $query->andFilterWhere(['like', 'relationship', $this->relationship])
             ->andFilterWhere(['like', 'membername', $this->membername])
             ->andFilterWhere(['like', 'cardid', $this->cardid])
-            ->andFilterWhere(['like', 'remarks', $this->remarks]);
+            ->andFilterWhere(['like', 'remarks', $this->remarks])
+            ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

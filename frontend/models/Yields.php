@@ -28,7 +28,7 @@ class Yields extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['planting_id', 'farms_id'], 'integer'],
+            [['planting_id', 'farms_id','create_at','update_at'], 'integer'],
             [['single'], 'number']
         ];
     }
@@ -43,6 +43,8 @@ class Yields extends \yii\db\ActiveRecord
             'planting_id' => '种植结构ID',
             'farms_id' => '农场ID',
             'single' => '单产',
+        	'create_at' => '创建日期',
+        	'update_at' => '更新日期'
         ];
     }
 }

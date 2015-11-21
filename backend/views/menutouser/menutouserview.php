@@ -3,6 +3,7 @@ namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\Mainmenu;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\MenuToUser */
@@ -33,7 +34,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'user_id',
-            'menulist',
+            [
+            	'attribute' => 'menulist',
+            ],
+            
+            'plate',
+            'businessmenu'
         ],
     ]) ?>
 

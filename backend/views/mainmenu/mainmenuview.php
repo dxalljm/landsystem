@@ -27,13 +27,17 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-
+	<?php $typenamearr = ['主页导航','板块','业务菜单'];?>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
             'menuname',
             'menuurl:url',
+            [
+            	'attribute' => 'typename',
+            	'value' => $typenamearr[$model->typename],
+            ]
         ],
     ]) ?>
 

@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Lease;
+use app\models\Theyear;
 
 /**
  * leaseSearch represents the model behind the search form about `app\models\Lease`.
@@ -41,7 +42,7 @@ public function rules()
      */
     public function search($params)
     {
-        $query = Lease::find()->andWhere($params);
+        $query = Lease::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -67,7 +68,8 @@ public function rules()
             ->andFilterWhere(['like', 'lessee_telephone', $this->lessee_telephone])
             ->andFilterWhere(['like', 'begindate', $this->begindate])
             ->andFilterWhere(['like', 'enddate', $this->enddate])
-            ->andFilterWhere(['like', 'photo', $this->photo]);
+            ->andFilterWhere(['like', 'photo', $this->photo])
+            ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
         
 
         return $dataProvider;

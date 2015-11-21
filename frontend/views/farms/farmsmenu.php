@@ -4,7 +4,6 @@ use app\models\ManagementArea;
 use yii\helpers\Html;
 use dosamigos\datetimepicker\DateTimePicker;
 use app\models\Theyear;
-use yii\widgets\ActiveFormrdiv;
 use yii\helpers\ArrayHelper;
 use app\models\Farms;
 use app\models\Farmer;
@@ -29,13 +28,7 @@ use app\models\Prevention;
 ?>
 
 <div class="farms-menu">
-<?php $form = ActiveFormrdiv::begin(); ?>
-    <style>
-        .info-box-content {
-            width: 160px;
 
-        }
-    </style>
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
@@ -73,6 +66,8 @@ use app\models\Prevention;
           <?= $farm->address;?></td>
         </tr>
     </table>
+    <br>
+<?= $farmsmenu?>
     <script type="text/javascript">
     
 	function geturl(farmid)
@@ -81,286 +76,7 @@ use app\models\Prevention;
 		return url;
 	}
     </script>
-  <p>&nbsp;</p>
-    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
-        
-        ?>
-    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=farmer/farmercreate&farms_id='.$_GET['farms_id']) ?>'>
-    <!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-blue">
-  <span class="info-box-icon"><i class="fa fa-user"></i></span>
-  <div class="info-box-content">
-  <span class="info-box-number">法人信息 </span>
-    <span class="info-box-text">法人：<?= $farm->farmername ?></span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 200%"></div>
-    </div>
-    <span class="progress-description">
-      填写法人相关信息
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
-    <td width="5%" align="center"></td>
-    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=farms/farmsttpomenu&farms_id='.$_GET['farms_id']) ?>'>
-<div class="info-box bg-blue">
-  <span class="info-box-icon"><i class="fa fa-users"></i></span>
-  <div class="info-box-content">
-  <span class="info-box-number">转让 </span>
-    <span class="info-box-text">无转让信息</span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
-    </div>
-    <span class="progress-description">
-      转让、分户、合并
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
-    <td width="5%" align="center">&nbsp;</td>
-    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=lease/leaseindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-blue">
-  <span class="info-box-icon"><i class="fa fa-street-view"></i></span>
-  <div class="info-box-content">
-  <span class="info-box-number">租赁 </span>
-    <span class="info-box-text">现共<?= Lease::find()->where(['farms_id'=>$_GET['farms_id']])->count(); ?>人租赁</span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
-    </div>
-    <span class="progress-description">
-      承租人信息及年限
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
-    <td width="5%" align="center">&nbsp;</td>
-    <td width="20%" align="center"> <a href='<?= Url::to('index.php?r=loan/loanindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-blue">
- <span class="info-box-icon"><i class="fa fa-university"></i></span>
-  <div class="info-box-content">
-  <span class="info-box-number">贷款 </span>
-    <span class="info-box-text">现有<?= Loan::find()->where(['farms_id'=>$_GET['farms_id']])->count();?>条贷款信息</span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
-    </div>
-    <span class="progress-description">
-     贷款相关信息
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
-    </tr>
-  </table>
-  <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
-        
-        ?>
-    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=dispute/disputeindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-blue">
-  <span class="info-box-icon"><i class="fa fa-commenting"></i></span>
-  <div class="info-box-content">
-  <span class="info-box-number">纠纷 </span>
-    <span class="info-box-text">现有<?= Dispute::find()->where(['farms_id'=>$_GET['farms_id']])->count() ?>个纠纷</span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
-    </div>
-    <span class="progress-description">
-     纠纷具体事项
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
-    <td width="5%" align="center">&nbsp;</td>    
-    <td width="20%" align="center"> <a href='<?= Url::to('index.php?r=cooperativeoffarm/cooperativeoffarmindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-blue">
- <span class="info-box-icon"><i class="fa fa-briefcase"></i></span>
-  <div class="info-box-content">
-  <span class="info-box-number">合作社信息 </span>
-    <span class="info-box-text">参加了<?= Cooperativeoffarm::find()->where(['farms_id'=>$_GET['farms_id']])->count() ?>个合作社</span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
-    </div>
-    <span class="progress-description">
-     注册资金等信息
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
-    <td width="5%" align="center">&nbsp;</td>
-    <td width="20%" align="center"> <a href='<?= Url::to('index.php?r=employee/employeefathers&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-blue">
- <span class="info-box-icon"><i class="fa fa-user-plus"></i></span>
-  <div class="info-box-content">
-  <span class="info-box-number">雇工 </span>
-    <span class="info-box-text">雇佣了<?php $lease = Lease::find()->where(['farms_id'=>$_GET['farms_id']])->all();$rows=0;foreach($lease as $value) {$rows += Employee::find()->where(['father_id'=>$value['id']])->count();}echo $rows ?>人</span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
-    </div>
-    <span class="progress-description">
-     雇佣人员的详细信息
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
-    <td width="5%" align="center">&nbsp;</td>
-    <td width="20%" align="center"> <a href='<?= Url::to('index.php?r=plantingstructure/plantingstructureindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-blue">
- <span class="info-box-icon"><i class="fa fa-sun-o"></i></span>
-  <div class="info-box-content">
-  <span class="info-box-number">种植结构 </span>
-    <span class="info-box-text">种植了<?= Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id']])->count()?>种作物</span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
-    </div>
-    <span class="progress-description">
-     承租人种植作物信息
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
-  </tr>
-  </table>
-  <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr><?php //Html::submitButton('',['style'=>'background:url("images/User With Frame.png") no-repeat; width:150px;height:150px;',])
-        
-        ?>
-    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=fireprevention/firepreventioncreate&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-blue">
-  <span class="info-box-icon"><i class="fa fa-fire-extinguisher"></i></span>
-  <div class="info-box-content">
-  <span class="info-box-number">防火工作 </span>
-    <span class="info-box-text"><?php if(Fireprevention::find()->where(['farms_id'=>$_GET['farms_id']])->count()) echo '完成防火工作'; else echo '未完成防火工作';?></span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
-    </div>
-    <span class="progress-description">
-     防火合同的签订
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
-    <td width="5%" align="center"></td>    
-    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=collection/collectionsend&farms_id='.$_GET['farms_id']).'&year='.date('Y') ?>'><!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-blue">
-  <span class="info-box-icon"><i class="fa fa-cny"></i></span>
-  <div class="info-box-content">
-  <span class="info-box-number">缴费业务</span>
-    <span class="info-box-text"><?php $isCollection = Collection::find()->where(['farms_id'=>$_GET['farms_id'],'ypayyear'=>date('Y')])->count();if($isCollection) echo '已收缴本年度承包费'; else echo '本年度承包佛未收缴'?></span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
-    </div>
-    <span class="progress-description">
-    承包费收缴
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
-    <td width="5%" align="center"></td>
-    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=yields/yieldsindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-blue">
-  <span class="info-box-icon"><i class="fa fa-balance-scale"></i></span>
-  <div class="info-box-content">
-  <span class="info-box-number">产品产量信息</span>
-    <span class="info-box-text">有<?= Yields::find()->where(['farms_id'=>$_GET['farms_id']])->count()?>条产量信息</span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
-    </div>
-    <span class="progress-description">
-     农产品的产量信息
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
 
-      <td width="5%" align="center"></td>
-      <td width="20%" align="center"><a href='<?= Url::to('index.php?r=sales/salesindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-blue">
-  <span class="info-box-icon"><i class="fa fa-cart-arrow-down"></i></span>
-  <div class="info-box-content">
-  <span class="info-box-number">农产品销售信息</span>
-    <span class="info-box-text">有<?= Sales::find()->where(['farms_id'=>$_GET['farms_id']])->count()?>条产量信息</span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
-    </div>
-    <span class="progress-description">
-     农产品的销售情况
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
-  </tr>
-  </table>
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=breed/breedcreate&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-blue">
-  <span class="info-box-icon"><i class="fa fa-github-alt"></i></span>
-  <div class="info-box-content"><?php $breedinfo = Breedinfo::find()->where(['breed_id'=>Breed::find()->where(['farms_id'=>$_GET['farms_id']])->one()['id']])->all();?>
-  <span class="info-box-number">养殖情况 </span>
-    <span class="info-box-text">养殖<?php foreach($breedinfo as $value) { echo $value['number'].Breedtype::find()->where(['id'=>$value['breedtype_id']])->one()['unit'].Breedtype::find()->where(['id'=>$value['breedtype_id']])->one()['typename'];}?></span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
-    </div>
-    <span class="progress-description">
-     养殖相关的
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
-    <td width="5%" align="center"></td>    
-    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=prevention/preventionindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-blue">
-  <span class="info-box-icon"><i class="fa fa-plus"></i></span>
-  <div class="info-box-content">
-  <span class="info-box-number">防疫情况</span>
-    <span class="info-box-text">有<?= Prevention::find()->where(['farms_id'=>$_GET['farms_id']])->count()?>条防疫信息</span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
-    </div>
-    <span class="progress-description">
-     防疫率,疫苗接种等信息
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
-    <td width="5%" align="center"></td>
-    <td width="20%" align="center"><a href='<?= Url::to('index.php?r=projectapplication/projectapplicationindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-blue">
-  <span class="info-box-icon"><i class="fa fa-plus"></i></span>
-  <div class="info-box-content">
-  <span class="info-box-number">项目申报</span>
-    <span class="info-box-text">有<?= Prevention::find()->where(['farms_id'=>$_GET['farms_id']])->count()?>条防疫信息</span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
-    </div>
-    <span class="progress-description">
-     防疫率,疫苗接种等信息
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
-
-      <td width="5%" align="center"></td>
-      <td width="20%" align="center"><a href='<?= Url::to('index.php?r=disaster/disasterindex&farms_id='.$_GET['farms_id']) ?>'><!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-blue">
-  <span class="info-box-icon"><i class="fa fa-plus"></i></span>
-  <div class="info-box-content">
-  <span class="info-box-number">灾害情况</span>
-    <span class="info-box-text">有<?= Prevention::find()->where(['farms_id'=>$_GET['farms_id']])->count()?>条防疫信息</span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: 100%"></div>
-    </div>
-    <span class="progress-description">
-     防疫率,疫苗接种等信息
-    </span>
-  </div><!-- /.info-box-content -->
-</div><!-- /.info-box --></a></td>
-  </tr>
-  </table>
-
- <?php ActiveFormrdiv::end(); ?>
               </div>
             </div>
         </div>

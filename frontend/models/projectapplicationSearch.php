@@ -62,7 +62,8 @@ class projectapplicationSearch extends Projectapplication
             'is_agree' => $this->is_agree,
         ]);
 
-        $query->andFilterWhere(['like', 'projecttype', $this->projecttype]);
+        $query->andFilterWhere(['like', 'projecttype', $this->projecttype])
+        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

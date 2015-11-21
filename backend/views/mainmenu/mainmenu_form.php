@@ -14,10 +14,13 @@ use yii\widgets\ActiveForm;
 	
 	<?= $form->field($model, 'sort')->textInput() ?>
 	
+	<?= $form->field($model, 'typename')->dropDownList(['主页导航','板块','业务菜单']) ?>
+	
     <?= $form->field($model, 'menuname')->textInput(['maxlength' => 500]) ?>
 
     <?= $form->field($model, 'menuurl')->textInput(['maxlength' => 500]) ?>
-
+	
+	
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

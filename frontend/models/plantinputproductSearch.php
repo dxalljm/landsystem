@@ -68,7 +68,8 @@ class plantinputproductSearch extends Plantinputproduct
             'plant_id' => $this->plant_id,
         ]);
 
-        $query->andFilterWhere(['like', 'zongdi', $this->zongdi]);
+        $query->andFilterWhere(['like', 'zongdi', $this->zongdi])
+        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

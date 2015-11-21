@@ -29,7 +29,7 @@ class Projectapplication extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['create_at', 'update_at', 'is_agree'], 'integer'],
+            [['create_at', 'update_at', 'is_agree','farms_id'], 'integer'],
             [['projecttype'], 'string', 'max' => 500]
         ];
     }
@@ -41,6 +41,7 @@ class Projectapplication extends \yii\db\ActiveRecord
     {
         return [
 			'id' => 'ID',
+        	'farms_id' => '农场ID',
             'projecttype' => '项目类型',
             'create_at' => '创建日期',
             'update_at' => '更新日期',

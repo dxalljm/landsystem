@@ -66,7 +66,8 @@ class cooperativeSearch extends Cooperative
             ->andFilterWhere(['like', 'cooperativetype', $this->cooperativetype])
             ->andFilterWhere(['like', 'directorname', $this->directorname])
             ->andFilterWhere(['like', 'finance', $this->finance])
-            ->andFilterWhere(['like', 'dividendmode', $this->dividendmode]);
+            ->andFilterWhere(['like', 'dividendmode', $this->dividendmode])
+            ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

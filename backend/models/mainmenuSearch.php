@@ -18,7 +18,7 @@ class mainmenuSearch extends mainmenu
     public function rules()
     {
         return [
-            [['id','sort'], 'integer'],
+            [['id','sort','typename'], 'integer'],
             [['menuname', 'menuurl'], 'safe'],
         ];
     }
@@ -58,6 +58,7 @@ class mainmenuSearch extends mainmenu
         $query->andFilterWhere([
             'id' => $this->id,
         	'sort' => $this->sort,
+        	'typename' => $this->typename,
         ]);
 
         $query->andFilterWhere(['like', 'menuname', $this->menuname])

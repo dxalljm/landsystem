@@ -60,7 +60,8 @@ class infrastructuretypeSearch extends Infrastructuretype
             'father_id' => $this->father_id,
         ]);
 
-        $query->andFilterWhere(['like', 'typename', $this->typename]);
+        $query->andFilterWhere(['like', 'typename', $this->typename])
+        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

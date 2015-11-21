@@ -28,7 +28,7 @@ class MenuToUser extends \yii\db\ActiveRecord
     {
         return [
             [['user_id'], 'integer'],
-            [['menulist'], 'string', 'max' => 500]
+            [['menulist','businessmenu','plate'], 'string', 'max' => 500]
         ];
     }
 
@@ -41,6 +41,8 @@ class MenuToUser extends \yii\db\ActiveRecord
 			'id' => 'ID',
             'user_id' => '用户ID',
             'menulist' => '所属导航',
+        	'businessmenu' => '业务菜单',
+        	'plate' => '板块',
         ];
     }
 }

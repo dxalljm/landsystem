@@ -67,7 +67,8 @@ class disasterSearch extends Disaster
         	'isinsurance' => $this->isinsurance,
         ]);
 
-        $query->andFilterWhere(['like', 'disasterplant', $this->disasterplant]);
+        $query->andFilterWhere(['like', 'disasterplant', $this->disasterplant])
+        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

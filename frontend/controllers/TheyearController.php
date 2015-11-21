@@ -27,6 +27,15 @@ class TheyearController extends Controller
         ];
     }
 
+    public function beforeAction($action)
+    {
+    	$action = Yii::$app->controller->action->id;
+    	if(\Yii::$app->user->can($action)){
+    		return true;
+    	}else{
+    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+    	}
+    }
     /**
      * Lists all Theyear models.
      * @return mixed
@@ -47,13 +56,13 @@ class TheyearController extends Controller
      * @param integer $id
      * @return mixed
      */
-//     public function actionTheyearview($id)
-//     {
-//     	Logs::writeLog('查看年度',$id);
-//         return $this->render('theyearview', [
-//             'model' => $this->findModel($id),
-//         ]);
-//     }
+    public function actionTheyearview($id)
+    {
+    	Logs::writeLog('查看年度',$id);
+        return $this->render('theyearview', [
+            'model' => $this->findModel($id),
+        ]);
+    }
 
     /**
      * Creates a new Theyear model.

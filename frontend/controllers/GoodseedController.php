@@ -26,6 +26,15 @@ class GoodseedController extends Controller
             ],
         ];
     }
+    public function beforeAction($action)
+    {
+    	$action = Yii::$app->controller->action->id;
+    	if(\Yii::$app->user->can($action)){
+    		return true;
+    	}else{
+    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+    	}
+    }
 
     /**
      * Lists all Goodseed models.
@@ -73,7 +82,7 @@ class GoodseedController extends Controller
             ]);
         }
     }
-    
+    //获取良种信息
     public function  actionGoodseedgetmodel($plant_id)
     {
     	$goodseed = Goodseed::find()->where(['plant_id'=>$plant_id])->all();

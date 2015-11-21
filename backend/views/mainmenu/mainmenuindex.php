@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('添加', ['mainmenucreate'], ['class' => 'btn btn-success']) ?>
     </p>
-
+	<?php ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -30,7 +30,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'sort',
             'menuname',
             'menuurl:url',
-
+			[
+				'attribute' => 'typename',
+				'value' => function($model) {
+					$typenamearr = ['主页导航','板块','业务菜单'];
+					return $typenamearr[$model->typename];
+				}
+			],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

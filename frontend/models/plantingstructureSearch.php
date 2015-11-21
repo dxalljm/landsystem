@@ -68,7 +68,8 @@ class plantingstructureSearch extends Plantingstructure
         	'lease_id' => $this->lease_id,
         ]);
 
-        $query->andFilterWhere(['like', 'zongdi', $this->zongdi]);
+        $query->andFilterWhere(['like', 'zongdi', $this->zongdi])
+        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

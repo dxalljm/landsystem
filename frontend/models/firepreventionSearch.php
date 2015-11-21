@@ -77,7 +77,8 @@ class firepreventionSearch extends Fireprevention
             ->andFilterWhere(['like', 'rectification_record', $this->rectification_record])
             ->andFilterWhere(['like', 'equipmentpic', $this->equipmentpic])
             ->andFilterWhere(['like', 'peoplepic', $this->peoplepic])
-            ->andFilterWhere(['like', 'facilitiespic', $this->facilitiespic]);
+            ->andFilterWhere(['like', 'facilitiespic', $this->facilitiespic])
+            ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

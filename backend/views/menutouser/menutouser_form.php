@@ -18,12 +18,18 @@ use yii\helpers\ArrayHelper;
     <?= $form->field($model, 'user_id')->textInput(['maxlength' => 100,'id'=>'menutousercreate','title' => '点击弹出数据库表','data-toggle' => 'modal', 'data-backdrop'=> "true",'data-target' => '#menutousercreate-modal',]) ?>
 	<?php $parents = MenuToUser::find()->where(['user_id'=>$model->user_id])->one();?>
     <?php 
-		$data = Mainmenu::find()->orderBy('sort ASC')->all();
+		$data = Mainmenu::find()->where(['typename'=>0])->orderBy('sort ASC')->all();
 		$menus =ArrayHelper::map($data,'id', 'menuname');
 		$model->menulist = explode(',',$parents['menulist']);
+		$model->plate = explode(',',$parents['plate']);
+		$model->businessmenu = explode(',',$parents['businessmenu']);
 	?>
     <?= $form->field($model, 'menulist')->checkboxList($menus); ?>
-
+	<?php $plantarr = ArrayHelper::map(Mainmenu::find()->where(['typename'=>1])->all(), 'id', 'menuname');?>
+	<?= $form->field($model, 'plate')->checkboxList($plantarr)->label('八大板块'); ?>
+	
+	<?php $business = ArrayHelper::map(Mainmenu::find()->where(['typename'=>2])->all(),'id','menuname');?>
+	<?= $form->field($model, 'businessmenu')->checkboxList($business)->label('业务菜单'); ?>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

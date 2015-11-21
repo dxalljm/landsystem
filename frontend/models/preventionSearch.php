@@ -68,7 +68,8 @@ class preventionSearch extends Prevention
 
         $query->andFilterWhere(['like', 'vaccine', $this->vaccine])
         	->andFilterWhere(['like', 'preventionrate', $this->preventionrate])
-       		->andFilterWhere(['like', 'isepidemic', $this->isepidemic]);
+       		->andFilterWhere(['like', 'isepidemic', $this->isepidemic])
+       		->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
         return $dataProvider;
     }
 }

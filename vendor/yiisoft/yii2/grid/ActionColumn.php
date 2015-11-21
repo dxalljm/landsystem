@@ -96,32 +96,42 @@ class ActionColumn extends Column
      */
     protected function initDefaultButtons()
     {
-        if (!isset($this->buttons['view'])) {
-            $this->buttons['view'] = function ($url, $model) {
-                return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
-                    'title' => Yii::t('yii', '查看'),
-                    'data-pjax' => '0',
-                ]);
-            };
-        }
-        if (!isset($this->buttons['update'])) {
-            $this->buttons['update'] = function ($url, $model) {
-                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
-                    'title' => Yii::t('yii', '更新'),
-                    'data-pjax' => '0',
-                ]);
-            };
-        }
-        if (!isset($this->buttons['delete'])) {
-            $this->buttons['delete'] = function ($url, $model) {
-                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
-                    'title' => Yii::t('yii', '删除'),
-                    'data-confirm' => Yii::t('yii', '确定要删除此项吗?'),
-                    'data-method' => 'post',
-                    'data-pjax' => '0',
-                ]);
-            };
-        }
+    	$controller = Yii::$app->controller->id;
+    	$action = $controller.'view';
+    	if(\Yii::$app->user->can($action)){
+	        if (!isset($this->buttons['view'])) {
+	            $this->buttons['view'] = function ($url, $model) {
+	                return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
+	                    'title' => Yii::t('yii', '查看'),
+	                    'data-pjax' => '0',
+	                ]);
+	            };
+	        }
+    	}
+    	$action = $controller.'update';
+    	if(\Yii::$app->user->can($action)){
+	        if (!isset($this->buttons['update'])) {
+	            $this->buttons['update'] = function ($url, $model) {
+	                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
+	                    'title' => Yii::t('yii', '更新'),
+	                    'data-pjax' => '0',
+	                ]);
+	            };
+	        }
+    	}
+    	$action = $controller.'delete';
+    	if(\Yii::$app->user->can($action)){
+	        if (!isset($this->buttons['delete'])) {
+	            $this->buttons['delete'] = function ($url, $model) {
+	                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
+	                    'title' => Yii::t('yii', '删除'),
+	                    'data-confirm' => Yii::t('yii', '确定要删除此项吗?'),
+	                    'data-method' => 'post',
+	                    'data-pjax' => '0',
+	                ]);
+	            };
+	        }
+    	}
     }
 
     /**

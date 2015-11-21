@@ -27,7 +27,7 @@ class Mainmenu extends \yii\db\ActiveRecord
 public function rules() 
     { 
         return [
-            [['sort'], 'integer'],
+            [['sort','typename'], 'integer'],
             [['menuname', 'menuurl'], 'string', 'max' => 500]
         ]; 
     } 
@@ -42,6 +42,7 @@ public function rules()
             'menuname' => '菜单名称',
             'menuurl' => '菜单地址',
             'sort' => '排序',
+        	'typename' => '菜单类型'
         ]; 
     } 
 

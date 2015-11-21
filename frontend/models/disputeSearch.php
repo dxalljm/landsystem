@@ -77,7 +77,8 @@ class disputeSearch extends Dispute
 
         $query->andFilterWhere(['like', 'content', $this->content])
             ->andFilterWhere(['like', 'create_at', $this->create_at])
-            ->andFilterWhere(['like', 'update_at', $this->update_at]);
+            ->andFilterWhere(['like', 'update_at', $this->update_at])
+            ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
             //->andFilterWhere(['like', 'farms.farmname', $this->farmname]);
 
         return $dataProvider;

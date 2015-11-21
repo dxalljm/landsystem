@@ -63,8 +63,9 @@ class breedinfoSearch extends Breedinfo
             'basicinvestment' => $this->basicinvestment,
             'housingarea' => $this->housingarea,
             'breedtype_id' => $this->breedtype_id,
+        	
         ]);
-
+        $query->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
         return $dataProvider;
     }
 }

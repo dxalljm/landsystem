@@ -64,7 +64,8 @@ class cooperativeoffarmSearch extends CooperativeOfFarm
             'cooperative_id' => $this->cooperative_id,
         ]);
 
-        $query->andFilterWhere(['like', 'proportion', $this->proportion]);
+        $query->andFilterWhere(['like', 'proportion', $this->proportion])
+        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

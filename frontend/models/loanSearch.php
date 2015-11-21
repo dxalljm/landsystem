@@ -63,7 +63,8 @@ class loanSearch extends Loan
             'mortgagemoney' => $this->mortgagemoney,
         ]);
 
-        $query->andFilterWhere(['like', 'mortgagebank', $this->mortgagebank]);
+        $query->andFilterWhere(['like', 'mortgagebank', $this->mortgagebank])
+        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
             
 
         return $dataProvider;

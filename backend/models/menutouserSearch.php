@@ -20,7 +20,7 @@ class menutouserSearch extends MenuToUser
     {
         return [
             [['id', 'user_id',], 'integer'],
-            [['menulist','username'], 'safe'],
+            [['menulist','username','plate','businessmenu'], 'safe'],
         ];
     }
 
@@ -62,7 +62,9 @@ class menutouserSearch extends MenuToUser
         ]);
 
         $query->andFilterWhere(['like', 'menulist', $this->menulist])
-        ->andFilterWhere(['like', 'land_user.username', $this->username]);
+        ->andFilterWhere(['like', 'land_user.username', $this->username])
+        ->andFilterWhere(['like', 'plate', $this->plate])
+        ->andFilterWhere(['like', 'businessmenu', $this->businessmenu]);
 
         return $dataProvider;
     }

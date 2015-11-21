@@ -60,7 +60,8 @@ class goodseedSearch extends Goodseed
             'plant_id' => $this->plant_id,
         ]);
 
-        $query->andFilterWhere(['like', 'plant_model', $this->plant_model]);
+        $query->andFilterWhere(['like', 'plant_model', $this->plant_model])
+        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

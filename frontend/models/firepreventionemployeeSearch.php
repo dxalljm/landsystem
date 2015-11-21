@@ -62,7 +62,7 @@ class firepreventionemployeeSearch extends Firepreventionemployee
         	'create_at' => $this->create_at,
         	'update_at' => $this->update_at,
         ]);
-
+		$query->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
         return $dataProvider;
     }
 }

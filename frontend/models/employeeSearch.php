@@ -65,7 +65,8 @@ class employeeSearch extends Employee
 
         $query->andFilterWhere(['like', 'employeetype', $this->employeetype])
             ->andFilterWhere(['like', 'employeename', $this->employeename])
-            ->andFilterWhere(['like', 'cardid', $this->cardid]);
+            ->andFilterWhere(['like', 'cardid', $this->cardid])
+            ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

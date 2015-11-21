@@ -32,7 +32,7 @@ class Disaster extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['farms_id', 'disastertype_id','isinsurance'], 'integer'],
+            [['farms_id', 'disastertype_id','isinsurance','create_at','update_at'], 'integer'],
             [['disasterarea', 'insurancearea', 'yieldreduction', 'socmoney'], 'number'],
             [['disasterplant'], 'string', 'max' => 500]
         ];
@@ -52,7 +52,9 @@ class Disaster extends \yii\db\ActiveRecord
             'insurancearea' => '受保面积',
             'yieldreduction' => '减产量',
             'socmoney' => '理赔金额',
-        	'isinsurance' => '是否保险'
+        	'isinsurance' => '是否保险',
+        	'create_at' => '创建日期',
+        	'update_at' => '更新日期',
         ];
     }
 }

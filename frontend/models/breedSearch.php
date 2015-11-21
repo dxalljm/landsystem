@@ -18,7 +18,7 @@ class breedSearch extends Breed
     public function rules()
     {
         return [
-            [['id', 'farms_id', 'is_demonstration'], 'integer'],
+            [['id', 'farms_id', 'is_demonstration','create_at','update_at'], 'integer'],
             [['breedname', 'breedaddress'], 'safe'],
         ];
     }
@@ -59,11 +59,13 @@ class breedSearch extends Breed
             'id' => $this->id,
             'farms_id' => $this->farms_id,
             'is_demonstration' => $this->is_demonstration,
+        	'create_at' => $this->create_at,
+        	'upcate_at' => $this->update_at,
         ]);
 
         $query->andFilterWhere(['like', 'breedname', $this->breedname])
-            ->andFilterWhere(['like', 'breedaddress', $this->breedaddress]);
-
+            ->andFilterWhere(['like', 'breedaddress', $this->breedaddress])
+            ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
         return $dataProvider;
     }
 }

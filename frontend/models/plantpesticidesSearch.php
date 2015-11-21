@@ -64,7 +64,7 @@ class plantpesticidesSearch extends Plantpesticides
             'pesticides_id' => $this->pesticides_id,
             'pconsumption' => $this->pconsumption,
         ]);
-
+		$query->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
         return $dataProvider;
     }
 }

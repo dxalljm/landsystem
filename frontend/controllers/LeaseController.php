@@ -47,7 +47,9 @@ class LeaseController extends Controller
     {
     	//$farmerarea = Plantingstructure::find()->where(['farms_id'=>$farms_id,'lease_id'=>0])->one()['area'];
          $searchModel = new leaseSearch();
-         $dataProvider = $searchModel->search(['farms_id'=>$farms_id]);
+         $params = Yii::$app->request->queryParams;
+         $params['leaseSearch']['farms_id'] = $farms_id;
+         $dataProvider = $searchModel->search($params);
 		//$this->getView()->registerJsFile($url)
         //$notclear = Farms::find()->where(['id'=>$farms_id])->one()['notclear'];
 		Logs::writeLog('租赁');
