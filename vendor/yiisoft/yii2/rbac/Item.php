@@ -46,4 +46,6 @@ class Item extends Object
      * @var integer UNIX timestamp representing the item updating time
      */
     public $updatedAt;
+    public $cname;
+    public $classdescription;
 }

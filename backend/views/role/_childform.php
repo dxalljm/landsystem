@@ -10,7 +10,9 @@ use app\models\ItemChild;
 /* @var $model app\models\AuthItem */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
+<style> 
+.itemChild-child{height:400px;height:auto;margin:0 auto;}
+</style>
 <div class="auth-item-form">
 
     <?php $form = ActiveForm::begin(); ?>
@@ -22,24 +24,24 @@ use app\models\ItemChild;
  		$model->child = ArrayHelper::map($parents,'child', 'child');
 	?>
 	<table class="table table-bordered table-hover">
-	<?php foreach ($allController as $value) {
+	<?php 
+		$i=0;
+		foreach ($allController as $value) {
 		$itemall = Item::find()->where(['rule_name'=>$value['classname']])->all();
+		
 		if($itemall) {
 			$title =  Item::find()->where(['rule_name'=>$value['classname']])->one()['data'];
-			$items =ArrayHelper::map($itemall,'name', 'description');
+			$items = ArrayHelper::map($itemall,'name', 'description');
+			//var_dump($items);
 	?>
 		<tr>
-			<td><?= $title?></td>
+			<td><input name="" type="checkbox" value="" id=<?= $value['classname']?>  onclick='allClick("<?= $value['classname']?>")' /><?= $title?></td>
 		</tr>
 		<tr>
-			<td><?= html::checkboxList('childPost[child][]',$model->child,$items,['class'=>'form-control'])?></td>
+			<td><?= html::checkboxListId('childPost[child][]',$model->child,$items,['class'=>'itemChild-child'])?></td>
 		</tr>
-	<?php }}?>
+	<?php $i++;}}?>
 	</table>
-    
-	
-	
-
     
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '提交' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
@@ -48,3 +50,25 @@ use app\models\ItemChild;
     <?php ActiveForm::end(); ?>
 
 </div>
+<script>
+function allClick(cname)
+{
+	if($('#'+cname).is(":checked")==true) {
+		$.getJSON('index.php?r=permission/jsonaname', {classname: cname}, function (data) {
+			if (data.status == 1) {
+				for(i=0;i<data.actions.length;i++) {
+					$('#'+data.actions[i]).attr('checked',true);
+				}
+			}	
+		});
+	} else {
+		$.getJSON('index.php?r=permission/jsonaname', {classname: cname}, function (data) {
+			if (data.status == 1) {
+				for(i=0;i<data.actions.length;i++) {
+					$('#'+data.actions[i]).attr('checked',false);
+				}
+			}	
+		});
+	}
+}
+</script>

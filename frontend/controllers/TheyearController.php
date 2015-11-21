@@ -31,50 +31,50 @@ class TheyearController extends Controller
      * Lists all Theyear models.
      * @return mixed
      */
-    public function actionTheyearindex()
-    {
-        $searchModel = new theyearSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-		Logs::writeLog('年度管理');
-        return $this->render('theyearindex', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+//     public function actionTheyearindex()
+//     {
+//         $searchModel = new theyearSearch();
+//         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+// 		Logs::writeLog('年度管理');
+//         return $this->render('theyearindex', [
+//             'searchModel' => $searchModel,
+//             'dataProvider' => $dataProvider,
+//         ]);
+//     }
 
     /**
      * Displays a single Theyear model.
      * @param integer $id
      * @return mixed
      */
-    public function actionTheyearview($id)
-    {
-    	Logs::writeLog('查看年度',$id);
-        return $this->render('theyearview', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+//     public function actionTheyearview($id)
+//     {
+//     	Logs::writeLog('查看年度',$id);
+//         return $this->render('theyearview', [
+//             'model' => $this->findModel($id),
+//         ]);
+//     }
 
     /**
      * Creates a new Theyear model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionTheyearcreate()
-    {
-        $model = new Theyear();
+//     public function actionTheyearcreate()
+//     {
+//         $model = new Theyear();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$new = $model->attributes;
-        	Logs::writeLog('添加年度',$model->id,'',$new);
+//         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//         	$new = $model->attributes;
+//         	Logs::writeLog('添加年度',$model->id,'',$new);
         	
-            return $this->redirect(['theyearview', 'id' => $model->id]);
-        } else {
-            return $this->render('theyearcreate', [
-                'model' => $model,
-            ]);
-        }
-    }
+//             return $this->redirect(['theyearview', 'id' => $model->id]);
+//         } else {
+//             return $this->render('theyearcreate', [
+//                 'model' => $model,
+//             ]);
+//         }
+//     }
 
     /**
      * Updates an existing Theyear model.
@@ -103,15 +103,15 @@ class TheyearController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionTheyeardelete()
-    {
-        $model = $this->findModel(1);
-    	$old = $model->attributes;
-    	Logs::writeLog('删除年度',1,$old);
-        $model->delete();
+//     public function actionTheyeardelete()
+//     {
+//         $model = $this->findModel(1);
+//     	$old = $model->attributes;
+//     	Logs::writeLog('删除年度',1,$old);
+//         $model->delete();
 
-        return $this->redirect(['theyearindex']);
-    }
+//         return $this->redirect(['theyearindex']);
+//     }
 
     /**
      * Finds the Theyear model based on its primary key value.

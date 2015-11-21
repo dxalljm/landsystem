@@ -103,7 +103,7 @@ class UserController extends Controller
             ]);
         }
     }
-    
+    //为用户分配 角色
     public function actionUserassign($id)
     {
     	$assign = new AssignmentForm();

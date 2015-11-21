@@ -38,7 +38,7 @@ class Item extends \yii\db\ActiveRecord
             [['name', 'type'], 'required'],
             [['type', 'created_at', 'updated_at'], 'integer'],
             [['description'], 'string'],
-            [['name', 'rule_name','data'], 'string', 'max' => 64]
+            [['name', 'rule_name','data','cname','classdescription'], 'string', 'max' => 64]
         ];
     }
 
@@ -55,6 +55,8 @@ class Item extends \yii\db\ActiveRecord
             'data' => 'Data',
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
+        	'cname' => '类',
+        	'classdescription' => '描述'
         ];
     }
 

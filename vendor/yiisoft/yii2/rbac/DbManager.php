@@ -189,6 +189,8 @@ class DbManager extends BaseManager
             	'data' => $item->data,
                 'created_at' => $item->createdAt,
                 'updated_at' => $item->updatedAt,
+            	'cname' => $item->cname,
+            	'classdescription' => $item->classdescription,
             ])->execute();
 
         return true;

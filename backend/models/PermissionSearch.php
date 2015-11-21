@@ -18,7 +18,7 @@ class PermissionSearch extends Item
     public function rules()
     {
         return [
-            [['name', 'description', 'rule_name', 'data'], 'safe'],
+            [['name', 'description', 'rule_name', 'data','cname','classdescription'], 'safe'],
             [['type', 'created_at', 'updated_at'], 'integer'],
         ];
     }
@@ -60,7 +60,9 @@ class PermissionSearch extends Item
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'rule_name', $this->rule_name])
-            ->andFilterWhere(['like', 'data', $this->data]);
+            ->andFilterWhere(['like', 'data', $this->data])
+            ->andFilterWhere(['like', 'cname', $this->cname])
+            ->andFilterWhere(['like', 'classdescription', $this->classdescription]);
 
         return $dataProvider;
     }

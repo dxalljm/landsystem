@@ -14,6 +14,7 @@ use yii\filters\AccessControl;
 use yii\rbac\Permission;
 use yii\rbac\DbManager;
 use app\models\Item;
+use app\models\Tables;
 /**
  * TablesController implements the CRUD actions for tables model.
  */
@@ -59,8 +60,11 @@ class PermissionController extends Controller
 		//echo '<br><br><br><br><br><br><br>';
 		$allClassInfo = PermissionForm::allClass();
 		if($classname) {
-			$actions = $this->getactions($classname);
-			$model->rule_name = $classname;
+			$actionname = $this->getactions($classname);
+			
+			$actions = $this->setActionInfo($actionname, $classname);
+			$model->cname = $classname;
+			$model->classdescription = Tables::find()->where(['tablename'=>str_replace('Controller','',$classname)])->one()['Ctablename'];
 		}
 		else
 			$actions = [];
@@ -71,13 +75,13 @@ class PermissionController extends Controller
 				$permission = new Permission();
 				$permission->name = $this->getActionName($itemPost['actionName'][$i]);
 				$permission->description = $itemPost['description'][$i];
-				$permission->ruleName = $model->rule_name;
-				$permission->data = $model->data;
+				$permission->cname = $model->cname;
+				$permission->classdescription = $model->classdescription;
 				$permission->type = $model->type;
 				$permission->createdAt = time();
 				$permission->updatedAt = time();
-				//var_dump($permission);exit;
-				yii::$app->authManager->add($permission);
+				if(!empty($itemPost['description'][$i]))
+					yii::$app->authManager->add($permission);
 			}
 		    
 		    //这里将权限添加到auth_item中
@@ -96,8 +100,52 @@ class PermissionController extends Controller
 	
 	public function getActionName($action)
 	{
-		$result = str_replace('action','',$action);
-		return strtolower($result);
+		if(is_array($action)) {
+			foreach ($action as $value) {
+				$str = str_replace('action','',$value);
+				$result[] = strtolower($str);
+			}
+		} else {
+			$str = str_replace('action','',$action);
+			$result = strtolower($str);
+		}
+		return $result;
+	}
+	
+	public function setActionInfo($action,$classname)
+	{
+		$tablename = str_replace('Controller','',$classname);
+		$tabledesc = Tables::find()->where(['tablename'=>$tablename])->one()['Ctablename'];
+		$actions = $this->getActionName($action); 
+		foreach ($actions as $value) {
+			$str = str_replace(strtolower($tablename),'',$value);
+			var_dump($str);
+			switch ($str)
+			{
+				case 'index';
+					$description = 	$tabledesc.'列表';
+					break;
+				case 'create';
+					$description = 	'新增'.$tabledesc;
+					break;
+				case 'view';
+					$description = 	'查看'.$tabledesc;
+					break;
+				case 'update';
+					$description = 	'更新'.$tabledesc;
+					break;
+				case 'delete';
+					$description = 	'删除'.$tabledesc;
+					break;
+				default:
+					$description = 'JSON'; 
+			}
+			$result[] = [
+					'action'=>$value,
+					'description' => $description,
+			];		
+		}
+		return $result;
 	}
 	
 	public function getactions($classname)
@@ -106,7 +154,17 @@ class PermissionController extends Controller
 		$c = $allClassInfo[$classname]['path'].$allClassInfo[$classname]['classname'];
 		//var_dump($classname);
 		$actions = $c::actionName();
+		
 		return $actions;
+	}
+	
+	public function actionJsonaname($classname)
+	{
+		$actions = $this->getactions($classname);
+		foreach ($actions as $value) {
+			$result[] = $this->getActionName($value);
+		}
+		echo json_encode(['status'=>1,'actions'=>$result]);
 	}
 	
 	public function actionPermissionindex()

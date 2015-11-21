@@ -42,15 +42,15 @@ class RoleController extends Controller
             ],
         ];
     }
-    public function beforeAction($action)
-    {
-    	$action = Yii::$app->controller->action->id;
-    	if(\Yii::$app->user->can($action)){
-    		return true;
-    	}else{
-    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
-    	}
-    }
+//     public function beforeAction($action)
+//     {
+//     	$action = Yii::$app->controller->action->id;
+//     	if(\Yii::$app->user->can($action)){
+//     		return true;
+//     	}else{
+//     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+//     	}
+//     }
 	public function actionRolecreate()
 	{
 		$role = new Role();
@@ -63,7 +63,7 @@ class RoleController extends Controller
 		    //这里将权限添加到auth_item中
 		    $bool = yii::$app->authManager->add($role);
 		    if($bool)
-		    	return $this->redirect(['roleview', 'id' => $model->name]);    
+		    	return $this->redirect(['roleindex']);    
 	    	
 	    } else {
 	    	return $this->render('rolecreate', [
