@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\CooperativeOfFarm;
+use app\models\Theyear;
 
 /**
  * cooperativeoffarmSearch represents the model behind the search form about `app\models\CooperativeOfFarm`.
@@ -42,7 +43,7 @@ class cooperativeoffarmSearch extends CooperativeOfFarm
      */
     public function search($params)
     {
-        $query = CooperativeOfFarm::find()->where($params);
+        $query = CooperativeOfFarm::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

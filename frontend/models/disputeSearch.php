@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Dispute;
-
+use app\models\Theyear;
 /**
  * disputeSearch represents the model behind the search form about `app\models\Dispute`.
  */
@@ -42,7 +42,7 @@ class disputeSearch extends Dispute
      */
     public function search($params)
     {
-        $query = Dispute::find()->where($params);
+        $query = Dispute::find();
         //$query->joinWith(['farms']);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

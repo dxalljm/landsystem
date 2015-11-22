@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('添加', ['farmscreate'], ['class' => 'btn btn-success']) ?>
         <?= Html::a('XLS导入', ['farmsxls'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('XLS导入宗地', ['farmszdxls'], ['class' => 'btn btn-success']) ?>
+        <?php //echo Html::a('XLS导入宗地', ['farmszdxls'], ['class' => 'btn btn-success']) ?>
     </p>
 </section>
 <?php  //echo $this->render('farms_search', ['model' => $searchModel]); ?>

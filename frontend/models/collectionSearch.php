@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Collection;
-
+use app\models\Theyear;
 /**
  * collectionSearch represents the model behind the search form about `app\models\Collection`.
  */

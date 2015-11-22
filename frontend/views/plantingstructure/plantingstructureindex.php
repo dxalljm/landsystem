@@ -87,21 +87,37 @@ use app\models\Lease;
     <td colspan="2" width="20%" align="center">|_</td>
     
     <td align="center">种植面积：<?= $v['area']?>亩</td>
-    <td width="12%" align="center">作物：<?= Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname']?></td>
-    <td width="12%" align="center"><?= Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 'index.php?r=plantingstructure/plantingstructureview&id='.$v['id'].'&lease_id='.$v['lease_id'].'&farms_id='.$_GET['farms_id'], [
-                    'title' => Yii::t('yii', '查看'),
-                    'data-pjax' => '0',
-                ]);?>&nbsp;&nbsp;<?= Html::a('<span class="glyphicon glyphicon-pencil"></span>', 'index.php?r=plantingstructure/plantingstructureupdate&id='.$v['id'].'&lease_id=0&farms_id='.$_GET['farms_id'], [
-                    'title' => Yii::t('yii', '更新'),
-                    'data-pjax' => '0',
-                ]);?>&nbsp;&nbsp;<?= Html::a('<span class="glyphicon glyphicon-trash"></span>', 'index.php?r=plantingstructure/plantingstructuredelete&id='.$v['id'].'&farms_id='.$_GET['farms_id'], [
-                    'title' => Yii::t('yii', '删除'),
-                    'data-pjax' => '0',
-                    'data' => [
-		                'confirm' => '您确定要删除这项吗？',
-		                //'method' => 'post',
-           			 ],
-                ]);?></td>
+    <td width="12%" align="center">作物：<?php 
+    			$controller = Yii::$app->controller->id;
+    			$action = $controller.'view';
+    			if(\Yii::$app->user->can($action)){
+	    			echo Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 'index.php?r=plantingstructure/plantingstructureview&id='.$v['id'].'&lease_id='.$v['lease_id'].'&farms_id='.$_GET['farms_id'], [
+	                    'title' => Yii::t('yii', '查看'),
+	                    'data-pjax' => '0',
+	                ]);
+    			}?>&nbsp;&nbsp;
+    			<?php 
+    			$controller = Yii::$app->controller->id;
+    			$action = $controller.'update';
+    			if(\Yii::$app->user->can($action)){
+	    			echo Html::a('<span class="glyphicon glyphicon-pencil"></span>', 'index.php?r=plantingstructure/plantingstructureupdate&id='.$v['id'].'&lease_id='.$v['lease_id'].'&farms_id='.$_GET['farms_id'], [
+	                    'title' => Yii::t('yii', '更新'),
+	                    'data-pjax' => '0',
+	                ]);
+	  			}?>&nbsp;&nbsp;
+	  			<?php
+	  			$controller = Yii::$app->controller->id;
+	  			$action = $controller.'delete';
+	  			if(\Yii::$app->user->can($action)){
+		  			 	echo Html::a('<span class="glyphicon glyphicon-trash"></span>', 'index.php?r=plantingstructure/plantingstructuredelete&id='.$v['id'].'&farms_id='.$_GET['farms_id'], [
+	                    'title' => Yii::t('yii', '删除'),
+	                    'data-pjax' => '0',
+	                    'data' => [
+			                'confirm' => '您确定要删除这项吗？',
+			                //'method' => 'post',
+	           			 ],
+	                ]);
+	  			}?></td>
     </tr>
   <?php }?>
 </table>
@@ -143,20 +159,38 @@ if($leases) {
     <td colspan="2" width="20%" align="center">|_</td>
     <td align="center">种植面积：<?= $v['area']?>亩</td>
     <td width="12%" align="center">作物：<?= Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname']?></td>
-    <td width="12%" align="center"><?= Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 'index.php?r=plantingstructure/plantingstructureview&id='.$v['id'].'&lease_id='.$v['lease_id'].'&farms_id='.$_GET['farms_id'], [
-                    'title' => Yii::t('yii', '查看'),
-                    'data-pjax' => '0',
-                ]);?>&nbsp;&nbsp;<?= Html::a('<span class="glyphicon glyphicon-pencil"></span>', 'index.php?r=plantingstructure/plantingstructureupdate&id='.$v['id'].'&lease_id='.$v['lease_id'].'&farms_id='.$_GET['farms_id'], [
-                    'title' => Yii::t('yii', '更新'),
-                    'data-pjax' => '0',
-                ]);?>&nbsp;&nbsp;<?= Html::a('<span class="glyphicon glyphicon-trash"></span>', 'index.php?r=plantingstructure/plantingstructuredelete&id='.$v['id'].'&farms_id='.$_GET['farms_id'], [
-                    'title' => Yii::t('yii', '删除'),
-                    'data-pjax' => '0',
-                    'data' => [
-		                'confirm' => '您确定要删除这项吗？',
-		                //'method' => 'post',
-           			 ],
-                ]);?></td>
+    <td width="12%" align="center">
+    			<?php 
+    			$controller = Yii::$app->controller->id;
+    			$action = $controller.'view';
+    			if(\Yii::$app->user->can($action)){
+	    			echo Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 'index.php?r=plantingstructure/plantingstructureview&id='.$v['id'].'&lease_id='.$v['lease_id'].'&farms_id='.$_GET['farms_id'], [
+	                    'title' => Yii::t('yii', '查看'),
+	                    'data-pjax' => '0',
+	                ]);
+    			}?>&nbsp;&nbsp;
+    			<?php 
+    			$controller = Yii::$app->controller->id;
+    			$action = $controller.'update';
+    			if(\Yii::$app->user->can($action)){
+	    			echo Html::a('<span class="glyphicon glyphicon-pencil"></span>', 'index.php?r=plantingstructure/plantingstructureupdate&id='.$v['id'].'&lease_id='.$v['lease_id'].'&farms_id='.$_GET['farms_id'], [
+	                    'title' => Yii::t('yii', '更新'),
+	                    'data-pjax' => '0',
+	                ]);
+	  			}?>&nbsp;&nbsp;
+	  			<?php
+	  			$controller = Yii::$app->controller->id;
+	  			$action = $controller.'delete';
+	  			if(\Yii::$app->user->can($action)){
+		  			 	echo Html::a('<span class="glyphicon glyphicon-trash"></span>', 'index.php?r=plantingstructure/plantingstructuredelete&id='.$v['id'].'&farms_id='.$_GET['farms_id'], [
+	                    'title' => Yii::t('yii', '删除'),
+	                    'data-pjax' => '0',
+	                    'data' => [
+			                'confirm' => '您确定要删除这项吗？',
+			                //'method' => 'post',
+	           			 ],
+	                ]);
+	  			}?></td>
     </tr>
   <?php }}?>
 </table>

@@ -946,16 +946,10 @@ class FarmsController extends Controller {
 				$value ['icon'] = 'fa fa-user-plus';
 				$value ['title'] = $menuUrl ['menuname'];
 				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
-				$lease = Lease::find ()->where ( [ 
+				$employeerows = Employee::find ()->where ( [ 
 						'farms_id' => $_GET ['farms_id'] 
-				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->all ();
-				$rows = 0;
-				foreach ( $lease as $val ) {
-					$rows += Employee::find ()->where ( [ 
-							'father_id' => $val ['id'] 
-					] )->count ();
-				}
-				$value ['info'] = '雇佣了' . $rows . '人';
+				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count ();
+				$value ['info'] = '雇佣了' . $employeerows . '人';
 				$value ['description'] = '雇佣人员的详细信息';
 				break;
 			case 'plantingstructure' :
@@ -971,12 +965,12 @@ class FarmsController extends Controller {
 				$value ['icon'] = 'fa fa-fire-extinguisher';
 				$value ['title'] = $menuUrl ['menuname'];
 				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
+				$value ['info'] = '未完成防火工作';
 				if (Fireprevention::find ()->where ( [ 
 						'farms_id' => $_GET ['farms_id'] 
 				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count ())
 					$$value ['info'] = '完成防火工作';
-				else
-					$value ['info'] = '未完成防火工作';
+					
 				$value ['description'] = '防火宣传、合同签订信息';
 				break;
 			case 'yields' :

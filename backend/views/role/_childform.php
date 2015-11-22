@@ -24,6 +24,12 @@ use app\models\ItemChild;
  		$model->child = ArrayHelper::map($parents,'child', 'child');
 	?>
 	<table class="table table-bordered table-hover">
+	<tr>
+		<td>按角色分配</td>
+	</tr>
+	<tr>
+		<td><?= html::checkboxListId('childPost[child][]',$model->child,ArrayHelper::map(Item::find()->where(['type'=>1])->all(), 'name', 'name'),['class'=>'itemChild-child'])?></td>
+	</tr>
 	<?php 
 		$i=0;
 		foreach ($allController as $value) {

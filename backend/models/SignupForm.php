@@ -14,6 +14,7 @@ class SignupForm extends Model
     public $email;
     public $password;
 	public $groups;
+	public $department_id;
 
     /**
      * @inheritdoc
@@ -26,15 +27,16 @@ class SignupForm extends Model
             ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
             ['username', 'string', 'min' => 2, 'max' => 255],
 
-            ['email', 'filter', 'filter' => 'trim'],
-            ['email', 'required'],
-            ['email', 'email'],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+//             ['email', 'filter', 'filter' => 'trim'],
+//             ['email', 'required'],
+//             ['email', 'email'],
+//             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
 
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
 			
 			['groups', 'string', 'max' => 20],
+        	 [['department_id'], 'integer'],
         ];
     }
 
@@ -48,7 +50,7 @@ class SignupForm extends Model
         if ($this->validate()) {
             $user = new User();
             $user->username = $this->username;
-            $user->email = $this->email;
+            $user->department_id = $this->department_id;
             $user->setPassword($this->password);
             $user->generateAuthKey();
             if ($user->save()) {

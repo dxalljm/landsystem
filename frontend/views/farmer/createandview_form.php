@@ -41,22 +41,23 @@ use app\models\Farms;
         <td align="right" valign="middle">民族</td>
         <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'nation')->dropDownList(ArrayHelper::map(Nation::find()->all(),'id','nationname'))->label(false)->error(false); else echo '&nbsp;'.Nation::find()->where(['id'=>$model->nation])->one()['nationname']; ?></td>
         <td align="right" valign="middle">政治面貌</td>
-        <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'political_outlook')->dropDownList(['党员'=>'党员','群众'=>'群众'])->label(false)->error(false); else echo '&nbsp;'.$model->political_outlook; ?></td>
+        <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'political_outlook')->dropDownList(['群众'=>'群众','团员'=>'团员','党员'=>'党员','民主党派'=>'民主党派','其他'=>'其他'])->label(false)->error(false); else echo '&nbsp;'.$model->political_outlook; ?></td>
       </tr>
       <tr>
         <td align="right" valign="middle">文化程度</td>
-        <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'cultural_degree')->dropDownList(['研究生'=>'研究生','本科'=>'本科','大专'=>'大专','高中'=>'高中','初中'=>'初中','小学'=>'小学','文盲'=>'文盲'])->label(false)->error(false); else echo '&nbsp;'.$model->cultural_degree; ?></td>
+        <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'cultural_degree')->dropDownList(['文盲'=>'文盲','小学'=>'小学','初中'=>'初中','高中'=>'高中','中专'=>'中专','大专'=>'大专','本科'=>'本科','研究生'=>'研究生'])->label(false)->error(false); else echo '&nbsp;'.$model->cultural_degree; ?></td>
         <td align="right" valign="middle">电话</td>
         <td colspan="2" valign="middle"><?= $farm->telephone?></td>
+      </tr>
+      <tr><?php if($model->domicile == '') $model->domicile = '黑龙江省大兴安岭地区加格达奇区';?><?php if($model->nowlive == '') $model->nowlive = '黑龙江省大兴安岭地区加格达奇区';?>
+        <td align="right" valign="middle">户籍所在地</td>
+        <td colspan="5" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'domicile')->textInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.$model->domicile; ?></td>
       </tr>
       <tr>
         <td align="right" valign="middle">现住地</td>
         <td colspan="5" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'nowlive')->textInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.$model->nowlive; ?></td>
       </tr>
-	  <tr>
-        <td align="right" valign="middle">户籍所在地</td>
-        <td colspan="5" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'domicile')->textInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.$model->domicile; ?></td>
-      </tr>
+	  
       
       <tr>
         <td align="right" valign="middle">身份证扫描件</td>
@@ -77,7 +78,9 @@ use app\models\Farms;
 	  
       <thead id="member-family-template" class="d-none">
           <tr>
-              <td><?php echo Html::hiddenInput('Parmembers[id][]', '', ['class' => 'form-control']); ?><?php echo Html::hiddenInput('Parmembers[farmer_id][]', '', ['class' => 'form-control']); ?><?php echo Html::dropDownList('Parmembers[relationship][]', '', ['妻子','丈夫','子女','父亲','母亲','岳父','岳母','弟兄','姐妹'],['class' => 'form-control']); ?></td>
+              <td><?php echo Html::hiddenInput('Parmembers[id][]', '', ['class' => 'form-control']); ?>
+              <?php echo Html::hiddenInput('Parmembers[farmer_id][]', '', ['class' => 'form-control']); ?>
+              <?php echo Html::dropDownList('Parmembers[relationship][]', '', ['妻子','丈夫','儿子','女儿','父亲','母亲','岳父','岳母','公公','婆婆','弟兄','姐妹'],['class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('Parmembers[membername][]', '', ['class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('Parmembers[cardid][]', '', ['class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('Parmembers[remarks][]', '', ['class' => 'form-control']); ?></td>
@@ -95,7 +98,9 @@ use app\models\Farms;
 		  </tr>
 		  <?php if(empty($membermodel)) {?>
 		  <tr>
-			  <td><?php echo Html::hiddenInput('Parmembers[id][]', '', ['class' => 'form-control']); ?><?php echo Html::hiddenInput('Parmembers[farmer_id][]', '', ['class' => 'form-control']); ?><?php echo Html::dropDownList('Parmembers[relationship][]', '',['妻子','丈夫','子女','父亲','母亲','岳父','岳母','弟兄','姐妹'], ['class' => 'form-control']); ?></td>
+			  <td><?php echo Html::hiddenInput('Parmembers[id][]', '', ['class' => 'form-control']); ?>
+			  <?php echo Html::hiddenInput('Parmembers[farmer_id][]', '', ['class' => 'form-control']); ?>
+			  <?php echo Html::dropDownList('Parmembers[relationship][]', '',['妻子','丈夫','儿子','女儿','父亲','母亲','岳父','岳母','公公','婆婆','弟兄','姐妹'], ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[membername][]', '', ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[cardid][]', '', ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[remarks][]', '', ['class' => 'form-control']); ?></td>
@@ -104,7 +109,9 @@ use app\models\Farms;
 		<?php } else {?>
 		<?php foreach($membermodel as $value) { ?>
 		 <tr>
-			  <td><?php echo Html::hiddenInput('Parmembers[id][]', $value['id'], ['class' => 'form-control']); ?><?php echo Html::hiddenInput('Parmembers[farmer_id][]', $value['farmer_id'], ['class' => 'form-control']); ?><?php echo Html::dropDownList('Parmembers[relationship][]', $value['relationship'],['妻子','丈夫','子女','父亲','母亲','岳父','岳母','弟兄','姐妹'], ['class' => 'form-control']); ?></td>
+			  <td><?php echo Html::hiddenInput('Parmembers[id][]', $value['id'], ['class' => 'form-control']); ?>
+			  <?php echo Html::hiddenInput('Parmembers[farmer_id][]', $value['farmer_id'], ['class' => 'form-control']); ?>
+			  <?php echo Html::dropDownList('Parmembers[relationship][]', $value['relationship'],['妻子','丈夫','儿子','女儿','父亲','母亲','岳父','岳母','公公','婆婆','弟兄','姐妹'], ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[membername][]', $value['membername'], ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[cardid][]', $value['cardid'], ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[remarks][]', $value['remarks'], ['class' => 'form-control']); ?></td>

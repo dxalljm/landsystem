@@ -194,6 +194,7 @@ class Farms extends \yii\db\ActiveRecord
     	echo '<td width="10%">'.html::textInput('jump',$nownum,['class'=>'form-control','id'=>'rowjump']).'</td>';
     	echo '<td>'.html::button('跳转',['class' => 'btn btn-success','onclick'=>'jumpurl("'.$action.'")']).'</td>';
     	echo '</tr>';
+    	echo '</table>';
     	echo html::hiddenInput('famsid','',['id'=>'setFarmsid']);
     }
     

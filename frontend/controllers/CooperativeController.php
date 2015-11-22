@@ -74,7 +74,10 @@ class CooperativeController extends Controller
     {
         $model = new Cooperative();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->create_at = time();
+        	$model->update_at = $model->create_at;
+        	$model->save();
         	$newAttr = $model->attributes;
         	Logs::writeLog('创建合作社',$model->id,'',$newAttr);
             return $this->redirect(['cooperativeview', 'id' => $model->id]);
@@ -95,7 +98,9 @@ class CooperativeController extends Controller
     {
         $model = $this->findModel($id);
 		$oldAttr = $model->attributes;
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->update_at = time();
+        	$model->save();
         	$newAttr = $model->attributes;
         	Logs::writeLog('更新合作社信息',$id,$oldAttr,$newAttr);
             return $this->redirect(['cooperativeview', 'id' => $model->id]);

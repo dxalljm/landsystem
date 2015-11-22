@@ -32,7 +32,7 @@ class Cooperative extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['peoples'], 'integer'],
+            [['peoples','create_at','update_at'], 'integer'],
             [['registered_capital'], 'number'],
             [['cooperativename', 'cooperativetype', 'directorname', 'finance', 'dividendmode'], 'string', 'max' => 500]
         ];

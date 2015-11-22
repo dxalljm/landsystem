@@ -12,6 +12,8 @@ use frontend\helpers;
 use frontend\helpers\Pinyin;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
+use app\models\Plant;
+use app\models\Plantingstructure;
 /**
  * BankAccountController implements the CRUD actions for BankAccount model.
  */
@@ -40,29 +42,23 @@ class SearchController extends Controller
 //     	}
 //     }
     
-    /**
-     * Lists all BankAccount models.
-     * @return mixed
-     */
-    public function actionSearchredirect()
+    public function actionSearchindex()
     {
-       	
+    	$planting = $this->getPlantingstructure();
+    	return $this->render('searchindex',[
+    			'planting' => $planting,
+    	]);
     }
-
     
-    public function actionSetpinyin()
+    public function getPlantingstructure()
     {
-    	set_time_limit(0);
-    	$farms = Farms::find()->all();
-    	//var_dump($farms);
-    	foreach ($farms as $value) {
-
-    		$model = Farms::findOne($value['id']);
-    		//var_dump($value['farmname']);
-    		$model->pinyin = Pinyin::encode($value['farmname']);
-    		$model->save();
-    		
+    	$planting = Plantingstructure::find()->all();
+    	foreach ($planting as $value) {
+    		$plantname = Plant::find()->where(['id'=>$value['plant_id']])->one()['cropname'];
+    		$result[$plantname]['area'][] = $value['area'];
+    		$result[$plantname]['goodseed_id'][] = $value['goodseed_id'];
     	}
-    	echo '完成';
+    	return $result;
     }
+ 
 }

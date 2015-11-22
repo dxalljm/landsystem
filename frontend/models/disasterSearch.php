@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Disaster;
-
+use app\models\Theyear;
 /**
  * disasterSearch represents the model behind the search form about `app\models\Disaster`.
  */

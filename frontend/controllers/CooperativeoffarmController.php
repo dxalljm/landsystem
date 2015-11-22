@@ -43,7 +43,9 @@ class CooperativeoffarmController extends Controller
     public function actionCooperativeoffarmindex($farms_id)
     {
         $searchModel = new cooperativeoffarmSearch();
-        $dataProvider = $searchModel->search(['farms_id'=>$farms_id]);
+        $params = Yii::$app->request->queryParams;
+        $params ['cooperativeoffarmSearch'] ['farms_id'] = $farms_id;
+        $dataProvider = $searchModel->search($params);
 		Logs::writeLog('农场合作社信息');
         return $this->render('cooperativeoffarmindex', [
             'searchModel' => $searchModel,

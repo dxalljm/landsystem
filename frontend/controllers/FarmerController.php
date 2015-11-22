@@ -172,6 +172,7 @@ class FarmerController extends Controller
 				Logs::writeLog('更新法人信息',$model->id,$old,$new);
                  // 得到家庭成员post的数据
                	$parmembers = Yii::$app->request->post('Parmembers');
+               	//var_dump($_POST);exit;
                	//删除家庭成员
                	$this->deleteMembers($membermodel, $parmembers['id']);
                  /* if (count($parmembers) > 0) {
@@ -215,20 +216,22 @@ class FarmerController extends Controller
 	    	 	//if($model->photo !== '') {
 	    	 		$upload = new UploadedFile();
 		    	 	$photo =  $upload->getInstance($model,'photo');
+		    	 if(!empty($photo)) {
 	 	    	 	$extphoto = $photo->getExtension();
 	 	    	 	$photoName = time().rand(100,999).'.'.$extphoto;
 	 	    	 	$photo->saveAs('uploads/'.$photoName);
 	 	    	 	$model->photo = 'uploads/'.$photoName;
-	    	 	//}
-	    	 	//if($model->cardpic !== '') {
-	 	    	 	$cardpic =  UploadedFile::getInstance($model,'cardpic');
+	    	 	}
+	    	 	$cardpic =  UploadedFile::getInstance($model,'cardpic');
+	    	 	if(!empty($cardpic)) {
+	 	    	 	
 	 	    	 	$extcardpic = $cardpic->getExtension();
 		    	 	$cardpicName = time().rand(100,999).'.'.$extcardpic;
 		    	 	$cardpic->saveAs('uploads/'.$cardpicName);
 		    	 	$model->cardpic = 'uploads/'.$cardpicName;
-	    	 	//}
+	    	 	}
 	    	 	$model->create_at = time();
-	    	 	$model->update_at = time();
+	    	 	$model->update_at = $model->create_at;
 	    	 	$model->years = $year;
 	    	 	$issave = $model->save();
 	    	 	

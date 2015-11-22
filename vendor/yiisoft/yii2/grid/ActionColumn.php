@@ -100,6 +100,7 @@ class ActionColumn extends Column
     	$action = $controller.'view';
     	if(\Yii::$app->user->can($action)){
 	        if (!isset($this->buttons['view'])) {
+	        	
 	            $this->buttons['view'] = function ($url, $model) {
 	                return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
 	                    'title' => Yii::t('yii', '查看'),

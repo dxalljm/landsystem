@@ -32,7 +32,17 @@ use app\models\Dispute;
             [
             	'attribute' => 'farmname',
             ],
-            'farmername',
+             [
+            	'attribute' => 'farmername',
+//             	'value' => function ($model) {
+// 	            	$farmer = Farmer::find()->where(['farms_id'=>$model->id])->count();
+// 	            	if($farmer) {
+//             			return html::a($model->farmername.'<i class="fa fa-check-square-o bg-red"></i>','#');
+// 	            	}
+//             		else 
+//             			return $model->farmername;
+//             	}
+            ],
             'measure',
             //'management_area',
             [
@@ -42,6 +52,8 @@ use app\models\Dispute;
             'value' => function($model,$key){
             	$url = ['/farms/farmsmenu','farms_id'=>$model->id];
             	$disputerows = Dispute::find()->where(['farms_id'=>$model->id])->count();
+            	$farmer = Farmer::find()->where(['farms_id'=>$model->id])->count();
+            	
             	if($disputerows) {
             		$option = '进入业务办理<i class="fa fa-commenting"></i>';
             		$title = '此农场有'.$disputerows.'条纠纷';
@@ -49,6 +61,9 @@ use app\models\Dispute;
             	else { 
             		$option = '进入业务办理';
             		$title = '农场相关业务办理';
+            	}
+            	if($farmer) {
+            		$option .= '<i class="fa fa-check text-red"></i>';
             	}
             	return Html::a($option,$url, [
             			'id' => 'farmermenu',

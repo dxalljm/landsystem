@@ -59,19 +59,24 @@ class eActionColumn extends \yii\grid\ActionColumn
     public function init()
     {
         parent::init();
-        $this->initDefaultButtons();
+        $this->initDefaultButtons($gets);
     }
 
     /**
      * Initializes the default button rendering callbacks
      */
-    protected function initDefaultButtons()
+    protected function initDefaultButtons($gets)
     {
     	$controller = Yii::$app->controller->id;
     	$action = $controller.'view';
+    	
+    	//landsystem/frontend/web/index.php?r=farms%2Ffarmsupdate&id=1'
+    		
     	if(\Yii::$app->user->can($action)){    	
 	        if (!isset($this->buttons['view'])) {
+	        	
 	            $this->buttons['view'] = function ($url, $model) {
+	            	$url = Url::to('index.php?r='.$controller.'/'.$action.'&'.$gets);
 	                return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
 	                    'title' => Yii::t('yii', '查看'),
 	                    'data-pjax' => '0',
@@ -81,8 +86,9 @@ class eActionColumn extends \yii\grid\ActionColumn
     	}
     	$action = $controller.'update';
     	if(\Yii::$app->user->can($action)){
-	        if (!isset($this->buttons['update'])) {
+	        if (!isset($this->buttons['update'])) {;
 	            $this->buttons['update'] = function ($url, $model) {
+	            	
 	                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
 	                    'title' => Yii::t('yii', '更新'),
 	                    'data-pjax' => '0',

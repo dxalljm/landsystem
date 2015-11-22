@@ -43,7 +43,9 @@ class DisputeController extends Controller
     public function actionDisputeindex($farms_id)
     {
         $searchModel = new disputeSearch();
-        $dataProvider = $searchModel->search(['farms_id'=>$farms_id]);
+        $params = Yii::$app->request->queryParams;
+        $params ['disputeSearch'] ['farms_id'] = $farms_id;
+        $dataProvider = $searchModel->search($params);
 		Logs::writeLog('纠纷');
         return $this->render('disputeindex', [
             'searchModel' => $searchModel,
