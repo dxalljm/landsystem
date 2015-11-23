@@ -4,6 +4,7 @@ use Yii;
 use yii\helpers\Html;
 use yii\widgets\ActiveFormrdiv;
 use dosamigos\datetimepicker\DateTimePicker;
+use frontend\helpers\MoneyFormat;
 ?>
 <div class="search-form">
 
@@ -24,7 +25,7 @@ use dosamigos\datetimepicker\DateTimePicker;
     <td><?= html::textInput('farmname','',['class'=>'form-control'])?></td>
     <td align="right">法人名称</td>
     <td><?= html::textInput('farmername','',['class'=>'form-control'])?></td>
-    <td align="right">类别选项</td><?php $class = ['plant'=>'作物','infrastructure'=>'基础设施','yields'=>'产量信息','sales'=>'销量信息','breedinfo'=>'养殖信息','prevention'=>'防疫情况','fireprevention'=>'防火情况','loan'=>'贷款情况','ollection'=>'缴费情况','disaster'=>'灾害情况']?>
+    <td align="right">类别选项</td><?php $class = ['parmpt'=>'请选择...','plant'=>'作物','infrastructure'=>'基础设施','yields'=>'产量信息','sales'=>'销量信息','breedinfo'=>'养殖信息','prevention'=>'防疫情况','fireprevention'=>'防火情况','loan'=>'贷款情况','ollection'=>'缴费情况','disaster'=>'灾害情况']?>
     <td><?php echo html::dropDownList('tab','',$class,['class'=>'form-control'])?></td>
     <td align="right">自</td>
     <td><?php echo DateTimePicker::widget([
@@ -73,6 +74,7 @@ use dosamigos\datetimepicker\DateTimePicker;
             </div>
         </div>
     </div>
+    <?php if($planting) {?>
     <div class="row">
         
         <div class="col-md-4">
@@ -104,7 +106,97 @@ use dosamigos\datetimepicker\DateTimePicker;
           </div>
           <!-- /.widget-user -->
         </div>
-        <!-- /.col -->
+        <!-- /.col -->   
+        <?php }
+        if($collection) {
+        ?>
+        <div class="row">
+          <div class="col-md-4">
+          <!-- Widget: user widget style 1 -->
+          <div class="box box-widget widget-user">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="widget-user-header bg-red">
+              <h3 class="widget-user-username">承包费收缴情况统计</h3>
+              <?php $amountsSum = 0;
+              	foreach($collection['amounts_receivable'] as $val){
+              		$amountsSum+=$val;
+              	}
+              ?>
+              <?php $realSum = 0;
+              	foreach($collection['real_income_amount'] as $val){
+              		$realSum+=$val;
+              	}
+              ?>
+              <h5 class="widget-user-desc"><?= date('Y')?>年度承包费收缴情况 </h5>
+            </div>
+            <div class="widget-user-image">
+              <img class="img-circle" src="images/plant.jpg" alt="User Avatar">
+            </div>
+            <div class="box-footer">
+              <div class="row">
+              <?php foreach ($collection as $key => $value) {?>
+                <div class="col-sm-4 border-right">
+                  <div class="description-block">
+                    <h5 class="description-header"><?php if($key == 'amounts_receivable') echo MoneyFormat::num_format($amountsSum).'元';
+                    elseif($key == 'real_income_amount') echo MoneyFormat::num_format($realSum).'元';
+                    else echo MoneyFormat::num_format($amountsSum-$realSum).'元';?></h5>
+                    <span class="description-text"><?php if($key == 'amounts_receivable') echo '应收金额';elseif($key == 'real_income_amount') echo '实收金额';else echo '欠款金额';?></span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <?php }?>
+              </div>
+              <!-- /.row -->
+            </div>
+          </div>
+          <!-- /.widget-user -->
+       </div>
+        <!-- /.col -->  
+        <?php }
+        if($breedinfo) {
+        ?>
+        <div class="row">
+          <div class="col-md-4">
+          <!-- Widget: user widget style 1 -->
+          <div class="box box-widget widget-user">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="widget-user-header bg-red">
+              <h3 class="widget-user-username">养殖情况统计</h3>
+              <?php 
+              $result = [];
+              	foreach ($breedinfo as $value) {
+					foreach ($value as $key=>$val) {
+						$result[$key][] = ['number'=>$val['number'],'unit'=>$val['unit']];
+					}
+             	}
+// 				var_dump($result);
+              ?>
+              <h5 class="widget-user-desc"><?= date('Y')?>年度养殖情况 </h5>
+            </div>
+            <div class="widget-user-image">
+              <img class="img-circle" src="images/plant.jpg" alt="User Avatar">
+            </div>
+            <div class="box-footer">
+              <div class="row">
+              <?php foreach ($result as $key => $value) {?>
+                <div class="col-sm-4 border-right">
+                  <div class="description-block"><?php $n = 0?>
+                    <h5 class="description-header"><?php foreach($value as $val){$n += $val['number'];}echo $n;$value[0]['unit'];?></h5>
+                    <span class="description-text"><?= $key?></span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <?php }?>
+              </div>
+              <!-- /.row -->
+            </div>
+          </div>
+          <!-- /.widget-user -->
+       </div>
+        <!-- /.col -->  
+        <?php }?>
 </section>
 
  <?php ActiveFormrdiv::end(); ?>

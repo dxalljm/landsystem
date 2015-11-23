@@ -17,11 +17,15 @@ use app\models\Plantingstructure;
 use app\models\Collection;
 use app\models\User;
 use app\models\Department;
+use app\models\Theyear;
+use app\models\Breedinfo;
+use app\models\Breedtype;
 /**
  * BankAccountController implements the CRUD actions for BankAccount model.
  */
 class SearchController extends Controller
 {
+	public $whereDate;
     public function behaviors()
     {
         return [
@@ -47,9 +51,18 @@ class SearchController extends Controller
     
     public function actionSearchindex()
     {
-    	$planting = $this->getPlantingstructure();
+    	$post = Yii::$app->request->post();
+    	if($post)
+    		$this->formatDate($post['begindate'],$post['enddate']);
+    	else 
+    		$this->formatDate();
+	    $planting = $this->getPlantingstructure();
+	    $collection = $this->getCollection();
+    	$breedinfo = $this->getBreedinfo();
     	return $this->render('searchindex',[
     			'planting' => $planting,
+    			'collection' => $collection,
+    			'breedinfo' => $breedinfo,
     	]);
     }
     //获取用户管理区信息
@@ -74,22 +87,49 @@ class SearchController extends Controller
     	}
     	return $result;
     }
+    //获得指定表的所有当前用户所属管理区的农场ID
+    public function getControllerData($controller) {
+    	$classFile = 'app\\models\\'.$controller;
+    	$result = [];
+    	foreach($this->getAllFarmsID() as $value) {
+    		$p = $classFile::find()->where(['farms_id'=>$value])->andFilterWhere(['between','update_at',$this->whereDate['begindate'],$this->whereDate['enddate']])->all();
+    		if(!empty($p))
+    			$result[$value][] = $p;
+    	}
+    	return $result;
+    }
+    
+    //对查询时间进行格式化
+    public function formatDate($begindate=false,$enddate=false)
+    {
+    	$timeFront = '';
+    	$timeBack = '';
+    	if($begindate) {
+    		$timeFront = strtotime($begindate);
+    	} else {
+    		$timeFront = Theyear::getYeartime()[0];
+    	}
+    	if($enddate) {
+    		$timeBack = strtotime($enddate);
+    	} else {
+    		$timeBack = Theyear::getYeartime()[1];
+    	}
+    	$this->whereDate = ['begindate'=>$timeFront,'enddate'=>$timeBack];
+//     	var_dump($this->whereDate);exit;
+    }
     
     public function getPlantingstructure()
     {
-    	$planting = [];
-    	foreach($this->getAllFarmsID() as $value) {
-    		$p = Plantingstructure::find()->where(['farms_id'=>$value])->all();
-    		if(!empty($p))
-    			$planting[$value][] = $p;
-    	}
-// 		var_dump($planting[2][0]);exit;
-    	foreach ($planting as $key => $value) {
+    	$data = $this->getControllerData('Plantingstructure');
+// 		var_dump($planting);exit;
+    	foreach ($data as $key => $value) {
     		foreach ($value as $val) {
-    			var_dump($val);exit;
-//     			$plantname = Plant::find()->where(['id'=>$val['plant_id']])->one()['cropname'];
-// 	    		$result[$plantname]['area'][] = $val['area'];
-// 	    		$result[$plantname]['goodseed_id'][] = $val['goodseed_id'];
+    			foreach($val as $v) {
+//     			var_dump($val[0]);exit;
+	    			$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname'];
+		    		$result[$plantname]['area'][] = $v['area'];
+		    		$result[$plantname]['goodseed_id'][] = $v['goodseed_id'];
+    			}
     		}
     		
     	}
@@ -98,6 +138,39 @@ class SearchController extends Controller
  
     public function getCollection()
     {
-    	$collection = Collection::find()->all(); 
+    	$data = $this->getControllerData('Collection');
+    	$result = '';
+    	foreach ($data as $key => $value) {
+    		foreach ($value as $val) {
+    			foreach($val as $v) {
+		    		$result['amounts_receivable'][] = $v['amounts_receivable'];
+		    		$result['real_income_amount'][] = $v['real_income_amount'];
+		    		$result['q'][] = $v['amounts_receivable'] - $v['real_income_amount'];
+    			}
+    		}
+    		
+    	}
+    	return $result;
     } 
+    
+    public function getBreedinfo()
+    {
+    	$data = $this->getControllerData('Breed');
+//     	var_dump($data);exit;
+    	$result = '';
+    	foreach ($data as $key => $value) {
+    		foreach ($value as $val) {
+    			foreach($val as $v) {
+    				$breedinfo = Breedinfo::find()->where(['breed_id'=>$v['id']])->all();
+    				foreach ($breedinfo as $b) {
+    					$breedtype = Breedtype::find()->where(['id'=>$b['breedtype_id']])->one();
+    					$result[$key][$breedtype['typename']] = ['unit'=>$breedtype['unit'],'number'=>$b['number']];
+    				}
+    			}
+    		}
+    	
+    	}
+//     	var_dump($result);exit;
+    	return $result;
+    }
 }

@@ -72,7 +72,10 @@ class BreedinfoController extends Controller
     {
         $model = new Breedinfo();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->create_at = time();
+        	$model->update_at = $model->create_at;
+        	$model->save();
             return $this->redirect(['breedinfoview', 'id' => $model->id]);
         } else {
             return $this->render('breedinfocreate', [
@@ -91,7 +94,9 @@ class BreedinfoController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->update_at = time();
+        	$model->save();
             return $this->redirect(['breedinfoview', 'id' => $model->id]);
         } else {
             return $this->render('breedinfoupdate', [
