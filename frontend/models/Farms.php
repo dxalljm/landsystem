@@ -42,7 +42,7 @@ class Farms extends \yii\db\ActiveRecord
             [['farmname', 'farmername'], 'required'],
             [['measure','notclear'], 'number'],
             [['zongdi'], 'string'],
-            [['management_area','state','oldfarms_id'], 'integer'],
+            [['management_area','state','oldfarms_id','locked'], 'integer'],
             [['farmname', 'farmername', 'cardid', 'telephone', 'address', 'cooperative_id', 'surveydate', 'groundsign', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate','latitude','longitude'], 'string', 'max' => 500],
         	[['measure','spyear'],'safe'],
         ]; 
@@ -79,7 +79,8 @@ class Farms extends \yii\db\ActiveRecord
         	'enddate' => '结束日期',
         	'oldfarms_id' => '变更前ID',
         	'latitude' => '纬度',
-        	'longitude' => '经度'
+        	'longitude' => '经度',
+        	'locked' => '锁定',
         ]; 
     }
     
@@ -106,7 +107,25 @@ class Farms extends \yii\db\ActiveRecord
             Yii::$app->cache->delete($cacheName);
         }
     }
-
+	//获取冻结信息
+    public static function getLocked ($farms_id)
+    {
+    	return self::findOne($farms_id)['locked'];
+    }
+    
+    //解冻
+    public static function unLocked($farms_id)
+    {
+    	$unlockDate = Loan::find()->where(['farms_id'=>$farms_id])->one()['enddate'];
+    	$model = self::findOne($farms_id);
+    	if(strtotime(date('Y-m-d')) > strtotime($unlockDate)) {
+	    	$model->locked = 0;
+	    	$model->save();
+    	} else {
+    		$model->locked = 1;
+    		$model->save();
+    	}  		
+    } 
     /**
      * 搜索所有农场信息
      * @author wubaiqing <wubaiqing@vip.qq.com>

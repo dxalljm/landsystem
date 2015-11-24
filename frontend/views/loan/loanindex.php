@@ -26,11 +26,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php Farms::showRow($_GET['farms_id']);?>
                 <div class="box-body">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+<?php if(!Farms::getLocked($_GET['farms_id'])) {?>
     <p>
         <?= Html::a('添加', ['loancreate','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?>
     </p>
-
+<?php }?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,

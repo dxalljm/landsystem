@@ -21,7 +21,7 @@ class farmsSearch extends Farms
     public function rules()
     {
         return [
-            [['id', 'create_at', 'update_at','state','oldfarms_id'], 'integer'],
+            [['id', 'create_at', 'update_at','state','oldfarms_id','locked'], 'integer'],
             [['farmname', 'farmername', 'address','measure', 'management_area', 'spyear', 'zongdi', 'cooperative_id','notclear','surveydate', 'groundsign', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate','latitude','longitude'], 'safe'],
             //[['measure'], 'number'],
         ];
@@ -133,6 +133,7 @@ class farmsSearch extends Farms
         //var_dump($dataProvider);
         $query->andFilterWhere([
             'id' => $this->id,
+        	'locked' => $this->locked,
         ]);
         //$this->management_area = [1, 4, 5];
 
@@ -144,8 +145,6 @@ class farmsSearch extends Farms
             ->andFilterWhere(['like', 'state', $this->state])
             ->andFilterWhere(['like', 'oldfarms_id', $this->oldfarms_id])
             ->andWhere(['management_area' => $this->management_area])
-
-
             ->andFilterWhere(['like', 'spyear', $this->spyear])
             ->andFilterWhere(['like', 'zongdi', $this->zongdi])
             ->andFilterWhere(['like', 'notclear', $this->notclear])

@@ -9,4 +9,9 @@ class HighchartsController extends Controller
 	{
 		
 	}
+	
+	public function showHighcharts()
+	{
+		
+	}
 }

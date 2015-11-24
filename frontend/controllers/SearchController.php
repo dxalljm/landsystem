@@ -59,11 +59,21 @@ class SearchController extends Controller
 	    $planting = $this->getPlantingstructure();
 	    $collection = $this->getCollection();
     	$breedinfo = $this->getBreedinfo();
+    	$loan = $this->getLoan();
+//     	$this->getFireprevention();
+    	$searchDate = date('Y年m月d日',$this->whereDate['begindate']).'—'.date('Y年m月d日',$this->whereDate['enddate']);
     	return $this->render('searchindex',[
+    			'searchDate' => $searchDate,
     			'planting' => $planting,
     			'collection' => $collection,
     			'breedinfo' => $breedinfo,
+    			'loan' => $loan,
     	]);
+    }
+    
+    public function actionSearchdemo()
+    {
+    	return $this->render('searchdemo');
     }
     //获取用户管理区信息
     public function getUserManagementArea()
@@ -172,5 +182,32 @@ class SearchController extends Controller
     	}
 //     	var_dump($result);exit;
     	return $result;
+    }
+    
+    public function getLoan()
+    {
+    	$data = $this->getControllerData('Loan');
+    	$result = '';
+   		foreach ($data as $key => $value) {
+    		foreach ($value as $val) {
+    			foreach($val as $v) {
+	    			$result[$key] = [
+	    				'mortgagebank' => $v['mortgagebank'],
+	    				'mortgagemoney' => $v['mortgagemoney'],
+	    				'mortgagearea' => $v['mortgagearea'],
+	    			];
+    			}
+    		}
+    	
+    	}
+//     	var_dump($result);exit;
+    	return $result;
+    }
+    
+    public function getFireprevention()
+    {
+    	$data = $this->getControllerData('Fireprevention');
+    	$result = '';
+    	var_dump($data);exit;
     }
 }

@@ -9,6 +9,7 @@ use app\models\Parcel;
 use app\models\ManagementArea;
 use app\models\Farms;
 use app\models\Contractnumber;
+use app\models\Loan;
 /* @var $this yii\web\View */
 /* @var $model app\models\Farms */
 /* @var $form yii\widgets\ActiveForm */
@@ -25,6 +26,7 @@ use app\models\Contractnumber;
                     </h3>
                 </div>
                 <div class="box-body">
+<?php if(!Farms::getLocked($_GET['farms_id'])) {?>
     <?php $form = ActiveFormrdiv::begin(); ?>
   <table width="100%" border="0">
     <tr>
@@ -163,6 +165,9 @@ use app\models\Contractnumber;
 </div>
 
     <?php ActiveFormrdiv::end(); ?>
+     <?php } else {?>
+    	<h4>此农场因贷款事由现已被冻结，解冻日期为<?= Loan::find()->where(['farms_id'=>$_GET['farms_id']])->one()['enddate'];?></h4>
+    <?php }?>
 	                </div>
             </div>
         </div>

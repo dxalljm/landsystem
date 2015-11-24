@@ -8,6 +8,8 @@ use dosamigos\datetimepicker\DateTimePicker;
 use app\models\Parcel;
 use app\models\ManagementArea;
 use app\models\Lease;
+use app\models\Farms;
+use app\models\Loan;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Farms */
@@ -16,7 +18,7 @@ use app\models\Lease;
 
 <div class="farms-form">
 
-    <?php $form = ActiveFormrdiv::begin(); ?>
+    
     <section class="content">
     <div class="row">
         <div class="col-xs-12">
@@ -27,6 +29,8 @@ use app\models\Lease;
                     </h3>
                 </div>
                 <div class="box-body">
+                <?php if(!Farms::getLocked($_GET['oldfarms_id'])) {?>
+                <?php $form = ActiveFormrdiv::begin(); ?>
   <table width="100%" border="0">
     <tr>
     <td width="46%"><table width="104%" height="458px"
@@ -218,7 +222,9 @@ use app\models\Lease;
 </div>
 
     <?php ActiveFormrdiv::end(); ?>
-    
+ <?php } else {?>
+    	<h4>此农场因贷款事由现已被冻结，解冻日期为<?= Loan::find()->where(['farms_id'=>$_GET['oldfarms_id']])->one()['enddate'];?></h4>
+    <?php }?>   
                 </div>
             </div>
         </div>

@@ -40,6 +40,7 @@ use app\models\Disaster;
 use app\models\Collection;
 use app\models\Breedinfo;
 use app\models\Breed;
+use app\models\Breedtype;
 
 /**
  * FarmsController implements the CRUD actions for farms model.
@@ -411,6 +412,7 @@ class FarmsController extends Controller {
 	}
 	// 业务办理菜单页面
 	public function actionFarmsmenu($farms_id) {
+		Farms::unLocked($farms_id);
 		$farm = $this->findModel ( $farms_id );
 		$farmsmenu = $this->showFarmmenu ( $farms_id );
 		Logs::writeLog ( '进入业务办理菜单页面', $farms_id );
@@ -900,6 +902,8 @@ class FarmsController extends Controller {
 						'newfarms_id' => $farms_id 
 				] )->count ();
 				$value ['info'] = '无过户转让信息';
+				if(Farms::getLocked($farms_id))
+					$value['info'] = '已冻结';
 				if ($ttop)
 					$value ['info'] = '过户' . $ttop . '次';
 				if ($ttopzongdi)

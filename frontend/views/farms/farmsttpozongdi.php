@@ -7,6 +7,7 @@ use yii\widgets\ActiveFormrdiv;
 use yii\grid\GridView;
 use app\models\Dispute;
 use app\models\ManagementArea;
+use app\models\Loan;
 /* @var $this yii\web\View */
 /* @var $model app\models\farms */
 
@@ -22,6 +23,7 @@ use app\models\ManagementArea;
                         转让</h3>
                 </div>
                 <div class="box-body">
+                <?php if(!Farms::getLocked($_GET['farms_id'])) {?>
                   <?php $form = ActiveFormrdiv::begin(); ?>
 	<table class="table table-bordered table-hover">
 	  <tr>
@@ -83,6 +85,9 @@ use app\models\ManagementArea;
     <?php }?>
     <?= Html::a('新建', ['farmssplit', 'farms_id' => $_GET['farms_id']], ['class' => 'btn btn-primary']) ?>
     <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
+    <?php } else {?>
+    	<h4>此农场因贷款事由现已被冻结，解冻日期为<?= Loan::find()->where(['farms_id'=>$_GET['farms_id']])->one()['enddate'];?></h4>
+    <?php }?>
               </div>
             </div>
         </div>

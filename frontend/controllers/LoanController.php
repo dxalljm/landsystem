@@ -8,6 +8,7 @@ use frontend\models\loanSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Farms;
 
 /**
  * LoanController implements the CRUD actions for Loan model.
@@ -72,12 +73,17 @@ class LoanController extends Controller
     public function actionLoancreate($farms_id)
     {
         $model = new Loan();
-		var_dump(Yii::$app->request->post());
+// 		var_dump(Yii::$app->request->post());
         if ($model->load(Yii::$app->request->post())) {
         	$model->create_at = time();
         	$model->update_at = time();
-        	$model->save();
-        
+        	if($model->save())
+        	{
+        		$farmsModel = Farms::findOne($farms_id);
+        		$farmsModel->locked = 1;
+        		$farmsModel->save();
+        	}
+        	
             return $this->redirect(['loanindex', 'farms_id'=>$farms_id]);
         } else {
             return $this->render('loancreate', [
