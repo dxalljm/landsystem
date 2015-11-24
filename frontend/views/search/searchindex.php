@@ -10,7 +10,7 @@ use yii\web\View;
 <link rel="stylesheet" type="text/css" href="css/styles.css" />
 
 <script type="text/javascript" src="js/jquery.flip.min.js"></script>
-
+<?php $this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
 <script type="text/javascript" src="js/script.js"></script>
 <script type="text/javascript" src="js/highcharts.js"></script>
 <div class="search-form">
@@ -87,11 +87,10 @@ use yii\web\View;
     <?php 
         if($collection) {
         ?>
-        <div class="sponsor" title="Click to flip">
-					
-			<div class="col-md-4" id="vertical">
+			
+			<div class="col-md-4">
           <!-- Widget: user widget style 1 -->
-          <div class="box box-widget widget-user">
+          <div class="box box-widget widget-user" id="collection">
             <!-- Add the bg color to the header using any of the bg-* classes -->
             <div class="widget-user-header bg-red">
               <h3 class="widget-user-username">承包费收缴情况统计</h3>
@@ -121,22 +120,26 @@ use yii\web\View;
                   <!-- /.description-block -->
                 </div>
                 <!-- /.col -->
+                <script type="text/javascript">
+	showPie(<?php echo json_encode([['应收金额',$amountsSum],['实收金额',$realSum],['欠款金额',$amountsSum-$realSum]]);?>,'showHigh','承包费收缴情况统计');
+</script>
                 <?php }?>
               </div>
               <!-- /.row -->
             </div>
           </div>
           <!-- /.widget-user -->
+          	<div class="sponsorData" id='showHigh'></div>
+
        </div>
         <!-- /.col -->  	
-<div class="sponsorData" id="showHigh">></div>
-	<?php $this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
-<script type="text/javascript">
-	showPie(<?php echo json_encode(['data'=>$collection]);?>,'showHigh','承包费收缴情况统计');
-</script>
+
+
         <?php }?>
         <?php if($loan) {?>
+        
         <div class="col-md-4">
+        
           <!-- Widget: user widget style 1 -->
           <div class="box box-widget widget-user">
             <!-- Add the bg color to the header using any of the bg-* classes -->
@@ -166,11 +169,14 @@ use yii\web\View;
               <!-- /.row -->
             </div>
           </div>
+  
+          <div class="sponsorData" id='showpie'></div>
+          <script type="text/javascript">showPie(<?php echo json_encode($loan)?>,'showpie','贷款情况统计');</script>
           <!-- /.widget-user -->
         </div>
         <!-- /.col -->   
         
-        
+     
 
         <?php } if($breedinfo) {
         ?>
@@ -215,6 +221,7 @@ use yii\web\View;
        </div>
         <!-- /.col -->
         <?php }?>  
+        </div>
         </div>
         <div class="row">
         <?php if($planting) {?>
