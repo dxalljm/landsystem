@@ -120,8 +120,9 @@ use yii\web\View;
                   <!-- /.description-block -->
                 </div>
                 <!-- /.col -->
-                <script type="text/javascript">
-	showPie(<?php echo json_encode([['应收金额',$amountsSum],['实收金额',$realSum],['欠款金额',$amountsSum-$realSum]]);?>,'showHigh','承包费收缴情况统计');
+<script type="text/javascript">
+showCombination('showHigh','承包费收缴情况综合图表','承包费收缴情况占比',<?php echo json_encode(['应收金额','实收金额','欠款金额'])?>,<?php echo json_encode([['type'=>'column','name'=>'应收金额','data'=>$amountsSum],['type'=>'column','name'=>'实收金额','data'=>$realSum],['type'=>'column','name'=>'欠款金额','data'=>$amountsSum-$realSum]])?>);
+                //showColumn(<?php //echo json_encode(['resultname'=>['应收金额','实收金额','欠款金额']])?>,<?php //echo json_encode(['resultvalue'=>[['应收金额',$amountsSum],['实收金额',$realSum],['欠款金额',$amountsSum-$realSum]]]);?>,'showHigh','承包费收缴情况统计');
 </script>
                 <?php }?>
               </div>
