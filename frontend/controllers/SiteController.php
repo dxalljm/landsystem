@@ -84,6 +84,7 @@ class SiteController extends Controller
 // 	    	var_dump($management);
 // 	    	exit;
 			if(is_array($management)) {
+                $arrayResult = [];
 				foreach($management as $value) {
 					$arrayResult[] = $value['areaname'];
 				}
