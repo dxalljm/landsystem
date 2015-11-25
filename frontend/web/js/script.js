@@ -8,7 +8,7 @@ $(document).ready(function(){
 		var elem = $(this);
 		
 		// data('flipped') is a flag we set when we flip the element:
-		
+
 		if(elem.data('flipped'))
 		{
 			// If the element has already been flipped, use the revertFlip method

@@ -263,7 +263,7 @@ showCombination('showHigh','承包费收缴情况综合图表','承包费收缴�
         
           <div class="col-md-4">
           <!-- Widget: user widget style 1 -->
-          <div class="box box-widget widget-user">
+          <div class="box box-widget widget-user" style="width: 200px; height:200px;">
             <!-- Add the bg color to the header using any of the bg-* classes -->
             <div class="widget-user-header bg-red">
               <h3 class="widget-user-username">承包费收缴情况统计</h3>
