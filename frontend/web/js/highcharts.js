@@ -5,7 +5,8 @@ function showPie(data,divID,title)
         $('#'+divID ).highcharts({
         	chart: {
                  plotBorderWidth: null,
-                 plotShadow: false
+                 plotShadow: false,
+                 width: 550
             },
 //            subtitle: {
 //                text: "总数:10000",
