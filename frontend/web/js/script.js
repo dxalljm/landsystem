@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	/* The following code is executed once the DOM is loaded */
 	
-	$('.box').bind("click",function(){
+	$('.content2').bind("click",function(){
 		
 		// $(this) point to the clicked .sponsorFlip element (caching it in elem for speed):
 		

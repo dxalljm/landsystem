@@ -6,8 +6,8 @@ function showPie(data,divID,title)
         	chart: {
                  plotBorderWidth: null,
                  plotShadow: false,
-                width: 200,
-                height: 200
+//                 width: 400,
+//                 height: 200
             },
             
 //            subtitle: {
@@ -84,49 +84,3 @@ function showColumn(resultname,resultvalue,divID,title,subtitle)
 	});
 }
 
-function showCombination(divID,title,pieTitle,resultname,columnValue,splineValue,pieValue)
-{
-	$(function () {                                                               
-	    $('#'+divID).highcharts({                                          
-	        chart: {                                                          
-	        },                                                                
-	        title: {                                                          
-	            text:title                                   
-	        },                                                                
-	        xAxis: {                                                          
-	            categories: resultname
-	        },                                                                
-	        tooltip: {                                                        
-	            formatter: function() {                                       
-	                var s;                                                    
-	                if (this.point.name) { // the pie chart                   
-	                    s = ''+                                               
-	                        this.point.name +': '+ this.y +' fruits';         
-	                } else {                                                  
-	                    s = ''+                                               
-	                        this.x  +': '+ this.y;                            
-	                }                                                         
-	                return s;                                                 
-	            }                                                             
-	        },                                                                
-	        labels: {                                                         
-	            items: [{                                                     
-	                html: pieTitle,                          
-	                style: {                                                  
-	                    left: '40px',                                         
-	                    top: '8px',                                           
-	                    color: 'black'                                        
-	                }                                                         
-	            }]                                                            
-	        },                                                                
-	        series: [columnValue,splineValue,pieValue],                                                           
-	            center: [100, 80],                                            
-	            size: 100,                                                    
-	            showInLegend: false,                                          
-	            dataLabels: {                                                 
-	                enabled: false                                            
-	            }                                                             
-	        }]                                                                
-	    });                                                                   
-	});                         	
-}

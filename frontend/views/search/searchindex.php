@@ -121,8 +121,7 @@ use yii\web\View;
                 </div>
                 <!-- /.col -->
 <script type="text/javascript">
-showCombination('showHigh','承包费收缴情况综合图表','承包费收缴情况占比',<?php echo json_encode(['应收金额','实收金额','欠款金额'])?>,<?php echo json_encode([['type'=>'column','name'=>'应收金额','data'=>$amountsSum],['type'=>'column','name'=>'实收金额','data'=>$realSum],['type'=>'column','name'=>'欠款金额','data'=>$amountsSum-$realSum]])?>);
-                //showColumn(<?php //echo json_encode(['resultname'=>['应收金额','实收金额','欠款金额']])?>,<?php //echo json_encode(['resultvalue'=>[['应收金额',$amountsSum],['实收金额',$realSum],['欠款金额',$amountsSum-$realSum]]]);?>,'showHigh','承包费收缴情况统计');
+showPie(<?php echo json_encode([['应收金额',$amountsSum],['实收金额',$realSum],['欠款金额',$amountsSum-$realSum]]);?>,'showHigh','承包费收缴情况统计');
 </script>
                 <?php }?>
               </div>
@@ -130,7 +129,7 @@ showCombination('showHigh','承包费收缴情况综合图表','承包费收缴�
             </div>
           </div>
           <!-- /.widget-user -->
-          	<div class="sponsorData" id='showHigh'></div>
+          	<div class="col-md-4 sponsorData" id='showHigh' style="width: 100%"></div>
 
        </div>
         <!-- /.col -->  	
@@ -263,7 +262,7 @@ showCombination('showHigh','承包费收缴情况综合图表','承包费收缴�
         
           <div class="col-md-4">
           <!-- Widget: user widget style 1 -->
-          <div class="box box-widget widget-user" style="width: 200px; height:200px;">
+          <div class="box box-widget widget-user">
             <!-- Add the bg color to the header using any of the bg-* classes -->
             <div class="widget-user-header bg-red">
               <h3 class="widget-user-username">承包费收缴情况统计</h3>
