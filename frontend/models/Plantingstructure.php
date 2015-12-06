@@ -146,4 +146,51 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	return $zongdi;
     }
 
+    public static function getPlantingstructure()
+    {
+    	$cacheKey = 'plantingstructure-hcharts';
+    	$result = Yii::$app->cache->get ( $cacheKey );
+    	if (! empty ( $result )) {
+    		return $result;
+    	}
+    	$data = [];
+    	$result = [];
+    	$areaNum = 0;
+    	foreach ( Farms::getManagementArea ()['id'] as $value ) {
+    		$areaNum++;
+    		$farm = Farms::find()->where(['management_area'=>$value])->all();
+    		foreach ($farm as $val) {
+    			$planting = Plantingstructure::find()->where(['farms_id'=>$val['id']])->all();
+    			foreach ($planting as $v) {
+    				$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname'];
+    				$data[$value][$plantname][] = $v['area'];
+    			}
+    		}
+    	}
+    	if($data) {
+	    	foreach ($data as $key => $value) {
+	    		$areaSum = 0.0;
+	    		foreach($value as $k => $val) {
+		    		foreach ($val as $v) {
+		    			$areaSum += $v;
+		    		}
+	    		}
+	    		for($i=1;$i<=$areaNum;$i++) {
+	    			if($i == $k) {
+	    				$d[$i] = $areaSum;
+	    			} else {
+	    				$d[$i] = 0;
+	    			}
+	    		}
+	    		$result[] = ['name'=>$key,'data'=>[$d]];
+	    	}
+    	}
+// 		var_dump($result);
+    	$jsonData = json_encode ( [
+    			'result' => $result
+    	] );
+    	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
+    	
+    	return $result;
+    }
 }

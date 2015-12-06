@@ -13,7 +13,13 @@ use app\models\Mainmenu;
               <img src="images/xaioren.gif" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-              <p>欢迎您 <?= yii::$app->user->identity->realname?></p>
+              <p><?php
+$h=date('G');
+if ($h<11) echo '早上好';
+else if ($h<13) echo '中午好';
+else if ($h<17) echo '下午好';
+else echo '晚上好';
+?> <?= yii::$app->user->identity->realname?></p>
               <a href="<?= Url::to('index.php?r=site/logout') ?>"><i class="fa fa-circle text-success"></i> 退出</a>
               <a href="<?= Url::to('index.php?r=user/modfiyuserinfo') ?>">修改密码</a>
             </div>

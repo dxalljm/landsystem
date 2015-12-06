@@ -100,7 +100,21 @@ class FarmsController extends Controller {
 				'dataProvider' => $dataProvider 
 		] );
 	}
-	
+	public function getFarmsid()
+	{
+		$departmentid = User::find ()->where ( [
+				'id' => \Yii::$app->getUser ()->id
+		] )->one ()['department_id'];
+		$departmentData = Department::find ()->where ( [
+				'id' => $departmentid
+		] )->one ();
+		$whereArray = explode ( ',', $departmentData ['membership'] );
+		$farms = Farms::find()->where(['management_area'=>$whereArray])->all();
+		foreach ($farms as $value) {
+			$farmsID[] = $value['id'];
+		}
+		return $farmsID;
+	}
 	// public function actionFarmszongdi()
 	// {
 	// $farms = Farms::find()->all();
@@ -111,90 +125,48 @@ class FarmsController extends Controller {
 	// }
 	// }
 	// 得到所属农场的记录数
-	public function actionGetfarmrows() {
-		$cacheKey = 'farms-hcharts2';
-		$result = Yii::$app->cache->get ( $cacheKey );
-		if (! empty ( $result )) {
-			return $result;
-		}
-		
-		$sum = 0;
-		$dep_id = User::findByUsername ( yii::$app->user->identity->username )['department_id'];
-		$departmentData = Department::find ()->where ( [ 
-				'id' => $dep_id 
-		] )->one ();
-		$whereArray = explode ( ',', $departmentData ['membership'] );
-		$all = Farms::find ()->count ();
-		
-		foreach ( $whereArray as $value ) {
-			$resultName = ManagementArea::find ()->where ( [ 
-					'id' => $value 
-			] )->one ()['areaname'];
-			$resultValue = ( float ) Farms::find ()->where ( [ 
-					'management_area' => $value 
-			] )->count ();
-			$result [] = [ 
-					$resultName,
-					$resultValue 
-			];
-			$sum += $resultValue;
-		}
-		$allvalue = $all - $sum;
-		if ($allvalue !== 0)
-			$result [] = [ 
-					'其他管理区',
-					( float ) $allvalue 
-			];
-		$jsonData = Json::encode ( [ 
-				'status' => 1,
-				'result' => $result,
-				'total' => $all 
-		] );
-		Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
-		
-		return $jsonData;
-	}
+	
 	// 得到所属农场的所有面积
-	public function actionGetfarmarea() {
-		$cacheKey = 'farmsarea-hcharts2';
-		$result = Yii::$app->cache->get ( $cacheKey );
-		if (! empty ( $result )) {
-			return $result;
-		}
-		$sum = 0;
-		$dep_id = User::findByUsername ( yii::$app->user->identity->username )['department_id'];
-		$departmentData = Department::find ()->where ( [ 
-				'id' => $dep_id 
-		] )->one ();
-		$whereArray = explode ( ',', $departmentData ['membership'] );
-		$all = Farms::find ()->sum ( 'measure' );
-		foreach ( $whereArray as $value ) {
-			$resultName = ManagementArea::find ()->where ( [ 
-					'id' => $value 
-			] )->one ()['areaname'];
-			$resultValue = ( float ) Farms::find ()->where ( [ 
-					'management_area' => $value 
-			] )->sum ( 'measure' );
-			$result [] = [ 
-					$resultName,
-					$resultValue 
-			];
-			$sum += $resultValue;
-		}
-		$allvalue = $all - $sum;
-		$result [] = [ 
-				'其他管理区',
-				( float ) $allvalue 
-		];
-		$jsonData = Json::encode ( [ 
-				'status' => 1,
-				'result' => $result,
-				'total' => $all 
-		] );
-		Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
+// 	public function getfarmarea() {
+// 		$cacheKey = 'farmsarea-hcharts2';
+// 		$result = Yii::$app->cache->get ( $cacheKey );
+// 		if (! empty ( $result )) {
+// 			return $result;
+// 		}
+// 		$sum = 0;
+// 		$dep_id = User::findByUsername ( yii::$app->user->identity->username )['department_id'];
+// 		$departmentData = Department::find ()->where ( [ 
+// 				'id' => $dep_id 
+// 		] )->one ();
+// 		$whereArray = explode ( ',', $departmentData ['membership'] );
+// 		$all = Farms::find ()->sum ( 'measure' );
+// 		foreach ( $whereArray as $value ) {
+// 			$resultName = ManagementArea::find ()->where ( [ 
+// 					'id' => $value 
+// 			] )->one ()['areaname'];
+// 			$resultValue = ( float ) Farms::find ()->where ( [ 
+// 					'management_area' => $value 
+// 			] )->sum ( 'measure' );
+// 			$result [] = [ 
+// 					$resultName,
+// 					$resultValue 
+// 			];
+// 			$sum += $resultValue;
+// 		}
+// 		$allvalue = $all - $sum;
+// 		$result [] = [ 
+// 				'其他管理区',
+// 				( float ) $allvalue 
+// 		];
+// 		$jsonData = Json::encode ( [ 
+// 				'status' => 1,
+// 				'result' => $result,
+// 				'total' => $all 
+// 		] );
+// 		Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
 		
-		return $jsonData;
-	}
+// 		return $jsonData;
+// 	}
 	// xls导入
 	public function actionFarmsxls() {
 		set_time_limit ( 0 );
@@ -218,7 +190,7 @@ class FarmsController extends Controller {
 					// echo ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];"<br>";
 					$farmsmodel = new Farms ();
 					// $farmsmodel = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
-					$farmsmodel->id = ( int ) $loadxls->getActiveSheet ()->getCell ( 'A' . $i )->getValue ();
+					//$farmsmodel->id = ( int ) $loadxls->getActiveSheet ()->getCell ( 'A' . $i )->getValue ();
 					$farmsmodel->management_area = ( int ) $loadxls->getActiveSheet ()->getCell ( 'B' . $i )->getValue ();
 					$farmsmodel->contractnumber = $loadxls->getActiveSheet ()->getCell ( 'C' . $i )->getValue ();
 					$farmsmodel->farmname = $loadxls->getActiveSheet ()->getCell ( 'D' . $i )->getValue ();
@@ -1071,7 +1043,7 @@ class FarmsController extends Controller {
 				'farmsindex' 
 		] );
 	}
-	
+
 	/**
 	 * Finds the farms model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.

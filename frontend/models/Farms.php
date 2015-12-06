@@ -238,5 +238,112 @@ class Farms extends \yii\db\ActiveRecord
     	$contractnumber = $cn1.'-'.$cn2.'-'.$cn3.'-'.$cn4;
     	return $contractnumber;
     }
+    public static function getManagementArea()
+    {
+    	$dep_id = User::findByUsername ( yii::$app->user->identity->username )['department_id'];
+    	$departmentData = Department::find ()->where ( [
+    			'id' => $dep_id
+    	] )->one ();
+    	$whereArray = explode ( ',', $departmentData ['membership'] );
+    	$managementarea = ManagementArea::find()->where(['id'=>$whereArray])->all();
+    	foreach ($managementarea as $value) {
+    		$result['id'][] = $value['id'];
+    		$result['areaname'][] = $value['areaname'];
+    	}
+    	return $result;
+    }
+    public static function getFarmrows() {
+    	$cacheKey = 'farms-hcharts';
+    	$result = Yii::$app->cache->get ( $cacheKey );
+    	if (! empty ( $result )) {
+    		return $result;
+    	}
+    	$rows = [];
+    	$sum = 0;
+    	$farmsID = [];
+    	
+    	$all = Farms::find ()->count ();
+    	foreach (self::getManagementArea()['id'] as $value) {
+    		$row = ( float ) Farms::find ()->where ( [
+    				'management_area' => $value
+    		] )->count ();
+    		$rows[] = $row;
+    		$sum += $row;
+    		$percent[] = bcdiv($row,$all)*100;
+    	}
+
+    	$result = [[
+    			'type' => 'column',
+    			'name' => '数量',
+    			'percent' => $all,
+    			'data' => $rows,
+    			'dataLabels'=> [
+    				'enabled'=> true,
+    				'rotation'=> -90,
+    				'color'=> '#FFFFFF',
+    				'align'=> 'right',
+    				'x'=> 0,
+    				'y'=> 0,
+    				'style'=> [
+    					'fontSize'=> '13px',
+    					'fontFamily'=> 'Verdana, sans-serif',
+    					'textShadow'=> '0 0 3px black'
+    				]
+    			]
+    	]];
+        
+    	$jsonData = json_encode(['result'=>$result,'all'=>$all]);
+    	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
     
+    	return $jsonData;
+    }
+    public static function getFarmarea() {
+    	$cacheKey = 'farms-hcharts2';
+    	$result = Yii::$app->cache->get ( $cacheKey );
+    	if (! empty ( $result )) {
+    		return $result;
+    	}
+    	$rows = [];
+    	$sum = 0;
+    	$farmsID = [];
+    	 
+    	$all = Farms::find ()->sum ('measure');
+    	foreach (self::getManagementArea()['id'] as $value) {
+
+			$area = ( float ) Farms::find ()->where ( [
+    		  		'management_area' => $value
+    		 ] )->sum ( 'measure' );
+    		 $areas[] = $area;
+    		 $sum += $area;
+    	}
+    	
+    	$allvalue = $all - $sum;
+    
+    	if ($allvalue !== 0) {
+    		$data[] = ['name'=>'其他管理区','y'=>$allvalue];
+    	}
+    	$result = [[
+    			'type' => 'column',
+    			'name' => '面积',
+    			'data' => $areas,
+    			'dataLabels'=> [
+    					'enabled'=> true,
+    					'rotation'=> -90,
+    					'color'=> '#FFFFFF',
+    					'align'=> 'right',
+    					'x'=> 0,
+    					'y'=> -20,
+    					'style'=> [
+    							'fontSize'=> '13px',
+    							'fontFamily'=> 'Verdana, sans-serif',
+    							'textShadow'=> '0 0 3px black'
+    					]
+    			]
+    	]];
+    
+    	$jsonData = json_encode(['result'=>$result]);
+    	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
+    
+    	return $jsonData;
+    }
 }

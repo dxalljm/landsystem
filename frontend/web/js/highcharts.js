@@ -81,4 +81,50 @@ function showColumn(resultname,resultvalue,divID,title,subtitle)
 	    });
 	});
 }
-
+//categories:各项目名称
+function showCombination(divID,title,categories,pieTitle,series)
+{
+	$(function () {                                                               
+	    $('#'+divID).highcharts({                                          
+	        chart: {                                                          
+	        },                                                                
+	        title: {                                                          
+	            text: title                                     
+	        },                                                                
+	        xAxis: {                                                          
+	            categories: categories
+	        },                                                                
+	        tooltip: {                                                        
+	            formatter: function() {                                       
+	                var s;                                                    
+	                if (this.point.name) { // the pie chart                   
+	                    s = ''+                                               
+	                        this.point.name +': '+ this.y +' fruits';         
+	                } else {                                                  
+	                    s = ''+                                               
+	                        this.x  +': '+ this.y;                            
+	                }                                                         
+	                return s;                                                 
+	            }                                                             
+	        },                                                                
+	        labels: {                                                         
+	            items: [{                                                     
+	                html: pieTitle,                          
+	                style: {                                                  
+	                    left: '40px',                                         
+	                    top: '8px',                                           
+	                    color: 'black'                                        
+	                }                                                         
+	            }]                                                            
+	        },                                                                
+	        series: series,                                                           
+	            center: [100, 80],                                            
+	            size: 100,                                                    
+	            showInLegend: false,                                          
+	            dataLabels: {                                                 
+	                enabled: false                                            
+	            }                                                             
+	        }]                                                                
+	    });                                                                   
+	});                        
+}

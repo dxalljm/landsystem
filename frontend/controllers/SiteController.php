@@ -77,7 +77,8 @@ class SiteController extends Controller
     		
     	} else {
 	    	Logs::writeLog('访问首页');
-	    	$dep_id = User::find()->where(['id'=>yii::$app->getUser()->id])->one()['department_id'];
+	    	$user = User::find()->where(['id'=>yii::$app->getUser()->id])->one();
+	    	$dep_id = $user['department_id'];
 	    	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
 	    	$arrayDepartment = explode(',',$departmentData['membership']);
 	    	$management = ManagementArea::find()->where(['id' =>$arrayDepartment])->all();
@@ -95,6 +96,7 @@ class SiteController extends Controller
 	        $areaname = [];
 	        return $this->render('index',[
 	            'areaname' => $result,
+	        	'user' => $user,
 	        ]);
     	}
     }

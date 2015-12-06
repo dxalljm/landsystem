@@ -12,7 +12,7 @@ use yii\web\View;
 <script type="text/javascript" src="js/jquery.flip.min.js"></script>
 <?php $this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
 <script type="text/javascript" src="js/script.js"></script>
-<script type="text/javascript" src="js/highcharts.js"></script>
+<script type="text/javascript" src="js/showhighcharts.js"></script>
 <div class="search-form">
 
     <?php $form = ActiveFormrdiv::begin(); ?>

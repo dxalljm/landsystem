@@ -256,104 +256,104 @@ if ($.fn.modal !== undefined) {
 //
 //// Apply the theme
 //var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
-Highcharts.createElement('link', {
-	href: 'http://fonts.googleapis.com/css?family=Signika:400,700',
-	rel: 'stylesheet',
-	type: 'text/css'
-}, null, document.getElementsByTagName('head')[0]);
-
-// Add the background image to the container
-Highcharts.wrap(Highcharts.Chart.prototype, 'getContainer', function (proceed) {
-	proceed.call(this);
-	this.container.style.background = 'url(http://www.highcharts.com/samples/graphics/sand.png)';
-});
-
-
-Highcharts.theme = {
-	colors: ["#f45b5b", "#8085e9", "#8d4654", "#7798BF", "#aaeeee", "#ff0066", "#eeaaee",
-		"#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
-	chart: {
-		backgroundColor: null,
-		style: {
-			fontFamily: "Signika, serif"
-		}
-	},
-	title: {
-		style: {
-			color: 'black',
-			fontSize: '16px',
-			fontWeight: 'bold'
-		}
-	},
-	subtitle: {
-		style: {
-			color: 'black'
-		}
-	},
-	tooltip: {
-		borderWidth: 0
-	},
-	legend: {
-		itemStyle: {
-			fontWeight: 'bold',
-			fontSize: '13px'
-		}
-	},
-	xAxis: {
-		labels: {
-			style: {
-				color: '#6e6e70'
-			}
-		}
-	},
-	yAxis: {
-		labels: {
-			style: {
-				color: '#6e6e70'
-			}
-		}
-	},
-	plotOptions: {
-		series: {
-			shadow: true
-		},
-		candlestick: {
-			lineColor: '#404048'
-		},
-		map: {
-			shadow: false
-		}
-	},
-
-	// Highstock specific
-	navigator: {
-		xAxis: {
-			gridLineColor: '#D0D0D8'
-		}
-	},
-	rangeSelector: {
-		buttonTheme: {
-			fill: 'white',
-			stroke: '#C0C0C8',
-			'stroke-width': 1,
-			states: {
-				select: {
-					fill: '#D0D0D8'
-				}
-			}
-		}
-	},
-	scrollbar: {
-		trackBorderColor: '#C0C0C8'
-	},
-
-	// General
-	background2: '#E0E0E8'
-	
-};
-
-// Apply the theme
-Highcharts.setOptions(Highcharts.theme);
+//Highcharts.createElement('link', {
+//	href: 'http://fonts.googleapis.com/css?family=Signika:400,700',
+//	rel: 'stylesheet',
+//	type: 'text/css'
+//}, null, document.getElementsByTagName('head')[0]);
+//
+//// Add the background image to the container
+//Highcharts.wrap(Highcharts.Chart.prototype, 'getContainer', function (proceed) {
+//	proceed.call(this);
+//	this.container.style.background = 'url(http://www.highcharts.com/samples/graphics/sand.png)';
+//});
+//
+//
+//Highcharts.theme = {
+//	colors: ["#f45b5b", "#8085e9", "#8d4654", "#7798BF", "#aaeeee", "#ff0066", "#eeaaee",
+//		"#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
+//	chart: {
+//		backgroundColor: null,
+//		style: {
+//			fontFamily: "Signika, serif"
+//		}
+//	},
+//	title: {
+//		style: {
+//			color: 'black',
+//			fontSize: '16px',
+//			fontWeight: 'bold'
+//		}
+//	},
+//	subtitle: {
+//		style: {
+//			color: 'black'
+//		}
+//	},
+//	tooltip: {
+//		borderWidth: 0
+//	},
+//	legend: {
+//		itemStyle: {
+//			fontWeight: 'bold',
+//			fontSize: '13px'
+//		}
+//	},
+//	xAxis: {
+//		labels: {
+//			style: {
+//				color: '#6e6e70'
+//			}
+//		}
+//	},
+//	yAxis: {
+//		labels: {
+//			style: {
+//				color: '#6e6e70'
+//			}
+//		}
+//	},
+//	plotOptions: {
+//		series: {
+//			shadow: true
+//		},
+//		candlestick: {
+//			lineColor: '#404048'
+//		},
+//		map: {
+//			shadow: false
+//		}
+//	},
+//
+//	// Highstock specific
+//	navigator: {
+//		xAxis: {
+//			gridLineColor: '#D0D0D8'
+//		}
+//	},
+//	rangeSelector: {
+//		buttonTheme: {
+//			fill: 'white',
+//			stroke: '#C0C0C8',
+//			'stroke-width': 1,
+//			states: {
+//				select: {
+//					fill: '#D0D0D8'
+//				}
+//			}
+//		}
+//	},
+//	scrollbar: {
+//		trackBorderColor: '#C0C0C8'
+//	},
+//
+//	// General
+//	background2: '#E0E0E8'
+//	
+//};
+//
+//// Apply the theme
+//Highcharts.setOptions(Highcharts.theme);
 
 
 function farmercontract(key) {
@@ -500,109 +500,109 @@ var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
 lease = leaseEvent();
 lease.close();
 
-var statis = function () {
-    return {
-        // 农场管理
-        farms : function () {
-            $.getJSON('index.php?r=farms/getfarmrows', function (data) {
-
-                
-                if (data.status == 1) {
-                    //$('#statis-farms').html(data.count);
-                    $(function () {
-                        $('#statis-farms').highcharts({
-                        	chart: {
-                                 plotBorderWidth: null,
-                                 plotShadow: false
-                            },
-//                            subtitle: {
-//                                text: "总数:10000",
-//                                x: -100,
-//                                y: 150
+//var statis = function () {
+//    return {
+//        // 农场管理
+//        farms : function () {
+//            $.getJSON('index.php?r=farms/getfarmstatistics', function (data) {
+//
+//                
+//                if (data.status == 1) {
+//                    //$('#statis-farms').html(data.count);
+//                    $(function () {
+//                        $('#statis-farms').highcharts({
+//                        	chart: {
+//                                 plotBorderWidth: null,
+//                                 plotShadow: false
 //                            },
-                            title: {
-                                text: '农场,共' + data.total + '个农场'
-                            },
-                            tooltip: {
-                        	    pointFormat: '{point.y}个农场 <br>{series.name}: <b>{point.percentage:.1f}%</b>'
-                            },
-                            plotOptions: {
-
-                                pie: {
-                                    allowPointSelect: true,
-                                    cursor: 'pointer',
-                                    dataLabels: {
-                                        enabled: true,
-                                        color: '#ffffff',
-                                        connectorColor: '#ffffff',
-                                        format: '<b>{point.name}</b><br>{point.y}个农场 <br> <b>占比</b>:{point.percentage:.1f}%'
-                                    }
-                                }
-                            },
-                            series: [{
-                                type: 'pie',
-                                name: '占比',
-                                data: data.result,
-                            }]
-                        });
-                    });
-                }
-            });
-        },
-        // 面积
-        area : function () {
-            $.getJSON('index.php?r=farms/getfarmarea', function (data) {
-                if (data.status == 1) {
-                	$(function () {
-                        $('#statis-area').highcharts({
-                        	chart: {
-                                 plotBorderWidth: null,
-                                 plotShadow: false
-                            },
-//                            subtitle: {
-//                                text: "总数:10000",
-//                                x: -100,
-//                                y: 50
+////                            subtitle: {
+////                                text: "总数:10000",
+////                                x: -100,
+////                                y: 150
+////                            },
+//                            title: {
+//                                text: '农场,共' + data.total + '个农场'
 //                            },
-                            title: {
-                                text: '面积,共' + data.total + '亩'
-                            },
-                            tooltip: {
-                        	    pointFormat: '{point.y}个农场 <br>{series.name}: <b>{point.percentage:.1f}%</b>'
-                            },
-                            plotOptions: {
-                                pie: {
-                                    allowPointSelect: true,
-                                    cursor: 'pointer',
-                                    dataLabels: {
-                                        enabled: true,
-                                        color: '#ffffff',
-                                        connectorColor: '#ffffff',
-                                        format: '<b>{point.name}</b><br>{point.y}亩 <br> <b>占比</b>:{point.percentage:.1f}%'
-                                    }
-                                }
-                            },
-                            series: [{
-                                type: 'pie',
-                                name: '占比',
-                                data: data.result,
-                            }]
-                        });
-                    });
-                }
-            });
-        },
-        // 实收金额
-        payment : function () {
-            $.getJSON('index.php?r=collection/getamounts', function (data) {
-                if (data.status == 1) {
-                    $('#statis-real').html(data.count.real);
-                    $('#statis-mounts').html(data.count.amounts);
-                }
-            });
-        }
-    }
-}
+//                            tooltip: {
+//                        	    pointFormat: '{point.y}个农场 <br>{series.name}: <b>{point.percentage:.1f}%</b>'
+//                            },
+//                            plotOptions: {
+//
+//                                pie: {
+//                                    allowPointSelect: true,
+//                                    cursor: 'pointer',
+//                                    dataLabels: {
+//                                        enabled: true,
+//                                        color: '#ffffff',
+//                                        connectorColor: '#ffffff',
+//                                        format: '<b>{point.name}</b><br>{point.y}个农场 <br> <b>占比</b>:{point.percentage:.1f}%'
+//                                    }
+//                                }
+//                            },
+//                            series: [{
+//                                type: 'pie',
+//                                name: '占比',
+//                                data: data.result,
+//                            }]
+//                        });
+//                    });
+//                }
+//            });
+//        },
+//        // 面积
+//        area : function () {
+//            $.getJSON('index.php?r=farms/getfarmarea', function (data) {
+//                if (data.status == 1) {
+//                	$(function () {
+//                        $('#statis-area').highcharts({
+//                        	chart: {
+//                                 plotBorderWidth: null,
+//                                 plotShadow: false
+//                            },
+////                            subtitle: {
+////                                text: "总数:10000",
+////                                x: -100,
+////                                y: 50
+////                            },
+//                            title: {
+//                                text: '面积,共' + data.total + '亩'
+//                            },
+//                            tooltip: {
+//                        	    pointFormat: '{point.y}个农场 <br>{series.name}: <b>{point.percentage:.1f}%</b>'
+//                            },
+//                            plotOptions: {
+//                                pie: {
+//                                    allowPointSelect: true,
+//                                    cursor: 'pointer',
+//                                    dataLabels: {
+//                                        enabled: true,
+//                                        color: '#ffffff',
+//                                        connectorColor: '#ffffff',
+//                                        format: '<b>{point.name}</b><br>{point.y}亩 <br> <b>占比</b>:{point.percentage:.1f}%'
+//                                    }
+//                                }
+//                            },
+//                            series: [{
+//                                type: 'pie',
+//                                name: '占比',
+//                                data: data.result,
+//                            }]
+//                        });
+//                    });
+//                }
+//            });
+//        },
+//        // 实收金额
+//        payment : function () {
+//            $.getJSON('index.php?r=collection/getamounts', function (data) {
+//                if (data.status == 1) {
+//                    $('#statis-real').html(data.count.real);
+//                    $('#statis-mounts').html(data.count.amounts);
+//                }
+//            });
+//        }
+//    }
+//}
 
 function jumpurl(action)
 {

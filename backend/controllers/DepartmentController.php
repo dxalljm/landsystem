@@ -99,7 +99,8 @@ class DepartmentController extends Controller
         if ($model->load(Yii::$app->request->post())) {
         	
         	$model->membership = implode(',', $model->membership);
-        	$model->operableaction = implode(',', $model->operableaction);
+        	if(is_array($model->operableaction)) 
+        		$model->operableaction = implode(',', $model->operableaction);
         	//var_dump($model);
         	if($model->save())
             	return $this->redirect(['departmentview', 'id' => $model->id]);
