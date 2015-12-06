@@ -120,8 +120,8 @@ use yii\web\View;
                   <!-- /.description-block -->
                 </div>
                 <!-- /.col -->
-                <script type="text/javascript">
-	showPie(<?php echo json_encode([['应收金额',$amountsSum],['实收金额',$realSum],['欠款金额',$amountsSum-$realSum]]);?>,'showHigh','承包费收缴情况统计');
+<script type="text/javascript">
+showPie(<?php echo json_encode([['应收金额',$amountsSum],['实收金额',$realSum],['欠款金额',$amountsSum-$realSum]]);?>,'showHigh','承包费收缴情况统计');
 </script>
                 <?php }?>
               </div>
@@ -129,7 +129,7 @@ use yii\web\View;
             </div>
           </div>
           <!-- /.widget-user -->
-          	<div class="sponsorData" id='showHigh'></div>
+          	<div class="col-md-4 sponsorData" id='showHigh' style="width: 100%"></div>
 
        </div>
         <!-- /.col -->  	

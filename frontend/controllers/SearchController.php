@@ -91,6 +91,7 @@ class SearchController extends Controller
     //获取用户所在管理区的所有农场
     public function getAllFarmsID()
     {
+    	$result = '';
     	$farms = Farms::find()->where(['management_area'=>$this->getUserManagementArea()])->all();
     	foreach ($farms as $value) {
     		$result[] = $value['id'];
