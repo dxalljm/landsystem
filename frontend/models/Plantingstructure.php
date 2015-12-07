@@ -156,6 +156,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	$data = [];
     	$result = [];
     	$areaNum = 0;
+    	
     	foreach ( Farms::getManagementArea ()['id'] as $value ) {
     		$areaNum++;
     		$farm = Farms::find()->where(['management_area'=>$value])->all();
@@ -163,34 +164,26 @@ class Plantingstructure extends \yii\db\ActiveRecord
     			$planting = Plantingstructure::find()->where(['farms_id'=>$val['id']])->all();
     			foreach ($planting as $v) {
     				$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname'];
-    				$data[$plantname][] = $v['area'];
+    				$data[$value][$plantname][] = $v['area'];
     			}
     		}
     	}
-    	if($data) {
-	    	foreach ($data as $key => $value) {
-	    		$areaSum = 0.0;
-	    		foreach($value as $k => $val) {
-// 		    		foreach ($val as $v) {
-		    			$areaSum += $val;
-// 		    		}
-	    		}
-// 	    		for($i=1;$i<=$areaNum;$i++) {
-// 	    			if($i == $k) {
-// 	    				$d[$i] = $areaSum;
-// 	    			} else {
-// 	    				$d[$i] = 0;
-// 	    			}
-// 	    		}
-	    		$result[] = ['name'=>$key,'data'=>[$areaSum]];
-	    	}
-    	}
-// 		var_dump($result);
-    	$jsonData = json_encode ( [
-    			'result' => $result
-    	] );
-    	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
     	
-    	return $jsonData;
+		foreach ($data as $key=>$value) {
+			foreach ($value as $k=>$val) {
+				$areaSum = 0.0;
+				foreach ($val as $v) {
+					$areaSum += $v;
+				}
+				$d[$key][$k] = $areaSum;
+			}
+		}
+		var_dump($d);
+//     	$jsonData = json_encode ( [
+//     			'result' => $result
+//     	] );
+//     	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
+    	
+//     	return $jsonData;
     }
 }
