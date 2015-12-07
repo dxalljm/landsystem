@@ -99,6 +99,16 @@ class Collection extends \yii\db\ActiveRecord {
 		}
 		return $result;
 	}
+	
+	public static function getCollecitonInfo($farms_id)
+	{
+		$coll = Collection::find()->where(['farms_id'=>$farms_id])->count();
+		if($coll)
+			return '已缴纳';
+		else 
+			return '未缴纳';
+	}
+	
 	public static function getCollection() {
 		$cacheKey = 'collection-hcharts';
 		$result = Yii::$app->cache->get ( $cacheKey );

@@ -25,26 +25,32 @@ class Huinong extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+public function rules() 
+    { 
         return [
-        	[['typeid'],'integer'],
-            [['subsidiesarea', 'subsidiesmoney'], 'number'],
-            [['subsidiestype_id'], 'string', 'max' => 500]
-        ];
-    }
+            [['subsidiesarea', 'subsidiesmoney', 'totalamount', 'realtotalamount'], 'number'],
+            [['typeid', 'create_at', 'update_at'], 'integer'],
+            [['subsidiestype_id', 'begindate', 'enddate'], 'string', 'max' => 500]
+        ]; 
+    } 
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-			'id' => 'ID',
+    /** 
+     * @inheritdoc 
+     */ 
+    public function attributeLabels() 
+    { 
+        return [ 
+            'id' => 'ID',
             'subsidiestype_id' => '补贴类型',
-        	'typeid' => '补贴种类',
             'subsidiesarea' => '补贴面积',
             'subsidiesmoney' => '补贴金额',
-        ];
-    }
+            'typeid' => '补贴种类',
+            'totalamount' => '补贴总金额',
+            'realtotalamount' => '实际补贴金额',
+            'begindate' => '开始日期',
+            'enddate' => '结束日期',
+            'create_at' => '创建日期',
+            'update_at' => '更新日期',
+        ]; 
+    } 
 }

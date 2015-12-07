@@ -5,22 +5,22 @@ namespace frontend\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Huinong;
+use app\models\Huinonggrant;
 
 /**
- * HuinongSearch represents the model behind the search form about `app\models\Huinong`.
+ * HuinonggrantSearch represents the model behind the search form about `app\models\Huinonggrant`.
  */
-class HuinongSearch extends Huinong
+class HuinonggrantSearch extends Huinonggrant
 {
     /**
      * @inheritdoc
      */
- 	public function rules()
+    public function rules()
     {
         return [
-            [['id', 'typeid', 'create_at', 'update_at', 'begindate', 'enddate'], 'integer'],
-            [['subsidiestype_id'], 'safe'],
-            [['subsidiesarea', 'subsidiesmoney', 'totalamount', 'realtotalamount'], 'number'],
+            [['id', 'farms_id', 'huinong_id', 'state'], 'integer'],
+            [['money', 'area'], 'number'],
+            [['note'], 'safe'],
         ];
     }
 
@@ -32,7 +32,7 @@ class HuinongSearch extends Huinong
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
-    
+
     /**
      * Creates data provider instance with search query applied
      *
@@ -42,7 +42,7 @@ class HuinongSearch extends Huinong
      */
     public function search($params)
     {
-        $query = Huinong::find();
+        $query = Huinonggrant::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -58,18 +58,14 @@ class HuinongSearch extends Huinong
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'subsidiesarea' => $this->subsidiesarea,
-            'subsidiesmoney' => $this->subsidiesmoney,
-            'typeid' => $this->typeid,
-            'totalamount' => $this->totalamount,
-            'realtotalamount' => $this->realtotalamount,
-            'create_at' => $this->create_at,
-            'update_at' => $this->update_at,
+            'farms_id' => $this->farms_id,
+            'huinong_id' => $this->huinong_id,
+            'money' => $this->money,
+            'area' => $this->area,
+            'state' => $this->state,
         ]);
 
-        $query->andFilterWhere(['like', 'subsidiestype_id', $this->subsidiestype_id])
-            ->andFilterWhere(['like', 'begindate', $this->begindate])
-            ->andFilterWhere(['like', 'enddate', $this->enddate]);
+        $query->andFilterWhere(['like', 'note', $this->note]);
 
         return $dataProvider;
     }

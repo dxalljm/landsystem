@@ -3,6 +3,7 @@ namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\Plant;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\HuinongSearch */
@@ -36,9 +37,33 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'subsidiestype_id',
-            'subsidiesarea',
-            'subsidiesmoney',
+            //'subsidiestype_id',
+            [
+            	'attribute' => 'typeid',
+            	'value' => function($model) {
+            		$classFile = 'app\\models\\'. $model->subsidiestype_id;
+            		$data = $classFile::find()->where(['id'=>$model->typeid])->one();
+            		if($model->subsidiestype_id == 'plant')
+            			return $data['cropname'];
+            		if($model->subsidiestype_id == 'goodseed') {
+            			$plantcropname = Plant::find()->where(['id'=>$data['plant_id']])->one()['cropname'];
+            			return $plantcropname.'/'.$data['plant_model'];
+            		}
+            	}
+            ],
+            [
+            	'attribute' => 'subsidiesarea',
+            	'value' => function ($model){
+            		$p = $model->subsidiesarea*100;
+            		return $p.'%';
+            	}
+            ],
+            [
+            	'attribute' => 'subsidiesmoney',
+           		'value' => function($model){
+           			return $model->subsidiesmoney.'元';
+            	}	 
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

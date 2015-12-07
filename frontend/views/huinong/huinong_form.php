@@ -5,6 +5,7 @@ use yii\helpers\ArrayHelper;
 use app\models\Subsidiestype;
 use app\models\Plant;
 use app\models\Goodseed;
+use dosamigos\datetimepicker\DateTimePicker;
 /* @var $this yii\web\View */
 /* @var $model app\models\Huinong */
 /* @var $form yii\widgets\ActiveForm */
@@ -19,34 +20,87 @@ use app\models\Goodseed;
 }
 </style>
 <div class="huinong-form">
-
+<?php 
+switch ($model->subsidiestype_id) {
+	case 'plant':
+		$fatherid = Plant::find()->where(['id'=>$model->typeid])->one()['father_id'];
+		$sonid = '';
+		$goodseeds = [];
+		$son = ArrayHelper::map(Plant::find()->where(['father_id'=>$fatherid])->all(),'id','cropname');
+		break;
+	case 'goodseed':
+		$plantid = Goodseed::find()->where(['id'=>$model->typeid])->one()['plant_id'];
+		$fatherid = Plant::find()->where(['id'=>$plantid])->one()['father_id'];
+		$sonid = Plant::find()->where(['id'=>$plantid])->one()['id'];
+		$son = ArrayHelper::map(Plant::find()->where(['father_id'=>$fatherid])->all(),'id','cropname');
+		$goodseeds = ArrayHelper::map(Goodseed::find()->where(['plant_id'=>$sonid])->all(),'id','plant_model');
+		break;
+	default:
+		$fatherid = '';
+		$son=[];
+		$sonid = '';
+		$goodseeds = [];
+}
+?>
     <?php $form = ActiveFormrdiv::begin(); ?>
 	<table class="table table-bordered table-hover">
 		<tr>
 			<td width=15% align='right'>补贴类型</td>
-			<td colspan="4" align='left'><?= $form->field($model, 'subsidiestype_id')->dropDownList(ArrayHelper::map(Subsidiestype::find()->all(), 'urladdress', 'typename'),['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
+			<td colspan="6" align='left'><?= $form->field($model, 'subsidiestype_id')->dropDownList(ArrayHelper::map(Subsidiestype::find()->all(), 'urladdress', 'typename'),['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
 		</tr>
 		<tr class="goodseed">
 			<td align='right'>良种型号</td>
-  			<td align='left'><?= html::dropDownList('plant-father','',ArrayHelper::map(Plant::find()->where(['father_id'=>1])->all(), 'id', 'cropname'),['prompt'=>'请选择...','class'=>'form-control','id'=>'goodseedplantfather']) ?></td>
-			<td align='right'><?= html::dropDownList('plant','',[],['prompt'=>'请选择...','class'=>'form-control','id'=>'goodseedplantson'])?></td>
-			<td align="right"><?= html::dropDownList('goodseed','',[],['prompt'=>'请选择...','class'=>'form-control','id'=>'goodseedgoodseed']) ?></td>
+  			<td align='left'><?= html::dropDownList('plant-father',$fatherid,ArrayHelper::map(Plant::find()->where(['father_id'=>1])->all(), 'id', 'cropname'),['prompt'=>'请选择...','class'=>'form-control','id'=>'goodseedplantfather']) ?></td>
+			<td colspan="2" align='right'><?= html::dropDownList('plant',$sonid,$son,['prompt'=>'请选择...','class'=>'form-control','id'=>'goodseedplantson'])?></td>
+			<td align="right"><?= html::dropDownList('goodseed',$model->typeid,$goodseeds,['prompt'=>'请选择...','class'=>'form-control','id'=>'goodseedgoodseed']) ?></td>
 			<td >&nbsp;</td>
 		</tr>
 		<tr class="plant">
 			<td width=15% align='right'>作物</td>
-			<td align='left'><?= html::dropDownList('plant-father','',ArrayHelper::map(Plant::find()->where(['father_id'=>1])->all(), 'id', 'cropname'),['prompt'=>'请选择...','class'=>'form-control','id'=>'plantfather']) ?></td>
-			<td align='right'><?= html::dropDownList('plant','',[],['prompt'=>'请选择...','class'=>'form-control','id'=>'plantson'])?></td>
+			<td align='left'><?= html::dropDownList('plant-father',$fatherid,ArrayHelper::map(Plant::find()->where(['father_id'=>1])->all(), 'id', 'cropname'),['prompt'=>'请选择...','class'=>'form-control','id'=>'plantfather']) ?></td>
+			<td colspan="2" align='right'><?= html::dropDownList('plant',$model->typeid,$son,['prompt'=>'请选择...','class'=>'form-control','id'=>'plantson'])?></td>
 			<td align='left'>&nbsp;</td>
 			<td align='left'>&nbsp;</td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>补贴面积</td>
-			<td colspan="4" align='left'><?= $form->field($model, 'subsidiesarea')->textInput()->label(false)->error(false) ?></td>
+			<td colspan="6" align='left'><?= $form->field($model, 'subsidiesarea')->textInput()->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>补贴金额</td>
-			<td colspan="4" align='left'><?= $form->field($model, 'subsidiesmoney')->textInput()->label(false)->error(false) ?></td>
+			<td colspan="6" align='left'><?= $form->field($model, 'subsidiesmoney')->textInput()->label(false)->error(false) ?></td>
+		</tr>
+		<tr>
+			<td width=15% align='right'>起止日期</td><?php if($model->begindate == '') $model->begindate = date('Y-m-d'); else $model->begindate = date('Y-m-d',$model->begindate)?>
+			<td align='center'><?= $form->field($model, 'begindate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+            'autoclose' => true,
+        	'minView' => 3,
+        	'maxView' => 3,
+            'format' => 'yyyy-mm-dd'
+        ]]) ?></td>
+			<td align='center'>至</td><?php if($model->enddate =='') $model->enddate = '';else $model->enddate = date('Y-m-d',$model->enddate);?>
+			<td align='center'><?= $form->field($model, 'enddate')->textInput(['maxlength' => 500])->label(false)->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+            'autoclose' => true,
+        	'minView' => 3,
+        	'maxView' => 3,
+            'format' => 'yyyy-mm-dd'
+        ]])?></td>
+			<td align='center'>&nbsp;</td>
+			<td colspan="2" align='center'>&nbsp;</td>
 		</tr>
 	</table>
 	<div class="form-group">
@@ -57,15 +111,17 @@ use app\models\Goodseed;
 
 </div>
 <script>
+if($('#huinong-subsidiestype_id').val() !== '')
+	$('.'+$('#huinong-subsidiestype_id').val()).css('display', 'table-row');
 $('#huinong-subsidiestype_id').change(function(){
 	var input = $(this).val();
 	if(input == 'goodseed') {
-		$('.plant').css('display', 'none')
-		$('.goodseed').css('display', 'table-row')
+		$('.plant').css('display', 'none');
+		$('.goodseed').css('display', 'table-row');
 	}
 	if(input == 'plant') {
-		$('.goodseed').css('display', 'none')
-		$('.plant').css('display', 'table-row')
+		$('.goodseed').css('display', 'none');
+		$('.plant').css('display', 'table-row');
 	}
 });
 $('#plantfather').change(function(){
