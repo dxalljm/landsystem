@@ -24,6 +24,7 @@ class AppAsset extends AssetBundle
     // 注册CSS
     public $css = [
         'vendor/bower/font-awesome/css/font-awesome.min.css',
+        'vendor/bower/font-awesome/css/font-awesome.min.css',
         'vendor/bower/AdminLTE/dist/css/AdminLTE.min.css',
         'vendor/bower/AdminLTE/dist/css/skins/_all-skins.min.css',
         'css/site.css',
@@ -31,6 +32,7 @@ class AppAsset extends AssetBundle
 
     // 注册JS
     public $js = [
+        'js/date.js',
         'vendor/bower/AdminLTE/bootstrap/js/bootstrap.min.js',
         'vendor/bower/AdminLTE/dist/js/app.min.js',
         'vendor/bower/devbridge-autocomplete/dist/jquery.autocomplete.min.js',

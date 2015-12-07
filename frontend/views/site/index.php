@@ -25,6 +25,12 @@ $this->title = '岭南管委会';
     <li><a href="<?= Url::to('index.php?r=site/index')?>"><i class="fa fa-dashboard"></i> 首页</a></li>
   </ol>
 
+
+<div id="currentTime">
+
+</div>
+
+
 <div class="row">
     <input class="Wdate" type="text" onClick="WdatePicker()">
     <div class="col-md-6">

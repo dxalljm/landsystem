@@ -61,9 +61,14 @@ use yii\helpers\Url;
                     
                
                 <?php }} ?>
-
-                
             </ul>
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="javascript:void(0);" id="currentTime"><?= date('Y年m月j日 H:i:s')?></a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 </header>
