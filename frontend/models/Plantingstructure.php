@@ -163,7 +163,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     			$planting = Plantingstructure::find()->where(['farms_id'=>$val['id']])->all();
     			foreach ($planting as $v) {
     				$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname'];
-    				$data[$value][$plantname][] = $v['area'];
+    				$data[$plantname][] = $v['area'];
     			}
     		}
     	}
@@ -171,18 +171,18 @@ class Plantingstructure extends \yii\db\ActiveRecord
 	    	foreach ($data as $key => $value) {
 	    		$areaSum = 0.0;
 	    		foreach($value as $k => $val) {
-		    		foreach ($val as $v) {
-		    			$areaSum += $v;
-		    		}
+// 		    		foreach ($val as $v) {
+		    			$areaSum += $val;
+// 		    		}
 	    		}
-	    		for($i=1;$i<=$areaNum;$i++) {
-	    			if($i == $k) {
-	    				$d[$i] = $areaSum;
-	    			} else {
-	    				$d[$i] = 0;
-	    			}
-	    		}
-	    		$result[] = ['name'=>$key,'data'=>[$d]];
+// 	    		for($i=1;$i<=$areaNum;$i++) {
+// 	    			if($i == $k) {
+// 	    				$d[$i] = $areaSum;
+// 	    			} else {
+// 	    				$d[$i] = 0;
+// 	    			}
+// 	    		}
+	    		$result[] = ['name'=>$key,'data'=>[$areaSum]];
 	    	}
     	}
 // 		var_dump($result);
@@ -191,6 +191,6 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	] );
     	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
     	
-    	return $result;
+    	return $jsonData;
     }
 }

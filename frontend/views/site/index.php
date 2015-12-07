@@ -123,7 +123,7 @@ $this->title = '岭南管委会';
             <div class="box-body">
               
 <?php 
- var_dump(Plantingstructure::getPlantingstructure());
+//  var_dump(Plantingstructure::getPlantingstructure());
 ?>
         		<div id="collection" style="wedth: 100%; height: 362px; margin: 0 auto;" ></div>
    			 <script type="text/javascript">
