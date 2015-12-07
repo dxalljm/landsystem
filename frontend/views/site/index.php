@@ -26,13 +26,9 @@ $this->title = '岭南管委会';
   </ol>
 
 
-<div id="currentTime">
-
-</div>
 
 
 <div class="row">
-    <input class="Wdate" type="text" onClick="WdatePicker()">
     <div class="col-md-6">
           <!-- Box Comment -->
           <div class="box box-widget">
