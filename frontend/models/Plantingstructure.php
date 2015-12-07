@@ -175,15 +175,15 @@ class Plantingstructure extends \yii\db\ActiveRecord
 				foreach ($val as $v) {
 					$areaSum += $v;
 				}
-				$d[$key][$k] = $areaSum;
+				$result[$key][$k] = $areaSum;
 			}
 		}
-		var_dump($d);
-//     	$jsonData = json_encode ( [
-//     			'result' => $result
-//     	] );
-//     	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
+// 		var_dump($d);
+    	$jsonData = json_encode ( [
+    			'result' => $result
+    	] );
+    	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
     	
-//     	return $jsonData;
+    	return $jsonData;
     }
 }
