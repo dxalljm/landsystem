@@ -178,7 +178,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
 				$result[$key][$k] = $areaSum;
 			}
 		}
-// 		var_dump($d);
+		var_dump($result);
     	$jsonData = json_encode ( [
     			'result' => $result
     	] );
