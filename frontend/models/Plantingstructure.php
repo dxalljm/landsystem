@@ -148,6 +148,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
 
     public static function getPlantingstructure()
     {
+
     	$cacheKey = 'plantingstructure-hcharts';
     	$result = Yii::$app->cache->get ( $cacheKey );
     	if (! empty ( $result )) {
@@ -197,11 +198,14 @@ class Plantingstructure extends \yii\db\ActiveRecord
 			}
 		}
 
-		$result['name'] = '区域总数';
+		$index = 0;
 		foreach ($planting as $name => $value) {
-			$result['name'] = $name;
-			$result['data'] = $value;
+			$result[$index]['name'] = $name;
+			$result[$index]['data'] = [$value];
+			$index++;
 		}
+//		var_dump($result);
+//		exit;
 
     	$jsonData = json_encode ( [
     			'result' => $result
