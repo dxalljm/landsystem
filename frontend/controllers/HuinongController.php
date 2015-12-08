@@ -8,6 +8,9 @@ use frontend\models\HuinongSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Logs;
+use app\models\Plantingstructure;
+use app\models\Huinonggrant;
 
 /**
  * HuinongController implements the CRUD actions for Huinong model.
@@ -40,7 +43,42 @@ class HuinongController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
-
+	//惠农政策当年有效列表
+    public function actionHuinonglist()
+    {
+    	$huinongs = Huinong::find()->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->all();
+    	return $this->render('huinonglist', [
+    			'huinongs' => $huinongs,
+    	]);
+    }
+    
+   //惠农政策获取相关数据列表
+   public function actionHuinongdata($id)
+   {
+   		$model = $this->findModel($id);
+   		switch ($model->subsidiestype_id) {
+   			case 'plant':
+   				$classname = 'plantingstructure';
+   				$data = Plantingstructure::find()->where(['plant_id'=>$model->typeid])->all();
+   				break;
+   			case 'goodseed':
+   				$classname = 'plantingstructure';
+   				$data = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid])->all();
+   				break;
+   		}
+   		$isSubmit = Yii::$app->request->post('isSubmit');
+   		
+   		if($isSubmit) {
+//    			var_dump($isSubmit);exit;
+   			$huinonggrantModel = new Huinonggrant();
+   		}
+        return $this->render('huinongdata', [
+        		'data' => $data,
+        		'classname' => $classname,
+        		'model' => $model,
+        ]);
+   }
+    
     /**
      * Displays a single Huinong model.
      * @param integer $id
@@ -62,8 +100,17 @@ class HuinongController extends Controller
     {
         $model = new Huinong();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['huinongview', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->typeid = Yii::$app->request->post($model->subsidiestype_id);
+        	$model->create_at = time();
+        	$model->update_at = $model->create_at;
+        	$model->begindate = (string)strtotime($model->begindate);
+        	$model->enddate = (string)strtotime($model->enddate);
+//         	var_dump($model);exit;
+        	$model->save();
+        	
+        	Logs::writeLog('新增惠农政策',$model->id,'',$model->attributes);
+            return $this->redirect(['huinongindex']);
         } else {
             return $this->render('huinongcreate', [
                 'model' => $model,
@@ -80,9 +127,18 @@ class HuinongController extends Controller
     public function actionHuinongupdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['huinongview', 'id' => $model->id]);
+		$old = $model->attributes;
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->typeid = Yii::$app->request->post($model->subsidiestype_id);
+        	$model->update_at = time();
+        	$model->begindate = (string)strtotime($model->begindate);
+        	$model->enddate = (string)strtotime($model->enddate);
+//         	var_dump($model->begindate);exit;
+        	$model->save();
+//         	var_dump($model->getErrors());exit;
+        	$new = $model->attributes;
+        	Logs::writeLog('更新惠农政策',$model->id,$old,$new);
+            return $this->redirect(['huinongindex']);
         } else {
             return $this->render('huinongupdate', [
                 'model' => $model,

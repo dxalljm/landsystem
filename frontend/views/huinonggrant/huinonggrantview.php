@@ -5,14 +5,14 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Huinong */
+/* @var $model app\models\Huinonggrant */
 
 $this->title = 'ID:'.$model->id;
-$title = Tables::find()->where(['tablename'=>'huinong'])->one()['Ctablename'];
-$this->params['breadcrumbs'][] = ['label' => $title, 'url' => ['huinongindex']];
+$title = Tables::find()->where(['tablename'=>'huinonggrant'])->one()['Ctablename'];
+$this->params['breadcrumbs'][] = ['label' => $title, 'url' => ['huinonggrantindex']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="huinong-view">
+<div class="huinonggrant-view">
 
 <section class="content">
     <div class="row">
@@ -25,9 +25,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="box-body">
 
     <p>
-    	 <?= Html::a('添加', ['huinongcreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('更新', ['huinongupdate', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('删除', ['huinongdelete', 'id' => $model->id], [
+    	 <?= Html::a('添加', ['huinonggrantcreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('更新', ['huinonggrantupdate', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('删除', ['huinonggrantdelete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => '您确定要删除这项吗？',
@@ -40,11 +40,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'subsidiestype_id',
- 
-            'typeid',
-            'subsidiesarea',
-            'subsidiesmoney',
+            'farms_id',
+            'huinong_id',
+            'money',
+            'area',
+            'state',
+            'note:ntext',
         ],
     ]) ?>
                 </div>
