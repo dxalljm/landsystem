@@ -156,29 +156,53 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	$data = [];
     	$result = [];
     	$areaNum = 0;
-    	
-    	foreach ( Farms::getManagementArea ()['id'] as $value ) {
+
+		$area = Farms::getManagementArea ();
+    	foreach ( $area['id'] as $key => $value ) {
     		$areaNum++;
-    		$farm = Farms::find()->where(['management_area'=>$value])->all();
+
+			// 农场区域
+			$array = [];
+			$array['areaname'] = $area['areaname'][$key];
+
+			$farm = Farms::find()->where(['management_area'=>$value])->all();
+
     		foreach ($farm as $val) {
     			$planting = Plantingstructure::find()->where(['farms_id'=>$val['id']])->all();
     			foreach ($planting as $v) {
     				$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname'];
-    				$data[$value][$plantname][] = $v['area'];
+					$array['name'][] = $plantname;
+					// 区域
+					$array['area'][] = $v['area'];
     			}
     		}
+			$data[] = $array;
     	}
-    	
-		foreach ($data as $key=>$value) {
-			foreach ($value as $k=>$val) {
-				$areaSum = 0.0;
-				foreach ($val as $v) {
-					$areaSum += $v;
+
+		// 作物统计
+		$planting = [];
+
+		// 总数计算
+		foreach ($data as $key => $value) {
+			if (empty($value['name']) || empty($value['area'])) {
+				continue;
+			}
+
+			// 作物循环
+			foreach ($value['name'] as $k => $val) {
+				if (!isset($planting[$val])) {
+					$planting[$val] = 0.00;
 				}
-				$result[$key][$k] = $areaSum;
+				$planting[$val] += $value['area'][$k];
 			}
 		}
-		var_dump($result);
+
+		$result['name'] = '区域总数';
+		foreach ($planting as $name => $value) {
+			$result['name'] = $name;
+			$result['data'] = $value;
+		}
+
     	$jsonData = json_encode ( [
     			'result' => $result
     	] );

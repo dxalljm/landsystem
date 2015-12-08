@@ -118,9 +118,6 @@ $this->title = '岭南管委会';
             <!-- /.box-header -->
             <div class="box-body">
               
-<?php 
- var_dump(Plantingstructure::getPlantingstructure());
-?>
         		<div id="collection" style="wedth: 100%; height: 362px; margin: 0 auto;" ></div>
    			 <script type="text/javascript">
    			showStacked('collection','缴费情况统计信息',<?= json_encode(Farms::getManagementArea()['areaname'])?>,'',<?= Collection::getCollection()?>,'元');
