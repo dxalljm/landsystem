@@ -62,6 +62,7 @@ class FarmsController extends Controller {
 		$result = self::actionName ();
 		return $result;
 	}
+	
 	public function beforeAction($action) {
 		$action = Yii::$app->controller->action->id;
 		if (\Yii::$app->user->can ( $action )) {
@@ -185,40 +186,68 @@ class FarmsController extends Controller {
 				$path = 'uploads/' . $model->file->name . '.' . $model->file->extension;
 				$loadxls = \PHPExcel_IOFactory::load ( $path );
 				$rows = $loadxls->getActiveSheet ()->getHighestRow ();
-				for($i = 4; $i <= $rows; $i ++) {
+				$area = 0.0;
+				for($i = 2; $i <= $rows; $i ++) {
+					//导入农场基础信息
 					// var_dump($loadxls->getActiveSheet()->getCell('H'.$i)->getValue())."<br>";exit;
 					// echo ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];"<br>";
-					$farmsmodel = new Farms ();
+// 					$farmsmodel = new Farms ();
 					// $farmsmodel = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
 					//$farmsmodel->id = ( int ) $loadxls->getActiveSheet ()->getCell ( 'A' . $i )->getValue ();
-					$farmsmodel->management_area = ( int ) $loadxls->getActiveSheet ()->getCell ( 'B' . $i )->getValue ();
-					$farmsmodel->contractnumber = $loadxls->getActiveSheet ()->getCell ( 'C' . $i )->getValue ();
-					$farmsmodel->farmname = $loadxls->getActiveSheet ()->getCell ( 'D' . $i )->getValue ();
-					$farmsmodel->farmername = $loadxls->getActiveSheet ()->getCell ( 'E' . $i )->getValue ();
-					$farmsmodel->measure = $loadxls->getActiveSheet ()->getCell ( 'F' . $i )->getValue ();
-					$farmsmodel->address = $loadxls->getActiveSheet ()->getCell ( 'G' . $i )->getValue ();
-					$farmsmodel->longitude = $this->formatLongLat ( $loadxls->getActiveSheet ()->getCell ( 'H' . $i )->getValue (), 'E' );
-					$farmsmodel->latitude = $this->formatLongLat ( $loadxls->getActiveSheet ()->getCell ( 'I' . $i )->getValue (), 'N' );
-					$farmsmodel->cardid = $loadxls->getActiveSheet ()->getCell ( 'J' . $i )->getValue ();
-					$farmsmodel->telephone = ( string ) $loadxls->getActiveSheet ()->getCell ( 'K' . $i )->getValue ();
-					// $farmsmodel->spyear = '';
-					$farmsmodel->begindate = '2010-09-13';
-					$farmsmodel->enddate = '2025-09-13';
-					// $farmsmodel->surveydate = date('Y-m-d',$time);
-					$farmsmodel->state = 1;
-					$farmsmodel->notclear = $loadxls->getActiveSheet ()->getCell ( 'F' . $i )->getValue ();
-					// echo $farmsmodel->surveydate;
-					// $farmsmodel->groundsign =
-					// $farmsmodel->investigator =
-					// $farmsmodel->farmersign = $loadxls->getActiveSheet()->getCell('L'.$i)->getValue();
-					$farmsmodel->create_at = time ();
-					$farmsmodel->update_at = time ();
-					// var_dump(Pinyin::encode($loadxls->getActiveSheet()->getCell('D'.$i)->getValue()));
-					$farmsmodel->pinyin = Pinyin::encode ( $loadxls->getActiveSheet ()->getCell ( 'D' . $i )->getValue () );
-					$farmsmodel->farmerpinyin = Pinyin::encode ( $loadxls->getActiveSheet ()->getCell ( 'E' . $i )->getValue () );
-					$farmsmodel->save ();
+// 					$farmsmodel->management_area = ( int ) $loadxls->getActiveSheet ()->getCell ( 'B' . $i )->getValue ();
+// 					$farmsmodel->contractnumber = $loadxls->getActiveSheet ()->getCell ( 'C' . $i )->getValue ();
+// 					$farmsmodel->farmname = $loadxls->getActiveSheet ()->getCell ( 'D' . $i )->getValue ();
+// 					$farmsmodel->farmername = $loadxls->getActiveSheet ()->getCell ( 'E' . $i )->getValue ();
+// 					$farmsmodel->measure = $loadxls->getActiveSheet ()->getCell ( 'F' . $i )->getValue ();
+// 					$farmsmodel->address = $loadxls->getActiveSheet ()->getCell ( 'G' . $i )->getValue ();
+// 					$farmsmodel->longitude = $this->formatLongLat ( $loadxls->getActiveSheet ()->getCell ( 'H' . $i )->getValue (), 'E' );
+// 					$farmsmodel->latitude = $this->formatLongLat ( $loadxls->getActiveSheet ()->getCell ( 'I' . $i )->getValue (), 'N' );
+// 					$farmsmodel->cardid = $loadxls->getActiveSheet ()->getCell ( 'J' . $i )->getValue ();
+// 					$farmsmodel->telephone = ( string ) $loadxls->getActiveSheet ()->getCell ( 'K' . $i )->getValue ();
+// 					// $farmsmodel->spyear = '';
+// 					$farmsmodel->begindate = '2010-09-13';
+// 					$farmsmodel->enddate = '2025-09-13';
+// 					// $farmsmodel->surveydate = date('Y-m-d',$time);
+// 					$farmsmodel->state = 1;
+// 					$farmsmodel->notclear = $loadxls->getActiveSheet ()->getCell ( 'F' . $i )->getValue ();
+// 					// echo $farmsmodel->surveydate;
+// 					// $farmsmodel->groundsign =
+// 					// $farmsmodel->investigator =
+// 					// $farmsmodel->farmersign = $loadxls->getActiveSheet()->getCell('L'.$i)->getValue();
+// 					$farmsmodel->create_at = time ();
+// 					$farmsmodel->update_at = time ();
+// 					// var_dump(Pinyin::encode($loadxls->getActiveSheet()->getCell('D'.$i)->getValue()));
+// 					$farmsmodel->pinyin = Pinyin::encode ( $loadxls->getActiveSheet ()->getCell ( 'D' . $i )->getValue () );
+// 					$farmsmodel->farmerpinyin = Pinyin::encode ( $loadxls->getActiveSheet ()->getCell ( 'E' . $i )->getValue () );
+// 					$farmsmodel->save ();
 					// var_dump($farmsmodel);
 					// exit;
+					
+					//导入农场宗地信息
+					$OldContractNumber = $loadxls->getActiveSheet()->getCell('C'.$i)->getValue();
+					$j = $i + 1;
+					echo $loadxls->getActiveSheet()->getCell('C'.$j)->getValue();
+					if($i<=$rows) {
+						$NewContractNumber = $loadxls->getActiveSheet()->getCell('C'.$j)->getValue();
+					
+						if($OldContractNumber == $NewContractNumber) {
+							$zongdi[] = $loadxls->getActiveSheet()->getCell('G'.$i)->getValue();
+							$area += Parcel::find()->where(['unifiedserialnumber'=>$loadxls->getActiveSheet()->getCell('G'.$i)->getValue()])->one()['grossarea'];
+						} else {
+							$zongdi[] = $loadxls->getActiveSheet()->getCell('G'.$i)->getValue();
+							$area += Parcel::find()->where(['unifiedserialnumber'=>$loadxls->getActiveSheet()->getCell('G'.$i)->getValue()])->one()['grossarea'];
+							$farm = Farms::find()->where(['contractnumber'=>$loadxls->getActiveSheet()->getCell('C'.$i)->getValue()])->one();
+							$model = $this->findModel($farm->id);
+							$model->zongdi = implode('、', $zongdi);
+							$model->measure = $area;
+							$model->notclear = 0;
+// 							$model->save();
+							$area = 0.0;
+							$zongdi = [];
+							var_dump($model);
+						}
+					}
+					
 				}
 			}
 		}

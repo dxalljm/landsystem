@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use app\models\Logs;
 use app\models\Plantingstructure;
 use app\models\Huinonggrant;
+use app\models\Farms;
 
 /**
  * HuinongController implements the CRUD actions for Huinong model.
@@ -71,6 +72,24 @@ class HuinongController extends Controller
    		if($isSubmit) {
 //    			var_dump($isSubmit);exit;
    			$huinonggrantModel = new Huinonggrant();
+   			foreach ($isSubmit as $value) {
+   				$plantInfo = explode('/', $value);
+   				$farms_id = $plantInfo[0];
+   				$huinong_id = $plantInfo[1];
+   				$money = $plantInfo[2];
+   				$area = $plantInfo[3];
+   				$farm = Plantingstructure::find()->where(['farms_id'=>$farms_id])->one();
+   				$huinonggrantModel->farms_id = $farms_id;
+   				$huinonggrantModel->huinong_id = $huinong_id;
+   				$huinonggrantModel->money = $money;
+   				$huinonggrantModel->area = $area;
+   				$huinonggrantModel->state = 0;
+   				$huinonggrantModel->create_at = time();
+   				$huinonggrantModel->update_at = $huinonggrantModel->create_at;
+   				$huinonggrantModel->save();
+   				Logs::writeLog('地产科提交符合惠农政策条件的农场用户',$huinonggrantModel->id,'',$huinonggrantModel->attributes);
+   			}
+   			return $this->redirect(['huinongsend']);
    		}
         return $this->render('huinongdata', [
         		'data' => $data,

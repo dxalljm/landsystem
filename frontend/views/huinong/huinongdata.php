@@ -66,7 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
     					<td align="center"><?= Collection::getCollecitonInfo($value['farms_id'])?></td>
     					<td align="center"><?= $value['area'].' 亩'?></td>
     					<td align="center"><?= MoneyFormat::num_format($money).' 元'?><?php $moneySum += $money;?></td>
-    					<td align="center"><?= html::checkboxList('isSubmit[]','',[$value['id']=>'是否提交'])?></td>
+    					<td align="center"><?= html::checkboxList('isSubmit[]','',[$value['farms_id'].'/'.$value['id'].'/'.$money.'/'.$value['area']=>'是否提交'])?></td>
     				</tr>
     				<?php }?>
     				<tr>
