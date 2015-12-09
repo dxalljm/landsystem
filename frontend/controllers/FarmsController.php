@@ -229,8 +229,9 @@ class FarmsController extends Controller {
 					echo $loadxls->getActiveSheet()->getCell('C'.$j)->getValue();
 					if($i<=$rows) {
 						$NewContractNumber = $loadxls->getActiveSheet()->getCell('C'.$j)->getValue();
-					
-						if($OldContractNumber == $NewContractNumber) {
+						$htareaArray = explode('-', $NewContractNumber);
+						$htarea = $htareaArray[2];
+						if ($OldContractNumber == $NewContractNumber) {
 							$zongdi[] = $loadxls->getActiveSheet()->getCell('G'.$i)->getValue();
 							$area += Parcel::find()->where(['unifiedserialnumber'=>$loadxls->getActiveSheet()->getCell('G'.$i)->getValue()])->one()['grossarea'];
 						} else {
@@ -240,7 +241,12 @@ class FarmsController extends Controller {
 							$model = $this->findModel($farm->id);
 							$model->zongdi = implode('、', $zongdi);
 							$model->measure = $area;
-							$model->notclear = 0;
+							if($htarea<$area) {
+								$notclear = bcsub($area, $htarea);
+							} else {
+								$notclear = 0.0;
+							}
+							$model->notclear = $notclear;
 // 							$model->save();
 							$area = 0.0;
 							$zongdi = [];
