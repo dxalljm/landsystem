@@ -269,9 +269,9 @@ class Farms extends \yii\db\ActiveRecord
     		] )->count ();
     		$rows[] = $row;
     		$sum += $row;
-    		$percent[] = bcdiv($row,$all)*100;
+    		$percent[] = sprintf("%.2f", $row/$all*100); 
     	}
-		var_dump($all);
+		var_dump($row);
 		var_dump($percent);
 
 		exit;
@@ -308,7 +308,7 @@ class Farms extends \yii\db\ActiveRecord
     		return $result;
     	}
     	$rows = [];
-    	$sum = 0;
+    	$sum = 0.0;
     	$farmsID = [];
     	 
     	$all = Farms::find ()->sum ('measure');
@@ -319,6 +319,7 @@ class Farms extends \yii\db\ActiveRecord
     		 ] )->sum ( 'measure' );
     		 $areas[] = $area;
     		 $sum += $area;
+    		 $percent[] = bcdiv($row,$all,2)*100;
     	}
     	
     	$allvalue = $all - $sum;
