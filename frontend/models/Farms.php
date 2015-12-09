@@ -319,7 +319,7 @@ class Farms extends \yii\db\ActiveRecord
     		 ] )->sum ( 'measure' );
     		 $areas[] = $area;
     		 $sum += $area;
-    		 $percent[] = bcdiv($area,$all,2)*100;
+    		 $percent[] = sprintf("%.2f", $area/$all*100);
     	}
     	
     	$allvalue = $all - $sum;
@@ -330,6 +330,7 @@ class Farms extends \yii\db\ActiveRecord
     	$result = [[
     			'type' => 'column',
     			'name' => '面积',
+    			'percent' => $percent,
     			'data' => $areas,
     			'dataLabels'=> [
     					'enabled'=> true,

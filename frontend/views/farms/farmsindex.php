@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
 //             ],
 			//'management_area',
             'measure',
-            // 'iscontract',
+            'contractnumber',
             // 'contractlife',
 
             ['class' => 'yii\grid\ActionColumn'],

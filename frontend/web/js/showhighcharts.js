@@ -84,16 +84,16 @@ function showColumn(divID,title,categories,subtitle,series,ytitle,dw)
 //categories:各项目名称
 function showCombination(divID,title,categories,pieTitle,series,dw)
 {
-	var pointFormatFunction = function () {
-		return '<span style="color:{series.color}">' + this.series.name + '</span>: <b>'+this.y+dw+'</b><br/>';
-	}
+//	var pointFormatFunction = function () {
+//		return '<span style="color:{series.color}">' + this.series.name + '</span>: <b>'+this.y+dw+'</b><br/>';
+//	}
 
 	// 所辖管理区农场数量统计数据, 百分比处理
-	if (divID == 'statis-farms') {
+//	if (divID == 'statis-farms') {
 		var pointFormatFunction = function () {
-			return '<span style="color:{series.color}">' + this.series.name + '</span>: <b>'+this.y+dw+' 占比: (' + series.result[0]['percent'][this.x]  + ')'+ '</b><br/>';
+			return '<span style="color:{series.color}">' + this.series.name + '</span>: <b>'+this.y+dw+' 占比: (' + series.result[0]['percent'][this.x]  + '%)'+ '</b><br/>';
 		}
-	}
+//	}
 
 	$(function () {
 	    $('#'+divID).highcharts({                                          
