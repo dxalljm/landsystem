@@ -315,7 +315,7 @@ class Farms extends \yii\db\ActiveRecord
     		 ] )->sum ( 'measure' );
     		 $areas[] = $area;
     		 $sum += $area;
-    		 $percent[] = bcdiv($row,$all,2)*100;
+    		 $percent[] = bcdiv($area,$all,2)*100;
     	}
     	
     	$allvalue = $all - $sum;
