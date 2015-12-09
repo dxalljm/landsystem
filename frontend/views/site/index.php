@@ -44,10 +44,6 @@ $this->title = '岭南管委会';
             <!-- /.box-header -->
             <div class="box-body">
               
-<?php
-var_dump(Farms::getFarmrows());
-
-?>
         		<div id="statis-farms" style="wedth: 100%; height: 350px; margin: 0 auto;" ></div>
    			 <script type="text/javascript">
    			showCombination('statis-farms','农场数量情况统计信息',<?= json_encode(Farms::getManagementArea()['areaname'])?>,'',<?= Farms::getFarmrows()?>,'个');
