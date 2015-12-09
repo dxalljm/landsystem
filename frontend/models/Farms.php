@@ -271,15 +271,15 @@ class Farms extends \yii\db\ActiveRecord
     		$sum += $row;
     		$percent[] = bcdiv($row,$all)*100;
     	}
-		var_dump($all);
-		var_dump($percent);
+//		var_dump($percent);
+//		var_dump($percent);
 
-		exit;
+//		exit;
 
     	$result = [[
     			'type' => 'column',
     			'name' => '数量',
-    			'percent' => $all,
+    			'percent' => $percent,
     			'data' => $rows,
     			'dataLabels'=> [
     				'enabled'=> true,
