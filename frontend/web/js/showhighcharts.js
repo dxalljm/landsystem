@@ -87,10 +87,7 @@ function showCombination(divID,title,categories,pieTitle,series,dw)
 	// 所辖管理区农场数量统计数据, 百分比处理
 	if (divID == 'statis-farms') {
 		series.result[0]['dataLabels']['formatter'] = function () {
-			console.log(this.point.x);
-			console.dir(series.result[0]['percent']);
-
-			return this.point.y + '(' + '百分比' + ')';
+			return this.point.y + ' (' + series.result[0]['percent'][this.point.x] + '%)';
 		}
 	}
 

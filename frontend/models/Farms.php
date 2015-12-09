@@ -269,7 +269,7 @@ class Farms extends \yii\db\ActiveRecord
     		] )->count ();
     		$rows[] = $row;
     		$sum += $row;
-    		$percent[] = sprintf("%.2f", $row/$all*100); 
+    		$percent[] = sprintf("%.2f", $row/$all*100);
     	}
 
     	$result = [[
@@ -283,7 +283,7 @@ class Farms extends \yii\db\ActiveRecord
     				'color'=> '#FFFFFF',
     				'align'=> 'right',
     				'x'=> 0,
-    				'y'=> 0,
+    				'y'=> -30,
     				'style'=> [
     					'fontSize'=> '13px',
     					'fontFamily'=> 'Verdana, sans-serif',
@@ -315,7 +315,7 @@ class Farms extends \yii\db\ActiveRecord
     		 ] )->sum ( 'measure' );
     		 $areas[] = $area;
     		 $sum += $area;
-    		 $percent[] = bcdiv($row,$all,2)*100;
+    		 $percent[] = bcdiv($area,$all,2)*100;
     	}
     	
     	$allvalue = $all - $sum;
