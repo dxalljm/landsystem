@@ -84,7 +84,15 @@ function showColumn(divID,title,categories,subtitle,series,ytitle,dw)
 //categories:各项目名称
 function showCombination(divID,title,categories,pieTitle,series,dw)
 {
-	         
+	// 所辖管理区农场数量统计数据, 百分比处理
+	if (divID == 'statis-farms') {
+		series.result[0]['dataLabels']['formatter'] = function () {
+			return this.point.y + '(' + '百分比' + ')';
+		}
+	}
+
+	console.log(series.result[0]['dataLabels']['formatter']);
+
 	$(function () {                                                               
 	    $('#'+divID).highcharts({                                          
 	        chart: {                                                          
@@ -101,7 +109,6 @@ function showCombination(divID,title,categories,pieTitle,series,dw)
 	            shared: true                                                        
 	        },    
 	        plotOptions: {
-
 	        	column: {
                     allowPointSelect: true,
                     stacking: 'category',
@@ -118,10 +125,7 @@ function showCombination(divID,title,categories,pieTitle,series,dw)
 	            }]                                                            
 	        },                                                                
 	        series: series.result 
-//	        credits: {
-//	            enabled:false
-//	        },
-	    });                                                                   
+	    });
 	});                        
 }
 function showStacked(divID,title,categories,ytitle,series,dw)

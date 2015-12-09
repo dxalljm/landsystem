@@ -44,7 +44,8 @@ $this->title = '岭南管委会';
             <!-- /.box-header -->
             <div class="box-body">
               
-<?php //var_dump(Farms::getFarmStatistics());
+<?php
+var_dump(Farms::getFarmrows());
 
 ?>
         		<div id="statis-farms" style="wedth: 100%; height: 350px; margin: 0 auto;" ></div>
