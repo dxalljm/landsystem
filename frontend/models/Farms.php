@@ -289,7 +289,11 @@ class Farms extends \yii\db\ActiveRecord
     					'fontFamily'=> 'Verdana, sans-serif',
     					'textShadow'=> '0 0 3px black'
     				]
-    			]
+    			],
+				'tooltip' => [
+					'shared' => true,
+					'formatter' => ''
+				]
     	]];
         
     	$jsonData = json_encode(['result'=>$result,'all'=>$all]);

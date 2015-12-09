@@ -84,16 +84,18 @@ function showColumn(divID,title,categories,subtitle,series,ytitle,dw)
 //categories:各项目名称
 function showCombination(divID,title,categories,pieTitle,series,dw)
 {
+	var pointFormatFunction = function () {
+		return '<span style="color:{series.color}">' + this.series.name + '</span>: <b>'+this.y+dw+'</b><br/>';
+	}
+
 	// 所辖管理区农场数量统计数据, 百分比处理
 	if (divID == 'statis-farms') {
-		series.result[0]['dataLabels']['formatter'] = function () {
-			return this.point.y + ' (' + series.result[0]['percent'][this.point.x] + '%)';
+		var pointFormatFunction = function () {
+			return '<span style="color:{series.color}">' + this.series.name + '</span>: <b>'+this.y+dw+' 占比: (' + series.result[0]['percent'][this.x]  + ')'+ '</b><br/>';
 		}
 	}
 
-	console.log(series.result[0]['dataLabels']['formatter']);
-
-	$(function () {                                                               
+	$(function () {
 	    $('#'+divID).highcharts({                                          
 	        chart: {                                                          
 	        },                                                                
@@ -104,10 +106,10 @@ function showCombination(divID,title,categories,pieTitle,series,dw)
 	            categories: categories
 	        },      
 
-	        tooltip: {                                                        
-	        	pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}'+dw+'</b><br/>',
-	            shared: true                                                        
-	        },    
+	        tooltip: {
+				pointFormatter: pointFormatFunction,
+	            shared: true
+	        },
 	        plotOptions: {
 	        	column: {
                     allowPointSelect: true,
