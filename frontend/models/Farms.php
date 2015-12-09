@@ -269,13 +269,13 @@ class Farms extends \yii\db\ActiveRecord
     		] )->count ();
     		$rows[] = $row;
     		$sum += $row;
-    		$percent[] = bcdiv($row,$all)*100;
+    		$percent[] = sprintf("%.2f", $row/$all*100);
     	}
 
     	$result = [[
     			'type' => 'column',
     			'name' => '数量',
-    			'percent' => $all,
+    			'percent' => $percent,
     			'data' => $rows,
     			'dataLabels'=> [
     				'enabled'=> true,
@@ -283,13 +283,17 @@ class Farms extends \yii\db\ActiveRecord
     				'color'=> '#FFFFFF',
     				'align'=> 'right',
     				'x'=> 0,
-    				'y'=> 0,
+    				'y'=> -30,
     				'style'=> [
     					'fontSize'=> '13px',
     					'fontFamily'=> 'Verdana, sans-serif',
     					'textShadow'=> '0 0 3px black'
     				]
-    			]
+    			],
+				'tooltip' => [
+					'shared' => true,
+					'formatter' => ''
+				]
     	]];
         
     	$jsonData = json_encode(['result'=>$result,'all'=>$all]);
@@ -304,7 +308,7 @@ class Farms extends \yii\db\ActiveRecord
     		return $result;
     	}
     	$rows = [];
-    	$sum = 0;
+    	$sum = 0.0;
     	$farmsID = [];
     	 
     	$all = Farms::find ()->sum ('measure');
@@ -315,6 +319,7 @@ class Farms extends \yii\db\ActiveRecord
     		 ] )->sum ( 'measure' );
     		 $areas[] = $area;
     		 $sum += $area;
+    		 $percent[] = bcdiv($area,$all,2)*100;
     	}
     	
     	$allvalue = $all - $sum;

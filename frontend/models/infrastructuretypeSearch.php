@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Infrastructuretype;
-
+use app\models\Theyear;
 /**
  * infrastructuretypeSearch represents the model behind the search form about `app\models\Infrastructuretype`.
  */
@@ -60,8 +60,8 @@ class infrastructuretypeSearch extends Infrastructuretype
             'father_id' => $this->father_id,
         ]);
 
-        $query->andFilterWhere(['like', 'typename', $this->typename])
-        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
+        $query->andFilterWhere(['like', 'typename', $this->typename]);
+//         ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }
