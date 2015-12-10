@@ -32,6 +32,7 @@ use yii\helpers\Url;
  */
 class ActionColumn extends Column
 {
+	public $farms_id = null;
     /**
      * @var string the ID of the controller that should handle the actions specified here.
      * If not set, it will use the currently active controller. This property is mainly used by
@@ -88,6 +89,8 @@ class ActionColumn extends Column
     public function init()
     {
         parent::init();
+        if(isset($_GET['farms_id']))
+        	$this->farms_id = $_GET['farms_id'];
         $this->initDefaultButtons();
     }
 
@@ -100,8 +103,9 @@ class ActionColumn extends Column
     	$action = $controller.'view';
     	if(\Yii::$app->user->can($action)){
 	        if (!isset($this->buttons['view'])) {
-	        	
 	            $this->buttons['view'] = function ($url, $model) {
+	            	if(!empty($this->farms_id))
+	            		$url.='&farms_id='.$this->farms_id;
 	                return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
 	                    'title' => Yii::t('yii', '查看'),
 	                    'data-pjax' => '0',
@@ -113,6 +117,8 @@ class ActionColumn extends Column
     	if(\Yii::$app->user->can($action)){
 	        if (!isset($this->buttons['update'])) {
 	            $this->buttons['update'] = function ($url, $model) {
+	            	if(!empty($this->farms_id))
+	            		$url.='&farms_id='.$this->farms_id;
 	                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
 	                    'title' => Yii::t('yii', '更新'),
 	                    'data-pjax' => '0',
@@ -124,6 +130,8 @@ class ActionColumn extends Column
     	if(\Yii::$app->user->can($action)){
 	        if (!isset($this->buttons['delete'])) {
 	            $this->buttons['delete'] = function ($url, $model) {
+	            	if(!empty($this->farms_id))
+	            		$url.='&farms_id='.$this->farms_id;
 	                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
 	                    'title' => Yii::t('yii', '删除'),
 	                    'data-confirm' => Yii::t('yii', '确定要删除此项吗?'),

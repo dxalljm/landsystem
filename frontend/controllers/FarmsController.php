@@ -41,6 +41,8 @@ use app\models\Collection;
 use app\models\Breedinfo;
 use app\models\Breed;
 use app\models\Breedtype;
+use app\models\Reviewprocess;
+use app\models\Lockedinfo;
 
 /**
  * FarmsController implements the CRUD actions for farms model.
@@ -188,6 +190,7 @@ class FarmsController extends Controller {
 				$loadxls = \PHPExcel_IOFactory::load ( $path );
 				$rows = $loadxls->getActiveSheet ()->getHighestRow ();
 				$area = 0.0;
+				$zongdi = [];
 				for($i = 2; $i <= $rows; $i ++) {
 					//导入农场基础信息
 					// var_dump($loadxls->getActiveSheet()->getCell('H'.$i)->getValue())."<br>";exit;
@@ -227,7 +230,7 @@ class FarmsController extends Controller {
 					//导入农场宗地信息
 					$OldContractNumber = $loadxls->getActiveSheet()->getCell('K'.$i)->getValue();
 					$htareaArray = explode('-', $OldContractNumber);
-// 					var_dump($loadxls->getActiveSheet()->getCell('B'.$i)->getValue());
+// 					var_dump($loadxls->getActiveSheet()->getCell('A'.$i)->getValue());
 // 					var_dump($OldContractNumber);
 // 					exit;
 					if(is_array($htareaArray))
@@ -242,18 +245,20 @@ class FarmsController extends Controller {
 						if ($OldContractNumber == $NewContractNumber) {
 // 							$htareaArray = explode('-', $OldContractNumber);
 // 							$htarea = $htareaArray[2];
-// 							
-							$zongdi[] = $loadxls->getActiveSheet()->getCell('G'.$i)->getValue();
-							$area += Parcel::find()->where(['unifiedserialnumber'=>$loadxls->getActiveSheet()->getCell('G'.$i)->getValue()])->one()['netarea'];
+							$netarea = Parcel::find()->where(['unifiedserialnumber'=>$loadxls->getActiveSheet()->getCell('G'.$i)->getValue()])->one()['netarea'];
+							$zongdi[] = $loadxls->getActiveSheet()->getCell('G'.$i)->getValue().'('.$netarea.')';
+							$area += $netarea;
 						} else {
 // 							
-							$zongdi[] = $loadxls->getActiveSheet()->getCell('G'.$i)->getValue();
-							$area += Parcel::find()->where(['unifiedserialnumber'=>$loadxls->getActiveSheet()->getCell('G'.$i)->getValue()])->one()['netarea'];
+							$netarea = Parcel::find()->where(['unifiedserialnumber'=>$loadxls->getActiveSheet()->getCell('G'.$i)->getValue()])->one()['netarea'];
+							$zongdi[] = $loadxls->getActiveSheet()->getCell('G'.$i)->getValue().'('.$netarea.')';
+							$area += $netarea;
 							$farm = Farms::find()->where(['contractnumber'=>$loadxls->getActiveSheet()->getCell('K'.$i)->getValue()])->one();
 							if($farm)
 								$farmModel = $this->findModel($farm->id);
 							else 
 								return '无此合同农场'.$OldContractNumber;
+// 							var_dump($zongdi);
 							$farmModel->zongdi = implode('、', $zongdi);
 							
 // 							var_dump($htarea);
@@ -265,9 +270,11 @@ class FarmsController extends Controller {
 								$notclear = 0.0;
 								
 							}
+							
 							$farmModel->measure = $area;
 							$farmModel->notclear = $notclear;
 							$farmModel->save();
+// 							var_dump($farmModel->getErrors());
 							$area = 0.0;
 							$zongdi = [];
 // 							if($notclear !== 0.0)
@@ -529,8 +536,18 @@ class FarmsController extends Controller {
 	public function actionFarmstransfer($farms_id) {
 		$model = $this->findModel ( $farms_id );
 		$oldAttr = $model->attributes;
+// 		$model->state = 0;
+		$model->locked = 1;
+		$model->save();
 		$nowModel = new Farms ();
+		
 		if ($nowModel->load ( Yii::$app->request->post () )) {
+			$reviewprocessModel = new Reviewprocess();
+			$reviewprocessModel->farms_id = $farms_id;
+			$reviewprocessModel->save();
+			$lockedinfoModel = new Lockedinfo();
+			$lockedinfoModel->farms_id = $farms_id;
+			$lockedinfoModel->lockedcontent = '整体过户审核过程中，已被冻结。';
 			$nowModel->address = $model->address;
 			$nowModel->management_area = $model->management_area;
 			$nowModel->spyear = $model->spyear;
@@ -545,7 +562,8 @@ class FarmsController extends Controller {
 			$nowModel->update_at = time ();
 			$nowModel->pinyin = Pinyin::encode ( $nowModel->farmname );
 			$nowModel->farmerpinyin = Pinyin::encode ( $nowModel->farmername );
-			$nowModel->state = 1;
+			$nowModel->state = 0;
+			$nowModel->locked = 1;
 			$nowModel->save ();
 			$model->state = 0;
 			$model->update_at = time ();
@@ -559,8 +577,9 @@ class FarmsController extends Controller {
 			Logs::writeLog ( '农场转让信息', $nowModel->id, $oldAttr, $newAttr );
 			
 			return $this->redirect ( [ 
-					'farmsttpomenu',
-					'farms_id' => $nowModel->id 
+					'farmsttpoprint',
+					'newfarms_id' => $nowModel->id, 
+					'oldfarms_id' => $model->id,
 			] );
 		} else {
 			return $this->render ( 'farmstransfer', [ 

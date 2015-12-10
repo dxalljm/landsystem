@@ -22,7 +22,7 @@ use app\models\Loan;
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">
-                        过户
+                       整体转让
                     </h3>
                 </div>
                 <div class="box-body">
@@ -160,7 +160,7 @@ use app\models\Loan;
   </tr>
 </table>
 <div class="form-group">
-      <?= Html::submitButton($nowModel->isNewRecord ? '添加' : '更新', ['class' => $nowModel->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+      <?= Html::submitButton('提交申请', ['class' => 'btn btn-success']) ?>
       <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
 </div>
 

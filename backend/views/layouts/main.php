@@ -25,8 +25,8 @@ AppAsset::register($this);
     <div class="wrap">
         <?php
             NavBar::begin([
-                'brandLabel' => 'My Company',
-                'brandUrl' => Yii::$app->homeUrl,
+                //'brandLabel' => 'My Company',
+                //'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
                 ],
@@ -38,7 +38,7 @@ AppAsset::register($this);
                 $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
             } else {
 				$menuItems[] = ['label' => '用户管理', 'url' => ['/user/userindex']];
-				$menuItems[] = ['label' => '业务管理', 'url' => ['/business/businessindex']];
+				//$menuItems[] = ['label' => '业务管理', 'url' => ['/business/businessindex']];
 				$menuItems[] = ['label' => '菜单管理', 'url' => ['/mainmenu/mainmenuindex']];
 				$menuItems[] = ['label' => '导航管理', 'url' => ['/menutouser/menutouserindex']];
 				$menuItems[] = ['label' => '数据库表管理', 'url' => ['/tables/tablesindex']];
@@ -46,6 +46,8 @@ AppAsset::register($this);
 				$menuItems[] = ['label' => '生成数据文件', 'url' => ['/gii']];
 				$menuItems[] = ['label' => '角色管理', 'url' => ['/role/roleindex']];
 				$menuItems[] = ['label' => '权限管理', 'url' => ['/permission/permissionindex']];
+				$menuItems[] = ['label' => '流程项目', 'url' => ['/processname/processnameindex']];
+				$menuItems[] = ['label' => '审核过程', 'url' => ['/auditprocess/auditprocessindex']];
                 $menuItems[] = [
                     'label' => '退出 (' . Yii::$app->user->identity->username . ')',
                     'url' => ['/site/logout'],

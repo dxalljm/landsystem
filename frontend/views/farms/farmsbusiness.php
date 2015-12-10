@@ -52,7 +52,7 @@ use app\models\Dispute;
             'value' => function($model,$key){
             	$url = ['/farms/farmsmenu','farms_id'=>$model->id];
             	$disputerows = Dispute::find()->where(['farms_id'=>$model->id])->count();
-            	$farmer = Farmer::find()->where(['farms_id'=>$model->id])->count();
+            	
             	
             	if($disputerows) {
             		$option = '进入业务办理<i class="fa fa-commenting"></i>';
@@ -62,7 +62,7 @@ use app\models\Dispute;
             		$option = '进入业务办理';
             		$title = '农场相关业务办理';
             	}
-            	if($farmer) {
+            	if($model->zongdi) {
             		$option .= '<i class="fa fa-check text-red"></i>';
             	}
             	return Html::a($option,$url, [
