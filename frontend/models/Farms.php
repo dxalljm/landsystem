@@ -318,7 +318,11 @@ class Farms extends \yii\db\ActiveRecord
     		  		'management_area' => $value
     		 ] )->sum ( 'measure' );
     		 $areas[] = $area;
+<<<<<<< HEAD
 //     		 $sum += $area;
+=======
+    		 $sum += $area;
+>>>>>>> 206dc0ddca6ecabe28329ff7d0c94b5a48350414
     		 $percent[] = sprintf("%.2f", $area/$all*100);
     	}
 //     	var_dump($areas);exit;
@@ -331,7 +335,11 @@ class Farms extends \yii\db\ActiveRecord
     			'type' => 'column',
     			'name' => '面积',
     			'percent' => $percent,
+<<<<<<< HEAD
     			'data' => $areas,    			
+=======
+    			'data' => $areas,
+>>>>>>> 206dc0ddca6ecabe28329ff7d0c94b5a48350414
     			'dataLabels'=> [
     					'enabled'=> true,
     					'rotation'=> -90,

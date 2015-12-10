@@ -169,7 +169,8 @@ class FarmsController extends Controller {
 // 		return $jsonData;
 // 	}
 	// xls导入
-	public function actionFarmsxls() {
+	public function actionFarmsxls() 
+	{
 		set_time_limit ( 0 );
 		$model = new UploadForm ();
 		$rows = 0;
@@ -192,8 +193,8 @@ class FarmsController extends Controller {
 					// var_dump($loadxls->getActiveSheet()->getCell('H'.$i)->getValue())."<br>";exit;
 					// echo ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];"<br>";
 // 					$farmsmodel = new Farms ();
-					// $farmsmodel = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
-					//$farmsmodel->id = ( int ) $loadxls->getActiveSheet ()->getCell ( 'A' . $i )->getValue ();
+// // 					$farmsmodel = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
+// // 					$farmsmodel->id = ( int ) $loadxls->getActiveSheet ()->getCell ( 'A' . $i )->getValue ();
 // 					$farmsmodel->management_area = ( int ) $loadxls->getActiveSheet ()->getCell ( 'B' . $i )->getValue ();
 // 					$farmsmodel->contractnumber = $loadxls->getActiveSheet ()->getCell ( 'C' . $i )->getValue ();
 // 					$farmsmodel->farmname = $loadxls->getActiveSheet ()->getCell ( 'D' . $i )->getValue ();
@@ -224,40 +225,67 @@ class FarmsController extends Controller {
 					// exit;
 					
 					//导入农场宗地信息
-					$OldContractNumber = $loadxls->getActiveSheet()->getCell('C'.$i)->getValue();
+					$OldContractNumber = $loadxls->getActiveSheet()->getCell('K'.$i)->getValue();
+					$htareaArray = explode('-', $OldContractNumber);
+// 					var_dump($loadxls->getActiveSheet()->getCell('B'.$i)->getValue());
+// 					var_dump($OldContractNumber);
+// 					exit;
+					if(is_array($htareaArray))
+						$htarea = $htareaArray[2];
+					else 
+						return $OldContractNumber;
 					$j = $i + 1;
-					echo $loadxls->getActiveSheet()->getCell('C'.$j)->getValue();
-					if($i<=$rows) {
-						$NewContractNumber = $loadxls->getActiveSheet()->getCell('C'.$j)->getValue();
 					
-						if($OldContractNumber == $NewContractNumber) {
+					if($i<=$rows) {
+						$NewContractNumber = $loadxls->getActiveSheet()->getCell('K'.$j)->getValue();
+						
+						if ($OldContractNumber == $NewContractNumber) {
+// 							$htareaArray = explode('-', $OldContractNumber);
+// 							$htarea = $htareaArray[2];
+// 							
 							$zongdi[] = $loadxls->getActiveSheet()->getCell('G'.$i)->getValue();
-							$area += Parcel::find()->where(['unifiedserialnumber'=>$loadxls->getActiveSheet()->getCell('G'.$i)->getValue()])->one()['grossarea'];
+							$area += Parcel::find()->where(['unifiedserialnumber'=>$loadxls->getActiveSheet()->getCell('G'.$i)->getValue()])->one()['netarea'];
 						} else {
+// 							
 							$zongdi[] = $loadxls->getActiveSheet()->getCell('G'.$i)->getValue();
-							$area += Parcel::find()->where(['unifiedserialnumber'=>$loadxls->getActiveSheet()->getCell('G'.$i)->getValue()])->one()['grossarea'];
-							$farm = Farms::find()->where(['contractnumber'=>$loadxls->getActiveSheet()->getCell('C'.$i)->getValue()])->one();
-							$model = $this->findModel($farm->id);
-							$model->zongdi = implode('、', $zongdi);
-							$model->measure = $area;
-							$model->notclear = 0;
-// 							$model->save();
+							$area += Parcel::find()->where(['unifiedserialnumber'=>$loadxls->getActiveSheet()->getCell('G'.$i)->getValue()])->one()['netarea'];
+							$farm = Farms::find()->where(['contractnumber'=>$loadxls->getActiveSheet()->getCell('K'.$i)->getValue()])->one();
+							if($farm)
+								$farmModel = $this->findModel($farm->id);
+							else 
+								return '无此合同农场'.$OldContractNumber;
+							$farmModel->zongdi = implode('、', $zongdi);
+							
+// 							var_dump($htarea);
+// 							var_dump($OldContractNumber);
+							if(bccomp((float)$htarea,$area) == 1) {
+								$notclear = (float)sprintf("%.2f", $htarea-$area);
+// 								$lastarea = $area;
+							} else {
+								$notclear = 0.0;
+								
+							}
+							$farmModel->measure = $area;
+							$farmModel->notclear = $notclear;
+							$farmModel->save();
 							$area = 0.0;
 							$zongdi = [];
-							var_dump($model);
+// 							if($notclear !== 0.0)
+// 								var_dump($farmModel->attributes);
 						}
 					}
 					
 				}
 			}
 		}
-		// exit;
+// 		exit;
 		Logs::writeLog ( '农场XLS批量导入' );
 		return $this->render ( 'farmsxls', [ 
 				'model' => $model,
 				'rows' => $rows 
 		] );
 	}
+
 	private function formatLongLat($str, $l) {
 		$miao = substr ( $str, - 4 );
 		$fen = substr ( $str, - 6, 2 );
