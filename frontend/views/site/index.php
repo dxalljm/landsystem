@@ -19,7 +19,7 @@ $this->title = '岭南管委会';
     <li><a href="<?= Url::to('index.php?r=site/index')?>"><i class="fa fa-dashboard"></i> 首页</a></li>
   </ol>
 
-
+<?php var_dump(Farms::getFarmarea());?>
 
 
 <div class="row">
