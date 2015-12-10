@@ -98,6 +98,11 @@ class HuinongController extends Controller
         ]);
    }
     
+   public function actionHuinongsend()
+   {
+  	 	return $this->render('collectionfinished',['farms_id'=>$farms_id]);
+   }
+   
     /**
      * Displays a single Huinong model.
      * @param integer $id

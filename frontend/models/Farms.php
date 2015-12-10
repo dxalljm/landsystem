@@ -302,13 +302,13 @@ class Farms extends \yii\db\ActiveRecord
     	return $jsonData;
     }
     public static function getFarmarea() {
-    	$cacheKey = 'farms-hcharts2';
+    	$cacheKey = 'farms-hcharts3';
     	$result = Yii::$app->cache->get ( $cacheKey );
     	if (! empty ( $result )) {
     		return $result;
     	}
-    	$rows = [];
-    	$sum = 0.0;
+    	$areas = [];
+//     	$sum = 0.0;
     	$farmsID = [];
     	 
     	$all = Farms::find ()->sum ('measure');
@@ -318,19 +318,20 @@ class Farms extends \yii\db\ActiveRecord
     		  		'management_area' => $value
     		 ] )->sum ( 'measure' );
     		 $areas[] = $area;
-    		 $sum += $area;
-    		 $percent[] = bcdiv($area,$all,2)*100;
+//     		 $sum += $area;
+    		 $percent[] = sprintf("%.2f", $area/$all*100);
     	}
-    	
-    	$allvalue = $all - $sum;
+//     	var_dump($areas);exit;
+    	//$allvalue = $all - $sum;
     
-    	if ($allvalue !== 0) {
-    		$data[] = ['name'=>'其他管理区','y'=>$allvalue];
-    	}
+//     	if ($allvalue !== 0) {
+//     		$data[] = ['name'=>'其他管理区','y'=>$allvalue];
+//     	}
     	$result = [[
     			'type' => 'column',
     			'name' => '面积',
-    			'data' => $areas,
+    			'percent' => $percent,
+    			'data' => $areas,    			
     			'dataLabels'=> [
     					'enabled'=> true,
     					'rotation'=> -90,
@@ -345,7 +346,7 @@ class Farms extends \yii\db\ActiveRecord
     					]
     			]
     	]];
-    
+    	var_dump($result);
     	$jsonData = json_encode(['result'=>$result]);
     	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
     
