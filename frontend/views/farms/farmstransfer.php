@@ -10,6 +10,7 @@ use app\models\ManagementArea;
 use app\models\Farms;
 use app\models\Contractnumber;
 use app\models\Loan;
+use app\models\Lockedinfo;
 /* @var $this yii\web\View */
 /* @var $model app\models\Farms */
 /* @var $form yii\widgets\ActiveForm */
@@ -26,7 +27,7 @@ use app\models\Loan;
                     </h3>
                 </div>
                 <div class="box-body">
-<?php if(!Farms::getLocked($_GET['farms_id'])) {?>
+<?php if(!Farms::getLocked($farms_id)) {?>
     <?php $form = ActiveFormrdiv::begin(); ?>
   <table width="100%" border="0">
     <tr>
@@ -101,7 +102,7 @@ use app\models\Loan;
         <td  colspan="5" align='left'><?= $form->field($nowModel, 'telephone')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
         </tr>
         <tr>
-			<td width=25% align='right'>合同号</td><?php $nowModel->contractnumber = Farms::getContractnumber($_GET['farms_id']);?>
+			<td width=25% align='right'>合同号</td><?php $nowModel->contractnumber = $model->contractnumber;?>
 			<td colspan="5" align='left'><?= $form->field($nowModel, 'contractnumber')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
@@ -166,7 +167,7 @@ use app\models\Loan;
 
     <?php ActiveFormrdiv::end(); ?>
      <?php } else {?>
-    	<h4>此农场因贷款事由现已被冻结，解冻日期为<?= Loan::find()->where(['farms_id'=>$_GET['farms_id']])->one()['enddate'];?></h4>
+    	<h4><?= Lockedinfo::find()->where(['farms_id'=>$farms_id])->one()['lockedcontent']?></h4>
     <?php }?>
 	                </div>
             </div>

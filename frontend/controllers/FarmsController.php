@@ -43,7 +43,7 @@ use app\models\Breed;
 use app\models\Breedtype;
 use app\models\Reviewprocess;
 use app\models\Lockedinfo;
-
+use app\models\Auditprocess;
 /**
  * FarmsController implements the CRUD actions for farms model.
  */
@@ -64,15 +64,24 @@ class FarmsController extends Controller {
 		$result = self::actionName ();
 		return $result;
 	}
-	
-	public function beforeAction($action) {
-		$action = Yii::$app->controller->action->id;
-		if (\Yii::$app->user->can ( $action )) {
-			return true;
-		} else {
-			throw new \yii\web\UnauthorizedHttpException ( '对不起，您现在还没获此操作的权限' );
+	public function actionFarmsreplace()
+	{
+		$farms = Farms::find()->all();
+		foreach ($farms as $farm) {
+			$model = $this->findModel($farm['id']);
+			$model->contractnumber = str_ireplace('－', '-', $model->contractnumber);
+			$model->save();
 		}
+		return 'finished';
 	}
+// 	public function beforeAction($action) {
+// 		$action = Yii::$app->controller->action->id;
+// 		if (\Yii::$app->user->can ( $action )) {
+// 			return true;
+// 		} else {
+// 			throw new \yii\web\UnauthorizedHttpException ( '对不起，您现在还没获此操作的权限' );
+// 		}
+// 	}
 	/**
 	 * Lists all farms models.
 	 *
@@ -433,6 +442,18 @@ class FarmsController extends Controller {
 				'dataProvider' => $dataProvider 
 		] );
 	}
+	public function actionFarmslist(){
+		$farms = Farms::find()->all();
+		foreach($farms as $farm) {
+			if(($farm->measure - Farms::getNowContractnumberArea($farm->id))/Farms::getNowContractnumberArea($farm->id) > 1) {
+				if(!($farm['zongdi'] == ''))
+					$data[] = $farm;
+			}
+		}
+		return $this->render ( 'farmslist', [
+				'data' => $data,
+ 		] );
+	}
 	// 得到所有农场ID
 	public function actionGetfarmid($id) {
 		$arrayFarmsid = Farms::getFarmArray ();
@@ -537,8 +558,7 @@ class FarmsController extends Controller {
 		$model = $this->findModel ( $farms_id );
 		$oldAttr = $model->attributes;
 // 		$model->state = 0;
-		$model->locked = 1;
-		$model->save();
+		
 		$nowModel = new Farms ();
 		
 		if ($nowModel->load ( Yii::$app->request->post () )) {
@@ -565,26 +585,28 @@ class FarmsController extends Controller {
 			$nowModel->state = 0;
 			$nowModel->locked = 1;
 			$nowModel->save ();
-			$model->state = 0;
-			$model->update_at = time ();
-			$model->save ();
+			
 			$ttpoModel = new Ttpo ();
 			$ttpoModel->oldfarms_id = $model->id;
 			$ttpoModel->newfarms_id = $nowModel->id;
 			$ttpoModel->create_at = time ();
 			$ttpoModel->save ();
+			$model->locked = 1;
+			$model->save();
 			$newAttr = $nowModel->attributes;
 			Logs::writeLog ( '农场转让信息', $nowModel->id, $oldAttr, $newAttr );
-			
+			$actionname = Auditprocess::find()->where(['actionname'=>yii::$app->controller->action->id])->one()['actionname'];
 			return $this->redirect ( [ 
-					'farmsttpoprint',
-					'newfarms_id' => $nowModel->id, 
-					'oldfarms_id' => $model->id,
+					'reviewprocess/reviewprocess'.$actionname,
+					'newfarmsid' => $nowModel->id, 
+					'oldfarmsid' => $model->id,
+					'actionname' => $actionname,
 			] );
 		} else {
 			return $this->render ( 'farmstransfer', [ 
 					'model' => $model,
-					'nowModel' => $nowModel 
+					'nowModel' => $nowModel,
+					'farms_id' => $farms_id,
 			] );
 		}
 	}

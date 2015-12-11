@@ -43,9 +43,9 @@ $this->title = '宗地明细'
     		<td align='center'>图幅号</td>
     	</tr>
     	<?php
-			$i=1;
+			$i=1;$areaSum = 0.0;
     	foreach($parcels as $parcel) {?>
-    	<tr>
+    	<tr><?php $areaSum += $parcel->netarea?>
     		<td align='center'><?= $i?></td>
     		<td align='center'><?= $parcel->temporarynumber?></td>
     		<td align='center'><?= $parcel->unifiedserialnumber?></td>
@@ -60,6 +60,21 @@ $this->title = '宗地明细'
     		<td align='center'><?= $parcel->figurenumber?></td>
     	</tr>
     	<?php $i++;}?>
+    	<tr>
+    		<td align='center'>合计</td>
+    		<td align='center'></td>
+    		<td align='center'></td>
+    		<td align='center'></td>
+    		<td align='center'></td>
+    		<td align='center'></td>
+    		<td align='center'></td>
+    		<td align='center'></td>
+    		<td align='center'></td>
+    		<td align='center'></td>
+    		<td align='center'><?= $areaSum?></td>
+    		<td align='center'></td>
+    	</tr>
+    	
     </table>
 	                </div>
             </div>

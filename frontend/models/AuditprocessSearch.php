@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
@@ -19,7 +19,7 @@ class AuditprocessSearch extends Auditprocess
     {
         return [
             [['id'], 'integer'],
-            [['projectname', 'process'], 'safe'],
+            [['projectname', 'process', 'actionname'], 'safe'],
         ];
     }
 
@@ -60,7 +60,8 @@ class AuditprocessSearch extends Auditprocess
         ]);
 
         $query->andFilterWhere(['like', 'projectname', $this->projectname])
-            ->andFilterWhere(['like', 'process', $this->process]);
+            ->andFilterWhere(['like', 'process', $this->process])
+            ->andFilterWhere(['like', 'actionname', $this->actionname]);
 
         return $dataProvider;
     }

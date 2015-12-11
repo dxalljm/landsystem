@@ -4,6 +4,7 @@ use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\ManagementArea;
+use app\models\Farms;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\farmsSearch */
@@ -59,21 +60,21 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ['class' => 'yii\grid\ActionColumn'],
 //             [
-//             'label'=>'更多操作',
+//             'label'=>'状态',
 //             'format'=>'raw',
 //             //'class' => 'btn btn-primary btn-lg',
 //             'value' => function($model,$key){
-//             	// $url = ['/user/userassign','id'=>$model->id];
-//             	return Html::a('详细信息','#', [
-//             			'id' => 'farmercreate',
-//             			'title' => '填写承包信息',
-//             			//'class' => 'btn btn-primary btn-lg',
-//             			'data-toggle' => 'modal',
-//             			'data-target' => '#farmercontract-modal',
-//             			//'data-id' => $key,
-//             			'onclick'=> 'farmercontract('.$key.')',
-//             			//'data-pjax' => '0',
-            
+//             	$option = '';
+//             	$title = '';
+//             	if($model->measure > Farms::getNowContractnumberArea($model->id)) {
+//             		$option = '<i class="fa fa-check text-red"></i>';
+//             		$title = '地块面积大于合同面积';
+            		
+//             	}
+//             	return Html::a($option,'#', [
+//             			'id' => 'farmermenu',
+//             			'title' => $title,
+            			
 //             	]);
 //             }
 //             ],

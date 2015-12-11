@@ -238,6 +238,16 @@ class Farms extends \yii\db\ActiveRecord
     	$contractnumber = $cn1.'-'.$cn2.'-'.$cn3.'-'.$cn4;
     	return $contractnumber;
     }
+    
+    public static function getNowContractnumberArea($farms_id,$state=null)
+    {
+    	$farm = Farms::find()->where(['id'=>$farms_id])->one();
+    	$contractnumber = $farm->contractnumber;
+    	$array = explode('-', $contractnumber);
+//     	var_dump($farms_id);
+    	return $array[2];
+    }
+    
     public static function getManagementArea()
     {
     	$dep_id = User::findByUsername ( yii::$app->user->identity->username )['department_id'];
@@ -318,11 +328,7 @@ class Farms extends \yii\db\ActiveRecord
     		  		'management_area' => $value
     		 ] )->sum ( 'measure' );
     		 $areas[] = $area;
-<<<<<<< HEAD
-//     		 $sum += $area;
-=======
-    		 $sum += $area;
->>>>>>> 206dc0ddca6ecabe28329ff7d0c94b5a48350414
+
     		 $percent[] = sprintf("%.2f", $area/$all*100);
     	}
 //     	var_dump($areas);exit;
@@ -335,11 +341,8 @@ class Farms extends \yii\db\ActiveRecord
     			'type' => 'column',
     			'name' => '面积',
     			'percent' => $percent,
-<<<<<<< HEAD
-    			'data' => $areas,    			
-=======
     			'data' => $areas,
->>>>>>> 206dc0ddca6ecabe28329ff7d0c94b5a48350414
+
     			'dataLabels'=> [
     					'enabled'=> true,
     					'rotation'=> -90,
@@ -354,7 +357,7 @@ class Farms extends \yii\db\ActiveRecord
     					]
     			]
     	]];
-    	var_dump($result);
+//     	var_dump($result);
     	$jsonData = json_encode(['result'=>$result]);
     	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
     

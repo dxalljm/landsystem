@@ -8,6 +8,8 @@ use dosamigos\datetimepicker\DateTimePicker;
 use app\models\Parcel;
 use app\models\ManagementArea;
 use app\models\Farms;
+use app\models\Reviewprocess;
+use app\models\Processname;
 /* @var $this yii\web\View */
 /* @var $model app\models\Farms */
 /* @var $form yii\widgets\ActiveForm */
@@ -26,9 +28,6 @@ use app\models\Farms;
     <td width="14%" align="center">现法人</td>
     <td width="14%" align="center">现面积</td>
   </tr>
-  <?php $oldfarm = Farms::find()->where(['id'=>$oldfarms_id])->one();
-  		$newfarm = Farms::find()->where(['id'=>$newfarms_id])->one();
-  ?>
   <tr>
     <td align="center"><?= $oldfarm->farmname?></td>
     <td align="center"><?= $oldfarm->farmername?></td>
@@ -37,84 +36,13 @@ use app\models\Farms;
     <td align="center"><?= $newfarm->farmername?></td>
     <td align="center"><?= $newfarm->measure?></td>
   </tr>
-  <?php ?>
+  <?php foreach ($process as $value) { ?>
   <tr>
-    <td align="center"><p>地产科<br />
+    <td align="center"><p><?= Processname::find()->where(['Identification'=>$value])->one()['processdepartment']?><br />
     意&nbsp;&nbsp;&nbsp;&nbsp;见</p></td>
     <td colspan="5" align="center">&nbsp;</td>
     </tr>
-  <tr>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-  </tr>
+  <?php }?>
 </table>
 
     <div class="form-group">
