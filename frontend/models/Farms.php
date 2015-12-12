@@ -340,7 +340,6 @@ class Farms extends \yii\db\ActiveRecord
     		  		'management_area' => $value
     		 ] )->sum ( 'measure' );
     		 $areas[] = $area;
-
     		 $percent[] = sprintf("%.2f", $area/$all*100);
     	}
 //     	var_dump($areas);exit;
