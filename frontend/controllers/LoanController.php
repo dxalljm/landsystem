@@ -9,6 +9,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Farms;
+use app\models\Lockedinfo;
+use app\models\Logs;
 
 /**
  * LoanController implements the CRUD actions for Loan model.
@@ -46,7 +48,7 @@ class LoanController extends Controller
         $params = Yii::$app->request->queryParams;
         $params['loanSearch']['farms_id'] = $farms_id;
         $dataProvider = $searchModel->search($params);
-
+		Logs::writeLog('贷款列表');
         return $this->render('loanindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -58,10 +60,12 @@ class LoanController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionLoanview($id)
+    public function actionLoanview($id,$farms_id)
     {
+    	Logs::writeLog('查看一条贷款信息',$id);
         return $this->render('loanview', [
             'model' => $this->findModel($id),
+        	'farms_id' => $farms_id,
         ]);
     }
 
@@ -82,8 +86,14 @@ class LoanController extends Controller
         		$farmsModel = Farms::findOne($farms_id);
         		$farmsModel->locked = 1;
         		$farmsModel->save();
+        		Logs::writeLog('冻结农场',$farms_id);
+        		$lockedinfoModel = new Lockedinfo();
+        		$lockedinfoModel->farms_id = $farms_id;
+        		$lockedinfoModel->lockedcontent = '因农场在贷款期限中，已被冻结，不能进行此操作，解冻日期为'.Loan::find()->where(['farms_id'=>$farms_id])->one()['enddate'];
+        		$lockedinfoModel->save();
+        		Logs::writeLog('增加冻结信息',$lockedinfoModel->id,'',$lockedinfoModel->attributes);
         	}
-        	
+        	Logs::writeLog('新增贷款信息',$model->id,'',$model->attributes);
             return $this->redirect(['loanindex', 'farms_id'=>$farms_id]);
         } else {
             return $this->render('loancreate', [
@@ -101,9 +111,10 @@ class LoanController extends Controller
     public function actionLoanupdate($id)
     {
         $model = $this->findModel($id);
-
+		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['loanview', 'id' => $model->id]);
+        	Logs::writeLog('更新贷款信息',$id,$old,$model->attributes);
+            return $this->redirect(['loanview', 'id' => $model->id,'farms_id'=>$model->farms_id]);
         } else {
             return $this->render('loanupdate', [
                 'model' => $model,
@@ -117,11 +128,22 @@ class LoanController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionLoandelete($id)
+    public function actionLoandelete($id,$farms_id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['loanindex']);
+        $loanModel = $this->findModel($id);
+        $old = $loanModel->attributes;
+        Logs::writeLog('删除贷款信息',$id,$old);
+		$loanModel->delete();
+        $farm = Farms::findOne($farms_id);
+		$farm->locked = 0;
+		$farm->save();
+		Logs::writeLog('解冻农场',$farms_id);
+		$lockedinfo = Lockedinfo::find()->where(['farms_id'=>$farms_id])->one();
+		$lockedinfoModel = Lockedinfo::findOne($lockedinfo->id);
+		$oldlockedinfo = $lockedinfoModel->attributes;
+		$lockedinfoModel->delete();
+		Logs::writeLog('删除冻结信息',$lockedinfo->id,$oldlockedinfo);
+        return $this->redirect(['loanindex','farms_id'=>$farms_id]);
     }
 
     /**

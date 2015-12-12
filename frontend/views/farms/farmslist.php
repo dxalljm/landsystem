@@ -6,6 +6,7 @@ use yii\grid\GridView;
 use app\models\ManagementArea;
 use app\models\Farmer;
 use app\models\Dispute;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\farmsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -18,66 +19,32 @@ use app\models\Dispute;
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">
-                        业务办理
+                       地块面积大于合同面积
                     </h3>
                 </div>
                 <div class="box-body">
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            //'id',
-            [
-            	'attribute' => 'farmname',
-            ],
-            'farmername',
-            'measure',
-            //'management_area',
-            [
-            
-            'format'=>'raw',
-            //'class' => 'btn btn-primary btn-lg',
-            'value' => function($model,$key){
-            	$url = ['/farms/farmsmenu','farms_id'=>$model->id];
-            	$disputerows = Dispute::find()->where(['farms_id'=>$model->id])->count();
-            	if($disputerows) {
-            		$option = '进入业务办理<i class="fa fa-commenting"></i>';
-            		$title = '此农场有'.$disputerows.'条纠纷';
-            	}
-            	else { 
-            		$option = '进入业务办理';
-            		$title = '农场相关业务办理';
-            	}
-            	return Html::a($option,$url, [
-            			'id' => 'farmermenu',
-            			'title' => $title,
-            			
-            	]);
-            }
-            ],
-            [
-            
-            'format'=>'raw',
-            //'class' => 'btn btn-primary btn-lg',
-            'value' => function($model,$key){
-            	// $url = ['/user/userassign','id'=>$model->id];
-            	return Html::a('详细信息','#', [
-            			'id' => 'farmercreate',
-            			'title' => '填写承包信息',
-            			//'class' => 'btn btn-primary btn-lg',
-            			'data-toggle' => 'modal',
-            			'data-target' => '#farmercontract-modal',
-            			//'data-id' => $key,
-            			'onclick'=> 'farmercontract('.$key.')',
-            			//'data-pjax' => '0',
-            
-            	]);
-            }
-            ],
-        ],
-    ]); ?>
+ <table class="table table-bordered table-hover">
+ 	<tr>
+ 		<td>序号</td>
+ 		<td>农场ID</td>
+ 		<td>法人姓名</td>
+ 		<td>农场名称</td>
+ 		<td>合同号</td>
+ 		<td>面积</td>
+ 		
+ 	</tr><?php $i=1;?>
+ 	<?php foreach($data as $value) {?>
+ 	<tr>
+ 		<td><?= $i++?></td>
+ 		<td><?= $value['id']?></td>
+ 		<td><?= $value['farmername']?></td>
+ 		<td><?= $value['farmname']?></td>
+ 		<td><?= $value['contractnumber']?></td>
+ 		<td><?= $value['measure']?></td>
+ 		
+ 	</tr>
+ 	<?php }?>
+ </table>
 	                </div>
             </div>
         </div>

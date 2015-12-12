@@ -20,15 +20,15 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">
-                        <?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']; ?>
+                        <?= Farms::find()->where(['id'=>$model->farms_id])->one()['farmname']; ?>
                     </h3>
                 </div>
-                <?php Farms::showRow($_GET['farms_id']);?>
+                <?php Farms::showRow($model->farms_id);?>
                 <div class="box-body">
 
     <p>
     	 <?= Html::a('添加', ['loancreate', 'farms_id' => $model->id], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('更新', ['loanupdate', 'id' => $model->id,'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('更新', ['loanupdate', 'id' => $model->id,'farms_id'=>$model->farms_id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('删除', ['loandelete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [

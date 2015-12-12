@@ -11,6 +11,7 @@ use app\models\Cooperativetype;
 use app\models\Parcel;
 use app\models\Farms;
 use app\models\Loan;
+use app\models\Lockedinfo;
 /* @var $this yii\web\View */
 /* @var $model app\models\farms */
 
@@ -29,10 +30,10 @@ use app\models\Loan;
                 <div class="box-body">
 	<p>
 	<?php if(!Farms::getLocked($farms_id)) {?>
-    	 <?= Html::a('过户', ['farmstransfer', 'farms_id' => $farms_id], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('转让', ['farmsttpozongdi', 'farms_id' => $farms_id],['class' => 'btn btn-primary']) ?>
+    	 <?= Html::a('整体转让', ['farmstransfer', 'farms_id' => $farms_id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('部分转让', ['farmsttpozongdi', 'farms_id' => $farms_id],['class' => 'btn btn-primary']) ?>
     <?php } else {?>
-    	<h4>此农场因贷款事由现已被冻结，解冻日期为<?= Loan::find()->where(['farms_id'=>$farms_id])->one()['enddate'];?></h4>
+    	<h4><?= Lockedinfo::find()->where(['farms_id'=>$farms_id])->one()['lockedcontent']?></h4>
     <?php }?>
         
     </p>
