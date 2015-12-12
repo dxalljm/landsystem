@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
@@ -19,7 +19,7 @@ class ProcessnameSearch extends Processname
     {
         return [
             [['id'], 'integer'],
-            [['processdepartment', 'Identification'], 'safe'],
+            [['processdepartment', 'Identification','rolename','sparerole'], 'safe'],
         ];
     }
 
@@ -60,7 +60,9 @@ class ProcessnameSearch extends Processname
         ]);
 
         $query->andFilterWhere(['like', 'processdepartment', $this->processdepartment])
-            ->andFilterWhere(['like', 'Identification', $this->Identification]);
+            ->andFilterWhere(['like', 'Identification', $this->Identification])
+            ->andFilterWhere(['like', 'rolename', $this->rolename])
+	        ->andFilterWhere(['like', 'sparerole', $this->sparerole]);
 
         return $dataProvider;
     }

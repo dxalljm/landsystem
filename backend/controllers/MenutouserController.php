@@ -73,9 +73,12 @@ class MenutouserController extends Controller
         $model = new MenuToUser();
 		
         if ($model->load(Yii::$app->request->post())) {
-        	$model->menulist = implode(',', $model->menulist);
-        	$model->plate = implode(',',$model->plate);
-        	$model->businessmenu = implode(',',$model->businessmenu);
+        	if(is_array($model->menulist))
+        		$model->menulist = implode(',', $model->menulist);
+        	if(is_array($model->plate))
+        		$model->plate = implode(',',$model->plate);
+        	if(is_array($model->businessmenu))
+        		$model->businessmenu = implode(',',$model->businessmenu);
         	$model->save();
             return $this->redirect(['menutouserview', 'id' => $model->id]);
         } else {
@@ -96,10 +99,12 @@ class MenutouserController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post())) {
-        	
-        	$model->menulist = implode(',', $model->menulist);
-        	$model->plate = implode(',',$model->plate);
-        	$model->businessmenu = implode(',',$model->businessmenu);
+        	if(is_array($model->menulist))
+        		$model->menulist = implode(',', $model->menulist);
+        	if(is_array($model->plate))
+        		$model->plate = implode(',',$model->plate);
+        	if(is_array($model->businessmenu))
+        		$model->businessmenu = implode(',',$model->businessmenu);
         	$model->save();
             return $this->redirect(['menutouserview', 'id' => $model->id]);
         } else {

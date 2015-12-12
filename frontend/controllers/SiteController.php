@@ -69,13 +69,13 @@ class SiteController extends Controller
 //       echo Pinyin::encode('杨淑华');
 
 //       exit;
-    	if(\Yii::$app->user->identity->username == 'cwk01') {
-    		Logs::writeLog('票据打印');
-    		$searchModel = new tempprintbillSearch();
-    		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-    		return $this->redirect(['tempprintbill/tempprintbillindex', 'searchModel' => $searchModel,'dataProvider'=>$dataProvider]);
+//     	if(\Yii::$app->user->identity->username == 'cwk01') {
+//     		Logs::writeLog('票据打印');
+//     		$searchModel = new tempprintbillSearch();
+//     		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+//     		return $this->redirect(['tempprintbill/tempprintbillindex', 'searchModel' => $searchModel,'dataProvider'=>$dataProvider]);
     		
-    	} else {
+//     	} else {
 	    	Logs::writeLog('访问首页');
 	    	$user = User::find()->where(['id'=>yii::$app->getUser()->id])->one();
 	    	$dep_id = $user['department_id'];
@@ -98,7 +98,7 @@ class SiteController extends Controller
 	            'areaname' => $result,
 	        	'user' => $user,
 	        ]);
-    	}
+//     	}
     }
 
     public function actionLogin()

@@ -18,7 +18,7 @@ class ReviewprocessSearch extends Reviewprocess
     public function rules()
     {
         return [
-            [['id', 'farms_id', 'create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime', 'regulations', 'regulationstime'], 'integer'],
+            [['id', 'oldfarms_id', 'newfarms_id', 'management_area', 'create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime', 'regulations', 'regulationstime'], 'integer'],
             [['estatecontent', 'financecontent', 'filereviewcontent', 'publicsecuritycontent', 'leadercontent', 'mortgagecontent', 'steeringgroupcontent', 'regulationscontent'], 'safe'],
         ];
     }
@@ -41,6 +41,7 @@ class ReviewprocessSearch extends Reviewprocess
      */
     public function search($params)
     {
+//     	var_dump($params);exit;
         $query = Reviewprocess::find();
 
         $dataProvider = new ActiveDataProvider([
@@ -57,7 +58,9 @@ class ReviewprocessSearch extends Reviewprocess
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'farms_id' => $this->farms_id,
+            'oldfarms_id' => $this->oldfarms_id,
+        	'newfarms_id' => $this->newfarms_id,
+        	'management_area' => $this->management_area,
             'create_at' => $this->create_at,
             'update_at' => $this->update_at,
             'estate' => $this->estate,

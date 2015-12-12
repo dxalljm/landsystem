@@ -4,14 +4,28 @@ use yii\helpers\Html;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Tables;
 use app\models\Tablefields;
+use app\models\Processname;
+use app\models\Reviewprocess;
+use app\models\User;
 /* @var $this yii\web\View */
 /* @var $model app\models\Reviewprocess */
 
 ?>
-
-<object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0> 
-       <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
-</object>
+<style type="text/css">
+#reviewprocess-estatecontent { display:none }
+#reviewprocess-financecontent { display:none }
+#reviewprocess-filereviewcontent { display:none }
+#reviewprocess-regulationscontent { display:none }
+#reviewprocess-publicsecuritycontent { display:none }
+#reviewprocess-leadercontent { display:none }
+#reviewprocess-mortgagecontent { display:none }
+#reviewprocess-steeringgroupcontent { display:none }
+.ttpoprint {
+	font-family: "仿宋";
+	font-size:20px;
+}
+.tablehead{ width:100%; height:30px; line-height:20px; text-align:center; float:left; font-size:30px; font-family:"黑体"}
+</style>
 <div class="reviewprocess-form">
 
 
@@ -21,20 +35,10 @@ use app\models\Tablefields;
     <section class="content">
     <div class="row">
         <div class="col-xs-12">
-        <div class="form-group">
-    	   	&nbsp;&nbsp;<?= Html::Button('打印', ['class' => 'btn btn-primary','onclick'=>'prn_preview4()']) ?> 			
-    	</div>
 <!--             <div class="box"> -->
 
 <!--                 <div class="box-body"> -->
-    <div class="col-md-6" id="ttpoprint">
-<style type="text/css">
-.ttpoprint {
-	font-family: "仿宋";
-	font-size:20px;
-}
-.tablehead{ width:100%; height:30px; line-height:20px; text-align:center; float:left; font-size:30px; font-family:"黑体"}
-</style>    
+    <div class="col-md-6" id="ttpoprint"> 
 
           <!-- Box Comment -->
           <div class="box box-widget">
@@ -60,10 +64,10 @@ use app\models\Tablefields;
 			  <tr height="40px">
 			    <td align="center"><?= $oldfarm->farmname?></td>
 			    <td align="center"><?= $oldfarm->farmername?></td>
-			    <td align="center"><?= $oldfarm->measure?></td>
+			    <td align="center"><?= $oldfarm->measure?>亩</td>
 			    <td align="center"><?= $newfarm->farmname?></td>
 			    <td align="center"><?= $newfarm->farmername?></td>
-			    <td align="center"><?= $newfarm->measure?></td>
+			    <td align="center"><?= $newfarm->measure?>亩</td>
 			  </tr>
 			  <tr height="40px">
 			    <td align="center">原合同号</td>
@@ -111,15 +115,16 @@ use app\models\Tablefields;
 			    	
 			    }?></table></td>
 			    </tr>
-			  <tr>
-			  <?php foreach ($process as $value) { ?>
-			  
+			    <?php foreach ($process as $value) { 
+			  	$role = Reviewprocess::getProcessRole($value);
+			  	
+			  	if($role['rolename'] == User::getItemname() or $role['sparerole'] == User::getItemname()) {
+			  ?>
+			  <tr>	  
 			    <td align="center"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?></td>
-			    <td colspan="5" align="right"><?php if($state) {?><?= $form->field($model,$value)->hiddenInput()->label(false)?><?= $form->field($model,$value.'content')->textInput()->label(false)?><?php } else {echo '<br><br><br><br>';}?>
-			    
-		        <p>签字：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日 </p></td>
+			    <td colspan="5" align="left" class='content'><?php if($state) { echo html::radioList('isAgree',1,[1=>'同意',0=>'不同意'],['id'=>'agree','onclick'=>'CheckState("'.$value.'")']); echo $form->field($model,$value.'content')->textInput()->label(false)->error(false);}?></td>
 			    </tr>
-			  <?php }?>
+			  <?php }}?>
 			  <tr>
 			    <td align="center">备&nbsp;&nbsp;&nbsp;&nbsp;注</td>
 			    <td colspan="5" align="center"><br><br><br><br>
@@ -146,21 +151,14 @@ use app\models\Tablefields;
 </div>
 
 <script language="javascript" type="text/javascript">
-    var LODOP; //声明为全局变量 
-	
-	function prn_preview4() {	
-		CreateOnePage();	
-		LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT","Full-Page");	
-		LODOP.PREVIEW();	
-	};		
-	
-	function CreateOnePage(){
-		LODOP=getLodop();  
-		LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_整页缩放打印输出");
-		strCenterStyle="<style/>form {text-align: center}</style>"; 
-		LODOP.ADD_PRINT_HTM("14%","10%","100%","90%","<body leftmargin=0 topmargin=0>"+document.getElementById('ttpoprint').innerHTML+"</body>");
-		LODOP.SET_PRINT_STYLEA(0,"Horient",2);        
-		LODOP.SET_PRINT_STYLEA(0,"Vorient",2);
-		LODOP.SET_PREVIEW_WINDOW(0,0,0,0,0,"");	
-	};	
+function CheckState(process) {
+$('#agree').click(function(){
+ 	var val = $('input:radio[name="isAgree"]:checked').val();
+	if(val == 0) {
+		$('#reviewprocess-'+process+'content').css('display', 'inline')
+	} else {
+		$('#reviewprocess-'+process+'content').css('display', 'none')
+	}
+});
+}
 </script>

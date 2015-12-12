@@ -2,7 +2,9 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveFormrdiv;
-
+use yii\helpers\ArrayHelper;
+use app\models\User;
+use app\models\AuthItem;
 /* @var $this yii\web\View */
 /* @var $model app\models\Processname */
 /* @var $form yii\widgets\ActiveForm */
@@ -19,6 +21,14 @@ use yii\widgets\ActiveFormrdiv;
 <tr>
 <td width=15% align='right'>标识</td>
 <td align='left'><?= $form->field($model, 'Identification')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+</tr>
+<tr>
+<td width=15% align='right'>角色</td>
+<td align='left'><?= $form->field($model, 'rolename')->dropDownList(ArrayHelper::map(AuthItem::find()->where(['type'=>1])->all(), 'name', 'name'))->label(false)->error(false) ?></td>
+</tr>
+<tr>
+<td width=15% align='right'>备用角色</td>
+<td align='left'><?= $form->field($model, 'sparerole')->dropDownList(ArrayHelper::map(AuthItem::find()->where(['type'=>1])->all(), 'name', 'name'))->label(false)->error(false) ?></td>
 </tr>
 </table>
     <div class="form-group">

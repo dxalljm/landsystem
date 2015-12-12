@@ -207,4 +207,22 @@ class User extends \yii\db\ActiveRecord
     {
         $this->password_reset_token = null;
     }
+    
+    public static function getUserManagementArea()
+    {
+    	$departmentid = User::find ()->where ( [
+    			'id' => \Yii::$app->getUser ()->id
+    	] )->one ()['department_id'];
+    	$departmentData = Department::find ()->where ( [
+    			'id' => $departmentid
+    	] )->one ();
+    	$whereArray = explode ( ',', $departmentData ['membership'] );
+    	
+    	return $whereArray;
+    }
+    
+    public static function getItemname()
+    {
+    	return AuthAssignment::find()->where(['user_id'=>\Yii::$app->getUser ()->id])->one()['item_name'];
+    }
 }

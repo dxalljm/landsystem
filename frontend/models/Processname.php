@@ -10,6 +10,8 @@ use Yii;
  * @property integer $id
  * @property string $processdepartment
  * @property string $Identification
+ * @property integer $user_id
+ * @property integer $spareuser
  */
 class Processname extends \yii\db\ActiveRecord
 {
@@ -27,7 +29,7 @@ class Processname extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['processdepartment', 'Identification'], 'string', 'max' => 500]
+            [['processdepartment', 'Identification','rolename','sparerole'], 'string', 'max' => 500]
         ];
     }
 
@@ -40,6 +42,8 @@ class Processname extends \yii\db\ActiveRecord
 			'id' => 'ID',
             'processdepartment' => '流程科室名称',
             'Identification' => '标识',
+            'rolename' => '角色',
+            'sparerole' => '备用角色',
         ];
     }
 }

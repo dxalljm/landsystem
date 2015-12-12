@@ -41,30 +41,32 @@ use app\models\Prevention;
                 <div class="box-body">
 	<table width="600px" class="table table-bordered table-hover">
       <tr>
-        <td align="right">管理区：</td>
-        <td align="left"><?= ManagementArea::find()->where(['id'=>$farm->management_area])->one()['areaname']?></td>
-        <td align="right">农场名称：</td>
-        <td align="left"><?= $farm->farmname?></td>
-        <td rowspan="4" align="left"><?php echo '&nbsp;'.Html::img(Farmer::find()->where(['farms_id'=>$farm->id])->one()['photo'],['height'=>'130px']);?></td>
+        <td width="79" align="right">管理区：</td>
+        <td width="90" align="left"><?= ManagementArea::find()->where(['id'=>$farm->management_area])->one()['areaname']?></td>
+        <td width="88" align="right">农场名称：</td>
+        <td width="60" align="left"><?= $farm->farmname?></td>
+        <td width="71" align="right">法人：</td>
+        <td width="94" align="left"><?= $farm->farmername?></td>
+        <td width="58" align="right">电话：</td>
+        <td width="23" align="left"><?= $farm->telephone?></td>
+        <td width="26" rowspan="6" align="left"><?php echo '&nbsp;'.Html::img(Farmer::find()->where(['farms_id'=>$farm->id])->one()['photo'],['height'=>'130px']);?></td>
       </tr>
       <tr>
-        <td align="right">审批年度：</td>
-        <td align="left">&nbsp;
-          <?= $farm->spyear;?></td>
+        <td align="right">农场位置：</td>
+        <td align="left"><?= $farm->address;?></td>
+        <td align="right">合同号：</td>
+        <td width="80" align="left"><?= $farm->contractnumber;?></td>
         <td align="right">面积：</td>
-        <td align="left">&nbsp;
-          <?= $farm->measure.'亩'?></td>
+        <td align="left"><?= $farm->measure.'亩'?></td>
+        <td width="80" align="right">未明确地块：</td>
+        <td width="23" align="left"><?= $farm->notclear.'亩'?></td>
         </tr>
       <tr>
-        <td align="right">宗地：</td>
-        <td colspan="3" align="left">&nbsp;
+        <td align="right"><?php if(!empty($farm->zongdi)) {?>宗地(<?= count(explode('、',$farm->zongdi))?>宗)：<?php }?></td>
+        <td colspan="7" align="left">&nbsp;
           <?= $farm->zongdi;?></td>
         </tr>
-      <tr>
-        <td align="right">农场位置：</td>
-        <td colspan="3" align="left">&nbsp;
-          <?= $farm->address;?></td>
-        </tr>
+      
     </table>
     <br>
 <?= $farmsmenu?>

@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Farms;
 use app\models\Auditprocess;
+use app\models\User;
 /**
  * ReviewprocessController implements the CRUD actions for Reviewprocess model.
  */
@@ -33,12 +34,12 @@ class ReviewprocessController extends Controller
      */
     public function actionReviewprocessindex()
     {
-        $searchModel = new ReviewprocessSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    	$whereArray = Farms::getManagementArea();
+    	
+        $reviewprpcesss = Reviewprocess::find()->where(['management_area'=>$whereArray['id']])->all();
 
         return $this->render('reviewprocessindex', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+			'data' => $reviewprpcesss,
         ]);
     }
 
@@ -48,12 +49,13 @@ class ReviewprocessController extends Controller
      * @return mixed
      */
   
-    public function actionReviewprocessfarmstransfer($newfarmsid,$oldfarmsid,$actionname,$state = 0)
+    public function actionReviewprocessfarmstransfer($newfarmsid,$oldfarmsid,$reviewprocessid,$state = 0)
     {
     	$model = new Reviewprocess();
     	$newfarm = Farms::find()->where(['id'=>$newfarmsid])->one();
     	$oldfarm = Farms::find()->where(['id'=>$oldfarmsid])->one();
-    	$process = Auditprocess::find()->where(['actionname'=>$actionname])->one()['process'];
+    	$reviewprocess = Reviewprocess::find()->where(['id'=>$reviewprocessid])->one();
+    	$process = Auditprocess::find()->where(['actionname'=>$reviewprocess['actionname']])->one()['process'];
     	
     	return $this->render ( 'reviewprocessfarmstransfer', [
     			'oldfarm' => $oldfarm,
@@ -64,6 +66,22 @@ class ReviewprocessController extends Controller
     	] );
     }
 
+    public function actionReviewprocessinspections($id)
+    {
+    	
+    	$model = $this->findModel($id);
+    	$oldfarm = Farms::find()->where(['id'=>$model->oldfarms_id])->one();
+    	$newfarm = Farms::find()->where(['id'=>$model->newfarms_id])->one();
+    	$process = Auditprocess::find()->where(['actionname'=>$model->actionname])->one()['process'];
+    	return $this->render ( 'reviewprocessinspections', [
+    			'model' => $model,
+    			'oldfarm' => $oldfarm,
+    			'newfarm' => $newfarm,
+    			'process' => explode('>', $process),
+    			'state' => 1,
+    	] );
+    }
+    
     /**
      * Finds the Reviewprocess model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

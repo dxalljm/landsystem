@@ -87,7 +87,8 @@ use app\models\Lease;
     <td colspan="2" width="20%" align="center">|_</td>
     
     <td align="center">种植面积：<?= $v['area']?>亩</td>
-    <td width="12%" align="center">作物：<?php 
+    <td width="12%" align="center">作物：<?= Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname']?></td>
+    <td><?php 
     			$controller = Yii::$app->controller->id;
     			$action = $controller.'view';
     			if(\Yii::$app->user->can($action)){

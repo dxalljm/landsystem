@@ -12,6 +12,9 @@ use app\models\Parcel;
 use app\models\Farms;
 use app\models\Loan;
 use app\models\Lockedinfo;
+use app\models\Auditprocess;
+use app\models\Reviewprocess;
+use app\models\Session;
 /* @var $this yii\web\View */
 /* @var $model app\models\farms */
 
@@ -46,12 +49,14 @@ use app\models\Lockedinfo;
     		<td align="center" valign="middle">过户时间</td>
     		<td align="center" valign="middle">操作</td>
     	</tr>
-    <?php foreach($ttpoModel as $value) {?>
+    <?php foreach($ttpoModel as $value) {    	
+    	
+    ?>
        	<tr><?php $oldfarm = Farms::find()->where(['id'=>$value['oldfarms_id']])->one(); $newfarm = Farms::find()->where(['id'=>$value['newfarms_id']])->one();?>
     		<td align="center" valign="middle"><?= $oldfarm->farmname ?>(<?= $oldfarm->farmername ?>)</td>
     		<td align="center" valign="middle"><?= $newfarm->farmname ?>(<?= $newfarm->farmername ?>)</td>
     		<td align="center" valign="middle"><?= date('Y-m-d',$value['create_at']) ?></td>
-    		<td align="center" valign="middle"><?= Html::a('查看详情', ['farmsttpoview', 'id' => $value['id']], ['class' => 'btn btn-success']) ?></td>
+    		<td align="center" valign="middle"><?= Html::a('查看详情', ['reviewprocess/reviewprocessfarmstransfer', ['oldfarmsid' => $oldfarm->id,'newfarmsid'=>$newfarm->id,'reviewprocessid'=>Session::getValue($value['oldfarms_id'],'reviewprocess_id')]], ['class' => 'btn btn-success']) ?></td>
     	</tr>
     	<?php }?>
     </table>

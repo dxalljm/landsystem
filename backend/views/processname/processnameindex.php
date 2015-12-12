@@ -38,6 +38,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'processdepartment',
             'Identification',
+            'rolename',
+            'sparerole',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

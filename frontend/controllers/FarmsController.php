@@ -44,6 +44,7 @@ use app\models\Breedtype;
 use app\models\Reviewprocess;
 use app\models\Lockedinfo;
 use app\models\Auditprocess;
+
 /**
  * FarmsController implements the CRUD actions for farms model.
  */
@@ -302,15 +303,41 @@ class FarmsController extends Controller {
 		] );
 	}
 
+// 	private function formatLongLat($str, $l) {
+// 		$miao = substr ( $str, - 4 );
+// 		$fen = substr ( $str, - 6, 2 );
+// 		$du = '';
+// 		if (strlen ( $str ) == 9)
+// 			$du = substr ( $str, 0, 3 );
+// 		if (strlen ( $str ) == 7)
+// 			$du = substr ( $str, 0, 2 );
+// 		$result = $l . $du . '°' . $fen . "'" . $miao . '"';
+// 		return $result;
+// 	}
+
+	public function actionFarmsmodfiylonglat()
+	{
+		$farms = Farms::find()->all();
+		foreach ($farms as $farm) {
+			$model = $this->findModel($farm['id']);
+			$model->longitude = $this->formatLongLat($farm['longitude'],'E');
+			$model->latitude = $this->formatLongLat($farm['latitude'], 'N');
+			$model->save();
+		}
+		return '完成';
+	}	
+
 	private function formatLongLat($str, $l) {
-		$miao = substr ( $str, - 4 );
-		$fen = substr ( $str, - 6, 2 );
-		$du = '';
-		if (strlen ( $str ) == 9)
-			$du = substr ( $str, 0, 3 );
-		if (strlen ( $str ) == 8)
-			$du = substr ( $str, 0, 2 );
-		$result = $l . $du . '°' . $fen . "'" . $miao . '"';
+		if(strlen($str) == 11) {
+			$miao = substr ( $str, - 3,2 );
+			$fen = substr ( $str, - 5, 2 );
+			$du = substr ( $str, - 8, 2);
+// 			var_dump($miao);
+			$result = $l . $du . '°' . $fen . "'" . $miao.'.0' . '"';
+		}
+		else 
+			$result = $str;
+		
 		return $result;
 	}
 	//
@@ -445,7 +472,7 @@ class FarmsController extends Controller {
 	public function actionFarmslist(){
 		$farms = Farms::find()->all();
 		foreach($farms as $farm) {
-			if(($farm->measure - Farms::getNowContractnumberArea($farm->id))/Farms::getNowContractnumberArea($farm->id) > 1) {
+			if(($farm->measure - Farms::getNowContractnumberArea($farm->id)) > Farms::getNowContractnumberArea($farm->id)*0.1) {
 				if(!($farm['zongdi'] == ''))
 					$data[] = $farm;
 			}
@@ -558,13 +585,15 @@ class FarmsController extends Controller {
 		$model = $this->findModel ( $farms_id );
 		$oldAttr = $model->attributes;
 // 		$model->state = 0;
+		$reviewprocess = new Reviewprocess();
 		
 		$nowModel = new Farms ();
 		
 		if ($nowModel->load ( Yii::$app->request->post () )) {
-			$reviewprocessModel = new Reviewprocess();
-			$reviewprocessModel->farms_id = $farms_id;
-			$reviewprocessModel->save();
+			//保存审核信息，成功返回reviewprocessID，失败返回flase
+			
+			
+// 			var_dump($reviewprocessModel->getErrors());exit;
 			$lockedinfoModel = new Lockedinfo();
 			$lockedinfoModel->farms_id = $farms_id;
 			$lockedinfoModel->lockedcontent = '整体过户审核过程中，已被冻结。';
@@ -585,22 +614,24 @@ class FarmsController extends Controller {
 			$nowModel->state = 0;
 			$nowModel->locked = 1;
 			$nowModel->save ();
-			
+			$reviewprocessID = Reviewprocess::processRun($model->id,$nowModel->id);
 			$ttpoModel = new Ttpo ();
 			$ttpoModel->oldfarms_id = $model->id;
 			$ttpoModel->newfarms_id = $nowModel->id;
 			$ttpoModel->create_at = time ();
 			$ttpoModel->save ();
+			
 			$model->locked = 1;
 			$model->save();
+			
 			$newAttr = $nowModel->attributes;
 			Logs::writeLog ( '农场转让信息', $nowModel->id, $oldAttr, $newAttr );
-			$actionname = Auditprocess::find()->where(['actionname'=>yii::$app->controller->action->id])->one()['actionname'];
+			
 			return $this->redirect ( [ 
-					'reviewprocess/reviewprocess'.$actionname,
+					Reviewprocess::getReturnAction(),
 					'newfarmsid' => $nowModel->id, 
 					'oldfarmsid' => $model->id,
-					'actionname' => $actionname,
+					'reviewprocessid' => $reviewprocessID,
 			] );
 		} else {
 			return $this->render ( 'farmstransfer', [ 

@@ -262,6 +262,18 @@ class Farms extends \yii\db\ActiveRecord
     	}
     	return $result;
     }
+    public static function getManagementAreaAllID()
+    {
+    	$allid = [];
+    	$management_ids = self::getManagementArea()['id'];
+    	foreach ($management_ids as $value) {
+    		$farms = Farms::find()->where(['management_area'=>$value])->all();
+    		foreach ($farms as $val) {
+    			$allid[] = $val['id']; 
+    		}
+    	}
+    	return $allid;
+    }
     public static function getFarmrows() {
     	$cacheKey = 'farms-hcharts';
     	$result = Yii::$app->cache->get ( $cacheKey );
