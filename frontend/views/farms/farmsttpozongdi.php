@@ -70,7 +70,7 @@ use app\models\Loan;
             		$title = '此农场有'.$disputerows.'条纠纷';
             	}
             	else { 
-            		$option = '确认';
+            		$option = '转让';
             		$title = '确认转让到此农场';
             	}
             	return Html::a($option,$url, [

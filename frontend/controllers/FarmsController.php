@@ -44,6 +44,7 @@ use app\models\Breedtype;
 use app\models\Reviewprocess;
 use app\models\Lockedinfo;
 use app\models\Auditprocess;
+use app\models\Contractnumber;
 
 /**
  * FarmsController implements the CRUD actions for farms model.
@@ -461,7 +462,8 @@ class FarmsController extends Controller {
 		if (! empty ( $whereArray ) && count ( $whereArray ) > 0) {
 			$params ['farmsSearch'] ['management_area'] = $whereArray;
 		}
-		$params ['farmsSearch'] ['state'] = 1;
+// 		$params ['farmsSearch'] ['state'] = 1;
+// 		$params ['farmsSearch'] ['update_at'] = date('Y');
 		$dataProvider = $searchModel->search ( $params );
 		Logs::writeLog ( '业务办理' );
 		return $this->render ( 'farmsbusiness', [ 
@@ -496,6 +498,7 @@ class FarmsController extends Controller {
 	}
 	// 业务办理菜单页面
 	public function actionFarmsmenu($farms_id) {
+		//如果当前日期超过贷款日期则解锁
 		Farms::unLocked($farms_id);
 		$farm = $this->findModel ( $farms_id );
 		$farmsmenu = $this->showFarmmenu ( $farms_id );
@@ -596,7 +599,7 @@ class FarmsController extends Controller {
 // 			var_dump($reviewprocessModel->getErrors());exit;
 			$lockedinfoModel = new Lockedinfo();
 			$lockedinfoModel->farms_id = $farms_id;
-			$lockedinfoModel->lockedcontent = '整体过户审核过程中，已被冻结。';
+			$lockedinfoModel->lockedcontent = '整体过户审核中，已被冻结。';
 			$nowModel->address = $model->address;
 			$nowModel->management_area = $model->management_area;
 			$nowModel->spyear = $model->spyear;
@@ -644,69 +647,80 @@ class FarmsController extends Controller {
 	
 	// 农场转让——新增
 	public function actionFarmssplit($farms_id) {
-		$oldfarm = $this->findModel ( $farms_id );
+		$oldmodel = $this->findModel ( $farms_id );
 		
-		$model = new Farms ();
+		$newmodel = new Farms ();
 		// $ttpoModel = Ttpo::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
 		// $ttpozongdiModel = Ttpozongdi::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
 		// 原农场转让宗地后，重新签订合同后，生成新的农场信息
-		if ($oldfarm->load ( Yii::$app->request->post () )) {
-			$oldfarm->state = 0;
-			$oldfarm->update_at = time ();
-			
-			$oldfarm->measure = Yii::$app->request->post ( 'oldmeasure' );
-			$oldfarm->zongdi = $this->deleteZongdiDH ( Yii::$app->request->post ( 'oldzongdi' ) );
-			$oldfarm->notclear = Yii::$app->request->post ( 'oldnotclear' );
-			$oldfarm->save ();
-			
+		if ($oldmodel->load ( Yii::$app->request->post () )) {
+			$lockedinfoModel = new Lockedinfo();
+			$lockedinfoModel->farms_id = $farms_id;
+			$lockedinfoModel->lockedcontent = '部分过户审核中，已被冻结。';
+// 			$oldmodel->state = 1;
+			$oldmodel = $this->findModel ( $farms_id );
+			$oldmodel->update_at = time ();
+// 			var_dump( Yii::$app->request->post ( 'oldzongdi' ) );exit;
+			$oldmodel->farmname = $oldmodel->farmname;
+			$oldmodel->measure = Yii::$app->request->post ( 'oldmeasure' );
+			$oldmodel->zongdi = $this->deleteZongdiDH ( Yii::$app->request->post ( 'oldzongdi' ) );
+			$oldmodel->notclear = Yii::$app->request->post ( 'oldnotclear' );
+			$oldmodel->contractnumber = Yii::$app->request->post ( 'oldcontractnumber' );
+			$oldmodel->locked = 1;
+			$oldmodel->save ();
+// 			var_dump($oldmodel);exit;
 			// $newfarm->save();
 			
-			if ($model->load ( Yii::$app->request->post () )) {
+			if ($newmodel->load ( Yii::$app->request->post () )) {
+// 				var_dump($newmodel->zongdi);exit;
+				$newmodel->farmname = $newmodel->farmname;
+				$newmodel->farmername = $newmodel->farmername;
+				$newmodel->cardid = $newmodel->cardid;
+				$newmodel->telephone = $newmodel->telephone;
+				$newmodel->address = $newmodel->address;
+				$newmodel->management_area = $newmodel->management_area;
+				$newmodel->spyear = $newmodel->spyear;
+				$newmodel->measure = $newmodel->measure;
+				$newmodel->zongdi = $newmodel->zongdi;
+				$newmodel->cooperative_id = $newmodel->cooperative_id;
+				$newmodel->surveydate = $newmodel->surveydate;
+				$newmodel->groundsign = $newmodel->groundsign;
+				$newmodel->farmersign = $newmodel->farmersign;
+				$newmodel->create_at = time ();
+				$newmodel->update_at = time ();
+				$newmodel->pinyin = $newmodel->pinyin;
+				$newmodel->farmerpinyin = $newmodel->farmerpinyin;
+				$newmodel->state = 1;
+				$newmodel->notclear = $newmodel->notclear;
+				$newmodel->oldfarms_id = $farms_id;
 				
-				$model->farmname = $model->farmname;
-				$model->farmername = $model->farmername;
-				$model->cardid = $model->cardid;
-				$model->telephone = $model->telephone;
-				$model->address = $model->address;
-				$model->management_area = $model->management_area;
-				$model->spyear = $model->spyear;
-				$model->measure = $model->measure;
-				$model->zongdi = $model->zongdi;
-				$model->cooperative_id = $model->cooperative_id;
-				$model->surveydate = $model->surveydate;
-				$model->groundsign = $model->groundsign;
-				$model->farmersign = $model->farmersign;
-				$model->create_at = time ();
-				$model->update_at = time ();
-				$model->pinyin = $model->pinyin;
-				$model->farmerpinyin = $model->farmerpinyin;
-				$model->state = 1;
-				$model->notclear = $model->notclear;
-				$model->oldfarms_id = $farms_id;
-				
-				$model->save ();
+				$newmodel->save ();
 			}
-			
+			$reviewprocessID = Reviewprocess::processRun($oldmodel->id,$newmodel->id);
 			$ttpozongdi = new Ttpozongdi ();
-			$ttpozongdi->oldfarms_id = $oldfarm->id;
-			$ttpozongdi->newfarms_id = $model->id;
-			$ttpozongdi->zongdi = $model->zongdi;
-			$ttpozongdi->oldzongdi = $oldfarm->zongdi;
-			$ttpozongdi->create_at = $oldfarm->update_at;
+			$ttpozongdi->oldfarms_id = $oldmodel->id;
+			$ttpozongdi->newfarms_id = $newmodel->id;
+			$ttpozongdi->zongdi = $newmodel->zongdi;
+			$ttpozongdi->oldzongdi = $oldmodel->zongdi;
+// 			var_dump($newmodel->zongdi);exit;
+			$ttpozongdi->create_at = $oldmodel->update_at;
 			$ttpozongdi->ttpozongdi = Yii::$app->request->post ( 'ttpozongdi' );
 			$ttpozongdi->ttpoarea = Yii::$app->request->post ( 'ttpoarea' );
 			
-			// $ttpozongdi->save();
-			
+			$ttpozongdi->save();
+			Contractnumber::contractnumberAdd();
+// 			var_dump($ttpozongdi->getErrors());exit;
 			return $this->redirect ( [ 
-					'farmsttpomenu',
-					'farms_id' => $newfarm->id 
+					Reviewprocess::getReturnAction(),
+					'newfarmsid' => $newmodel->id, 
+					'oldfarmsid' => $oldmodel->id,
+					'reviewprocessid' => $reviewprocessID,
 			] );
 		} else {
 			
 			return $this->render ( 'farmssplit', [ 
-					'oldFarm' => $oldfarm,
-					'model' => $model 
+					'oldFarm' => $oldmodel,
+					'newFarm' => $newmodel 
 			] );
 		}
 	}
@@ -732,7 +746,7 @@ class FarmsController extends Controller {
 	// 删除已经分配转让出去的空数组
 	private function deleteZongdiDH($zongdiStr) {
 		$arrayZongdi = explode ( '、', $zongdiStr );
-		
+// 		var_dump($arrayZongdi);
 		foreach ( $arrayZongdi as $key => $value ) {
 			if ($value == '') {
 				unset ( $arrayZongdi [$key] );
@@ -996,9 +1010,9 @@ class FarmsController extends Controller {
 				$value ['icon'] = 'fa fa-users';
 				$value ['title'] = $menuUrl ['menuname'];
 				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
-				$ttop = Ttpo::find ()->where ( [ 
+				$ttop = Ttpo::find ()->orWhere ( [ 
 						'newfarms_id' => $farms_id 
-				] )->count ();
+				] )->orWhere(['oldfarms_id'=>$farms_id])->count ();
 				$ttopzongdi = Ttpozongdi::find ()->where ( [ 
 						'newfarms_id' => $farms_id 
 				] )->count ();
@@ -1173,6 +1187,24 @@ class FarmsController extends Controller {
 		] );
 	}
 
+	public function actionGetfarminfo($str)
+	{
+		$search = Farms::find()->where(['farmname'=>$str])->one();
+		$data['farmername'] = $search->farmername;
+		$data['cardid'] = $search->cardid;
+		$data['telephone'] = $search->telephone;
+		echo json_encode(['status'=>1,'data'=>$data]);
+	}
+	
+	public function actionGetfarmerinfo($str)
+	{
+		$search = Farms::find()->where(['farmername'=>$str])->one();
+		$data['farmname'] = $search->farmname;
+		$data['cardid'] = $search->cardid;
+		$data['telephone'] = $search->telephone;
+		echo json_encode(['status'=>1,'data'=>$data]);
+	}
+	
 	/**
 	 * Finds the farms model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.

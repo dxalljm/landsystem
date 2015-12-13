@@ -96,7 +96,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			$zongdiarr = explode('、',$model->zongdi);
 			foreach($zongdiarr as $zongdi){
 				$zongdiinfo = Parcel::find()->where(['unifiedserialnumber'=>Lease::getZongdi($zongdi)])->one();
-				eval($content = '  宗地号：'.$zongdiinfo->unifiedserialnumber."<br>".'土壤类型：'.$zongdiinfo->agrotype."<br>".'  含石量：'.$zongdiinfo->stonecontent."<br>".'  毛面积：'.$zongdiinfo->grossarea);
+// 				eval($content = '  宗地号：'.$zongdiinfo->unifiedserialnumber."<br>".'土壤类型：'.$zongdiinfo->agrotype."<br>".'  含石量：'.$zongdiinfo->stonecontent."<br>".'  毛面积：'.$zongdiinfo->grossarea);
 				?>
 				<div class="btn-group">
 				<div class="btn dropdown-toggle" 

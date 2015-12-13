@@ -49,7 +49,7 @@ class ReviewprocessController extends Controller
      * @return mixed
      */
   
-    public function actionReviewprocessfarmstransfer($newfarmsid,$oldfarmsid,$reviewprocessid,$state = 0)
+    public function actionReviewprocessfarmstransfer($newfarmsid,$oldfarmsid,$reviewprocessid)
     {
     	$model = new Reviewprocess();
     	$newfarm = Farms::find()->where(['id'=>$newfarmsid])->one();
@@ -62,10 +62,25 @@ class ReviewprocessController extends Controller
     			'newfarm' => $newfarm,
     			'process' => explode('>', $process),
     			'model' => $model,
-    			'state' => $state,
     	] );
     }
 
+    public function actionReviewprocessfarmssplit($newfarmsid,$oldfarmsid,$reviewprocessid)
+    {
+    	$model = new Reviewprocess();
+    	$newfarm = Farms::find()->where(['id'=>$newfarmsid])->one();
+    	$oldfarm = Farms::find()->where(['id'=>$oldfarmsid])->one();
+    	$reviewprocess = Reviewprocess::find()->where(['id'=>$reviewprocessid])->one();
+    	$process = Auditprocess::find()->where(['actionname'=>$reviewprocess['actionname']])->one()['process'];
+    	 
+    	return $this->render ( 'reviewprocessfarmssplit', [
+    			'oldfarm' => $oldfarm,
+    			'newfarm' => $newfarm,
+    			'process' => explode('>', $process),
+    			'model' => $model,
+    	] );
+    }
+    
     public function actionReviewprocessinspections($id)
     {
     	
@@ -73,12 +88,23 @@ class ReviewprocessController extends Controller
     	$oldfarm = Farms::find()->where(['id'=>$model->oldfarms_id])->one();
     	$newfarm = Farms::find()->where(['id'=>$model->newfarms_id])->one();
     	$process = Auditprocess::find()->where(['actionname'=>$model->actionname])->one()['process'];
+    	if($model->load(Yii::$app->request->post())) {
+    		$model->save();
+    		$state = Reviewprocess::isNextProcess($model->id);
+    		if($state) {
+    			$m = $this->findModel($model->id);
+    			$m->leader = 3;
+    			$m->steeringgroup = 3;
+    			$m->save();
+    		}
+    		
+    	}
+//     	var_dump(Yii::$app->request->post());
     	return $this->render ( 'reviewprocessinspections', [
     			'model' => $model,
     			'oldfarm' => $oldfarm,
     			'newfarm' => $newfarm,
     			'process' => explode('>', $process),
-    			'state' => 1,
     	] );
     }
     

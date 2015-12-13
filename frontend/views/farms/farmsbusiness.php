@@ -65,6 +65,10 @@ use app\models\Dispute;
             	if($model->zongdi) {
             		$option .= '<i class="fa fa-check text-red"></i>';
             	}
+            	if($model->state == 0) {
+            		$option .= '<i class="fa fa-random text-red"></i>';
+            		$title = '已转让';
+            	}
             	return Html::a($option,$url, [
             			'id' => 'farmermenu',
             			'title' => $title,

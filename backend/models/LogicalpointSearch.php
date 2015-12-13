@@ -1,16 +1,16 @@
 <?php
 
-namespace frontend\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Projectapplication;
-use app\models\Theyear;
+use app\models\Logicalpoint;
+
 /**
- * projectapplicationSearch represents the model behind the search form about `app\models\Projectapplication`.
+ * LogicalpointSearch represents the model behind the search form about `app\models\Logicalpoint`.
  */
-class projectapplicationSearch extends Projectapplication
+class LogicalpointSearch extends Logicalpoint
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class projectapplicationSearch extends Projectapplication
     public function rules()
     {
         return [
-            [['id', 'create_at', 'update_at', 'is_agree'], 'integer'],
-            [['projecttype'], 'safe'],
+            [['id'], 'integer'],
+            [['actionname', 'processname'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class projectapplicationSearch extends Projectapplication
      */
     public function search($params)
     {
-        $query = Projectapplication::find();
+        $query = Logicalpoint::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -57,13 +57,10 @@ class projectapplicationSearch extends Projectapplication
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'create_at' => $this->create_at,
-            'update_at' => $this->update_at,
-            'is_agree' => $this->is_agree,
         ]);
 
-        $query->andFilterWhere(['like', 'projecttype', $this->projecttype])
-        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
+        $query->andFilterWhere(['like', 'actionname', $this->actionname])
+            ->andFilterWhere(['like', 'processname', $this->processname]);
 
         return $dataProvider;
     }

@@ -43,4 +43,10 @@ class Contractnumber extends \yii\db\ActiveRecord
             'lifeyear' => '年限',
         ];
     }
+    
+    public static function contractnumberAdd(){
+    	$model = Contractnumber::findOne(1);
+    	$model->contractnumber = $model->contractnumber + 1;
+    	$model->save();
+    }
 }

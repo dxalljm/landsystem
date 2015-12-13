@@ -234,6 +234,8 @@ class Farms extends \yii\db\ActiveRecord
     		$cn3 = 0;
     	else
     		$cn3 = $farm->measure;
+    	
+//     		$cn3 = substr($cn3,0,strlen($cn3)-1); 
     	$cn4 = $farm->management_area;
     	$contractnumber = $cn1.'-'.$cn2.'-'.$cn3.'-'.$cn4;
     	return $contractnumber;

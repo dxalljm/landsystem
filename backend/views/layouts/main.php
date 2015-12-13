@@ -32,7 +32,7 @@ AppAsset::register($this);
                 ],
             ]);
             $menuItems = [
-                ['label' => '首页', 'url' => ['/site/index']],
+//                 ['label' => '首页', 'url' => ['/site/index']],
             ];
             if (Yii::$app->user->isGuest) {
                 $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
@@ -48,6 +48,7 @@ AppAsset::register($this);
 				$menuItems[] = ['label' => '权限管理', 'url' => ['/permission/permissionindex']];
 				$menuItems[] = ['label' => '流程项目', 'url' => ['/processname/processnameindex']];
 				$menuItems[] = ['label' => '审核过程', 'url' => ['/auditprocess/auditprocessindex']];
+				$menuItems[] = ['label' => '流程指向', 'url' => ['/logicalpoint/logicalpointindex']];
                 $menuItems[] = [
                     'label' => '退出 (' . Yii::$app->user->identity->username . ')',
                     'url' => ['/site/logout'],

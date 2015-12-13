@@ -9,6 +9,7 @@ use app\models\Parcel;
 use app\models\ManagementArea;
 use app\models\Lease;
 use app\models\Farms;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Farms */
@@ -134,19 +135,21 @@ use app\models\Farms;
     <table width="99%" height="458px" class="table table-bordered table-hover">
       <tr>
         <td width="30%" align='right'>农场名称</td>
-        <td colspan="5" align='left'><?=  $form->field($model, 'farmname')->textInput(['maxlength' => 500])->label(false)->error(false)?></td>
+        <td colspan="4" align='left'><?=  $form->field($newFarm, 'farmname')->textInput(['maxlength' => 500])->label(false)->error(false)?></td>
+        <td align='left'><?= html::a('查询','#',['id'=>'searchFarms','class'=>'btn btn-success'])?></td>
         </tr>
       <tr>
         <td width="30%" align='right'>承包人姓名</td>
-        <td colspan="5" align='left'><?=  $form->field($model, 'farmername')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+        <td colspan="4" align='left'><?=  $form->field($newFarm, 'farmername')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+        <td align='left'><?= html::a('查询','#',['id'=>'searchFarmer','class'=>'btn btn-success'])?></td>
         </tr>
       <tr>
         <td width="30%" align='right'>身份证号</td>
-        <td colspan="5" align='left'><?=  $form->field($model, 'cardid')->textInput(['maxlength' => 500])->label(false)->error(false)?></td>
+        <td colspan="5" align='left'><?=  $form->field($newFarm, 'cardid')->textInput(['maxlength' => 500])->label(false)->error(false)?></td>
         </tr>
       <tr>
         <td width="30%" align='right'>电话号码</td>
-        <td colspan="5" align='left'><?=  $form->field($model, 'telephone')->textInput(['maxlength' => 500])->label(false)->error(false)?></td>
+        <td colspan="5" align='left'><?=  $form->field($newFarm, 'telephone')->textInput(['maxlength' => 500])->label(false)->error(false)?></td>
         </tr>
       <tr>
         <td width="30%" align='right'>农场位置</td>
@@ -157,13 +160,13 @@ use app\models\Farms;
         <td colspan="5" align='left' valign="middle"><?=  ManagementArea::find()->where(['id'=>$oldFarm->management_area])->one()['areaname']?></td>
         </tr>
        <tr>
-			<td width=30% align='right'>合同号</td><?php $model->contractnumber = Farms::getContractnumber($_GET['farms_id'],'new');?>
-			<td colspan="5" align='left'><?= $form->field($model, 'contractnumber')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+			<td width=30% align='right'>合同号</td><?php $newFarm->contractnumber = Farms::getContractnumber($_GET['farms_id'],'new');?>
+			<td colspan="5" align='left'><?= $form->field($newFarm, 'contractnumber')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
 			<td width=30% align='right'>承包年限</td>
-			<td align='center'>自</td><?php if($oldFarm->begindate == '') $model->begindate='2010-09-13'; else $model->begindate = $oldFarm->begindate;if($oldFarm->enddate == '') $model->enddate = '2025-09-13';else $model->enddate = $oldFarm->enddate;?>
-			<td align='center'><?= $form->field($model, 'begindate')->textInput()->label(false)->error(false)->widget(
+			<td align='center'>自</td><?php if($oldFarm->begindate == '') $newFarm->begindate='2010-09-13'; else $newFarm->begindate = $oldFarm->begindate;if($oldFarm->enddate == '') $newFarm->enddate = '2025-09-13';else $newFarm->enddate = $oldFarm->enddate;?>
+			<td align='center'><?= $form->field($newFarm, 'begindate')->textInput()->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
         'inline' => false, 
@@ -177,7 +180,7 @@ use app\models\Farms;
             'format' => 'yyyy-mm-dd'
         ]]) ?></td>
 			<td align='center'>至</td>
-			<td align='center'><?= $form->field($model, 'enddate')->textInput()->label(false)->error(false)->widget(
+			<td align='center'><?= $form->field($newFarm, 'enddate')->textInput()->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
         'inline' => false, 
@@ -194,17 +197,17 @@ use app\models\Farms;
 		</tr>
 		<tr>
 		  <td align='right'>宗地</td>
-		  <td colspan="5" align='left'><?= $form->field($model, 'zongdi')->textarea(['readonly' => false])->label(false)->error(false) ?></td>
+		  <td colspan="5" align='left'><?= $form->field($newFarm, 'zongdi')->textarea(['readonly' => false])->label(false)->error(false) ?></td>
 		  </tr>
-		<?php $model->notclear = 0;$model->measure = 0;?>
+		<?php $newFarm->notclear = 0;$newFarm->measure = 0;?>
 		<tr>
-        <td align='right'>面积</td><?= html::hiddenInput('tempmeasure',$model->measure,['id'=>'temp_measure']) ?>
-								  <?= html::hiddenInput('tempnotclear',$model->notclear,['id'=>'temp_notclear']) ?>
-        <td colspan="5" align='left'><?= $form->field($model, 'measure')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
+        <td align='right'>面积</td><?= html::hiddenInput('tempmeasure',$newFarm->measure,['id'=>'temp_measure']) ?>
+								  <?= html::hiddenInput('tempnotclear',$newFarm->notclear,['id'=>'temp_notclear']) ?>
+        <td colspan="5" align='left'><?= $form->field($newFarm, 'measure')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
         </tr>
       <tr>
         <td align='right'>未明确地块面积</td>
-        <td colspan="5" align='left'><?= $form->field($model, 'notclear')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
+        <td colspan="5" align='left'><?= $form->field($newFarm, 'notclear')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
        </tr>
        <tr>
         <td align='right'>转让未明确地块面积</td>
@@ -212,7 +215,7 @@ use app\models\Farms;
        </tr>
       <tr>
         <td align='right'>法人签字</td>
-        <td colspan="5" align='left'><?= $form->field($model, 'farmersign')->textInput()->label(false)->error(false) ?></td>
+        <td colspan="5" align='left'><?= $form->field($newFarm, 'farmersign')->textInput()->label(false)->error(false) ?></td>
         </tr>
     </table></td>
   </tr>
@@ -247,7 +250,8 @@ function toZongdi(zongdi,area){
 	} else
 		$('#farms-zongdi').val(newzongdi);
 	var oldzongdi = $('#oldfarm-zongdi').val();
-	$('#oldfarm-zongdi').val(oldzongdi.replace(zongdi, ""));
+	var strzongdi = zongdi+"("+area+")";
+	$('#oldfarm-zongdi').val(oldzongdi.replace(strzongdi, ""));
 	oldzongdistr = $('#oldfarm-zongdi').val();
 	var first = oldzongdistr.substr(0,1);
 	var last = oldzongdistr.substr(oldzongdistr.length-1,1);
@@ -282,12 +286,27 @@ function toHTH()
 	//生成合同号
 	var hth = $('#farms-contractnumber').val();
 	var arrayhth = hth.split('-');
-	arrayhth[2] = $('#farms-measure').val();
+	var measure = $('#farms-measure').val();
+	var last = measure.substr(measure.length-1,1);
+
+	if(last == 0) {
+		arrayhth[2] = measure.substring(0,measure.length-1);
+	} else {
+		arrayhth[2] = measure;
+	}
+	
 	$('#farms-contractnumber').val(arrayhth.join('-'));
 	
 	var hth = $('#oldfarms-contractnumber').val();
 	var arrayhth = hth.split('-');
-	arrayhth[2] = $('#oldfarms-measure').val();
+	var oldmeasure = $('#oldfarms-measure').val();
+	var oldlast = oldmeasure.substr(oldmeasure.length-1,1);
+
+	if(oldlast == 0) {
+		arrayhth[2] = oldmeasure.substring(0,oldmeasure.length-1);
+	} else {
+		arrayhth[2] = oldmeasure;
+	}
 	$('#oldfarms-contractnumber').val(arrayhth.join('-'));
 }
 $('#input-notclear').blur(function(){
@@ -382,7 +401,27 @@ $('#input-notclear').keyup(function (event) {
 		}
 	}
 });
-
+$('#searchFarms').click(function(){
+	var input = $('#farms-farmname').val();
+	$.getJSON('index.php?r=farms/getfarminfo', {str: input}, function (data) {
+		if (data.status == 1) {
+			$('#farms-farmername').val(data.data['farmername']);
+			$('#farms-cardid').val(data.data['cardid']);
+			$('#farms-telephone').val(data.data['telephone']);
+		}	
+	});
+});
+$('#searchFarmer').click(function(){
+	var input = $('#farms-farmername').val();
+	
+	$.getJSON('index.php?r=farms/getfarmerinfo', {str: input}, function (data) {
+		if (data.status == 1) {
+			$('#farms-farmname').val(data.data['farmname']);
+			$('#farms-cardid').val(data.data['cardid']);
+			$('#farms-telephone').val(data.data['telephone']);
+		}	
+	});
+});
 </script>
 <?php
 

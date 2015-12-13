@@ -7,6 +7,7 @@ use app\models\Tablefields;
 use app\models\Processname;
 use app\models\Reviewprocess;
 use app\models\User;
+use Yii;
 /* @var $this yii\web\View */
 /* @var $model app\models\Reviewprocess */
 
@@ -116,13 +117,29 @@ use app\models\User;
 			    }?></table></td>
 			    </tr>
 			    <?php foreach ($process as $value) { 
+			    //获取当前流程的角色信息
 			  	$role = Reviewprocess::getProcessRole($value);
-			  	
+			  	//审核角色或备分审核角色与当前用户角色相同，则显示该条目
 			  	if($role['rolename'] == User::getItemname() or $role['sparerole'] == User::getItemname()) {
 			  ?>
 			  <tr>	  
 			    <td align="center"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?></td>
-			    <td colspan="5" align="left" class='content'><?php if($state) { echo html::radioList('isAgree',1,[1=>'同意',0=>'不同意'],['id'=>'agree','onclick'=>'CheckState("'.$value.'")']); echo $form->field($model,$value.'content')->textInput()->label(false)->error(false);}?></td>
+			    <td colspan="5" align="left" class='content'>
+			    <?php 
+			    if($model->$value == 3 or $model->$value == 0) {
+			    	if($model->$value == 3)
+			    		$model->$value = 1; 
+			    	echo $form->field($model,$value)->radioList([1=>'同意',0=>'不同意'],['onclick'=>'CheckState("'.$value.'")'])->label(false)->error(false); 
+			    	echo $form->field($model,$value.'content')->textInput()->label(false)->error(false);
+			    	echo $form->field($model,$value.'time')->hiddenInput(['value'=>time()])->label(false)->error(false);
+			    } else {
+			    	echo Reviewprocess::state($model->$value);
+			    	echo "<br>";
+			    	if(!$model->$value) {
+			    		$modelStr = $value.'content';
+			    		echo "原由：".$model->$modelStr;
+			    	}
+			    }?></td>
 			    </tr>
 			  <?php }}?>
 			  <tr>
@@ -131,7 +148,9 @@ use app\models\User;
 			 </tr>
 			</table>
 			<br>
-			
+	<div class="form-group">
+        <?= Html::submitButton('提交', ['class' => 'btn btn-primary']) ?>
+    </div>
             </div>
             <!-- /.box-body -->
            
@@ -151,13 +170,37 @@ use app\models\User;
 </div>
 
 <script language="javascript" type="text/javascript">
+if($('input:radio[name="Reviewprocess[estate]"]:checked').val() == 0){
+	$('#reviewprocess-estatecontent').css('display', 'inline');
+}
+if($('input:radio[name="Reviewprocess[finance]"]:checked').val() == 0){
+	$('#reviewprocess-financecontent').css('display', 'inline');
+}
+if($('input:radio[name="Reviewprocess[filereview]"]:checked').val() == 0){
+	$('#reviewprocess-filereviewcontent').css('display', 'inline');
+}
+if($('input:radio[name="Reviewprocess[regulations]"]:checked').val() == 0){
+	$('#reviewprocess-regulationscontent').css('display', 'inline');
+}
+if($('input:radio[name="Reviewprocess[publicsecurity]"]:checked').val() == 0){
+	$('#reviewprocess-publicsecuritycontent').css('display', 'inline');
+}
+if($('input:radio[name="Reviewprocess[leader]"]:checked').val() == 0){
+	$('#reviewprocess-leadercontent').css('display', 'inline');
+}
+if($('input:radio[name="Reviewprocess[mortgage]"]:checked').val() == 0){
+	$('#reviewprocess-mortgagecontent').css('display', 'inline');
+}
+if($('input:radio[name="Reviewprocess[steeringgroup]"]:checked').val() == 0){
+	$('#reviewprocess-steeringgroupcontent').css('display', 'inline');
+}
 function CheckState(process) {
-$('#agree').click(function(){
- 	var val = $('input:radio[name="isAgree"]:checked').val();
+$('#reviewprocess-'+process).click(function(){
+ 	var val = $('input:radio[name="Reviewprocess['+process+']"]:checked').val();
 	if(val == 0) {
-		$('#reviewprocess-'+process+'content').css('display', 'inline')
+		$('#reviewprocess-'+process+'content').css('display', 'inline');
 	} else {
-		$('#reviewprocess-'+process+'content').css('display', 'none')
+		$('#reviewprocess-'+process+'content').css('display', 'none');
 	}
 });
 }

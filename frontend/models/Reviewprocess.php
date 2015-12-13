@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use app\models\Auditprocess;
 use app\models\Session;
+use app\models\Logicalpoint;
 /**
  * This is the model class for table "{{%reviewprocess}}".
  *
@@ -52,8 +53,8 @@ class Reviewprocess extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['oldfarms_id','newfarms_id', 'management_area','create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime'], 'integer'],
-            [['estatecontent', 'financecontent', 'filereviewcontent', 'publicsecuritycontent', 'leadercontent', 'mortgagecontent', 'steeringgroupcontent','actionname'], 'string', 'max' => 500]
+            [['oldfarms_id','newfarms_id', 'management_area','create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime','regulations','regulationstime'], 'integer'],
+            [['estatecontent', 'financecontent', 'filereviewcontent', 'publicsecuritycontent', 'leadercontent', 'mortgagecontent', 'steeringgroupcontent','actionname','regulationscontent'], 'string', 'max' => 500]
         ];
     }
 
@@ -106,22 +107,69 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	return $result;
     }
     
-    public static function state()
+    public static function getProcessIdentification()
     {
-    	return ['无','通过','待审核','排队等待'];
+//     	$processname = Processname::find()->orWhere(['rolename'=>User::getItemname()])->orWhere(['sparerole'=>User::getItemname()])->one();
+    	$processname = Processname::find()->where(['rolename'=>User::getItemname()])->one();
+    	$result = $processname['Identification'];    	 
+    	return $result;
+    }
+    
+    public static function isNextProcess($id)
+    {
+    	$model = self::findOne($id);
+    	$processs = Reviewprocess::getProcess($model->actionname);
+    	foreach ($processs as $value) {
+    		if($model->leader == 1) {
+    			if($model->steeringgroup == 1) {
+    				$model->state = 7;
+    				$model->save();
+    				$oldFarm = Farms::findOne($model->oldfarms_id);
+    				$oldFarm->state = 0;
+    				$oldFarm->locked = 0;
+    				$oldFarm->update_at = time();
+    				$oldFarm->save();
+    				$newFarm = Farms::findOne($model->newfarms_id);
+    				$newFarm->state = 1;
+    				$newFarm->locked = 0;
+    				$newFarm->save();
+    				return false;
+    			} else {
+    				return false;
+    			}
+    		} else {
+    			if($value !== 'leader' and $value !== 'steeringgroup') {
+	    			if($model->$value == 1)
+	    				$state = true;
+	    			else
+	    				$state = false;
+    			}
+    		}
+    		
+    	}
+    	return $state;
+    }
+    
+    public static function state($num)
+    {
+    	$stateArray = [3=>'待审核',2=>'排除等待',1=>'同意',0=>'不同意',-1=>'无',4=>'审核中',5=>'分管领导审核中',6=>'领导小组审核中',7=>'完成'];
+    	return $stateArray[$num];
     }
     //返回指定的审核流程
     public static function getAuditprocess($actionname = NULL)
     {
-    	if(empty($actionname))
-   			return Auditprocess::find()->where(['actionname'=>yii::$app->controller->action->id])->one();
+    	if(empty($actionname)) {
+    		$processID = Logicalpoint::find()->where(['actionname'=>yii::$app->controller->action->id])->one()['processname'];
+   			return Auditprocess::find()->where(['id'=>$processID])->one();
+    	}
     	else 
     		return Auditprocess::find()->where(['actionname'=>$actionname])->one();
     }
     //返回访问地址
-    public static function getReturnAction($actionname = NULL) 
+    public static function getReturnAction() 
     {
-    	return 'reviewprocess/reviewprocess'.self::getAuditprocess()['actionname'];
+    	
+    	return 'reviewprocess/reviewprocess'.yii::$app->controller->action->id;
     }
     //返回定位方法名称
     public static function getAction($key = NULL)
@@ -145,6 +193,8 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	}
     	return false;
     }
+   
+    
     //保存流程
     public static function processRun($oldfarms_id,$newfarms_id)
     { 	
@@ -158,11 +208,11 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$reviewprocessModel->create_at = time();
     	$reviewprocessModel->update_at = $reviewprocessModel->create_at;
     	for($i=0;$i<count($processs);$i++) {
-    		$reviewprocessModel->$processs[$i] = 2;
+    		$reviewprocessModel->$processs[$i] = 3;
     		if($processs[$i] == 'leader' or $processs[$i] == 'steeringgroup')
-    			$reviewprocessModel->$processs[$i] = 3;
+    			$reviewprocessModel->$processs[$i] = 2;
     	}
-    	
+    	$reviewprocessModel->state = 4;
 //     	var_dump($reviewprocessModel);exit;
     	if($reviewprocessModel->save()) {
     		Session::sessionSave($oldfarms_id,'reviewprocess_id',$reviewprocessModel->id);
