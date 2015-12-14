@@ -19,7 +19,7 @@ class departmentSearch extends Department
     {
         return [
             [['id'], 'integer'],
-            [['departmentname', 'membership', 'operableaction'], 'safe'],
+            [['departmentname', 'membership'], 'safe'],
         ];
     }
 
@@ -60,8 +60,7 @@ class departmentSearch extends Department
         ]);
 
         $query->andFilterWhere(['like', 'departmentname', $this->departmentname])
-            ->andFilterWhere(['like', 'membership', $this->membership])
-            ->andFilterWhere(['like', 'operableaction', $this->operableaction]);
+            ->andFilterWhere(['like', 'membership', $this->membership]);
 
         return $dataProvider;
     }

@@ -286,27 +286,13 @@ function toHTH()
 	//生成合同号
 	var hth = $('#farms-contractnumber').val();
 	var arrayhth = hth.split('-');
-	var measure = $('#farms-measure').val();
-	var last = measure.substr(measure.length-1,1);
-
-	if(last == 0) {
-		arrayhth[2] = measure.substring(0,measure.length-1);
-	} else {
-		arrayhth[2] = measure;
-	}
-	
+	arrayhth[2] = cutZero($('#farms-measure').val());
 	$('#farms-contractnumber').val(arrayhth.join('-'));
 	
 	var hth = $('#oldfarms-contractnumber').val();
 	var arrayhth = hth.split('-');
-	var oldmeasure = $('#oldfarms-measure').val();
-	var oldlast = oldmeasure.substr(oldmeasure.length-1,1);
-
-	if(oldlast == 0) {
-		arrayhth[2] = oldmeasure.substring(0,oldmeasure.length-1);
-	} else {
-		arrayhth[2] = oldmeasure;
-	}
+	arrayhth[2] = cutZero($('#oldfarms-measure').val());
+	
 	$('#oldfarms-contractnumber').val(arrayhth.join('-'));
 }
 $('#input-notclear').blur(function(){

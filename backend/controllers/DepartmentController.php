@@ -72,10 +72,8 @@ class DepartmentController extends Controller
         $model = new Department();
 		
         if ($model->load(Yii::$app->request->post())) {
-        	//var_dump($model);
-        	$model->membership = implode(',', $model->membership);
-        	if(is_array($model->operableaction)) 
-        		$model->operableaction = implode(',', $model->operableaction);
+        	if(is_array($model->membership)) 
+        		$model->membership = implode(',', $model->membership);
         	
         	if($model->save())
             	return $this->redirect(['departmentview', 'id' => $model->id]);
@@ -97,11 +95,8 @@ class DepartmentController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post())) {
-        	
-        	$model->membership = implode(',', $model->membership);
-        	if(is_array($model->operableaction)) 
-        		$model->operableaction = implode(',', $model->operableaction);
-        	//var_dump($model);
+        	if(is_array($model->membership))
+        		$model->membership = implode(',', $model->membership);
         	if($model->save())
             	return $this->redirect(['departmentview', 'id' => $model->id]);
         } else {

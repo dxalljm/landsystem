@@ -9,7 +9,7 @@ use app\models\Parcel;
 use app\models\ManagementArea;
 use app\models\Lease;
 use app\models\Farms;
-use app\models\Loan;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Farms */
@@ -18,7 +18,7 @@ use app\models\Loan;
 
 <div class="farms-form">
 
-    
+    <?php $form = ActiveFormrdiv::begin(); ?>
     <section class="content">
     <div class="row">
         <div class="col-xs-12">
@@ -29,11 +29,9 @@ use app\models\Loan;
                     </h3>
                 </div>
                 <div class="box-body">
-                <?php if(!Farms::getLocked($_GET['oldfarms_id'])) {?>
-                <?php $form = ActiveFormrdiv::begin(); ?>
   <table width="100%" border="0">
     <tr>
-    <td width="46%"><table width="104%" height="458px"
+    <td width="46%" valign="top"><table width="104%" height="458px"
 		class="table table-bordered table-hover">
       <tr>
         <td width="15%" align='right' valign="middle">农场名称</td>
@@ -62,61 +60,44 @@ use app\models\Loan;
         </tr>
       <tr>
       <tr>
-			<td width=15% align='right'>合同号</td>
-			<td colspan="5" align='left'><?= html::textInput('oldcontractnumber','',['id'=>'oldfarms-contractnumber','class'=>'form-control'])?></td>
+			<td width=15% align='right'>合同号</td><?php if($oldFarm->contractnumber == '') $oldFarm->contractnumber = Farms::getContractnumber($_GET['farms_id']);?>
+			<td colspan="5" align='left'><?= html::textInput('oldcontractnumber',$oldFarm->contractnumber,['id'=>'oldfarms-contractnumber','class'=>'form-control'])?></td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>承包年限</td>
 			<td align='center'>自</td>
-			<td align='center'><?php echo DateTimePicker::widget([
-				'name' => 'oldbegindate',
-				'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
-				'options' => [
-					'readonly' => true
-				],
-				'clientOptions' => [
-					'language' => 'zh-CN',
-					'format' => 'yyyy-mm-dd',
-					'todayHighlight' => true,
-					'autoclose' => true,
-					'minView' => 3,
-					'maxView' => 3,
-				]
-			]);?></td>
+			<td align='center'><?php echo $oldFarm->begindate;?></td>
 			<td align='center'>至</td>
-			<td align='center'><?php echo DateTimePicker::widget([
-				'name' => 'oldenddate',
-				'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
-				//'type' => DatePicker::TYPE_COMPONENT_APPEND,
-				'options' => [
-					'readonly' => true
-				],
-				'clientOptions' => [
-					'language' => 'zh-CN',
-					'format' => 'yyyy-mm-dd',
-					//'todayHighlight' => true,
-					'autoclose' => true,
-					'minView' => 3,
-					'maxView' => 3,
-				]
-			]);?></td>
+			<td align='center'><?php echo $oldFarm->enddate;?></td>
 			<td align='center'>止</td>
 		</tr>
+		<tr>
         <td width="20%" align='right' valign="middle">宗地</td>
-        <td colspan="5" align='left' valign="middle"><?php $arrayZongdi = explode('、', $oldFarm->zongdi);
-        $i=0;
-        foreach($arrayZongdi as $value) {
-        	echo html::button($value,['onclick'=>'toZongdi("'.$value.'","'.Lease::zongdiToArea($value).'")','value'=>$value,'id'=>$value,'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
-        	$i++;
-        	if($i%5 == 0)
-        		echo '<br><br>';
+        <td colspan="5" align='left' valign="middle">
+        <table width="100%" border="0" align="right">
+        <?php $arrayZongdi = explode('、', $oldFarm->zongdi); 
+        for($i = 0;$i<count($arrayZongdi);$i++) {
+        	// 			    	echo $i%6;
+        	if($i%5 == 0) {
+        		echo '<tr>';
+        		echo '<td>';
+        			echo html::button($arrayZongdi[$i],['onclick'=>'toZongdi("'.Lease::getZongdi($arrayZongdi[$i]).'","'.Lease::getArea($arrayZongdi[$i]).'")','value'=>$arrayZongdi[$i],'id'=>Lease::getZongdi($arrayZongdi[$i]),'class'=>"btn btn-default"]);
+        		echo '</td>';
+        	} else {
+        		echo '<td>';
+        			echo html::button($arrayZongdi[$i],['onclick'=>'toZongdi("'.Lease::getZongdi($arrayZongdi[$i]).'","'.Lease::getArea($arrayZongdi[$i]).'")','value'=>$arrayZongdi[$i],'id'=>Lease::getZongdi($arrayZongdi[$i]),'class'=>"btn btn-default"]);
+        		echo '</td>';
+        	}
         }
-        ?></td>
+        ?>
+        </table>
+        </td>
         </tr>
       <tr><?= Html::hiddenInput('oldzongdi',$oldFarm->zongdi,['id'=>'oldfarm-zongdi']) ?>
       <?= Html::hiddenInput('ttpozongdi','',['id'=>'ttpozongdi-zongdi']) ?>
       <?= Html::hiddenInput('ttpoarea',0,['id'=>'ttpozongdi-area']) ?>
-        <td align='right' valign="middle">面积</td><?= html::hiddenInput('tempoldnotclear',$oldFarm->measure,['id'=>'temp_oldnotclear']) ?>
+        <td align='right' valign="middle">面积</td><?= html::hiddenInput('tempoldmeasure',$oldFarm->measure,['id'=>'temp_oldmeasure']) ?>
+        										 <?= html::hiddenInput('tempoldnotclear',$oldFarm->notclear,['id'=>'temp_oldnotclear']) ?>
         <td colspan="5" align='left' valign="middle"><?= html::textInput('oldmeasure',$oldFarm->measure,['readonly' => true,'id'=>'oldfarms-measure','class'=>'form-control']) ?></td>
         </tr>
       <tr>
@@ -129,45 +110,40 @@ use app\models\Loan;
         </tr>
     </table></td>
     <td width="4%" align="center"><font size="5"><i class="fa fa-arrow-right"></i></font></td>
-    <td width="50%"><table width="99%" height="458px"
-		class="table table-bordered table-hover">
+    <td width="50%">
+    <table width="99%" height="458px" class="table table-bordered table-hover">
       <tr>
         <td width="30%" align='right'>农场名称</td>
-        <td colspan="5" align='left'><?= html::textInput('farmname',$model->farmname,['class'=>'form-control'])  ?></td>
+        <td colspan="5" align='left'><?=  $newFarm->farmname?></td>
         </tr>
       <tr>
-        <td width="20%" align='right'>承包人姓名</td>
-        <td colspan="5" align='left'><?= $model->farmername ?></td>
+        <td width="30%" align='right'>承包人姓名</td>
+        <td colspan="5" align='left'><?=  $newFarm->farmername?></td>
         </tr>
       <tr>
-        <td width="20%" align='right'>身份证号</td>
-        <td colspan="5" align='left'><?= $model->cardid?></td>
+        <td width="30%" align='right'>身份证号</td>
+        <td colspan="5" align='left'><?=  $newFarm->cardid?></td>
         </tr>
       <tr>
-        <td width="20%" align='right'>电话号码</td>
-        <td colspan="5" align='left'><?= $model->telephone?></td>
+        <td width="30%" align='right'>电话号码</td>
+        <td colspan="5" align='left'><?=  $newFarm->telephone?></td>
         </tr>
       <tr>
-        <td width="20%" align='right'>农场位置</td>
-        <td colspan="5" align='left'><?= $model->address ?></td>
+        <td width="30%" align='right'>农场位置</td>
+        <td colspan="5" align='left'><?=  $oldFarm->address?></td>
         </tr>
        <tr>
-        <td width="20%" align='right' valign="middle">管理区</td>
-        <td colspan="5" align='left' valign="middle"><?= ManagementArea::find()->where(['id'=>$model->management_area])->one()['areaname']?></td>
+        <td width="30%" align='right' valign="middle">管理区</td>
+        <td colspan="5" align='left' valign="middle"><?=  ManagementArea::find()->where(['id'=>$oldFarm->management_area])->one()['areaname']?></td>
         </tr>
-      <tr>
-        <td width="20%" align='right'>宗地</td><?php $model->zongdi = '';?>
-        <td colspan="5" align='left'><?= $form->field($model, 'zongdi')->textarea(['readonly' => true])->label(false)->error(false) ?></td>
-        </tr>
-      <tr>
-      <tr>
-			<td width=15% align='right'>合同号</td>
-			<td colspan="5" align='left'><?= $form->field($model, 'contractnumber')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+       <tr>
+			<td width=30% align='right'>合同号</td><?php $newFarm->contractnumber = Farms::getContractnumber($_GET['farms_id'],'new');?>
+			<td colspan="5" align='left'><?= $form->field($newFarm, 'contractnumber')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
-			<td width=15% align='right'>承包年限</td>
-			<td align='center'>自</td>
-			<td align='center'><?= $form->field($model, 'begindate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+			<td width=30% align='right'>承包年限</td>
+			<td align='center'>自</td><?php if($oldFarm->begindate == '') $newFarm->begindate='2010-09-13'; else $newFarm->begindate = $oldFarm->begindate;if($oldFarm->enddate == '') $newFarm->enddate = '2025-09-13';else $newFarm->enddate = $oldFarm->enddate;?>
+			<td align='center'><?= $form->field($newFarm, 'begindate')->textInput()->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
         'inline' => false, 
@@ -181,7 +157,7 @@ use app\models\Loan;
             'format' => 'yyyy-mm-dd'
         ]]) ?></td>
 			<td align='center'>至</td>
-			<td align='center'><?= $form->field($model, 'enddate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+			<td align='center'><?= $form->field($newFarm, 'enddate')->textInput()->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
         'inline' => false, 
@@ -195,14 +171,20 @@ use app\models\Loan;
             'format' => 'yyyy-mm-dd'
         ]])?></td>
 			<td align='center'>止</td>
-		</tr><?php $model->notclear = '';$model->measure = '';?>
-        <td align='right'>面积</td><?= html::hiddenInput('tempmeasure',$model->measure,['id'=>'temp_measure']) ?>
-								  <?= html::hiddenInput('tempnotclear',$model->notclear,['id'=>'temp_notclear']) ?>
-        <td colspan="5" align='left'><?= $form->field($model, 'measure')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
+		</tr>
+		<tr>
+		  <td align='right'>宗地</td>
+		  <td colspan="5" align='left'><?= $form->field($newFarm, 'zongdi')->textarea(['readonly' => false])->label(false)->error(false) ?></td>
+		  </tr>
+		<?php $newFarm->notclear = 0;$newFarm->measure = 0;?>
+		<tr>
+        <td align='right'>面积</td><?= html::hiddenInput('tempmeasure',$newFarm->measure,['id'=>'temp_measure']) ?>
+								  <?= html::hiddenInput('tempnotclear',$newFarm->notclear,['id'=>'temp_notclear']) ?>
+        <td colspan="5" align='left'><?= $form->field($newFarm, 'measure')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
         </tr>
       <tr>
         <td align='right'>未明确地块面积</td>
-        <td colspan="5" align='left'><?= $form->field($model, 'notclear')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
+        <td colspan="5" align='left'><?= $form->field($newFarm, 'notclear')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
        </tr>
        <tr>
         <td align='right'>转让未明确地块面积</td>
@@ -210,7 +192,7 @@ use app\models\Loan;
        </tr>
       <tr>
         <td align='right'>法人签字</td>
-        <td colspan="5" align='left'><?= $form->field($model, 'farmersign')->textInput()->label(false)->error(false) ?></td>
+        <td colspan="5" align='left'><?= $form->field($newFarm, 'farmersign')->textInput()->label(false)->error(false) ?></td>
         </tr>
     </table></td>
   </tr>
@@ -218,13 +200,12 @@ use app\models\Loan;
 <div class="form-group">
       <?= Html::submitButton('提交', ['class' =>  'btn btn-success']) ?>
       <?= Html::button('重置', ['class' => 'btn btn-primary','id'=>'reset']) ?>
+      <?= Html::submitButton('继续转让', ['class' =>  'btn btn-success']) ?>
       <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
 </div>
 
     <?php ActiveFormrdiv::end(); ?>
- <?php } else {?>
-    	<h4>此农场因贷款事由现已被冻结，解冻日期为<?= Loan::find()->where(['farms_id'=>$_GET['oldfarms_id']])->one()['enddate'];?></h4>
-    <?php }?>   
+    
                 </div>
             </div>
         </div>
@@ -239,14 +220,15 @@ function toZongdi(zongdi,area){
 	var newvalue = $('#farms-measure').val()*1 + area*1;
 	$('#farms-measure').val(newvalue.toFixed(2));
 	$('#temp_measure').val(newvalue.toFixed(2));
-	var newzongdi = $('#farms-zongdi').val()+'、'+zongdi;
+	var newzongdi = $('#farms-zongdi').val()+'、'+zongdi+'('+area+')';
 	var first = newzongdi.substr(0,1);
 	if(first == '、') {
 		$('#farms-zongdi').val(newzongdi.substring(1));
 	} else
 		$('#farms-zongdi').val(newzongdi);
 	var oldzongdi = $('#oldfarm-zongdi').val();
-	$('#oldfarm-zongdi').val(oldzongdi.replace(zongdi, ""));
+	var strzongdi = zongdi+"("+area+")";
+	$('#oldfarm-zongdi').val(oldzongdi.replace(strzongdi, ""));
 	oldzongdistr = $('#oldfarm-zongdi').val();
 	var first = oldzongdistr.substr(0,1);
 	var last = oldzongdistr.substr(oldzongdistr.length-1,1);
@@ -269,19 +251,34 @@ function toZongdi(zongdi,area){
 	var ttpoarea = $('#ttpozongdi-area').val();
 	ttpoarea = area*1 + ttpoarea*1;
 	$('#ttpozongdi-area').val(ttpoarea);
-	
+	toHTH();
 }
 $('#reset').click(function() {
 	 
     location.reload();
 
 });
+function toHTH()
+{
+	//生成合同号
+	var hth = $('#farms-contractnumber').val();
+	var arrayhth = hth.split('-');
+	arrayhth[2] = cutZero($('#farms-measure').val());
+	$('#farms-contractnumber').val(arrayhth.join('-'));
+	
+	var hth = $('#oldfarms-contractnumber').val();
+	var arrayhth = hth.split('-');
+	arrayhth[2] = cutZero($('#oldfarms-measure').val());
+	
+	$('#oldfarms-contractnumber').val(arrayhth.join('-'));
+}
 $('#input-notclear').blur(function(){
 	var input = $(this).val();
-	if(input*1 > $('#temp-oldnotclear').val()*1) {
+	if(input*1 > $('#temp_oldnotclear').val()*1) {
 		
-		alert('输入的数值不能大于'+$('#temp-oldnotclear').val());
-		$('#input-notclear').focus();
+		alert('输入的数值不能大于'+$('#temp_oldnotclear').val());
+		$(this).val(0);
+		$(this).focus();
 	} else {
 		if(input > $('#temp_notclear').val()) {
 			var tempmeasure = $('#temp_measure').val();
@@ -290,11 +287,13 @@ $('#input-notclear').blur(function(){
 				var result = farmsmeasure*1 + input*1;
 				$('#temp_measure').val(result.toFixed(2));
 				$('#farms-measure').val(result.toFixed(2));
+				$('#farms-notclear').val(input);
 				$('#temp_notclear').val(input);	
 				
 			} else {
+				
 				var cha = input*1 - $('#temp_notclear').val()*1;
-				var result = tempmeasure*1 + cha*1;
+				var result = farmsmeasure*1 + cha*1;
 				var oldmeasure = $('#oldfarms-measure').val();
 				var oldresult = oldmeasure*1 - cha*1;
 				$('#oldfarms-measure').val(oldresult.toFixed(2));
@@ -303,7 +302,9 @@ $('#input-notclear').blur(function(){
 				$('#oldfarms-notclear').val(notclearresult.toFixed(2));
 				$('#temp_measure').val(result.toFixed(2));
 				$('#farms-measure').val(result.toFixed(2));
+				$('#farms-notclear').val(input);
 				$('#temp_notclear').val(input);	
+				
 			}
 		} 
 		if(input < $('#temp_notclear').val()) {
@@ -313,24 +314,41 @@ $('#input-notclear').blur(function(){
 				var result = farmsmeasure*1 + input*1;
 				$('#temp_measure').val(result.toFixed(2));
 				$('#farms-measure').val(result.toFixed(2));
-				
+				$('#farms-notclear').val(input);	
 				$('#temp_notclear').val(input);	
+				
 			} else {
 				var cha = $('#temp_notclear').val()*1 - input*1;
-				var result = tempmeasure*1 - cha*1;
+				var result = farmsmeasure*1 - cha*1;
+				var oldmeasure = $('#oldfarms-measure').val();
+				var oldresult = oldmeasure*1 + cha*1;
+				$('#oldfarms-measure').val(oldresult.toFixed(2));
+				var oldnotclear = $('#oldfarms-notclear').val();
+				var notclearresult = oldnotclear*1 + cha*1;
+				$('#oldfarms-notclear').val(notclearresult.toFixed(2));
 				$('#temp_measure').val(result.toFixed(2));
 				$('#farms-measure').val(result.toFixed(2));
+				$('#farms-notclear').val(input);
 				$('#temp_notclear').val(input);	
+				
 			}
 		}
 	}
+	toHTH();
 });
 $('#input-notclear').keyup(function (event) {
 	var input = $(this).val();
-	if(/^\d+(\.\d+)?$/.test(input)) {
-		if(event.keyCode == 8) {
-			$(this).val('');
-			
+	if(event.keyCode == 8) {
+		$(this).val('');
+		$('#farms-notclear').val(0);
+		var result = $('#farms-measure').val()-$('#temp_notclear').val();
+		$('#farms-measure').val(result.toFixed(2));
+		$('#oldfarms-measure').val($('#oldfarms-measure').val()*1+$('#temp_notclear').val()*1);
+		$('#oldfarms-notclear').val($('#oldfarms-notclear').val()*1+$('#temp_notclear').val()*1);	
+		$('#temp_notclear').val('');
+		$('#temp_measure').val('');
+	} else {
+		if(/^\d+(\.\d+)?$/.test(input)) {
 			if($('#temp_notclear').val() !== '') {
 				var result = $('#farms-measure').val()-$('#temp_notclear').val();
 				$('#farms-measure').val(result.toFixed(2));
@@ -339,13 +357,33 @@ $('#input-notclear').keyup(function (event) {
 				$('#temp_notclear').val('');
 				$('#temp_measure').val('');
 			}
-		
+		} else {
+			alert('输入的必须为数字');
+			var last = input.substr(input.length-1,1);
+			$('#input-notclear').val(input.substring(0,input.length-1));
 		}
-	} else {
-		alert('输入的必须为数字');
-		var last = input.substr(input.length-1,1);
-		$('#input-notclear').val(input.substring(0,input.length-1));
 	}
+});
+$('#searchFarms').click(function(){
+	var input = $('#farms-farmname').val();
+	$.getJSON('index.php?r=farms/getfarminfo', {str: input}, function (data) {
+		if (data.status == 1) {
+			$('#farms-farmername').val(data.data['farmername']);
+			$('#farms-cardid').val(data.data['cardid']);
+			$('#farms-telephone').val(data.data['telephone']);
+		}	
+	});
+});
+$('#searchFarmer').click(function(){
+	var input = $('#farms-farmername').val();
+	
+	$.getJSON('index.php?r=farms/getfarmerinfo', {str: input}, function (data) {
+		if (data.status == 1) {
+			$('#farms-farmname').val(data.data['farmname']);
+			$('#farms-cardid').val(data.data['cardid']);
+			$('#farms-telephone').val(data.data['telephone']);
+		}	
+	});
 });
 </script>
 <?php
@@ -365,12 +403,27 @@ $("#farms-zongdi").keyup(function (event) {
 		}
 	});
  });
-
+$('#farms-zongdi').blur(function(){
+	var input = $(this).val();
+    input = $.trim(input);
+	$.getJSON('index.php?r=parcel/areasum', {zongdi: input}, function (data) {
+		if (data.status == 1) {
+			$("#farms-measure").val(data.sum);	
+			var zarea = $("#temp_oldmeasure").val();
+			var result = zarea*1-data.sum*1-$("#farms-notclear").val()*1;
+			$('#oldfarms-measure').val(result.toFixed(2));
+			var hth = $('#farms-contractnumber').val();
+			var arrayhth = hth.split('-');
+			arrayhth[2] = $('#farms-measure').val();
+			$('#farms-contractnumber').val(arrayhth.join('-'));
+			
+			var hth = $('#oldfarms-contractnumber').val();
+			var arrayhth = hth.split('-');
+			arrayhth[2] = $('#oldfarms-measure').val();
+			$('#oldfarms-contractnumber').val(arrayhth.join('-'));
+		}	
+	});
+});
 JS;
 $this->registerJs($script);
-
-
-
-
-
 ?>

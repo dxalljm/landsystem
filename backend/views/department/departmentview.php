@@ -38,7 +38,6 @@ $this->params['breadcrumbs'][] = $this->title;
             	'attribute' => 'membership',
             	'value' => ManagementArea::getAreaname($model->membership),
             ],
-            'operableaction',
         ],
     ]) ?>
 

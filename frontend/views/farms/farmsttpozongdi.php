@@ -28,7 +28,7 @@ use app\models\Loan;
 	<table class="table table-bordered table-hover">
 	  <tr>
     		<td align="center" valign="middle">农场查询</td>
-    		<td align="center" valign="middle"><?= html::textInput('farmSearch','',['class'=>'form-control']) ?></td>
+    		<td align="center" valign="middle"><?= html::textInput('search','',['class'=>'form-control']) ?></td>
 			<td align="center" valign="middle"><?= Html::submitButton('查询', ['class' => 'btn btn-primary']) ?></td>
     	</tr>
     	<tr>
