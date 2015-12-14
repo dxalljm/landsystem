@@ -21,6 +21,7 @@ use app\models\Theyear;
 use app\models\Breedinfo;
 use app\models\Breedtype;
 use app\models\Goodseed;
+use frontend\models\plantingstructureSearch;
 /**
  * BankAccountController implements the CRUD actions for BankAccount model.
  */
@@ -65,8 +66,10 @@ class SearchController extends Controller
     			$areaWhere = [1,2,3,4,5,6,7];
     		} else 
     			$areaWhere = $managementarea;
-    		$searchClass = '\frontend\models\\'.$tab.'Search';
-    		$Search = new  $searchClass();
+    		
+    		$searchClass = $tab.'Search';
+    		$path = '\frontend\models\\';
+    		$Search = new $path.$searchClass();
     		$params = Yii::$app->request->queryParams;
     		if($tab == 'farms') {
     			$params [$searchClass] ['management_area'] = $management_area['id'];
