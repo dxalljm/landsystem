@@ -27,7 +27,7 @@ class Infrastructuretype extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            //[['father_id'], 'integer'],
+            [['father_id'], 'integer'],
             [['typename'], 'string', 'max' => 500]
         ];
     }
@@ -43,4 +43,45 @@ class Infrastructuretype extends \yii\db\ActiveRecord
             'typename' => '类型名称',
         ];
     }
+
+    /**
+     * 获取全部的分类信息
+     *
+     * @return array
+     */
+    public static function getAllList()
+    {
+        $allList = [];
+
+        $query = self::find()->select(
+            ['id', 'father_id', 'typename']
+        )->where(['is_delete' => 0])
+         ->orderBy(['sort'=>SORT_ASC, 'id' => SORT_ASC]);
+
+
+        $rows = $query->all();
+
+        foreach ($rows as $rowkey => $rowValue) {
+            $allList[$rowValue['id']] = $rowValue->attributes;
+        }
+
+        return $allList;
+    }
+
+    public static function getNameById($id)
+    {
+        $query = self::find()->select(
+            ['id', 'father_id', 'typename']
+        )->where(['id' => $id]);
+
+        $rows = $query->one();
+
+        $name = '';
+        if (!empty($rows)) {
+            return $rows->typename;
+        }
+        return $name;
+
+    }
+
 }
