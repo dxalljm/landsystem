@@ -20,6 +20,7 @@ use app\models\Department;
 use app\models\Theyear;
 use app\models\Breedinfo;
 use app\models\Breedtype;
+use app\models\Goodseed;
 /**
  * BankAccountController implements the CRUD actions for BankAccount model.
  */
@@ -48,28 +49,75 @@ class SearchController extends Controller
 //     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
 //     	}
 //     }
-    
+
     public function actionSearchindex()
     {
     	$post = Yii::$app->request->post();
-    	if($post)
+    	$Search = '';
+    	$dataProvider = [];
+    	$tab = '';
+    	if($post) {
+//     		var_dump($post);exit;
     		$this->formatDate($post['begindate'],$post['enddate']);
-    	else 
-    		$this->formatDate();
-	    $planting = $this->getPlantingstructure();
-	    $collection = $this->getCollection();
-    	$breedinfo = $this->getBreedinfo();
-    	$loan = $this->getLoan();
-//     	$this->getFireprevention();
-    	$searchDate = date('Y年m月d日',$this->whereDate['begindate']).'—'.date('Y年m月d日',$this->whereDate['enddate']);
-    	return $this->render('searchindex',[
-    			'searchDate' => $searchDate,
-    			'planting' => $planting,
-    			'collection' => $collection,
-    			'breedinfo' => $breedinfo,
-    			'loan' => $loan,
-    	]);
+    		$managementarea = $post['managementarea'];
+    		$tab = $post['tab'];
+    		if($managementarea == 0) {
+    			$areaWhere = [1,2,3,4,5,6,7];
+    		} else 
+    			$areaWhere = $managementarea;
+    		$searchClass = '\frontend\models\\'.$tab.'Search';
+    		$Search = new  $searchClass();
+    		$params = Yii::$app->request->queryParams;
+    		if($tab == 'farms') {
+    			$params [$searchClass] ['management_area'] = $management_area['id'];
+    		} else {
+//     			var_dump($areaWhere);exit;
+    			$arrayID = $this->getFarmsid($areaWhere);
+    			$params [$searchClass] ['farms_id'] = $arrayID;
+    			$params [$searchClass] ['create_at'] = $this->whereDate['begindate'];
+    			$params [$searchClass] ['update_at'] = $this->whereDate['enddate'];
+    		}
+    		$dataProvider = $Search->search ( $params );
+    	}	
+    	return $this->render ( 'searchindex', [
+    			'searchModel' => $Search,
+    			'dataProvider' => $dataProvider,
+    			'controllername' => $tab,
+    	] );
+//     	$searchDate = date('Y年m月d日',$this->whereDate['begindate']).'—'.date('Y年m月d日',$this->whereDate['enddate']);
     }
+    
+    private function getFarmsid($managment_area)
+    {
+    	$farms = Farms::find()->where(['management_area'=>$managment_area])->all();
+    	foreach ($farms as $farm) {
+    		$id[] = $farm['id'];
+    	}
+//     	var_dump($id);exit;
+    	return $id;
+    }
+
+//     public function actionSearchindex()
+//     {
+//     	$post = Yii::$app->request->post();
+//     	if($post)
+//     		$this->formatDate($post['begindate'],$post['enddate']);
+//     	else 
+//     		$this->formatDate();
+// // 	    $planting = $this->getPlantingstructure();
+// 	    $collection = $this->getCollection();
+//     	$breedinfo = $this->getBreedinfo();
+//     	$loan = $this->getLoan();
+// //     	$this->getFireprevention();
+//     	$searchDate = date('Y年m月d日',$this->whereDate['begindate']).'—'.date('Y年m月d日',$this->whereDate['enddate']);
+//     	return $this->render('searchindex',[
+//     			'searchDate' => $searchDate,
+// //     			'planting' => $planting,
+//     			'collection' => $collection,
+//     			'breedinfo' => $breedinfo,
+//     			'loan' => $loan,
+//     	]);
+//     }
     
     public function actionSearchdemo()
     {
@@ -129,23 +177,25 @@ class SearchController extends Controller
 //     	var_dump($this->whereDate);exit;
     }
     
-    public function getPlantingstructure()
-    {
-    	$data = $this->getControllerData('Plantingstructure');
-// 		var_dump($planting);exit;
-    	foreach ($data as $key => $value) {
-    		foreach ($value as $val) {
-    			foreach($val as $v) {
-//     			var_dump($val[0]);exit;
-	    			$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname'];
-		    		$result[$plantname]['area'][] = $v['area'];
-		    		$result[$plantname]['goodseed_id'][] = $v['goodseed_id'];
-    			}
-    		}
+    
+    
+//     public function getPlantingstructure()
+//     {
+//     	$data = $this->getControllerData('Plantingstructure');
+// // 		var_dump($planting);exit;
+//     	foreach ($data as $key => $value) {
+//     		foreach ($value as $val) {
+//     			foreach($val as $v) {
+// //     			var_dump($val[0]);exit;
+// 	    			$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname'];
+// 		    		$result[$plantname]['area'][] = $v['area'];
+// 		    		$result[$plantname]['goodseed_id'][] = $v['goodseed_id'];
+//     			}
+//     		}
     		
-    	}
-    	return $result;
-    }
+//     	}
+//     	return $result;
+//     }
  
     public function getCollection()
     {

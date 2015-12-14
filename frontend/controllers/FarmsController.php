@@ -761,7 +761,7 @@ class FarmsController extends Controller {
 	// 转让给现有法人
 	public function actionFarmstozongdi($farms_id, $oldfarms_id) {
 	$oldmodel = $this->findModel ( $oldfarms_id );
-		var_dump($oldmodel);
+// 		var_dump($oldmodel);
 		$newmodel = $this->findModel($farms_id);
 		// $ttpoModel = Ttpo::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
 		// $ttpozongdiModel = Ttpozongdi::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
@@ -771,7 +771,7 @@ class FarmsController extends Controller {
 			$lockedinfoModel->farms_id = $farms_id;
 			$lockedinfoModel->lockedcontent = '部分过户审核中，已被冻结。';
 // 			$oldmodel->state = 1;
-			$oldmodel = $this->findModel ( $farms_id );
+			$oldmodel = $this->findModel ( $oldfarms_id );
 			$oldmodel->update_at = time ();
 // 			var_dump( Yii::$app->request->post ( 'oldzongdi' ) );exit;
 			$oldmodel->farmname = $oldmodel->farmname;
@@ -825,8 +825,8 @@ class FarmsController extends Controller {
 // 			var_dump($ttpozongdi->getErrors());exit;
 			return $this->redirect ( [ 
 					Reviewprocess::getReturnAction(),
-					'newfarmsid' => $newmodel->id, 
-					'oldfarmsid' => $oldmodel->id,
+					'newfarmsid' => $farms_id, 
+					'oldfarmsid' => $oldfarms_id,
 					'reviewprocessid' => $reviewprocessID,
 			] );
 		} else {

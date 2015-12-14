@@ -81,6 +81,22 @@ class ReviewprocessController extends Controller
     	] );
     }
     
+    public function actionReviewprocessfarmstozongdi($newfarmsid,$oldfarmsid,$reviewprocessid)
+    {
+    	$model = new Reviewprocess();
+    	$newfarm = Farms::find()->where(['id'=>$newfarmsid])->one();
+    	$oldfarm = Farms::find()->where(['id'=>$oldfarmsid])->one();
+    	$reviewprocess = Reviewprocess::find()->where(['id'=>$reviewprocessid])->one();
+    	$process = Auditprocess::find()->where(['actionname'=>$reviewprocess['actionname']])->one()['process'];
+//     	var_dump($newfarm);
+    	return $this->render ( 'reviewprocessfarmstozongdi', [
+    			'oldfarm' => $oldfarm,
+    			'newfarm' => $newfarm,
+    			'process' => explode('>', $process),
+    			'model' => $model,
+    	] );
+    }
+    
     public function actionReviewprocessinspections($id)
     {
     	

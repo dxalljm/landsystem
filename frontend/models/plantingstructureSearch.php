@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Plantingstructure;
-
+use app\models\Theyear;
 /**
  * plantingstructureSearch represents the model behind the search form about `app\models\Plantingstructure`.
  */
@@ -18,9 +18,9 @@ class plantingstructureSearch extends Plantingstructure
     public function rules()
     {
         return [
-            [['id', 'plant_id', 'inputproduct_id', 'pesticides_id', 'pconsumption', 'goodseed_id', 'farms_id', 'lease_id'], 'integer'],
+            [['id', 'plant_id', 'goodseed_id', 'lease_id'], 'integer'],
             [['area'], 'number'],
-            [['zongdi'], 'safe'],
+            [['zongdi','farms_id'], 'safe'],
         ];
     }
 
@@ -42,7 +42,7 @@ class plantingstructureSearch extends Plantingstructure
      */
     public function search($params)
     {
-        $query = Plantingstructure::find()->where($params);
+        $query = Plantingstructure::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -60,9 +60,6 @@ class plantingstructureSearch extends Plantingstructure
             'id' => $this->id,
             'plant_id' => $this->plant_id,
             'area' => $this->area,
-            'inputproduct_id' => $this->inputproduct_id,
-            'pesticides_id' => $this->pesticides_id,
-            'pconsumption' => $this->pconsumption,
             'goodseed_id' => $this->goodseed_id,
             'farms_id' => $this->farms_id,
         	'lease_id' => $this->lease_id,

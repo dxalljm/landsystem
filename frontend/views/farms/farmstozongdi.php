@@ -29,9 +29,9 @@ use yii\helpers\Url;
                     </h3>
                 </div>
                 <div class="box-body">
-  <table width="100%" border="0">
+  <table width="100%" height="100%" border="0">
     <tr>
-    <td width="46%" valign="top"><table width="104%" height="458px"
+    <td width="46%" valign="top"><table width="100%" height="100%"
 		class="table table-bordered table-hover">
       <tr>
         <td width="15%" align='right' valign="middle">农场名称</td>
@@ -74,12 +74,14 @@ use yii\helpers\Url;
 		<tr>
         <td width="20%" align='right' valign="middle">宗地</td>
         <td colspan="5" align='left' valign="middle">
-        <table width="100%" border="0" align="right">
-        <?php $arrayZongdi = explode('、', $oldFarm->zongdi); 
+        <table width="100%" height="100%" border="0" cellspacing="5">
+        <?php  
+        if(!empty($oldFarm->zongdi)) {
+        $arrayZongdi = explode('、', $oldFarm->zongdi);
         for($i = 0;$i<count($arrayZongdi);$i++) {
         	// 			    	echo $i%6;
         	if($i%5 == 0) {
-        		echo '<tr>';
+        		echo '<tr height="10">';
         		echo '<td>';
         			echo html::button($arrayZongdi[$i],['onclick'=>'toZongdi("'.Lease::getZongdi($arrayZongdi[$i]).'","'.Lease::getArea($arrayZongdi[$i]).'")','value'=>$arrayZongdi[$i],'id'=>Lease::getZongdi($arrayZongdi[$i]),'class'=>"btn btn-default"]);
         		echo '</td>';
@@ -88,7 +90,7 @@ use yii\helpers\Url;
         			echo html::button($arrayZongdi[$i],['onclick'=>'toZongdi("'.Lease::getZongdi($arrayZongdi[$i]).'","'.Lease::getArea($arrayZongdi[$i]).'")','value'=>$arrayZongdi[$i],'id'=>Lease::getZongdi($arrayZongdi[$i]),'class'=>"btn btn-default"]);
         		echo '</td>';
         	}
-        }
+        }}
         ?>
         </table>
         </td>
@@ -96,8 +98,7 @@ use yii\helpers\Url;
       <tr><?= Html::hiddenInput('oldzongdi',$oldFarm->zongdi,['id'=>'oldfarm-zongdi']) ?>
       <?= Html::hiddenInput('ttpozongdi','',['id'=>'ttpozongdi-zongdi']) ?>
       <?= Html::hiddenInput('ttpoarea',0,['id'=>'ttpozongdi-area']) ?>
-        <td align='right' valign="middle">面积</td><?= html::hiddenInput('tempoldmeasure',$oldFarm->measure,['id'=>'temp_oldmeasure']) ?>
-        										 <?= html::hiddenInput('tempoldnotclear',$oldFarm->notclear,['id'=>'temp_oldnotclear']) ?>
+        <td align='right' valign="middle">面积</td>
         <td colspan="5" align='left' valign="middle"><?= html::textInput('oldmeasure',$oldFarm->measure,['readonly' => true,'id'=>'oldfarms-measure','class'=>'form-control']) ?></td>
         </tr>
       <tr>
@@ -111,7 +112,7 @@ use yii\helpers\Url;
     </table></td>
     <td width="4%" align="center"><font size="5"><i class="fa fa-arrow-right"></i></font></td>
     <td width="50%">
-    <table width="99%" height="458px" class="table table-bordered table-hover">
+    <table width="99%" height="100%" class="table table-bordered table-hover">
       <tr>
         <td width="30%" align='right'>农场名称</td>
         <td colspan="5" align='left'><?=  $newFarm->farmname?></td>
@@ -137,49 +138,24 @@ use yii\helpers\Url;
         <td colspan="5" align='left' valign="middle"><?=  ManagementArea::find()->where(['id'=>$oldFarm->management_area])->one()['areaname']?></td>
         </tr>
        <tr>
-			<td width=30% align='right'>合同号</td><?php $newFarm->contractnumber = Farms::getContractnumber($_GET['farms_id'],'new');?>
+			<td width=30% align='right'>合同号</td>
 			<td colspan="5" align='left'><?= $form->field($newFarm, 'contractnumber')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
 			<td width=30% align='right'>承包年限</td>
-			<td align='center'>自</td><?php if($oldFarm->begindate == '') $newFarm->begindate='2010-09-13'; else $newFarm->begindate = $oldFarm->begindate;if($oldFarm->enddate == '') $newFarm->enddate = '2025-09-13';else $newFarm->enddate = $oldFarm->enddate;?>
-			<td align='center'><?= $form->field($newFarm, 'begindate')->textInput()->label(false)->error(false)->widget(
-    DateTimePicker::className(), [
-        // inline too, not bad
-        'inline' => false, 
-    	'language'=>'zh-CN',
-        
-        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
-        'clientOptions' => [
-            'autoclose' => true,
-        	'minView' => 3,
-        	'maxView' => 3,
-            'format' => 'yyyy-mm-dd'
-        ]]) ?></td>
+			<td align='center'>自</td>
+			<td align='center'><?php echo $newFarm->begindate;?></td>
 			<td align='center'>至</td>
-			<td align='center'><?= $form->field($newFarm, 'enddate')->textInput()->label(false)->error(false)->widget(
-    DateTimePicker::className(), [
-        // inline too, not bad
-        'inline' => false, 
-    	'language'=>'zh-CN',
-        
-        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
-        'clientOptions' => [
-            'autoclose' => true,
-        	'minView' => 3,
-        	'maxView' => 3,
-            'format' => 'yyyy-mm-dd'
-        ]])?></td>
+			<td align='center'><?php echo $newFarm->enddate;?></td>
 			<td align='center'>止</td>
 		</tr>
 		<tr>
 		  <td align='right'>宗地</td>
 		  <td colspan="5" align='left'><?= $form->field($newFarm, 'zongdi')->textarea(['readonly' => false])->label(false)->error(false) ?></td>
 		  </tr>
-		<?php $newFarm->notclear = 0;$newFarm->measure = 0;?>
 		<tr>
-        <td align='right'>面积</td><?= html::hiddenInput('tempmeasure',$newFarm->measure,['id'=>'temp_measure']) ?>
-								  <?= html::hiddenInput('tempnotclear',$newFarm->notclear,['id'=>'temp_notclear']) ?>
+        <td align='right'>面积</td>
+								  <?= html::hiddenInput('tempinput',0,['id'=>'temp_input']) ?>
         <td colspan="5" align='left'><?= $form->field($newFarm, 'measure')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
         </tr>
       <tr>
@@ -213,6 +189,9 @@ use yii\helpers\Url;
 </section>
 </div>
 <script>
+if($('#oldfarms-notclear').val() == 0) {
+	$('#input-notclear').attr("readonly",true); 
+}
 function toZongdi(zongdi,area){
 	$('#'+zongdi).attr('disabled',true);
 	var value = $('#oldfarms-measure').val()*1-area*1;
@@ -274,96 +253,146 @@ function toHTH()
 }
 $('#input-notclear').blur(function(){
 	var input = $(this).val();
+	if(input !== '') {
 	if(input*1 > $('#temp_oldnotclear').val()*1) {
 		
 		alert('输入的数值不能大于'+$('#temp_oldnotclear').val());
 		$(this).val(0);
 		$(this).focus();
 	} else {
-		if(input > $('#temp_notclear').val()) {
-			var tempmeasure = $('#temp_measure').val();
-			var farmsmeasure = $('#farms-measure').val();
-			if(farmsmeasure < tempmeasure) {
-				var result = farmsmeasure*1 + input*1;
-				$('#temp_measure').val(result.toFixed(2));
-				$('#farms-measure').val(result.toFixed(2));
-				$('#farms-notclear').val(input);
-				$('#temp_notclear').val(input);	
-				
-			} else {
-				
-				var cha = input*1 - $('#temp_notclear').val()*1;
-				var result = farmsmeasure*1 + cha*1;
-				var oldmeasure = $('#oldfarms-measure').val();
-				var oldresult = oldmeasure*1 - cha*1;
-				$('#oldfarms-measure').val(oldresult.toFixed(2));
-				var oldnotclear = $('#oldfarms-notclear').val();
-				var notclearresult = oldnotclear*1 - cha*1;
-				$('#oldfarms-notclear').val(notclearresult.toFixed(2));
-				$('#temp_measure').val(result.toFixed(2));
-				$('#farms-measure').val(result.toFixed(2));
-				$('#farms-notclear').val(input);
-				$('#temp_notclear').val(input);	
-				
-			}
-		} 
-		if(input < $('#temp_notclear').val()) {
-			var tempmeasure = $('#temp_measure').val();
-			var farmsmeasure = $('#farms-measure').val();
-			if(farmsmeasure < tempmeasure) {
-				var result = farmsmeasure*1 + input*1;
-				$('#temp_measure').val(result.toFixed(2));
-				$('#farms-measure').val(result.toFixed(2));
-				$('#farms-notclear').val(input);	
-				$('#temp_notclear').val(input);	
-				
-			} else {
-				var cha = $('#temp_notclear').val()*1 - input*1;
-				var result = farmsmeasure*1 - cha*1;
-				var oldmeasure = $('#oldfarms-measure').val();
-				var oldresult = oldmeasure*1 + cha*1;
-				$('#oldfarms-measure').val(oldresult.toFixed(2));
-				var oldnotclear = $('#oldfarms-notclear').val();
-				var notclearresult = oldnotclear*1 + cha*1;
-				$('#oldfarms-notclear').val(notclearresult.toFixed(2));
-				$('#temp_measure').val(result.toFixed(2));
-				$('#farms-measure').val(result.toFixed(2));
-				$('#farms-notclear').val(input);
-				$('#temp_notclear').val(input);	
-				
-			}
+		var oldmeasure = $('#oldfarms-measure').val();
+		var oldnotclear = $('#oldfarms-notclear').val();
+
+		var newmeasure = $('#farms-measure').val();
+		var newnotclear = $('#farms-notclear').val();
+
+		var tempinput = $('#temp_input').val();
+		if(tempinput == 0) {
+// 			alert(0);
+			var oldmeasureresult = oldmeasure*1 - input*1;
+			$('#oldfarms-measure').val(oldmeasureresult.toFixed(2));
+			var oldnotclearresult = oldnotclear*1 - input*1;
+			$('#oldfarms-notclear').val(oldnotclearresult.toFixed(2));
+			var newmeasureresult = newmeasure*1 + input*1;
+			$('#farms-measure').val(newmeasureresult.toFixed(2));
+			var newnotclearresult = newnotclear*1 + input*1;
+			$('#farms-notclear').val(newnotclearresult.toFixed(2));
+			$('#temp_input').val(input);
+		} else {
+// 			alert(1);
+			var cha = input*1 - tempinput*1 ;
+			var oldmeasureresult = oldmeasure*1 - cha*1;
+			$('#oldfarms-measure').val(oldmeasureresult.toFixed(2));
+			var oldnotclearresult = oldnotclear*1 - cha*1;
+			$('#oldfarms-notclear').val(oldnotclearresult.toFixed(2));
+			var newmeasureresult = newmeasure*1 + cha*1;
+			$('#farms-measure').val(newmeasureresult.toFixed(2));
+			var newnotclearresult = newnotclear*1 + cha*1;
+			$('#farms-notclear').val(newnotclearresult.toFixed(2));
+			$('#temp_input').val(input);
 		}
+// 		var oldmeasure = $('#oldfarms-measure').val();
+// 		var newmeasure = $('#farms-measure').val();
+// 		var jian = oldmeasure*1-input*1;
+// 		var jia = newmearue*1+input*1;
+// 		$('#oldfarms-measure').val(jian.toFixed(2));
+// 		$('#farms-measure').val(jia.toFixed(2));
+// 		$('#farms-notclear').val(jia.toFixed(2));
+// 		if(input*1 > $('#temp_notclear').val()*1) {
+// 			alert(1);
+// 			var tempmeasure = $('#temp_measure').val();
+// 			var farmsmeasure = $('#farms-measure').val();
+// 			if(farmsmeasure < tempmeasure) {
+// 				alert(11);
+// 				var result = farmsmeasure*1 + input*1;
+// 				$('#temp_measure').val(result.toFixed(2));
+// 				$('#farms-measure').val(result.toFixed(2));
+// 				$('#farms-notclear').val(result.toFixed(2));
+// 				$('#temp_notclear').val(result.toFixed(2));	
+				
+// 			} else {
+// 				alert(12)
+// 				var cha = $('#temp_notclear').val()*1 - input*1;
+// 				var result = farmsmeasure*1 + cha*1;
+// 				var oldmeasure = $('#oldfarms-measure').val();
+// 				var oldresult = oldmeasure*1 - cha*1;
+// 				$('#oldfarms-measure').val(oldresult.toFixed(2));
+// 				var oldnotclear = $('#oldfarms-notclear').val();
+// 				var notclearresult = oldnotclear*1 - cha*1;
+// 				$('#oldfarms-notclear').val(notclearresult.toFixed(2));
+// // 				$('#temp_measure').val(result.toFixed(2));
+// 				$('#farms-measure').val(result.toFixed(2));
+// 				$('#farms-notclear').val(result.toFixed(2));
+// // 				$('#temp_notclear').val(result.toFixed(2));	
+				
+// 			}
+// 		} 
+// 		if(input*1 < $('#temp_notclear').val()*1) {
+// 			alert(2)
+// 			var tempmeasure = $('#temp_measure').val();
+// 			var farmsmeasure = $('#farms-measure').val();
+// 			if(farmsmeasure < tempmeasure) {
+// 				alert(21)
+// 				var result = farmsmeasure*1 + input*1;
+// 				$('#temp_measure').val(result.toFixed(2));
+// 				$('#farms-measure').val(result.toFixed(2));
+// 				$('#farms-notclear').val(result.toFixed(2));	
+// 				$('#temp_notclear').val(result.toFixed(2));	
+				
+// 			} else {
+// 				alert(22);
+// 				var newtempnotclear = $('#temp_notclear').val();
+// 				var oldtempnotclear = $('#temp_oldnotclear').val();
+// 				var cha = $('#temp_notclear').val()*1 - input*1;
+// 				var result = farmsmeasure*1 + input*1;
+// 				var oldtempmeasure = $('#temp_oldmeasure').val();
+// 				var oldmeasure = oldtempmeasure*1 - input*1;
+				
+// 				var oldnotclear = oldtempnotclear*1 - input*1;
+// 				$('#oldfarms-measure').val(oldmeasure.toFixed(2));
+
+// 				$('#oldfarms-notclear').val(oldnotclear.toFixed(2));
+// 				$('#temp_measure').val(result.toFixed(2));
+// 				$('#farms-measure').val(result.toFixed(2));
+				
+// 				$('#farms-notclear').val(result.toFixed(2));
+// 				$('#temp_notclear').val(result.toFixed(2));	
+// 				$('#temp_oldnotclear').val(oldnotclear.toFixed(2));
+// 				$('#temp_oldmeasure').val(oldmeasure.toFixed(2));
+// 			}
+// 		}
+	}
 	}
 	toHTH();
 });
-$('#input-notclear').keyup(function (event) {
-	var input = $(this).val();
-	if(event.keyCode == 8) {
-		$(this).val('');
-		$('#farms-notclear').val(0);
-		var result = $('#farms-measure').val()-$('#temp_notclear').val();
-		$('#farms-measure').val(result.toFixed(2));
-		$('#oldfarms-measure').val($('#oldfarms-measure').val()*1+$('#temp_notclear').val()*1);
-		$('#oldfarms-notclear').val($('#oldfarms-notclear').val()*1+$('#temp_notclear').val()*1);	
-		$('#temp_notclear').val('');
-		$('#temp_measure').val('');
-	} else {
-		if(/^\d+(\.\d+)?$/.test(input)) {
-			if($('#temp_notclear').val() !== '') {
-				var result = $('#farms-measure').val()-$('#temp_notclear').val();
-				$('#farms-measure').val(result.toFixed(2));
-				$('#oldfarms-measure').val($('#oldfarms-measure').val()*1+$('#temp_notclear').val()*1);
-				$('#oldfarms-notclear').val($('#oldfarms-notclear').val()*1+$('#temp_notclear').val()*1);	
-				$('#temp_notclear').val('');
-				$('#temp_measure').val('');
-			}
-		} else {
-			alert('输入的必须为数字');
-			var last = input.substr(input.length-1,1);
-			$('#input-notclear').val(input.substring(0,input.length-1));
-		}
-	}
-});
+// $('#input-notclear').keyup(function (event) {
+// 	var input = $(this).val();
+// 	if(event.keyCode == 8) {
+// 		$(this).val('');
+// 		$('#farms-notclear').val(0);
+// 		var result = $('#farms-measure').val()-$('#temp_notclear').val();
+// 		$('#farms-measure').val(result.toFixed(2));
+// 		$('#oldfarms-measure').val($('#oldfarms-measure').val()*1+$('#temp_notclear').val()*1);
+// 		$('#oldfarms-notclear').val($('#oldfarms-notclear').val()*1+$('#temp_notclear').val()*1);	
+// 		$('#temp_notclear').val('');
+// 		$('#temp_measure').val('');
+// 	} else {
+// 		if(/^\d+(\.\d+)?$/.test(input)) {
+// 			if($('#temp_notclear').val() !== '') {
+// 				var result = $('#farms-measure').val()-$('#temp_notclear').val();
+// 				$('#farms-measure').val(result.toFixed(2));
+// 				$('#oldfarms-measure').val($('#oldfarms-measure').val()*1+$('#temp_notclear').val()*1);
+// 				$('#oldfarms-notclear').val($('#oldfarms-notclear').val()*1+$('#temp_notclear').val()*1);	
+// 				$('#temp_notclear').val('');
+// 				$('#temp_measure').val('');
+// 			}
+// 		} else {
+// 			alert('输入的必须为数字');
+// 			var last = input.substr(input.length-1,1);
+// 			$('#input-notclear').val(input.substring(0,input.length-1));
+// 		}
+// 	}
+// });
 $('#searchFarms').click(function(){
 	var input = $('#farms-farmname').val();
 	$.getJSON('index.php?r=farms/getfarminfo', {str: input}, function (data) {
