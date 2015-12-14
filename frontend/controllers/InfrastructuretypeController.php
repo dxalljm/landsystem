@@ -70,7 +70,7 @@ class InfrastructuretypeController extends Controller
     public function actionInfrastructuretypecreate()
     {
         $model = new Infrastructuretype();
-		
+
         if ($model->load(Yii::$app->request->post())) {
         	var_dump(Yii::$app->request->post('arrayFahterID'));
         	exit;

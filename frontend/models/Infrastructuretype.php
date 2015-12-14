@@ -43,4 +43,29 @@ class Infrastructuretype extends \yii\db\ActiveRecord
             'typename' => '类型名称',
         ];
     }
+
+    /**
+     * 获取全部的分类信息
+     *
+     * @return array
+     */
+    public static function getAllList()
+    {
+        $allList = [];
+
+        $query = self::find()->select(
+            ['id', 'father_id', 'typename']
+        )->where(['is_delete' => 0])
+         ->orderBy(['sort'=>SORT_ASC, 'id' => SORT_ASC]);
+
+
+        $rows = $query->all();
+
+        foreach ($rows as $rowkey => $rowValue) {
+            $allList[$rowValue['id']] = $rowValue->attributes;
+        }
+
+        return $allList;
+    }
+
 }

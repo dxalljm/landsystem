@@ -5,6 +5,9 @@ use yii\widgets\ActiveFormrdiv;
 use app\models\Infrastructuretype;
 use yii\helpers\ArrayHelper;
 
+use frontend\widgets\CategorySelect;
+
+
 /* @var $this yii\web\View */
 /* @var $model app\models\Infrastructuretype */
 /* @var $form yii\widgets\ActiveForm */
@@ -22,21 +25,54 @@ use yii\helpers\ArrayHelper;
 <tbody>
 	<tr>
 		<td width=15% align='right'>类别</td>
-		<td align='left'><?= html::dropDownList('arrayFatherID[]','',ArrayHelper::map($dropdownValue, 'id', 'typename'),['class'=>'form-control','id'=>'father_id'])?></td>
+		<td align='left'>
+			<?php
+
+			$listData = Infrastructuretype::getAllList();
+
+			if (!$model->isNewRecord && isset($listData[$model->id])) {
+				unset($listData[$model->id]);
+			}
+
+			if (count($listData) > 0) {
+				echo CategorySelect::widget([
+					"model" => $model,
+					'isDisableParent' => null,
+					"attribute" => 'parent_id',
+					'isShowFinal' => null,
+					"categories" => $listData,
+					'selectedValue' => $model->father_id,
+					'htmlOptions' => [
+						'class' => 'form-control col-sm-5 col-lg-5',
+						'name' => 'WikiCategory[parent_id]'
+					]
+				]);
+
+			} else {
+				echo "无可用父分类";
+			}
+			?>
+		</td>
 	</tr>
-	<tr class="temp-tr">
-        <td align='right'>子类</td>
-        <td><?= html::dropDownList('arrayFatherID[]','',['prompt'=>'请选择...'],['class'=>'form-control']) ?></td>
-    </tr>
-    <tr class="temp-tr2">
-        <td align='right'>子类</td>
-        <td><?=  html::dropDownList('arrayFatherID[]','',['prompt'=>'请选择...'],['class'=>'form-control']) ?></td>
-    </tr>
-    <tr class="temp-tr3">
-        <td align='right'>子类</td>
-        <td><?=  html::dropDownList('arrayFatherID[]','',['prompt'=>'请选择...'],['class'=>'form-control']) ?></td>
-    </tr>
+
+
+
+
+
+
+
+
 </tbody>
+
+
+
+
+
+
+
+
+
+
 <tfoot>
 	<tr>
 		<td width=15% align='right'>类型名称</td>
