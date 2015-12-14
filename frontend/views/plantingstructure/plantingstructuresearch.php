@@ -1,39 +1,33 @@
 <?php
-namespace frontend\controllers;
-use Yii;
+
+use app\models\tables;
 use yii\helpers\Html;
-use yii\widgets\ActiveFormrdiv;
-use dosamigos\datetimepicker\DateTimePicker;
-use frontend\helpers\MoneyFormat;
-use yii\web\View;
+use yii\grid\GridView;
+use app\models\Farms;
+use app\models\Plantingstructure;
+use app\models\Plant;
+use app\models\Lease;
 use yii\helpers\ArrayHelper;
 use app\models\ManagementArea;
-use app\models\Search;
-use yii\grid\GridView;
+use dosamigos\datetimepicker\DateTimePicker;
+use yii\helpers\Url;
+use yii\widgets\ActiveFormrdiv;
+/* @var $this yii\web\View */
+/* @var $searchModel frontend\models\leaseSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
 ?>
-<link rel="stylesheet" type="text/css" href="css/styles.css" />
-
-<script type="text/javascript" src="js/jquery.flip.min.js"></script>
-<?php $this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
-<script type="text/javascript" src="js/script.js"></script>
-<script type="text/javascript" src="js/showhighcharts.js"></script>
-<div class="search-form">
-
-    <?php $form = ActiveFormrdiv::begin(); ?>
-  <section class="content">
+<div class="lease-index">
+<section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>
-                    </h3>
-                </div>
                 <div class="box-body">
-                <?php $managementArea_array = ArrayHelper::map(ManagementArea::find()->all(), 'id', 'areaname');
+<?php $form = ActiveFormrdiv::begin(); ?>
+
+  <?php $managementArea_array = ArrayHelper::map(ManagementArea::find()->all(), 'id', 'areaname');
                 	array_splice($managementArea_array,0,0,[0=>'全部']);
-                ?>
-<table class="table table-hover">
+                ?>              
+  <table class="table table-hover">
   <tr>
   	<td align="right">管理区</td>
     <td><?= html::dropDownList('managementarea','',$managementArea_array,['class'=>'form-control','id'=>'management_area'])?></td>
@@ -81,24 +75,15 @@ use yii\grid\GridView;
     
   </tr>
 </table>
-<?php if(!empty($dataProvider)) {?>
-    
-    <?= GridView::widget([
+ <?php ActiveFormrdiv::end(); ?>
+ <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'columns' => Search::$controllername(),
+        'columns' => Plantingstructure::plantingstructure(),
     ]); ?>
-    <?php }?>
-
                 </div>
             </div>
         </div>
     </div>
-
 </section>
-
- <?php ActiveFormrdiv::end(); ?>
 </div>
-
-    
-

@@ -172,10 +172,13 @@ class Farms extends \yii\db\ActiveRecord
         return $jsonData;
     }
 
-    public static function getFarmArray()
+    public static function getFarmArray($management_area = NULL)
     {
-    	$departmentid = User::find()->where(['id'=>\Yii::$app->getUser()->id])->one()['department_id'];
-    	$strdepartment = Department::find()->where(['id'=>$departmentid])->one()['membership'];
+    	if(empty($management_area)) {
+	    	$departmentid = User::find()->where(['id'=>\Yii::$app->getUser()->id])->one()['department_id'];
+	    	$strdepartment = Department::find()->where(['id'=>$departmentid])->one()['membership'];
+    	} else 
+    		$strdepartment = $management_area;
     	$farms = self::find()->where(['management_area'=>$strdepartment])->all();
     	 
     	foreach ($farms as $key=>$value) {

@@ -15,6 +15,7 @@ use frontend\models\leaseSearch;
 use app\models\Plantinputproduct;
 use app\models\Plantpesticides;
 use app\models\Logs;
+use app\models\Theyear;
 /**
  * PlantingstructureController implements the CRUD actions for Plantingstructure model.
  */
@@ -55,6 +56,33 @@ class PlantingstructureController extends Controller
         ]);
     }
 
+    public function actionPlantingstructuresearch($begindate,$enddate,$management_area)
+    {
+    	$post = Yii::$app->request->post();
+    		
+    	if($post) {
+    		$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
+    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
+    				'begindate' => $whereDate['begindate'],
+    				'enddate' => $whereDate['enddate'],
+    				'management_area' => $post['managementarea'],
+    		]);
+    	} else {
+    	
+	    	$searchModel = new plantingstructureSearch();
+	    	$params = Yii::$app->request->queryParams;
+	    	$arrayID = Farms::getFarmArray($management_area);
+	    	$params ['plantingstructureSearch']['farms_id'] = $arrayID;
+	    	$params ['plantingstructureSearch']['begindate'] = $begindate;
+	    	$params ['plantingstructureSearch']['enddate'] = $enddate;
+	    	$dataProvider = $searchModel->searchIndex ( $params['plantingstructureSearch'] );
+	    	return $this->render('plantingstructuresearch',[
+	    			'searchModel' => $searchModel,
+	    			'dataProvider' => $dataProvider,
+	    	]);
+    	}
+    }
+    
     /**
      * Displays a single Plantingstructure model.
      * @param integer $id

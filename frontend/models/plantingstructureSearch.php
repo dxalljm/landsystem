@@ -18,9 +18,9 @@ class plantingstructureSearch extends Plantingstructure
     public function rules()
     {
         return [
-            [['id', 'plant_id', 'goodseed_id', 'lease_id'], 'integer'],
+            [['id', 'plant_id', 'goodseed_id', 'lease_id', 'farms_id'], 'integer'],
             [['area'], 'number'],
-            [['zongdi','farms_id'], 'safe'],
+            [['zongdi'], 'safe'],
         ];
     }
 
@@ -42,32 +42,52 @@ class plantingstructureSearch extends Plantingstructure
      */
     public function search($params)
     {
+    	
         $query = Plantingstructure::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+		
         $this->load($params);
-
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
 
         $query->andFilterWhere([
             'id' => $this->id,
             'plant_id' => $this->plant_id,
             'area' => $this->area,
             'goodseed_id' => $this->goodseed_id,
-            'farms_id' => $this->farms_id,
         	'lease_id' => $this->lease_id,
+            'farms_id' => $this->farms_id,
         ]);
 
         $query->andFilterWhere(['like', 'zongdi', $this->zongdi])
         ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
+    }
+    public function searchIndex($params)
+    {
+//     	 var_dump($params);exit;
+    	$query = Plantingstructure::find();
+    
+    	$dataProvider = new ActiveDataProvider([
+    			'query' => $query,
+    	]);
+    
+    	//         $this->setAttributes($params);
+    
+    	$query->andFilterWhere([
+    			'id' => $this->id,
+    			'plant_id' => $this->plant_id,
+    			'area' => $this->area,
+    			'goodseed_id' => $this->goodseed_id,
+    			'lease_id' => $this->lease_id,
+    			'farms_id' => $params['farms_id'],
+    	]);
+    
+    	$query->andFilterWhere(['like', 'zongdi', $this->zongdi])
+    	->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+    
+    	return $dataProvider;
     }
 }

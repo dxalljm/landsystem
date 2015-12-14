@@ -35,7 +35,9 @@ else echo '晚上好';
           <?php 
           	$controller = Yii::$app->controller->id;
           	$action = yii::$app->controller->action->id;
-	    	if($action == 'collectionsend' or $action == 'farmsmenu' or $action == 'farmsttpomenu' or $action == 'farmssplit'or $action == 'farmstransfer' or $action == 'farmsttpozongdi' or $action == 'farmstozongdi'  or $controller == 'plantpesticides' or $controller == 'prevention' or $controller == 'breed' or $controller == 'loan' or  $controller == 'sales' or $controller == 'yields' or $controller == 'farmer' or $controller == 'lease' or $controller == 'fireprevention' or $controller == 'dispute' or $controller == 'lease' or $controller == 'cooperativeoffarm' or $controller == 'employee' or $controller == 'plantingstructure' or $controller == 'plantinputproduct'){?>
+// 	    	if($action == 'collectionsend' or $action == 'farmsmenu' or $action == 'farmsttpomenu' or $action == 'farmssplit'or $action == 'farmstransfer' or $action == 'farmsttpozongdi' or $action == 'farmstozongdi'  or $controller == 'plantpesticides' or $controller == 'prevention' or $controller == 'breed' or $controller == 'loan' or  $controller == 'sales' or $controller == 'yields' or $controller == 'farmer' or $controller == 'lease' or $controller == 'fireprevention' or $controller == 'dispute' or $controller == 'lease' or $controller == 'cooperativeoffarm' or $controller == 'employee' or $controller == 'plantingstructure' or $controller == 'plantinputproduct'){
+	    	if(isset($_GET['farms_id'])) {
+          	?>
 	    	<?php if(isset($_GET['farms_id'])) {?>
 	    	<li class="header text-light-blue"><h4><?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']?></h4></li>
 	    	<?php }?>

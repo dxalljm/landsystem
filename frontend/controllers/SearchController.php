@@ -21,13 +21,12 @@ use app\models\Theyear;
 use app\models\Breedinfo;
 use app\models\Breedtype;
 use app\models\Goodseed;
-use frontend\models\plantingstructureSearch;
+
 /**
  * BankAccountController implements the CRUD actions for BankAccount model.
  */
 class SearchController extends Controller
 {
-	public $whereDate;
     public function behaviors()
     {
         return [
@@ -51,44 +50,62 @@ class SearchController extends Controller
 //     	}
 //     }
 
-    public function actionSearchindex()
-    {
-    	$post = Yii::$app->request->post();
-    	$Search = '';
-    	$dataProvider = [];
-    	$tab = '';
-    	if($post) {
-//     		var_dump($post);exit;
-    		$this->formatDate($post['begindate'],$post['enddate']);
-    		$managementarea = $post['managementarea'];
-    		$tab = $post['tab'];
-    		if($managementarea == 0) {
-    			$areaWhere = [1,2,3,4,5,6,7];
-    		} else 
-    			$areaWhere = $managementarea;
-    		
-    		$searchClass = $tab.'Search';
-    		$path = '\frontend\models\\';
-    		$Search = new $path.$searchClass();
-    		$params = Yii::$app->request->queryParams;
-    		if($tab == 'farms') {
-    			$params [$searchClass] ['management_area'] = $management_area['id'];
-    		} else {
-//     			var_dump($areaWhere);exit;
-    			$arrayID = $this->getFarmsid($areaWhere);
-    			$params [$searchClass] ['farms_id'] = $arrayID;
-    			$params [$searchClass] ['create_at'] = $this->whereDate['begindate'];
-    			$params [$searchClass] ['update_at'] = $this->whereDate['enddate'];
-    		}
-    		$dataProvider = $Search->search ( $params );
-    	}	
-    	return $this->render ( 'searchindex', [
-    			'searchModel' => $Search,
-    			'dataProvider' => $dataProvider,
-    			'controllername' => $tab,
-    	] );
-//     	$searchDate = date('Y年m月d日',$this->whereDate['begindate']).'—'.date('Y年m月d日',$this->whereDate['enddate']);
-    }
+//     public function actionSearchindex()
+//     {
+//     	$post = Yii::$app->request->post();
+//     	$Search = '';
+//     	$dataProvider = [];
+//     	$tab = '';
+//     	if($post) {
+// //     		var_dump($post);exit;
+//     		$this->formatDate($post['begindate'],$post['enddate']);
+//     		$managementarea = $post['managementarea'];
+//     		$tab = $post['tab'];
+//     		if($managementarea == 0) {
+//     			$areaWhere = [1,2,3,4,5,6,7];
+//     		} else 
+//     			$areaWhere = $managementarea;
+
+// 			$searchName = $tab.'Search';
+//     		$searchClass = 'frontend\models\\'.$searchName;
+//     		$Search = new  $searchClass();
+
+//     		$params = Yii::$app->request->queryParams;
+
+//     		if($tab == 'farms') {
+//     			$params [$searchName] ['management_area'] = $management_area['id'];
+//     		} else {
+// //     			var_dump($areaWhere);exit;
+//     			$arrayID = $this->getFarmsid($areaWhere);
+//     			$params [$searchName] ['farms_id'] = $arrayID;
+//     			$params [$searchName] ['create_at'] = $this->whereDate['begindate'];
+//     			$params [$searchName] ['update_at'] = $this->whereDate['enddate'];
+//     		}
+//     		$dataProvider = $Search->searchIndex ( $params[$searchName] );
+//     	}	
+//     	return $this->render ( 'searchindex', [
+//     			'searchModel' => $Search,
+//     			'dataProvider' => $dataProvider,
+//     			'controllername' => $tab,
+//     	] );
+// //     	$searchDate = date('Y年m月d日',$this->whereDate['begindate']).'—'.date('Y年m月d日',$this->whereDate['enddate']);
+//     }
+
+	public function actionSearchindex()
+	{
+		$post = Yii::$app->request->post();	
+			
+		if($post) {
+			$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
+			return $this->redirect ([$post['tab'].'/'.$post['tab'].'search', 
+					'begindate' => $whereDate['begindate'],
+					'enddate' => $whereDate['enddate'],
+					'management_area' => $post['managementarea'],
+			    ]);
+		} else {
+			return $this->render('searchindex');
+		}
+	}
     
     private function getFarmsid($managment_area)
     {
@@ -159,25 +176,6 @@ class SearchController extends Controller
     			$result[$value][] = $p;
     	}
     	return $result;
-    }
-    
-    //对查询时间进行格式化
-    public function formatDate($begindate=false,$enddate=false)
-    {
-    	$timeFront = '';
-    	$timeBack = '';
-    	if($begindate) {
-    		$timeFront = strtotime($begindate);
-    	} else {
-    		$timeFront = Theyear::getYeartime()[0];
-    	}
-    	if($enddate) {
-    		$timeBack = strtotime($enddate);
-    	} else {
-    		$timeBack = Theyear::getYeartime()[1];
-    	}
-    	$this->whereDate = ['begindate'=>$timeFront,'enddate'=>$timeBack];
-//     	var_dump($this->whereDate);exit;
     }
     
     
