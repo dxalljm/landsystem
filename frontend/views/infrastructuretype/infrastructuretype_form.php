@@ -38,13 +38,13 @@ use frontend\widgets\CategorySelect;
 				echo CategorySelect::widget([
 					"model" => $model,
 					'isDisableParent' => null,
-					"attribute" => 'parent_id',
+					"attribute" => 'father_id',
 					'isShowFinal' => null,
 					"categories" => $listData,
 					'selectedValue' => $model->father_id,
 					'htmlOptions' => [
 						'class' => 'form-control col-sm-5 col-lg-5',
-						'name' => 'WikiCategory[parent_id]'
+						'name' => 'Infrastructuretype[father_id]'
 					]
 				]);
 

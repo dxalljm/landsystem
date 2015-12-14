@@ -27,7 +27,7 @@ class Infrastructuretype extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            //[['father_id'], 'integer'],
+            [['father_id'], 'integer'],
             [['typename'], 'string', 'max' => 500]
         ];
     }
@@ -66,6 +66,22 @@ class Infrastructuretype extends \yii\db\ActiveRecord
         }
 
         return $allList;
+    }
+
+    public static function getNameById($id)
+    {
+        $query = self::find()->select(
+            ['id', 'father_id', 'typename']
+        )->where(['id' => $id]);
+
+        $rows = $query->one();
+
+        $name = '';
+        if (!empty($rows)) {
+            return $rows->typename;
+        }
+        return $name;
+
     }
 
 }

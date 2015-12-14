@@ -72,10 +72,6 @@ class InfrastructuretypeController extends Controller
         $model = new Infrastructuretype();
 
         if ($model->load(Yii::$app->request->post())) {
-        	var_dump(Yii::$app->request->post('arrayFahterID'));
-        	exit;
-        	if($model->father_id == '')
-        		$model->father_id = Yii::$app->request->post('infrastructureFatherPost');
         	$model->save();
         	
             return $this->redirect(['infrastructuretypeview', 'id' => $model->id]);

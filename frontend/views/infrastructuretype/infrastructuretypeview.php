@@ -4,6 +4,8 @@ use app\models\tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
+use app\models\Infrastructuretype;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\Infrastructuretype */
 
@@ -40,7 +42,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'father_id',
+            [
+                'attribute' => 'father_id',
+                'value' => Infrastructuretype::getNameById($model->father_id)
+            ],
             'typename',
         ],
     ]) ?>
