@@ -88,31 +88,3 @@ use frontend\widgets\CategorySelect;
     <?php ActiveFormrdiv::end(); ?>
 
 </div>
-<script>
-
-$('#father_id').change(function(){
-	var input = $(this).val();
-
-	$.getJSON('index.php?r=infrastructuretype/getson', {father_id: input}, function (data) {
-		if (data.son == 1) {
-			var Child = $("#infrastructuretype-father_id");
-			for(i=0;i<data.data.length;i++) {
-				Child.append('<option value="'+data.data[i]['id']+'">'+data.data[i]['typename']+'</option>');
-			}
-			$('.temp-tr').css('display', 'table-row')
-		}
-	});
-});
-$('#infrastructuretype-father_id').change(function(){
-	var input = $(this).val();
-	$.getJSON('index.php?r=infrastructuretype/getson', {father_id: input}, function (data) {
-		if (data.son == 1) {
-			var Child = $("#infrastructuretype-father_id");
-			for(i=0;i<data.data.length;i++) {
-				Child.append('<option value="'+data.data[i]['id']+'">'+data.data[i]['typename']+'</option>');
-			}
-			$('.temp-tr2').css('display', 'table-row')
-		}
-	});
-});
-</script>
