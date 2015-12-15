@@ -1200,6 +1200,47 @@ class FarmsController extends Controller {
 		echo json_encode(['status'=>1,'data'=>$data]);
 	}
 	
+	public function actionFarmssearch($begindate,$enddate,$management_area,$farmname,$farmername,$telephone,$address)
+	{
+		$post = Yii::$app->request->post();
+// 		var_dump($post);exit;
+		if($post) {
+    		if($post['tab'] == 'parmpt')
+    			return $this->redirect(['search/searchindex']);
+			$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
+			return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
+					'begindate' => $whereDate['begindate'],
+					'enddate' => $whereDate['enddate'],
+					'management_area' => $post['managementarea'],
+					'farmname' => $post['farmname'],
+					'farmername' => $post['farmername'],
+					'telephone' => $post['telephone'],
+					'address' => $post['address'],
+			]);
+		} else {
+			 
+			$searchModel = new farmsSearch();
+			$params = Yii::$app->request->queryParams;
+			if($management_area)
+				$params ['farmsSearch']['management_area'] = $management_area;
+			if($farmname)
+				$params ['farmsSearch']['farmname'] = $farmname;
+			if($farmername)
+				$params ['farmsSearch']['farmername'] = $farmername;
+			if($telephone)
+				$params ['farmsSearch']['telephone'] = $telephone;
+			if($address)
+				$params ['farmsSearch']['address'] = $address;
+			$params ['farmsSearch']['begindate'] = $begindate;
+			$params ['farmsSearch']['enddate'] = $enddate;
+			$dataProvider = $searchModel->searchIndex ( $params['farmsSearch'] );
+			return $this->render('farmssearch',[
+					'searchModel' => $searchModel,
+					'dataProvider' => $dataProvider,
+			]);
+		}
+	}
+	
 	/**
 	 * Finds the farms model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.

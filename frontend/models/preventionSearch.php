@@ -72,4 +72,40 @@ class preventionSearch extends Prevention
        		->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
         return $dataProvider;
     }
+    public function searchIndex($params)
+    {
+//     	var_dump($params);exit;
+    	$query = Prevention::find();
+    
+    	$dataProvider = new ActiveDataProvider([
+    			'query' => $query,
+    	]);
+    
+    	if(isset($params['farms_id']))
+    		$farms_id = $params['farms_id'];
+    	else
+    		$farms_id = $this->farms_id;
+    
+    	if (!$this->validate()) {
+    		// uncomment the following line if you do not want to any records when validation fails
+    		// $query->where('0=1');
+    		return $dataProvider;
+    	}
+    
+    	$query->andFilterWhere([
+    			'id' => $this->id,
+    			'farms_id' => $farms_id,
+    			'breedinfo_id' => $this->breedinfo_id,
+    			'preventionnumber' => $this->preventionnumber,
+    			'breedinfonumber' => $this->breedinfonumber,
+    			//'preventionrate' => $this->preventionrate,
+    			//'isepidemic' => $this->isepidemic,
+    	]);
+    
+    	$query->andFilterWhere(['like', 'vaccine', $this->vaccine])
+    	->andFilterWhere(['like', 'preventionrate', $this->preventionrate])
+    	->andFilterWhere(['like', 'isepidemic', $this->isepidemic])
+    	->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+    	return $dataProvider;
+    }
 }

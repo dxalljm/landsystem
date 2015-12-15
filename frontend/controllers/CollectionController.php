@@ -280,7 +280,7 @@ class CollectionController extends Controller
         }
     }
 	
-    public function actionCollectionsearch($farms_id,$cardid)
+    public function actionCollectionsearch2($farms_id,$cardid)
     {
     	//$this->layout='@app/views/layouts/nomain.php';
     	$year = Theyear::findOne(1)['years'];
@@ -393,6 +393,37 @@ class CollectionController extends Controller
 //         return $this->redirect(['collectionindex']);
 //     }
 
+    public function actionCollectionsearch($begindate,$enddate,$management_area)
+    {
+    	$post = Yii::$app->request->post();
+    
+    	if($post) {
+    		if($post['tab'] == 'parmpt')
+    			return $this->redirect(['search/searchindex']);
+    		$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
+    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
+    				'begindate' => $whereDate['begindate'],
+    				'enddate' => $whereDate['enddate'],
+    				'management_area' => $post['managementarea'],
+    		]);
+    	} else {
+    		 
+    		$searchModel = new collectionSearch();
+    		$params = Yii::$app->request->queryParams;
+    		if($management_area) {
+    			$arrayID = Farms::getFarmArray($management_area);
+    			$params ['collectionSearch']['farms_id'] = $arrayID;
+    		}
+    		$params ['collectionSearch']['begindate'] = $begindate;
+    		$params ['collectionSearch']['enddate'] = $enddate;
+    		$dataProvider = $searchModel->searchIndex ( $params['collectionSearch'] );
+    		return $this->render('collectionsearch',[
+    				'searchModel' => $searchModel,
+    				'dataProvider' => $dataProvider,
+    		]);
+    	}
+    }
+    
     /**
      * Finds the Collection model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

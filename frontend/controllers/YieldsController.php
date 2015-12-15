@@ -9,6 +9,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Plantingstructure;
+use app\models\Farms;
+use app\models\Theyear;
 /**
  * YieldsController implements the CRUD actions for Yields model.
  */
@@ -113,6 +115,37 @@ class YieldsController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['yieldsindex']);
+    }
+    
+    public function actionYieldssearch($begindate,$enddate,$management_area)
+    {
+    	$post = Yii::$app->request->post();
+    
+    	if($post) {
+    		if($post['tab'] == 'parmpt')
+    			return $this->redirect(['search/searchindex']);
+    		$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
+    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
+    				'begindate' => $whereDate['begindate'],
+    				'enddate' => $whereDate['enddate'],
+    				'management_area' => $post['managementarea'],
+    		]);
+    	} else {
+    		 
+    		$searchModel = new yieldsSearch();
+    		$params = Yii::$app->request->queryParams;
+    		if($management_area) {
+	    		$arrayID = Farms::getFarmArray($management_area);
+	    		$params ['yieldsSearch']['farms_id'] = $arrayID;
+    		}
+    		$params ['yieldsSearch']['begindate'] = $begindate;
+    		$params ['yieldsSearch']['enddate'] = $enddate;
+    		$dataProvider = $searchModel->searchIndex ( $params['yieldsSearch'] );
+    		return $this->render('yieldssearch',[
+    				'searchModel' => $searchModel,
+    				'dataProvider' => $dataProvider,
+    		]);
+    	}
     }
 
     /**

@@ -10,6 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Plantingstructure;
 use app\models\Yields;
+use app\models\Theyear;
+use app\models\Farms;
 
 /**
  * SalesController implements the CRUD actions for Sales model.
@@ -119,6 +121,36 @@ class SalesController extends Controller
         return $this->redirect(['salesindex']);
     }
 
+    public function actionSalessearch($begindate,$enddate,$management_area)
+    {
+    	$post = Yii::$app->request->post();
+    
+    	if($post) {
+    		if($post['tab'] == 'parmpt')
+    			return $this->redirect(['search/searchindex']);
+    		$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
+    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
+    				'begindate' => $whereDate['begindate'],
+    				'enddate' => $whereDate['enddate'],
+    				'management_area' => $post['managementarea'],
+    		]);
+    	} else {
+    		 
+    		$searchModel = new salesSearch();
+    		$params = Yii::$app->request->queryParams;
+    		if($management_area) {
+    			$arrayID = Farms::getFarmArray($management_area);
+    			$params ['salesSearch']['farms_id'] = $arrayID;
+    		}
+    		$params ['salesSearch']['begindate'] = $begindate;
+    		$params ['salesSearch']['enddate'] = $enddate;
+    		$dataProvider = $searchModel->searchIndex ( $params['salesSearch'] );
+    		return $this->render('salessearch',[
+    				'searchModel' => $searchModel,
+    				'dataProvider' => $dataProvider,
+    		]);
+    	}
+    }
     /**
      * Finds the Sales model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

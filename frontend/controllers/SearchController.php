@@ -94,13 +94,19 @@ class SearchController extends Controller
 	public function actionSearchindex()
 	{
 		$post = Yii::$app->request->post();	
-			
+		
 		if($post) {
+    		if($post['tab'] == 'parmpt')
+    			return $this->render('searchindex');
 			$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
 			return $this->redirect ([$post['tab'].'/'.$post['tab'].'search', 
 					'begindate' => $whereDate['begindate'],
 					'enddate' => $whereDate['enddate'],
 					'management_area' => $post['managementarea'],
+					'farmname' => $post['farmname'],
+					'farmername' => $post['farmername'],
+					'telephone' => $post['telephone'],
+					'address' => $post['address'],
 			    ]);
 		} else {
 			return $this->render('searchindex');

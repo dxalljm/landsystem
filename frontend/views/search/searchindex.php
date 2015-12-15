@@ -11,6 +11,10 @@ use app\models\ManagementArea;
 use app\models\Search;
 use yii\grid\GridView;
 ?>
+<style type="text/css">
+#farms { display:none }
+
+</style>
 <link rel="stylesheet" type="text/css" href="css/styles.css" />
 
 <script type="text/javascript" src="js/jquery.flip.min.js"></script>
@@ -37,8 +41,8 @@ use yii\grid\GridView;
   <tr>
   	<td align="right">管理区</td>
     <td><?= html::dropDownList('managementarea','',$managementArea_array,['class'=>'form-control','id'=>'management_area'])?></td>
-    <td align="right">选项</td><?php $class = ['parmpt'=>'请选择...','farms'=>'农场法人','plantingstructure'=>'种植作物','infrastructure'=>'基础设施','yields'=>'产量信息','sales'=>'销量信息','breedinfo'=>'养殖信息','prevention'=>'防疫情况','fireprevention'=>'防火情况','loan'=>'贷款情况','ollection'=>'缴费情况','disaster'=>'灾害情况']?>
-    <td><?php echo html::dropDownList('tab','',$class,['class'=>'form-control','id'=>'tabname'])?></td>
+    <td align="right">选项</td><?php $class = ['parmpt'=>'请选择...','farms'=>'农场法人','plantingstructure'=>'种植作物','infrastructure'=>'基础设施','yields'=>'产量信息','sales'=>'销量信息','breedinfo'=>'养殖信息','prevention'=>'防疫情况','fireprevention'=>'防火情况','loan'=>'贷款情况','collection'=>'缴费情况','disaster'=>'灾害情况']?>
+    <td><?php echo html::dropDownList('tab','',$class,['class'=>'form-control','id'=>'tablename'])?></td>
     <td align="right">自</td>
     <td><?php echo DateTimePicker::widget([
 				'name' => 'begindate',
@@ -78,9 +82,27 @@ use yii\grid\GridView;
 			]);?></td>
     <td>止</td>
     <td><?= html::submitButton('查询',['class'=>'btn btn-success'])?></td>
-    
+  </tr>
+  <tr >
+  	<td colspan="10">
+  		<table class="table table-hover" id="farms" width="100%">
+ 		 <tr>
+		    <td>农场名称</td>
+		    <td><?= html::textInput('farmname','',['class'=>'form-control'])?></td>
+		    <td>法人姓名</td>
+		    <td><?= html::textInput('farmername','',['class'=>'form-control'])?></td>
+		    <td>电话</td>
+		    <td><?= html::textInput('telephone','',['class'=>'form-control'])?></td>
+		    <td>农场位置</td>
+		    <td><?= html::textInput('address','',['class'=>'form-control'])?></td>
+		    <td><?= html::submitButton('查询',['class'=>'btn btn-success'])?></td>
+		  </tr>
+		</table>
+  	</td>
   </tr>
 </table>
+
+
 <?php if(!empty($dataProvider)) {?>
     
     <?= GridView::widget([
@@ -90,15 +112,15 @@ use yii\grid\GridView;
     ]); ?>
     <?php }?>
 
-                </div>
-            </div>
-        </div>
-    </div>
 
-</section>
 
  <?php ActiveFormrdiv::end(); ?>
 </div>
-
+<script type="text/javascript">
+$('#tablename').change(function(){
+	var input = $(this).val();
+	$('#'+input).css('display', 'inline');
+});
+</script>
     
 

@@ -61,6 +61,8 @@ class PlantingstructureController extends Controller
     	$post = Yii::$app->request->post();
     		
     	if($post) {
+    		if($post['tab'] == 'parmpt')
+    			return $this->redirect(['search/searchindex']);
     		$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
     		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
     				'begindate' => $whereDate['begindate'],
@@ -71,8 +73,10 @@ class PlantingstructureController extends Controller
     	
 	    	$searchModel = new plantingstructureSearch();
 	    	$params = Yii::$app->request->queryParams;
-	    	$arrayID = Farms::getFarmArray($management_area);
-	    	$params ['plantingstructureSearch']['farms_id'] = $arrayID;
+	    	if($management_area) {
+		    	$arrayID = Farms::getFarmArray($management_area);
+		    	$params ['plantingstructureSearch']['farms_id'] = $arrayID;
+	    	}
 	    	$params ['plantingstructureSearch']['begindate'] = $begindate;
 	    	$params ['plantingstructureSearch']['enddate'] = $enddate;
 	    	$dataProvider = $searchModel->searchIndex ( $params['plantingstructureSearch'] );

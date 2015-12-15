@@ -73,7 +73,10 @@ class plantingstructureSearch extends Plantingstructure
     	$dataProvider = new ActiveDataProvider([
     			'query' => $query,
     	]);
-    
+    	if(isset($params['farms_id']))
+    		$farms_id = $params['farms_id'];
+    	else
+    		$farms_id = $this->farms_id;
     	//         $this->setAttributes($params);
     
     	$query->andFilterWhere([
@@ -82,7 +85,7 @@ class plantingstructureSearch extends Plantingstructure
     			'area' => $this->area,
     			'goodseed_id' => $this->goodseed_id,
     			'lease_id' => $this->lease_id,
-    			'farms_id' => $params['farms_id'],
+    			'farms_id' => $farms_id,
     	]);
     
     	$query->andFilterWhere(['like', 'zongdi', $this->zongdi])

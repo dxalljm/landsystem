@@ -65,7 +65,7 @@ class breedinfoSearch extends Breedinfo
             'breedtype_id' => $this->breedtype_id,
         	
         ]);
-        $query->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
+        $query->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
         return $dataProvider;
     }
 }

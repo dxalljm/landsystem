@@ -8,7 +8,8 @@ use frontend\models\disasterSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use app\models\Theyear;
+use app\models\Farms;
 /**
  * DisasterController implements the CRUD actions for Disaster model.
  */
@@ -71,7 +72,10 @@ class DisasterController extends Controller
     {
         $model = new Disaster();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->create_at = time();
+        	$model->update_at = $model->create_at;
+        	$model->save();
             return $this->redirect(['disasterview', 'id' => $model->id]);
         } else {
             return $this->render('disastercreate', [
@@ -90,7 +94,9 @@ class DisasterController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->update_at = time();
+        	$model->save();
             return $this->redirect(['disasterview', 'id' => $model->id]);
         } else {
             return $this->render('disasterupdate', [
@@ -112,6 +118,36 @@ class DisasterController extends Controller
         return $this->redirect(['disasterindex']);
     }
 
+    public function actionDisastersearch($begindate,$enddate,$management_area)
+    {
+    	$post = Yii::$app->request->post();
+    
+    	if($post) {
+    		if($post['tab'] == 'parmpt')
+    			return $this->redirect(['search/searchindex']);
+    		$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
+    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
+    				'begindate' => $whereDate['begindate'],
+    				'enddate' => $whereDate['enddate'],
+    				'management_area' => $post['managementarea'],
+    		]);
+    	} else {
+    		 
+    		$searchModel = new disasterSearch();
+    		$params = Yii::$app->request->queryParams;
+    		if($management_area) {
+    			$arrayID = Farms::getFarmArray($management_area);
+    			$params ['disasterSearch']['farms_id'] = $arrayID;
+    		}
+    		$params ['disasterSearch']['begindate'] = $begindate;
+    		$params ['disasterSearch']['enddate'] = $enddate;
+    		$dataProvider = $searchModel->searchIndex ( $params['disasterSearch'] );
+    		return $this->render('disasterSearch',[
+    				'searchModel' => $searchModel,
+    				'dataProvider' => $dataProvider,
+    		]);
+    	}
+    }
     /**
      * Finds the Disaster model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

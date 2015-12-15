@@ -11,7 +11,7 @@ use yii\filters\VerbFilter;
 use app\models\Farms;
 use app\models\Lockedinfo;
 use app\models\Logs;
-
+use app\models\Theyear;
 /**
  * LoanController implements the CRUD actions for Loan model.
  */
@@ -146,6 +146,37 @@ class LoanController extends Controller
         return $this->redirect(['loanindex','farms_id'=>$farms_id]);
     }
 
+    public function actionLoansearch($begindate,$enddate,$management_area)
+    {
+    	$post = Yii::$app->request->post();
+    
+    	if($post) {
+    		if($post['tab'] == 'parmpt')
+    			return $this->redirect(['search/searchindex']);
+    		$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
+    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
+    				'begindate' => $whereDate['begindate'],
+    				'enddate' => $whereDate['enddate'],
+    				'management_area' => $post['managementarea'],
+    		]);
+    	} else {
+    		 
+    		$searchModel = new loanSearch();
+    		$params = Yii::$app->request->queryParams;
+    		if($management_area) {
+    			$arrayID = Farms::getFarmArray($management_area);
+    			$params ['loanSearch']['farms_id'] = $arrayID;
+    		}
+    		$params ['loanSearch']['begindate'] = $begindate;
+    		$params ['loanSearch']['enddate'] = $enddate;
+    		$dataProvider = $searchModel->searchIndex ( $params['loanSearch'] );
+    		return $this->render('loansearch',[
+    				'searchModel' => $searchModel,
+    				'dataProvider' => $dataProvider,
+    		]);
+    	}
+    }
+    
     /**
      * Finds the Loan model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

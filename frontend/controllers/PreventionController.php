@@ -10,7 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use frontend\models\breedinfoSearch;
 use app\models\Breed;
-
+use app\models\Theyear;
+use app\models\Farms;
 /**
  * PreventionController implements the CRUD actions for Prevention model.
  */
@@ -127,6 +128,37 @@ class PreventionController extends Controller
         return $this->redirect(['preventionindex']);
     }
 
+    public function actionPreventionsearch($begindate,$enddate,$management_area)
+    {
+    	$post = Yii::$app->request->post();
+    
+    	if($post) {
+    		if($post['tab'] == 'parmpt')
+    			return $this->redirect(['search/searchindex']);
+    		$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
+    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
+    				'begindate' => $whereDate['begindate'],
+    				'enddate' => $whereDate['enddate'],
+    				'management_area' => $post['managementarea'],
+    		]);
+    	} else {
+    		 
+    		$searchModel = new preventionSearch();
+    		$params = Yii::$app->request->queryParams;
+    		if($management_area) {
+    			$arrayID = Farms::getFarmArray($management_area);
+    			$params ['preventionSearch']['farms_id'] = $arrayID;
+    		}
+    		$params ['preventionSearch']['begindate'] = $begindate;
+    		$params ['preventionSearch']['enddate'] = $enddate;
+    		$dataProvider = $searchModel->searchIndex ( $params['preventionSearch'] );
+    		return $this->render('preventionsearch',[
+    				'searchModel' => $searchModel,
+    				'dataProvider' => $dataProvider,
+    		]);
+    	}
+    }
+    
     /**
      * Finds the Prevention model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

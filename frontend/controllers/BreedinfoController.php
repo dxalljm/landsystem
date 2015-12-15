@@ -8,7 +8,8 @@ use frontend\models\breedinfoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use app\models\Theyear;
+use app\models\Farms;
 /**
  * BreedinfoController implements the CRUD actions for Breedinfo model.
  */
@@ -116,6 +117,37 @@ class BreedinfoController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['breedinfoindex']);
+    }
+    
+    public function actionBreedinfosearch($begindate,$enddate,$management_area)
+    {
+    	$post = Yii::$app->request->post();
+    
+    	if($post) {
+    		if($post['tab'] == 'parmpt')
+    			return $this->redirect(['search/searchindex']);
+    		$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
+    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
+    				'begindate' => $whereDate['begindate'],
+    				'enddate' => $whereDate['enddate'],
+    				'management_area' => $post['managementarea'],
+    		]);
+    	} else {
+    		 
+    		$searchModel = new breedinfoSearch();
+    		$params = Yii::$app->request->queryParams;
+    		if($management_area) {
+    			$arrayID = Farms::getFarmArray($management_area);
+    			$params ['breedinfoSearch']['farms_id'] = $arrayID;
+    		}
+    		$params ['breedinfoSearch']['begindate'] = $begindate;
+    		$params ['breedinfoSearch']['enddate'] = $enddate;
+    		$dataProvider = $searchModel->search ( $params );
+    		return $this->render('breedinfosearch',[
+    				'searchModel' => $searchModel,
+    				'dataProvider' => $dataProvider,
+    		]);
+    	}
     }
 
     /**

@@ -57,23 +57,32 @@ class farmsSearch extends Farms
     	return $tj;
     }
     
-    public function pinyinSearch()
+    public function pinyinSearch($str = NULL)
     {
-    	if (preg_match ("/^[A-Za-z]/", $this->farmname)) {
-    		$tj = ['like','pinyin',$this->farmname];
+    	if(empty($str))
+    		$farmname = $this->farmname;
+    	else
+    		$farmname = $str;
+    	if (preg_match ("/^[A-Za-z]/", $farmname)) {
+    		$tj = ['like','pinyin',$farmname];
     	} else {
-    		$tj = ['like','farmname',$this->farmname];
+    		$tj = ['like','farmname',$farmname];
     	}
 		return $tj;
     }
     
-    public function farmerpinyinSearch()
+    public function farmerpinyinSearch($str = NULL)
     {
-    	if (preg_match ("/^[A-Za-z]/", $this->farmername)) {
-    		$tj = ['like','farmerpinyin',$this->farmername];
+    	if(empty($str))
+    		$farmername = $this->farmername;
+    	else
+    		$farmername = $str;
+    	if (preg_match ("/^[A-Za-z]/", $farmername)) {
+    		$tj = ['like','farmerpinyin',$farmername];
     	} else {
-    		$tj = ['like','farmername',$this->farmername];
+    		$tj = ['like','farmername',$farmername];
     	}
+//     	var_dump($tj);exit;
     	return $tj;
     }
     /**
@@ -161,6 +170,81 @@ class farmsSearch extends Farms
           	//->andFilterWhere(['between', 'measure', $this->measure,$this->measure]);
 
         return $dataProvider;
+    }
+    public function searchIndex($params)
+    {
+//     	    	var_dump($params);
+//     	       exit;
+    	$query = farms::find();
+    	//$query->joinWith(['farmer']);
+    
+    	$dataProvider = new ActiveDataProvider([
+    			'query' => $query,
+    	]);    
+    
+//     	$this->load($params);
+    
+    	if (!$this->validate()) {
+    		// uncomment the following line if you do not want to any records when validation fails
+    		// $query->where('0=1');
+    		return $dataProvider;
+    	}
+    	if(isset($params['management_area']))
+    		$management_area = $params['management_area'];
+    	else
+    		$management_area = $this->management_area;
+    	
+    	if(isset($params['farmname']))
+    		$farmname = $params['farmname'];
+    	else
+    		$farmname = $this->farmname;
+    	
+    	if(isset($params['farmername']))
+    		$farmername = $params['farmername'];
+    	else
+    		$farmername = $this->farmername;
+    	
+    	if(isset($params['address']))
+    		$address = $params['address'];
+    	else
+    		$address = $this->address;
+    	
+    	if(isset($params['telephone']))
+    		$telephone = $params['telephone'];
+    	else
+    		$telephone = $this->telephone;
+    	$query->andFilterWhere([
+    			'id' => $this->id,
+    			'locked' => $this->locked,
+    			'management_area' => $management_area,
+    	]);
+    	//$this->management_area = [1, 4, 5];
+    
+    	$query->andFilterWhere($this->pinyinSearch($farmname))
+    	->andFilterWhere($this->farmerpinyinSearch($farmername))
+    	
+    	->andFilterWhere(['like', 'cardid', $this->cardid])
+    	->andFilterWhere(['like', 'telephone', $telephone])
+    	->andFilterWhere(['like', 'address', $address])
+    	->andFilterWhere(['like', 'state', $this->state])
+    	->andFilterWhere(['like', 'oldfarms_id', $this->oldfarms_id])
+//     	->andWhere(['management_area' => $this->management_area])
+    	->andFilterWhere(['like', 'spyear', $this->spyear])
+    	->andFilterWhere(['like', 'zongdi', $this->zongdi])
+    	->andFilterWhere(['like', 'notclear', $this->notclear])
+    	->andFilterWhere(['like', 'cooperative_id', $this->cooperative_id])
+    	->andFilterWhere(['like', 'surveydate', $this->surveydate])
+    	->andFilterWhere(['like', 'groundsign', $this->groundsign])
+    	->andFilterWhere(['like', 'farmersign', $this->farmersign])
+    	->andFilterWhere(['like', 'pinyin', $this->pinyin])
+    	->andFilterWhere(['like', 'farmerpinyin', $this->farmerpinyin])
+    	->andFilterWhere(['like', 'contractnumber', $this->contractnumber])
+    	->andFilterWhere(['like', 'latitude', $this->latitude])
+    	->andFilterWhere(['like', 'longitude', $this->longitude])
+    	->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+    	//->andFilterWhere(['between', 'measure', $this->measure,$this->measure]);
+    
+    	return $dataProvider;
     }
     
     public function ttposearch($params)

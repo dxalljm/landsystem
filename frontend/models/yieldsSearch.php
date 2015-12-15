@@ -64,4 +64,33 @@ class yieldsSearch extends Yields
 
         return $dataProvider;
     }
+    public function searchIndex($params)
+    {
+//     	var_dump($params);exit;
+    	$query = Yields::find();
+    
+    	$dataProvider = new ActiveDataProvider([
+    			'query' => $query,
+    	]);
+    	if(isset($params['farms_id']))
+    		$farms_id = $params['farms_id'];
+    	else 
+    		$farms_id = $this->farms_id;
+//     	$this->load($params);
+    
+    	if (!$this->validate()) {
+    		// uncomment the following line if you do not want to any records when validation fails
+    		// $query->where('0=1');
+    		return $dataProvider;
+    	}
+    
+    	$query->andFilterWhere([
+    			'id' => $this->id,
+    			'planting_id' => $this->planting_id,
+    			'farms_id' => $farms_id,
+    			'single' => $this->single,
+    	]);
+    	$query->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+    	return $dataProvider;
+    }
 }

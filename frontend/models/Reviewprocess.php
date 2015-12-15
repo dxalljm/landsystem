@@ -231,4 +231,18 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	}
     	return $model;
     }
+    
+    //获取当前用户的审核任务数量
+    public static function getUserProcessCount()
+    {
+    	$mamangmentarea = Farms::getManagementArea();
+    	
+    	$process = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
+    	$processRows = Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$process=>3])->count();
+//     	var_dump($processRows);exit;
+    	if($processRows)
+    		return '<small class="label pull-right bg-red">'.$processRows.'</small>';
+    	else 
+    		return false;
+    }
 }

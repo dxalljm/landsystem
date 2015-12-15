@@ -3,6 +3,7 @@ use yii\helpers\Url;
 use app\models\Farms;
 use app\models\MenuToUser;
 use app\models\Mainmenu;
+use app\models\Reviewprocess;
 ?>
 <aside class="main-sidebar">
     <section class="sidebar" style="height: auto;">
@@ -116,8 +117,16 @@ else echo '晚上好';
               				echo '</ul>';
             				echo '</li>';
 	                     	
-	                   } else 
-	                       	echo "<li ><a href=" . Url::to('index.php?r='.$menu['menuurl']) . "><i class='fa fa-dashboard'></i><span>". $menu['menuname'] . "</span></a></li>";
+	                   } else  {
+	                   	 	echo '<li>';
+	                   		echo '<a href="' . Url::to('index.php?r='.$menu['menuurl']) . '">';
+	                   		echo '<i class="fa fa-calendar"></i> <span>'. $menu['menuname'] .'</span>';
+	                   		if($menu['menuurl'] == 'reviewprocess/reviewprocessindex')
+	                   			echo Reviewprocess::getUserProcessCount();
+	                   		echo '</a>';
+	                   		echo '</li>';
+// 	                       	echo "<li ><a href=""><i class='fa fa-dashboard'></i><span>" "</span></a></li>";
+	                   }
 					}
                 }
                 ?>

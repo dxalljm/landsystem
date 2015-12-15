@@ -72,4 +72,39 @@ class disasterSearch extends Disaster
 
         return $dataProvider;
     }
+    public function searchIndex($params)
+    {
+    	$query = Disaster::find();
+    
+    	$dataProvider = new ActiveDataProvider([
+    			'query' => $query,
+    	]);
+    
+    	if(isset($params['farms_id']))
+    		$farms_id = $params['farms_id'];
+    	else
+    		$farms_id = $this->farms_id;
+    
+    	if (!$this->validate()) {
+    		// uncomment the following line if you do not want to any records when validation fails
+    		// $query->where('0=1');
+    		return $dataProvider;
+    	}
+    
+    	$query->andFilterWhere([
+    			'id' => $this->id,
+    			'farms_id' => $farms_id,
+    			'disastertype_id' => $this->disastertype_id,
+    			'disasterarea' => $this->disasterarea,
+    			'insurancearea' => $this->insurancearea,
+    			'yieldreduction' => $this->yieldreduction,
+    			'socmoney' => $this->socmoney,
+    			'isinsurance' => $this->isinsurance,
+    	]);
+    
+    	$query->andFilterWhere(['like', 'disasterplant', $this->disasterplant])
+    	->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+    
+    	return $dataProvider;
+    }
 }

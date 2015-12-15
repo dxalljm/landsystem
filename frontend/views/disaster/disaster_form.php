@@ -25,26 +25,30 @@ use app\models\Farms;
 <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false)->error(false) ?>
 <tr>
 <td width=15% align='right'>灾害类型</td>
-<td align='left'><?= $form->field($model, 'disastertype_id')->dropDownList(ArrayHelper::map(Disastertype::find()->all(), 'id', 'typename'))->label(false)->error(false) ?></td>
+<td align='left'><?= $form->field($model, 'disastertype_id')->dropDownList(ArrayHelper::map(Disastertype::find()->all(), 'id', 'typename'),['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
 </tr>
 
 <tr>
 <td width=15% align='right'>受灾作物</td>
 <?php 
 	$plantingstracutres = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id']])->all();
-	$plantValue = '';
-	foreach ($plantingstracutres as $value) {
-		$plant = Plant::find()->where(['id'=>$value['plant_id']])->one();
-		$plantValue[$plant['id']] = [
-			'id' => $plant->id,
-			'cropname' => $plant->cropname,
-		];
-		
-	}
+	$plantValue = [];
+	if($plantingstracutres) {
+		foreach ($plantingstracutres as $value) {
+			$plant = Plant::find()->where(['id'=>$value['plant_id']])->one();
+			$plantValue[$plant['id']] = [
+				'id' => $plant->id,
+				'cropname' => $plant->cropname,
+			];
+			
+		}
 	if(is_array($plantValue))
 		sort($plantValue);
+	$disasterplant = ArrayHelper::map($plantValue, 'id', 'cropname');
+	} else 
+		$disasterplant = $plantValue;
 ?>
-<td align='left'><?= $form->field($model, 'disasterplant')->dropDownList(ArrayHelper::map($plantValue, 'id', 'cropname'),['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
+<td align='left'><?= $form->field($model, 'disasterplant')->dropDownList($disasterplant,['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
 </tr>
 <tr>
 <td width=15% align='right'>受灾面积</td><?= html::hiddenInput('tempArea','',['id'=>'temp-area']) ?>

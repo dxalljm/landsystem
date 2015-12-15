@@ -2,6 +2,7 @@
 use app\models\MenuToUser;
 use app\models\Mainmenu;
 use yii\helpers\Url;
+use app\models\Reviewprocess;
 ?>
 
 <header class="main-header">
@@ -56,7 +57,11 @@ use yii\helpers\Url;
                         <li><a href="<?= Url::to('index.php?r=disastertype/disastertypeindex')?>">灾害类型</a></li>
                     </ul>
                         <?php } else {
-                        echo "<li ><a href=" . Url::to('index.php?r='.$menu['menuurl']) . ">". $menu['menuname'] . "</a></li>";
+                        echo "<li ><a href=" . Url::to('index.php?r='.$menu['menuurl']) . ">". $menu['menuname'];
+                        if($menu['menuurl'] == 'reviewprocess/reviewprocessindex') {
+                        	echo Reviewprocess::getUserProcessCount();
+                        }
+                        echo "</a></li>";                       
                     } ?>
                     
                
