@@ -382,12 +382,13 @@ class Farms extends \yii\db\ActiveRecord
 				'rows' => $rows,
     			'rowpercent' => $rowpercent,
     			'dataLabels'=> [
+						'verticalAlign' => 'top',
     					'enabled'=> true,
     					'rotation'=> 0,
     					'color'=> '#FFFFFF',
     					'align'=> 'center',
     					'x'=> 0,
-    					'y'=> 0,
+    					'y'=> -10,
 //     					'style'=> [
 //     							'fontSize'=> '13px',
 //     							'fontFamily'=> 'Verdana, sans-serif',
@@ -395,6 +396,7 @@ class Farms extends \yii\db\ActiveRecord
 //     					]
     			]
     	]];
+
 //     	var_dump($result);
     	$jsonData = json_encode(['result'=>$result]);
     	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );

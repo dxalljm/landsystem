@@ -73,7 +73,7 @@ function showColumn(divID,title,categories,subtitle,series,ytitle,dw)
 	        },
 	        plotOptions: {
 	            column: {
-	                pointPadding: 0.2,
+	                pointPadding: 0.10,
 	                borderWidth: 0
 	            }
 	        },
