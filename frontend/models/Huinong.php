@@ -45,6 +45,7 @@ public function rules()
             'subsidiesarea' => '补贴面积',
             'subsidiesmoney' => '补贴金额',
             'typeid' => '补贴种类',
+        	
             'totalamount' => '补贴总金额',
             'realtotalamount' => '实际补贴金额',
             'begindate' => '开始日期',

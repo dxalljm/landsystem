@@ -18,7 +18,7 @@ class HuinonggrantSearch extends Huinonggrant
     public function rules()
     {
         return [
-            [['id', 'farms_id', 'huinong_id', 'state'], 'integer'],
+            [['id', 'farms_id', 'huinong_id', 'state','lease_id'], 'integer'],
             [['money', 'area'], 'number'],
             [['note'], 'safe'],
         ];
@@ -59,6 +59,7 @@ class HuinonggrantSearch extends Huinonggrant
         $query->andFilterWhere([
             'id' => $this->id,
             'farms_id' => $this->farms_id,
+        	'lease_id' => $this->lease_id,
             'huinong_id' => $this->huinong_id,
             'money' => $this->money,
             'area' => $this->area,

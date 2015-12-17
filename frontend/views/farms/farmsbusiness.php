@@ -72,7 +72,6 @@ use app\models\Dispute;
             	return Html::a($option,$url, [
             			'id' => 'farmermenu',
             			'title' => $title,
-            			
             	]);
             }
             ],

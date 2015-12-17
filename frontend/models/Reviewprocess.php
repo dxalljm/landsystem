@@ -238,6 +238,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$mamangmentarea = Farms::getManagementArea();
     	
     	$process = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
+//     	var_dump(User::getItemname());exit;
     	$processRows = Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$process=>3])->count();
 //     	var_dump($processRows);exit;
     	if($processRows)
