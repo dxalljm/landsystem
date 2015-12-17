@@ -6,6 +6,7 @@ use app\models\User;
 use app\models\Mainmenu;
 use app\models\MenuToUser;
 use yii\helpers\ArrayHelper;
+use app\models\AuthItem;
 /* @var $this yii\web\View */
 /* @var $model app\models\MenuToUser */
 /* @var $form yii\widgets\ActiveForm */
@@ -15,8 +16,8 @@ use yii\helpers\ArrayHelper;
 
     <?php $form = ActiveForm::begin(); ?>
 	
-    <?= $form->field($model, 'user_id')->textInput(['maxlength' => 100,'id'=>'menutousercreate','title' => '点击弹出数据库表','data-toggle' => 'modal', 'data-backdrop'=> "true",'data-target' => '#menutousercreate-modal',]) ?>
-	<?php $parents = MenuToUser::find()->where(['user_id'=>$model->user_id])->one();?>
+    <?= $form->field($model, 'role_id')->dropDownList(ArrayHelper::map(AuthItem::find()->where(['type'=>1])->all(), 'name', 'name')) ?>
+	<?php $parents = MenuToUser::find()->where(['role_id'=>$model->role_id])->one();?>
     <?php 
 		$data = Mainmenu::find()->where(['typename'=>0])->orderBy('sort ASC')->all();
 		$menus =ArrayHelper::map($data,'id', 'menuname');

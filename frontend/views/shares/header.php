@@ -3,6 +3,7 @@ use app\models\MenuToUser;
 use app\models\Mainmenu;
 use yii\helpers\Url;
 use app\models\Reviewprocess;
+use app\models\User;
 ?>
 
 <header class="main-header">
@@ -23,7 +24,7 @@ use app\models\Reviewprocess;
 
                 <?php
                 if(yii::$app->user->identity->username != 'admin') {
-                    $menuliststr = MenuToUser::find()->where(['user_id'=>\Yii::$app->user->id])->one()['menulist'];
+                    $menuliststr = MenuToUser::find()->where(['role_id'=>User::getItemname()])->one()['menulist'];
                     $menulistarr = explode(',', $menuliststr);
 
                     foreach($menulistarr as $val) {

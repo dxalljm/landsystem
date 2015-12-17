@@ -4,6 +4,7 @@ use app\models\Farms;
 use app\models\MenuToUser;
 use app\models\Mainmenu;
 use app\models\Reviewprocess;
+use app\models\User;
 ?>
 <aside class="main-sidebar">
     <section class="sidebar" style="height: auto;">
@@ -89,7 +90,7 @@ else echo '晚上好';
           
           	 <?php
                 if(yii::$app->user->identity->username != 'admin') {
-                    $menuliststr = MenuToUser::find()->where(['user_id'=>\Yii::$app->user->id])->one()['menulist'];
+                    $menuliststr = MenuToUser::find()->where(['role_id'=>User::getItemname()])->one()['menulist'];
                     $menulistarr = explode(',', $menuliststr);
 	                   foreach($menulistarr as $val) {
 	                   $menu = Mainmenu::find()->where(['id'=>$val])->one();

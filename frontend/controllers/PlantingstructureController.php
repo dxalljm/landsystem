@@ -16,6 +16,8 @@ use app\models\Plantinputproduct;
 use app\models\Plantpesticides;
 use app\models\Logs;
 use app\models\Theyear;
+use app\models\Search;
+use app\models\Plant;
 /**
  * PlantingstructureController implements the CRUD actions for Plantingstructure model.
  */
@@ -56,19 +58,23 @@ class PlantingstructureController extends Controller
         ]);
     }
 
-    public function actionPlantingstructuresearch($begindate,$enddate,$management_area)
+    public function actionPlantingstructuresearch($tab,$begindate,$enddate,$management_area,$plantfather,$plantson,$goodseed)
     {
     	$post = Yii::$app->request->post();
-    		
+    	
     	if($post) {
     		if($post['tab'] == 'parmpt')
-    			return $this->redirect(['search/searchindex']);
+    			return $this->redirect(['search/searchindex','tab'=>$tab,'management_area'=>$management_area,'begindate'=>$begindate,'enddate'=>$enddate]);
     		$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
-    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
-    				'begindate' => $whereDate['begindate'],
-    				'enddate' => $whereDate['enddate'],
-    				'management_area' => $post['managementarea'],
-    		]);
+    		$array[] = $post['tab'].'/'.$post['tab'].'search';
+    		$array['tab'] = $post['tab'];
+			$array['begindate'] = $whereDate['begindate'];
+			$array['enddate'] = $whereDate['enddate'];
+			$array['management_area'] = $post['managementarea'];
+			foreach (Search::getParameter($post['tab']) as $value) {
+				$array[$value] = $post[$value];
+			}
+			return $this->redirect ($array);
     	} else {
     	
 	    	$searchModel = new plantingstructureSearch();
@@ -79,10 +85,29 @@ class PlantingstructureController extends Controller
 	    	}
 	    	$params ['plantingstructureSearch']['begindate'] = $begindate;
 	    	$params ['plantingstructureSearch']['enddate'] = $enddate;
+	    	if($plantfather and $plantfather !== 'prompt') {
+	    		if($plantson and $plantson !== 'prompt') {
+	    			if($goodseed and $goodseed !== 'prompt') {
+	    				$params ['plantingstructureSearch']['goodseed_id'] = $goodseed;
+	    			} else {
+	    				$params ['plantingstructureSearch']['plant_id'] = $plantson;
+	    			}
+	    		} else {
+	    			$plants = Plant::find()->where(['father_id'=>$plantfather])->all();
+	    			foreach ($plants as $value) {
+	    				$arrayPlantID[] = $value['id'];
+	    			}
+	    			$params ['plantingstructureSearch']['plant_id'] = $arrayPlantID;
+	    		}
+	    	}
 	    	$dataProvider = $searchModel->searchIndex ( $params['plantingstructureSearch'] );
 	    	return $this->render('plantingstructuresearch',[
 	    			'searchModel' => $searchModel,
 	    			'dataProvider' => $dataProvider,
+	    			'tab' => $tab,
+	    			'management_area' => $management_area,
+	    			'begindate' => $begindate,
+	    			'enddate' => $enddate,
 	    	]);
     	}
     }

@@ -21,6 +21,7 @@ use app\models\Theyear;
 use app\models\Breedinfo;
 use app\models\Breedtype;
 use app\models\Goodseed;
+use app\models\Search;
 
 /**
  * BankAccountController implements the CRUD actions for BankAccount model.
@@ -91,25 +92,28 @@ class SearchController extends Controller
 // //     	$searchDate = date('Y年m月d日',$this->whereDate['begindate']).'—'.date('Y年m月d日',$this->whereDate['enddate']);
 //     }
 
-	public function actionSearchindex()
+	
+
+	public function actionSearchindex($tab = '',$management_area = '',$begindate = '',$enddate = '')
 	{
 		$post = Yii::$app->request->post();	
-		
+// 		var_dump($tab);exit;
 		if($post) {
     		if($post['tab'] == 'parmpt')
     			return $this->render('searchindex');
 			$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
-			return $this->redirect ([$post['tab'].'/'.$post['tab'].'search', 
-					'begindate' => $whereDate['begindate'],
-					'enddate' => $whereDate['enddate'],
-					'management_area' => $post['managementarea'],
-					'farmname' => $post['farmname'],
-					'farmername' => $post['farmername'],
-					'telephone' => $post['telephone'],
-					'address' => $post['address'],
-			    ]);
+			$array[] = $post['tab'].'/'.$post['tab'].'search';
+			$array['tab'] = $post['tab'];
+			$array['begindate'] = $whereDate['begindate'];
+			$array['enddate'] = $whereDate['enddate'];
+			$array['management_area'] = $post['managementarea'];
+			foreach (Search::getParameter($post['tab']) as $value) {
+				$array[$value] = $post[$value];
+			}
+// 			var_dump($array);exit;
+			return $this->redirect ($array);
 		} else {
-			return $this->render('searchindex');
+			return $this->render('searchindex',['tab'=>$tab,'management_area'=>$management_area,'begindate'=>$begindate,'enddate'=>$enddate]);
 		}
 	}
     

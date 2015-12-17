@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'user_id',
+            'role_id',
             [
             	'attribute' => 'menulist',
             ],

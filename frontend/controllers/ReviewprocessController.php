@@ -49,19 +49,21 @@ class ReviewprocessController extends Controller
      * @return mixed
      */
   
-    public function actionReviewprocessfarmstransfer($newfarmsid,$oldfarmsid,$reviewprocessid)
+    public function actionReviewprocessfarmstransfer($oldfarmsid,$newfarmsid,$reviewprocessid)
     {
+//     	var_dump($reviewprocessid);
     	$model = new Reviewprocess();
     	$newfarm = Farms::find()->where(['id'=>$newfarmsid])->one();
     	$oldfarm = Farms::find()->where(['id'=>$oldfarmsid])->one();
     	$reviewprocess = Reviewprocess::find()->where(['id'=>$reviewprocessid])->one();
     	$process = Auditprocess::find()->where(['actionname'=>$reviewprocess['actionname']])->one()['process'];
-    	
+//     	var_dump($process);exit;
     	return $this->render ( 'reviewprocessfarmstransfer', [
     			'oldfarm' => $oldfarm,
     			'newfarm' => $newfarm,
     			'process' => explode('>', $process),
     			'model' => $model,
+    			'reviewprocessid' => $reviewprocessid
     	] );
     }
 

@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use app\models\Farms;
+use frontend\helpers\MoneyFormat;
 
 /**
  * This is the model class for table "{{%collection}}".
@@ -99,46 +100,75 @@ class Collection extends \yii\db\ActiveRecord {
 		}
 		return $result;
 	}
-	
-	public static function getCollecitonInfo($farms_id)
-	{
-		$coll = Collection::find()->where(['farms_id'=>$farms_id])->count();
-		if($coll)
+	public static function getCollecitonInfo($farms_id) {
+		$coll = Collection::find ()->where ( [ 
+				'farms_id' => $farms_id 
+		] )->count ();
+		if ($coll)
 			return '已缴纳';
-		else 
+		else
 			return '未缴纳';
 	}
-	
 	public static function getCollection() {
 		$cacheKey = 'collection-hcharts';
 		$result = Yii::$app->cache->get ( $cacheKey );
 		if (! empty ( $result )) {
 			return $result;
 		}
-		
+		$i = 0;
+		$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
 		foreach ( Farms::getManagementArea ()['id'] as $value ) {
 			
 			$allmeasure = Farms::find ()->where ( [ 
 					'management_area' => $value 
 			] )->sum ( 'measure' );
-			$amounts_receivable[] = $allmeasure * PlantPrice::find ()->where ( [ 
-					'years' => date ( 'Y' ) 
-			] )->one ()['price'];
-			$real_income_amount[] = ( float ) Collection::find ()->where ( [
-					'farms_id' => $value
-			] )->sum ( 'real_income_amount' );
+			$amounts_receivable [] = [ 
+					'color' => $color [$i],
+					'y' => (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [ 
+							'years' => date ( 'Y' ) 
+					] )->one ()['price']/10000)
+			];
+			$real_income_amount [] = ( float ) sprintf("%.2f",Collection::find ()->where ( [ 
+					'farms_id' => $value 
+			] )->sum ( 'real_income_amount' )/10000);
+			$i ++;
 		}
-		$result = [
-					[
+		$result = [ 
+				[ 
 						'name' => '应收金额',
 						'data' => $amounts_receivable,
-					],
-					[
+						'dataLabels' => [ 
+								'enabled' => true,
+								'rotation' => 0,
+								'color' => '#FFFFFF',
+								'align' => 'center',
+								'x' => 0,
+								'y' => 0,
+								'style' => [ 
+										'fontSize' => '13px',
+										'fontFamily' => 'Verdana, sans-serif',
+										'textShadow' => '0 0 3px black' 
+								] 
+						] 
+				],
+				[ 
 						'name' => '实收金额',
 						'data' => $real_income_amount,
-					]
-				];
-		
+						'dataLabels' => [ 
+								'enabled' => true,
+								'rotation' => 0,
+								'color' => '#FFFFFF',
+								'align' => 'center',
+								'x' => 0,
+								'y' => 0,
+								'style' => [ 
+										'fontSize' => '13px',
+										'fontFamily' => 'Verdana, sans-serif',
+										'textShadow' => '0 0 3px black' 
+								] 
+						] 
+				] 
+		];
 		
 		$jsonData = json_encode ( [ 
 				'result' => $result 
@@ -172,5 +202,16 @@ class Collection extends \yii\db\ActiveRecord {
 		return $this->hasOne ( Farms::className (), [ 
 				'id' => 'farms_id' 
 		] );
+	}
+	
+	public static function totalReal()
+	{
+		$whereArray = Farms::getManagementAreaAllID();
+		return MoneyFormat::num_format(Collection::find()->where(['farms_id'=>$whereArray])->sum('real_income_amount')).'元';
+	}
+	public static function totalAmounts()
+	{
+		$whereArray = Farms::getManagementAreaAllID();
+		return MoneyFormat::num_format(Collection::find()->where(['farms_id'=>$whereArray])->sum('amounts_receivable')).'元';
 	}
 }

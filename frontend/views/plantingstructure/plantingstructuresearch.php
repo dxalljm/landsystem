@@ -25,12 +25,12 @@ use app\models\Search;
                 <div class="box-body">
 
               
-  <?= $this->render('..//search/searchindex.php');?>
+   <?= $this->render('..//search/searchindex',['tab'=>$tab,'management_area'=>$management_area,'begindate'=>$begindate,'enddate'=>$enddate]);?>
 
  <?= GridView::widget([
         'dataProvider' => $dataProvider,
 //         'filterModel' => $searchModel,
-        'columns' => Search::getColumns(['management_area','farms_id','lease_id','goodseed_id','area']),
+        'columns' => Search::getColumns(['management_area','farms_id','lease_id','plant_id','goodseed_id','area']),
     ]); ?>
                 </div>
             </div>

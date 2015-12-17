@@ -89,11 +89,13 @@ function showCombination(divID,title,categories,pieTitle,series,dw)
 //	}
 
 	// 所辖管理区农场数量统计数据, 百分比处理
-//	if (divID == 'statis-farms') {
+	if (divID == 'statis-area') {
 		var pointFormatFunction = function () {
-			return '<span style="color:{series.color}">' + this.series.name + '</span>: <b>'+this.y+dw+' 占比: (' + series.result[0]['percent'][this.x]  + '%)'+ '</b><br/>';
+			//$html = '<span style="color:{series.color}">' + this.series.name + '</span>: <b>'+this.y+dw+' 占比: (' + series.result[0]['percent'][this.x]  + '%)'+ '</b><br/>';
+			$html = '<span style="color:{series.color}">' + this.series.name + '</span>: <b>'+this.y+dw+' 占比: (' + series.result[0]['percent'][this.x]  + '%)'+ '</b><br/><span style="color:{series.color}">' + '数量' + '</span>: <b>'+series.result[0]['rows'][this.x]+'户'+' 占比: (' + series.result[0]['rowpercent'][this.x]  + '%)'+ '</b><br/>';
+			return $html;
 		}
-//	}
+	}
 
 	$(function () {
 	    $('#'+divID).highcharts({                                          
@@ -121,7 +123,7 @@ function showCombination(divID,title,categories,pieTitle,series,dw)
 	                html: pieTitle,                          
 	                style: {                                                  
 	                    left: '40px',                                         
-	                    top: '8px',                                           
+	                    top: '80px',                                           
                                       
 	                }                                                         
 	            }]                                                            

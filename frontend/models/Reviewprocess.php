@@ -215,7 +215,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$reviewprocessModel->state = 4;
 //     	var_dump($reviewprocessModel);exit;
     	if($reviewprocessModel->save()) {
-    		Session::sessionSave($oldfarms_id,'reviewprocess_id',$reviewprocessModel->id);
+//     		Session::sessionSave($oldfarms_id,'reviewprocess_id',$reviewprocessModel->id);
     		return $reviewprocessModel->id;    	
     	}
     	else 

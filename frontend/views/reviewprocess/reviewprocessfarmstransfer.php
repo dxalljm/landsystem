@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Tables;
 use app\models\Tablefields;
+use app\models\Reviewprocess;
 /* @var $this yii\web\View */
 /* @var $model app\models\Reviewprocess */
 
@@ -81,15 +82,15 @@ use app\models\Tablefields;
 			    <td align="center">原宗地信息</td><?php if(!empty($oldfarm->zongdi)) $zongdiArray = explode('、', $oldfarm->zongdi); else $zongdiArray = [];?>
 			    <td colspan="5" align="center"><table width="100%" border="0" align="right"><?php for($i = 0;$i<count($zongdiArray);$i++) {
 			    	
-			    	if($i == 0 or $i%6 == 0) {
+			    	if($i%5 == 0) {
 			    		echo '<tr>';
+			    		echo '<td>';
+			    		echo $zongdiArray[$i];
+			    		echo '</td>';
 			    	} else {
 			    		echo '<td>';
 			    		echo $zongdiArray[$i];
 			    		echo '</td>';
-			    	}
-			    	if($i == 0 or $i%6 == 0) {
-			    		echo '</tr>';
 			    	}
 			    	
 			    }?></table></td>
@@ -98,26 +99,25 @@ use app\models\Tablefields;
 			    <td align="center">现宗地信息</td><?php if(!empty($newfarm->zongdi)) $zongdiArray = explode('、', $newfarm->zongdi); else $zongdiArray = [];?>
 			    <td colspan="5" align="center"><table width="100%" border="0" align="center"><?php for($i = 0;$i<count($zongdiArray);$i++) {
 			    	
-			    	if($i == 0 or $i%6 == 0) {
+			    	if($i%5 == 0) {
 			    		echo '<tr>';
+			    		echo '<td>';
+			    		echo $zongdiArray[$i];
+			    		echo '</td>';
 			    	} else {
 			    		echo '<td>';
 			    		echo $zongdiArray[$i];
 			    		echo '</td>';
-			    	}
-			    	if($i == 0 or $i%6 == 0) {
-			    		echo '</tr>';
 			    	}
 			    	
 			    }?></table></td>
 			    </tr>
 			  <tr>
 			  <?php foreach ($process as $value) { ?>
-			  
 			    <td align="center"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?></td>
-			    <td colspan="5" align="right"><?php if($state) {?><?= $form->field($model,$value)->hiddenInput()->label(false)?><?= $form->field($model,$value.'content')->textInput()->label(false)?><?php } else {echo '<br><br><br><br>';}?>
-			    
-		        <p>签字：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日 </p></td>
+			    <td colspan="5" align="left"><br>&nbsp;&nbsp;&nbsp;&nbsp;<?= Reviewprocess::state(Reviewprocess::find()->where(['id'=>$reviewprocessid])->one()[$value]);?>
+			    <br>
+		        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;签字：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日 </p></td>
 			    </tr>
 			  <?php }?>
 			  <tr>

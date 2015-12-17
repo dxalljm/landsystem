@@ -25,7 +25,7 @@ use app\models\Search;
                 <div class="box-body">
 
               
-  <?= $this->render('..//search/searchindex.php');?>
+  <?= $this->render('..//search/searchindex',['tab'=>$tab,'management_area'=>$management_area,'begindate'=>$begindate,'enddate'=>$enddate]);?>
 
  <?= GridView::widget([
         'dataProvider' => $dataProvider,

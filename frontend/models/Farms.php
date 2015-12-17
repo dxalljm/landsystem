@@ -117,14 +117,16 @@ class Farms extends \yii\db\ActiveRecord
     public static function unLocked($farms_id)
     {
     	$unlockDate = Loan::find()->where(['farms_id'=>$farms_id])->one()['enddate'];
-    	$model = self::findOne($farms_id);
-    	if(strtotime(date('Y-m-d')) > strtotime($unlockDate)) {
-	    	$model->locked = 0;
-	    	$model->save();
-    	} else {
-    		$model->locked = 1;
-    		$model->save();
-    	}  		
+    	if($unlockDate) {
+	    	$model = self::findOne($farms_id);
+	    	if(strtotime(date('Y-m-d')) > strtotime($unlockDate)) {
+		    	$model->locked = 0;
+		    	$model->save();
+	    	} else {
+	    		$model->locked = 1;
+	    		$model->save();
+	    	}  		
+    	}
     } 
     /**
      * 搜索所有农场信息
@@ -253,7 +255,7 @@ class Farms extends \yii\db\ActiveRecord
     	return $array[2];
     }
     
-    public static function getManagementArea()
+    public static function getManagementArea($str = NULL)
     {
     	$dep_id = User::findByUsername ( yii::$app->user->identity->username )['department_id'];
     	$departmentData = Department::find ()->where ( [
@@ -263,7 +265,10 @@ class Farms extends \yii\db\ActiveRecord
     	$managementarea = ManagementArea::find()->where(['id'=>$whereArray])->all();
     	foreach ($managementarea as $value) {
     		$result['id'][] = $value['id'];
-    		$result['areaname'][] = $value['areaname'];
+    		if($str == 'small')
+    			$result['areaname'][] = str_ireplace('管理区', '', $value['areaname']);
+    		else 
+    			$result['areaname'][] = $value['areaname'];
     	}
     	return $result;
     }
@@ -288,15 +293,18 @@ class Farms extends \yii\db\ActiveRecord
     	$rows = [];
     	$sum = 0;
     	$farmsID = [];
-    	
+    	$i=0;
+    	$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
     	$all = Farms::find ()->count ();
     	foreach (self::getManagementArea()['id'] as $value) {
     		$row = ( float ) Farms::find ()->where ( [
     				'management_area' => $value
     		] )->count ();
-    		$rows[] = $row;
+    		
+    		$rows[] = ['color'=>$color[$i],'y'=>$row];
     		$sum += $row;
     		$percent[] = sprintf("%.2f", $row/$all*100);
+    		$i++;
     	}
 
     	$result = [[
@@ -306,11 +314,11 @@ class Farms extends \yii\db\ActiveRecord
     			'data' => $rows,
     			'dataLabels'=> [
     				'enabled'=> true,
-    				'rotation'=> -90,
+    				'rotation'=> 0,
     				'color'=> '#FFFFFF',
-    				'align'=> 'right',
+    				'align'=> 'center',
     				'x'=> 0,
-    				'y'=> -30,
+    				'y'=> 0,
     				'style'=> [
     					'fontSize'=> '13px',
     					'fontFamily'=> 'Verdana, sans-serif',
@@ -329,7 +337,7 @@ class Farms extends \yii\db\ActiveRecord
     	return $jsonData;
     }
     public static function getFarmarea() {
-    	$cacheKey = 'farms-hcharts3';
+    	$cacheKey = 'farms-hcharts2';
     	$result = Yii::$app->cache->get ( $cacheKey );
     	if (! empty ( $result )) {
     		return $result;
@@ -337,17 +345,30 @@ class Farms extends \yii\db\ActiveRecord
     	$areas = [];
 //     	$sum = 0.0;
     	$farmsID = [];
-    	 
+    	$i=0;
+    	$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
     	$all = Farms::find ()->sum ('measure');
     	foreach (self::getManagementArea()['id'] as $value) {
 
 			$area = ( float ) Farms::find ()->where ( [
     		  		'management_area' => $value
     		 ] )->sum ( 'measure' );
-    		 $areas[] = $area;
-    		 $percent[] = sprintf("%.2f", $area/$all*100);
+			
+    		$areas[] = ['color'=>$color[$i],'y'=>(float)sprintf("%.2f", $area/10000)];
+    		$percent[] = sprintf("%.2f", $area/$all*100);
+    		$i++;
     	}
-//     	var_dump($areas);exit;
+    	
+    	$all = Farms::find ()->count ();
+    	foreach (self::getManagementArea()['id'] as $value) {
+    		$row = ( float ) Farms::find ()->where ( [
+    				'management_area' => $value
+    		] )->count ();
+    	
+    		$rows[] = $row;
+    		$rowpercent[] = sprintf("%.2f", $row/$all*100);
+    	}
+//     	var_dump($areas);
     	//$allvalue = $all - $sum;
     
 //     	if ($allvalue !== 0) {
@@ -358,19 +379,20 @@ class Farms extends \yii\db\ActiveRecord
     			'name' => '面积',
     			'percent' => $percent,
     			'data' => $areas,
-
+				'rows' => $rows,
+    			'rowpercent' => $rowpercent,
     			'dataLabels'=> [
     					'enabled'=> true,
-    					'rotation'=> -90,
+    					'rotation'=> 0,
     					'color'=> '#FFFFFF',
-    					'align'=> 'right',
+    					'align'=> 'center',
     					'x'=> 0,
-    					'y'=> -20,
-    					'style'=> [
-    							'fontSize'=> '13px',
-    							'fontFamily'=> 'Verdana, sans-serif',
-    							'textShadow'=> '0 0 3px black'
-    					]
+    					'y'=> 0,
+//     					'style'=> [
+//     							'fontSize'=> '13px',
+//     							'fontFamily'=> 'Verdana, sans-serif',
+//     							'textShadow'=> '0 0 3px black'
+//     					]
     			]
     	]];
 //     	var_dump($result);
@@ -378,5 +400,16 @@ class Farms extends \yii\db\ActiveRecord
     	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
     
     	return $jsonData;
+    }
+    
+    public static function totalNum()
+    {
+    	$whereArray = self::getManagementArea();
+    	return Farms::find()->where(['management_area'=>$whereArray['id']])->count().'户';
+    }
+    public static function totalArea()
+    {
+    	$whereArray = self::getManagementArea();
+    	return sprintf("%.2f",Farms::find()->where(['management_area'=>$whereArray['id']])->sum ( 'measure' )/10000).'万亩';
     }
 }

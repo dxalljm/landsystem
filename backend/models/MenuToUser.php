@@ -27,8 +27,7 @@ class MenuToUser extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id'], 'integer'],
-            [['menulist','plate','businessmenu'], 'string', 'max' => 500]
+            [['role_id','menulist','plate','businessmenu'], 'string', 'max' => 500]
         ];
     }
 
@@ -39,7 +38,7 @@ class MenuToUser extends \yii\db\ActiveRecord
     {
         return [
 			'id' => 'ID',
-            'user_id' => '用户ID',
+            'role_id' => '角色ID',
             'menulist' => '所属导航',
         	'plate' => '八大板块',
         	'businessmenu' => '业务菜单'

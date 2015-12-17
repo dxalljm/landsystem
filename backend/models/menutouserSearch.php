@@ -19,8 +19,8 @@ class menutouserSearch extends MenuToUser
     public function rules()
     {
         return [
-            [['id', 'user_id',], 'integer'],
-            [['menulist','username','plate','businessmenu'], 'safe'],
+            [['id',], 'integer'],
+            [['role_id','menulist','username','plate','businessmenu'], 'safe'],
         ];
     }
 
@@ -43,7 +43,7 @@ class menutouserSearch extends MenuToUser
     public function search($params)
     {
         $query = MenuToUser::find();
-        $query->joinWith(['user']);
+//         $query->joinWith(['user']);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -58,11 +58,10 @@ class menutouserSearch extends MenuToUser
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'user_id' => $this->user_id,
         ]);
 
         $query->andFilterWhere(['like', 'menulist', $this->menulist])
-        ->andFilterWhere(['like', 'land_user.username', $this->username])
+        ->andFilterWhere(['like', 'role_id', $this->role_id])
         ->andFilterWhere(['like', 'plate', $this->plate])
         ->andFilterWhere(['like', 'businessmenu', $this->businessmenu]);
 

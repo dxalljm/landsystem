@@ -213,6 +213,7 @@ class farmsSearch extends Farms
     		$telephone = $params['telephone'];
     	else
     		$telephone = $this->telephone;
+    	
     	$query->andFilterWhere([
     			'id' => $this->id,
     			'locked' => $this->locked,

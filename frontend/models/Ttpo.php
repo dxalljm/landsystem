@@ -28,7 +28,7 @@ class Ttpo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['oldfarms_id', 'newfarms_id','create_at'], 'integer'],
+            [['oldfarms_id', 'newfarms_id','create_at','reviewprocess_id'], 'integer'],
            // [[''], 'string', 'max' => 500]
         ];
     }
@@ -43,6 +43,7 @@ class Ttpo extends \yii\db\ActiveRecord
             'oldfarms_id' => '原农场ID',
             'newfarms_id' => '现农场ID',
             'create_at' => '创建日期',
+        	'reviewprocess_id' => '审核过程',
         ];
     }
 }

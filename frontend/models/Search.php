@@ -13,7 +13,24 @@ use frontend\helpers\MoneyFormat;
  * @property string $value
  */
 class Search extends \yii\db\ActiveRecord {
-	// public statc $columns = ['class' => 'yii\grid\SerialColumn'];
+	public static function getParameter($tab) {
+		$array = [ 
+				'farms' => [ 
+						'farmname',
+						'farmername',
+						'telephone',
+						'address' 
+				],
+				
+				// 'plantingstructure' => ['plantfather','plantson','goodseed','Inputproductfather','Inputproductson_id','Inputproduct','pesticides'],
+				'plantingstructure' => [ 
+						'plantfather',
+						'plantson',
+						'goodseed' 
+				] 
+		];
+		return $array [$tab];
+	}
 	public static function getColumns(array $field) {
 		// $controller = Yii::$app->controller->id;
 		$columns [] = [ 
@@ -382,8 +399,18 @@ class Search extends \yii\db\ActiveRecord {
 						$columns [] = [ 
 								'attribute' => $value,
 								'value' => function ($model) {
-										$v = $model->yieldreduction*100;
-											return $v.'%';
+									$v = $model->yieldreduction * 100;
+									return $v . '%';
+								} 
+						];
+						break;
+					case 'plant_id' :
+						$columns [] = [ 
+								'attribute' => $value,
+								'value' => function ($model) {
+									return Plant::find ()->where ( [ 
+											'id' => $model->plant_id 
+									] )->one ()['cropname'];
 								} 
 						];
 						break;

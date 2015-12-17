@@ -77,13 +77,23 @@ class plantingstructureSearch extends Plantingstructure
     		$farms_id = $params['farms_id'];
     	else
     		$farms_id = $this->farms_id;
+    	
+    	if(isset($params['plant_id']))
+    		$plant_id = $params['plant_id'];
+    	else
+    		$plant_id = $this->plant_id;
+    	
+    	if(isset($params['goodseed_id']))
+    		$goodseed_id = $params['goodseed_id'];
+    	else
+    		$goodseed_id = $this->goodseed_id;
     	//         $this->setAttributes($params);
     
     	$query->andFilterWhere([
     			'id' => $this->id,
-    			'plant_id' => $this->plant_id,
+    			'plant_id' => $plant_id,
     			'area' => $this->area,
-    			'goodseed_id' => $this->goodseed_id,
+    			'goodseed_id' => $goodseed_id,
     			'lease_id' => $this->lease_id,
     			'farms_id' => $farms_id,
     	]);

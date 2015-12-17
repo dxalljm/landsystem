@@ -45,7 +45,8 @@ use app\models\Reviewprocess;
 use app\models\Lockedinfo;
 use app\models\Auditprocess;
 use app\models\Contractnumber;
-
+use app\models\Search;
+use app\models\Farmermembers;
 /**
  * FarmsController implements the CRUD actions for farms model.
  */
@@ -588,6 +589,7 @@ class FarmsController extends Controller {
 		$model = $this->findModel ( $farms_id );
 		$oldAttr = $model->attributes;
 // 		$model->state = 0;
+		
 		$reviewprocess = new Reviewprocess();
 		
 		$nowModel = new Farms ();
@@ -600,6 +602,7 @@ class FarmsController extends Controller {
 			$lockedinfoModel = new Lockedinfo();
 			$lockedinfoModel->farms_id = $farms_id;
 			$lockedinfoModel->lockedcontent = '整体过户审核中，已被冻结。';
+			$lockedinfoModel->save();
 			$nowModel->address = $model->address;
 			$nowModel->management_area = $model->management_area;
 			$nowModel->spyear = $model->spyear;
@@ -617,16 +620,17 @@ class FarmsController extends Controller {
 			$nowModel->state = 0;
 			$nowModel->locked = 1;
 			$nowModel->save ();
+			$oldModel = $this->findModel($farms_id);
+			$oldModel->locked = 1;
+			$oldModel->save();
+// 			var_dump($oldModel->getErrors());exit;
 			$reviewprocessID = Reviewprocess::processRun($model->id,$nowModel->id);
 			$ttpoModel = new Ttpo ();
 			$ttpoModel->oldfarms_id = $model->id;
 			$ttpoModel->newfarms_id = $nowModel->id;
 			$ttpoModel->create_at = time ();
+			$ttpoModel->reviewprocess_id = $reviewprocessID;
 			$ttpoModel->save ();
-			
-			$model->locked = 1;
-			$model->save();
-			
 			$newAttr = $nowModel->attributes;
 			Logs::writeLog ( '农场转让信息', $nowModel->id, $oldAttr, $newAttr );
 			
@@ -702,7 +706,7 @@ class FarmsController extends Controller {
 			$ttpozongdi->newfarms_id = $newmodel->id;
 			$ttpozongdi->zongdi = $newmodel->zongdi;
 			$ttpozongdi->oldzongdi = $oldmodel->zongdi;
-// 			var_dump($newmodel->zongdi);exit;
+			$ttpozongdi->reviewprocess_id = $reviewprocessID;
 			$ttpozongdi->create_at = $oldmodel->update_at;
 			$ttpozongdi->ttpozongdi = Yii::$app->request->post ( 'ttpozongdi' );
 			$ttpozongdi->ttpoarea = Yii::$app->request->post ( 'ttpoarea' );
@@ -878,6 +882,17 @@ class FarmsController extends Controller {
 		}
 	}
 	
+	public function actionFarmsfileprint($farms_id)
+	{
+		$farm = Farms::find()->where(['id'=>$farms_id])->one();
+		$farmer = Farmer::find()->where(['farms_id'=>$farms_id])->one();
+		$members = Farmermembers::find()->where(['farmer_id'=>$farmer->id])->all();
+		return $this->render ( 'farmsfileprint', [
+				'farm' => $farm,
+				'farmer' => $farmer,
+				'members' => $members,
+		] );
+	}
 	// public function actionFarmsttpo($farms_id)
 	// {
 	// $model = $this->findModel($farms_id);
@@ -943,7 +958,7 @@ class FarmsController extends Controller {
 	// }
 	public function showFarmmenu($farms_id) {
 		$businessmenu = MenuToUser::find ()->where ( [ 
-				'user_id' => \Yii::$app->getUser ()->id 
+				'role_id' => User::getItemname() 
 		] )->one ()['businessmenu'];
 		$arrayBusinessMenu = explode ( ',', $businessmenu );
 		$html = '<div class="row" >';
@@ -1012,12 +1027,12 @@ class FarmsController extends Controller {
 						'newfarms_id' => $farms_id 
 				] )->count ();
 				$value ['info'] = '无过户转让信息';
-				if(Farms::getLocked($farms_id))
-					$value['info'] = '已冻结';
 				if ($ttop)
 					$value ['info'] = '过户' . $ttop . '次';
 				if ($ttopzongdi)
 					$value ['info'] .= ' 转让' . $ttopzongdi . '次';
+				if(Farms::getLocked($farms_id))
+					$value['info'] = '已冻结';
 				$value ['description'] = '过户、转让办理与历史记录';
 				break;
 			case 'lease' :
@@ -1200,23 +1215,23 @@ class FarmsController extends Controller {
 		echo json_encode(['status'=>1,'data'=>$data]);
 	}
 	
-	public function actionFarmssearch($begindate,$enddate,$management_area,$farmname,$farmername,$telephone,$address)
+	public function actionFarmssearch($tab,$begindate,$enddate,$management_area,$farmname,$farmername,$telephone,$address)
 	{
 		$post = Yii::$app->request->post();
 // 		var_dump($post);exit;
 		if($post) {
     		if($post['tab'] == 'parmpt')
-    			return $this->redirect(['search/searchindex']);
+    			return $this->redirect(['search/searchindex','tab'=>$tab,'management_area'=>$management_area,'begindate'=>$begindate,'enddate'=>$enddate]);
 			$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
-			return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
-					'begindate' => $whereDate['begindate'],
-					'enddate' => $whereDate['enddate'],
-					'management_area' => $post['managementarea'],
-					'farmname' => $post['farmname'],
-					'farmername' => $post['farmername'],
-					'telephone' => $post['telephone'],
-					'address' => $post['address'],
-			]);
+			$array[] = $post['tab'].'/'.$post['tab'].'search';
+			$array['tab'] = $post['tab'];
+			$array['begindate'] = $whereDate['begindate'];
+			$array['enddate'] = $whereDate['enddate'];
+			$array['management_area'] = $post['managementarea'];
+			foreach (Search::getParameter($post['tab']) as $value) {
+				$array[$value] = $post[$value];
+			}
+			return $this->redirect ($array);
 		} else {
 			 
 			$searchModel = new farmsSearch();
@@ -1237,6 +1252,10 @@ class FarmsController extends Controller {
 			return $this->render('farmssearch',[
 					'searchModel' => $searchModel,
 					'dataProvider' => $dataProvider,
+					'tab' => $tab,
+					'management_area' => $management_area,
+					'begindate' => $begindate,
+					'enddate' => $enddate,
 			]);
 		}
 	}
