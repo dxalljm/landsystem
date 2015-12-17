@@ -388,7 +388,7 @@ class Farms extends \yii\db\ActiveRecord
     					'color'=> '#FFFFFF',
     					'align'=> 'center',
     					'x'=> 0,
-    					'y'=> -10,
+    					'y'=> -19,
 //     					'style'=> [
 //     							'fontSize'=> '13px',
 //     							'fontFamily'=> 'Verdana, sans-serif',
