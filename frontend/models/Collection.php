@@ -112,6 +112,7 @@ class Collection extends \yii\db\ActiveRecord {
 	public static function getCollection() {
 		$cacheKey = 'collection-hcharts';
 		$result = Yii::$app->cache->get ( $cacheKey );
+		$result =false;
 		if (! empty ( $result )) {
 			return $result;
 		}
@@ -134,7 +135,8 @@ class Collection extends \yii\db\ActiveRecord {
 			$i ++;
 		}
 		$result = [ 
-				[ 
+				[
+                        'color' => 'white',
 						'name' => '应收金额',
 						'data' => $amounts_receivable,
 						'dataLabels' => [ 
@@ -151,7 +153,8 @@ class Collection extends \yii\db\ActiveRecord {
 								] 
 						] 
 				],
-				[ 
+				[
+                        'color' => 'white',
 						'name' => '实收金额',
 						'data' => $real_income_amount,
 						'dataLabels' => [ 
@@ -169,7 +172,7 @@ class Collection extends \yii\db\ActiveRecord {
 						] 
 				] 
 		];
-		
+
 		$jsonData = json_encode ( [ 
 				'result' => $result 
 		] );

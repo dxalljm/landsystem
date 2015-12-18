@@ -152,15 +152,15 @@ function showStacked(divID,title,categories,ytitle,series,dw)
 	            }
 	        },
 	        legend: {
-	            align: 'right',
-	            x: -70,
-	            verticalAlign: 'top',
-	            y: 20,
-	            floating: true,
-	            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColorSolid) || 'white',
-	            borderColor: '#CCC',
-	            borderWidth: 1,
-	            shadow: false
+				align: 'right',
+				x: -70,
+				verticalAlign: 'top',
+				y: 20,
+				floating: true,
+				backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColorSolid) || 'white',
+				borderColor: '#CCC',
+				borderWidth: 1,
+				shadow: false
 	        },
 	        tooltip: {
 	            formatter: function() {
@@ -178,7 +178,17 @@ function showStacked(divID,title,categories,ytitle,series,dw)
 	                }
 	            }
 	        },
-	            series: series.result
+			series: [{
+				color: '#ccc',
+				name: 'John',
+				data: [5, 3]
+			}, {
+				name: 'Jane',
+				data: [2, 2, 3, 2, 1]
+			}, {
+				name: 'Joe',
+				data: [3, 4, 4, 2, 5]
+			}]
 	    });
 	});
 }
