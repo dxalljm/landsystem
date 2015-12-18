@@ -137,7 +137,9 @@ function showStacked(divID,title,categories,ytitle,series,dw)
 	$(function () {
 	    $('#'+divID).highcharts({
 	        chart: {
-	            type: 'column'
+	            type: 'column',
+				borderColor: '#ccc',
+				borderWidth: 2,
 	        },
 	        title: {
 	            text: title
@@ -158,8 +160,8 @@ function showStacked(divID,title,categories,ytitle,series,dw)
 				y: 20,
 				floating: true,
 				backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColorSolid) || 'white',
-				borderColor: '#CCC',
-				borderWidth: 1,
+				borderColor: '#909090',
+				borderWidth: 2,
 				shadow: false
 	        },
 	        tooltip: {
@@ -171,6 +173,7 @@ function showStacked(divID,title,categories,ytitle,series,dw)
 	        },
 	        plotOptions: {
 	            column: {
+					borderColor: '#ccc',
 	                stacking: 'normal',
 	                dataLabels: {
 	                    enabled: true,
@@ -178,17 +181,7 @@ function showStacked(divID,title,categories,ytitle,series,dw)
 	                }
 	            }
 	        },
-			series: [{
-				color: '#ccc',
-				name: 'John',
-				data: [5, 3]
-			}, {
-				name: 'Jane',
-				data: [2, 2, 3, 2, 1]
-			}, {
-				name: 'Joe',
-				data: [3, 4, 4, 2, 5]
-			}]
+			series: series.result
 	    });
 	});
 }

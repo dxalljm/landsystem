@@ -117,15 +117,15 @@ class Collection extends \yii\db\ActiveRecord {
 			return $result;
 		}
 		$i = 0;
-		$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
+//		$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
 		foreach ( Farms::getManagementArea ()['id'] as $value ) {
 			
 			$allmeasure = Farms::find ()->where ( [ 
 					'management_area' => $value 
 			] )->sum ( 'measure' );
 			$amounts_receivable [] = [ 
-					'color' => $color [$i],
-					'y' => (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [ 
+//					'color' => $color [$i],
+					'y' => (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [
 							'years' => date ( 'Y' ) 
 					] )->one ()['price']/10000)
 			];
@@ -136,41 +136,40 @@ class Collection extends \yii\db\ActiveRecord {
 		}
 		$result = [ 
 				[
-                        'color' => 'white',
+					'color' => '#FFF',
 						'name' => '应收金额',
 						'data' => $amounts_receivable,
-						'dataLabels' => [ 
+						'dataLabels' => [
 								'enabled' => true,
 								'rotation' => 0,
 								'color' => '#FFFFFF',
 								'align' => 'center',
 								'x' => 0,
-								'y' => 0,
-								'style' => [ 
+								'y' => -23,
+								'style' => [
 										'fontSize' => '13px',
 										'fontFamily' => 'Verdana, sans-serif',
-										'textShadow' => '0 0 3px black' 
-								] 
-						] 
+										'textShadow' => '0 0 3px black'
+								]
+						]
 				],
 				[
-                        'color' => 'white',
 						'name' => '实收金额',
 						'data' => $real_income_amount,
-						'dataLabels' => [ 
+						'dataLabels' => [
 								'enabled' => true,
 								'rotation' => 0,
 								'color' => '#FFFFFF',
 								'align' => 'center',
 								'x' => 0,
 								'y' => 0,
-								'style' => [ 
+								'style' => [
 										'fontSize' => '13px',
 										'fontFamily' => 'Verdana, sans-serif',
-										'textShadow' => '0 0 3px black' 
-								] 
-						] 
-				] 
+										'textShadow' => '0 0 3px black'
+								]
+						]
+				]
 		];
 
 		$jsonData = json_encode ( [ 
