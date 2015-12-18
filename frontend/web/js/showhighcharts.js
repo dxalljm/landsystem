@@ -46,7 +46,8 @@ function showColumn(divID,title,categories,subtitle,series,ytitle,dw)
 	$(function () {
 	    $('#'+divID).highcharts({
 	        chart: {
-	            type: 'column'
+	            type: 'column',
+	            
 	        },
 	        title: {
 	            text: title
@@ -116,7 +117,7 @@ function showCombination(divID,title,categories,pieTitle,series,dw)
 	        	column: {
                     allowPointSelect: true,
                     stacking: 'category',
-                }
+                },
             },
 	        labels: {                                                         
 	            items: [{                                                     

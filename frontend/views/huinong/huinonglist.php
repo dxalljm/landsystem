@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
             		if(Huinonggrant::find()->where(['huinong_id'=>$value['id']])->count()) 
             			echo html::a('补贴发放情况',Url::to('index.php?r=huinong/huinongdatainfo&id='.$value['id']),['class'=>'btn btn-success']);
             		else 
-            			echo html::a('补贴发放明细确认表',Url::to('index.php?r=huinong/huinongdata&id='.$value['id']),['class'=>'btn btn-success']);?></td>
+            			echo html::a('补贴对你确认',Url::to('index.php?r=huinong/huinongdata&id='.$value['id']),['class'=>'btn btn-success']);?></td>
     				</tr>
     				<?php }?>
     			</table>
