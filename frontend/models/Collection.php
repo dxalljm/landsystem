@@ -117,26 +117,31 @@ class Collection extends \yii\db\ActiveRecord {
 			return $result;
 		}
 		$i = 0;
-//		$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
+		$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
+		$amountsColor = ['#fedfdf','#feeedf','#fefddf','#e1fedf','#dffcfe','#dfe3fe','#fedffe'];
 		foreach ( Farms::getManagementArea ()['id'] as $value ) {
 			
 			$allmeasure = Farms::find ()->where ( [ 
 					'management_area' => $value 
 			] )->sum ( 'measure' );
 			$amounts_receivable [] = [ 
-//					'color' => $color [$i],
+					'color' => $amountsColor[$i],
+					'borderColor' => $color [$i],
 					'y' => (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [
 							'years' => date ( 'Y' ) 
 					] )->one ()['price']/10000)
 			];
-			$real_income_amount [] = ( float ) sprintf("%.2f",Collection::find ()->where ( [ 
+			$real_income_amount [] = [
+					'color' => $color[$i],
+					'y' => ( float ) sprintf("%.2f",Collection::find ()->where ( [ 
 					'farms_id' => $value 
-			] )->sum ( 'real_income_amount' )/10000);
+			] )->sum ( 'real_income_amount' )/10000)
+			];
 			$i ++;
 		}
 		$result = [ 
 				[
-					'color' => '#FFF',
+					'color' => '#FFF',					
 						'name' => '应收金额',
 						'data' => $amounts_receivable,
 						'dataLabels' => [
