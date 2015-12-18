@@ -12,6 +12,7 @@ use app\models\Logs;
 use app\models\Plantingstructure;
 use app\models\Huinonggrant;
 use app\models\Farms;
+use frontend\models\HuinonggrantSearch;
 
 /**
  * HuinongController implements the CRUD actions for Huinong model.
@@ -52,7 +53,13 @@ class HuinongController extends Controller
     			'huinongs' => $huinongs,
     	]);
     }
-    
+    public function actionHuinongprovidelist()
+    {
+    	$huinongs = Huinong::find()->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->all();
+    	return $this->render('huinongprovidelist', [
+    			'huinongs' => $huinongs,
+    	]);
+    }
    //惠农政策获取相关数据列表
    public function actionHuinongdata($id)
    {
@@ -68,19 +75,21 @@ class HuinongController extends Controller
    				break;
    		}
    		$isSubmit = Yii::$app->request->post('isSubmit');
-   		
+//    		var_dump($isSubmit);
    		if($isSubmit) {
 //    			var_dump($isSubmit);exit;
-   			$huinonggrantModel = new Huinonggrant();
+   			
    			foreach ($isSubmit as $value) {
+   				$huinonggrantModel = new Huinonggrant();
    				$plantInfo = explode('/', $value);
    				$farms_id = $plantInfo[0];
-   				$huinong_id = $plantInfo[1];
+   				$lease_id = $plantInfo[1];
    				$money = $plantInfo[2];
    				$area = $plantInfo[3];
    				$farm = Plantingstructure::find()->where(['farms_id'=>$farms_id])->one();
    				$huinonggrantModel->farms_id = $farms_id;
-   				$huinonggrantModel->huinong_id = $huinong_id;
+   				$huinonggrantModel->huinong_id = $id;
+   				$huinonggrantModel->lease_id = $lease_id;
    				$huinonggrantModel->money = $money;
    				$huinonggrantModel->area = $area;
    				$huinonggrantModel->state = 0;
@@ -97,10 +106,63 @@ class HuinongController extends Controller
         		'model' => $model,
         ]);
    }
-    
+   //补贴发放明细
+   public function actionHuinongdatainfo($id)
+   {
+   		$post = Yii::$app->request->post();
+   		if($post) {
+   			if($post['farmname']) {
+   				$farm = Farms::find()->orWhere(['farmname'=>$post['farmname']])->orWhere(['pinyin'=>$post['farmname']])->all();
+   				foreach ($farm as $value) {
+   					$farmid[] = $value['id'];
+   				}
+   				$data = Huinonggrant::find()->where(['farms_id'=>$farmid])->all();
+   			}
+   		} else {
+		   	$model = $this->findModel($id);
+		   	switch ($model->subsidiestype_id) {
+	   		case 'plant':
+	   			$classname = 'plantingstructure';
+	   			$data = Plantingstructure::find()->where(['plant_id'=>$model->typeid])->all();
+	   			break;
+	   		case 'goodseed':
+	   			$classname = 'plantingstructure';
+	   			$data = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid])->all();
+	   			break;
+	   		}
+		   	$data = Huinonggrant::find()->where(['huinong_id'=>$id])->all();
+   		}
+	   	return $this->render('huinongdatainfo', [
+	   			'data' => $data,
+	   			'classname' => $classname,
+	   			'model' => $model,
+	   	]);
+   }
+   //惠农政策发放
+   public function actionHuinongprovide($id)
+   {
+	   	$model = $this->findModel($id);
+	   	switch ($model->subsidiestype_id) {
+	   		case 'plant':
+	   			$classname = 'plantingstructure';
+	   			$data = Plantingstructure::find()->where(['plant_id'=>$model->typeid])->all();
+	   			break;
+	   		case 'goodseed':
+	   			$classname = 'plantingstructure';
+	   			$data = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid])->all();
+	   			break;
+	   	}
+	   	$data = Huinonggrant::find()->where(['huinong_id'=>$id])->all();
+	   	
+	   	return $this->render('huinongprovide', [
+	   			'data' => $data,
+	   			'classname' => $classname,
+	   			'model' => $model,
+	   	]);
+   }
    public function actionHuinongsend()
    {
-  	 	return $this->render('collectionfinished',['farms_id'=>$farms_id]);
+  	 	return $this->render('collectionsend');
    }
    
     /**

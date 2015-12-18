@@ -210,11 +210,16 @@ class Collection extends \yii\db\ActiveRecord {
 	public static function totalReal()
 	{
 		$whereArray = Farms::getManagementAreaAllID();
-		return MoneyFormat::num_format(Collection::find()->where(['farms_id'=>$whereArray])->sum('real_income_amount')).'元';
+		return sprintf("%.2f",Collection::find()->where(['farms_id'=>$whereArray])->sum('real_income_amount')/10000).'万元';
 	}
 	public static function totalAmounts()
 	{
-		$whereArray = Farms::getManagementAreaAllID();
-		return MoneyFormat::num_format(Collection::find()->where(['farms_id'=>$whereArray])->sum('amounts_receivable')).'元';
+		$whereArray = Farms::getManagementArea();
+		$allmeasure = Farms::find ()->where ( [
+				'management_area' => $whereArray['id']
+		] )->sum ( 'measure' );
+		return (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [ 
+							'years' => date ( 'Y' ) 
+					] )->one ()['price']/10000).'万元';
 	}
 }

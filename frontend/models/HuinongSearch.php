@@ -55,12 +55,13 @@ class HuinongSearch extends Huinong
             // $query->where('0=1');
             return $dataProvider;
         }
-
+		
         $query->andFilterWhere([
             'id' => $this->id,
             'subsidiesarea' => $this->subsidiesarea,
             'subsidiesmoney' => $this->subsidiesmoney,
             'typeid' => $this->typeid,
+        	
             'totalamount' => $this->totalamount,
             'realtotalamount' => $this->realtotalamount,
             'create_at' => $this->create_at,

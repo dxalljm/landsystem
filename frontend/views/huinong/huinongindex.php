@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">
-                        <?= $this->title ?>                    </h3>
+                        <?= $this->title ?>发布                   </h3>
                 </div>
                 <div class="box-body">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>

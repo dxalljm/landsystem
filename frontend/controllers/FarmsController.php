@@ -1187,6 +1187,88 @@ class FarmsController extends Controller {
 		}
 		return $value;
 	}
+	
+	public function getPlate($controller, $menuUrl, $farms_id) {
+		switch ($controller) {
+			case 'farmsland' :
+				$value ['icon'] = 'fa fa-delicious';
+				$value ['title'] = $menuUrl ['menuname'];
+				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
+				$value ['info'] = Farms::find ()->where ( [
+						'management_area' => Farms::getManagementArea()
+				] )->count();
+				$value ['description'] = '农场基础信息';
+				break;
+			case 'plantingstructure' :
+				$value ['icon'] = 'fa fa-pagelines';
+				$value ['title'] = $menuUrl ['menuname'];
+				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
+				$value ['info'] = '种植了' . Plantingstructure::find ()->where ( [ 
+						'farms_id' => $_GET ['farms_id'] 
+				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '种作物';
+				$value ['description'] = '种植作物信息';
+				break;
+			case 'yields' :
+				$value ['icon'] = 'fa fa-line-chart';
+				$value ['title'] = $menuUrl ['menuname'];
+				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
+				$value ['info'] = '现共' . Lease::find ()->where ( [
+						'farms_id' => $_GET ['farms_id']
+				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '人租赁';
+				$value ['description'] = '承租人信息及年限';
+				break;
+			case 'huinong' :
+				$value ['icon'] = 'fa fa-dollar';
+				$value ['title'] = $menuUrl ['menuname'];
+				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
+				$value ['info'] = '现有' . Loan::find ()->where ( [
+						'farms_id' => $_GET ['farms_id']
+				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '条贷款信息';
+				$value ['description'] = '贷款信息';
+				break;
+			case 'collection' :
+				$value ['icon'] = 'fa fa-commenting';
+				$value ['title'] = $menuUrl ['menuname'];
+				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
+				$value ['info'] = '现有' . Dispute::find ()->where ( [
+						'farms_id' => $_GET ['farms_id']
+				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '个纠纷';
+				$value ['description'] = '纠纷具体事项';
+				break;
+			case 'fireprevention' :
+				$value ['icon'] = 'fa fa-briefcase';
+				$value ['title'] = $menuUrl ['menuname'];
+				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
+				$value ['info'] = '参加了' . Cooperativeoffarm::find ()->where ( [
+						'farms_id' => $_GET ['farms_id']
+				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '个合作社';
+				$value ['description'] = '注册资金等信息';
+				break;
+			case 'breed' :
+				$value ['icon'] = 'fa fa-user-plus';
+				$value ['title'] = $menuUrl ['menuname'];
+				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
+				$employeerows = Employee::find ()->where ( [
+						'farms_id' => $_GET ['farms_id']
+				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count ();
+				$value ['info'] = '雇佣了' . $employeerows . '人';
+				$value ['description'] = '雇佣人员的详细信息';
+				break;
+			case 'disaster' :
+				$value ['icon'] = 'fa fa-sun-o';
+				$value ['title'] = $menuUrl ['menuname'];
+				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
+				$value ['info'] = '种植了' . Plantingstructure::find ()->where ( [
+						'farms_id' => $_GET ['farms_id']
+				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '种作物';
+				$value ['description'] = '种植作物信息';
+				break;
+			
+			default :
+				$value = false;
+		}
+		return $value;
+	}
 	public function actionFarmsdelete($id) {
 		$model = $this->findModel ( $id );
 		$oldAttr = $model->getAttributes ();

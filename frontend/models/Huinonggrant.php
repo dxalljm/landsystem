@@ -31,7 +31,7 @@ class Huinonggrant extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['farms_id', 'huinong_id', 'state','create_at','update_at'], 'integer'],
+            [['farms_id', 'huinong_id', 'state','create_at','update_at','lease_id'], 'integer'],
             [['money', 'area'], 'number'],
             [['note'], 'string']
         ];
@@ -47,6 +47,7 @@ class Huinonggrant extends \yii\db\ActiveRecord
             'farms_id' => '农场ID',
             'huinong_id' => '惠农政策ID',
             'money' => '补贴金额',
+        	'lease_id' => '租赁者ID',
             'area' => '种植面积',
             'state' => '状态',
             'note' => '备注',

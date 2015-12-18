@@ -29,15 +29,13 @@ $this->title = '岭南管委会';
             <div class="box-header with-border">
               <div class="user-block">
                 <span class="username"><a href="#">您所辖管理区农场面积统计数据</a></span>
-                <span class="description">所辖管理区的农场面积以及户数在所有管理区中的占比</span>
+                <span class="description">所辖管理区的农场面积以及户数在所有管理区中的占比，单位（万亩）</span>
               </div>
               <!-- /.user-block -->
               <div class="box-tools">
-                <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="Mark as read">
-                  <i class="fa fa-circle-o"></i></button>
                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                 </button>
-                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+
               </div>
               <!-- /.box-tools -->
             </div>
@@ -61,15 +59,13 @@ $this->title = '岭南管委会';
             <div class="box-header with-border">
               <div class="user-block">
                 <span class="username"><a href="#">您所辖管理区缴费情况统计数据</a></span>
-                <span class="description">所辖管理区的农场数量在所有管理区中的占比</span>
+                <span class="description">单位（万元）</span>
               </div>
               <!-- /.user-block -->
               <div class="box-tools">
-                <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="Mark as read">
-                  <i class="fa fa-circle-o"></i></button>
                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                 </button>
-                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+
               </div>
               <!-- /.box-tools -->
             </div>
@@ -97,11 +93,9 @@ $this->title = '岭南管委会';
               </div>
               <!-- /.user-block -->
               <div class="box-tools">
-                <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="Mark as read">
-                  <i class="fa fa-circle-o"></i></button>
                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                 </button>
-                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+
               </div>
               <!-- /.box-tools -->
             </div>

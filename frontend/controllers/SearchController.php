@@ -98,6 +98,7 @@ class SearchController extends Controller
 	{
 		$post = Yii::$app->request->post();	
 // 		var_dump($tab);exit;
+		$getDate = Theyear::formatDate($begindate,$enddate);
 		if($post) {
     		if($post['tab'] == 'parmpt')
     			return $this->render('searchindex');
@@ -113,7 +114,7 @@ class SearchController extends Controller
 // 			var_dump($array);exit;
 			return $this->redirect ($array);
 		} else {
-			return $this->render('searchindex',['tab'=>$tab,'management_area'=>$management_area,'begindate'=>$begindate,'enddate'=>$enddate]);
+			return $this->render('searchindex',['tab'=>$tab,'management_area'=>$management_area,'begindate'=>$getDate['begindate'],'enddate'=>$getDate['enddate']]);
 		}
 	}
     

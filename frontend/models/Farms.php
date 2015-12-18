@@ -381,6 +381,9 @@ class Farms extends \yii\db\ActiveRecord
     			'data' => $areas,
 				'rows' => $rows,
     			'rowpercent' => $rowpercent,
+    			'Legend' => [
+    					'backgroundColor' => '#FFFFFF',
+    			],
     			'dataLabels'=> [
 						'verticalAlign' => 'top',
     					'enabled'=> true,
