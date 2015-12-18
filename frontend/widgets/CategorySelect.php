@@ -93,7 +93,7 @@ class CategorySelect extends \yii\bootstrap\Widget
         }
 
         if (empty($this->strPadStr)) {
-            $this->strPadStr = '-';
+            $this->strPadStr = '----';
         }
 
         if ($this->isShowFinal === null) {

@@ -40,6 +40,7 @@ class AppAsset extends AssetBundle
     	'js/vendor/bower/lodop/LodopFuncs.js',
         'vendor/bower/highcharts/highcharts.js',
         'js/main.js',
+    	
     ];
 
     // 依赖

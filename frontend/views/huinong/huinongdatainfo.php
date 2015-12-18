@@ -34,6 +34,40 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?= $this->title ?>                    </h3>
                 </div>
                 <div class="box-body">
+                <?php $huinongGrant = Huinonggrant::find();?>
+                <table class="table table-bordered table-hover">
+                	<tr>
+                		<td align="right"><strong>享受补贴人数：</strong></td>
+                		<td align="left"><strong>
+               		    <?= $huinongGrant->where(['huinong_id'=>$model->id])->count()?>
+               		    人</strong></td>
+                		<td align="right"><strong>已发放补贴人数：</strong></td>
+                		<td align="left"><strong>
+               		    <?= $huinongGrant->where(['huinong_id'=>$model->id,'state'=>1])->count()?>
+               		    人</strong></td>
+                		<td align="right"><strong>未发放补贴人数：</strong></td>
+                		<td align="left"><strong>
+               		    <?= $huinongGrant->where(['huinong_id'=>$model->id,'state'=>0])->count()?>
+               		    人</strong></td>
+                		<td align="right"><strong>应发放金额：</strong></td>
+                		<td align="left"><strong>
+               		    <?= $huinongGrant->where(['huinong_id'=>$model->id])->sum('money')?>
+               		    元</strong></td>
+                		<td align="right"><strong>已发放金额：</strong></td>
+                		<td align="left"><strong>
+               		    <?= $huinongGrant->where(['huinong_id'=>$model->id,'state'=>1])->sum('money')?>
+               		    元</strong></td>
+                		<td align="right"><strong>差额：</strong></td>
+                		<td align="left"><strong>
+               		    <?= $huinongGrant->where(['huinong_id'=>$model->id,'state'=>0])->sum('money')?>
+               		    元</strong></td>
+                		<td align="right"><strong>完成度：</strong></td>
+                		<td align="left"><strong>
+               		    <?php $wcd = $huinongGrant->where(['huinong_id'=>$model->id,'state'=>1])->count()/$huinongGrant->where(['huinong_id'=>$model->id])->count()*100;echo $wcd.'%'?>
+                		</strong></td>
+                	</tr>
+                </table>
+                <br>
                 <?php $form = ActiveFormrdiv::begin(); ?>
     			<table class="table table-bordered table-hover">
     			<?php if($classname == 'plantingstructure') {?>
@@ -98,7 +132,7 @@ $this->params['breadcrumbs'][] = $this->title;
     					<td align="center"><b></b></td>
     					<td align="center" width="150px"><b><?php echo $areaSum.'亩';?></b></td>
     					<td align="center" width="150px"><b>应发：<?php echo $moneySum.'元';?></b></td>
-    					<td align="center"><b>已发：<?= Huinonggrant::find()->where(['id'=>$model->id,'state'=>1])->sum('money')?></b></td>
+    					<td align="center"><b>已发：<?= Huinonggrant::find()->where(['huinong_id'=>$model->id,'state'=>1])->sum('money')?></b></td>
     				</tr>
     				<?php }?>
     			</table>

@@ -115,6 +115,7 @@ else echo '晚上好';
 	                       	echo '<li><a href="'.Url::to('index.php?r=infrastructuretype/infrastructuretypeindex').'"><i class="fa fa-circle-o"></i>基础设施类型</a></li>';
 	                       	echo '<li><a href="'.Url::to('index.php?r=projecttype/projecttypeindex').'"><i class="fa fa-circle-o"></i>项目类型</a></li>';
 	                       	echo '<li><a href="'.Url::to('index.php?r=disasterypte/disastertypeindex').'"><i class="fa fa-circle-o"></i>灾害类型</a></li>';
+	                       	echo '<li><a href="'.Url::to('index.php?r=machinetype/machinetypeindex').'">机具类型</a></li>';
               				echo '</ul>';
             				echo '</li>';
 	                     	

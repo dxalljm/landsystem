@@ -23,6 +23,9 @@ $this->title = 'huinong';
 $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctablename'];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<style type="text/css">
+#textSubmit { display:none }
+</style>
 <div class="huinong-index">
 
     <section class="content">
@@ -34,7 +37,40 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?= $this->title ?>                    </h3>
                 </div>
                 <div class="box-body">
+                <?php $huinongGrant = Huinonggrant::find();?>
+                <table class="table table-bordered table-hover">
+                	<tr>
+                		<td align="right"><strong>享受补贴人数：</strong></td>
+                		<td align="left"><strong>
+               		    <?= $huinongGrant->where(['huinong_id'=>$model->id])->count()?>
+               		    人</strong></td>
+                		<td align="right"><strong>已发放补贴人数：</strong></td>
+                		<td align="left"><strong>
+               		    <?= $huinongGrant->where(['huinong_id'=>$model->id,'state'=>1])->count()?>
+               		    人</strong></td>
+                		<td align="right"><strong>未发放补贴人数：</strong></td>
+                		<td align="left"><strong>
+               		    <?= $huinongGrant->where(['huinong_id'=>$model->id,'state'=>0])->count()?>
+               		    人</strong></td>
+                		<td align="right"><strong>应发放金额：</strong></td>
+                		<td align="left"><strong>
+               		    <?= $huinongGrant->where(['huinong_id'=>$model->id])->sum('money')?>
+               		    元</strong></td>
+                		<td align="right"><strong>已发放金额：</strong></td>
+                		<td align="left"><strong>
+               		    <?= $huinongGrant->where(['huinong_id'=>$model->id,'state'=>1])->sum('money')?>
+               		    元</strong></td>
+                		<td align="right"><strong>差额：</strong></td>
+                		<td align="left"><strong>
+               		    <?= $huinongGrant->where(['huinong_id'=>$model->id,'state'=>0])->sum('money')?>
+               		    元</strong></td>
+                		<td align="right"><strong>完成度：</strong></td>
+                		<td align="left"><strong><?php $wcd = $huinongGrant->where(['huinong_id'=>$model->id,'state'=>1])->count()/$huinongGrant->where(['huinong_id'=>$model->id])->count()*100;echo $wcd.'%'?></strong></td>
+                	</tr>
+                </table>
+               
                 <?php $form = ActiveFormrdiv::begin(); ?>
+    			<br>
     			<table class="table table-bordered table-hover">
     			<?php if($classname == 'plantingstructure') {?>
     				
@@ -58,9 +94,9 @@ $this->params['breadcrumbs'][] = $this->title;
     				</tr>
     				<tr>
     					<td width="28" align="center"><b></b></td>
-    					<td align="center"><?= html::textInput('farmname','',['class'=>'form-control'])?></td>
-    					<td align="center"><b><?= html::textInput('farmername','',['class'=>'form-control'])?></b></td>
-    					<td align="center"><b><?= html::textInput('lessee','',['class'=>'form-control'])?></b></td>
+    					<td align="center"><?= html::textInput('farmname',$post['farmname'],['class'=>'form-control'])?></td>
+    					<td align="center"><b><?= html::textInput('farmername',$post['farmername'],['class'=>'form-control'])?></b></td>
+    					<td align="center"><b><?= html::textInput('lesseename',$post['lesseename'],['class'=>'form-control'])?></b></td>
     					<?php if($model->subsidiestype_id == 'plant') {?>
     						<td width="28" align="center"><b></b></td>
     					<?php }?>
@@ -70,9 +106,9 @@ $this->params['breadcrumbs'][] = $this->title;
     					<?php }?>
     					<td width="28" align="center"><b></b></td>
     					<td width="56" align="center"><b></b></td>
-    					<td align="center" width="50"><?= html::textInput('area','',['class'=>'form-control'])?></td>
-    					<td align="center" width="150"><?= html::textInput('money','',['class'=>'form-control'])?></td>
-    					<td colspan="2" align="center" width="150"><b><?= html::textInput('lessee','',['class'=>'form-control'])?></b></td>
+    					<td align="center"></td>
+    					<td align="center"></td>
+    					<td colspan="2" align="center" width="150"><b><?= html::radioList('is_provide',$post['is_provide'],[0=>'未发',1=>'已发'],['id'=>'isprovide'])?></b></td>
     				</tr>
     				<?php 
     				$i=1;$areaSum=0.0;$moneySum=0.0;
@@ -97,7 +133,7 @@ $this->params['breadcrumbs'][] = $this->title;
     					<td align="center"><?= Collection::getCollecitonInfo($value['farms_id'])?></td>
     					<td align="center"><?= $value['area'].' 亩'?></td>
     					<td align="center"><?= $value['money'].' 元'?></td>
-    					<td colspan="2" align="center"><?= html::checkboxList('isSubmit[]',$value['state'],[$value['farms_id'].'/'.$value['lease_id'].'/'.sprintf("%.2f",$value['money']).'/'.$value['area']=>'是否发放'])?>
+    					<td colspan="2" align="center"><?php if($value['state']) echo '已发放'; else echo  html::checkboxList('isSubmit[]',$value['state'],[$value['id']=>'是否发放']);?></td>
     				</tr><?php $areaSum += $value['area'];$moneySum += $value['money'];?>
     				<?php }?>
     				<tr>
@@ -114,15 +150,15 @@ $this->params['breadcrumbs'][] = $this->title;
     					<?php }?>
     					<td align="center"><b></b></td>
     					<td align="center"><b></b></td>
-    					<td align="center" width="150"><b><?php echo $areaSum.'亩';?></b></td>
-    					<td align="center" width="150"><b>应发：<?php echo $moneySum.'元';?></b></td>
-    					<?php $yfmoney = Huinonggrant::find()->where(['id'=>$model->id,'state'=>1])->sum('money')?>
+    					<td align="center" width="100"><b><?php echo $areaSum.'亩';?></b></td>
+    					<td align="center" width="100"><b><?php echo $moneySum.'元';?></b></td>
+    					<?php $yfmoney = Huinonggrant::find()->where(['huinong_id'=>$model->id,'state'=>1])->sum('money')?>
     					<td align="right" width="53"><b>已发：</b></td>
     					<td align="center" width="95"><b><?php echo html::textInput('moneySum',$yfmoney,['readonly'=>'readonly','class'=>'form-control','id'=>'money']);?></b></td>
     				</tr>
     				<?php }?>
     			</table>
-
+<input type="submit" id="textSubmit">
     <?php ActiveFormrdiv::end(); ?>
                 </div>
                 
@@ -133,23 +169,33 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <script>
 $('input:checkbox[name="isSubmit[]"]').click(function(){
+
 	var input = $(this).is(":checked");
 	var areaSum = $('#area').val();
 	var moneySum = $('#money').val();
 	var val = $(this).val();
 	var valArr = val.split('/');
-	
 	if(input == true) {
-		var areaResult = areaSum*1 + valArr[3]*1;
-		$('#area').val(areaResult.toFixed(2));
-		var moneyResult = moneySum*1 + valArr[2]*1;
-		$('#money').val(moneyResult.toFixed(2));
+		if(confirm("确定已经发放了吗？"))
+		 {
+			var areaResult = areaSum*1 + valArr[3]*1;
+			$('#area').val(areaResult.toFixed(2));
+			var moneyResult = moneySum*1 + valArr[2]*1;
+			$('#money').val(moneyResult.toFixed(2));
+			$("form").submit();
+		} else {
+			 $(this).prop('checked', false);
+		}
+		
 	} else {
 		var areaResult = areaSum*1 - valArr[3]*1;
 		$('#area').val(areaResult.toFixed(2));
 		var moneyResult = moneySum*1 - valArr[2]*1;
 		$('#money').val(moneyResult.toFixed(2));
 	}
+});
+$('#isprovide').click(function(){
+	$("form").submit();
 });
 // function setSum(money,area)
 // {
