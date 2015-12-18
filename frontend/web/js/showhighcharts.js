@@ -151,8 +151,16 @@ function showStacked(divID,title,categories,ytitle,series,dw)
 	            min: 0,
 	            title: {
 	                text: ytitle
-	            }
+	            },
+				stackLabels: {
+					enabled: true,
+					style: {
+						fontWeight: 'bold',
+						color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+					}
+				}
 	        },
+
 	        legend: {
 				align: 'right',
 				x: -70,

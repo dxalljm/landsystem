@@ -140,12 +140,12 @@ class Collection extends \yii\db\ActiveRecord {
 						'name' => '应收金额',
 						'data' => $amounts_receivable,
 						'dataLabels' => [
-								'enabled' => true,
+								'enabled' => false,
 								'rotation' => 0,
 								'color' => '#FFFFFF',
 								'align' => 'center',
 								'x' => 0,
-								'y' => -23,
+								'y' => 0,
 								'style' => [
 										'fontSize' => '13px',
 										'fontFamily' => 'Verdana, sans-serif',
