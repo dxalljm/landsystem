@@ -1,6 +1,6 @@
 <?php
 
-namespace console\controllers;
+namespace console\models;
 
 use Yii;
 

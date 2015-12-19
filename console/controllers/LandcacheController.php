@@ -3,16 +3,17 @@
 namespace console\controllers;
 
 use yii\console\Controller;
-use app\models\Farms;
-use app\models\User;
-use app\models\Cache;
-use app\models\Collection;
-use app\models\Plantingstructure;
+use console\models\Farms;
+use console\models\User;
+use console\models\Cache;
 class LandcacheController extends Controller
 {
 
 	public function actionIndex($str = NULL)
 	{
+		var_dump(new User());
+		echo '123';
+		exit;
 		Farms::getFarmarea();
 	}
 	  

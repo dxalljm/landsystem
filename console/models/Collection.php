@@ -1,7 +1,6 @@
 <?php
 
-namespace console\controllers;
-
+namespace console\models;
 use Yii;
 use app\models\Farms;
 use frontend\helpers\MoneyFormat;
