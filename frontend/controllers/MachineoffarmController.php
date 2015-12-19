@@ -84,26 +84,26 @@ class MachineoffarmController extends Controller
     		$lastclass = $post['lastclass'];
     		$smallclass = Machinetype::find()->where(['id'=>$lastclass])->one()['father_id'];
     		$bigclass = Machinetype::find()->where(['id'=>$smallclass])->one()['father_id'];
-    	}
+    	
     	$dataProvider = $searchModel->search($params);
     	
-        $model = new Machineoffarm();
+//         $model = new Machineoffarm();
 
-        if ($model->load(Yii::$app->request->post())) {
-        	$model->farms_id = $farms_id;
-        	if($machine_id !== 0) {
-        		$machinename = Machine::find()->where(['id'=>$machine_id])->one()['productname'];
-        		$model->machinename = $machinename;
-        		$model->machine_id = $machine_id;
-        		$model->create_at = time();
-        		$model->update_at = $model->create_at;
-        		$model->save();
-        	}
-        	if(!empty($model->machinename)) {
-        		$model->machine_id = 
-        	}
+//         if ($model->load(Yii::$app->request->post())) {
+//         	$model->farms_id = $farms_id;
+//         	if($machine_id !== 0) {
+//         		$machinename = Machine::find()->where(['id'=>$machine_id])->one()['productname'];
+//         		$model->machinename = $machinename;
+//         		$model->machine_id = $machine_id;
+//         		$model->create_at = time();
+//         		$model->update_at = $model->create_at;
+//         		$model->save();
+//         	}
+//         	if(!empty($model->machinename)) {
+        		
+//         	}
         	
-            return $this->redirect(['machineoffarmindex', 'farms_id' => $model->farms_id]);
+//             return $this->redirect(['machineoffarmindex', 'farms_id' => $model->farms_id]);
         } else {
             return $this->render('machineoffarmcreate', [
                 	'model' => $model,
