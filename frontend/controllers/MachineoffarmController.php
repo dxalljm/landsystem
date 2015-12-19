@@ -64,47 +64,59 @@ class MachineoffarmController extends Controller
      */
     public function actionMachineoffarmcreate($farms_id,$machine_id = 0)
     {
-    	$post = Yii::$app->request->post();
+    	$model = new Machineoffarm();
+    	$lastclass = null;
+    	$smallclass = null;
+    	$bigclass = null;
+    	$save = false;
     	$searchModel = new MachineSearch();
     	$params = Yii::$app->request->queryParams;
-    	$lastclass = '';
-    	$smallclass = '';
-    	$bigclass = '';
-    	if($post) {
-//     		var_dump($post);exit;
-    		$params['MachineSearch']['machinetype_id'] = $post['lastclass'];
-    		if(isset($post['MachineSearch']['productname']))
-    			$params['MachineSearch']['productname'] = $post['MachineSearch']['productname'];
-    		if(isset($post['MachineSearch']['implementmodel']))
-    			$params['MachineSearch']['implementmodel'] = $post['MachineSearch']['implementmodel'];
-    		if(isset($post['MachineSearch']['filename']))
-    			$params['MachineSearch']['filename'] = $post['MachineSearch']['filename'];
-    		if(isset($post['MachineSearch']['enterprisename']))
-    			$params['MachineSearch']['enterprisename'] = $post['MachineSearch']['enterprisename'];
-    		$lastclass = $post['lastclass'];
-    		$smallclass = Machinetype::find()->where(['id'=>$lastclass])->one()['father_id'];
-    		$bigclass = Machinetype::find()->where(['id'=>$smallclass])->one()['father_id'];
-    	
     	$dataProvider = $searchModel->search($params);
+   		if($machine_id !== 0) {
+    		$machinename = Machine::find()->where(['id'=>$machine_id])->one();
+    		$model->farms_id = $farms_id;
+    		$model->machinename = $machinename['productname'];
+    		$model->machine_id = $machine_id;
+    		$model->machinetype_id = $machinename['machinetype_id'];
+    		$model->create_at = time();
+    		$model->update_at = $model->create_at;
+    		$save = $model->save();
+    		if($save)
+    			return $this->redirect(['machineoffarmindex', 'farms_id' => $model->farms_id]);
+    	}
     	
-//         $model = new Machineoffarm();
+    	$post = Yii::$app->request->post();
+    		if($post) {
+	    		
+    			$params['MachineSearch']['machinetype_id'] = $post['lastclass'];
+    			if(isset($post['MachineSearch']['productname']))
+    				$params['MachineSearch']['productname'] = $post['MachineSearch']['productname'];
+    			if(isset($post['MachineSearch']['implementmodel']))
+    				$params['MachineSearch']['implementmodel'] = $post['MachineSearch']['implementmodel'];
+    			if(isset($post['MachineSearch']['filename']))
+    				$params['MachineSearch']['filename'] = $post['MachineSearch']['filename'];
+    			if(isset($post['MachineSearch']['enterprisename']))
+    				$params['MachineSearch']['enterprisename'] = $post['MachineSearch']['enterprisename'];
+    			$lastclass = $post['lastclass'];
+    			$smallclass = Machinetype::find()->where(['id'=>$lastclass])->one()['father_id'];
+    			$bigclass = Machinetype::find()->where(['id'=>$smallclass])->one()['father_id'];
+    			if ($model->load(Yii::$app->request->post())) {
+    				//     		var_dump($model);exit;
+    				if($model->machinename !== '') {
+    					$model->farms_id = $farms_id;
+    					$model->machinename = $model->machinename;
+    					$model->machinetype_id = $lastclass;
+    					$model->machine_id = 0;
+    					$model->create_at = time();
+    					$model->update_at = $model->create_at;
+    					$save = $model->save();
+    				}
+    				if($save)
+    					return $this->redirect(['machineoffarmindex', 'farms_id' => $model->farms_id]);
+    			}
+    		}
 
-//         if ($model->load(Yii::$app->request->post())) {
-//         	$model->farms_id = $farms_id;
-//         	if($machine_id !== 0) {
-//         		$machinename = Machine::find()->where(['id'=>$machine_id])->one()['productname'];
-//         		$model->machinename = $machinename;
-//         		$model->machine_id = $machine_id;
-//         		$model->create_at = time();
-//         		$model->update_at = $model->create_at;
-//         		$model->save();
-//         	}
-//         	if(!empty($model->machinename)) {
-        		
-//         	}
-        	
-//             return $this->redirect(['machineoffarmindex', 'farms_id' => $model->farms_id]);
-        } else {
+    	 
             return $this->render('machineoffarmcreate', [
                 	'model' => $model,
             		'searchModel' => $searchModel,
@@ -114,7 +126,7 @@ class MachineoffarmController extends Controller
             		'bigclass' => $bigclass,
             		'farms_id' => $farms_id,
             ]);
-        }
+        
     }
 
     

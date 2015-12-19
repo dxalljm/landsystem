@@ -139,8 +139,8 @@ function showStacked(divID,title,categories,ytitle,series,dw)
 	    $('#'+divID).highcharts({
 	        chart: {
 	            type: 'column',
-				borderColor: '#ccc',
-				borderWidth: 2,
+//				borderColor: '#ccc',
+//				borderWidth: 2,
 	        },
 	        title: {
 	            text: title

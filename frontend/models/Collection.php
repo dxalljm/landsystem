@@ -110,12 +110,12 @@ class Collection extends \yii\db\ActiveRecord {
 			return '未缴纳';
 	}
 	public static function getCollection() {
-		$cacheKey = 'collection-hcharts';
-		$result = Yii::$app->cache->get ( $cacheKey );
-		$result =false;
-		if (! empty ( $result )) {
-			return $result;
-		}
+// 		$cacheKey = 'collection-hcharts';
+// 		$result = Yii::$app->cache->get ( $cacheKey );
+// 		$result =false;
+// 		if (! empty ( $result )) {
+// 			return $result;
+// 		}
 		$i = 0;
 		$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
 		$amountsColor = ['#fedfdf','#feeedf','#fefddf','#e1fedf','#dffcfe','#dfe3fe','#fedffe'];
@@ -141,7 +141,7 @@ class Collection extends \yii\db\ActiveRecord {
 		}
 		$result = [ 
 				[
-					'color' => '#FFF',					
+// 					'color' => '#FFF',					
 						'name' => '应收金额',
 						'data' => $amounts_receivable,
 						'dataLabels' => [
@@ -176,13 +176,14 @@ class Collection extends \yii\db\ActiveRecord {
 						]
 				]
 		];
-
+// 		var_dump($result[0]);
 		$jsonData = json_encode ( [ 
 				'result' => $result 
 		] );
-		Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
-		
-		return $jsonData;
+// 		$landcache = new Cache();
+//     	$landcache->actionname = 'collection';
+//     	$landcache->content = $jsonData;
+//     	$landcache->save();;
 	}
 	/**
 	 * @inheritdoc

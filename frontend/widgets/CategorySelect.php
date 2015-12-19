@@ -111,7 +111,7 @@ class CategorySelect extends \yii\bootstrap\Widget
     public function run()
     {
         if ($this->model == null || $this->attribute == null) {
-            $options = '<option value="0">请选择分类</option>';
+            $options = '<option value="1">请选择分类</option>';
         } else {
             $selection = $this->selectedValue;// 默认选中
 

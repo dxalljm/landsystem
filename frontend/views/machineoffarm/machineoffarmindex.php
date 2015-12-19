@@ -3,6 +3,8 @@ namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\Machinetype;
+use app\models\Machine;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\MachineoffarmSearch */
@@ -35,10 +37,29 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'machine_id',
-            'farms_id',
-
+//             'id',
+//             'farms_id',
+			[
+				'label' => '农机大类',
+				'value' => function ($model) {
+					return Machinetype::getClass($model->machinetype_id)[0];
+				}
+			],
+			[
+				'label' => '农机小类',
+				'value' => function ($model) {
+					return Machinetype::getClass($model->machinetype_id)[1];
+				}
+			],
+			[
+				'label' => '农机品目',
+				'value' => function ($model) {
+					return Machinetype::getClass($model->machinetype_id)[2];
+				}
+			],
+//             'machinetype_id',
+//             'machine_id',
+			'machinename',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

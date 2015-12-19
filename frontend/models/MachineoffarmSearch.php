@@ -19,7 +19,7 @@ class MachineoffarmSearch extends Machineoffarm
     public function rules()
     {
         return [
-            [['id', 'machine_id', 'farms_id','create_at','update_at'], 'integer'],
+            [['id', 'machine_id', 'farms_id','create_at','update_at','machinetype_id'], 'integer'],
         	[['machinename'],'string'],
         ];
     }
@@ -60,6 +60,7 @@ class MachineoffarmSearch extends Machineoffarm
             'id' => $this->id,
             'machine_id' => $this->machine_id,
             'farms_id' => $this->farms_id,
+        	'machinetype_id' => $this->machine_id,
         ]);
         $query->andFilterWhere(['like', 'machinename', $this->machinename])
         ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);

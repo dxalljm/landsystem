@@ -18,7 +18,6 @@ use app\models\Pesticides;
 #farms { display:none }
 #plantingstructure { display:none }
 </style>
-<link rel="stylesheet" type="text/css" href="css/styles.css" />
 
 <script type="text/javascript" src="js/jquery.flip.min.js"></script>
 <?php $this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>

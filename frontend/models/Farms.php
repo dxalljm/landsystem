@@ -337,11 +337,11 @@ class Farms extends \yii\db\ActiveRecord
     	return $jsonData;
     }
     public static function getFarmarea() {
-    	$cacheKey = 'farms-hcharts2';
-    	$result = Yii::$app->cache->get ( $cacheKey );
-    	if (! empty ( $result )) {
-    		return $result;
-    	}
+//     	$cacheKey = 'farms-hcharts2';
+//     	$result = Yii::$app->cache->get ( $cacheKey );
+//     	if (! empty ( $result )) {
+//     		return $result;
+//     	}
     	$areas = [];
 //     	$sum = 0.0;
     	$farmsID = [];
@@ -403,8 +403,10 @@ class Farms extends \yii\db\ActiveRecord
 //     	var_dump($result);
     	$jsonData = json_encode(['result'=>$result]);
     	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
-    
-    	return $jsonData;
+    	$landcache = new Cache();
+    	$landcache->actionname = 'farmsarea';
+    	$landcache->content = $jsonData;
+    	$landcache->save();
     }
     
     public static function totalNum()

@@ -147,6 +147,31 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	return $zongdi;
     }
 
+    public static function getPlantname()
+    {
+    	$area = Farms::getManagementArea ();
+    	foreach ( $area['id'] as $key => $value ) {
+			// 农场区域
+			
+// 			$array['areaname'] = $area['areaname'][$key];
+			
+			$farm = Farms::find()->where(['management_area'=>$value])->all();
+    		foreach ($farm as $val) {
+    			$plantsum = 0;
+    			$goodseedsum = 0;
+    			$planting = Plantingstructure::find()->where(['farms_id'=>$val['id']])->all();
+    			foreach ($planting as $v) {
+    				$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname'];
+    				$data[$plantname] = $plantname;
+    			}
+    		}
+    	}
+    	foreach ($data as $value) {
+    		$result[] = $value;
+    	}
+    	return $result;
+    }
+    
     public static function getPlantingstructure()
     {
 
@@ -158,56 +183,110 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	$data = [];
     	$result = [];
     	$areaNum = 0;
-
+    	$plant = [];
+    	$goodseed = [];
 		$area = Farms::getManagementArea ();
     	foreach ( $area['id'] as $key => $value ) {
     		$areaNum++;
 
 			// 农场区域
-			$array = [];
-			$array['areaname'] = $area['areaname'][$key];
-
+			
+// 			$array['areaname'] = $area['areaname'][$key];
+			
 			$farm = Farms::find()->where(['management_area'=>$value])->all();
-
     		foreach ($farm as $val) {
+    			$plantsum = 0;
+    			$goodseedsum = 0;
     			$planting = Plantingstructure::find()->where(['farms_id'=>$val['id']])->all();
     			foreach ($planting as $v) {
     				$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname'];
-					$array['name'][] = $plantname;
-					// 区域
-					$array['area'][] = $v['area'];
+    				
+					$plant['name'] = '作物';
+					$goodseed['name'] = '良种';
+					$plantsum += $v['area'];
+					$plant['data'][$plantname][] = $plantsum;
+					if($v['goodseed_id'] !== 0)
+						$goodseedarea = $v['area'];
+					else
+						$goodseedarea = 0.0;
+					$goodseedsum += $goodseedarea;
+					$goodseed['data'][$plantname][] = $goodseedsum;
+// 					var_dump($goodseed);
     			}
     		}
-			$data[] = $array;
     	}
-
+// 		var_dump($goodseed);exit;
 		// 作物统计
-		$planting = [];
-
+		$plantdata = [];
+		$goodseeddata = [];
 		// 总数计算
-		foreach ($data as $key => $value) {
-			if (empty($value['name']) || empty($value['area'])) {
-				continue;
-			}
-
-			// 作物循环
-			foreach ($value['name'] as $k => $val) {
-				if (!isset($planting[$val])) {
-					$planting[$val] = 0.00;
+		foreach ($plant['data'] as $key => $value) {
+			$area = 0;
+			foreach($value as $ke => $val) {
+	// 			var_dump($val);
+				if (!isset($val)) {
+					$planting[$key] = 0.00;
 				}
-				$planting[$val] += $value['area'][$k];
+				$area += $val;
+				$plantdata[$key] = $area;
 			}
 		}
-
-		$index = 0;
-		foreach ($planting as $name => $value) {
-			$result[$index]['name'] = $name;
-			$result[$index]['data'] = [$value];
-			$index++;
+		foreach ($goodseed['data'] as $key => $value) {
+			$area = 0;
+			foreach($value as $ke => $val) {
+				// 			var_dump($val);
+				if (!isset($val)) {
+					$planting[$key] = 0.00;
+				}
+				$area += $val;
+				$goodseeddata[$key] = $area;
+			}
 		}
-//		var_dump($result);
-//		exit;
-
+		foreach($plantdata as $value) {
+			$plantresult[] = $value;
+		}
+		foreach($goodseeddata as $value) {
+			$goodseedresult[] = $value;
+		}
+		$result = [
+				[
+						'color' => '#bdfdc9',
+						'name' => '作物',
+						'data' => $plantresult,
+						'dataLabels' => [
+								'enabled' => false,
+								'rotation' => 0,
+								'color' => '#FFFFFF',
+								'align' => 'center',
+								'x' => 0,
+								'y' => 0,
+								'style' => [
+										'fontSize' => '13px',
+										'fontFamily' => 'Verdana, sans-serif',
+										'textShadow' => '0 0 3px black'
+								]
+						]
+				],
+				[
+						'color' => '#02c927',
+						'name' => '良种',
+						'data' => $goodseedresult,
+						'dataLabels' => [
+								'enabled' => true,
+								'rotation' => 0,
+								'color' => '#FFFFFF',
+								'align' => 'center',
+								'x' => 0,
+								'y' => 0,
+								'style' => [
+										'fontSize' => '13px',
+										'fontFamily' => 'Verdana, sans-serif',
+										'textShadow' => '0 0 3px black'
+								]
+						]
+				]
+		];
+// 		var_dump($result);
     	$jsonData = json_encode ( [
     			'result' => $result
     	] );
