@@ -1205,6 +1205,7 @@ class FarmsController extends Controller {
 		}
 		return $value;
 	}
+	
 	public function getPlate($controller, $menuUrl, $farms_id) {
 		switch ($controller) {
 			case 'farmsland' :

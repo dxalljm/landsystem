@@ -1,4 +1,4 @@
-c<?php
+<?php
 
 namespace console\models;
 
@@ -8,8 +8,13 @@ use Yii;
  * This is the model class for table "{{%cache}}".
  *
  * @property integer $id
- * @property string $actionname
- * @property string $content
+ * @property integer $user_id
+ * @property string $farmscache
+ * @property string $collectioncache
+ * @property string $plantingstructurecache
+ * @property string $plantinputproductcache
+ * @property string $huinongcache
+ * @property string $infrastructurecache
  */
 class Cache extends \yii\db\ActiveRecord
 {
@@ -28,7 +33,7 @@ class Cache extends \yii\db\ActiveRecord
     {
         return [
             [['user_id'], 'integer'],
-            [['actionname'], 'string', 'max' => 500]
+            [['farmscache', 'collectioncache', 'plantingstructurecache', 'plantinputproductcache', 'huinongcache', 'infrastructurecache'], 'string']
         ];
     }
 
@@ -40,7 +45,12 @@ class Cache extends \yii\db\ActiveRecord
         return [
 			'id' => 'ID',
             'user_id' => '用户ID',
-            'content' => '备注',
+            'farmscache' => '农场面积暂存',
+            'collectioncache' => '收费情况暂存',
+            'plantingstructurecache' => '作物情况暂存',
+            'plantinputproductcache' => '投入品情况暂存',
+            'huinongcache' => '惠农政策情况暂存',
+            'infrastructurecache' => '基础设施情况暂存',
         ];
     }
 }

@@ -6,22 +6,21 @@ use yii\console\Controller;
 use console\models\Farms;
 use console\models\User;
 use console\models\Cache;
+use console\models\Plantingstructure;
+use console\models\Collection;
 class LandcacheController extends Controller
 {
 
 	public function actionIndex($str = NULL)
 	{
-		var_dump(new User());
-		echo '123';
-		exit;
-		Farms::getFarmarea();
 	}
 	  
 	public function getAllUser()
 	{
 		$allUser = User::find()->all();
 		foreach($allUser as $user) {
-			$allID[] = $user['id'];
+			if($user['id'] !== 1)
+				$allID[] = $user['id'];
 		}
 		return $allID;
 	}
@@ -61,7 +60,7 @@ class LandcacheController extends Controller
 			else
 				$landcache = new Cache();
 			$landcache->user_id = $id;
-			$landcache->plantingstructurecache = Plantingstructure::getPlantingstructure($userid);
+			$landcache->plantingstructurecache = Plantingstructure::getPlantingstructure($id);
 			$landcache->save();
 		}
 	}

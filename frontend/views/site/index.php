@@ -10,6 +10,7 @@ use app\models\Department;
 use app\models\ManagementArea;
 use app\models\Collection;
 use app\models\Plantingstructure;
+use app\models\Cache;
 $this->title = '岭南管委会';
 ?>
 <script type="text/javascript" src="js/showhighcharts.js"></script>
@@ -44,7 +45,7 @@ $this->title = '岭南管委会';
            
 				<div id="statis-area" style="min-width: 262px; height: 300px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-   			//showCombination('statis-area','面积：<?php //echo Farms::totalArea()?> 农场户数：<?php //echo Farms::totalNum()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Farms::getFarmarea()?>,'万亩');
+   			showCombination('statis-area','面积：<?php echo Farms::totalArea()?> 农场户数：<?php echo Farms::totalNum()?>',<?php echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php echo Cache::getCache(\Yii::$app->getUser()->getId())['farmscache']?>,'万亩');
 		</script>
             </div>
         
@@ -74,7 +75,7 @@ $this->title = '岭南管委会';
               <?php //var_dump(Collection::getCollection());?>
         		<div id="collection" style="min-width: 100%; height: 300px; margin: 0 auto;" ></div>
    			 <script type="text/javascript">
-   			//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
+   			showStacked('collection','应收：<?php echo Collection::totalAmounts()?> 实收：<?php echo Collection::totalReal()?>',<?php echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php echo Cache::getCache(\Yii::$app->getUser()->getId())['collectioncache']?>,'万元');
 		</script>
             </div>
             <!-- /.box-body -->
@@ -103,7 +104,7 @@ $this->title = '岭南管委会';
             <div class="box-body">
 				<div id="plantingstructure" style="min-width: 262px; height: 300px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-				showStacked('plantingstructure','作物种植面积统计',<?= json_encode(Plantingstructure::getPlantname())?>,'',<?= Plantingstructure::getPlantingstructure()?>,'亩');
+				showStacked('plantingstructure','作物种植面积统计',<?= json_encode(Plantingstructure::getPlantname())?>,'',<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecache']?>,'亩');
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
             </div>

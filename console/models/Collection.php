@@ -2,7 +2,7 @@
 
 namespace console\models;
 use Yii;
-use app\models\Farms;
+use console\models\Farms;
 use frontend\helpers\MoneyFormat;
 
 /**
@@ -118,7 +118,7 @@ class Collection extends \yii\db\ActiveRecord {
 		$i = 0;
 		$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
 		$amountsColor = ['#fedfdf','#feeedf','#fefddf','#e1fedf','#dffcfe','#dfe3fe','#fedffe'];
-		foreach ( Farms::getUserManagementArea($userid)['id'] as $value ) {
+		foreach ( Farms::getUserManagementArea($userid) as $value ) {
 			
 			$allmeasure = Farms::find ()->where ( [ 
 					'management_area' => $value 

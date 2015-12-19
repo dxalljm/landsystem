@@ -5,8 +5,8 @@ namespace console\models;
 use Yii;
 use yii\base\Application;
 use yii\helpers\Json;
-use app\models\ManagementArea;
-use app\models\User;
+use console\models\ManagementArea;
+use console\models\User;
 use yii\helpers\Url;
 use yii\helpers\Html;
 /**
@@ -276,6 +276,7 @@ class Farms extends \yii\db\ActiveRecord
     }
     public static function getUserManagementArea($userid) 
     {
+    	$result = [];
     	$dep_id = User::findIdentity($userid)['department_id'];
     	$departmentData = Department::find ()->where ( [
     			'id' => $dep_id
@@ -283,12 +284,10 @@ class Farms extends \yii\db\ActiveRecord
     	$whereArray = explode ( ',', $departmentData ['membership'] );
     	$managementarea = ManagementArea::find()->where(['id'=>$whereArray])->all();
     	foreach ($managementarea as $value) {
-    		$result['id'][] = $value['id'];
-    		if($str == 'small')
-    			$result['areaname'][] = str_ireplace('管理区', '', $value['areaname']);
-    		else
-    			$result['areaname'][] = $value['areaname'];
+    		$result[] = $value['id'];
     	}
+//     	var_dump($userid)
+//     	var_dump($result);exit;
     	return $result;
     }
     public static function getManagementAreaAllID()
@@ -367,7 +366,7 @@ class Farms extends \yii\db\ActiveRecord
     	$i=0;
     	$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
     	$all = Farms::find ()->sum ('measure');
-    	foreach (self::getManagementArea($id)['id'] as $value) {
+    	foreach (self::getUserManagementArea($id) as $value) {
 
 			$area = ( float ) Farms::find ()->where ( [
     		  		'management_area' => $value
@@ -379,7 +378,7 @@ class Farms extends \yii\db\ActiveRecord
     	}
     	
     	$all = Farms::find ()->count ();
-    	foreach (self::getUserManagementArea($id)['id'] as $value) {
+    	foreach (self::getUserManagementArea($id) as $value) {
     		$row = ( float ) Farms::find ()->where ( [
     				'management_area' => $value
     		] )->count ();

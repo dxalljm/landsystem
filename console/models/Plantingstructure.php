@@ -3,7 +3,7 @@
 namespace console\models;
 
 use Yii;
-
+use console\models\Plant;
 /**
  * This is the model class for table "{{%plantingstructure}}".
  *
@@ -180,7 +180,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	$plant = [];
     	$goodseed = [];
 		$area = Farms::getUserManagementArea($userid);
-    	foreach ( $area['id'] as $key => $value ) {
+    	foreach ( $area as $key => $value ) {
     		$areaNum++;
 
 			// 农场区域
