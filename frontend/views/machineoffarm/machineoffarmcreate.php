@@ -32,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
     		'bigclass' => $bigclass,
     		'dataProvider' => $dataProvider,
     		'searchModel' => $searchModel,
+    		'farms_id' => $farms_id,
     ]) ?>
 
 </div>

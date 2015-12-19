@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Machineoffarm;
+use app\models\Theyear;
 
 /**
  * MachineoffarmSearch represents the model behind the search form about `app\models\Machineoffarm`.
@@ -18,7 +19,7 @@ class MachineoffarmSearch extends Machineoffarm
     public function rules()
     {
         return [
-            [['id', 'machine_id', 'farms_id'], 'integer'],
+            [['id', 'machine_id', 'farms_id','create_at','update_at'], 'integer'],
         	[['machinename'],'string'],
         ];
     }
@@ -60,7 +61,8 @@ class MachineoffarmSearch extends Machineoffarm
             'machine_id' => $this->machine_id,
             'farms_id' => $this->farms_id,
         ]);
-        $query->andFilterWhere(['like', 'machinename', $this->machinename]);
+        $query->andFilterWhere(['like', 'machinename', $this->machinename])
+        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
         return $dataProvider;
     }
 }

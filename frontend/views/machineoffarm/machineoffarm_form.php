@@ -14,16 +14,17 @@ use yii\grid\GridView;
 <div class="machineoffarm-form">
 
     <?php $form = ActiveFormrdiv::begin(); ?>
-    
+
 <table class="table table-bordered table-hover">
 	<tr>
 		<td width=15% align='right'>机具大类</td>
-		<td align='left' width=20%><?= html::dropDownList('bigclass',$bigclass,ArrayHelper::map(Machinetype::find()->where(['father_id'=>0])->all(), 'id', 'typename'),['class'=>'form-control','id'=>'bigClass','prompt'=>'请选择...']) ?></td>
+		<td align='left' width=20%><?= html::dropDownList('bigclass',$bigclass,ArrayHelper::map(Machinetype::find()->where(['father_id'=>1])->all(), 'id', 'typename'),['class'=>'form-control','id'=>'bigClass','prompt'=>'请选择...']) ?></td>
 		<td align='right'>机具小类</td>
 		<td align='left'><?= html::dropDownList('smallclass',$smallclass,ArrayHelper::map(Machinetype::find()->where(['father_id'=>$bigclass])->all(),'id', 'typename'),['class'=>'form-control','id'=>'smallClass'])?></td>
 		<td align='right'>机具品目</td>
 		<td align='left'><?= html::dropDownList('lastclass',$lastclass,ArrayHelper::map(Machinetype::find()->where(['father_id'=>$smallclass])->all(),'id', 'typename'),['class'=>'form-control','id'=>'lastClass'])?></td>
 	</tr>
+	<?= $form->field($model, 'machinetype_id')->hiddenInput()->label(false)->error(false)?>
 	<tr>
 		<td align='right'>机具名称</td>
 		<td colspan="5"><?= $form->field($model, 'machinename')->textInput()->label(false)->error(false)?></td>
@@ -43,7 +44,19 @@ use yii\grid\GridView;
             // 'enterprisename',
             // 'parameter:ntext',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+            
+            'format'=>'raw',
+            
+            'value' => function($model,$key){
+            	$url = ['/machineoffarm/machineoffarmcreate','farms_id'=>$model->id,'machine_id'=>$model->id];    	
+            	$option = '添加此机具';
+            	return Html::a($option,$url, [
+            			'id' => 'machineoffarm',
+            			'class' => 'btn btn-primary btn-xs',
+            	]);
+            }
+            ],
         ],
     ]); ?>
     <div class="form-group">
@@ -91,6 +104,8 @@ $('#smallClass').change(function(){
 	});
 });
 $('#lastClass').change(function(){
+	var input = $(this).val();
+	$('machineoffarm-machinetype_id').val(input);
 	$("form").submit();
 });
 </script>

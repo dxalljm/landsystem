@@ -89,11 +89,11 @@ class CategorySelect extends \yii\bootstrap\Widget
         }
 
         if ($this->strPadLength === null) {
-            $this->strPadLength = 1;
+            $this->strPadLength = 4;
         }
 
         if (empty($this->strPadStr)) {
-            $this->strPadStr = '----';
+            $this->strPadStr = '-';
         }
 
         if ($this->isShowFinal === null) {
@@ -115,7 +115,7 @@ class CategorySelect extends \yii\bootstrap\Widget
         } else {
             $selection = $this->selectedValue;// 默认选中
 
-            $options = '<option value="0">请选择分类</option>'.$this->listOptions(0, 0, $selection);
+            $options = '<option value="1">请选择分类</option>'.$this->listOptions(0, 0, $selection);
         }
         echo Html::tag('select', $options, $this->htmlOptions);
     }

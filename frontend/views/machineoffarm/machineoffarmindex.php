@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('添加', ['machineoffarmcreate'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('添加', ['machineoffarmcreate','farms_id'=>$farms_id], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([

@@ -12,7 +12,7 @@ use frontend\widgets\CategorySelect;
 <div class="machine-form">
 
     <?php $form = ActiveFormrdiv::begin(); ?>
-    <?php $dropdownValue = Machinetype::find()->andWhere('father_id<=1')->all();?>
+    <?php $dropdownValue = Machinetype::find()->where(['father_id'=>1])->all();?>
 <table class="table table-bordered table-hover">
 		<tr>
 <td width=15% align='right'>类别</td>

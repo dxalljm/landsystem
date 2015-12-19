@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use frontend\models\MachineSearch;
 use app\models\Machinetype;
+use app\models\Machine;
 
 /**
  * MachineoffarmController implements the CRUD actions for Machineoffarm model.
@@ -32,7 +33,7 @@ class MachineoffarmController extends Controller
      * Lists all Machineoffarm models.
      * @return mixed
      */
-    public function actionMachineoffarmindex()
+    public function actionMachineoffarmindex($farms_id)
     {
         $searchModel = new MachineoffarmSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -40,6 +41,7 @@ class MachineoffarmController extends Controller
         return $this->render('machineoffarmindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+        	'farms_id' => $farms_id,
         ]);
     }
 
@@ -60,7 +62,7 @@ class MachineoffarmController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionMachineoffarmcreate()
+    public function actionMachineoffarmcreate($farms_id,$machine_id = 0)
     {
     	$post = Yii::$app->request->post();
     	$searchModel = new MachineSearch();
@@ -87,8 +89,21 @@ class MachineoffarmController extends Controller
     	
         $model = new Machineoffarm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['machineoffarmview', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->farms_id = $farms_id;
+        	if($machine_id !== 0) {
+        		$machinename = Machine::find()->where(['id'=>$machine_id])->one()['productname'];
+        		$model->machinename = $machinename;
+        		$model->machine_id = $machine_id;
+        		$model->create_at = time();
+        		$model->update_at = $model->create_at;
+        		$model->save();
+        	}
+        	if(!empty($model->machinename)) {
+        		$model->machine_id = 
+        	}
+        	
+            return $this->redirect(['machineoffarmindex', 'farms_id' => $model->farms_id]);
         } else {
             return $this->render('machineoffarmcreate', [
                 	'model' => $model,
@@ -97,6 +112,7 @@ class MachineoffarmController extends Controller
             		'lastclass' => $lastclass,
             		'smallclass' =>$smallclass,
             		'bigclass' => $bigclass,
+            		'farms_id' => $farms_id,
             ]);
         }
     }
