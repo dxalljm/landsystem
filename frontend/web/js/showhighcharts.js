@@ -177,6 +177,7 @@ function showStacked(divID,title,categories,ytitle,series,dw)
 	            formatter: function() {
 	                return '<b>'+ this.x +'</b><br/>'+
 	                    this.series.name +': '+ this.y +'<br/>'+
+	                    
 	                    '占比: '+Highcharts.numberFormat(this.point.percentage, 2)+'%';
 	            }
 	        },
