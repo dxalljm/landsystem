@@ -78,7 +78,6 @@ $this->title = '岭南管委会';
 		</script>
             </div>
             <!-- /.box-body -->
-           
           </div>
           <!-- /.box -->
         </div>
