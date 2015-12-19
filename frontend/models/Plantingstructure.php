@@ -287,6 +287,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
 				]
 		];
 // 		var_dump($result);
+
     	$jsonData = json_encode ( [
     			'result' => $result
     	] );
