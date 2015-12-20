@@ -102,7 +102,7 @@ $this->title = '岭南管委会';
             <!-- /.box-header -->
             <?php
 //            var_dump(Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecache']);
-            $string = '{"result":[{"color":"#bdfdc9","type":"column","name":"\u4f5c\u7269","data":[0.07,0.16,0.03,0.06,0,0.02]},{"color":"#02c927","type":"column","name":"\u826f\u79cd","data":[0,0,0.01,0,0,0]},{"type":"pie","name":"wubaiqing-test", "center": [200, 20], "size": 50, "showInLegend": false, dataLabels: {"enabled": false}, "data":[{"name":"\u9ec4\u82aa","y":207.1}, {"name":"\u9ec4\u82aa2","y":27.1}]}]}';
+            $string = '{"result":[{"color":"#bdfdc9","type":"column","name":"\u4f5c\u7269", "dataLabels": { "enabled": false} ,"data":[0.07,0.16,0.03,0.06,0,0.02]},{"color":"#02c927","type":"column","name":"\u826f\u79cd", "dataLabels": { "color": "#000"}, "data":[0,0,0.01,0,0,0]},{"type":"pie","name":"wubaiqing-test", "center": [200, 20], "size": 50, "showInLegend": false, dataLabels: {"enabled": false}, "data":[{"name":"\u9ec4\u82aa","y":207.1}, {"name":"\u9ec4\u82aa2","y":27.1}]}]}';
             ?>
             <div class="box-body">
 				<div id="plantingstructure" style="min-width: 262px; height: 300px; margin: 0 auto"; ></div>
