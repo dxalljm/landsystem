@@ -216,7 +216,10 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	for($i=0;$i<count($processs);$i++) {
     		$reviewprocessModel->$processs[$i] = 3;
     		if($processs[$i] == 'leader' or $processs[$i] == 'steeringgroup')
-    			$reviewprocessModel->$processs[$i] = 2;
+    			if($i == 0)
+    				$reviewprocessModel->process[$i] = 3;
+    			else 
+    				$reviewprocessModel->$processs[$i] = 2;
     	}
     	$reviewprocessModel->state = 4;
 //     	var_dump($reviewprocessModel);exit;
@@ -244,7 +247,9 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$mamangmentarea = Farms::getManagementArea();
     	
     	$process = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
+
     	$processRows = Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$process=>3])->count();
+
     	if($processRows)
     		return '<small class="label pull-right bg-red">'.$processRows.'</small>';
     	else 
