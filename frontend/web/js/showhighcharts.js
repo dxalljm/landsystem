@@ -102,10 +102,10 @@ function showCombination(divID,title,categories,pieTitle,series,dw)
     $('#'+divID).highcharts({                                          
       chart: {                                                          
       },                                                                
-      title: {                                                          
-        text: title                                     
-      },                                                                
-      xAxis: {                                                          
+      title: {
+        text: title
+      },
+      xAxis: {
         categories: categories
       },      
 
@@ -119,17 +119,17 @@ function showCombination(divID,title,categories,pieTitle,series,dw)
           stacking: 'category',
         },
       },
-      labels: {                                                         
-        items: [{                                                     
-          html: pieTitle,                          
-          style: {                                                  
-            left: '40px',                                         
-            top: '80px',                                           
+      labels: {
+        items: [{
+          html: pieTitle,
+          style: {
+            left: '40px',
+            top: '80px',
 
-          }                                                         
-        }]                                                            
-      },                                                                
-      series: series.result 
+          }
+        }]
+      },
+      series: series.result
     });
   });                        
 }
@@ -162,17 +162,6 @@ function showStacked(divID,title,categories,ytitle,series,dw)
         }
       },
 
-      legend: {
-        align: 'right',
-        x: -70,
-        verticalAlign: 'top',
-        y: 20,
-        floating: true,
-        backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColorSolid) || 'white',
-        borderColor: '#909090',
-        borderWidth: 2,
-        shadow: false
-      },
       tooltip: {
         formatter: function() {
           return '<b>'+ this.x +'</b><br/>'+
