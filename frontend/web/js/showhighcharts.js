@@ -138,7 +138,7 @@ function showStacked(divID,title,categories,ytitle,series,dw)
   $(function () {
     $('#'+divID).highcharts({
       chart: {
-        type: 'column',
+        //type: 'column',
         //				borderColor: '#ccc',
         //				borderWidth: 2,
       },
@@ -183,3 +183,56 @@ function showStacked(divID,title,categories,ytitle,series,dw)
     });
   });
 }
+
+function showStackedPie(divID,title,categories,ytitle,series,dw)
+{
+  $(function () {
+    $('#'+divID).highcharts({
+      chart: {
+        //type: 'column',
+        //				borderColor: '#ccc',
+        //				borderWidth: 2,
+      },
+      title: {
+        text: title
+      },
+      xAxis: {
+        categories: categories
+      },
+      yAxis: {
+        min: 0,
+        title: {
+          text: ytitle
+        },
+        stackLabels: {
+          enabled: true,
+          style: {
+            fontWeight: 'bold',
+            color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+          }
+        }
+      },
+
+      tooltip: {
+        formatter: function() {
+          return '<b>'+ this.x +'</b><br/>'+
+              this.series.name +': '+ this.y +'<br/>'+
+              '占比: '+Highcharts.numberFormat(this.point.percentage, 2)+'%';
+        }
+      },
+      plotOptions: {
+        column: {
+          borderColor: '#ccc',
+          stacking: 'normal',
+          dataLabels: {
+            enabled: true,
+            color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+          }
+        }
+      },
+      series: series.result
+    });
+  });
+
+}
+

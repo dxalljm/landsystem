@@ -100,11 +100,15 @@ $this->title = '岭南管委会';
               <!-- /.box-tools -->
             </div>
             <!-- /.box-header -->
-            <?php //var_dump(Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecache']);?>
+            <?php
+//            var_dump(Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecache']);
+            $string = '{"result":[{"color":"#bdfdc9","type":"column","name":"\u4f5c\u7269","data":[0.07,0.16,0.03,0.06,0,0.02]},{"color":"#02c927","type":"column","name":"\u826f\u79cd","data":[0,0,0.01,0,0,0]},{"type":"pie","name":"wubaiqing-test", "center": [200, 20], "size": 50, "showInLegend": false, dataLabels: {"enabled": false}, "data":[{"name":"\u9ec4\u82aa","y":207.1}, {"name":"\u9ec4\u82aa2","y":27.1}]}]}';
+            ?>
             <div class="box-body">
 				<div id="plantingstructure" style="min-width: 262px; height: 300px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-				showStacked('plantingstructure','',<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecategories']?>,'',<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecache']?>,'万亩');
+//				showStacked('plantingstructure','',<?//= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecategories']?>//,'',<?//= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecache']?>//,'万亩');
+				showStackedPie('plantingstructure','',<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecategories']?>,'',<?= $string;?>,'万亩');
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
             </div>
@@ -194,7 +198,7 @@ $this->title = '岭南管委会';
             <div class="box-body">
 				<div id="plantingstructure" style="min-width: 262px; height: 300px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-				showStacked('plantingstructure','',<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecategories']?>,'',<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecache']?>,'亩');
+//				showStacked('plantingstructure','',<?//= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecategories']?>//,'',<?//= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecache']?>//,'亩');
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
             </div>
