@@ -203,18 +203,22 @@ class FarmsController extends Controller {
 				$path = 'uploads/' . $model->file->name . '.' . $model->file->extension;
 				$loadxls = \PHPExcel_IOFactory::load ( $path );
 				$rows = $loadxls->getActiveSheet ()->getHighestRow ();
-				
+				$farms = Farms::find()->where(['management_area'=>2])->all();
 				$zongdi = [ ];
 				for($i = 3; $i <= $rows; $i ++) {
-// 					echo $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
-// 					echo "<br>";
 					$contract = $loadxls->getActiveSheet()->getCell('C'.$i)->getValue();
 					$array = explode('-', $contract);
-					if((float)$array[2] !== $loadxls->getActiveSheet()->getCell('F'.$i)->getValue()) {
-						echo $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
-						exit;
+					for($j=0;$j<=count($farms);$j++) {
+						if($contract == $farms[$j]) {
+							echo $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
+							echo '--------------';
+							echo $value['id'];
+							echo '<br>';
+						}
+							
 					}
-					$area += $array[2];
+					
+					
 					// 导入农场基础信息
 					// var_dump($loadxls->getActiveSheet()->getCell('H'.$i)->getValue())."<br>";exit;
 					// echo ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];"<br>";
