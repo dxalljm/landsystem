@@ -50,36 +50,33 @@ class Reviewprocess extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+	public function rules() 
+    { 
         return [
-            [['oldfarms_id','newfarms_id', 'management_area','create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime','regulations','regulationstime'], 'integer'],
-            [['estatecontent', 'financecontent', 'filereviewcontent', 'publicsecuritycontent', 'leadercontent', 'mortgagecontent', 'steeringgroupcontent','actionname','regulationscontent'], 'string', 'max' => 500]
-        ];
-    }
+            [['newfarms_id', 'create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime', 'regulations', 'regulationstime', 'oldfarms_id', 'management_area', 'state', 'project', 'projecttime'], 'integer'],
+            [['projectcontent'], 'string'],
+            [['estatecontent', 'financecontent', 'filereviewcontent', 'publicsecuritycontent', 'leadercontent', 'mortgagecontent', 'steeringgroupcontent', 'regulationscontent', 'actionname'], 'string', 'max' => 500]
+        ]; 
+    } 
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-			'id' => 'ID',
-            'oldfarms_id' => '原农场ID',
-        	'newfarms_id' => '新农场ID',
-        	'management_area' => '管理区ID',
+    /** 
+     * @inheritdoc 
+     */ 
+    public function attributeLabels() 
+    { 
+        return [ 
+            'id' => 'ID',
+            'newfarms_id' => '现农场ID',
             'create_at' => '创建日期',
             'update_at' => '更新日期',
             'estate' => '地产科状态',
-        	'regulations' => '法规科状态',
             'finance' => '财务报表',
             'filereview' => '档案审查状态',
             'publicsecurity' => '公安部门状态',
-            'leader' => '分管领导状态',
+            'leader' => '分管领导',
             'mortgage' => '抵押贷款审查状态',
             'steeringgroup' => '领导小组状态',
             'estatecontent' => '地产科意见',
-        	'regulationscontent' => '法规科意见',
             'financecontent' => '财务科意见',
             'filereviewcontent' => '档案审查情况',
             'publicsecuritycontent' => '公安部门意见',
@@ -88,15 +85,23 @@ class Reviewprocess extends \yii\db\ActiveRecord
             'steeringgroupcontent' => '领导小组意见',
             'estatetime' => '地产科审查时间',
             'financetime' => '财务科审核时间',
-        	'regulationstime' => '法规科审核时间',
             'filereviewtime' => '档案审查时间',
             'publicsecuritytime' => '公安部门审核时间',
             'leadertime' => '分管领导审核时间',
             'mortgagetime' => '抵押贷款审核时间',
             'steeringgrouptime' => '领导小组审核时间',
-        	'actionname' => '方法名称',
-        ];
-    }
+            'regulations' => '法规科状态',
+            'regulationscontent' => '法规科意见',
+            'regulationstime' => '法规科审核时间',
+            'actionname' => '方法名称',
+            'oldfarms_id' => '原农场ID',
+            'management_area' => '管理区',
+            'state' => '状态',
+            'project' => '项目科状态',
+            'projectcontent' => '项目科内容',
+            'projecttime' => '项目科审核时间',
+        ]; 
+    } 
     
     public static function getProcessRole($Identification)
     {
@@ -188,7 +193,8 @@ class Reviewprocess extends \yii\db\ActiveRecord
     public static function isShowProess($actionname) {
     	$process = Reviewprocess::getProcess($actionname);
     	foreach ($process as $p) {
-    		if(self::getProcessRole($p)['rolename'] == User::getItemname() or self::getProcessRole($p)['sparerole'] == User::getItemname())
+//     		if(self::getProcessRole($p)['rolename'] == User::getItemname() or self::getProcessRole($p)['sparerole'] == User::getItemname())
+			if(self::getProcessRole($p)['rolename'] == User::getItemname())
     			return true;
     	}
     	return false;
@@ -196,7 +202,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
    
     
     //保存流程
-    public static function processRun($oldfarms_id,$newfarms_id)
+    public static function processRun($oldfarms_id=NULL,$newfarms_id=null)
     { 	
     	$processs = self::getProcess();
 //     	var_dump($processs);exit;
@@ -238,9 +244,9 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$mamangmentarea = Farms::getManagementArea();
     	
     	$process = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
-//     	var_dump(User::getItemname());exit;
+    	var_dump($process);exit;
     	$processRows = Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$process=>3])->count();
-//     	var_dump($processRows);exit;
+    	var_dump($processRows);exit;
     	if($processRows)
     		return '<small class="label pull-right bg-red">'.$processRows.'</small>';
     	else 

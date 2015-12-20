@@ -28,13 +28,13 @@ use frontend\widgets\CategorySelect;
 				echo CategorySelect::widget([
 					"model" => $model,
 					'isDisableParent' => null,
-					"attribute" => 'father_id',
+					"attribute" => 'projecttype',
 					'isShowFinal' => null,
 					"categories" => $listData,
 					'selectedValue' => $model->projecttype,
 					'htmlOptions' => [
 						'class' => 'form-control col-sm-5 col-lg-5',
-						'name' => 'Infrastructuretype[father_id]'
+						'name' => 'Projectapplication[projecttype]'
 					]
 				]);
 
@@ -44,8 +44,8 @@ use frontend\widgets\CategorySelect;
 			?>
 </tr>
 <tr>
-<td width=15% align='right'>是否立项</td>
-<td align='left'><?= $form->field($model, 'is_agree')->textInput()->label(false)->error(false) ?></td>
+<td width=15% align='right'>申请内容</td>
+<td align='left'><?= $form->field($model, 'content')->textInput()->label(false)->error(false) ?></td>
 </tr>
 </table>
     <div class="form-group">

@@ -147,10 +147,12 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	return $zongdi;
     }
 
-    public static function getPlantname()
+    public static function getPlantname($userid)
     {
-    	$area = Farms::getManagementArea ();
-    	foreach ( $area['id'] as $key => $value ) {
+    	$data = [];
+    	$result = [];
+    	$area = Farms::getUserManagementArea($userid);
+    	foreach ( $area as $key => $value ) {
 			// 农场区域
 			
 // 			$array['areaname'] = $area['areaname'][$key];
@@ -179,6 +181,8 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	$areaNum = 0;
     	$plant = [];
     	$goodseed = [];
+    	$goodseedresult = [];
+    	$plantresult = [];
 		$area = Farms::getUserManagementArea($userid);
     	foreach ( $area as $key => $value ) {
     		$areaNum++;
@@ -195,16 +199,14 @@ class Plantingstructure extends \yii\db\ActiveRecord
     			foreach ($planting as $v) {
     				$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname'];
     				
-					$plant['name'] = '作物';
-					$goodseed['name'] = '良种';
 					$plantsum += $v['area'];
-					$plant['data'][$plantname][] = $plantsum;
+					$plant[$plantname][] = $plantsum;
 					if($v['goodseed_id'] !== 0)
 						$goodseedarea = $v['area'];
 					else
 						$goodseedarea = 0.0;
 					$goodseedsum += $goodseedarea;
-					$goodseed['data'][$plantname][] = $goodseedsum;
+					$goodseed[$plantname][] = $goodseedsum;
 // 					var_dump($goodseed);
     			}
     		}
@@ -213,8 +215,9 @@ class Plantingstructure extends \yii\db\ActiveRecord
 		// 作物统计
 		$plantdata = [];
 		$goodseeddata = [];
+		$plantPie = [];
 		// 总数计算
-		foreach ($plant['data'] as $key => $value) {
+		foreach ($plant as $key => $value) {
 			$area = 0;
 			foreach($value as $ke => $val) {
 	// 			var_dump($val);
@@ -225,7 +228,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
 				$plantdata[$key] = $area;
 			}
 		}
-		foreach ($goodseed['data'] as $key => $value) {
+		foreach ($goodseed as $key => $value) {
 			$area = 0;
 			foreach($value as $ke => $val) {
 				// 			var_dump($val);
@@ -236,49 +239,58 @@ class Plantingstructure extends \yii\db\ActiveRecord
 				$goodseeddata[$key] = $area;
 			}
 		}
-		foreach($plantdata as $value) {
-			$plantresult[] = $value;
+		foreach($plantdata as $key => $value) {
+			$plantresult[] = (float)sprintf("%.2f", $value/10000);
+			$plantPie['name'] = $key;
+			$plantPie['y'] = $value;
 		}
 		foreach($goodseeddata as $value) {
-			$goodseedresult[] = $value;
+			$goodseedresult[] = (float)sprintf("%.2f", $value/10000);
 		}
 		$result = [
 				[
 						'color' => '#bdfdc9',
+						'type' => 'column',
 						'name' => '作物',
 						'data' => $plantresult,
-						'dataLabels' => [
-								'enabled' => false,
-								'rotation' => 0,
-								'color' => '#FFFFFF',
-								'align' => 'center',
-								'x' => 0,
-								'y' => 0,
-								'style' => [
-										'fontSize' => '13px',
-										'fontFamily' => 'Verdana, sans-serif',
-										'textShadow' => '0 0 3px black'
-								]
-						]
+// 						'dataLabels' => [
+// 								'enabled' => false,
+// 								'rotation' => 0,
+// 								'color' => '#FFFFFF',
+// 								'align' => 'center',
+// 								'x' => 0,
+// 								'y' => 0,
+// 								'style' => [
+// 										'fontSize' => '13px',
+// 										'fontFamily' => 'Verdana, sans-serif',
+// 										'textShadow' => '0 0 3px black'
+// 								]
+// 						]
 				],
 				[
 						'color' => '#02c927',
+						'type' => 'column',
 						'name' => '良种',
 						'data' => $goodseedresult,
-						'dataLabels' => [
-								'enabled' => true,
-								'rotation' => 0,
-								'color' => '#FFFFFF',
-								'align' => 'center',
-								'x' => 0,
-								'y' => 0,
-								'style' => [
-										'fontSize' => '13px',
-										'fontFamily' => 'Verdana, sans-serif',
-										'textShadow' => '0 0 3px black'
-								]
-						]
-				]
+// 						'dataLabels' => [
+// 								'enabled' => true,
+// 								'rotation' => 0,
+// 								'color' => '#FFFFFF',
+// 								'align' => 'center',
+// 								'x' => 0,
+// 								'y' => 0,
+// 								'style' => [
+// 										'fontSize' => '13px',
+// 										'fontFamily' => 'Verdana, sans-serif',
+// 										'textShadow' => '0 0 3px black'
+// 								]
+// 						]
+				],
+				[
+					'type' => 'pie',
+					'name' => '',
+					'data' => $plantPie,						
+				],
 		];
 // 		var_dump($result);
 
@@ -287,5 +299,46 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	] );
     	
     	return $jsonData;
+    }
+    
+    public static function getPlantGoodseedSum($userid) {
+    	$plant = [];
+    	$goodseed = [];
+    	$area = Farms::getUserManagementArea($userid);
+    	foreach ( $area as $key => $value ) {
+    		   			
+    		$farm = Farms::find()->where(['management_area'=>$value])->all();
+    		foreach ($farm as $val) {
+    			$plantsum = 0;
+    			$goodseedsum = 0;
+    			$planting = Plantingstructure::find()->where(['farms_id'=>$val['id']])->all();
+    			foreach ($planting as $v) {
+    				$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname'];
+    	
+    				$plantsum += $v['area'];
+    				$plant[$plantname][] = $plantsum;
+    				if($v['goodseed_id'] !== 0)
+    					$goodseedarea = $v['area'];
+    				else
+    					$goodseedarea = 0.0;
+    				$goodseedsum += $goodseedarea;
+    				$goodseed[$plantname][] = $goodseedsum;
+    				// 					var_dump($goodseed);
+    			}
+    		}
+    	}
+    	$plantsum = 0.0;
+    	$goodseedsum = 0.0;
+    	foreach ($plant as $value) {
+    		foreach($value as $val) {
+    			$plantsum += $val;
+    		}
+    	}
+    	foreach ($goodseed as $value) {
+    		foreach($value as $val) {
+    			$goodseedsum += $val;
+    		}
+    	}
+    	return ['plantSum'=>(float)sprintf("%.2f", $plantsum/10000),'goodseedSum'=>(float)sprintf("%.2f", $goodseedsum/10000)];
     }
 }

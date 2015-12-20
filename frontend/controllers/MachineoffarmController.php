@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use frontend\models\MachineSearch;
 use app\models\Machinetype;
 use app\models\Machine;
+use app\models\Farms;
 
 /**
  * MachineoffarmController implements the CRUD actions for Machineoffarm model.
@@ -36,7 +37,9 @@ class MachineoffarmController extends Controller
     public function actionMachineoffarmindex($farms_id)
     {
         $searchModel = new MachineoffarmSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $params = Yii::$app->request->queryParams;
+        $params['MachineoffarmSearch']['farms_id'] = $farms_id;
+        $dataProvider = $searchModel->search($params);
 
         return $this->render('machineoffarmindex', [
             'searchModel' => $searchModel,
@@ -109,6 +112,7 @@ class MachineoffarmController extends Controller
     					$model->machine_id = 0;
     					$model->create_at = time();
     					$model->update_at = $model->create_at;
+    					$model->acquisitiontime = strtotime($model->acquisitiontime);
     					$save = $model->save();
     				}
     				if($save)

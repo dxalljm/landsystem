@@ -6,6 +6,7 @@ use yii\helpers\ArrayHelper;
 use app\models\Machineoffarm;
 use app\models\Machinetype;
 use yii\grid\GridView;
+use dosamigos\datetimepicker\DateTimePicker;
 /* @var $this yii\web\View */
 /* @var $model app\models\Machineoffarm */
 /* @var $form yii\widgets\ActiveForm */
@@ -27,7 +28,22 @@ use yii\grid\GridView;
 	<?= $form->field($model, 'machinetype_id')->hiddenInput()->label(false)->error(false)?>
 	<tr>
 		<td align='right'>机具名称</td>
-		<td colspan="5"><?= $form->field($model, 'machinename')->textInput()->label(false)->error(false)?></td>
+		<td align='left'><?= $form->field($model, 'machinename')->textInput()->label(false)->error(false)?></td>
+		<td align='right'>购置年限</td>
+		<td colspan="3"><?= $form->field($model, 'acquisitiontime')->textInput()->label(false)->error(false)->widget(
+    DateTimePicker::className(), [
+        // inline too, not bad
+        'inline' => false, 
+    	'language'=>'zh-CN',
+        
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+            'autoclose' => true,
+        	'minView' => 3,
+        	'maxView' => 3,
+            'format' => 'yyyy-mm-dd'
+        ]]) ?></td>
+		
 	</tr>
 </table>
 <?= GridView::widget([
@@ -52,8 +68,8 @@ use yii\grid\GridView;
             	$url = ['/machineoffarm/machineoffarmcreate','farms_id'=>$model->id,'machine_id'=>$model->id];    	
             	$option = '添加此机具';
             	return Html::a($option,$url, [
-            			'id' => 'machineoffarm',
-            			'class' => 'btn btn-primary btn-xs',
+            			//'id' => 'machineoffarm',
+            			'class' => 'btn btn-primary btn-xs machineoffarm',
             	]);
             }
             ],
@@ -107,5 +123,11 @@ $('#lastClass').change(function(){
 	var input = $(this).val();
 	$('machineoffarm-machinetype_id').val(input);
 	$("form").submit();
+});
+$('.machineoffarm').click(function(){
+	if($('#machineoffarm-acquisitiontime').val() == '') {
+		alert('请输入购置年限');
+		$('#machineoffarm-acquisitiontime').focus();
+	}
 });
 </script>

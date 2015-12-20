@@ -119,40 +119,6 @@ use app\models\Pesticides;
   </tr>
 </table>
 
-
-
-					<input type="checkbox" class="all"/> 全选 <br>
-					<input type="checkbox" class="invert"/> 反选 <br>
-					<input type="checkbox" class="revoke"/> 取消选择 <br>
-
-					<div>
-						<input type="checkbox" class="nodes"/> <br>
-						<input type="checkbox" class="nodes"/> <br>
-						<input type="checkbox" class="nodes"/> <br>
-						<input type="checkbox" class="nodes"/> <br>
-						<input type="checkbox" class="nodes"/> <br>
-						<input type="checkbox" class="nodes"/> <br>
-						<input type="checkbox" class="nodes"/> <br>
-						<input type="checkbox" class="nodes"/> <br>
-						<input type="checkbox" class="nodes"/> <br>
-						<input type="checkbox" class="nodes"/> <br>
-						<input type="checkbox" class="nodes"/> <br>
-						<input type="checkbox" class="nodes"/> <br>
-						<input type="checkbox" class="nodes"/> <br>
-						<input type="checkbox" class="nodes"/> <br>
-						<input type="checkbox" class="nodes"/> <br>
-						<input type="checkbox" class="nodes"/> <br>
-						<input type="checkbox" class="nodes"/> <br>
-						<input type="checkbox" class="nodes"/> <br>
-                    </div>
-
-
-					<script>
-						selected.all('.all', '.nodes');
-						selected.invert('.invert', '.nodes');
-						selected.revoke('.revoke', '.nodes');
-					</script>
-
 <?php if(!empty($dataProvider)) {?>
     
     <?= GridView::widget([

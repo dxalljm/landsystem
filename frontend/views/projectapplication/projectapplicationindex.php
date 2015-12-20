@@ -3,7 +3,8 @@ namespace frontend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
-
+use app\models\Infrastructuretype;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\projectapplicationSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -26,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('添加', ['projectapplicationcreate'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('添加', ['projectapplicationcreate','farms_id'=>$farms_id], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -35,13 +36,31 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'projecttype',
-            'create_at',
-            'update_at',
-            'is_agree',
+//             'id',
+            [
+            	'attribute' => 'projecttype',
+            	'value' => function($model) {
+            		return Infrastructuretype::find()->where(['id'=>$model->projecttype])->one()['typename'];
+            }
+            ],
+            'content',
 
             ['class' => 'yii\grid\ActionColumn'],
+             [
+	            'label'=>'操作',
+	            'format'=>'raw',
+	            //'class' => 'btn btn-primary btn-lg',
+	            'value' => function($model,$key){
+	            	$url = Url::to(['projectapplication/projectapplicationprint','id'=>$model->id]);
+	            	$option = '打印申请';
+	            	$title = '';
+	            	return Html::a($option,$url, [
+	            			'id' => 'farmerland',
+	            			'title' => $title,
+	            			'class' => 'btn btn-primary btn-xs',
+	            	]);
+	            }
+            ],
         ],
     ]); ?>
                 </div>

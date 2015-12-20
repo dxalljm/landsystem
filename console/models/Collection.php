@@ -116,6 +116,8 @@ class Collection extends \yii\db\ActiveRecord {
 // 			return $result;
 // 		}
 		$i = 0;
+		$amounts_receivable = [];
+		$real_income_amount = [];
 		$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
 		$amountsColor = ['#fedfdf','#feeedf','#fefddf','#e1fedf','#dffcfe','#dfe3fe','#fedffe'];
 		foreach ( Farms::getUserManagementArea($userid) as $value ) {
@@ -130,11 +132,16 @@ class Collection extends \yii\db\ActiveRecord {
 							'years' => date ( 'Y' ) 
 					] )->one ()['price']/10000)
 			];
+			$farm = Farms::find()->where(['management_area' => $value])->all();
+			$collectionSUm = 0.0;
+			foreach ($farm as $val) {
+				$collectionSUm +=  ( float ) sprintf("%.2f",Collection::find ()->where ( [ 
+						'farms_id' => $val['id'] 
+				] )->sum ( 'real_income_amount' )/10000);
+			}
 			$real_income_amount [] = [
 					'color' => $color[$i],
-					'y' => ( float ) sprintf("%.2f",Collection::find ()->where ( [ 
-					'farms_id' => $value 
-			] )->sum ( 'real_income_amount' )/10000)
+					'y' => $collectionSUm,
 			];
 			$i ++;
 		}
@@ -208,16 +215,21 @@ class Collection extends \yii\db\ActiveRecord {
 		] );
 	}
 	
-	public static function totalReal()
+	public static function totalReal($userid)
 	{
-		$whereArray = Farms::getManagementAreaAllID();
-		return sprintf("%.2f",Collection::find()->where(['farms_id'=>$whereArray])->sum('real_income_amount')/10000).'万元';
+		$whereArray = Farms::getUserManagementArea($userid);
+		$farm = Farms::find()->where(['management_area'=>$whereArray])->all();
+		$sum = 0.0;
+		foreach ($farm as $value) {
+			$sum += Collection::find()->where(['farms_id'=>$value['id']])->sum('real_income_amount');
+		}
+		return sprintf("%.2f",$sum/10000).'万元';
 	}
-	public static function totalAmounts()
+	public static function totalAmounts($userid)
 	{
-		$whereArray = Farms::getManagementArea();
+		$whereArray = Farms::getUserManagementArea($userid);
 		$allmeasure = Farms::find ()->where ( [
-				'management_area' => $whereArray['id']
+				'management_area' => $whereArray
 		] )->sum ( 'measure' );
 		return (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [ 
 							'years' => date ( 'Y' ) 

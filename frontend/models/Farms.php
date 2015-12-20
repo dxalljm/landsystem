@@ -419,4 +419,114 @@ class Farms extends \yii\db\ActiveRecord
     	$whereArray = self::getManagementArea();
     	return sprintf("%.2f",Farms::find()->where(['management_area'=>$whereArray['id']])->sum ( 'measure' )/10000).'万亩';
     }
+    
+    private static function getPlate($controller, $menuUrl) {
+    	switch ($controller) {
+    		case 'farms' :
+    			$value ['icon'] = 'fa fa-delicious';
+    			$value ['title'] = $menuUrl ['menuname'];
+    			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] );
+    			$value ['info'] = '共'.Farms::find ()->where ( [
+    					'management_area' => Farms::getManagementArea ()['id']
+    			] )->count ().'户农场';
+    			$value ['description'] = '农场基础信息';
+    			break;
+    		case 'plantingstructure' :
+    			$value ['icon'] = 'fa fa-pagelines';
+    			$value ['title'] = $menuUrl ['menuname'];
+    			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
+    			$value ['info'] = '种植了' . Plantingstructure::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '种作物';
+    			$value ['description'] = '种植作物信息';
+    			break;
+    		case 'yields' :
+    			$value ['icon'] = 'fa fa-line-chart';
+    			$value ['title'] = $menuUrl ['menuname'];
+    			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
+    			$value ['info'] = '现共' . Lease::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '人租赁';
+    			$value ['description'] = '承租人信息及年限';
+    			break;
+    		case 'huinong' :
+    			$value ['icon'] = 'fa fa-dollar';
+    			$value ['title'] = $menuUrl ['menuname'];
+    			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
+    			$value ['info'] = '现有' . Loan::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '条贷款信息';
+    			$value ['description'] = '贷款信息';
+    			break;
+    		case 'collection' :
+    			$value ['icon'] = 'fa fa-cny';
+    			$value ['title'] = $menuUrl ['menuname'];
+    			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
+    			$value ['info'] = '现有' . Dispute::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '个纠纷';
+    			$value ['description'] = '纠纷具体事项';
+    			break;
+    		case 'fireprevention' :
+    			$value ['icon'] = 'fa fa-fire-extinguisher';
+    			$value ['title'] = $menuUrl ['menuname'];
+    			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
+    			$value ['info'] = '参加了' . Cooperativeoffarm::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '个合作社';
+    			$value ['description'] = '注册资金等信息';
+    			break;
+    		case 'breed' :
+    			$value ['icon'] = 'fa fa-github-alt';
+    			$value ['title'] = $menuUrl ['menuname'];
+    			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
+    			$employeerows = Employee::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count ();
+    			$value ['info'] = '雇佣了' . $employeerows . '人';
+    			$value ['description'] = '雇佣人员的详细信息';
+    			break;
+    		case 'disaster' :
+    			$value ['icon'] = 'fa fa-soundcloud';
+    			$value ['title'] = $menuUrl ['menuname'];
+    			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
+    			$value ['info'] = '种植了' . Plantingstructure::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '种作物';
+    			$value ['description'] = '种植作物信息';
+    			break;
+    				
+    		default :
+    			$value = false;
+    	}
+    	return $value;
+    }
+    public static function showEightPlantmenu()
+    {
+    	$businessmenu = MenuToUser::find ()->where ( [
+    			'role_id' => User::getItemname ()
+    	] )->one ()['plate'];
+    	$arrayBusinessMenu = explode ( ',', $businessmenu );
+    	$html = '<div class="row" >';
+    
+    	for($i = 0; $i < count ( $arrayBusinessMenu ); $i ++) {
+    
+    		$menuUrl = Mainmenu::find ()->where ( [
+    				'id' => $arrayBusinessMenu [$i]
+    		] )->one ();
+    		$html .= self::showEightPlant($menuUrl );
+    	}
+    	$html .= '</div>';
+    
+    	return $html;
+    }
+    
+    private static function showEightPlant($menuUrl) {
+    	$str = explode ( '/', $menuUrl ['menuurl'] );
+    	$divInfo = self::getPlate ( $str [0], $menuUrl );
+    	$html = '<div class="col-md-3 col-sm-6 col-xs-12" style="text-align:center;">';
+    	$html .= '<a href=' . $divInfo ['url'] . '>';
+    	$html .= '<div class="info-box bg-blue">';
+    	$html .= '<span class="info-box-icon"><i class="' . $divInfo ['icon'] . '"></i></span>';
+    	$html .= '<div class="info-box-content">';
+    	$html .= '<span class="info-box-number">' . $divInfo ['title'] . ' </span>';
+    	$html .= '<span class="info-box-text">' . $divInfo ['info'] . '</span>';
+    	$html .= '<!-- The progress section is optional -->';
+    	$html .= '<div class="progress">';
+    	$html .= '<div class="progress-bar" style="width: 100%"></div>';
+    	$html .= '</div>';
+    	$html .= '<span class="progress-description">';
+    	$html .= $divInfo ['description'];
+    	$html .= '</span>';
+    	$html .= '</div><!-- /.info-box-content -->';
+    	$html .= '</div><!-- /.info-box --></a>';
+    	$html .= '</div>';
+    	return $html;
+    }
 }

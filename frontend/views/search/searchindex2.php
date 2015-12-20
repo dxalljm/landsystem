@@ -353,6 +353,36 @@ showPie(<?php echo json_encode([['应收金额',$amountsSum],['实收金额',$re
 
  <?php ActiveFormrdiv::end(); ?>
 </div>
+<input type="checkbox" class="all"/> 全选 <br>
+					<input type="checkbox" class="invert"/> 反选 <br>
+					<input type="checkbox" class="revoke"/> 取消选择 <br>
 
+					<div>
+						<input type="checkbox" class="nodes"/> <br>
+						<input type="checkbox" class="nodes"/> <br>
+						<input type="checkbox" class="nodes"/> <br>
+						<input type="checkbox" class="nodes"/> <br>
+						<input type="checkbox" class="nodes"/> <br>
+						<input type="checkbox" class="nodes"/> <br>
+						<input type="checkbox" class="nodes"/> <br>
+						<input type="checkbox" class="nodes"/> <br>
+						<input type="checkbox" class="nodes"/> <br>
+						<input type="checkbox" class="nodes"/> <br>
+						<input type="checkbox" class="nodes"/> <br>
+						<input type="checkbox" class="nodes"/> <br>
+						<input type="checkbox" class="nodes"/> <br>
+						<input type="checkbox" class="nodes"/> <br>
+						<input type="checkbox" class="nodes"/> <br>
+						<input type="checkbox" class="nodes"/> <br>
+						<input type="checkbox" class="nodes"/> <br>
+						<input type="checkbox" class="nodes"/> <br>
+                    </div>
+
+
+					<script>
+						selected.all('.all', '.nodes');
+						selected.invert('.invert', '.nodes');
+						selected.revoke('.revoke', '.nodes');
+					</script>
     
 

@@ -53,23 +53,23 @@ use app\models\Reviewprocess;
 			  <tr height="40px">
 			    <td width="18%" align="center">农场名称</td>
 			    <td colspan="3" align="center"><?= $farm->farmname?></td>
-			    <td width="23%" rowspan="5" align="center"><?php echo '&nbsp;'.Html::img($farmer->photo,['height'=>'130px']);?></td>
+			    <td width="23%" rowspan="5" align="center"><?php if($farmer) echo '&nbsp;'.Html::img($farmer->photo,['height'=>'130px']);?></td>
 			  </tr>
 			  <tr height="40px">
 			    <td align="center">法人姓名</td>
 			    <td width="20%" align="center"><?= $farm->farmername?></td>
 			    <td width="20%" align="center">曾用名</td>
-			    <td width="19%" align="center"><?= $farmer->farmerbeforename?></td>
+			    <td width="19%" align="center"><?php if($farmer) echo $farmer->farmerbeforename?></td>
 			    </tr>
 			  <tr height="40px">
 			    <td align="center">民族</td>
-			    <td align="center"><?= $farmer->nation?></td>
+			    <td align="center"><?php if($farmer) echo $farmer->nation?></td>
 			    <td align="center">政治面貌</td>
-			    <td align="center"><?= $farmer->political_outlook?></td>
+			    <td align="center"><?php if($farmer) echo $farmer->political_outlook?></td>
 			    </tr>
 			  <tr height="40px">
 			    <td align="center">文化程序</td>
-			    <td align="center"><?= $farmer->cultural_degree?></td>
+			    <td align="center"><?php if($farmer) echo $farmer->cultural_degree?></td>
 			    <td align="center">承包面积</td>
 			    <td align="center"><?= $farm->measure?></td>
 			    </tr>
@@ -113,11 +113,11 @@ use app\models\Reviewprocess;
 			    </tr>
 			  <tr>
 			    <td align="center"  valign="middle"><br>户籍所在地<br><br></td>
-			    <td colspan="4" align="left"><br><?= $farmer->domicile?><br><br></td>              
+			    <td colspan="4" align="left"><br><?php if($farmer) echo $farmer->domicile?><br><br></td>              
 			    </tr>
 			  <tr>
 			    <td align="center"><br>现住地<br><br></td>
-			    <td colspan="4" align="left"  valign="middle"><br><?= $farmer->nowlive?><br><br>             
+			    <td colspan="4" align="left"  valign="middle"><br><?php if($farmer) echo $farmer->nowlive?><br><br>             
 			    </tr>
 			  <tr>
 			    <td colspan="5" align="center"><br>家庭主要成员 <br><br></td>
@@ -128,6 +128,7 @@ use app\models\Reviewprocess;
 			    <td colspan="2" align="center"><br>身份证号码<br><br> </td>                    
 			    <td align="center"><br>备注<br><br> </td>
 			    </tr>
+			    <?php if($members) {?>
 			    <?php foreach ($members as $member) {?>
 			  	<tr>
 			    <td align="center"><br><?= $member['relationship']?><br><br></td>
@@ -135,7 +136,7 @@ use app\models\Reviewprocess;
 			    <td colspan="2" align="center"><br><?= $member['cardid']?><br><br></td>                
 			    <td align="center"><br><?= $member['remarks']?><br><br></td>
 			    </tr>
-			    <?php }?>
+			    <?php }}?>
 			</table>
 			<br>
 			
@@ -170,7 +171,8 @@ use app\models\Reviewprocess;
 		LODOP=getLodop();  
 		LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_整页缩放打印输出");
 		strCenterStyle="<style/>form {text-align: center}</style>"; 
-		LODOP.ADD_PRINT_HTM("14%","10%","100%","90%","<body leftmargin=0 topmargin=0>"+document.getElementById('ttpoprint').innerHTML+"</body>");
+		LODOP.ADD_PRINT_HTM("25mm","20mm","RightMargin:0mm","BottomMargin:9mm",strCenterStyle+document.getElementById("ttpoprint").innerHTML); //上下边距9mm，左右边距0mm
+		//LODOP.ADD_PRINT_HTM("14%","10%","100%","90%","<body leftmargin=0 topmargin=0>"+document.getElementById('ttpoprint').innerHTML+"</body>");
 		LODOP.SET_PRINT_STYLEA(0,"Horient",2);        
 		LODOP.SET_PRINT_STYLEA(0,"Vorient",2);
 		LODOP.SET_PREVIEW_WINDOW(0,0,0,0,0,"");	

@@ -290,10 +290,26 @@ class Farms extends \yii\db\ActiveRecord
 //     	var_dump($result);exit;
     	return $result;
     }
-    public static function getManagementAreaAllID()
+    public static function getUserManagementAreaname($userid)
+    {
+    	$result = [];
+    	$dep_id = User::findIdentity($userid)['department_id'];
+    	$departmentData = Department::find ()->where ( [
+    			'id' => $dep_id
+    	] )->one ();
+    	$whereArray = explode ( ',', $departmentData ['membership'] );
+    	$managementarea = ManagementArea::find()->where(['id'=>$whereArray])->all();
+    	foreach ($managementarea as $value) {
+    		$result[] = str_ireplace('管理区', '', $value['areaname']);
+    	}
+    	//     	var_dump($userid)
+    	//     	var_dump($result);exit;
+    	return $result;
+    }
+    public static function getManagementAreaAllID($userid)
     {
     	$allid = [];
-    	$management_ids = self::getManagementArea()['id'];
+    	$management_ids = self::getUserManagementArea($userid);
     	foreach ($management_ids as $value) {
     		$farms = Farms::find()->where(['management_area'=>$value])->all();
     		foreach ($farms as $val) {
@@ -363,6 +379,9 @@ class Farms extends \yii\db\ActiveRecord
     	$areas = [];
 //     	$sum = 0.0;
     	$farmsID = [];
+    	$percent = [];
+    	$rows = [];
+    	$rowpercent = [];
     	$i=0;
     	$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
     	$all = Farms::find ()->sum ('measure');
@@ -424,14 +443,14 @@ class Farms extends \yii\db\ActiveRecord
     	return $jsonData;
     }
     
-    public static function totalNum()
+    public static function totalNum($userid)
     {
-    	$whereArray = self::getManagementArea();
-    	return Farms::find()->where(['management_area'=>$whereArray['id']])->count().'户';
+    	$whereArray = self::getUserManagementArea($userid);
+    	return Farms::find()->where(['management_area'=>$whereArray])->count().'户';
     }
-    public static function totalArea()
+    public static function totalArea($userid)
     {
-    	$whereArray = self::getManagementArea();
-    	return sprintf("%.2f",Farms::find()->where(['management_area'=>$whereArray['id']])->sum ( 'measure' )/10000).'万亩';
+    	$whereArray = self::getUserManagementArea($userid);
+    	return sprintf("%.2f",Farms::find()->where(['management_area'=>$whereArray])->sum ( 'measure' )/10000).'万亩';
     }
 }

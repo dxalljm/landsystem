@@ -49,6 +49,7 @@ class HuinongController extends Controller
 	//惠农政策当年有效列表
     public function actionHuinonglist()
     {
+    	$whereArray = Farms::getManagementArea();
     	$huinongs = Huinong::find()->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->all();
     	return $this->render('huinonglist', [
     			'huinongs' => $huinongs,
@@ -65,14 +66,15 @@ class HuinongController extends Controller
    public function actionHuinongdata($id)
    {
    		$model = $this->findModel($id);
+   		$farmsallid = Farms::getManagementAreaAllID();
    		switch ($model->subsidiestype_id) {
    			case 'plant':
    				$classname = 'plantingstructure';
-   				$data = Plantingstructure::find()->where(['plant_id'=>$model->typeid])->all();
+   				$data = Plantingstructure::find()->where(['plant_id'=>$model->typeid,'farms_id'=>$farmsallid])->all();
    				break;
    			case 'goodseed':
    				$classname = 'plantingstructure';
-   				$data = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid])->all();
+   				$data = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid,'farms_id'=>$farmsallid])->all();
    				break;
    		}
    		$isSubmit = Yii::$app->request->post('isSubmit');
@@ -89,6 +91,7 @@ class HuinongController extends Controller
    				$area = $plantInfo[3];
    				$farm = Plantingstructure::find()->where(['farms_id'=>$farms_id])->one();
    				$huinonggrantModel->farms_id = $farms_id;
+   				$huinonggrantModel->management_area = Farms::find()->where(['id'=>$farms_id])->one()['management_area'];
    				$huinonggrantModel->huinong_id = $id;
    				$huinonggrantModel->lease_id = $lease_id;
    				$huinonggrantModel->money = $money;
@@ -110,19 +113,20 @@ class HuinongController extends Controller
    //补贴发放明细
    public function actionHuinongdatainfo($id)
    {
-   		
-		   	$model = $this->findModel($id);
-		   	switch ($model->subsidiestype_id) {
+		$model = $this->findModel($id);
+		$farmsallid = Farms::getManagementAreaAllID();
+		switch ($model->subsidiestype_id) {
 	   		case 'plant':
 	   			$classname = 'plantingstructure';
-	   			$data = Plantingstructure::find()->where(['plant_id'=>$model->typeid])->all();
+	   			$data = Plantingstructure::find()->where(['plant_id'=>$model->typeid,'farms_id'=>$farmsallid])->all();
 	   			break;
 	   		case 'goodseed':
 	   			$classname = 'plantingstructure';
-	   			$data = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid])->all();
+	   			$data = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid,'farms_id'=>$farmsallid])->all();
 	   			break;
-	   		}
-		   	$data = Huinonggrant::find()->where(['huinong_id'=>$id])->all();
+	   	}
+	   	$whereArray = Farms::getManagementArea();
+		$data = Huinonggrant::find()->where(['huinong_id'=>$id,'management_area'=>$whereArray])->all();
    		
 	   	return $this->render('huinongdatainfo', [
 	   			'data' => $data,

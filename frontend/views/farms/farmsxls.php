@@ -29,6 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $this->render('xls_form', [
         'model' => $model,
     	'rows' => $rows,
+    	'area' => $area,
     ]) ?>
 	                </div>
             </div>

@@ -35,7 +35,7 @@ class ReviewprocessController extends Controller
     public function actionReviewprocessindex()
     {
     	$whereArray = Farms::getManagementArea();
-    	
+//     	var_dump($whereArray);exit;
         $reviewprpcesss = Reviewprocess::find()->where(['management_area'=>$whereArray['id']])->all();
 
         return $this->render('reviewprocessindex', [

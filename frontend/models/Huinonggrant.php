@@ -31,7 +31,7 @@ class Huinonggrant extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['farms_id', 'huinong_id', 'state','create_at','update_at','lease_id'], 'integer'],
+            [['farms_id', 'huinong_id', 'state','create_at','update_at','lease_id','management_area'], 'integer'],
             [['money', 'area'], 'number'],
             [['note'], 'string']
         ];
@@ -53,6 +53,16 @@ class Huinonggrant extends \yii\db\ActiveRecord
             'note' => '备注',
         	'create_at' => '创建日期',
         	'update_at' => '更新日期',
+        	'management_area' => '管理区ID',
         ];
+    }
+    
+    public static function isInHuinonggrant($huinong_id)
+    {
+    	$whereArray = Farms::getManagementArea();
+    	if(Huinonggrant::find()->where(['management_area'=>$whereArray,'huinong_id'=>$huinong_id])->count())
+    		return true;
+    	else 
+    		return false;
     }
 }

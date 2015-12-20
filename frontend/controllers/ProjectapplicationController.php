@@ -8,7 +8,10 @@ use frontend\models\projectapplicationSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use app\models\Farms;
+use app\models\Projecttype;
+use app\models\Infrastructuretype;
+use app\models\Reviewprocess;
 /**
  * ProjectapplicationController implements the CRUD actions for Projectapplication model.
  */
@@ -39,14 +42,17 @@ class ProjectapplicationController extends Controller
      * Lists all Projectapplication models.
      * @return mixed
      */
-    public function actionProjectapplicationindex()
+    public function actionProjectapplicationindex($farms_id)
     {
         $searchModel = new projectapplicationSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $params = Yii::$app->request->queryParams;
+        $params['projectapplicationSearch']['farms_id'] = $farms_id;
+        $dataProvider = $searchModel->search($params);
 
         return $this->render('projectapplicationindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+        	'farms_id' => $farms_id,
         ]);
     }
 
@@ -67,31 +73,55 @@ class ProjectapplicationController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionProjectapplicationcreate()
+    public function actionProjectapplicationcreate($farms_id)
     {
         $model = new Projectapplication();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['projectapplicationview', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+//         	var_dump($model);exit;
+        	$model->farms_id = $farms_id;
+        	$model->management_area = Farms::find()->where(['id'=>$farms_id])->one()['management_area'];
+        	$model->create_at = time();
+        	$model->update_at = $model->create_at;
+        	$model->is_agree = 0;
+        	$model->state = 0;
+        	$model->save();
+        	Reviewprocess::processRun($farms_id);
+            return $this->redirect(['projectapplicationindex', 'farms_id' => $farms_id]);
         } else {
             return $this->render('projectapplicationcreate', [
                 'model' => $model,
             ]);
         }
     }
-
+	
+    public function actionProjectapplicationprint($id)
+    {
+    	$model = $this->findModel($id);
+    	$farm = Farms::find()->where(['id'=>$model->farms_id])->one();
+    	$projecttypename = Infrastructuretype::find()->where(['id'=>$model->projecttype])->one()['typename'];
+//     	var_dump($projecttypename);exit;
+    	return $this->render('projectapplicationprint', [
+    			'model' => $model,
+    			'farm' => $farm,
+    			'projecttypename' => $projecttypename,
+    	]);
+    }
+    
     /**
      * Updates an existing Projectapplication model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionProjectapplicationupdate($id)
+    public function actionProjectapplicationupdate($id,$farms_id)
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['projectapplicationview', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->update_at = time();
+        	$model->save();
+            return $this->redirect(['projectapplicationindex', 'farms_id' => $farms_id]);
         } else {
             return $this->render('projectapplicationupdate', [
                 'model' => $model,
@@ -105,11 +135,11 @@ class ProjectapplicationController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionProjectapplicationdelete($id)
+    public function actionProjectapplicationdelete($id,$farms_id)
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['projectapplicationindex']);
+        return $this->redirect(['projectapplicationindex','farms_id'=>$farms_id]);
     }
 
     /**

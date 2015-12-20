@@ -18,8 +18,9 @@ class projectapplicationSearch extends Projectapplication
     public function rules()
     {
         return [
-            [['id', 'create_at', 'update_at', 'is_agree'], 'integer'],
+            [['id','farms_id', 'create_at', 'update_at', 'is_agree','management_area'], 'integer'],
             [['projecttype'], 'safe'],
+        	[['content'],'string']
         ];
     }
 
@@ -40,7 +41,8 @@ class projectapplicationSearch extends Projectapplication
      * @return ActiveDataProvider
      */
     public function search($params)
-    {
+    {	
+//     	var_dump($params);exit;
         $query = Projectapplication::find();
 
         $dataProvider = new ActiveDataProvider([
@@ -57,12 +59,15 @@ class projectapplicationSearch extends Projectapplication
 
         $query->andFilterWhere([
             'id' => $this->id,
+        	'farms_id' => $this->farms_id,
             'create_at' => $this->create_at,
             'update_at' => $this->update_at,
             'is_agree' => $this->is_agree,
+        	'management_area' => $this->management_area,
         ]);
 
         $query->andFilterWhere(['like', 'projecttype', $this->projecttype])
+        ->andFilterWhere(['like', 'content', $this->content])
         ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;

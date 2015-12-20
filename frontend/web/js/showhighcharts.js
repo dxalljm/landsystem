@@ -93,8 +93,8 @@ function showCombination(divID,title,categories,pieTitle,series,dw)
   if (divID == 'statis-area') {
     var pointFormatFunction = function () {
       //$html = '<span style="color:{series.color}">' + this.series.name + '</span>: <b>'+this.y+dw+' 占比: (' + series.result[0]['percent'][this.x]  + '%)'+ '</b><br/>';
-      $html = '<span style="color:{series.color}">' + this.series.name + '</span>: <b>'+this.y+dw+' 占比: (' + series.result[0]['percent'][this.x]  + '%)'+ '</b><br/><span style="color:{series.color}">' + '数量' + '</span>: <b>'+series.result[0]['rows'][this.x]+'户'+' 占比: (' + series.result[0]['rowpercent'][this.x]  + '%)'+ '</b><br/>';
-      return $html;
+      html = '<span style="color:{series.color}">' + this.series.name + '</span>: <b>'+this.y+dw+' 占比: (' + series.result[0]['percent'][this.x]  + '%)'+ '</b><br/><span style="color:{series.color}">' + '数量' + '</span>: <b>'+series.result[0]['rows'][this.x]+'户'+' 占比: (' + series.result[0]['rowpercent'][this.x]  + '%)'+ '</b><br/>';
+      return html;
     }
   }
 

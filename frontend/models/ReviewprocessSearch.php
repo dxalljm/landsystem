@@ -15,11 +15,11 @@ class ReviewprocessSearch extends Reviewprocess
     /**
      * @inheritdoc
      */
-    public function rules()
+public function rules()
     {
         return [
-            [['id', 'oldfarms_id', 'newfarms_id', 'management_area', 'create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime', 'regulations', 'regulationstime'], 'integer'],
-            [['estatecontent', 'financecontent', 'filereviewcontent', 'publicsecuritycontent', 'leadercontent', 'mortgagecontent', 'steeringgroupcontent', 'regulationscontent'], 'safe'],
+            [['id', 'newfarms_id', 'create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime', 'regulations', 'regulationstime', 'oldfarms_id', 'management_area', 'state', 'project', 'projecttime'], 'integer'],
+            [['estatecontent', 'financecontent', 'filereviewcontent', 'publicsecuritycontent', 'leadercontent', 'mortgagecontent', 'steeringgroupcontent', 'regulationscontent', 'actionname', 'projectcontent'], 'safe'],
         ];
     }
 
@@ -41,7 +41,6 @@ class ReviewprocessSearch extends Reviewprocess
      */
     public function search($params)
     {
-//     	var_dump($params);exit;
         $query = Reviewprocess::find();
 
         $dataProvider = new ActiveDataProvider([
@@ -58,9 +57,7 @@ class ReviewprocessSearch extends Reviewprocess
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'oldfarms_id' => $this->oldfarms_id,
-        	'newfarms_id' => $this->newfarms_id,
-        	'management_area' => $this->management_area,
+            'newfarms_id' => $this->newfarms_id,
             'create_at' => $this->create_at,
             'update_at' => $this->update_at,
             'estate' => $this->estate,
@@ -79,6 +76,11 @@ class ReviewprocessSearch extends Reviewprocess
             'steeringgrouptime' => $this->steeringgrouptime,
             'regulations' => $this->regulations,
             'regulationstime' => $this->regulationstime,
+            'oldfarms_id' => $this->oldfarms_id,
+            'management_area' => $this->management_area,
+            'state' => $this->state,
+            'project' => $this->project,
+            'projecttime' => $this->projecttime,
         ]);
 
         $query->andFilterWhere(['like', 'estatecontent', $this->estatecontent])
@@ -88,7 +90,9 @@ class ReviewprocessSearch extends Reviewprocess
             ->andFilterWhere(['like', 'leadercontent', $this->leadercontent])
             ->andFilterWhere(['like', 'mortgagecontent', $this->mortgagecontent])
             ->andFilterWhere(['like', 'steeringgroupcontent', $this->steeringgroupcontent])
-            ->andFilterWhere(['like', 'regulationscontent', $this->regulationscontent]);
+            ->andFilterWhere(['like', 'regulationscontent', $this->regulationscontent])
+            ->andFilterWhere(['like', 'actionname', $this->actionname])
+            ->andFilterWhere(['like', 'projectcontent', $this->projectcontent]);
 
         return $dataProvider;
     }

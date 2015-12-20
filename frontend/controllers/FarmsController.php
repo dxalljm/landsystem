@@ -189,6 +189,7 @@ class FarmsController extends Controller {
 		set_time_limit ( 0 );
 		$model = new UploadForm ();
 		$rows = 0;
+		$area = 0.0;
 		if (Yii::$app->request->isPost) {
 			
 			$model->file = UploadedFile::getInstance ( $model, 'file' );
@@ -202,9 +203,18 @@ class FarmsController extends Controller {
 				$path = 'uploads/' . $model->file->name . '.' . $model->file->extension;
 				$loadxls = \PHPExcel_IOFactory::load ( $path );
 				$rows = $loadxls->getActiveSheet ()->getHighestRow ();
-				$area = 0.0;
+				
 				$zongdi = [ ];
-				for($i = 2; $i <= $rows; $i ++) {
+				for($i = 3; $i <= $rows; $i ++) {
+// 					echo $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
+// 					echo "<br>";
+					$contract = $loadxls->getActiveSheet()->getCell('C'.$i)->getValue();
+					$array = explode('-', $contract);
+					if((float)$array[2] !== $loadxls->getActiveSheet()->getCell('F'.$i)->getValue()) {
+						echo $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
+						exit;
+					}
+					$area += $array[2];
 					// 导入农场基础信息
 					// var_dump($loadxls->getActiveSheet()->getCell('H'.$i)->getValue())."<br>";exit;
 					// echo ManagementArea::find()->where(['areaname'=>$loadxls->getActiveSheet()->getCell('B'.$i)->getValue()])->one()['id'];"<br>";
@@ -241,72 +251,94 @@ class FarmsController extends Controller {
 					// exit;
 					
 					// 导入农场宗地信息
-					$OldContractNumber = $loadxls->getActiveSheet ()->getCell ( 'K' . $i )->getValue ();
-					$htareaArray = explode ( '-', $OldContractNumber );
+// 					$OldContractNumber = $loadxls->getActiveSheet ()->getCell ( 'K' . $i )->getValue ();
+// 					$htareaArray = explode ( '-', $OldContractNumber );
 					// var_dump($loadxls->getActiveSheet()->getCell('A'.$i)->getValue());
 					// var_dump($OldContractNumber);
 					// exit;
-					if (is_array ( $htareaArray ))
-						$htarea = $htareaArray [2];
-					else
-						return $OldContractNumber;
-					$j = $i + 1;
+// 					if (is_array ( $htareaArray ))
+// 						$htarea = $htareaArray [2];
+// 					else
+// 						return $OldContractNumber;
+// 					$j = $i + 1;
 					
-					if ($i <= $rows) {
-						$NewContractNumber = $loadxls->getActiveSheet ()->getCell ( 'K' . $j )->getValue ();
+// 					if ($i <= $rows) {
+// 						$NewContractNumber = $loadxls->getActiveSheet ()->getCell ( 'K' . $j )->getValue ();
 						
-						if ($OldContractNumber == $NewContractNumber) {
-							// $htareaArray = explode('-', $OldContractNumber);
-							// $htarea = $htareaArray[2];
-							$netarea = Parcel::find ()->where ( [ 
-									'unifiedserialnumber' => $loadxls->getActiveSheet ()->getCell ( 'G' . $i )->getValue () 
-							] )->one ()['netarea'];
-							$zongdi [] = $loadxls->getActiveSheet ()->getCell ( 'G' . $i )->getValue () . '(' . $netarea . ')';
-							$area += $netarea;
-						} else {
-							//
-							$netarea = Parcel::find ()->where ( [ 
-									'unifiedserialnumber' => $loadxls->getActiveSheet ()->getCell ( 'G' . $i )->getValue () 
-							] )->one ()['netarea'];
-							$zongdi [] = $loadxls->getActiveSheet ()->getCell ( 'G' . $i )->getValue () . '(' . $netarea . ')';
-							$area += $netarea;
-							$farm = Farms::find ()->where ( [ 
-									'contractnumber' => $loadxls->getActiveSheet ()->getCell ( 'K' . $i )->getValue () 
-							] )->one ();
-							if ($farm)
-								$farmModel = $this->findModel ( $farm->id );
-							else
-								return '无此合同农场' . $OldContractNumber;
-								// var_dump($zongdi);
-							$farmModel->zongdi = implode ( '、', $zongdi );
+// 						if ($OldContractNumber == $NewContractNumber) {
+// 							// $htareaArray = explode('-', $OldContractNumber);
+// 							// $htarea = $htareaArray[2];
+// 							$netarea = Parcel::find ()->where ( [ 
+// 									'unifiedserialnumber' => $loadxls->getActiveSheet ()->getCell ( 'G' . $i )->getValue () 
+// 							] )->one ()['netarea'];
+// 							$zongdi [] = $loadxls->getActiveSheet ()->getCell ( 'G' . $i )->getValue () . '(' . $netarea . ')';
+// 							$area += $netarea;
+// 						} else {
+// 							//
+// 							$netarea = Parcel::find ()->where ( [ 
+// 									'unifiedserialnumber' => $loadxls->getActiveSheet ()->getCell ( 'G' . $i )->getValue () 
+// 							] )->one ()['netarea'];
+// 							$zongdi [] = $loadxls->getActiveSheet ()->getCell ( 'G' . $i )->getValue () . '(' . $netarea . ')';
+// 							$area += $netarea;
+// 							$farm = Farms::find ()->where ( [ 
+// 									'contractnumber' => $loadxls->getActiveSheet ()->getCell ( 'K' . $i )->getValue () 
+// 							] )->one ();
+// 							if ($farm)
+// 								$farmModel = $this->findModel ( $farm->id );
+// 							else
+// 								return '无此合同农场' . $OldContractNumber;
+// 								// var_dump($zongdi);
+// 							$farmModel->zongdi = implode ( '、', $zongdi );
 							
-							// var_dump($htarea);
-							// var_dump($OldContractNumber);
-							if (bccomp ( ( float ) $htarea, $area ) == 1) {
-								$notclear = ( float ) sprintf ( "%.2f", $htarea - $area );
-								// $lastarea = $area;
-							} else {
-								$notclear = 0.0;
-							}
+// 							// var_dump($htarea);
+// 							// var_dump($OldContractNumber);
+// 							if (bccomp ( ( float ) $htarea, $area ) == 1) {
+// 								$notclear = ( float ) sprintf ( "%.2f", $htarea - $area );
+// 								// $lastarea = $area;
+// 							} else {
+// 								$notclear = 0.0;
+// 							}
 							
-							$farmModel->measure = $area;
-							$farmModel->notclear = $notclear;
-							$farmModel->save ();
-							// var_dump($farmModel->getErrors());
-							$area = 0.0;
-							$zongdi = [ ];
-							// if($notclear !== 0.0)
-							// var_dump($farmModel->attributes);
-						}
-					}
+// 							$farmModel->measure = $area;
+// 							$farmModel->notclear = $notclear;
+// 							$farmModel->save ();
+// 							// var_dump($farmModel->getErrors());
+// 							$area = 0.0;
+// 							$zongdi = [ ];
+// 							// if($notclear !== 0.0)
+// 							// var_dump($farmModel->attributes);
+// 						}
+// 					}
 				}
 			}
 		}
+		//var_dump($area);
 		// exit;
 		Logs::writeLog ( '农场XLS批量导入' );
 		return $this->render ( 'farmsxls', [ 
 				'model' => $model,
-				'rows' => $rows 
+				'rows' => $rows, 
+				'area' => $area
+		] );
+	}
+	
+	public function actionFarmsland()
+	{
+		$whereArray = Farms::getManagementArea()['id'];
+		$searchModel = new farmsSearch ();
+		
+		$params = Yii::$app->request->queryParams;
+		$params ['farmsSearch'] ['state'] = 1;
+		// 管理区域是否是数组
+		if (! empty ( $whereArray ) && count ( $whereArray ) > 0) {
+			$params ['farmsSearch'] ['management_area'] = $whereArray;
+		}
+		// var_dump($params);exit;
+		$dataProvider = $searchModel->search ( $params );
+		Logs::writeLog ( '农场管理' );
+		return $this->render ( 'farmsland', [
+				'searchModel' => $searchModel,
+				'dataProvider' => $dataProvider
 		] );
 	}
 	
@@ -888,13 +920,36 @@ class FarmsController extends Controller {
 		$farmer = Farmer::find ()->where ( [ 
 				'farms_id' => $farms_id 
 		] )->one ();
-		$members = Farmermembers::find ()->where ( [ 
-				'farmer_id' => $farmer->id 
-		] )->all ();
+		$members = [];
+		if($farmer)
+			$members = Farmermembers::find ()->where ( [ 
+					'farmer_id' => $farmer->id 
+			] )->all ();
 		return $this->render ( 'farmsfileprint', [ 
 				'farm' => $farm,
 				'farmer' => $farmer,
 				'members' => $members 
+		] );
+	}
+	
+	public function actionFarmsfile($farms_id) {
+		$farm = Farms::find ()->where ( [
+				'id' => $farms_id
+		] )->one ();
+		$farmer = Farmer::find ()->where ( [
+				'farms_id' => $farms_id
+		] )->one ();
+		$members = [];
+		if($farmer)
+			$members = Farmermembers::find ()->where ( [
+					'farmer_id' => $farmer->id
+			] )->all ();
+		$machine = Machineoffarm::find()->where(['farms_id'=>$farms_id])->all();
+		return $this->render ( 'farmsfile', [
+				'farm' => $farm,
+				'farmer' => $farmer,
+				'members' => $members,
+				'machine' => $machine,
 		] );
 	}
 	// public function actionFarmsttpo($farms_id)
@@ -960,7 +1015,8 @@ class FarmsController extends Controller {
 	// }
 	// echo 'yes';
 	// }
-	public function showFarmmenu($farms_id) {
+	public function showFarmmenu($farms_id) 
+	{
 		$businessmenu = MenuToUser::find ()->where ( [ 
 				'role_id' => User::getItemname () 
 		] )->one ()['businessmenu'];
@@ -968,25 +1024,19 @@ class FarmsController extends Controller {
 		$html = '<div class="row" >';
 		
 		for($i = 0; $i < count ( $arrayBusinessMenu ); $i ++) {
-			// if($i == 0)
-			// echo '<div class="row">';
-			// if($i%4 == 0) {
-			
-			// }
+
 			$menuUrl = Mainmenu::find ()->where ( [ 
 					'id' => $arrayBusinessMenu [$i] 
 			] )->one ();
 			$html .= $this->showMenuPic ( $menuUrl, $farms_id );
-			// if($i == 0)
-			// echo '</div>';
-			// if($i%4 == 0) {
-			
-			// }
 		}
 		$html .= '</div>';
 		
 		return $html;
 	}
+	
+
+	
 	public function showMenuPic($menuUrl, $farms_id) {
 		$str = explode ( '/', $menuUrl ['menuurl'] );
 		$divInfo = $this->getMenuInfo ( $str [0], $menuUrl, $farms_id );
@@ -1165,7 +1215,7 @@ class FarmsController extends Controller {
 				$value ['info'] = '申报了' . Projectapplication::find ()->where ( [ 
 						'farms_id' => $_GET ['farms_id'] 
 				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '个项目';
-				$value ['description'] = ' 防疫率,疫苗接种等信息';
+				$value ['description'] = '项目申报、完成情况';
 				break;
 			case 'disaster' :
 				$value ['icon'] = 'fa fa-soundcloud';
@@ -1174,7 +1224,7 @@ class FarmsController extends Controller {
 				$value ['info'] = '有' . Disaster::find ()->where ( [ 
 						'farms_id' => $_GET ['farms_id'] 
 				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '个灾害';
-				$value ['description'] = ' 防疫率,疫苗接种等信息';
+				$value ['description'] = '受灾、保险情况';
 				break;
 			case 'collection' :
 				$value ['icon'] = 'fa fa-cny';
@@ -1206,87 +1256,7 @@ class FarmsController extends Controller {
 		return $value;
 	}
 	
-	public function getPlate($controller, $menuUrl, $farms_id) {
-		switch ($controller) {
-			case 'farmsland' :
-				$value ['icon'] = 'fa fa-delicious';
-				$value ['title'] = $menuUrl ['menuname'];
-				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
-				$value ['info'] = Farms::find ()->where ( [ 
-						'management_area' => Farms::getManagementArea () 
-				] )->count ();
-				$value ['description'] = '农场基础信息';
-				break;
-			case 'plantingstructure' :
-				$value ['icon'] = 'fa fa-pagelines';
-				$value ['title'] = $menuUrl ['menuname'];
-				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
-				$value ['info'] = '种植了' . Plantingstructure::find ()->where ( [ 
-						'farms_id' => $_GET ['farms_id'] 
-				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '种作物';
-				$value ['description'] = '种植作物信息';
-				break;
-			case 'yields' :
-				$value ['icon'] = 'fa fa-line-chart';
-				$value ['title'] = $menuUrl ['menuname'];
-				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
-				$value ['info'] = '现共' . Lease::find ()->where ( [ 
-						'farms_id' => $_GET ['farms_id'] 
-				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '人租赁';
-				$value ['description'] = '承租人信息及年限';
-				break;
-			case 'huinong' :
-				$value ['icon'] = 'fa fa-dollar';
-				$value ['title'] = $menuUrl ['menuname'];
-				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
-				$value ['info'] = '现有' . Loan::find ()->where ( [ 
-						'farms_id' => $_GET ['farms_id'] 
-				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '条贷款信息';
-				$value ['description'] = '贷款信息';
-				break;
-			case 'collection' :
-				$value ['icon'] = 'fa fa-commenting';
-				$value ['title'] = $menuUrl ['menuname'];
-				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
-				$value ['info'] = '现有' . Dispute::find ()->where ( [ 
-						'farms_id' => $_GET ['farms_id'] 
-				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '个纠纷';
-				$value ['description'] = '纠纷具体事项';
-				break;
-			case 'fireprevention' :
-				$value ['icon'] = 'fa fa-briefcase';
-				$value ['title'] = $menuUrl ['menuname'];
-				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
-				$value ['info'] = '参加了' . Cooperativeoffarm::find ()->where ( [ 
-						'farms_id' => $_GET ['farms_id'] 
-				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '个合作社';
-				$value ['description'] = '注册资金等信息';
-				break;
-			case 'breed' :
-				$value ['icon'] = 'fa fa-user-plus';
-				$value ['title'] = $menuUrl ['menuname'];
-				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
-				$employeerows = Employee::find ()->where ( [ 
-						'farms_id' => $_GET ['farms_id'] 
-				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count ();
-				$value ['info'] = '雇佣了' . $employeerows . '人';
-				$value ['description'] = '雇佣人员的详细信息';
-				break;
-			case 'disaster' :
-				$value ['icon'] = 'fa fa-sun-o';
-				$value ['title'] = $menuUrl ['menuname'];
-				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
-				$value ['info'] = '种植了' . Plantingstructure::find ()->where ( [ 
-						'farms_id' => $_GET ['farms_id'] 
-				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '种作物';
-				$value ['description'] = '种植作物信息';
-				break;
-			
-			default :
-				$value = false;
-		}
-		return $value;
-	}
+	
 	public function actionFarmsdelete($id) {
 		$model = $this->findModel ( $id );
 		$oldAttr = $model->getAttributes ();
