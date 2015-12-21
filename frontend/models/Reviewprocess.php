@@ -53,7 +53,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
 	public function rules() 
     { 
         return [
-            [['newfarms_id', 'create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime', 'regulations', 'regulationstime', 'oldfarms_id', 'management_area', 'state', 'project', 'projecttime'], 'integer'],
+            [['newfarms_id', 'operation_id', 'create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime', 'regulations', 'regulationstime', 'oldfarms_id', 'management_area', 'state', 'project', 'projecttime'], 'integer'],
             [['projectcontent'], 'string'],
             [['estatecontent', 'financecontent', 'filereviewcontent', 'publicsecuritycontent', 'leadercontent', 'mortgagecontent', 'steeringgroupcontent', 'regulationscontent', 'actionname'], 'string', 'max' => 500]
         ]; 
@@ -67,6 +67,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
         return [ 
             'id' => 'ID',
             'newfarms_id' => '现农场ID',
+        	'operation_id' => '操作ID',
             'create_at' => '创建日期',
             'update_at' => '更新日期',
             'estate' => '地产科状态',
@@ -202,13 +203,14 @@ class Reviewprocess extends \yii\db\ActiveRecord
    
     
     //保存流程
-    public static function processRun($oldfarms_id=NULL,$newfarms_id=null)
+    public static function processRun($oldfarms_id=NULL,$newfarms_id=null,$operation_id=NULL)
     { 	
     	$processs = self::getProcess();
 //     	var_dump($processs);exit;
     	$reviewprocessModel = new Reviewprocess();
     	$reviewprocessModel->oldfarms_id = $oldfarms_id;
     	$reviewprocessModel->newfarms_id = $newfarms_id;
+    	$reviewprocessModel->operation_id = $operation_id;
     	$reviewprocessModel->management_area = Farms::find()->where(['id'=>$oldfarms_id])->one()['management_area'];
     	$reviewprocessModel->actionname = self::getAction();
     	$reviewprocessModel->create_at = time();

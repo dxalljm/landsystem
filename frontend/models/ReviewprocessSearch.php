@@ -18,7 +18,7 @@ class ReviewprocessSearch extends Reviewprocess
 public function rules()
     {
         return [
-            [['id', 'newfarms_id', 'create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime', 'regulations', 'regulationstime', 'oldfarms_id', 'management_area', 'state', 'project', 'projecttime'], 'integer'],
+            [['id', 'newfarms_id','operation_id', 'create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime', 'regulations', 'regulationstime', 'oldfarms_id', 'management_area', 'state', 'project', 'projecttime'], 'integer'],
             [['estatecontent', 'financecontent', 'filereviewcontent', 'publicsecuritycontent', 'leadercontent', 'mortgagecontent', 'steeringgroupcontent', 'regulationscontent', 'actionname', 'projectcontent'], 'safe'],
         ];
     }
@@ -58,6 +58,7 @@ public function rules()
         $query->andFilterWhere([
             'id' => $this->id,
             'newfarms_id' => $this->newfarms_id,
+        	'operation_id' => $this->operation_id,
             'create_at' => $this->create_at,
             'update_at' => $this->update_at,
             'estate' => $this->estate,

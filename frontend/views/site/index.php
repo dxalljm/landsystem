@@ -19,7 +19,7 @@ $this->title = '岭南管委会';
   <ol class="breadcrumb">
     <li><a href="<?= Url::to('index.php?r=site/index')?>"><i class="fa fa-dashboard"></i> 首页</a></li>
   </ol>
-
+<?php var_dump(Plantingstructure::getALlsum());?>
 <div class="row">
         <div class="col-md-4">
           <!-- Box Comment -->

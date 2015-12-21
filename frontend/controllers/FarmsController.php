@@ -189,7 +189,7 @@ class FarmsController extends Controller {
 		set_time_limit ( 0 );
 		$model = new UploadForm ();
 		$rows = 0;
-		$area = 0.0;
+		$area = [];
 		if (Yii::$app->request->isPost) {
 			
 			$model->file = UploadedFile::getInstance ( $model, 'file' );
@@ -205,15 +205,13 @@ class FarmsController extends Controller {
 				$rows = $loadxls->getActiveSheet ()->getHighestRow ();
 				$farms = Farms::find()->where(['management_area'=>2])->all();
 				$zongdi = [ ];
+				$a = [];
 				for($i = 3; $i <= $rows; $i ++) {
 					$contract = $loadxls->getActiveSheet()->getCell('C'.$i)->getValue();
 					$array = explode('-', $contract);
-					for($j=0;$j<=count($farms);$j++) {
-						if($contract == $farms[$j]) {
-							echo $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
-							echo '--------------';
-							echo $value['id'];
-							echo '<br>';
+					foreach($farms as $value) {
+						if($contract == $value['contractnumber']) {
+							$area[] = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
 						}
 							
 					}

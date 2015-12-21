@@ -12,6 +12,7 @@ use app\models\Processname;
 use app\models\User;
 use app\models\Projectapplication;
 use app\models\Projecttype;
+use app\models\Infrastructuretype;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\ReviewprocessSearch */
@@ -107,7 +108,7 @@ $this->params ['breadcrumbs'] [] = $this->title;
 							<tr height="40px">
 								<td align="center"><?= $oldfarm->farmname?></td>
 								<td align="center"><?= $oldfarm->farmername?></td>
-								<td align="center"><?= Projecttype::find()->where(['id'=>$projectapplication->projecttype])->one()['typename'].'建设'?></td>
+								<td align="center"><?= Infrastructuretype::find()->where(['id'=>$value['projecttype']])->one()['typename'].'建设'?></td>
 								<td align="center"><?= date('Y-m-d',$projectapplication->create_at)?></td>
 								<td align="center">
 								<?php if(User::getItemname() == '地产科科长' or User::getItemname() == '主任' or  User::getItemname() == '副主任' ) {?>

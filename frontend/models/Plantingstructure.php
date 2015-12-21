@@ -59,7 +59,15 @@ class Plantingstructure extends \yii\db\ActiveRecord
         ];
     }
    
-   
+    public static function getALlsum()
+    {
+    	$sum = 0.0;
+    	$planting = Plantingstructure::find()->all();
+    	foreach ($planting as $value) {
+    		$sum+=$value['area'];
+    	}
+    	return $sum;
+    }
     
     //得到已经填写种植信息的宗地
     public static function getOverZongdi($lease_id,$farms_id)

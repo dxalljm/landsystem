@@ -79,6 +79,7 @@ class ProjectapplicationController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
 //         	var_dump($model);exit;
+        	$reviewprocessID =Reviewprocess::processRun($farms_id);
         	$model->farms_id = $farms_id;
         	$model->management_area = Farms::find()->where(['id'=>$farms_id])->one()['management_area'];
         	$model->create_at = time();
@@ -86,7 +87,7 @@ class ProjectapplicationController extends Controller
         	$model->is_agree = 0;
         	$model->state = 0;
         	$model->save();
-        	Reviewprocess::processRun($farms_id);
+        	
             return $this->redirect(['projectapplicationindex', 'farms_id' => $farms_id]);
         } else {
             return $this->render('projectapplicationcreate', [

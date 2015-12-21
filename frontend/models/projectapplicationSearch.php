@@ -18,7 +18,7 @@ class projectapplicationSearch extends Projectapplication
     public function rules()
     {
         return [
-            [['id','farms_id', 'create_at', 'update_at', 'is_agree','management_area'], 'integer'],
+            [['id','farms_id', 'create_at', 'update_at', 'is_agree','management_area','reviewprocess_id'], 'integer'],
             [['projecttype'], 'safe'],
         	[['content'],'string']
         ];
@@ -60,6 +60,7 @@ class projectapplicationSearch extends Projectapplication
         $query->andFilterWhere([
             'id' => $this->id,
         	'farms_id' => $this->farms_id,
+        	'reviewprocess_id'=>$this->reviewprocess_id,
             'create_at' => $this->create_at,
             'update_at' => $this->update_at,
             'is_agree' => $this->is_agree,
