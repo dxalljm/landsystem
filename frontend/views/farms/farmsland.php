@@ -64,7 +64,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'telephone',
             'measure',
             'contractnumber',
-            
+
 
 //             ['class' => 'yii\grid\ActionColumn'],
             [

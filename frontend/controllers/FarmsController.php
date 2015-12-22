@@ -331,11 +331,12 @@ class FarmsController extends Controller {
 		
 		$params = Yii::$app->request->queryParams;
 		$params ['farmsSearch'] ['state'] = 1;
+
 		// 管理区域是否是数组
-		if (! empty ( $whereArray ) && count ( $whereArray ) > 0) {
+		if (empty($params['farmsSearch']['management_area'])) {
 			$params ['farmsSearch'] ['management_area'] = $whereArray;
 		}
-// 		var_dump($params);exit;
+
 		$dataProvider = $searchModel->search ( $params );
 		Logs::writeLog ( '农场管理' );
 		return $this->render ( 'farmsland', [
