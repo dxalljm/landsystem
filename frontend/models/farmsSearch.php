@@ -138,7 +138,7 @@ class farmsSearch extends Farms
 //         ]);
 		
         
-//     	$this->load($params);
+     	$this->load($params);
 //     	$this->management_area = $params['farmsSearch']['management_area'];
         if (!$this->validate()) {
             // uncomment the following line if you do not want to any records when validation fails
