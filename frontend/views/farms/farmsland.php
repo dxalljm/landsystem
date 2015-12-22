@@ -36,13 +36,14 @@ $this->params['breadcrumbs'][] = $this->title;
 </table>
                     <?php
                     // 计算
-                    var_dump($dataProvider->getModels());
-                    exit;
+//                    var_dump($dataProvider->getModels());
+//                    exit;
                     ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'layout' => "{summary}\n wubaiqign - test 合计,合计合计..... {items}\n {pager}",
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
