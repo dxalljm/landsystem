@@ -65,6 +65,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'measure',
             'contractnumber',
 
+            [
+                'header' => '合计',
+                'value' => function () {
+                    return '123';
+                }
+            ],
 
 //             ['class' => 'yii\grid\ActionColumn'],
             [
