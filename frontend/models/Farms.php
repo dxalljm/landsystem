@@ -480,7 +480,7 @@ class Farms extends \yii\db\ActiveRecord
     	$data = [];
     	foreach($farms as $value) {
     		foreach ($value as $val)
-    			$data[] = ['farmername'=>$value['farmername'],'cardid'=>$value['cardid']];
+    			$data[] = ['farmername'=>$val['farmername'],'cardid'=>$val['cardid']];
     	}
     	
     	$newdata = self::unique_arr($data);

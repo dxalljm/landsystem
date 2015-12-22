@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <td align="center"><strong>面积：
       <?= Farms::getFarmarea()?>万亩</strong></td>
     <td align="center"><strong>法人：
-      <?= Farms::getFarmerrows()?>个</strong></td>
+      <?php echo Farms::getFarmerrows()?>个</strong></td>
 </tr>
 </table>
 
