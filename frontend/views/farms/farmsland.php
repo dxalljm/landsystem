@@ -34,6 +34,11 @@ $this->params['breadcrumbs'][] = $this->title;
       <?php echo Farms::getFarmerrows()?>个</strong></td>
 </tr>
 </table>
+                    <?php
+                    // 计算
+                    var_dump($dataProvider->getModels());
+                    exit;
+                    ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
