@@ -31,6 +31,7 @@ class GridView extends BaseListView
     const FILTER_POS_FOOTER = 'footer';
     const FILTER_POS_BODY = 'body';
 
+    public $total;
     /**
      * @var string the default data column class if the class name is not explicitly specified when configuring a data column.
      * Defaults to 'yii\grid\DataColumn'.
@@ -355,6 +356,7 @@ class GridView extends BaseListView
             /* @var $column Column */
             $cells[] = $column->renderHeaderCell();
         }
+        
         $content = Html::tag('tr', implode('', $cells), $this->headerRowOptions);
         if ($this->filterPosition == self::FILTER_POS_HEADER) {
             $content = $this->renderFilters() . $content;
@@ -376,6 +378,7 @@ class GridView extends BaseListView
             /* @var $column Column */
             $cells[] = $column->renderFooterCell();
         }
+        
         $content = Html::tag('tr', implode('', $cells), $this->footerRowOptions);
         if ($this->filterPosition == self::FILTER_POS_FOOTER) {
             $content .= $this->renderFilters();
@@ -396,7 +399,7 @@ class GridView extends BaseListView
                 /* @var $column Column */
                 $cells[] = $column->renderFilterCell();
             }
-
+            
             return Html::tag('tr', implode('', $cells), $this->filterRowOptions);
         } else {
             return '';
@@ -411,7 +414,8 @@ class GridView extends BaseListView
     {
         $models = array_values($this->dataProvider->getModels());
         $keys = $this->dataProvider->getKeys();
-        $rows = [];
+        if($this->total)
+        	$rows[] = $this->total;
         foreach ($models as $index => $model) {
             $key = $keys[$index];
             if ($this->beforeRow !== null) {
@@ -420,7 +424,7 @@ class GridView extends BaseListView
                     $rows[] = $row;
                 }
             }
-
+			
             $rows[] = $this->renderTableRow($model, $key, $index);
 
             if ($this->afterRow !== null) {
@@ -430,7 +434,8 @@ class GridView extends BaseListView
                 }
             }
         }
-
+        
+// 		var_dump($rows);
         if (empty($rows)) {
             $colspan = count($this->columns);
 
@@ -454,13 +459,13 @@ class GridView extends BaseListView
         foreach ($this->columns as $column) {
             $cells[] = $column->renderDataCell($model, $key, $index);
         }
+        
         if ($this->rowOptions instanceof Closure) {
             $options = call_user_func($this->rowOptions, $model, $key, $index, $this);
         } else {
             $options = $this->rowOptions;
         }
         $options['data-key'] = is_array($key) ? json_encode($key) : (string)$key;
-
         return Html::tag('tr', implode('', $cells), $options);
     }
 

@@ -4,7 +4,7 @@ namespace app\models;
 
 use Yii;
 use frontend\helpers\MoneyFormat;
-
+use app\models\ManagementArea;
 /**
  * This is the model class for table "{{%session}}".
  *
@@ -23,7 +23,7 @@ class Search extends \yii\db\ActiveRecord {
 				],
 				
 				// 'plantingstructure' => ['plantfather','plantson','goodseed','Inputproductfather','Inputproductson_id','Inputproduct','pesticides'],
-				'plantingstructure' => [ 
+						'plantingstructure' => [ 
 						'plantfather',
 						'plantson',
 						'goodseed' 
@@ -31,28 +31,26 @@ class Search extends \yii\db\ActiveRecord {
 		];
 		return $array [$tab];
 	}
-	public static function getColumns(array $field) {
+	public static function getColumns(array $field,$params=NULL) {
+// 		var_dump($params);exit;
 		// $controller = Yii::$app->controller->id;
 		$columns [] = [ 
 				'class' => 'yii\grid\SerialColumn' 
 		];
 		// var_dump(yii::$app->controller->id);
-		if (yii::$app->controller->id !== 'farms') {
+// 		if (yii::$app->controller->id !== 'farms') {
 			foreach ( $field as $value ) {
 				
 				switch ($value) {
 					case 'management_area' :
-						$columns [] = [ 
-								'label' => '管理区',
-								'value' => function ($model) {
-									$managementArea = Farms::find ()->where ( [ 
-											'id' => $model->farms_id 
-									] )->one ()['management_area'];
-									return ManagementArea::find ()->where ( [ 
-											'id' => $managementArea 
-									] )->one ()['areaname'];
-								} 
-						];
+						$columns [] = [
+// 				            	'label'=>'管理区',
+				            	'attribute'=>$value,
+				            	'value'=> function($model) {
+				            		return ManagementArea::getAreanameOne($model->management_area);
+				           	 	},
+				            	'filter' => ManagementArea::getAreaname(),     //此处我们可以将筛选项组合成key-value形式
+				            ];
 						break;
 					case 'farms_id' :
 						$columns [] = [ 
@@ -407,32 +405,31 @@ class Search extends \yii\db\ActiveRecord {
 					case 'plant_id' :
 						$columns [] = [ 
 								'attribute' => $value,
-								'value' => function ($model) {
-									return Plant::find ()->where ( [ 
-											'id' => $model->plant_id 
-									] )->one ()['cropname'];
-								} 
-						];
+								'value' => function($model,$params) {
+								
+									return Plant::getNameOne($model->plant_id);
+								},
+								'filter' => Plant::getAllname(),
+								];
 						break;
 					default :
 						$columns [] = $value;
 				}
 			}
-		} else {
-			foreach ( $field as $value ) {
-				if ($value == 'management_area')
-					$columns [] = [ 
-							'attribute' => 'management_area',
-							'value' => function ($model) {
-								return ManagementArea::find ()->where ( [ 
-										'id' => $model->management_area 
-								] )->one ()['areaname'];
-							} 
-					];
-				else
-					$columns [] = $value;
-			}
-		}
+// 		} else {
+// 			foreach ( $field as $value ) {
+// 				if ($value == 'management_area')
+// 					$columns [] = [ 
+// 							'attribute' => 'management_area',
+// 							'value'=> function($model) {
+// 				            		return ManagementArea::getAreanameOne($model->management_area);
+// 				           	 	},
+// 				            	'filter' => ManagementArea::getAreaname(),     //此处我们可以将筛选项组合成key-value形式
+// 					];
+// 				else
+// 					$columns [] = $value;
+// 			}
+// 		}
 		return $columns;
 	}
 }

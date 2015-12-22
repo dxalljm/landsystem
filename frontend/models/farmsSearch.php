@@ -107,6 +107,9 @@ class farmsSearch extends Farms
         
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+//         		'pagination' => [
+//         				'pageSize' => 0,
+//         		],
         ]);
 		//var_dump($params['farmsSearch']['measure']);
 //         print_r($params['farmsSearch']);
@@ -187,6 +190,9 @@ class farmsSearch extends Farms
     
     	$dataProvider = new ActiveDataProvider([
     			'query' => $query,
+    			'pagination' => [
+    					'pageSize' => 0,
+    			],
     	]);    
     
 //     	$this->load($params);

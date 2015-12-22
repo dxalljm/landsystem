@@ -34,13 +34,23 @@ class PlantingstructureController extends Controller
             ],
         ];
     }
-    public function beforeAction($action)
+//     public function beforeAction($action)
+//     {
+//     	$action = Yii::$app->controller->action->id;
+//     	if(\Yii::$app->user->can($action)){
+//     		return true;
+//     	}else{
+//     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+//     	}
+//     }
+    
+    public function actionPlantingstructurearea()
     {
-    	$action = Yii::$app->controller->action->id;
-    	if(\Yii::$app->user->can($action)){
-    		return true;
-    	}else{
-    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+    	$planting = Plantingstructure::find()->all();
+    	foreach ($planting as $value) {
+    		$model = $this->findModel($value['id']);
+    		$model->management_area = Farms::find()->where(['id'=>$value['farms_id']])->one()['management_area'];
+    		$model->save();
     	}
     }
     
@@ -62,12 +72,17 @@ class PlantingstructureController extends Controller
     {
     	$searchModel = new plantingstructureSearch();
     	$params = Yii::$app->request->queryParams;
-    	$arrayID = Farms::getManagementAreaAllID();
-    	$params ['plantingstructureSearch']['farms_id'] = $arrayID;
-    	$dataProvider = $searchModel->search ( $params['plantingstructureSearch'] );
+    	$whereArray = Farms::getManagementArea()['id'];
+//     	$params ['plantingstructureSearch']['farms_id'] = $arrayID;
+    	if (empty($params['plantingstructureSearch']['management_area'])) {
+    		$params ['plantingstructureSearch'] ['management_area'] = $whereArray;
+    	}
+    	
+    	$dataProvider = $searchModel->search ( $params );
     	return $this->render('plantingstructureinfo',[
     			'searchModel' => $searchModel,
     			'dataProvider' => $dataProvider,
+    			'params' => $params,
     	]);
     }
     

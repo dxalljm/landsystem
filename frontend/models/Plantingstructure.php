@@ -33,7 +33,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['plant_id', 'plant_father','farms_id', 'lease_id'], 'integer'],
+            [['plant_id', 'plant_father','farms_id', 'lease_id','management_area'], 'integer'],
             [['area'], 'number'],
             [['zongdi'], 'string'],
         	[['goodseed_id'],'safe'],
@@ -56,6 +56,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
         	'lease_id' => '承租人ID',
         	'create_at' => '创建日期',
         	'update_at' => '更新日期',
+        	'management_area' => '管理区',
         ];
     }
    
@@ -302,5 +303,89 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
     	
     	return $jsonData;
+    }
+    
+    public static function getFarmRows($params)
+    {
+    	$where['management_area'] = $params['plantingstructureSearch']['management_area'];
+    	$row = Plantingstructure::find ()->where ($where)->count ();
+    	return $row;
+    }
+    
+    public static function getFarmerrows($params)
+    {
+    	$where = ['management_area'=>$params['plantingstructureSearch']['management_area']];
+    	$Plantingstructure = Plantingstructure::find ()->where ($where)->all ();
+    	//     	var_dump($farms);exit;
+    	$data = [];
+    	foreach($Plantingstructure as $value) {
+    		$farm = Farms::find()->where(['id'=>$value['farms_id']])->one();
+    		$data[] = ['farmername'=>$farm['farmername'],'cardid'=>$farm['cardid']];
+    	}
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		return count($newdata);
+    	}
+    	else
+    		return 0;;
+    }
+    
+    public static function getLeaseRows($params)
+    {
+    	$where = ['management_area'=>$params['plantingstructureSearch']['management_area']];
+    	$Plantingstructure = Plantingstructure::find ()->where ($where)->all ();
+    	$data = [];
+    	foreach($Plantingstructure as $value) {
+    		$lease = Lease::find()->where(['id'=>$value['lease_id']])->one();
+    		if($lease)
+    			$data[] = ['lessee'=>$lease['lessee'],'lessee_cardid'=>$lease['lessee_cardid']];
+    	}
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		return count($newdata);
+		}
+		else 
+			return 0;
+    }
+    
+    public static function getPlantRows($params)
+    {
+    	$where = ['management_area'=>$params['plantingstructureSearch']['management_area']];
+    	$Plantingstructure = Plantingstructure::find ()->where ($where)->all ();
+    	$data = [];
+    	foreach($Plantingstructure as $value) {
+    		$data[] = ['id'=>$value['plant_id']];
+    	}
+		if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		return count($newdata);
+		}
+		else 
+			return 0;
+    	
+    }
+    
+    public static function getGoodseedRows($params)
+    {
+    	$where = ['management_area'=>$params['plantingstructureSearch']['management_area']];
+    	$Plantingstructure = Plantingstructure::find ()->where ($where)->all ();
+    	$data = [];
+    	foreach($Plantingstructure as $value) {
+    		if($value['goodseed_id'] !== 0)
+    			$data[] = ['id'=>$value['goodseed_id']];
+    	}
+		if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		return count($newdata);
+		}
+		else 
+			return 0;
+    }
+    
+    public static function getArea($params)
+    {
+    	$where = ['management_area'=>$params['plantingstructureSearch']['management_area']];
+    	$area = Plantingstructure::find ()->where ($where)->sum ('area');
+    	return (float)sprintf("%.2f", $area/10000);
     }
 }

@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Plantinputproduct;
+use app\models\Farms;
 
 /**
  * plantinputproductSearch represents the model behind the search form about `app\models\Plantinputproduct`.
@@ -18,7 +19,7 @@ class plantinputproductSearch extends Plantinputproduct
     public function rules()
     {
         return [
-            [['id', 'farms_id', 'lessee_id', 'father_id', 'son_id', 'inputproduct_id', 'plant_id','planting_id'], 'integer'],
+            [['id', 'farms_id', 'lessee_id', 'father_id', 'son_id', 'inputproduct_id', 'plant_id','planting_id','management_area'], 'integer'],
             [['pconsumption'], 'number'],
             [['zongdi'], 'safe'],
         ];
@@ -42,7 +43,7 @@ class plantinputproductSearch extends Plantinputproduct
      */
     public function search($params)
     {
-        $query = Plantinputproduct::find()->where($params);
+        $query = Plantinputproduct::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -66,6 +67,7 @@ class plantinputproductSearch extends Plantinputproduct
             'inputproduct_id' => $this->inputproduct_id,
             'pconsumption' => $this->pconsumption,
             'plant_id' => $this->plant_id,
+        	'management_area' => $this->management_area,
         ]);
 
         $query->andFilterWhere(['like', 'zongdi', $this->zongdi])

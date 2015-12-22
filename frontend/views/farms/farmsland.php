@@ -24,26 +24,24 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-body">
-<table class="table table-bordered table-hover">
-  <tr>
-    <td align="center"><strong>户数：
-      <?= Farms::getFarmrows();?>户</strong></td>
-    <td align="center"><strong>面积：
-      <?= Farms::getFarmarea()?>万亩</strong></td>
-    <td align="center"><strong>法人：
-      <?php echo Farms::getFarmerrows()?>个</strong></td>
-</tr>
-</table>
                     <?php
-                    // 计算
-//                    var_dump($dataProvider->getModels());
-//                    exit;
+                    
                     ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'layout' => "{summary}\n wubaiqign - test 合计,合计合计..... {items}\n {pager}",
+        'total' => '<tr>
+						<td></td>
+						<td align="center"><strong>合计</strong></td>
+						<td><strong>'.Farms::getRows($params).'户</strong></td>
+						<td><strong>'.Farms::getFarmerrows($params).'个</strong></td>
+						<td></td>
+						<td><strong>'.Farms::getFarmarea($params).'万亩</strong></td>
+						<td></td>
+						<td></td>
+					</tr>',
+//         'layout' => "{summary}\n wubaiqign - test 合计,合计合计..... {items}\n {pager}",
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
@@ -70,13 +68,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'telephone',
             'measure',
             'contractnumber',
-
-            [
-                'header' => '合计',
-                'value' => function () {
-                    return '123';
-                }
-            ],
 
 //             ['class' => 'yii\grid\ActionColumn'],
             [

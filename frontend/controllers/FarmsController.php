@@ -105,7 +105,7 @@ class FarmsController extends Controller {
 		$params = Yii::$app->request->queryParams;
 		$params ['farmsSearch'] ['state'] = 1;
 		// 管理区域是否是数组
-		if (! empty ( $whereArray ) && count ( $whereArray ) > 0) {
+		if (empty($params['farmsSearch']['mamagement_area'])) {
 			$params ['farmsSearch'] ['management_area'] = $whereArray;
 		}
 		// var_dump($params);exit;
@@ -113,7 +113,8 @@ class FarmsController extends Controller {
 		Logs::writeLog ( '农场管理' );
 		return $this->render ( 'farmsindex', [ 
 				'searchModel' => $searchModel,
-				'dataProvider' => $dataProvider 
+				'dataProvider' => $dataProvider, 
+				
 		] );
 	}
 	public function getFarmsid() {
@@ -341,7 +342,8 @@ class FarmsController extends Controller {
 		Logs::writeLog ( '农场管理' );
 		return $this->render ( 'farmsland', [
 				'searchModel' => $searchModel,
-				'dataProvider' => $dataProvider
+				'dataProvider' => $dataProvider,
+				'params' => $params,
 		] );
 	}
 	

@@ -284,33 +284,16 @@ class Farms extends \yii\db\ActiveRecord
     	}
     	return $allid;
     }
-    public static function getFarmrows() {
-    	$rows = [];
-    	$sum = 0;
-    	foreach (self::getManagementArea()['id'] as $value) {
-    		$row = ( float ) Farms::find ()->where ( [
-    				'management_area' => $value,
-    				'state' => 1,
-    		] )->count ();
-    		$sum += $row;
-    	}
-    
-    	return $sum;
+    public static function getRows($params) {
+    	$where['state'] = $params['farmsSearch']['state'];
+    	$where['management_area'] = $params['farmsSearch']['management_area'];
+    	$row = Farms::find ()->where ($where)->count ();
+    	return $row;
     }
-    public static function getFarmarea() {
-    	$areas = 0.0;
-//     	$sum = 0.0;
-    	$all = Farms::find ()->sum ('measure');
-    	foreach (self::getManagementArea()['id'] as $value) {
-
-			$area = ( float ) Farms::find ()->where ( [
-    		  		'management_area' => $value
-    		 ] )->sum ( 'measure' );
-			
-    		$areas += (float)sprintf("%.2f", $area/10000);
-    		
-    	}
-    	return $areas;
+    public static function getFarmarea($params) {
+    	$where = ['state'=>$params['farmsSearch']['state'],'management_area'=>$params['farmsSearch']['management_area']];
+    	$sum = Farms::find ()->where ($where)->sum ('measure');
+    	return (float)sprintf("%.2f", $sum/10000);
     }
     
     public static function totalNum()
@@ -347,7 +330,7 @@ class Farms extends \yii\db\ActiveRecord
     			$value ['icon'] = 'fa fa-line-chart';
     			$value ['title'] = $menuUrl ['menuname'];
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
-    			$value ['info'] = '现共' . Lease::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '人租赁';
+    			$value ['info'] = '现共';// . Yields::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->sum () . '人租赁';
     			$value ['description'] = '承租人信息及年限';
     			break;
     		case 'huinong' :
@@ -439,6 +422,7 @@ class Farms extends \yii\db\ActiveRecord
     	// 判断是否保留一级数组键 (一级数组键可以为非数字)
     	if($stkeep) $stArr = array_keys($array2D);
     
+//     	var_dump($array2D);exit;
     	// 判断是否保留二级数组键 (所有二级数组键必须相同)
     	if($ndformat) $ndArr = array_keys(end($array2D));
     
@@ -466,24 +450,20 @@ class Farms extends \yii\db\ActiveRecord
     	return $output;
     }
     //获取管理区法人个数
-    public static function getFarmerrows()
+    public static function getFarmerrows($params)
     {
-    	$rows = [];
-    	$sum = 0;
-    	foreach (self::getManagementArea()['id'] as $value) {
-    		$farms[] = Farms::find ()->where ( [
-    				'management_area' => $value,
-    				'state' => 1,
-    		] )->all ();
-    	}
+    	$where = ['state'=>$params['farmsSearch']['state'],'management_area'=>$params['farmsSearch']['management_area']];
+    	$farms = Farms::find ()->where ($where)->all ();
 //     	var_dump($farms);exit;
     	$data = [];
     	foreach($farms as $value) {
-    		foreach ($value as $val)
-    			$data[] = ['farmername'=>$val['farmername'],'cardid'=>$val['cardid']];
+    		$data[] = ['farmername'=>$value['farmername'],'cardid'=>$value['cardid']];
     	}
-    	
-    	$newdata = self::unique_arr($data);
-    	return count($newdata);
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		return count($newdata);
+    	}
+    	else
+    		return 0;
     }
 }

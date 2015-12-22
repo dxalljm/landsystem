@@ -18,7 +18,7 @@ class plantingstructureSearch extends Plantingstructure
     public function rules()
     {
         return [
-            [['id', 'plant_id', 'goodseed_id', 'lease_id', 'farms_id'], 'integer'],
+            [['id', 'plant_id', 'goodseed_id', 'lease_id', 'farms_id','management_area'], 'integer'],
             [['area'], 'number'],
             [['zongdi'], 'safe'],
         ];
@@ -42,7 +42,7 @@ class plantingstructureSearch extends Plantingstructure
      */
     public function search($params)
     {
-    	
+//     	var_dump($params);exit;
         $query = Plantingstructure::find();
 
         $dataProvider = new ActiveDataProvider([
@@ -58,6 +58,7 @@ class plantingstructureSearch extends Plantingstructure
             'goodseed_id' => $this->goodseed_id,
         	'lease_id' => $this->lease_id,
             'farms_id' => $this->farms_id,
+        	'management_area'=>$this->management_area,
         ]);
 
         $query->andFilterWhere(['like', 'zongdi', $this->zongdi])
