@@ -332,7 +332,7 @@ class FarmsController extends Controller {
 		$params = Yii::$app->request->queryParams;
 		$params ['farmsSearch'] ['state'] = 1;
 		// 管理区域是否是数组
-		if (! empty ( $whereArray ) && count ( $whereArray ) > 0 && (count($whereArray) !== 7)) {
+		if (! empty ( $whereArray ) && count ( $whereArray ) > 0) {
 			$params ['farmsSearch'] ['management_area'] = $whereArray;
 		}
 // 		var_dump($params);exit;
