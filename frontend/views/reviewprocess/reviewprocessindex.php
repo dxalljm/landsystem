@@ -78,8 +78,8 @@ $this->params ['breadcrumbs'] [] = $this->title;
 								</td>
 								<td align="center">
 								<?php 
-								if($value[$field] == 3 or $value[$field] == 0) 
-									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id']],['class'=>'btn btn-success']); 
+								if($value[$field] == 2 or $value[$field] == 0) 
+									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id'],'class'=>'farmstransfer'],['class'=>'btn btn-success']); 
 								else {
 									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id']],['class'=>'btn btn-success','disabled'=>'disabled']);
 								}?></td>
@@ -100,16 +100,18 @@ $this->params ['breadcrumbs'] [] = $this->title;
 								<td align="center">操作</td>
 							</tr>
 							<?php foreach ($projectapplication as $value) {
-							$projectapplication = Projectapplication::find()->where(['farms_id'=>$value['oldfarms_id'],'state'=>0])->one();
+								
+							$project = Projectapplication::find()->where(['reviewprocess_id'=>$value['id']])->one();
 							$oldfarm = Farms::find()->where(['id'=>$value['oldfarms_id']])->one();
 							if(Reviewprocess::isShowProess($value['actionname'])) {
 								$field = Reviewprocess::getProcessIdentification();
+								
 								?>
 							<tr height="40px">
 								<td align="center"><?= $oldfarm->farmname?></td>
 								<td align="center"><?= $oldfarm->farmername?></td>
-								<td align="center"><?= Infrastructuretype::find()->where(['id'=>$value['projecttype']])->one()['typename'].'建设'?></td>
-								<td align="center"><?= date('Y-m-d',$projectapplication->create_at)?></td>
+								<td align="center"><?= Infrastructuretype::find()->where(['id'=>$project['projecttype']])->one()['typename'].'建设'?></td>
+								<td align="center"><?= date('Y-m-d',$project['create_at'])?></td>
 								<td align="center">
 								<?php if(User::getItemname() == '地产科科长' or User::getItemname() == '主任' or  User::getItemname() == '副主任' ) {?>
 									<div class="btn-group">
@@ -127,8 +129,15 @@ $this->params ['breadcrumbs'] [] = $this->title;
 								</td>
 								<td align="center">
 								<?php 
-								if($value[$field] == 3 or $value[$field] == 0) 
-									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id']],['class'=>'btn btn-success']); 
+								$s = false;
+// 								if(is_array($field)) {
+									foreach ($field as $v) {
+										if($value[$v] == 2 or $value[$v] == 0)
+											$s = true;
+									}
+// 								}
+								if($s) 
+									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id'],'class'=>'projectapplication'],['class'=>'btn btn-success']); 
 								else {
 									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id']],['class'=>'btn btn-success','disabled'=>'disabled']);
 								}?></td>

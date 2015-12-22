@@ -56,6 +56,20 @@ class ProjectapplicationController extends Controller
         ]);
     }
 
+    public function actionProjectapplicationlist()
+    {
+    	$searchModel = new projectapplicationSearch();
+    	$whereArray = Farms::getManagementArea();
+    	$params = Yii::$app->request->queryParams;
+    	$params['projectapplicationSearch']['management_area'] = $whereArray;
+    	$params['projectapplicationSearch']['state'] = 1;
+    	$dataProvider = $searchModel->search($params);
+    
+    	return $this->render('projectapplicationlist', [
+    			'searchModel' => $searchModel,
+    			'dataProvider' => $dataProvider,
+    	]);
+    }
     /**
      * Displays a single Projectapplication model.
      * @param integer $id
@@ -81,6 +95,7 @@ class ProjectapplicationController extends Controller
 //         	var_dump($model);exit;
         	$reviewprocessID =Reviewprocess::processRun($farms_id);
         	$model->farms_id = $farms_id;
+        	$model->reviewprocess_id = $reviewprocessID;
         	$model->management_area = Farms::find()->where(['id'=>$farms_id])->one()['management_area'];
         	$model->create_at = time();
         	$model->update_at = $model->create_at;

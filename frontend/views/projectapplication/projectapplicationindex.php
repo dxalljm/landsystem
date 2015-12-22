@@ -5,6 +5,8 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\Infrastructuretype;
 use yii\helpers\Url;
+use app\models\Reviewprocess;
+use app\models\Processname;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\projectapplicationSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -15,15 +17,14 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="projectapplication-index">
 
-    <section class="content">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">
-                                            </h3>
-                </div>
-                <div class="box-body">
+	<section class="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title"></h3>
+					</div>
+					<div class="box-body">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -44,28 +45,50 @@ $this->params['breadcrumbs'][] = $this->title;
             }
             ],
             'content',
-
-            ['class' => 'yii\grid\ActionColumn'],
-             [
-	            'label'=>'操作',
-	            'format'=>'raw',
-	            //'class' => 'btn btn-primary btn-lg',
-	            'value' => function($model,$key){
-	            	$url = Url::to(['projectapplication/projectapplicationprint','id'=>$model->id]);
-	            	$option = '打印申请';
-	            	$title = '';
-	            	return Html::a($option,$url, [
-	            			'id' => 'farmerland',
-	            			'title' => $title,
-	            			'class' => 'btn btn-primary btn-xs',
-	            	]);
-	            }
-            ],
-        ],
+			[
+				'label' => '审核状态',
+				'attribute' => 'state',
+				'format'=>'raw',
+				'value' => function ($model) {
+					$reviewprocess = Reviewprocess::find()->where(['id'=>$model->reviewprocess_id])->one();
+					$html = '';
+					$result = Reviewprocess::state($reviewprocess['state']);
+					if($reviewprocess['state'] == 5) {
+						$html.= '<div class="btn-group">';
+						$html.=  '<div class="dropdown-toggle" data-toggle="dropdown" data-trigger="hover">';
+						$html.= $result.'<span class="caret"></span>';
+						$html.=  '</div>';
+						$html.=  '<ul class="dropdown-menu" role="menu">';
+						foreach (Reviewprocess::getProcess($reviewprocess['actionname']) as $val) {
+							//$html.= '<li><a href="#">111</a></li>';
+							$html.=  '<li>'.Processname::find()->where(['Identification'=>$val])->one()['processdepartment'].':'.Reviewprocess::state($reviewprocess[$val]).'</li>';
+						}
+						$html.=  '</ul>';
+						$html.=  '</div>';
+						return Html::a($html,'#',['class' => 'dropdown-toggle', ]);
+					} else 
+						return $result;
+					
+			} ], 
+			['class' => 'yii\grid\ActionColumn'], [
+				'label'=>'操作', 'format'=>'raw',  
+				'value' => function($model,$key){ 
+					$url = Url::to(['projectapplication/projectapplicationprint','id'=>$model->id]);
+					$option = '打印申请'; 
+					$title = ''; 
+					return Html::a($option,$url, [ 
+							'id' => 'farmerland', 
+							'title' => $title, 
+							'class' => 'btn btn-primary	btn-xs', 
+							
+					]); 
+			}], 
+    	], 
     ]); ?>
-                </div>
-            </div>
-        </div>
-    </div>
+			</div>
+		</div>
+
+</div>
+</div>
 </section>
 </div>

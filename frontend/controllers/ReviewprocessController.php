@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use app\models\Farms;
 use app\models\Auditprocess;
 use app\models\User;
+use app\models\Projectapplication;
 /**
  * ReviewprocessController implements the CRUD actions for Reviewprocess model.
  */
@@ -100,31 +101,68 @@ class ReviewprocessController extends Controller
     	] );
     }
     
-    public function actionReviewprocessinspections($id)
+    public function actionReviewprocessinspections($id,$class)
     {
-    	
     	$model = $this->findModel($id);
-    	$oldfarm = Farms::find()->where(['id'=>$model->oldfarms_id])->one();
-    	$newfarm = Farms::find()->where(['id'=>$model->newfarms_id])->one();
+    	
     	$process = Auditprocess::find()->where(['actionname'=>$model->actionname])->one()['process'];
-    	if($model->load(Yii::$app->request->post())) {
-    		$model->save();
-    		$state = Reviewprocess::isNextProcess($model->id);
-    		if($state) {
-    			$m = $this->findModel($model->id);
-    			$m->leader = 3;
-    			$m->steeringgroup = 3;
-    			$m->save();
-    		}
-    		
+    	
+    	if($class == 'farmstransfer') {
+	    	$oldfarm = Farms::find()->where(['id'=>$model->oldfarms_id])->one();
+	    	$newfarm = Farms::find()->where(['id'=>$model->newfarms_id])->one();
+	    	if($model->load(Yii::$app->request->post())) {
+	    		$model->save();
+	    		$state = Reviewprocess::isNextProcess($model->id);
+	    		if($state) {
+	    			$oldfarmsModel = Farms::findOne($model->oldfarms_id);
+	    			$oldfarmsModel->state = 0;
+	    			$oldfarmsModel->locked = 0;
+	    			$oldfarmsModel->save();
+	    			$newfarmModel = Farms::findOne($model->newfarms_id);
+	    			$newfarmModel->state = 1;
+	    			$newfarmModel->locked = 0;
+	    			$newfarmModel->save();
+	    		}
+	    		 
+	    	}
+	    	return $this->render ( 'reviewprocessinspections', [
+	    			'model' => $model,
+	    			'oldfarm' => $oldfarm,
+	    			'newfarm' => $newfarm,
+	    			'process' => explode('>', $process),
+	    			'class' => $class,
+	    	] );
     	}
-//     	var_dump(Yii::$app->request->post());
-    	return $this->render ( 'reviewprocessinspections', [
-    			'model' => $model,
-    			'oldfarm' => $oldfarm,
-    			'newfarm' => $newfarm,
-    			'process' => explode('>', $process),
-    	] );
+    	if($class == 'projectapplication') {
+    		$farm = Farms::find()->where(['id'=>$model->oldfarms_id])->one();
+//     		$whereArray = Farms::getManagementArea();
+    		$project = Projectapplication::find()->where(['reviewprocess_id'=>$id])->one();
+    		if($model->load(Yii::$app->request->post())) {
+    			
+    			if($model->leader == 0)
+    				$model->state = 5;
+    			if($model->leader == 1)
+    				$model->state = 7;
+//     			var_dump($model);
+    			$model->save();
+    			$state = Reviewprocess::isNextProcess($model->id); 
+    			
+    			if($state) {
+    				$project = Projectapplication::find()->where(['reviewprocess_id'=>$model->id])->one();
+    				$projectModel = Projectapplication::findOne($project->id);
+    				$projectModel->state = 1;
+    				$projectModel->save();
+    				return $this->redirect(['reviewprocess/reviewprocessindex']);
+    			}
+    		}
+    		return $this->render ( 'reviewprocessinspections', [
+    				'model' => $model,
+    				'farm' => $farm,
+    				'process' => explode('>', $process),
+    				'class' => $class,
+    				'project'=>$project,
+    		] );
+    	}
     }
     
     /**

@@ -116,49 +116,79 @@ class Reviewprocess extends \yii\db\ActiveRecord
     public static function getProcessIdentification()
     {
 //     	$processname = Processname::find()->orWhere(['rolename'=>User::getItemname()])->orWhere(['sparerole'=>User::getItemname()])->one();
-    	$processname = Processname::find()->where(['rolename'=>User::getItemname()])->one();
-    	$result = $processname['Identification'];    	 
+    	$processname = Processname::find()->where(['rolename'=>User::getItemname()])->all();
+    	foreach ($processname as $value) {
+    		$result[] = $value['Identification'];
+    	}
+    	    	 
     	return $result;
     }
     
     public static function isNextProcess($id)
     {
     	$model = self::findOne($id);
-    	$processs = Reviewprocess::getProcess($model->actionname);
+    	$processs = self::getProcess($model->actionname);
+    	$rows = count($processs);
+    	$i = 0;
+    	
     	foreach ($processs as $value) {
-    		if($model->leader == 1) {
-    			if($model->steeringgroup == 1) {
-    				$model->state = 7;
-    				$model->save();
-    				$oldFarm = Farms::findOne($model->oldfarms_id);
-    				$oldFarm->state = 0;
-    				$oldFarm->locked = 0;
-    				$oldFarm->update_at = time();
-    				$oldFarm->save();
-    				$newFarm = Farms::findOne($model->newfarms_id);
-    				$newFarm->state = 1;
-    				$newFarm->locked = 0;
-    				$newFarm->save();
-    				return false;
-    			} else {
-    				return false;
-    			}
-    		} else {
-    			if($value !== 'leader' and $value !== 'steeringgroup') {
-	    			if($model->$value == 1)
-	    				$state = true;
-	    			else
-	    				$state = false;
-    			}
-    		}
+    		if($model->$value == 3) {
+    			$result = $model->$value-1;
+    			$model->$value = $result;
+    		}	
+    		if($model->$value == 1)
+    			$i++;
     		
     	}
+    	if($i == $rows) {
+    		$model->state = 7;
+    		$state = true;
+    	}
+		else {
+			$model->state = 4;
+			$state = false;
+		}	
     	return $state;
     }
     
+//     public static function isNextProcess($id)
+//     {
+//     	$model = self::findOne($id);
+//     	$processs = Reviewprocess::getProcess($model->actionname);
+//     	foreach ($processs as $value) {
+//     		if($model->leader == 1) {
+//     			if($model->steeringgroup == 1) {
+//     				$model->state = 7;
+//     				$model->save();
+//     				$oldFarm = Farms::findOne($model->oldfarms_id);
+//     				$oldFarm->state = 0;
+//     				$oldFarm->locked = 0;
+//     				$oldFarm->update_at = time();
+//     				$oldFarm->save();
+//     				$newFarm = Farms::findOne($model->newfarms_id);
+//     				$newFarm->state = 1;
+//     				$newFarm->locked = 0;
+//     				$newFarm->save();
+//     				return false;
+//     			} else {
+//     				return false;
+//     			}
+//     		} else {
+//     			if($value !== 'leader' and $value !== 'steeringgroup') {
+//     				if($model->$value == 1)
+//     					$state = true;
+//     				else
+//     					$state = false;
+//     			}
+//     		}
+    
+//     	}
+//     	return $state;
+//     }
+    
     public static function state($num)
     {
-    	$stateArray = [3=>'待审核',2=>'排除等待',1=>'同意',0=>'不同意',-1=>'无',4=>'审核中',5=>'分管领导审核中',6=>'领导小组审核中',7=>'完成'];
+    	$stateArray = [3=>'排队等待',2=>'待审核',1=>'同意',0=>'不同意',-1=>'无',4=>'审核中',7=>'通过',5=>'审核未通过'];
     	return $stateArray[$num];
     }
     //返回指定的审核流程
@@ -216,12 +246,12 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$reviewprocessModel->create_at = time();
     	$reviewprocessModel->update_at = $reviewprocessModel->create_at;
     	for($i=0;$i<count($processs);$i++) {
-    		$reviewprocessModel->$processs[$i] = 3;
+    		$reviewprocessModel->$processs[$i] = 2;
     		if($processs[$i] == 'leader' or $processs[$i] == 'steeringgroup')
     			if($i == 0)
-    				$reviewprocessModel->process[$i] = 3;
-    			else 
     				$reviewprocessModel->$processs[$i] = 2;
+    			else 
+    				$reviewprocessModel->$processs[$i] = 3;
     	}
     	$reviewprocessModel->state = 4;
 //     	var_dump($reviewprocessModel);exit;
@@ -250,7 +280,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	
     	$process = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
 
-    	$processRows = Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$process=>3])->count();
+    	$processRows = Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$process=>2])->count();
 
     	if($processRows)
     		return '<small class="label pull-right bg-red">'.$processRows.'</small>';

@@ -8,6 +8,7 @@ use app\models\Processname;
 use app\models\Reviewprocess;
 use app\models\User;
 use Yii;
+use app\models\Infrastructuretype;
 /* @var $this yii\web\View */
 /* @var $model app\models\Reviewprocess */
 
@@ -21,39 +22,24 @@ use Yii;
 #reviewprocess-leadercontent { display:none }
 #reviewprocess-mortgagecontent { display:none }
 #reviewprocess-steeringgroupcontent { display:none }
-.ttpoprint {
-	font-family: "仿宋";
-	font-size:20px;
+.table {
+/* 	font-family: "仿宋"; */
+	font-size:16px;
 }
-.tablehead{ width:100%; height:30px; line-height:20px; text-align:center; float:left; font-size:30px; font-family:"黑体"}
 </style>
 <div class="reviewprocess-form">
-
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                </div>
+                <div class="box-body">
 
     <?php $form = ActiveFormrdiv::begin(); ?>
     
-    
-    <section class="content">
-    <div class="row">
-        <div class="col-xs-12">
-<!--             <div class="box"> -->
-
-<!--                 <div class="box-body"> -->
-    <div class="col-md-6" id="ttpoprint"> 
-
-          <!-- Box Comment -->
-          <div class="box box-widget">
-            <div class="box-header with-border">
-              <div class="user-block">
-                <span class="tablehead">宜农林地承包经营权转让审批表</span>
-              </div>
-              <!-- /.user-block -->
-             
-              <!-- /.box-tools -->
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-             <table width="100%" border="1" cellpadding="0" cellspacing="0" class="ttpoprint">
+ <?php if($class == 'farmstransfer') {?>
+             <table class="table table-bordered table-hover">
 			  <tr height="40px">
 			    <td align="center">原农场名称</td>
 			    <td width="13%" align="center">原法人</td>
@@ -126,8 +112,8 @@ use Yii;
 			    <td align="center"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?></td>
 			    <td colspan="5" align="left" class='content'>
 			    <?php 
-			    if($model->$value == 3 or $model->$value == 0) {
-			    	if($model->$value == 3)
+			    if($model->$value == 2 or $model->$value == 0) {
+			    	if($model->$value == 2)
 			    		$model->$value = 1; 
 			    	echo $form->field($model,$value)->radioList([1=>'同意',0=>'不同意'],['onclick'=>'CheckState("'.$value.'")'])->label(false)->error(false); 
 			    	echo $form->field($model,$value.'content')->textInput()->label(false)->error(false);
@@ -147,23 +133,61 @@ use Yii;
 			    <td colspan="5" align="center"><br><br><br><br>
 			 </tr>
 			</table>
+<?php }?>
+<?php if($class == 'projectapplication') {?>
+<table class="table table-bordered table-hover">
+  <tr>
+    <td align="right">项目名称：</td>
+    <td><?= Infrastructuretype::find()->where(['id'=>$project['projecttype']])->one()['typename']?></td>
+    <td align="right">申请人：</td>
+    <td><?= $farm->farmername;?></td>
+    <td align="right">农场名称：</td>
+    <td><?= $farm->farmname ?></td>
+  </tr>
+  <?php foreach ($process as $value) { 
+			    //获取当前流程的角色信息
+			  	$role = Reviewprocess::getProcessRole($value);
+			  	//审核角色或备分审核角色与当前用户角色相同，则显示该条目
+			  	if($role['rolename'] == User::getItemname() or $role['sparerole'] == User::getItemname()) {
+			  ?>
+  <tr>
+    <td align="right">申请内容：</td>
+    <td colspan="5"><?= $project['content']?></td>
+    </tr>
+  <tr>
+    <td align="right"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?>：</td>
+			    <td colspan="5" align="left" class='content'>
+			    <?php 
+			    if($model->$value == 2 or $model->$value == 0) {
+			    	if($model->$value == 3)
+			    		$model->$value = 1; 
+			    	echo $form->field($model,$value)->radioList([1=>'同意',0=>'不同意'],['onclick'=>'CheckState("'.$value.'")'])->label(false)->error(false); 
+			    	echo $form->field($model,$value.'content')->textInput()->label(false)->error(false);
+			    	echo $form->field($model,$value.'time')->hiddenInput(['value'=>time()])->label(false)->error(false);
+			    } else {
+			    	echo Reviewprocess::state($model->$value);
+			    	echo "<br>";
+			    	if(!$model->$value) {
+			    		$modelStr = $value.'content';
+			    		echo "原由：".$model->$modelStr;
+			    	}
+			    }?></td>
+    </tr>
+    <?php }}?>
+</table>
+<?php }?>
 			<br>
 	<div class="form-group">
         <?= Html::submitButton('提交', ['class' => 'btn btn-primary']) ?>
     </div>
-            </div>
-            <!-- /.box-body -->
-           
-          </div>
-          <!-- /.box -->
-        </div>
+
         <!-- /.col -->
 
     
 
     <?php ActiveFormrdiv::end(); ?>
-<!--                 </div> -->
-<!--             </div> -->
+                </div>
+            </div>
         </div>
     </div>
 </section>
