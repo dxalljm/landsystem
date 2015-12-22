@@ -277,7 +277,7 @@ class Farms extends \yii\db\ActiveRecord
     	$allid = [];
     	$management_ids = self::getManagementArea()['id'];
     	foreach ($management_ids as $value) {
-    		$farms = Farms::find()->where(['management_area'=>$value])->all();
+    		$farms = Farms::find()->where(['management_area'=>$value,'state' => 1])->all();
     		foreach ($farms as $val) {
     			$allid[] = $val['id']; 
     		}
@@ -285,68 +285,21 @@ class Farms extends \yii\db\ActiveRecord
     	return $allid;
     }
     public static function getFarmrows() {
-    	$cacheKey = 'farms-hcharts';
-    	$result = Yii::$app->cache->get ( $cacheKey );
-    	if (! empty ( $result )) {
-    		return $result;
-    	}
     	$rows = [];
     	$sum = 0;
-    	$farmsID = [];
-    	$i=0;
-    	$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
-    	$all = Farms::find ()->count ();
     	foreach (self::getManagementArea()['id'] as $value) {
     		$row = ( float ) Farms::find ()->where ( [
-    				'management_area' => $value
+    				'management_area' => $value,
+    				'state' => 1,
     		] )->count ();
-    		
-    		$rows[] = ['color'=>$color[$i],'y'=>$row];
     		$sum += $row;
-    		$percent[] = sprintf("%.2f", $row/$all*100);
-    		$i++;
     	}
-
-    	$result = [[
-    			'type' => 'column',
-    			'name' => '数量',
-    			'percent' => $percent,
-    			'data' => $rows,
-    			'dataLabels'=> [
-    				'enabled'=> true,
-    				'rotation'=> 0,
-    				'color'=> '#FFFFFF',
-    				'align'=> 'center',
-    				'x'=> 0,
-    				'y'=> 0,
-    				'style'=> [
-    					'fontSize'=> '13px',
-    					'fontFamily'=> 'Verdana, sans-serif',
-    					'textShadow'=> '0 0 3px black'
-    				]
-    			],
-				'tooltip' => [
-					'shared' => true,
-					'formatter' => ''
-				]
-    	]];
-        
-    	$jsonData = json_encode(['result'=>$result,'all'=>$all]);
-    	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
     
-    	return $jsonData;
+    	return $sum;
     }
     public static function getFarmarea() {
-//     	$cacheKey = 'farms-hcharts2';
-//     	$result = Yii::$app->cache->get ( $cacheKey );
-//     	if (! empty ( $result )) {
-//     		return $result;
-//     	}
-    	$areas = [];
+    	$areas = 0.0;
 //     	$sum = 0.0;
-    	$farmsID = [];
-    	$i=0;
-    	$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
     	$all = Farms::find ()->sum ('measure');
     	foreach (self::getManagementArea()['id'] as $value) {
 
@@ -354,59 +307,10 @@ class Farms extends \yii\db\ActiveRecord
     		  		'management_area' => $value
     		 ] )->sum ( 'measure' );
 			
-    		$areas[] = ['color'=>$color[$i],'y'=>(float)sprintf("%.2f", $area/10000)];
-    		$percent[] = sprintf("%.2f", $area/$all*100);
-    		$i++;
+    		$areas += (float)sprintf("%.2f", $area/10000);
+    		
     	}
-    	
-    	$all = Farms::find ()->count ();
-    	foreach (self::getManagementArea()['id'] as $value) {
-    		$row = ( float ) Farms::find ()->where ( [
-    				'management_area' => $value
-    		] )->count ();
-    	
-    		$rows[] = $row;
-    		$rowpercent[] = sprintf("%.2f", $row/$all*100);
-    	}
-//     	var_dump($areas);
-    	//$allvalue = $all - $sum;
-    
-//     	if ($allvalue !== 0) {
-//     		$data[] = ['name'=>'其他管理区','y'=>$allvalue];
-//     	}
-    	$result = [[
-    			'type' => 'column',
-    			'name' => '面积',
-    			'percent' => $percent,
-    			'data' => $areas,
-				'rows' => $rows,
-    			'rowpercent' => $rowpercent,
-    			'Legend' => [
-    					'backgroundColor' => '#FFFFFF',
-    			],
-    			'dataLabels'=> [
-						'verticalAlign' => 'top',
-    					'enabled'=> true,
-    					'rotation'=> 0,
-    					'color'=> '#FFFFFF',
-    					'align'=> 'center',
-    					'x'=> 0,
-    					'y'=> -19,
-//     					'style'=> [
-//     							'fontSize'=> '13px',
-//     							'fontFamily'=> 'Verdana, sans-serif',
-//     							'textShadow'=> '0 0 3px black'
-//     					]
-    			]
-    	]];
-
-//     	var_dump($result);
-    	$jsonData = json_encode(['result'=>$result]);
-    	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
-    	$landcache = new Cache();
-    	$landcache->actionname = 'farmsarea';
-    	$landcache->content = $jsonData;
-    	$landcache->save();
+    	return $areas;
     }
     
     public static function totalNum()
@@ -427,7 +331,8 @@ class Farms extends \yii\db\ActiveRecord
     			$value ['title'] = $menuUrl ['menuname'];
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] );
     			$value ['info'] = '共'.Farms::find ()->where ( [
-    					'management_area' => Farms::getManagementArea ()['id']
+    					'management_area' => Farms::getManagementArea ()['id'],
+    					'state' => 1,
     			] )->count ().'户农场';
     			$value ['description'] = '农场基础信息';
     			break;
@@ -528,5 +433,57 @@ class Farms extends \yii\db\ActiveRecord
     	$html .= '</div><!-- /.info-box --></a>';
     	$html .= '</div>';
     	return $html;
+    }
+    public static function unique_arr($array2D,$stkeep=false,$ndformat=true)
+    {
+    	// 判断是否保留一级数组键 (一级数组键可以为非数字)
+    	if($stkeep) $stArr = array_keys($array2D);
+    
+    	// 判断是否保留二级数组键 (所有二级数组键必须相同)
+    	if($ndformat) $ndArr = array_keys(end($array2D));
+    
+    	//降维,也可以用implode,将一维数组转换为用逗号连接的字符串
+    	foreach ($array2D as $v){
+    		$v = join(",",$v);
+    		$temp[] = $v;
+    	}
+    
+    	//去掉重复的字符串,也就是重复的一维数组
+    	$temp = array_unique($temp);
+    
+    	//再将拆开的数组重新组装
+    	foreach ($temp as $k => $v)
+    	{
+    		if($stkeep) $k = $stArr[$k];
+    		if($ndformat)
+    		{
+    			$tempArr = explode(",",$v);
+    			foreach($tempArr as $ndkey => $ndval) $output[$k][$ndArr[$ndkey]] = $ndval;
+    		}
+    		else $output[$k] = explode(",",$v);
+    	}
+    
+    	return $output;
+    }
+    //获取管理区法人个数
+    public static function getFarmerrows()
+    {
+    	$rows = [];
+    	$sum = 0;
+    	foreach (self::getManagementArea()['id'] as $value) {
+    		$farms[] = Farms::find ()->where ( [
+    				'management_area' => $value,
+    				'state' => 1,
+    		] )->all ();
+    	}
+//     	var_dump($farms);exit;
+    	$data = [];
+    	foreach($farms as $value) {
+    		foreach ($value as $val)
+    			$data[] = ['farmername'=>$value['farmername'],'cardid'=>$value['cardid']];
+    	}
+    	
+    	$newdata = self::unique_arr($data);
+    	return count($newdata);
     }
 }

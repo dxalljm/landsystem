@@ -115,10 +115,12 @@ class ReviewprocessController extends Controller
 	    		$state = Reviewprocess::isNextProcess($model->id);
 	    		if($state) {
 	    			$oldfarmsModel = Farms::findOne($model->oldfarms_id);
+	    			$oldfarmsModel->update_at = time();
 	    			$oldfarmsModel->state = 0;
 	    			$oldfarmsModel->locked = 0;
 	    			$oldfarmsModel->save();
 	    			$newfarmModel = Farms::findOne($model->newfarms_id);
+	    			$newfarmModel->update_at = $oldfarmsModel->update_at;
 	    			$newfarmModel->state = 1;
 	    			$newfarmModel->locked = 0;
 	    			$newfarmModel->save();

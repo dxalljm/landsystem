@@ -6,6 +6,7 @@ use yii\grid\GridView;
 use app\models\ManagementArea;
 use app\models\Farms;
 use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\farmsSearch */
@@ -16,27 +17,24 @@ $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctable
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="farms-index">
-
-    <section class="content-header">
-
-    <p>
-        <?= Html::a('添加', ['farmscreate'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('XLS导入', ['farmsxls'], ['class' => 'btn btn-success']) ?>
-        <?php //echo Html::a('XLS导入宗地', ['farmszdxls'], ['class' => 'btn btn-success']) ?>
-    </p>
-</section>
 <?php  //echo $this->render('farms_search', ['model' => $searchModel]); ?>
     
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>
-                    </h3>
-                </div>
                 <div class="box-body">
+<table class="table table-bordered table-hover">
+  <tr>
+    <td align="center"><strong>户数：
+      <?= Farms::getFarmrows();?>户</strong></td>
+    <td align="center"><strong>面积：
+      <?= Farms::getFarmarea()?>万亩</strong></td>
+    <td align="center"><strong>法人：
+      <?= Farms::getFarmerrows()?>个</strong></td>
+</tr>
+</table>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -44,6 +42,14 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
+            [
+            	'label'=>'管理区',
+            	'attribute'=>'management_area',
+            	'value'=> function($model) {
+            		return ManagementArea::getAreanameOne($model->management_area);
+           	 	},
+            	'filter' => ManagementArea::getAreaname(),     //此处我们可以将筛选项组合成key-value形式
+            ],
             [
             	'attribute' => 'farmname',
 
@@ -55,9 +61,10 @@ $this->params['breadcrumbs'][] = $this->title;
 //             	'value' => 'managementarea.areaname',
 //             ],
 			//'management_area',
+            'telephone',
             'measure',
             'contractnumber',
-            // 'contractlife',
+            
 
 //             ['class' => 'yii\grid\ActionColumn'],
             [

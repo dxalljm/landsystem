@@ -78,7 +78,12 @@ $this->params ['breadcrumbs'] [] = $this->title;
 								</td>
 								<td align="center">
 								<?php 
-								if($value[$field] == 2 or $value[$field] == 0) 
+								$s = false;
+								foreach ($field as $v) {
+									if($value[$v] == 2 or $value[$v] == 0)
+										$s = true;
+								}
+								if($s) 
 									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id'],'class'=>'farmstransfer'],['class'=>'btn btn-success']); 
 								else {
 									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id']],['class'=>'btn btn-success','disabled'=>'disabled']);
@@ -130,12 +135,10 @@ $this->params ['breadcrumbs'] [] = $this->title;
 								<td align="center">
 								<?php 
 								$s = false;
-// 								if(is_array($field)) {
-									foreach ($field as $v) {
-										if($value[$v] == 2 or $value[$v] == 0)
-											$s = true;
-									}
-// 								}
+								foreach ($field as $v) {
+									if($value[$v] == 2 or $value[$v] == 0)
+										$s = true;
+								}
 								if($s) 
 									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id'],'class'=>'projectapplication'],['class'=>'btn btn-success']); 
 								else {

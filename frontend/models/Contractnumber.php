@@ -28,7 +28,7 @@ class Contractnumber extends \yii\db\ActiveRecord
     {
         return [
             [['lifeyear'], 'string'],
-            [['contractnumber'], 'string', 'max' => 500]
+            [['contractnumber'], 'integer']
         ];
     }
 
@@ -46,7 +46,7 @@ class Contractnumber extends \yii\db\ActiveRecord
     
     public static function contractnumberAdd(){
     	$model = Contractnumber::findOne(1);
-    	$model->contractnumber = $model->contractnumber + 1;
+    	$model->contractnumber++;
     	$model->save();
     }
 }

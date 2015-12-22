@@ -22,7 +22,7 @@ class farmsSearch extends Farms
     {
         return [
             [['id', 'create_at', 'update_at','state','oldfarms_id','locked'], 'integer'],
-            [['farmname', 'farmername', 'address','measure', 'management_area', 'spyear', 'zongdi', 'cooperative_id','notclear','surveydate', 'groundsign', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate','latitude','longitude'], 'safe'],
+            [['farmname', 'farmername', 'address','measure', 'management_area','telephone', 'spyear', 'zongdi', 'cooperative_id','notclear','surveydate', 'groundsign', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate','latitude','longitude'], 'safe'],
             //[['measure'], 'number'],
         ];
     }
@@ -85,6 +85,12 @@ class farmsSearch extends Farms
 //     	var_dump($tj);exit;
     	return $tj;
     }
+    
+    public function getManagementWhere($managemetnarea)
+    {
+//     	if($managemetnarea)
+    		
+    }
     /**
      * Creates data provider instance with search query applied
      *
@@ -130,10 +136,10 @@ class farmsSearch extends Farms
 //         				],
 //         		] 
 //         ]);
-
+		
         
-        $this->load($params);
-
+//     	$this->load($params);
+//     	$this->management_area = $params['farmsSearch']['management_area'];
         if (!$this->validate()) {
             // uncomment the following line if you do not want to any records when validation fails
             // $query->where('0=1');
@@ -143,6 +149,7 @@ class farmsSearch extends Farms
         $query->andFilterWhere([
             'id' => $this->id,
         	'locked' => $this->locked,
+        	'management_area' => $this->management_area,
         ]);
         //$this->management_area = [1, 4, 5];
 
@@ -153,7 +160,7 @@ class farmsSearch extends Farms
             ->andFilterWhere(['like', 'address', $this->address])
             ->andFilterWhere(['like', 'state', $this->state])
             ->andFilterWhere(['like', 'oldfarms_id', $this->oldfarms_id])
-            ->andWhere(['management_area' => $this->management_area])
+//             ->andWhere(['management_area' => $managementarea])
             ->andFilterWhere(['like', 'spyear', $this->spyear])
             ->andFilterWhere(['like', 'zongdi', $this->zongdi])
             ->andFilterWhere(['like', 'notclear', $this->notclear])

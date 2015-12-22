@@ -58,6 +58,19 @@ class PlantingstructureController extends Controller
         ]);
     }
 
+    public function actionPlantingstructureinfo()
+    {
+    	$searchModel = new plantingstructureSearch();
+    	$params = Yii::$app->request->queryParams;
+    	$arrayID = Farms::getManagementAreaAllID();
+    	$params ['plantingstructureSearch']['farms_id'] = $arrayID;
+    	$dataProvider = $searchModel->search ( $params['plantingstructureSearch'] );
+    	return $this->render('plantingstructureinfo',[
+    			'searchModel' => $searchModel,
+    			'dataProvider' => $dataProvider,
+    	]);
+    }
+    
     public function actionPlantingstructuresearch($tab,$begindate,$enddate,$management_area,$plantfather,$plantson,$goodseed)
     {
     	$post = Yii::$app->request->post();

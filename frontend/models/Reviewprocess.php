@@ -130,9 +130,13 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$processs = self::getProcess($model->actionname);
     	$rows = count($processs);
     	$i = 0;
-    	
+    	$no = true;
     	foreach ($processs as $value) {
-    		if($model->$value == 3) {
+    		if($model->$value == 0)
+    			$no = false;
+    	}
+    	foreach ($processs as $value) {
+    		if(($model->$value == 3) and $no) {
     			$result = $model->$value-1;
     			$model->$value = $result;
     		}	
@@ -148,6 +152,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
 			$model->state = 4;
 			$state = false;
 		}	
+		$model->save();
     	return $state;
     }
     

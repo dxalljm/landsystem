@@ -9,6 +9,9 @@ use app\models\Reviewprocess;
 /* @var $model app\models\Reviewprocess */
 
 ?>
+<object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0> 
+       <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
+</object>
 <div class="reviewprocess-form">
 
 
@@ -18,6 +21,9 @@ use app\models\Reviewprocess;
     <section class="content">
     <div class="row">
         <div class="col-xs-12">
+         <div class="form-group">
+    	   	&nbsp;&nbsp;<?= Html::Button('打印', ['class' => 'btn btn-primary','onclick'=>'prn_preview4()']) ?> 			
+    	</div>
 <!--             <div class="box"> -->
 
 <!--                 <div class="box-body"> -->
@@ -172,3 +178,23 @@ use app\models\Reviewprocess;
     </div>
 </section>
 </div>
+<script language="javascript" type="text/javascript">
+    var LODOP; //声明为全局变量 
+	
+	function prn_preview4() {	
+		CreateOnePage();	
+		LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT","Auto-Width");	
+		LODOP.PREVIEW();	
+	};		
+	
+	function CreateOnePage(){
+		LODOP=getLodop();  
+		LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_整页缩放打印输出");
+		strCenterStyle="<style/>form {text-align: center}</style>"; 
+		LODOP.ADD_PRINT_HTM("25mm","20mm","RightMargin:0mm","BottomMargin:9mm",strCenterStyle+document.getElementById("ttpoprint").innerHTML); //上下边距9mm，左右边距0mm
+		//LODOP.ADD_PRINT_HTM("14%","10%","100%","90%","<body leftmargin=0 topmargin=0>"+document.getElementById('ttpoprint').innerHTML+"</body>");
+		LODOP.SET_PRINT_STYLEA(0,"Horient",2);        
+// 		LODOP.SET_PRINT_STYLEA(0,"Vorient",2);
+		LODOP.SET_PREVIEW_WINDOW(0,0,0,0,0,"");	
+	};	
+</script>
