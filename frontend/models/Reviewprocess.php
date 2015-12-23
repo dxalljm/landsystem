@@ -252,7 +252,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$reviewprocessModel->update_at = $reviewprocessModel->create_at;
     	for($i=0;$i<count($processs);$i++) {
     		$reviewprocessModel->$processs[$i] = 2;
-    		if($processs[$i] == 'leader' or $processs[$i] == 'steeringgroup')
+    		if($processs[$i] == 'leader')
     			if($i == 0)
     				$reviewprocessModel->$processs[$i] = 2;
     			else 

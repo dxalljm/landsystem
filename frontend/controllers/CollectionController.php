@@ -428,32 +428,26 @@ class CollectionController extends Controller
     	}
     }
     
-    public function actionCollectioninfo($ypayyear=NULL)
+    public function actionCollectioninfo()
     {
-   		 
     	$searchModel = new collectionSearch();
     	$params = Yii::$app->request->queryParams;
-    	$params ['collectionSearch'] ['dckpay'] = 1;
-//    		$params ['collectionSearch'] ['ypayyear'] = $ypayyear;
     	$whereArray = Farms::getManagementArea()['id'];
     	if (empty($params['collectionSearch']['management_area'])) {
 			$params ['collectionSearch'] ['management_area'] = $whereArray;
 		}
-
+		
 		$dataProvider = $searchModel->search ( $params );
-
-		// 如果选择多个区域, 默认为空
-		if (is_array($searchModel->management_area)) {
-			
+    	if (is_array($searchModel->management_area)) {
 			$searchModel->management_area = null;
-			
 		}
-// 		$searchModel->ypayyear = date('Y');
-    		return $this->render('collectioninfo',[
-    				'searchModel' => $searchModel,
-    				'dataProvider' => $dataProvider,
-    				'params' => $params,
-    		]);
+    	
+    	
+    	return $this->render('collectioninfo',[
+    			'searchModel' => $searchModel,
+    			'dataProvider' => $dataProvider,
+    			'params' => $params,
+    	]);
     	
     }
     /**

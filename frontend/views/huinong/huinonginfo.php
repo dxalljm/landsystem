@@ -34,7 +34,8 @@ $this->params['breadcrumbs'][] = $this->title;
     					<td align="center">补贴种类</td>
     					<td align="center">应发人数</td>
     					<td align="center">实发人数</td>
-    					<td align="center">完成度</td>
+    					<td align="center">进度</td>
+    					
     					<td align="center">操作</td>
     				</tr>
     				<?php foreach ($huinongs as $value) {?>
@@ -61,7 +62,10 @@ $this->params['breadcrumbs'][] = $this->title;
             		?>
             		<td align="center"><?= $total;?></td>
             		<td align="center"><?= $real;?></td>
-            		<td align="center"><?= $bfb?></td>
+            		<td width="30%" align="center"><div class="progress progress-xs progress-striped active">
+                      <div class="progress-bar progress-bar-success" style="width: <?= $bfb?>"></div>
+                    </div><span class="badge bg-green"><?= $bfb?></span></td>
+            		
             		<td align="center"><?php 
             			echo html::a('查看详情',Url::to('index.php?r=huinong/huinonginfodata&id='.$value['id']),['class'=>'btn btn-success']);?></td>
     				</tr>

@@ -51,6 +51,27 @@ class BreedinfoController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
+    
+    public function actionBreedinfoinfo()
+    {
+    	$searchModel = new breedinfoSearch();
+    	$params = Yii::$app->request->queryParams;
+    	$whereArray = Farms::getManagementArea()['id'];
+    
+    	if (empty($params['breedinfoSearch']['management_area'])) {
+    		$params ['breedinfoSearch'] ['management_area'] = $whereArray;
+    	}
+    	$dataProvider = $searchModel->search ( $params );
+    	if (is_array($searchModel->management_area)) {
+    		$searchModel->management_area = null;
+    	}
+    
+    	return $this->render('breedinfoinfo', [
+    			'searchModel' => $searchModel,
+    			'dataProvider' => $dataProvider,
+    			'params' => $params,
+    	]);
+    }
 
     /**
      * Displays a single Breedinfo model.
@@ -69,7 +90,7 @@ class BreedinfoController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionBreedinfocreate()
+    public function actionBreedinfocreate($farms_id)
     {
         $model = new Breedinfo();
 

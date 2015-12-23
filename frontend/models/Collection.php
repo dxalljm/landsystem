@@ -271,7 +271,7 @@ class Collection extends \yii\db\ActiveRecord {
 			return count($newdata);
 		}
 		else
-			return 0;;
+			return 0;
 	}
 	
 	public static function getAmounts($params)
@@ -348,4 +348,31 @@ class Collection extends \yii\db\ActiveRecord {
 		}
 		return (float)sprintf("%.2f", $sum/10000);
 	}
+	
+  	public static function getYear()
+    {
+		$result = Collection::find ()->all ();
+
+        foreach ($result as $val) {
+            $data[] = ['year'=>$val['ypayyear']];
+        }
+        if($data) {
+        	$newdata = Farms::unique_arr($data);
+        	foreach ($newdata as $value) {
+        		$year[$value['year']] = $value['year'];
+        	}
+//         	var_dump($year);exit;
+        	return $year;
+        }
+        else
+        	return [];
+    }
+    
+    public static function getYearOne($id)
+    {
+//     	var_dump($id);
+    	$data = self::getYear();
+//     	var_dump($data);exit;
+    	return  $data[$id];   //主要通过此种方式实现
+    }
 }

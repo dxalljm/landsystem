@@ -18,7 +18,7 @@ class disasterSearch extends Disaster
     public function rules()
     {
         return [
-            [['id', 'farms_id', 'disastertype_id','isinsurance'], 'integer'],
+            [['id', 'farms_id', 'disastertype_id','isinsurance','management_area'], 'integer'],
             [['disasterarea', 'insurancearea', 'yieldreduction', 'socmoney'], 'number'],
             [['disasterplant'], 'safe'],
         ];
@@ -50,12 +50,6 @@ class disasterSearch extends Disaster
 
         $this->load($params);
 
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
-
         $query->andFilterWhere([
             'id' => $this->id,
             'farms_id' => $this->farms_id,
@@ -65,6 +59,7 @@ class disasterSearch extends Disaster
             'yieldreduction' => $this->yieldreduction,
             'socmoney' => $this->socmoney,
         	'isinsurance' => $this->isinsurance,
+        	'management_area' => $this->management_area,
         ]);
 
         $query->andFilterWhere(['like', 'disasterplant', $this->disasterplant])

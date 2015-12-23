@@ -11,7 +11,7 @@ use yii\filters\VerbFilter;
 use app\models\Breedtype;
 use app\models\Breedinfo;
 use app\models\Logs;
-
+use app\models\Farms;
 /**
  * BreedController implements the CRUD actions for Breed model.
  */
@@ -59,6 +59,7 @@ class BreedController extends Controller
         }
     }
 
+   
     /**
      * Displays a single Breed model.
      * @param integer $id
@@ -129,6 +130,7 @@ class BreedController extends Controller
 	    					$breedinfoModel = new Breedinfo();
 	    					$breedinfoModel->create_at = time();
 	    					$breedinfoModel->update_at = $breedinfoModel->create_at;
+	    					$breedinfoModel->management_area = Farms::getFarmsAreaID($farms_id);
 	    				}
 	    				
 	    				$breedinfoModel->breed_id = $model->id;
@@ -157,6 +159,7 @@ class BreedController extends Controller
     	else { 
         	$model = new Breed();
         	if ($model->load(Yii::$app->request->post())) {
+        		$model->management_area = Farms::getFarmsAreaID($farms_id);
         		$model->create_at = time();
         		$model->update_at = $model->create_at;
         		$model->save();

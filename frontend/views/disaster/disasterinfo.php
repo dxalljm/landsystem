@@ -13,7 +13,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 use yii\helpers\Url;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Search;
-use app\models\Fireprevention;
+use app\models\Disaster;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -28,8 +28,17 @@ use app\models\Fireprevention;
  <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'columns' => Search::getColumns(['management_area','farms_id','firewcd'],$params),
-        			
+        'total' => '<tr>
+			        <td></td>
+			        <td align="center"><strong>合计</strong></td>
+			        <td><strong>'.Disaster::getFarmRows($params).'户</strong></td>
+			        <td><strong>'.Disaster::getFarmerrows($params).'个</strong></td>
+			        <td><strong>'.Disaster::getTypeRows($params).'个</strong></td>
+			        <td><strong>'.Disaster::getArea($params).'万亩</strong></td>
+			        <td><strong>'.Disaster::getPlantRows($params).'种</strong></td>
+			        <td><strong>'.Disaster::getBX($params).'个参保</strong></td>
+			        </tr>',
+        'columns' => Search::getColumns(['management_area','farms_id','disastertype_id','disasterarea','disasterplant','isinsurance','yieldreduction']),
     ]); ?>
                 </div>
             </div>

@@ -5,6 +5,9 @@ namespace app\models;
 use Yii;
 use frontend\helpers\MoneyFormat;
 use app\models\ManagementArea;
+use app\models\Fireprevention;
+use app\models\Collection;
+use yii\helpers\Html;
 /**
  * This is the model class for table "{{%session}}".
  *
@@ -23,11 +26,12 @@ class Search extends \yii\db\ActiveRecord {
 				],
 				
 				// 'plantingstructure' => ['plantfather','plantson','goodseed','Inputproductfather','Inputproductson_id','Inputproduct','pesticides'],
-						'plantingstructure' => [ 
+				'plantingstructure' => [ 
 						'plantfather',
 						'plantson',
 						'goodseed' 
-				] 
+				],
+				'breedinfo' => ['breed_id','basicinvestment','housingarea','breedtype_id','number'],
 		];
 		return $array [$tab];
 	}
@@ -42,16 +46,45 @@ class Search extends \yii\db\ActiveRecord {
 			foreach ( $field as $value ) {
 				
 				switch ($value) {
+					case 'operation' :
+						$columns[] = [
+				                'label'=>'更多操作',
+				                'format'=>'raw',
+				            	//'class' => 'btn btn-primary btn-lg',
+				                'value' => function($model,$key){
+				                	if(Yii::$app->controller->id == 'plantingstructure')
+				                    	$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'view','id'=>$model->id,'farms_id'=>$model->farms_id,'lease_id'=>$model->lease_id];
+				                	else 
+				                		$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'view','id'=>$model->id,'farms_id'=>$model->farms_id];
+				                    $option = '查看详情';
+					            	$title = '';
+					            	return Html::a($option,$url, [
+					            			'id' => 'farmerland',
+					            			'title' => $title,
+					            			'class' => 'btn btn-primary btn-xs',
+					            	]);
+				                }
+				            ];
+						break;
 					case 'management_area' :
 						$columns [] = [
 // 				            	'label'=>'管理区',
 				            	'attribute'=>$value,
 				            	'value'=> function($model) {
+// 				            	var_dump($model);exit;
 				            		return ManagementArea::getAreanameOne($model->management_area);
 				           	 	},
 				            	'filter' => ManagementArea::getAreaname(),     //此处我们可以将筛选项组合成key-value形式
 				            ];
 						break;
+					case 'ypayyear' :
+							$columns [] = [
+							// 				            	'label'=>'管理区',
+							'attribute'=>$value,
+							
+							'filter' => Collection::getYear(),     //此处我们可以将筛选项组合成key-value形式
+							];
+							break;
 					case 'farms_id' :
 						$columns [] = [ 
 								'label' => '农场名称',
@@ -177,20 +210,6 @@ class Search extends \yii\db\ActiveRecord {
 									$breed = Breed::find ()->where ( [ 
 											'id' => $model->breed_id 
 									] )->one ();
-									$management_area = Farms::find ()->where ( [ 
-											'id' => $breed->farms_id 
-									] )->one ()['management_area'];
-									return ManagementArea::find ()->where ( [ 
-											'id' => $management_area 
-									] )->one ()['areaname'];
-								} 
-						];
-						$columns [] = [ 
-								'label' => '农场名称',
-								'value' => function ($model) {
-									$breed = Breed::find ()->where ( [ 
-											'id' => $model->breed_id 
-									] )->one ();
 									return Farms::find ()->where ( [ 
 											'id' => $breed->farms_id 
 									] )->one ()['farmname'];
@@ -254,12 +273,12 @@ class Search extends \yii\db\ActiveRecord {
 					case 'breedtype_id' :
 						$columns [] = [ 
 								'attribute' => $value,
-								'value' => function ($model) {
-									$breedtype = Breedtype::find ()->where ( [ 
-											'id' => $model->breedtype_id 
-									] )->one ();
-									return $breedtype->typename;
-								} 
+								'value'=> function($model) {
+// 				            	var_dump($model);exit;
+				            		return Breedtype::getTypenameOne($model->breedtype_id);
+				           	 	},
+				            	'filter' => Breedtype::getAllTypename(), 
+								
 						];
 						break;
 					case 'number' :
@@ -405,13 +424,26 @@ class Search extends \yii\db\ActiveRecord {
 					case 'plant_id' :
 						$columns [] = [ 
 								'attribute' => $value,
-								'value' => function($model,$params) {
+								'value' => function($model) {
 								
 									return Plant::getNameOne($model->plant_id);
 								},
 								'filter' => Plant::getAllname(),
 								];
 						break;
+					case 'firewcd' :
+						$columns [] = [
+        				'label' => '完成情况',
+        				'value' => function($model) {
+		        				$html = '<div class="progress progress-xs progress-striped active">';
+		        				$html.= '<div class="progress-bar progress-bar-success" style="width: '.Fireprevention::getFinir($model->id).'%'.'"></div>';
+		        				$html.='</div><span class="badge bg-green">'.Fireprevention::getFinir($model->id).'%'.'</span>';
+        						$str = '<span class="badge bg-green">'.Fireprevention::getFinir($model->id).'%'.'</span>';
+		        				return Fireprevention::getFinir($model->id).'%';
+	        			}
+	        			];
+						break;
+						
 					default :
 						$columns [] = $value;
 				}

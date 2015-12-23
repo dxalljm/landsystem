@@ -37,7 +37,7 @@ use app\models\Search;
 			        <td><strong>'.Plantingstructure::getGoodseedRows($params).'种</strong></td>
 			        <td><strong>'.Plantingstructure::getArea($params).'万亩</strong></td>
 			        </tr>',
-        'columns' => Search::getColumns(['management_area','farms_id','lease_id','plant_id','goodseed_id','area'],$params),
+        'columns' => Search::getColumns(['management_area','farms_id','lease_id','plant_id','goodseed_id','area','operation'],$params),
     ]); ?>
                 </div>
             </div>

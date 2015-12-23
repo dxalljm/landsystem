@@ -32,7 +32,7 @@ class Disaster extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['farms_id', 'disastertype_id','isinsurance','create_at','update_at'], 'integer'],
+            [['farms_id', 'disastertype_id','isinsurance','create_at','update_at','management_area'], 'integer'],
             [['disasterarea', 'insurancearea', 'yieldreduction', 'socmoney'], 'number'],
             [['disasterplant'], 'string', 'max' => 500]
         ];
@@ -55,6 +55,113 @@ class Disaster extends \yii\db\ActiveRecord
         	'isinsurance' => '是否保险',
         	'create_at' => '创建日期',
         	'update_at' => '更新日期',
+        	'management_area' => '管理区',
         ];
+    }
+    
+    public static function getFarmRows($params)
+    {
+    	$where = [];
+    	foreach ($params['disasterSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
+    	$row = Yields::find ()->where ($where)->count ();
+    	return $row;
+    }
+    
+	public static function getFarmerrows($params)
+    {
+    	$where = [];
+    	foreach ($params['disasterSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
+    	$yields = Yields::find ()->where ($where)->all ();
+    	//     	var_dump($farms);exit;
+    	$data = [];
+    	foreach($yields as $value) {
+    		$farm = Farms::find()->where(['id'=>$value['farms_id']])->one();
+    		$data[] = ['farmername'=>$farm['farmername'],'cardid'=>$farm['cardid']];
+    	}
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		return count($newdata);
+    	}
+    	else
+    		return 0;;
+    }
+    
+    public static function getTypeRows($params)
+    {
+    	$where = [];
+    	foreach ($params['disasterSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
+    	$result = Disaster::find ()->where ($where)->all ();
+    	$data = [];
+    	foreach($result as $value) {
+    		$type = Disastertype::find()->where(['id'=>$value['disastertype_id']])->one();
+    		if($type)
+    			$data[] = ['id'=>$type['typename']];
+    	}
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		return count($newdata);
+    	}
+    	else
+    		return 0;
+    }
+    
+    public static function getArea($params)
+    {
+    	$where = [];
+    	foreach ($params['disasterSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
+    	$result = Disaster::find ()->where ($where)->all ();
+    	$sum = 0.0;
+    	foreach($result as $value) {
+    		$sum += $value['disasterarea'];
+    	}
+    	return (float)sprintf("%.2f", $sum/10000);
+    }
+    
+    public static function getPlantRows($params)
+    {
+    	$where = [];
+    	foreach ($params['disasterSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
+    	$result = Disaster::find ()->where ($where)->all ();
+    	$data = [];
+    	foreach($result as $value) {
+    		$data[] = ['id'=>Plant::find()->where(['id'=>$value['disasterplant']])->one()['cropname']];
+    	}
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		return count($newdata);
+    	}
+    	else
+    		return 0;
+    }
+    
+    public static function getBX($params)
+    {
+    	$where = [];
+    	foreach ($params['disasterSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
+    	$result = Disaster::find ()->where ($where)->all ();
+    	$sum = 0;
+    	foreach($result as $value) {
+    		if($value['isinsurance'])
+    			$sum++;
+    	}
+    	return $sum;
     }
 }

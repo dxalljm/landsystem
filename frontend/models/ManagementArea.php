@@ -50,13 +50,15 @@ class ManagementArea extends \yii\db\ActiveRecord
         foreach ($area as $key => $val) {
             $data[$val->id] = $val->areaname;
         }
-
+// 		var_dump($data);exit;
     	return $data;
     }
     
     public static function getAreanameOne($id)
     {
+//     	var_dump($id);
     	$data = self::getAreaname();
+//     	var_dump($data);exit;
     	return  $data[$id];   //主要通过此种方式实现
     }
 }

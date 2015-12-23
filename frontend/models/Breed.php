@@ -29,7 +29,7 @@ class Breed extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['farms_id', 'is_demonstration','create_at','update_at'], 'integer'],
+            [['farms_id', 'is_demonstration','create_at','update_at','management_area'], 'integer'],
             [['breedname', 'breedaddress'], 'string', 'max' => 500]
         ];
     }
@@ -46,7 +46,8 @@ class Breed extends \yii\db\ActiveRecord
             'breedaddress' => '养殖位置',
             'is_demonstration' => '是否示范户',
         	'create_at' => '创建日期',
-        	'update_at' => '更新日期'
+        	'update_at' => '更新日期',
+        	'management_area' => '管理区',
         ];
     }
 }

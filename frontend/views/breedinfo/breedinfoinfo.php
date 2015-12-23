@@ -13,7 +13,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 use yii\helpers\Url;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Search;
-use app\models\Fireprevention;
+use app\models\Breedinfo;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -28,8 +28,19 @@ use app\models\Fireprevention;
  <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'columns' => Search::getColumns(['management_area','farms_id','firewcd'],$params),
-        			
+        'total' => '<tr>
+			        <td></td>
+			        <td align="center"><strong>合计</strong></td>
+			        <td><strong>'.Breedinfo::getFarmRows($params).'户</strong></td>
+			        <td><strong>'.Breedinfo::getFarmerrows($params).'个</strong></td>
+			        <td><strong></strong></td>
+			        <td><strong></strong></td>
+			        <td><strong></strong></td>
+			        <td><strong>'.Breedinfo::getTypeRows($params).'种</strong></td>
+					<td><strong></strong></td>
+
+			        </tr>',
+        'columns' => Search::getColumns(['management_area','breed_id','breedtype_id','number'],$params),
     ]); ?>
                 </div>
             </div>

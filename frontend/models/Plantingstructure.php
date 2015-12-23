@@ -320,7 +320,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     
     public static function getFarmerrows($params)
     {
-    	var_dump($params);
+//     	var_dump($params);
     	$where = [];
     	foreach ($params['plantingstructureSearch'] as $key => $value) {
     		if($value !== '')

@@ -57,11 +57,15 @@ class FirepreventionController extends Controller
     public function actionFirepreventioninfo()
     {
     	$searchModel = new firepreventionSearch();
+    	$params = Yii::$app->request->queryParams;
    		$whereArray = Farms::getManagementArea()['id'];
+   		
     	if (empty($params['firepreventionSearch']['management_area'])) {
     		$params ['firepreventionSearch'] ['management_area'] = $whereArray;
     	}
+    	
     	$dataProvider = $searchModel->search ( $params );
+    	
     	if (is_array($searchModel->management_area)) {
 			$searchModel->management_area = null;
 		}

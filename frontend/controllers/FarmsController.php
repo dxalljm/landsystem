@@ -332,7 +332,7 @@ class FarmsController extends Controller {
 		
 		$params = Yii::$app->request->queryParams;
 		$params ['farmsSearch'] ['state'] = 1;
-
+		
 		// 管理区域是否是数组
 		if (empty($params['farmsSearch']['management_area'])) {
 			$params ['farmsSearch'] ['management_area'] = $whereArray;
@@ -1303,7 +1303,7 @@ class FarmsController extends Controller {
 	}
 	public function actionFarmssearch($tab, $begindate, $enddate, $management_area, $farmname, $farmername, $telephone, $address) {
 		$post = Yii::$app->request->post ();
-		// var_dump($post);exit;
+// 		var_dump($post);exit;
 		if ($post) {
 			if ($post ['tab'] == 'parmpt')
 				return $this->redirect ( [ 
@@ -1340,13 +1340,17 @@ class FarmsController extends Controller {
 			$params ['farmsSearch'] ['begindate'] = $begindate;
 			$params ['farmsSearch'] ['enddate'] = $enddate;
 			$dataProvider = $searchModel->searchIndex ( $params ['farmsSearch'] );
+			if (is_array($searchModel->management_area)) {
+				$searchModel->management_area = null;
+			}
 			return $this->render ( 'farmssearch', [ 
 					'searchModel' => $searchModel,
 					'dataProvider' => $dataProvider,
 					'tab' => $tab,
 					'management_area' => $management_area,
 					'begindate' => $begindate,
-					'enddate' => $enddate 
+					'enddate' => $enddate,
+					'params' => $params,
 			] );
 		}
 	}

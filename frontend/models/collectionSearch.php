@@ -64,12 +64,14 @@ class collectionSearch extends Collection
     public function search($params)
     {
 //     	var_dump($params);
+//     	exit;
         $query = Collection::find();
         $query->joinWith(['farms']);
+		
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+       
         $dataProvider->setSort([
         		'attributes' => [
         
@@ -81,17 +83,11 @@ class collectionSearch extends Collection
         
         		]
         ]);
-//         if(empty($this->ypayyear))
-//         	$this->ypayyear = (int)date('Y');
-        $this->load($params);
-
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
-
         
+		if(empty($this->ypayyear))
+			$this->ypayyear = date('Y');
+// 		var_dump($this->ypayyear);exit;
+        $this->load($params);        
         
        $query->andFilterWhere([
             'id' => $this->id,

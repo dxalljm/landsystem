@@ -357,20 +357,20 @@ class Farms extends \yii\db\ActiveRecord
     			$value ['info'] = '参加了' . Cooperativeoffarm::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '个合作社';
     			$value ['description'] = '注册资金等信息';
     			break;
-    		case 'breed' :
+    		case 'breedinfo' :
     			$value ['icon'] = 'fa fa-github-alt';
     			$value ['title'] = $menuUrl ['menuname'];
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
-    			$employeerows = Employee::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count ();
-    			$value ['info'] = '雇佣了' . $employeerows . '人';
-    			$value ['description'] = '雇佣人员的详细信息';
+    			$employeerows = Breed::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count ();
+    			$value ['info'] = '共有' . $employeerows . '户养殖户';
+    			$value ['description'] = '养殖户基本信息';
     			break;
     		case 'disaster' :
     			$value ['icon'] = 'fa fa-soundcloud';
     			$value ['title'] = $menuUrl ['menuname'];
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
-    			$value ['info'] = '种植了' . Plantingstructure::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '种作物';
-    			$value ['description'] = '种植作物信息';
+    			$value ['info'] = '有' . Disaster::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '户受灾';
+    			$value ['description'] = '农户受灾情况';
     			break;
     				
     		default :

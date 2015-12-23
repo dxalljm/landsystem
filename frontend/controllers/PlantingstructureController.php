@@ -267,6 +267,7 @@ class PlantingstructureController extends Controller
     		//$model->zongdi = Lease::getZongdi($model->zongdi);
     		$model->create_at = time();
     		$model->update_at = time();
+    		$model->management_area = Farms::getFarmsAreaID($farms_id);
     		$model->save();
     		
     		$new = $model->attributes;

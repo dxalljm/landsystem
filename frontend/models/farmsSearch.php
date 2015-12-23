@@ -142,12 +142,7 @@ class farmsSearch extends Farms
 		
         
      	$this->load($params);
-//     	$this->management_area = $params['farmsSearch']['management_area'];
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
+
         //var_dump($dataProvider);
         $query->andFilterWhere([
             'id' => $this->id,
@@ -190,19 +185,12 @@ class farmsSearch extends Farms
     
     	$dataProvider = new ActiveDataProvider([
     			'query' => $query,
-    			'pagination' => [
-    					'pageSize' => 0,
-    			],
+//     			'pagination' => [
+//     					'pageSize' => 20,
+//     			],
     	]);    
     
-//     	$this->load($params);
-    
-    	if (!$this->validate()) {
-    		// uncomment the following line if you do not want to any records when validation fails
-    		// $query->where('0=1');
-    		return $dataProvider;
-    	}
-    	if(isset($params['management_area']))
+    	if(isset($params['management_area']) and $params['management_area'] !== 0)
     		$management_area = $params['management_area'];
     	else
     		$management_area = $this->management_area;
@@ -232,7 +220,7 @@ class farmsSearch extends Farms
     			'locked' => $this->locked,
     			'management_area' => $management_area,
     	]);
-    	//$this->management_area = [1, 4, 5];
+//     	var_dump($management_area);exit;
     
     	$query->andFilterWhere($this->pinyinSearch($farmname))
     	->andFilterWhere($this->farmerpinyinSearch($farmername))
@@ -275,12 +263,6 @@ class farmsSearch extends Farms
     
     
     	$this->load($params);
-    
-    	if (!$this->validate()) {
-    		// uncomment the following line if you do not want to any records when validation fails
-    		// $query->where('0=1');
-    		return $dataProvider;
-    	}
     	//var_dump($dataProvider);
     	$query->andFilterWhere([
     			'id' => $this->id,
