@@ -46,9 +46,11 @@ class ManagementArea extends \yii\db\ActiveRecord
     {
     	$whereArray = Farms::getManagementArea();
     	$area = ManagementArea::find()->where(['id'=>$whereArray['id']])->all();
-    	$data = ArrayHelper::map($area, 'id', 'areaname');
-//     	$data[0]='全部';
-//     	var_dump($data);
+
+        foreach ($area as $key => $val) {
+            $data[$val->id] = $val->areaname;
+        }
+
     	return $data;
     }
     

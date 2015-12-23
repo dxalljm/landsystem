@@ -339,6 +339,12 @@ class FarmsController extends Controller {
 		}
 
 		$dataProvider = $searchModel->search ( $params );
+
+		// 如果选择多个区域, 默认为空
+		if (is_array($searchModel->management_area)) {
+			$searchModel->management_area = null;
+		}
+
 		Logs::writeLog ( '农场管理' );
 		return $this->render ( 'farmsland', [
 				'searchModel' => $searchModel,

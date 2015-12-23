@@ -24,9 +24,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-body">
-                    <?php
-                    
-                    ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
