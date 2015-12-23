@@ -28,7 +28,7 @@ class Yields extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['planting_id', 'farms_id','create_at','update_at'], 'integer'],
+            [['planting_id', 'farms_id','create_at','update_at','management_area'], 'integer'],
             [['single'], 'number']
         ];
     }
@@ -44,7 +44,112 @@ class Yields extends \yii\db\ActiveRecord
             'farms_id' => '农场ID',
             'single' => '单产',
         	'create_at' => '创建日期',
-        	'update_at' => '更新日期'
+        	'update_at' => '更新日期',
+        	'management_area'=> '管理区',
         ];
+    }
+    
+    public static function getAllname()
+    {
+    	$result = [];
+    	$where = Farms::getManagementArea()['id'];
+    	$yields = Yields::find ()->where (['management_area'=>$where])->all ();
+    	$data = [];
+    	foreach($yields as $value) {
+    		$data[] = ['id'=>Plantingstructure::find()->where(['id'=>$value['planting_id']])->one()['plant_id']];
+    	}
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		foreach($newdata as $value) {
+    			//     		var_dump($value);exit;
+    			$result[$value['id']] = Plant::find()->where(['id'=>$value['id']])->one()['cropname'];
+    		}
+    	}
+    	return $result;
+    }
+    
+    public static function getNameOne($id)
+    {
+    	$data = self::getAllname();
+    	return $data[$id];
+    }
+    
+    public static function getFarmRows($params)
+    {
+    	$where['management_area'] = $params['yieldsSearch']['management_area'];
+    	$row = Yields::find ()->where ($where)->count ();
+    	return $row;
+    }
+    
+    public static function getFarmerrows($params)
+    {
+    	$where = ['management_area'=>$params['yieldsSearch']['management_area']];
+    	$yields = Yields::find ()->where ($where)->all ();
+    	//     	var_dump($farms);exit;
+    	$data = [];
+    	foreach($yields as $value) {
+    		$farm = Farms::find()->where(['id'=>$value['farms_id']])->one();
+    		$data[] = ['farmername'=>$farm['farmername'],'cardid'=>$farm['cardid']];
+    	}
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		return count($newdata);
+    	}
+    	else
+    		return 0;;
+    }
+    
+    public static function getPlantRows($params)
+    {
+    	$where = ['management_area'=>$params['yieldsSearch']['management_area']];
+    	$yields = Yields::find ()->where ($where)->all ();
+    	$data = [];
+    	foreach($yields as $value) {
+    		$planting = Plantingstructure::find()->where(['id'=>$value['planting_id']])->one();
+    		if($planting)
+    			$data[] = ['plant_id'=>Plant::find()->where(['id'=>$planting['plant_id']])->one()['cropname']];
+    	}
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		return count($newdata);
+    	}
+    	else
+    		return 0;
+    }
+   
+    
+    public static function getPlantG($params)
+    {
+    	$where = ['management_area'=>$params['yieldsSearch']['management_area']];
+    	$yields = Yields::find ()->where ($where)->all ();
+    	$sum = 0.0;
+    	foreach($yields as $value) {
+    		$sum += $value['single'];
+    	}
+    	return (float)sprintf("%.2f", $sum/10000);
+    }
+    
+    public static function getPlantA($params)
+    {
+    	$where = ['management_area'=>$params['yieldsSearch']['management_area']];
+    	$yields = Yields::find ()->where ($where)->all ();
+    	$sum = 0.0;
+    	foreach($yields as $value) {
+    		$planting = Plantingstructure::find()->where(['id'=>$value['planting_id']])->one();
+    		$sum += $value['single']*$planting['area'];
+    	}
+    	return (float)sprintf("%.2f", $sum/10000);
+    }
+    
+    public static function getArea($params)
+    {
+    	$sum = 0.0;
+    	$where = ['management_area'=>$params['yieldsSearch']['management_area']];
+    	$yields = Yields::find ()->where ($where)->all();
+    	foreach ($yields as $value) {
+    		$planting = Plantingstructure::find()->where(['id'=>$value['planting_id']])->one();
+    		$sum += $planting['area'];
+    	}
+    	return (float)sprintf("%.2f", $sum/10000);
     }
 }

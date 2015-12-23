@@ -29,7 +29,7 @@ class Sales extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['planting_id','farms_id','create_at','update_at'], 'integer'],
+            [['planting_id','farms_id','create_at','update_at','management_area'], 'integer'],
             [['volume', 'price'], 'number'],
             [['whereabouts'], 'string', 'max' => 500]
         ];
@@ -48,7 +48,8 @@ class Sales extends \yii\db\ActiveRecord
             'volume' => '销售量',
             'price' => '价格',
         	'create_at' => '创建日期',
-        	'update_at' => '更新日期'
+        	'update_at' => '更新日期',
+        	'management_area' => '管理区',
         ];
     }
     

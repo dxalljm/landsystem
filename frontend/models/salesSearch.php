@@ -18,7 +18,7 @@ class salesSearch extends Sales
     public function rules()
     {
         return [
-            [['id', 'planting_id','farms_id','create_at','update_at'], 'integer'],
+            [['id', 'planting_id','farms_id','create_at','update_at','management_area'], 'integer'],
             [['whereabouts'], 'safe'],
             [['volume', 'price'], 'number'],
         ];
@@ -62,6 +62,7 @@ class salesSearch extends Sales
         	'farms_id' => $this->farms_id,
             'volume' => $this->volume,
             'price' => $this->price,
+        	'management_area' => $this->management_area,
         ]);
 
         $query->andFilterWhere(['like', 'whereabouts', $this->whereabouts]);

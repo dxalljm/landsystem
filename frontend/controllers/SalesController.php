@@ -75,7 +75,11 @@ class SalesController extends Controller
         $model = new Sales();
         $planting = Plantingstructure::find()->where(['farms_id'=>$farms_id])->all();
 		$volume = Sales::getVolume($planting_id);
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->create_at = time();
+        	$model->update_at = $model->create_at;
+        	$model->management_area = Farms::getFarmsAreaID($farms_id);
+        	$model->save();
             return $this->redirect(['salesindex', 'farms_id' => $farms_id,'plantings'=>$planting]);
         } else {
             return $this->render('salescreate', [
@@ -98,7 +102,9 @@ class SalesController extends Controller
         $model = $this->findModel($id);
         $planting = Plantingstructure::find()->where(['farms_id'=>$farms_id])->all();
         $volume = Sales::getVolume($planting_id);
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->update_at = time();
+        	$model->save();
             return $this->redirect(['salesview', 'id' => $model->id]);
         } else {
             return $this->render('salesupdate', [
