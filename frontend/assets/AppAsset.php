@@ -39,6 +39,7 @@ class AppAsset extends AssetBundle
         'vendor/bower/devbridge-autocomplete/dist/jquery.autocomplete.min.js',
     	'js/vendor/bower/lodop/LodopFuncs.js',
         'vendor/bower/highcharts/highcharts.js',
+        'vendor/bower/echarts/build/dist/echarts.js',
         'js/main.js',
     	
     ];
