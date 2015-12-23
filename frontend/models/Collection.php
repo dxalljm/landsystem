@@ -215,7 +215,7 @@ class Collection extends \yii\db\ActiveRecord {
 	public static function totalReal()
 	{
 		$whereArray = Farms::getManagementAreaAllID();
-		return sprintf("%.2f",Collection::find()->where(['farms_id'=>$whereArray])->sum('real_income_amount')/10000).'万元';
+		return sprintf("%.2f",Collection::find()->where(['farms_id'=>$whereArray])->sum('real_income_amount')/10000);
 	}
 	public static function totalAmounts()
 	{
@@ -225,6 +225,17 @@ class Collection extends \yii\db\ActiveRecord {
 		] )->sum ( 'measure' );
 		return (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [ 
 							'years' => date ( 'Y' ) 
-					] )->one ()['price']/10000).'万元';
+					] )->one ()['price']/10000);
 	}
+	
+	public static function getPercentage()
+	{
+		$real = self::totalReal();
+		$amounts = self::totalAmounts();
+		if($real !== 0.0)
+			$percentage = sprintf("%.2f",$real/$amounts)*100;
+		else 
+			$percentage = 0;
+		return $percentage;
+	} 
 }

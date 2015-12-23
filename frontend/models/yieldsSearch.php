@@ -18,7 +18,7 @@ class yieldsSearch extends Yields
     public function rules()
     {
         return [
-            [['id', 'planting_id', 'farms_id'], 'integer'],
+            [['id', 'planting_id', 'farms_id','management_area'], 'integer'],
             [['single'], 'number'],
         ];
     }
@@ -41,6 +41,7 @@ class yieldsSearch extends Yields
      */
     public function search($params)
     {
+//     	var_dump($params);exit;
         $query = Yields::find();
 
         $dataProvider = new ActiveDataProvider([
@@ -60,6 +61,7 @@ class yieldsSearch extends Yields
             'planting_id' => $this->planting_id,
             'farms_id' => $this->farms_id,
             'single' => $this->single,
+        	'management_area' => $this->management_area,
         ]);
 
         return $dataProvider;

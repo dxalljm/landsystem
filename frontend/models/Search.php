@@ -110,10 +110,10 @@ class Search extends \yii\db\ActiveRecord {
 									$planting = Plantingstructure::find ()->where ( [ 
 											'id' => $model->planting_id 
 									] )->one ();
-									return Plant::find ()->where ( [ 
-											'id' => $planting ['plant_id'] 
-									] )->one ()['cropname'];
-								} 
+								
+									return Yields::getNameOne($planting['plant_id']);
+								},
+								'filter' => Yields::getAllname(),
 						];
 						$columns [] = [ 
 								'label' => '种植面积',

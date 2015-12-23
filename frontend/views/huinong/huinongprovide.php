@@ -129,7 +129,7 @@ $this->params['breadcrumbs'][] = $this->title;
     						<td align="center"><?= Plant::find()->where(['id'=>$goodseed['plant_id']])->one()['cropname']?></td>
     						<td align="center"><?= $goodseed['plant_model']?></td>
     					<?php }?>
-    					<td align="center"><?= '有'.Dispute::find()->where(['farms_id'=>$value['farms_id']])->count().'条纠纷'?></td>
+    					<td align="center"><?= Dispute::find()->where(['farms_id'=>$value['farms_id']])->count().'条'?></td>
     					<td align="center"><?= Collection::getCollecitonInfo($value['farms_id'])?></td>
     					<td align="center"><?= $value['area'].' 亩'?></td>
     					<td align="center"><?= $value['money'].' 元'?></td>

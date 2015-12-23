@@ -55,6 +55,16 @@ class HuinongController extends Controller
     			'huinongs' => $huinongs,
     	]);
     }
+    
+    public function actionHuinonginfo()
+    {
+    	$whereArray = Farms::getManagementArea();
+    	$huinongs = Huinong::find()->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->all();
+    	return $this->render('huinonginfo', [
+    			'huinongs' => $huinongs,
+    	]);
+    }
+    
     public function actionHuinongprovidelist()
     {
     	$huinongs = Huinong::find()->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->all();
@@ -100,6 +110,10 @@ class HuinongController extends Controller
    				$huinonggrantModel->create_at = time();
    				$huinonggrantModel->update_at = $huinonggrantModel->create_at;
    				$huinonggrantModel->save();
+   				$huinongModel = $this->findModel($id);
+   				$huinongModel->totalamount = Huinonggrant::find()->where(['huinong_id'=>$id])->sum('money');
+   				$huinongModel->realtotalamount = Huinonggrant::find()->where(['huinong_id'=>$id,'state'=>1])->sum('money');
+   				$huinongModel->save();
    				Logs::writeLog('地产科提交符合惠农政策条件的农场用户',$huinonggrantModel->id,'',$huinonggrantModel->attributes);
    			}
    			return $this->redirect(['huinongsend']);
@@ -125,7 +139,7 @@ class HuinongController extends Controller
 	   			$data = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid,'farms_id'=>$farmsallid])->all();
 	   			break;
 	   	}
-	   	$whereArray = Farms::getManagementArea();
+	   	$whereArray = Farms::getManagementArea()['id'];
 		$data = Huinonggrant::find()->where(['huinong_id'=>$id,'management_area'=>$whereArray])->all();
    		
 	   	return $this->render('huinongdatainfo', [
@@ -133,6 +147,30 @@ class HuinongController extends Controller
 	   			'classname' => $classname,
 	   			'model' => $model,
 	   	]);
+   }
+   
+   public function actionHuinonginfodata($id)
+   {
+   	$model = $this->findModel($id);
+   	$farmsallid = Farms::getManagementAreaAllID();
+   	switch ($model->subsidiestype_id) {
+   		case 'plant':
+   			$classname = 'plantingstructure';
+   			$data = Plantingstructure::find()->where(['plant_id'=>$model->typeid,'farms_id'=>$farmsallid])->all();
+   			break;
+   		case 'goodseed':
+   			$classname = 'plantingstructure';
+   			$data = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid,'farms_id'=>$farmsallid])->all();
+   			break;
+   	}
+   	$whereArray = Farms::getManagementArea()['id'];
+   	$data = Huinonggrant::find()->where(['huinong_id'=>$id,'management_area'=>$whereArray])->all();
+   	 
+   	return $this->render('huinonginfodata', [
+   			'data' => $data,
+   			'classname' => $classname,
+   			'model' => $model,
+   	]);
    }
    //惠农政策发放
    public function actionHuinongprovide($id)

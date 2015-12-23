@@ -50,6 +50,25 @@ class YieldsController extends Controller
         ]);
     }
 
+    public function actionYieldsinfo()
+    {
+    	$searchModel = new yieldsSearch();
+    	$params = Yii::$app->request->queryParams;
+    	$whereArray = Farms::getManagementArea()['id'];
+    	if(count($whereArray) == 1)
+    		$whereArray = $whereArray[0];
+    	if (empty($params['yieldsSearch']['management_area'])) {
+    		$params ['yieldsSearch'] ['management_area'] = $whereArray;
+    	}
+    	 
+    	$dataProvider = $searchModel->search ( $params );
+    	return $this->render('yieldsinfo',[
+    			'searchModel' => $searchModel,
+    			'dataProvider' => $dataProvider,
+    			'params' => $params,
+    	]);
+    }
+    
     /**
      * Displays a single Yields model.
      * @param integer $id
@@ -75,8 +94,11 @@ class YieldsController extends Controller
     	else 
         	$model = new Yields();
         $planting = Plantingstructure::find()->where(['farms_id'=>$farms_id])->all();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->management_area = Farms::getFarmsAreaID($farms_id);
+        	$model->create_at = time();
+        	$model->update_at = $model->create_at;
+        	$model->save();
             return $this->redirect(['yieldsindex', 'farms_id' => $farms_id,'plantings'=>$planting]);
         } else {
             return $this->render('yieldscreate', [
@@ -95,7 +117,9 @@ class YieldsController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->update_at = time();
+        	$model->save();
             return $this->redirect(['yieldsview', 'id' => $model->id]);
         } else {
             return $this->render('yieldsupdate', [

@@ -85,7 +85,10 @@ class Farms extends \yii\db\ActiveRecord
     }
     
     
-    
+    public static function getFarmsAreaID($farms_id)
+    {
+    	return Farms::find()->where(['id'=>$farms_id])->one()['management_area']; 
+    }
     public function getfarmer()
     {
     	return $this->hasOne(Farmer::className(), ['farms_id' => 'id']);
@@ -330,21 +333,21 @@ class Farms extends \yii\db\ActiveRecord
     			$value ['icon'] = 'fa fa-line-chart';
     			$value ['title'] = $menuUrl ['menuname'];
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
-    			$value ['info'] = '现共';// . Yields::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->sum () . '人租赁';
-    			$value ['description'] = '承租人信息及年限';
+    			$value ['info'] = '现有' . Yields::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '条产品信息';
+    			$value ['description'] = '农产品产量信息';
     			break;
     		case 'huinong' :
     			$value ['icon'] = 'fa fa-dollar';
     			$value ['title'] = $menuUrl ['menuname'];
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
-    			$value ['info'] = '现有' . Loan::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '条贷款信息';
-    			$value ['description'] = '贷款信息';
+    			$value ['info'] = '现有' . Huinong::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '条惠农补贴信息';
+    			$value ['description'] = '补贴发放情况';
     			break;
     		case 'collection' :
     			$value ['icon'] = 'fa fa-cny';
     			$value ['title'] = $menuUrl ['menuname'];
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
-    			$value ['info'] = '现有' . Dispute::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '个纠纷';
+    			$value ['info'] = '完成' . Collection::getPercentage().'%';
     			$value ['description'] = '纠纷具体事项';
     			break;
     		case 'fireprevention' :
