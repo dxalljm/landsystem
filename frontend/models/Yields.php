@@ -76,14 +76,22 @@ class Yields extends \yii\db\ActiveRecord
     
     public static function getFarmRows($params)
     {
-    	$where['management_area'] = $params['yieldsSearch']['management_area'];
+    	$where = [];
+    	foreach ($params['yieldsSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
     	$row = Yields::find ()->where ($where)->count ();
     	return $row;
     }
     
     public static function getFarmerrows($params)
     {
-    	$where = ['management_area'=>$params['yieldsSearch']['management_area']];
+    	$where = [];
+    	foreach ($params['yieldsSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
     	$yields = Yields::find ()->where ($where)->all ();
     	//     	var_dump($farms);exit;
     	$data = [];
@@ -101,7 +109,11 @@ class Yields extends \yii\db\ActiveRecord
     
     public static function getPlantRows($params)
     {
-    	$where = ['management_area'=>$params['yieldsSearch']['management_area']];
+    	$where = [];
+    	foreach ($params['yieldsSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
     	$yields = Yields::find ()->where ($where)->all ();
     	$data = [];
     	foreach($yields as $value) {
@@ -120,7 +132,11 @@ class Yields extends \yii\db\ActiveRecord
     
     public static function getPlantG($params)
     {
-    	$where = ['management_area'=>$params['yieldsSearch']['management_area']];
+    	$where = [];
+    	foreach ($params['yieldsSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
     	$yields = Yields::find ()->where ($where)->all ();
     	$sum = 0.0;
     	foreach($yields as $value) {
@@ -131,7 +147,11 @@ class Yields extends \yii\db\ActiveRecord
     
     public static function getPlantA($params)
     {
-    	$where = ['management_area'=>$params['yieldsSearch']['management_area']];
+    	$where = [];
+    	foreach ($params['yieldsSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
     	$yields = Yields::find ()->where ($where)->all ();
     	$sum = 0.0;
     	foreach($yields as $value) {
@@ -144,7 +164,11 @@ class Yields extends \yii\db\ActiveRecord
     public static function getArea($params)
     {
     	$sum = 0.0;
-    	$where = ['management_area'=>$params['yieldsSearch']['management_area']];
+   		$where = [];
+    	foreach ($params['yieldsSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
     	$yields = Yields::find ()->where ($where)->all();
     	foreach ($yields as $value) {
     		$planting = Plantingstructure::find()->where(['id'=>$value['planting_id']])->one();

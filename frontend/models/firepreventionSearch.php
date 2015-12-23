@@ -18,7 +18,7 @@ class firepreventionSearch extends Fireprevention
     public function rules()
     {
         return [
-            [['id', 'farms_id'], 'integer'],
+            [['id', 'farms_id','management_area'], 'integer'],
             [['firecontract', 'safecontract', 'environmental_agreement', 'firetools', 'mechanical_fire_cover', 'chimney_fire_cover', 'isolation_belt', 'propagandist', 'fire_administrator', 'cooker', 'fieldpermit', 'propaganda_firecontract', 'leaflets', 'employee_firecontract', 'rectification_record', 'equipmentpic', 'peoplepic', 'facilitiespic'], 'safe'],
         ];
     }
@@ -58,6 +58,7 @@ class firepreventionSearch extends Fireprevention
         $query->andFilterWhere([
             'id' => $this->id,
             'farms_id' => $this->farms_id,
+        	'management_area' => $this->management_area,
         ]);
 
         $query->andFilterWhere(['like', 'firecontract', $this->firecontract])

@@ -12,6 +12,7 @@ use app\models\Employee;
 use app\models\Lease;
 use app\models\Firepreventionemployee;
 use app\models\Logs;
+use app\models\Farms;
 /**
  * FirepreventionController implements the CRUD actions for Fireprevention model.
  */
@@ -53,6 +54,25 @@ class FirepreventionController extends Controller
         ]);
     }
 
+    public function actionFirepreventioninfo()
+    {
+    	$searchModel = new firepreventionSearch();
+   		$whereArray = Farms::getManagementArea()['id'];
+    	if (empty($params['firepreventionSearch']['management_area'])) {
+    		$params ['firepreventionSearch'] ['management_area'] = $whereArray;
+    	}
+    	$dataProvider = $searchModel->search ( $params );
+    	if (is_array($searchModel->management_area)) {
+			$searchModel->management_area = null;
+		}
+    	Logs::writeLog('防火工作');
+    	return $this->render('firepreventioninfo', [
+    			'searchModel' => $searchModel,
+    			'dataProvider' => $dataProvider,
+    			'params' => $params,
+    	]);
+    }
+    
     /**
      * Displays a single Fireprevention model.
      * @param integer $id
@@ -114,8 +134,9 @@ class FirepreventionController extends Controller
         	$fireemployeeModel->employee_id = $ArrEmployeesFire['employee_id'][$i];
         	$fireemployeeModel->is_smoking = $ArrEmployeesFire['is_smoking'][$i];
         	$fireemployeeModel->is_retarded = $ArrEmployeesFire['is_retarded'][$i];
-        	$new = $fireemployeeModel->attributes;
+        	$fireemployeeModel->management_area = Farms::getFarmsAreaID($farms_id);
         	$fireemployeeModel->save();
+        	$new = $fireemployeeModel->attributes;
         	Logs::writeLog($message,$fireemployeeModel->id,$old,$new);
         	
         }

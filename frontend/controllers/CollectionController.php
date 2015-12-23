@@ -18,6 +18,7 @@ use app\models\Logs;
 use app\models\User;
 use app\models\Department;
 use yii\bootstrap\Collapse;
+use app\models\ManagementArea;
 /**
  * CollectionController implements the CRUD actions for Collection model.
  */
@@ -70,8 +71,10 @@ class CollectionController extends Controller
         ]);
     }
     
-    public function actionCollectionsend($farms_id,$year)
+    public function actionCollectionsend($farms_id,$year = NULL)
     {
+    	if(empty($year))
+    		$year = Theyear::getYear();
     	$farm = Farms::find()->where(['id'=>$farms_id])->one();
    		$collection = Collection::find()->where(['farms_id'=>$farms_id,'ypayyear'=>$year])->one();
     	//var_dump($collection);
@@ -115,6 +118,7 @@ class CollectionController extends Controller
 			$model->create_at = time();
 			$model->update_at = time();
 			$model->dckpay = 0;
+			$model->management_area = Farms::find()->where(['id'=>$farms_id])->one()['management_area'];
 // 			var_dump($model->real_income_amount);
 // 			exit;
         	$model->save();
@@ -424,6 +428,34 @@ class CollectionController extends Controller
     	}
     }
     
+    public function actionCollectioninfo($ypayyear=NULL)
+    {
+   		 
+    	$searchModel = new collectionSearch();
+    	$params = Yii::$app->request->queryParams;
+    	$params ['collectionSearch'] ['dckpay'] = 1;
+//    		$params ['collectionSearch'] ['ypayyear'] = $ypayyear;
+    	$whereArray = Farms::getManagementArea()['id'];
+    	if (empty($params['collectionSearch']['management_area'])) {
+			$params ['collectionSearch'] ['management_area'] = $whereArray;
+		}
+
+		$dataProvider = $searchModel->search ( $params );
+
+		// 如果选择多个区域, 默认为空
+		if (is_array($searchModel->management_area)) {
+			
+			$searchModel->management_area = null;
+			
+		}
+// 		$searchModel->ypayyear = date('Y');
+    		return $this->render('collectioninfo',[
+    				'searchModel' => $searchModel,
+    				'dataProvider' => $dataProvider,
+    				'params' => $params,
+    		]);
+    	
+    }
     /**
      * Finds the Collection model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

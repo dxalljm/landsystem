@@ -39,7 +39,8 @@ class Collection extends \yii\db\ActiveRecord {
 								'ypayyear',
 								'isupdate',
 								'dckpay',
-								'payyear' 
+								'payyear',
+								'management_area', 
 						],
 						'integer' 
 				],
@@ -203,7 +204,8 @@ class Collection extends \yii\db\ActiveRecord {
 				'isupdate' => '是否可更新',
 				'create_at' => '创建日期',
 				'update_at' => '更新日期',
-				'dckpay' => '地产科提交缴费' 
+				'dckpay' => '地产科提交缴费', 
+				'management_area' => '管理区',
 		];
 	}
 	public function getfarms() {
@@ -238,4 +240,112 @@ class Collection extends \yii\db\ActiveRecord {
 			$percentage = 0;
 		return $percentage;
 	} 
+	
+	public static function getFarmRows($params)
+	{
+		$where = [];
+		foreach ($params['collectionSearch'] as $key => $value) {
+			if($value !== '')
+				$where[$key] = $value;
+		}
+		$row = Collection::find ()->where ($where)->count ();
+		return $row;
+	}
+	
+	public static function getFarmerrows($params)
+	{
+		$where = [];
+		foreach ($params['collectionSearch'] as $key => $value) {
+			if($value !== '')
+				$where[$key] = $value;
+		}
+		$result = Collection::find ()->where ($where)->all ();
+		//     	var_dump($farms);exit;
+		$data = [];
+		foreach($result as $value) {
+			$farm = Farms::find()->where(['id'=>$value['farms_id']])->one();
+			$data[] = ['farmername'=>$farm['farmername'],'cardid'=>$farm['cardid']];
+		}
+		if($data) {
+			$newdata = Farms::unique_arr($data);
+			return count($newdata);
+		}
+		else
+			return 0;;
+	}
+	
+	public static function getAmounts($params)
+	{
+		$where = [];
+		foreach ($params['collectionSearch'] as $key => $value) {
+			if($value !== '')
+				$where[$key] = $value;
+		}
+		$result = Collection::find ()->where ($where)->all ();
+		$sum = 0.0;
+		foreach($result as $value) {
+			$sum += $value['amounts_receivable'];
+		}
+		return (float)sprintf("%.2f", $sum/10000);
+	}
+	
+	public static function getReal($params)
+	{
+		$where = [];
+		foreach ($params['collectionSearch'] as $key => $value) {
+			if($value !== '')
+				$where[$key] = $value;
+		}
+		$result = Collection::find ()->where ($where)->all ();
+		$sum = 0.0;
+		foreach($result as $value) {
+			$sum += $value['real_income_amount'];
+		}
+		return (float)sprintf("%.2f", $sum/10000);
+	}
+	
+	public static function getAllOwe($params)
+	{
+		$where = [];
+		foreach ($params['collectionSearch'] as $key => $value) {
+			if($value !== '')
+				$where[$key] = $value;
+		}
+		$result = Collection::find ()->where ($where)->all ();
+		$sum = 0.0;
+		foreach($result as $value) {
+			$sum += $value['owe'];
+		}
+		return (float)sprintf("%.2f", $sum/10000);
+	}
+	
+	public static function getAllYpayarea($params)
+	{
+		$where = [];
+		foreach ($params['collectionSearch'] as $key => $value) {
+			if($value !== '')
+				$where[$key] = $value;
+		}
+		$result = Collection::find ()->where ($where)->all ();
+		$sum = 0.0;
+		foreach($result as $value) {
+			$sum += $value['ypayarea'];
+		}
+		return (float)sprintf("%.2f", $sum/10000);
+	}
+	
+	public static function getAllYpaymoney($params)
+	{
+		$where = [];
+		foreach ($params['collectionSearch'] as $key => $value) {
+			if($value !== '')
+				$where[$key] = $value;
+		}
+		$result = Collection::find ()->where ($where)->all ();
+		$sum = 0.0;
+		foreach($result as $value) {
+			$sum += $value['ypaymoney'];
+		}
+		return (float)sprintf("%.2f", $sum/10000);
+	}
 }

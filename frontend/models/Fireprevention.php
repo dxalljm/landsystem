@@ -44,7 +44,7 @@ class Fireprevention extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['farms_id'], 'integer'],
+            [['farms_id','management_area'], 'integer'],
             [['firecontract', 'safecontract', 'environmental_agreement', 'firetools', 'mechanical_fire_cover', 'chimney_fire_cover', 'isolation_belt', 'propagandist', 'fire_administrator', 'cooker', 'fieldpermit', 'propaganda_firecontract', 'leaflets', 'employee_firecontract', 'rectification_record', 'equipmentpic', 'peoplepic', 'facilitiespic'], 'string', 'max' => 500]
         ];
     }
@@ -57,6 +57,7 @@ class Fireprevention extends \yii\db\ActiveRecord
         return [
 			'id' => 'ID',
             'farms_id' => '农场ID',
+        	'management_area' => '管理区',
             'firecontract' => '文火合同',
             'safecontract' => '安全生产合同',
             'environmental_agreement' => '环境保护协议',

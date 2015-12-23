@@ -20,7 +20,7 @@ class collectionSearch extends Collection
 	public function rules()
     {
         return [
-            [['id', 'payyear','farms_id', 'ypayyear', 'isupdate','dckpay','create_at','update_at'], 'integer'],
+            [['id', 'payyear','farms_id', 'ypayyear', 'isupdate','dckpay','create_at','update_at','management_area'], 'integer'],
             [['farmname', 'billingtime'], 'safe'],
             [['ypayarea', 'amounts_receivable', 'real_income_amount', 'ypaymoney', 'owe'], 'number'],
         ];
@@ -35,6 +35,25 @@ class collectionSearch extends Collection
         return Model::scenarios();
     }
 
+    public function betweenSearch($str)
+    {
+    	if(!empty($this->$str)) {
+    		preg_match_all('/(.*)([0-9]+?)/iU', $this->$str, $where);
+    		//print_r($where);
+    
+    		// 		string(2) ">="
+    		// 		string(3) "300"
+    		if($where[1][0] == '>' or $where[1][0] == '>=')
+    			$tj = ['between', $str, (float)$where[2][0],(float)99999.0];
+    		if($where[1][0] == '<' or $where[1][0] == '<=')
+    			$tj = ['between', $str, (float)0.0,(float)$where[2][0]];
+    		if($where[1][0] == '')
+    			$tj = ['like', $str, $this->$str];
+    	} else
+    		$tj = ['like', $str, $this->$str];
+    	//var_dump($tj);
+    	return $tj;
+    }
     /**
      * Creates data provider instance with search query applied
      *
@@ -44,6 +63,7 @@ class collectionSearch extends Collection
      */
     public function search($params)
     {
+//     	var_dump($params);
         $query = Collection::find();
         $query->joinWith(['farms']);
         $dataProvider = new ActiveDataProvider([
@@ -61,7 +81,8 @@ class collectionSearch extends Collection
         
         		]
         ]);
-        
+//         if(empty($this->ypayyear))
+//         	$this->ypayyear = (int)date('Y');
         $this->load($params);
 
         if (!$this->validate()) {
@@ -77,18 +98,21 @@ class collectionSearch extends Collection
             'farms_id' => $this->farms_id,
             'payyear' => $this->payyear,
        		'ypayyear' => $this->ypayyear,
-            'ypayarea' => $this->ypayarea,
-            'ypaymoney' => $this->ypaymoney,
+//             'ypayarea' => $this->ypayarea,
+//             'ypaymoney' => $this->ypaymoney,
             'owe' => $this->owe,
        		'dckpay' => $this->dckpay,
             'isupdate' => $this->isupdate,
+       		'land_collection.management_area' => $this->management_area,
         ]);
 
         $query->andFilterWhere(['like', 'billingtime', $this->billingtime])
-            ->andFilterWhere(['like', 'amounts_receivable', $this->amounts_receivable])
-            ->andFilterWhere(['like', 'real_income_amount', $this->real_income_amount])
+            ->andFilterWhere($this->betweenSearch('amounts_receivable'))
+    		->andFilterWhere($this->betweenSearch('real_income_amount'))
+    		->andFilterWhere($this->betweenSearch('ypayarea'))
+    		->andFilterWhere($this->betweenSearch('ypaymoney'))
             ->andFilterWhere(['like', 'land_farms.farmname', $this->farmname])
-            ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
+            ->andFilterWhere(['between','land_collection.update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }
@@ -141,7 +165,7 @@ class collectionSearch extends Collection
     	->andFilterWhere(['like', 'amounts_receivable', $this->amounts_receivable])
     	->andFilterWhere(['like', 'real_income_amount', $this->real_income_amount])
     	->andFilterWhere(['like', 'land_farms.farmname', $this->farmname])
-    	->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+    	->andFilterWhere(['between','land.collection.update_at',$params['begindate'],$params['enddate']]);
     
     	return $dataProvider;
     }

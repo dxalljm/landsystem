@@ -73,12 +73,15 @@ class PlantingstructureController extends Controller
     	$searchModel = new plantingstructureSearch();
     	$params = Yii::$app->request->queryParams;
     	$whereArray = Farms::getManagementArea()['id'];
-//     	$params ['plantingstructureSearch']['farms_id'] = $arrayID;
     	if (empty($params['plantingstructureSearch']['management_area'])) {
-    		$params ['plantingstructureSearch'] ['management_area'] = $whereArray;
-    	}
+			$params ['plantingstructureSearch'] ['management_area'] = $whereArray;
+		}
+		$dataProvider = $searchModel->search ( $params );
+    	if (is_array($searchModel->management_area)) {
+			$searchModel->management_area = null;
+		}
     	
-    	$dataProvider = $searchModel->search ( $params );
+    	
     	return $this->render('plantingstructureinfo',[
     			'searchModel' => $searchModel,
     			'dataProvider' => $dataProvider,

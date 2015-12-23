@@ -165,7 +165,7 @@ jQuery('#collection-payyear').change(function(){
 				});
 			}
     });
-    $.get('/landsystem/frontend/web/index.php?r=collection/collectioncreate',{year:year,farms_id:<?= $_GET['farms_id']?>},function (data) {
+    $.get('/landsystem/frontend/web/index.php?r=collection/collectionsend',{year:year,farms_id:<?= $_GET['farms_id']?>},function (data) {
 		$('body').html(data);
 	});
 });

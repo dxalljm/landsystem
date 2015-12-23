@@ -307,14 +307,25 @@ class Plantingstructure extends \yii\db\ActiveRecord
     
     public static function getFarmRows($params)
     {
-    	$where['management_area'] = $params['plantingstructureSearch']['management_area'];
+    	$where = [];
+    	foreach ($params['plantingstructureSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
+//     	var_dump($where);
     	$row = Plantingstructure::find ()->where ($where)->count ();
+//     	var_dump($row);
     	return $row;
     }
     
     public static function getFarmerrows($params)
     {
-    	$where = ['management_area'=>$params['plantingstructureSearch']['management_area']];
+    	var_dump($params);
+    	$where = [];
+    	foreach ($params['plantingstructureSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
     	$Plantingstructure = Plantingstructure::find ()->where ($where)->all ();
     	//     	var_dump($farms);exit;
     	$data = [];
@@ -332,7 +343,11 @@ class Plantingstructure extends \yii\db\ActiveRecord
     
     public static function getLeaseRows($params)
     {
-    	$where = ['management_area'=>$params['plantingstructureSearch']['management_area']];
+    	$where = [];
+    	foreach ($params['plantingstructureSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
     	$Plantingstructure = Plantingstructure::find ()->where ($where)->all ();
     	$data = [];
     	foreach($Plantingstructure as $value) {
@@ -350,7 +365,11 @@ class Plantingstructure extends \yii\db\ActiveRecord
     
     public static function getPlantRows($params)
     {
-    	$where = ['management_area'=>$params['plantingstructureSearch']['management_area']];
+   		$where = [];
+    	foreach ($params['plantingstructureSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
     	$Plantingstructure = Plantingstructure::find ()->where ($where)->all ();
     	$data = [];
     	foreach($Plantingstructure as $value) {
@@ -367,7 +386,11 @@ class Plantingstructure extends \yii\db\ActiveRecord
     
     public static function getGoodseedRows($params)
     {
-    	$where = ['management_area'=>$params['plantingstructureSearch']['management_area']];
+    	$where = [];
+    	foreach ($params['plantingstructureSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
     	$Plantingstructure = Plantingstructure::find ()->where ($where)->all ();
     	$data = [];
     	foreach($Plantingstructure as $value) {
@@ -384,7 +407,11 @@ class Plantingstructure extends \yii\db\ActiveRecord
     
     public static function getArea($params)
     {
-    	$where = ['management_area'=>$params['plantingstructureSearch']['management_area']];
+   		$where = [];
+    	foreach ($params['plantingstructureSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
     	$area = Plantingstructure::find ()->where ($where)->sum ('area');
     	return (float)sprintf("%.2f", $area/10000);
     }

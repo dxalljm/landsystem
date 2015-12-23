@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\base\Theme;
 
 /**
  * This is the model class for table "{{%theyear}}".
@@ -46,6 +47,11 @@ class Theyear extends \yii\db\ActiveRecord
     	$year = Theyear::findOne(1)['years'];
     	$thisyear = [strtotime($year.'-01-01 00:00:01'),strtotime($year.'-12-31 23:59:59')];
     	return $thisyear;
+    }
+    
+    public static function getYear()
+    {
+    	return Theyear::findOne(1)['years'];
     }
     
     public static function formatDate($begindate=false,$enddate=false)

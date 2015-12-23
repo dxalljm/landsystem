@@ -55,13 +55,15 @@ class YieldsController extends Controller
     	$searchModel = new yieldsSearch();
     	$params = Yii::$app->request->queryParams;
     	$whereArray = Farms::getManagementArea()['id'];
-    	if(count($whereArray) == 1)
-    		$whereArray = $whereArray[0];
     	if (empty($params['yieldsSearch']['management_area'])) {
     		$params ['yieldsSearch'] ['management_area'] = $whereArray;
     	}
-    	 
     	$dataProvider = $searchModel->search ( $params );
+    	if (is_array($searchModel->management_area)) {
+			$searchModel->management_area = null;
+		}
+    	 
+    	
     	return $this->render('yieldsinfo',[
     			'searchModel' => $searchModel,
     			'dataProvider' => $dataProvider,

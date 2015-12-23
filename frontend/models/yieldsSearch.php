@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Yields;
-
+use app\models\Theyear;
 /**
  * yieldsSearch represents the model behind the search form about `app\models\Yields`.
  */
@@ -63,7 +63,7 @@ class yieldsSearch extends Yields
             'single' => $this->single,
         	'management_area' => $this->management_area,
         ]);
-
+        $query->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
         return $dataProvider;
     }
     public function searchIndex($params)

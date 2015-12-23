@@ -32,8 +32,8 @@ $this->params['breadcrumbs'][] = $this->title;
     				<tr>
     					<td align="center">补贴类型</td>
     					<td align="center">补贴种类</td>
-    					<td align="center">应发金额</td>
-    					<td align="center">实发金额</td>
+    					<td align="center">应发人数</td>
+    					<td align="center">实发人数</td>
     					<td align="center">完成度</td>
     					<td align="center">操作</td>
     				</tr>
@@ -50,9 +50,9 @@ $this->params['breadcrumbs'][] = $this->title;
 				            		} ?>
             		</td>
             		<?php $huinonggrant = Huinonggrant::find();
-            		$total = (float)$huinonggrant->where(['huinong_id'=>$value['id']])->sum('money');
-            		$real = (float)$huinonggrant->where(['huinong_id'=>$value['id'],'state'=>1])->sum('money');
-            		if($real !== 0.0) {
+            		$total = $huinonggrant->where(['huinong_id'=>$value['id']])->count();
+            		$real = $huinonggrant->where(['huinong_id'=>$value['id'],'state'=>1])->count();
+            		if($real) {
             			$bfb = sprintf("%.2f", $real/$total)*100;
             			$bfb = $bfb.'%';
             		}
