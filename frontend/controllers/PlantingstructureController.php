@@ -76,12 +76,13 @@ class PlantingstructureController extends Controller
     	if (empty($params['plantingstructureSearch']['management_area'])) {
 			$params ['plantingstructureSearch'] ['management_area'] = $whereArray;
 		}
+		
 		$dataProvider = $searchModel->search ( $params );
     	if (is_array($searchModel->management_area)) {
 			$searchModel->management_area = null;
 		}
     	
-    	
+		
     	return $this->render('plantingstructureinfo',[
     			'searchModel' => $searchModel,
     			'dataProvider' => $dataProvider,

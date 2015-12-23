@@ -48,7 +48,9 @@ class plantingstructureSearch extends Plantingstructure
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-		
+      
+//        
+        
         $this->load($params);
 
         $query->andFilterWhere([
@@ -63,8 +65,8 @@ class plantingstructureSearch extends Plantingstructure
 
         $query->andFilterWhere(['like', 'zongdi', $this->zongdi])
         ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
-
         return $dataProvider;
+        
     }
     public function searchIndex($params)
     {

@@ -330,9 +330,13 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	//     	var_dump($farms);exit;
     	$data = [];
     	foreach($Plantingstructure as $value) {
-    		$farm = Farms::find()->where(['id'=>$value['farms_id']])->one();
-    		$data[] = ['farmername'=>$farm['farmername'],'cardid'=>$farm['cardid']];
+			$allid[] = $value['farms_id'];	
     	}
+    	$farm = Farms::find()->where(['id'=>$allid])->all();
+    	foreach ($farm as $val) {
+    		$data[] = ['farmername'=>$val['farmername'],'cardid'=>$val['cardid']];
+    	}
+   	
     	if($data) {
     		$newdata = Farms::unique_arr($data);
     		return count($newdata);
@@ -351,10 +355,13 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	$Plantingstructure = Plantingstructure::find ()->where ($where)->all ();
     	$data = [];
     	foreach($Plantingstructure as $value) {
-    		$lease = Lease::find()->where(['id'=>$value['lease_id']])->one();
-    		if($lease)
-    			$data[] = ['lessee'=>$lease['lessee'],'lessee_cardid'=>$lease['lessee_cardid']];
+    		$allid[] = $value['lease_id'];
     	}
+    	$lease = Lease::find()->where(['id'=>$allid])->all();
+    	foreach ($lease as $val) {
+    		$data[] = ['lessee'=>$val['lessee'],'lessee_cardid'=>$val['lessee_cardid']];
+    	}
+    		
     	if($data) {
     		$newdata = Farms::unique_arr($data);
     		return count($newdata);
@@ -370,6 +377,13 @@ class Plantingstructure extends \yii\db\ActiveRecord
     		if($value !== '')
     			$where[$key] = $value;
     	}
+    	
+    	
+    	Farms::find()->where([
+    	'id'=>[1,2,3,4,5,6]])->all();
+    	
+    	
+    	
     	$Plantingstructure = Plantingstructure::find ()->where ($where)->all ();
     	$data = [];
     	foreach($Plantingstructure as $value) {

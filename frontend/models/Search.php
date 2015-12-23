@@ -43,6 +43,7 @@ class Search extends \yii\db\ActiveRecord {
 		];
 		// var_dump(yii::$app->controller->id);
 // 		if (yii::$app->controller->id !== 'farms') {
+
 			foreach ( $field as $value ) {
 				
 				switch ($value) {
@@ -425,7 +426,7 @@ class Search extends \yii\db\ActiveRecord {
 						$columns [] = [ 
 								'attribute' => $value,
 								'value' => function($model) {
-								
+// 									return '111';
 									return Plant::getNameOne($model->plant_id);
 								},
 								'filter' => Plant::getAllname(),
