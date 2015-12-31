@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Fireprevention;
-
+use app\models\Theyear;
 /**
  * firepreventionSearch represents the model behind the search form about `app\models\Fireprevention`.
  */
@@ -41,6 +41,7 @@ class firepreventionSearch extends Fireprevention
      */
     public function search($params)
     {
+//     	var_dump($params);exit;
         $query = Fireprevention::find();
 
         $dataProvider = new ActiveDataProvider([
@@ -48,12 +49,6 @@ class firepreventionSearch extends Fireprevention
         ]);
 
         $this->load($params);
-
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
 
         $query->andFilterWhere([
             'id' => $this->id,

@@ -11,7 +11,7 @@ use yii\helpers\Url;
 /* @var $searchModel frontend\models\tempprintbillSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'tempprintbill';
+$this->title = 'collection';
 $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctablename'];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -28,10 +28,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <div class="box-body">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <h3>截止<?= date('Y年m月d日',$create_at)?>止已经收缴<?= MoneyFormat::num_format($billSum)?>元整</h3>
-    </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

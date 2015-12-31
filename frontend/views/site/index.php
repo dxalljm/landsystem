@@ -13,13 +13,13 @@ use app\models\Plantingstructure;
 use app\models\Cache;
 $this->title = '岭南管委会';
 ?>
-<script type="text/javascript" src="js/showhighcharts.js"></script>
+
+<script type="text/javascript" src="js/showEcharts.js"></script>
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <ol class="breadcrumb">
     <li><a href="<?= Url::to('index.php?r=site/index')?>"><i class="fa fa-dashboard"></i> 首页</a></li>
   </ol>
-<?php var_dump(Plantingstructure::getALlsum());?>
 <div class="row">
         <div class="col-md-4">
           <!-- Box Comment -->
@@ -40,11 +40,7 @@ $this->title = '岭南管委会';
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-           
-				<div id="statis-area" style="min-width: 262px; height: 300px; margin: 0 auto"; ></div>
-				<script type="text/javascript">
-   			showCombination('statis-area','',<?= Cache::getCache(\Yii::$app->getUser()->getId())['farmscategories']?>,'',<?= Cache::getCache(\Yii::$app->getUser()->getId())['farmscache']?>,'万亩');
-		</script>
+
             </div>
         
           </div>
@@ -72,10 +68,9 @@ $this->title = '岭南管委会';
             <!-- /.box-header -->
             <div class="box-body">
               <?php //var_dump(Collection::getCollection());?>
-        		<div id="collection" style="min-width: 100%; height: 300px; margin: 0 auto;" ></div>
-   			 <script type="text/javascript">
-   			showStacked('collection','',<?php echo Cache::getCache(\Yii::$app->getUser()->getId())['collectioncategories'];?>,'',<?php echo Cache::getCache(\Yii::$app->getUser()->getId())['collectioncache']?>,'万元');
-		</script>
+              <div id="collection" style="width:510px;height:300px"></div>
+<script type="text/javascript">showShadow('collection',['应收金额','实收金额'],<?php echo Cache::getCache(\Yii::$app->getUser()->getId())['collectioncategories'];?>,<?php echo Cache::getCache(\Yii::$app->getUser()->getId())['collectioncache']?>,'万元')</script>
+
             </div>
             <!-- /.box-body -->
           </div>

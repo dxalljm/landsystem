@@ -13,6 +13,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 use yii\helpers\Url;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Search;
+use app\models\Fireprevention;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -27,7 +28,8 @@ use app\models\Search;
  <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'columns' => Search::getColumns(['management_area','farms_id'],$params),
+        'columns' => Search::getColumns(['management_area','farms_id','firewcd'],$params),
+        			
     ]); ?>
                 </div>
             </div>

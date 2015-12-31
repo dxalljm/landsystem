@@ -24,7 +24,7 @@ use app\models\Collection;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-body">
-
+<?php //var_dump($dataProvider->getModels());exit;?>
  <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -40,7 +40,7 @@ use app\models\Collection;
 			        <td><strong>'.Collection::getAllYpayarea($params).'万亩</strong></td>
             		<td><strong>'.Collection::getAllYpaymoney($params).'万元</strong></td>
 			        </tr>',
-        'columns' => Search::getColumns(['management_area','ypayyear','farms_id','amounts_receivable','real_income_amount','owe','ypayarea','ypaymoney']),
+        'columns' => Search::getColumns(['management_area','ypayyear','farms_id','amounts_receivable','real_income_amount','owe','ypayarea','ypaymoney'],$params),
     ]); ?>
                 </div>
             </div>

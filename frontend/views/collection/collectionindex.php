@@ -35,7 +35,12 @@ use app\models\Farms;
             ['class' => 'yii\grid\SerialColumn'],
 
           // 'id',
-            
+            [
+	            'attribute' => 'management_area',
+	            'value' => function($model) {
+	            	return ManagementArea::find()->where(['id'=>$model->management_area])->one()['areaname'];
+            }
+            ],
             [
             	'label' => '农场名称',
               	'attribute' => 'farmname',

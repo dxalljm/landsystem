@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
   <tr>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo date('Y年m月d日',$model->create_at)?></td>
     <td align="right">NO:</td>
-    <td width="30%"><?= $model->nonumber?></td>
+    <td width="30%"><?php if($model->nonumber) echo $model->nonumber;?></td>
   </tr>
 </table>
 <table width="100%" border="1">

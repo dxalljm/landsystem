@@ -46,7 +46,14 @@ class Plant extends \yii\db\ActiveRecord
     
     public static function getAllname()
     {
-    	$result = [];
+    	$cache = 'cache-key-plants';
+    	$result = Yii::$app->cache->get($cache);
+    	if (!empty($result)) {
+    		return $result;
+    	}
+    	
+    	
+     	$result = [];
     	$where = Farms::getManagementArea()['id'];
     	$Plantingstructure = Plantingstructure::find ()->where (['management_area'=>$where])->all ();
     	$data = [];
@@ -56,10 +63,16 @@ class Plant extends \yii\db\ActiveRecord
     	if($data) {
     	$newdata = Farms::unique_arr($data);
 	    	foreach($newdata as $value) {
+	    		$allid[] = $value['id'];
 	//     		var_dump($value);exit;
-	    		$result[$value['id']] = Plant::find()->where(['id'=>$value['id']])->one()['cropname'];
+// 	    		$result[$value['id']] = Plant::find()->where(['id'=>$value['id']])->one()['cropname'];
+	    	}
+	    	$plants = Plant::find()->where(['id'=>$allid])->all();
+	    	foreach ($plants as $value) {
+	    		$result[$value->id] = $value->cropname;
 	    	}
     	}
+    	Yii::$app->cache->set($cache, $result, 86400);
     	return $result;
     }
     

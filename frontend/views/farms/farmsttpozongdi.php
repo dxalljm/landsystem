@@ -86,7 +86,7 @@ use app\models\Loan;
     <?= Html::a('新建', ['farmssplit', 'farms_id' => $_GET['farms_id']], ['class' => 'btn btn-primary']) ?>
     <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
     <?php } else {?>
-    	<h4>此农场因贷款事由现已被冻结，解冻日期为<?= Loan::find()->where(['farms_id'=>$_GET['farms_id']])->one()['enddate'];?></h4>
+    	<h4><?= Lockedinfo::find()->where(['farms_id'=>$farms_id])->one()['lockedcontent']?></h4>
     <?php }?>
               </div>
             </div>

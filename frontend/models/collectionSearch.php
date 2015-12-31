@@ -21,7 +21,7 @@ class collectionSearch extends Collection
     {
         return [
             [['id', 'payyear','farms_id', 'ypayyear', 'isupdate','dckpay','create_at','update_at','management_area'], 'integer'],
-            [['farmname', 'billingtime'], 'safe'],
+            [['farmname', 'billingtime','nonumber'], 'safe'],
             [['ypayarea', 'amounts_receivable', 'real_income_amount', 'ypaymoney', 'owe'], 'number'],
         ];
     }
@@ -64,12 +64,14 @@ class collectionSearch extends Collection
     public function search($params)
     {
 //     	var_dump($params);
+//     	exit;
         $query = Collection::find();
         $query->joinWith(['farms']);
+		
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+       
         $dataProvider->setSort([
         		'attributes' => [
         
@@ -81,17 +83,11 @@ class collectionSearch extends Collection
         
         		]
         ]);
-//         if(empty($this->ypayyear))
-//         	$this->ypayyear = (int)date('Y');
-        $this->load($params);
-
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
-
         
+		if(empty($this->ypayyear))
+			$this->ypayyear = date('Y');
+// 		var_dump($this->ypayyear);exit;
+        $this->load($params);        
         
        $query->andFilterWhere([
             'id' => $this->id,
@@ -109,6 +105,7 @@ class collectionSearch extends Collection
         $query->andFilterWhere(['like', 'billingtime', $this->billingtime])
             ->andFilterWhere($this->betweenSearch('amounts_receivable'))
     		->andFilterWhere($this->betweenSearch('real_income_amount'))
+    		->andFilterWhere(['like', 'nonumber', $this->nonumber])
     		->andFilterWhere($this->betweenSearch('ypayarea'))
     		->andFilterWhere($this->betweenSearch('ypaymoney'))
             ->andFilterWhere(['like', 'land_farms.farmname', $this->farmname])

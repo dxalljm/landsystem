@@ -125,13 +125,17 @@ class Collection extends \yii\db\ActiveRecord {
 			$allmeasure = Farms::find ()->where ( [ 
 					'management_area' => $value 
 			] )->sum ( 'measure' );
-			$amounts_receivable [] = [ 
-					'color' => $amountsColor[$i],
-					'borderColor' => $color [$i],
-					'y' => (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [
+			$amountsSum =  (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [
 							'years' => date ( 'Y' ) 
-					] )->one ()['price']/10000)
-			];
+					] )->one ()['price']/10000);
+			$amounts_receivable[] = $amountsSum;
+// 			$amounts_receivable [] = [ 
+// 					'color' => $amountsColor[$i],
+// 					'borderColor' => $color [$i],
+// 					'y' => (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [
+// 							'years' => date ( 'Y' ) 
+// 					] )->one ()['price']/10000)
+// 			];
 			$farm = Farms::find()->where(['management_area' => $value])->all();
 			$collectionSUm = 0.0;
 			foreach ($farm as $val) {
@@ -139,50 +143,104 @@ class Collection extends \yii\db\ActiveRecord {
 						'farms_id' => $val['id'] 
 				] )->sum ( 'real_income_amount' )/10000);
 			}
-			$real_income_amount [] = [
-					'color' => $color[$i],
-					'y' => $collectionSUm,
-			];
+// 			$real_income_amount [] = [
+// 					'color' => $color[$i],
+// 					'y' => $collectionSUm,
+// 			];
+			$real_income_amount[] = $collectionSUm;
 			$i ++;
 		}
-		$result = [ 
-				[
-// 					'color' => '#FFF',					
-						'name' => '应收金额',
-						'data' => $amounts_receivable,
-						'dataLabels' => [
-								'enabled' => false,
-								'rotation' => 0,
-								'color' => '#FFFFFF',
-								'align' => 'center',
-								'x' => 0,
-								'y' => 0,
-								'style' => [
-										'fontSize' => '13px',
-										'fontFamily' => 'Verdana, sans-serif',
-										'textShadow' => '0 0 3px black'
-								]
-						]
-				],
-				[
-						'name' => '实收金额',
-						'data' => $real_income_amount,
-						'dataLabels' => [
-								'enabled' => true,
-								'rotation' => 0,
-								'color' => '#FFFFFF',
-								'align' => 'center',
-								'x' => 0,
-								'y' => 0,
-								'style' => [
-										'fontSize' => '13px',
-										'fontFamily' => 'Verdana, sans-serif',
-										'textShadow' => '0 0 3px black'
-								]
-						]
+		$cha = [];
+// 		var_dump($amounts_receivable);
+		for($i=0;$i<count($amounts_receivable);$i++) {
+			$cha[$i] = $amounts_receivable[$i] - $real_income_amount[$i];
+		}
+// 		exit;
+		$result = [[
+			'name'=>'应收金额',
+			'type'=>'bar',
+			'stack'=>'sum',
+			'barCategoryGap'=>'50%',
+			'itemStyle'=>[
+				'normal'=> [
+					'color'=> 'tomato',
+					'barBorderColor'=> 'tomato',
+					'barBorderWidth'=> 6,
+					'barBorderRadius'=>0,
+					'label'=>[
+						'show'=> true, 
+						'position'=> 'insideTop'
+					]
 				]
-		];
-// 		var_dump($result[0]);
+			],
+			'data'=>$amounts_receivable,
+		],
+		[
+			'name'=>'实收金额',
+			'type'=>'bar',
+			'stack'=>'sum',
+			'itemStyle'=> [
+				'normal'=> [
+					'color'=>'#fff',
+					'barBorderColor'=> 'tomato',
+					'barBorderWidth'=> 6,
+					'barBorderRadius'=>0,
+					'label' => [
+						'show'=> true,
+						'position'=> 'top',
+// 						'formatter'=> 'function (params) {
+// 							for (var i = 0, l = option.xAxis[0].data.length; i < l; i++) {
+// 								if (option.xAxis[0].data[i] == params.name) {
+// 									return option.series[0].data[i] + params.value;
+// 								}
+// 							}
+// 						}',
+						'textStyle'=>[
+							'color'=> 'tomato'
+						]
+					]
+				]
+			],
+			'data'=>$cha,
+		]];
+// 		$result = [ 
+// 				[
+// // 					'color' => '#FFF',					
+// 						'name' => '应收金额',
+// 						'data' => $amounts_receivable,
+// 						'dataLabels' => [
+// 								'enabled' => false,
+// 								'rotation' => 0,
+// 								'color' => '#FFFFFF',
+// 								'align' => 'center',
+// 								'x' => 0,
+// 								'y' => 0,
+// 								'style' => [
+// 										'fontSize' => '13px',
+// 										'fontFamily' => 'Verdana, sans-serif',
+// 										'textShadow' => '0 0 3px black'
+// 								]
+// 						]
+// 				],
+// 				[
+// 						'name' => '实收金额',
+// 						'data' => $real_income_amount,
+// 						'dataLabels' => [
+// 								'enabled' => true,
+// 								'rotation' => 0,
+// 								'color' => '#FFFFFF',
+// 								'align' => 'center',
+// 								'x' => 0,
+// 								'y' => 0,
+// 								'style' => [
+// 										'fontSize' => '13px',
+// 										'fontFamily' => 'Verdana, sans-serif',
+// 										'textShadow' => '0 0 3px black'
+// 								]
+// 						]
+// 				]
+// 		];
+		var_dump($result);
 		$jsonData = json_encode ( [ 
 				'result' => $result 
 		] );
@@ -218,20 +276,25 @@ class Collection extends \yii\db\ActiveRecord {
 	public static function totalReal($userid)
 	{
 		$whereArray = Farms::getUserManagementArea($userid);
-		$farm = Farms::find()->where(['management_area'=>$whereArray])->all();
-		$sum = 0.0;
-		foreach ($farm as $value) {
-			$sum += Collection::find()->where(['farms_id'=>$value['id']])->sum('real_income_amount');
-		}
+		//$farm = Farms::find()->where(['management_area'=>$whereArray])->all();
+		//$sum = 0.0;
+		//foreach ($farm as $value) {
+			$sum = (float)Collection::find()->where(['management_area'=>$whereArray,'dckpay'=>1])->sum('real_income_amount');
+// 			var_dump($s);
+			
+		//}
+		
 		return sprintf("%.2f",$sum/10000).'万元';
 	}
 	public static function totalAmounts($userid)
 	{
 		$whereArray = Farms::getUserManagementArea($userid);
-		$allmeasure = Farms::find ()->where ( [
-				'management_area' => $whereArray
-		] )->sum ( 'measure' );
-		return (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [ 
+		$farms = Farms::find()->where(['management_area'=>$whereArray])->all();
+		$sum = 0.0;
+		foreach ($farms as $value) {
+			$sum += Farms::getNowContractnumberArea($value['id']);
+		}
+		return (float)sprintf("%.2f",$sum * PlantPrice::find ()->where ( [ 
 							'years' => date ( 'Y' ) 
 					] )->one ()['price']/10000).'万元';
 	}

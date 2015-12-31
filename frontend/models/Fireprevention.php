@@ -80,4 +80,17 @@ class Fireprevention extends \yii\db\ActiveRecord
         	'update_at' => '更新日期',
         ];
     }
+    
+    public static function getFinir($id)
+    {
+    	$yes = 0;
+    	$no = 0;
+    	$array = ['firecontract', 'safecontract', 'environmental_agreement', 'firetools', 'mechanical_fire_cover', 'chimney_fire_cover', 'isolation_belt', 'propagandist', 'fire_administrator', 'cooker', 'fieldpermit', 'propaganda_firecontract', 'leaflets', 'employee_firecontract', 'rectification_record', 'equipmentpic', 'peoplepic', 'facilitiespic'];
+    	foreach ($array as $value) {
+    		$fire = Fireprevention::find()->where(['id'=>$id])->one();
+    		if($fire[$value])
+    			$yes++;
+    	}
+    	return (float)sprintf("%.2f", $yes/count($array))*100;
+    }
 }

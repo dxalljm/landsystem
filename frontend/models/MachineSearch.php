@@ -41,6 +41,8 @@ class MachineSearch extends Machine
      */
     public function search($params)
     {
+//     	var_dump($params);
+//     	exit;
         $query = Machine::find();
 
         $dataProvider = new ActiveDataProvider([
@@ -48,12 +50,6 @@ class MachineSearch extends Machine
         ]);
 
         $this->load($params);
-
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
 
         $query->andFilterWhere([
             'id' => $this->id,

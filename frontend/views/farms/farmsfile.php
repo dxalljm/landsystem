@@ -1,10 +1,13 @@
 <?php
 namespace frontend\controllers;
 use yii\helpers\Html;
+use app\models\Machine;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Tables;
 use app\models\Tablefields;
 use app\models\Reviewprocess;
+use app\models\Nation;
+use app\models\Farmer;
 /* @var $this yii\web\View */
 /* @var $model app\models\Reviewprocess */
 
@@ -62,7 +65,7 @@ use app\models\Reviewprocess;
 			    </tr>
 			  <tr height="40px">
 			    <td align="center">民族</td>
-			    <td align="center"><?php if($farmer) echo $farmer->nation?></td>
+			    <td align="center"><?php if($farmer) echo Nation::find()->where(['id'=>$farmer->nation])->one()['nationname']?></td>
 			    <td align="center">政治面貌</td>
 			    <td align="center"><?php if($farmer) echo $farmer->political_outlook?></td>
 			    </tr>
@@ -130,14 +133,15 @@ use app\models\Reviewprocess;
 			    <?php if($members) {?>
 			    <?php foreach ($members as $member) {?>
 			  	<tr>
-			  	  <td align="center"><br><?= $member['relationship']?><br><br></td>
+			  	  <td align="center"><br><?= Farmer::getRelationship($member['relationship'])?><br><br></td>
 			  	  <td align="center"><br><?= $member['membername']?><br><br></td>                        
 			  	  <td colspan="2" align="center"><br><?= $member['cardid']?><br><br></td>                
 			  	  <td align="center"><br><?= $member['remarks']?><br><br></td>
 		  	    </tr>
 			  	<?php }}?>
 			</table>
- <table width="100%" border="1" cellpadding="0" cellspacing="0">
+			<?php if($machine) {?>
+ <table width="100%" border="1" cellpadding="0" cellspacing="0" class="ttpoprint">
   <tr>
     <td colspan="5" align="center">生产及交通工具</td>
     </tr>
@@ -148,17 +152,19 @@ use app\models\Reviewprocess;
     <td align="center">购置年限</td>
     <td align="center">备注</td>
   </tr>
-  <?php foreach ($machine as $value) {?>
+  <?php
+	
+  foreach ($machine as $value) {?>
   <tr>
-    <td align="center"><?= $value['membername']?></td>
-    <td align="center"><?= $value['membername']?></td>
-    <td align="center"><?= $value['membername']?></td>
-    <td align="center"><?= $value['membername']?></td>
-    <td align="center"><?= $value['membername']?></td>
+    <td align="center"><?= $value['machinename']?></td>
+    <td align="center">1</td>
+    <td align="center"><?= Machine::find()->where(['id'=>$value['machine_id']])->one()['filename']?></td>
+    <td align="center"></td>
+    <td align="center"></td>
   </tr>
   <?php }?>
 </table>
-
+<?php }?>
 			<br>
 			
             </div>

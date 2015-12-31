@@ -29,15 +29,15 @@ class PreventionController extends Controller
         ];
     }
 
-    public function beforeAction($action)
-    {
-    	$action = Yii::$app->controller->action->id;
-    	if(\Yii::$app->user->can($action)){
-    		return true;
-    	}else{
-    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
-    	}
-    }
+//     public function beforeAction($action)
+//     {
+//     	$action = Yii::$app->controller->action->id;
+//     	if(\Yii::$app->user->can($action)){
+//     		return true;
+//     	}else{
+//     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+//     	}
+//     }
     /**
      * Lists all Prevention models.
      * @return mixed
@@ -87,7 +87,10 @@ class PreventionController extends Controller
     {
         $model = new Prevention();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+        	$model->create_at = time();
+        	$model->update_at = $model->create_at;
+        	$model->save();
             return $this->redirect(['preventionindex', 'farms_id'=>$farms_id]);
         } else {
             return $this->render('preventioncreate', [

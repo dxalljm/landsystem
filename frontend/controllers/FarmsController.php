@@ -332,7 +332,7 @@ class FarmsController extends Controller {
 		
 		$params = Yii::$app->request->queryParams;
 		$params ['farmsSearch'] ['state'] = 1;
-
+		
 		// 管理区域是否是数组
 		if (empty($params['farmsSearch']['management_area'])) {
 			$params ['farmsSearch'] ['management_area'] = $whereArray;
@@ -493,21 +493,17 @@ class FarmsController extends Controller {
 	// }
 	// 业务办理列表页面
 	public function actionFarmsbusiness() {
-		$departmentid = User::find ()->where ( [ 
-				'id' => \Yii::$app->getUser ()->id 
-		] )->one ()['department_id'];
-		$departmentData = Department::find ()->where ( [ 
-				'id' => $departmentid 
-		] )->one ();
-		$whereArray = explode ( ',', $departmentData ['membership'] );
+		
+		$whereArray = Farms::getManagementArea()['id'];
+		
 		$searchModel = new farmsSearch ();
 		$params = Yii::$app->request->queryParams;
-		
+// 		var_dump($params);exit;
 		// 管理区域是否是数组
 		if (! empty ( $whereArray ) && count ( $whereArray ) > 0) {
 			$params ['farmsSearch'] ['management_area'] = $whereArray;
 		}
-		// $params ['farmsSearch'] ['state'] = 1;
+		$params ['farmsSearch'] ['state'] = 1;
 		// $params ['farmsSearch'] ['update_at'] = date('Y');
 		$dataProvider = $searchModel->search ( $params );
 		Logs::writeLog ( '业务办理' );
@@ -517,16 +513,24 @@ class FarmsController extends Controller {
 		] );
 	}
 	public function actionFarmslist() {
-		$farms = Farms::find ()->all ();
+		$sum = 0.0;
+		$farms = Farms::find ()->where(['management_area'=>5])->all ();
 		foreach ( $farms as $farm ) {
-			if (($farm->measure - Farms::getNowContractnumberArea ( $farm->id )) > Farms::getNowContractnumberArea ( $farm->id ) * 0.1) {
-				if (! ($farm ['zongdi'] == ''))
-					$data [] = $farm;
-			}
+			$sum += Farms::getNowContractnumberArea ($farm['id']);
+// 			if (($farm->measure - Farms::getNowContractnumberArea ( $farm->id )) > Farms::getNowContractnumberArea ( $farm->id ) * 0.1) {
+// 				if (! ($farm ['zongdi'] == ''))
+// 					$data [] = $farm;
+// 			}
+// 			if($farm->notstate) {
+// 				$model = $this->findModel($farm->id);
+// 				$model->measure = $model->measure - $farm->notstate;
+// 				$model->save();
+// 			}
 		}
-		return $this->render ( 'farmslist', [ 
-				'data' => $data 
-		] );
+		echo $sum;
+// 		return $this->render ( 'farmslist', [ 
+// 				'data' => $data 
+// 		] );
 	}
 	// 得到所有农场ID
 	public function actionGetfarmid($id) {
@@ -783,8 +787,8 @@ class FarmsController extends Controller {
 			$params ['farmsSearch'] ['farmname'] = $search;
 			$params ['farmsSearch'] ['farmername'] = $search;
 			$params ['farmsSearch'] ['management_area'] = $management_area ['id'];
-			$params ['farmsSearch'] ['state'] = 1;
-			$params ['farmsSearch'] ['locked'] = 0;
+// 			$params ['farmsSearch'] ['state'] = 1;
+// 			$params ['farmsSearch'] ['locked'] = 0;
 			$dataProvider = $farmsSearch->search ( $params );
 		}
 		return $this->render ( 'farmsttpozongdi', [ 
@@ -1303,7 +1307,7 @@ class FarmsController extends Controller {
 	}
 	public function actionFarmssearch($tab, $begindate, $enddate, $management_area, $farmname, $farmername, $telephone, $address) {
 		$post = Yii::$app->request->post ();
-		// var_dump($post);exit;
+// 		var_dump($post);exit;
 		if ($post) {
 			if ($post ['tab'] == 'parmpt')
 				return $this->redirect ( [ 
@@ -1340,13 +1344,18 @@ class FarmsController extends Controller {
 			$params ['farmsSearch'] ['begindate'] = $begindate;
 			$params ['farmsSearch'] ['enddate'] = $enddate;
 			$dataProvider = $searchModel->searchIndex ( $params ['farmsSearch'] );
+			if (is_array($searchModel->management_area)) {
+				$searchModel->management_area = null;
+			}
 			return $this->render ( 'farmssearch', [ 
 					'searchModel' => $searchModel,
 					'dataProvider' => $dataProvider,
+					'params' => $params,
 					'tab' => $tab,
 					'management_area' => $management_area,
 					'begindate' => $begindate,
-					'enddate' => $enddate 
+					'enddate' => $enddate,
+					'params' => $params,
 			] );
 		}
 	}

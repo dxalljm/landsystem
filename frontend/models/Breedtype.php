@@ -44,4 +44,31 @@ class Breedtype extends \yii\db\ActiveRecord
         	'unit' => '单位',
         ];
     }
+    
+    public static function getAllTypename()
+    {
+    	$where = Farms::getManagementArea()['id'];
+    	$result = Breedinfo::find ()->where(['management_area'=>$where])->all ();
+    	//     	var_dump($farms);exit;
+    	$data = [];
+    	foreach($result as $value) {
+    		$type = Breedtype::find()->where(['id'=>$value['breedtype_id']])->one();
+    		$data[] = ['id'=>$type['id'],'typename'=>$type['typename']];
+    	}
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		foreach ($newdata as $value) {
+    			$d[$value['id']] = $value['typename'];
+    		}
+    		return $d;
+    	}
+    	else
+    		return [];
+    }
+    
+    public static function getTypenameOne($id)
+    {
+    	$data = self::getAllTypename();
+    	return $data[$id];
+    }
 }

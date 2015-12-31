@@ -27,7 +27,7 @@ class Machineoffarm extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['machine_id', 'farms_id','create_at','update_at','acquisitiontime'], 'integer'],
+            [['machine_id', 'farms_id','create_at','update_at'], 'integer'],
         	[['machinename'],'string'],
         ];
     }

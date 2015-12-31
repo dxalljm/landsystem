@@ -59,8 +59,8 @@ class disputetypeSearch extends Disputetype
             'id' => $this->id,
         ]);
 
-        $query->andFilterWhere(['like', 'typename', $this->typename])
-        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
+        $query->andFilterWhere(['like', 'typename', $this->typename]);
+//         ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

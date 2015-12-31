@@ -18,7 +18,7 @@ class breedinfoSearch extends Breedinfo
     public function rules()
     {
         return [
-            [['id', 'breed_id', 'number', 'breedtype_id'], 'integer'],
+            [['id', 'breed_id', 'number', 'breedtype_id','create_at','update_at','management_area'], 'integer'],
             [['basicinvestment', 'housingarea'], 'number'],
         ];
     }
@@ -50,12 +50,6 @@ class breedinfoSearch extends Breedinfo
 
         $this->load($params);
 
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
-
         $query->andFilterWhere([
             'id' => $this->id,
             'breed_id' => $this->breed_id,
@@ -63,9 +57,9 @@ class breedinfoSearch extends Breedinfo
             'basicinvestment' => $this->basicinvestment,
             'housingarea' => $this->housingarea,
             'breedtype_id' => $this->breedtype_id,
-        	
+        	'management_area' => $this->management_area,
         ]);
-        $query->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+//         $query->andFilterWhere(['between','update_at',Theyear::getYeartime()['begindate'],Theyear::getYeartime()['enddate']]);
         return $dataProvider;
     }
 }

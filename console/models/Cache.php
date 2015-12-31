@@ -33,8 +33,8 @@ class Cache extends \yii\db\ActiveRecord
     { 
         return [
             [['user_id'], 'integer'],
-            [['farmscache', 'collectioncache', 'plantingstructurecache', 'plantinputproductcache', 'huinongcache', 'infrastructurecache', 'plantinputproductcategories', 'infrastructurecategories'], 'string'],
-            [['farmstitle', 'farmscategories', 'collectiontitle', 'collectioncategories', 'plantingstructuretitle', 'plantingstructurecategories', 'huinongtitle', 'huinongcategories', 'plantinputproducttitle', 'infrastructuretitle'], 'string', 'max' => 500]
+            [['farmscache', 'collectioncache', 'plantingstructurecache', 'plantinputproductcache', 'huinongcache', 'infrastructurecache', 'plantinputproductcategories', 'infrastructurecategories','projectapplicationcache','projectapplicationcategories'], 'string'],
+            [['farmstitle', 'farmscategories', 'collectiontitle', 'collectioncategories', 'plantingstructuretitle', 'plantingstructurecategories', 'huinongtitle', 'huinongcategories', 'plantinputproducttitle', 'infrastructuretitle','projectapplicationtitle'], 'string', 'max' => 500]
         ]; 
     } 
 
@@ -64,6 +64,9 @@ class Cache extends \yii\db\ActiveRecord
             'plantinputproductcategories' => '投入品列表',
             'infrastructuretitle' => '基础设施标题',
             'infrastructurecategories' => '基础设施列表',
+        	'projectapplicationtitle' => '项目标题',
+        	'projectapplicationcache' => '项目暂存',
+        	'projectapplicationcategories' => '项目列表',
         ]; 
     }  
 }

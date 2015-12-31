@@ -27,23 +27,25 @@ class DisasterController extends Controller
         ];
     }
 
-    public function beforeAction($action)
-    {
-    	$action = Yii::$app->controller->action->id;
-    	if(\Yii::$app->user->can($action)){
-    		return true;
-    	}else{
-    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
-    	}
-    }
+//     public function beforeAction($action)
+//     {
+//     	$action = Yii::$app->controller->action->id;
+//     	if(\Yii::$app->user->can($action)){
+//     		return true;
+//     	}else{
+//     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+//     	}
+//     }
     /**
      * Lists all Disaster models.
      * @return mixed
      */
-    public function actionDisasterindex()
+    public function actionDisasterindex($farms_id)
     {
         $searchModel = new disasterSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $params = Yii::$app->request->queryParams;
+        $params['disasterSearch']['farms_id'] = $farms_id;
+        $dataProvider = $searchModel->search($params);
 
         return $this->render('disasterindex', [
             'searchModel' => $searchModel,
@@ -51,6 +53,27 @@ class DisasterController extends Controller
         ]);
     }
 
+    public function actionDisasterinfo()
+    {
+    	$searchModel = new disasterSearch();
+    	$params = Yii::$app->request->queryParams;
+    	$whereArray = Farms::getManagementArea()['id'];
+    
+    	if (empty($params['disasterSearch']['management_area'])) {
+    		$params ['disasterSearch'] ['management_area'] = $whereArray;
+    	}
+    	$dataProvider = $searchModel->search ( $params );
+    	if (is_array($searchModel->management_area)) {
+    		$searchModel->management_area = null;
+    	}
+    
+    	return $this->render('disasterinfo', [
+    			'searchModel' => $searchModel,
+    			'dataProvider' => $dataProvider,
+    			'params' => $params,
+    	]);
+    }
+    
     /**
      * Displays a single Disaster model.
      * @param integer $id

@@ -22,7 +22,7 @@ class farmsSearch extends Farms
     {
         return [
             [['id', 'create_at', 'update_at','state','oldfarms_id','locked'], 'integer'],
-            [['farmname', 'farmername', 'address','measure', 'management_area','telephone', 'spyear', 'zongdi', 'cooperative_id','notclear','surveydate', 'groundsign', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate','latitude','longitude'], 'safe'],
+            [['farmname', 'farmername', 'address','measure','notstateinfo', 'management_area','telephone', 'spyear', 'zongdi', 'cooperative_id','notclear','surveydate', 'groundsign', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate','latitude','longitude'], 'safe'],
             //[['measure'], 'number'],
         ];
     }
@@ -59,6 +59,7 @@ class farmsSearch extends Farms
     
     public function pinyinSearch($str = NULL)
     {
+    	
     	if(empty($str))
     		$farmname = $this->farmname;
     	else
@@ -68,11 +69,13 @@ class farmsSearch extends Farms
     	} else {
     		$tj = ['like','farmname',$farmname];
     	}
+    	
 		return $tj;
     }
     
     public function farmerpinyinSearch($str = NULL)
     {
+//     	var_dump($str);exit;
     	if(empty($str))
     		$farmername = $this->farmername;
     	else
@@ -140,21 +143,18 @@ class farmsSearch extends Farms
 //         		] 
 //         ]);
 		
-        
+//         var_dump($dataProvider);exit;
      	$this->load($params);
-//     	$this->management_area = $params['farmsSearch']['management_area'];
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
-        //var_dump($dataProvider);
+//      	$this->management_area = 6;
+//         var_dump($dataProvider);
         $query->andFilterWhere([
             'id' => $this->id,
         	'locked' => $this->locked,
+        	'state' => $this->state,
         	'management_area' => $this->management_area,
+//         	'notstate' => $this->notstate,
         ]);
-        //$this->management_area = [1, 4, 5];
+        
 
           $query->andFilterWhere($this->pinyinSearch())
             ->andFilterWhere($this->farmerpinyinSearch())
@@ -178,7 +178,7 @@ class farmsSearch extends Farms
             ->andFilterWhere(['like', 'longitude', $this->longitude])
             ->andFilterWhere($this->betweenSearch());
           	//->andFilterWhere(['between', 'measure', $this->measure,$this->measure]);
-
+		
         return $dataProvider;
     }
     public function searchIndex($params)
@@ -190,19 +190,12 @@ class farmsSearch extends Farms
     
     	$dataProvider = new ActiveDataProvider([
     			'query' => $query,
-    			'pagination' => [
-    					'pageSize' => 0,
-    			],
+//     			'pagination' => [
+//     					'pageSize' => 20,
+//     			],
     	]);    
     
-//     	$this->load($params);
-    
-    	if (!$this->validate()) {
-    		// uncomment the following line if you do not want to any records when validation fails
-    		// $query->where('0=1');
-    		return $dataProvider;
-    	}
-    	if(isset($params['management_area']))
+    	if(isset($params['management_area']) and $params['management_area'] !== 0)
     		$management_area = $params['management_area'];
     	else
     		$management_area = $this->management_area;
@@ -232,7 +225,7 @@ class farmsSearch extends Farms
     			'locked' => $this->locked,
     			'management_area' => $management_area,
     	]);
-    	//$this->management_area = [1, 4, 5];
+//     	var_dump($management_area);exit;
     
     	$query->andFilterWhere($this->pinyinSearch($farmname))
     	->andFilterWhere($this->farmerpinyinSearch($farmername))
@@ -275,12 +268,6 @@ class farmsSearch extends Farms
     
     
     	$this->load($params);
-    
-    	if (!$this->validate()) {
-    		// uncomment the following line if you do not want to any records when validation fails
-    		// $query->where('0=1');
-    		return $dataProvider;
-    	}
     	//var_dump($dataProvider);
     	$query->andFilterWhere([
     			'id' => $this->id,

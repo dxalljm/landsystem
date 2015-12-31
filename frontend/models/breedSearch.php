@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Breed;
-
+use app\models\Theyear;
 /**
  * breedSearch represents the model behind the search form about `app\models\Breed`.
  */
@@ -18,7 +18,7 @@ class breedSearch extends Breed
     public function rules()
     {
         return [
-            [['id', 'farms_id', 'is_demonstration','create_at','update_at'], 'integer'],
+            [['id', 'farms_id', 'is_demonstration','create_at','update_at','management_area'], 'integer'],
             [['breedname', 'breedaddress'], 'safe'],
         ];
     }
@@ -49,18 +49,13 @@ class breedSearch extends Breed
 
         $this->load($params);
 
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
-
         $query->andFilterWhere([
             'id' => $this->id,
             'farms_id' => $this->farms_id,
             'is_demonstration' => $this->is_demonstration,
         	'create_at' => $this->create_at,
         	'upcate_at' => $this->update_at,
+        	'management_area' => $this->management_area,
         ]);
 
         $query->andFilterWhere(['like', 'breedname', $this->breedname])
