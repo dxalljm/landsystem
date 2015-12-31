@@ -56,7 +56,10 @@ class ManagementArea extends \yii\db\ActiveRecord
             $data[$val->id] = $val->areaname;
         }
 // 		var_dump($data);exit;
+<<<<<<< HEAD
         Yii::$app->cache->set($cache, $data, 86400);
+=======
+>>>>>>> eeb6816296c9c9c844c87b0d98c64c9ef06f5015
     	return $data;
     }
     

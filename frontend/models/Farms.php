@@ -383,7 +383,11 @@ class Farms extends \yii\db\ActiveRecord
     			$value ['icon'] = 'fa fa-github-alt';
     			$value ['title'] = $menuUrl ['menuname'];
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
+<<<<<<< HEAD
     			$employeerows = Breed::find ()->where(['management_area'=>$where])->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count ();
+=======
+    			$employeerows = Breed::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count ();
+>>>>>>> eeb6816296c9c9c844c87b0d98c64c9ef06f5015
     			$value ['info'] = '共有' . $employeerows . '户养殖户';
     			$value ['description'] = '养殖户基本信息';
     			break;
@@ -391,6 +395,7 @@ class Farms extends \yii\db\ActiveRecord
     			$value ['icon'] = 'fa fa-soundcloud';
     			$value ['title'] = $menuUrl ['menuname'];
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
+<<<<<<< HEAD
     			$value ['info'] = '有' . Disaster::find ()->where(['management_area'=>$where])->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '户受灾';
     			$value ['description'] = '农户受灾情况';
     			break;
@@ -400,6 +405,10 @@ class Farms extends \yii\db\ActiveRecord
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
     			$value ['info'] = '有' . Projectapplication::find ()->where(['management_area'=>$where])->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '条基础设施建设';
     			$value ['description'] = '项目情况';
+=======
+    			$value ['info'] = '有' . Disaster::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '户受灾';
+    			$value ['description'] = '农户受灾情况';
+>>>>>>> eeb6816296c9c9c844c87b0d98c64c9ef06f5015
     			break;
     		default :
     			$value = false;
