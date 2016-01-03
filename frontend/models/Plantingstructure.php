@@ -328,15 +328,13 @@ class Plantingstructure extends \yii\db\ActiveRecord
     
     public static function getPlanter($params)
     {
-<<<<<<< HEAD
+
 //     	$cacheKey = 'plantingstructure-planter'.\Yii::$app->getUser()->id;
 //     	$result = Yii::$app->cache->get ( $cacheKey );
 //     	if (! empty ( $result )) {
 //     		return $result;
 //     	}
-=======
-//     	var_dump($params);
->>>>>>> eeb6816296c9c9c844c87b0d98c64c9ef06f5015
+
     	$where = [];
     	foreach ($params['plantingstructureSearch'] as $key => $value) {
     		if($value !== '')
@@ -352,11 +350,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	foreach ($farm as $val) {
     		$data[] = ['farmername'=>$val['farmername'],'cardid'=>$val['cardid']];
     	}
-<<<<<<< HEAD
-    	
-=======
-   	
->>>>>>> eeb6816296c9c9c844c87b0d98c64c9ef06f5015
+
     	if($data) {
     		$newdata = Farms::unique_arr($data);
     		$result = count($newdata);
@@ -388,19 +382,12 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	$data = [];
     	foreach($Plantingstructure as $value) {
     		$allid[] = $value['lease_id'];
-<<<<<<< HEAD
     	}
     	$lease = Lease::find()->where(['id'=>$allid])->all();
     	foreach ($lease as $val) {
     		$data[] = ['lessee'=>$val['lessee'],'lessee_cardid'=>$val['lessee_cardid']];
     	}
-=======
-    	}
-    	$lease = Lease::find()->where(['id'=>$allid])->all();
-    	foreach ($lease as $val) {
-    		$data[] = ['lessee'=>$val['lessee'],'lessee_cardid'=>$val['lessee_cardid']];
-    	}
->>>>>>> eeb6816296c9c9c844c87b0d98c64c9ef06f5015
+
     		
     	if($data) {
     		$newdata = Farms::unique_arr($data);
@@ -420,14 +407,6 @@ class Plantingstructure extends \yii\db\ActiveRecord
     			$where[$key] = $value;
     	}
     	
-    	
-<<<<<<< HEAD
-=======
-    	Farms::find()->where([
-    	'id'=>[1,2,3,4,5,6]])->all();
-    	
-    	
->>>>>>> eeb6816296c9c9c844c87b0d98c64c9ef06f5015
     	
     	$Plantingstructure = Plantingstructure::find ()->where ($where)->all ();
     	$data = [];

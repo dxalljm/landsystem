@@ -1,7 +1,7 @@
 <?php
 
 namespace console\controllers;
-
+use console\models\elasticsearchtest;
 use yii\console\Controller;
 use console\models\Farms;
 use console\models\User;
@@ -12,11 +12,28 @@ use console\models\Huinonggrant;
 use console\models\Huinong;
 use console\models\Plantinputproduct;
 use console\models\Projectapplication;
+use console\models\test;
 // use console\models\Projectapplication;
 class LandcacheController extends Controller
 {
 
-
+	public function actionIndex()
+	{
+		elasticsearchtest::showdb();
+		
+	}
+	
+	public function eInsert()
+	{
+		set_time_limit(0);
+		$farms = Farms::find()->all();
+		foreach ($farms as $farm) {
+			$elastic = new Elasticsearch();
+			$elastic->value = $farm;
+			$elastic->insert();
+		}
+		echo 'done';
+	}
 	  
 	public function getAllUser()
 	{

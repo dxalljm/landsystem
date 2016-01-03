@@ -48,6 +48,8 @@ use app\models\Contractnumber;
 use app\models\Search;
 use app\models\Farmermembers;
 use app\models\Machineoffarm;
+use app\models\elasticsearchtest;
+use app\models\Elasticsearch;
 
 /**
  * FarmsController implements the CRUD actions for farms model.
@@ -512,11 +514,15 @@ class FarmsController extends Controller {
 				'dataProvider' => $dataProvider 
 		] );
 	}
-	public function actionFarmslist() {
-		$sum = 0.0;
-		$farms = Farms::find ()->where(['management_area'=>5])->all ();
-		foreach ( $farms as $farm ) {
-			$sum += Farms::getNowContractnumberArea ($farm['id']);
+	public function actionFarmslist() 
+	{
+		
+		$elastic = new Elasticsearch();
+		var_dump($elastic->get('王'));
+// 		$sum = 0.0;
+// 		$farms = Farms::find ()->where(['management_area'=>5])->all ();
+// 		foreach ( $farms as $farm ) {
+// 			$sum += Farms::getNowContractnumberArea ($farm['id']);
 // 			if (($farm->measure - Farms::getNowContractnumberArea ( $farm->id )) > Farms::getNowContractnumberArea ( $farm->id ) * 0.1) {
 // 				if (! ($farm ['zongdi'] == ''))
 // 					$data [] = $farm;
@@ -526,8 +532,8 @@ class FarmsController extends Controller {
 // 				$model->measure = $model->measure - $farm->notstate;
 // 				$model->save();
 // 			}
-		}
-		echo $sum;
+// 		}
+// 		echo $sum;
 // 		return $this->render ( 'farmslist', [ 
 // 				'data' => $data 
 // 		] );

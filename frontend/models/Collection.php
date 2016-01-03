@@ -227,7 +227,7 @@ class Collection extends \yii\db\ActiveRecord {
 				'management_area' => $whereArray['id']
 		] )->sum ( 'measure' );
 		return (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [ 
-							'years' => date ( 'Y' ) 
+							'years' => Theyear::findOne(1)['years'] 
 					] )->one ()['price']/10000);
 	}
 	
@@ -353,11 +353,9 @@ class Collection extends \yii\db\ActiveRecord {
   	public static function getYear()
     {
 		$result = Collection::find ()->all ();
-<<<<<<< HEAD
-		$data = [];
-=======
 
->>>>>>> eeb6816296c9c9c844c87b0d98c64c9ef06f5015
+		$data = [];
+
         foreach ($result as $val) {
             $data[] = ['year'=>$val['ypayyear']];
         }
