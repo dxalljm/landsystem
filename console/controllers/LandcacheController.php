@@ -12,17 +12,10 @@ use console\models\Huinonggrant;
 use console\models\Huinong;
 use console\models\Plantinputproduct;
 use console\models\Projectapplication;
-<<<<<<< HEAD
-=======
-use console\models\test;
->>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
-// use console\models\Projectapplication;
+
 class LandcacheController extends Controller
 {
 
-<<<<<<< HEAD
-
-=======
 	public function actionIndex()
 	{
 		elasticsearchtest::showdb();
@@ -40,7 +33,6 @@ class LandcacheController extends Controller
 		}
 		echo 'done';
 	}
->>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
 	  
 	public function getAllUser()
 	{

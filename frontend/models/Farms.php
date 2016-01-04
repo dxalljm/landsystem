@@ -383,13 +383,7 @@ class Farms extends \yii\db\ActiveRecord
     			$value ['icon'] = 'fa fa-github-alt';
     			$value ['title'] = $menuUrl ['menuname'];
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
-<<<<<<< HEAD
     			$employeerows = Breed::find ()->where(['management_area'=>$where])->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count ();
-=======
-
-    			$employeerows = Breed::find ()->where(['management_area'=>$where])->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count ();
-
->>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
     			$value ['info'] = '共有' . $employeerows . '户养殖户';
     			$value ['description'] = '养殖户基本信息';
     			break;
@@ -406,10 +400,6 @@ class Farms extends \yii\db\ActiveRecord
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
     			$value ['info'] = '有' . Projectapplication::find ()->where(['management_area'=>$where])->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '条基础设施建设';
     			$value ['description'] = '项目情况';
-<<<<<<< HEAD
-=======
-
->>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
     			break;
     		default :
     			$value = false;

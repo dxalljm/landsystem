@@ -28,6 +28,27 @@ class Elasticsearch extends \yii\elasticsearch\ActiveRecord
 {
  	public function attributes()
     {
-        return ['id', 'index', 'type', 'value'];
+        return [
+        		'id', 
+        		'index', 
+        		'type', 
+        		'farmername',
+        		'farmname',
+        		'management_area',
+        		'measure',
+        		'zongdi',
+        		'address',
+        		'create_at',
+        		'update_at',
+        		'pinyin',
+        		'cardid',
+        		'telephone',
+        		'farmerpinyin',
+        		'notclear',
+        		'contractnumber',
+        		'locked',
+        		'notstate',
+        		'notstateinfo'
+        ];
     }
 }

@@ -514,23 +514,40 @@ class FarmsController extends Controller {
 				'dataProvider' => $dataProvider 
 		] );
 	}
-<<<<<<< HEAD
-	public function actionFarmslist() {
-		$sum = 0.0;
-		$farms = Farms::find ()->where(['management_area'=>5])->all ();
-		foreach ( $farms as $farm ) {
-			$sum += Farms::getNowContractnumberArea ($farm['id']);
-=======
 	public function actionFarmslist() 
 	{
 		
-		$elastic = new Elasticsearch();
-		var_dump($elastic->get('王'));
+// 		set_time_limit ( 0 );
+// 		$farms = Farms::find()->all();
+// 		foreach ($farms as $farm) {
+// 			$elastic = new Elasticsearch();
+// 			$elastic->id = $farm['id'];
+// 			$elastic->farmername = $farm['farmername'];
+// 			$elastic->farmname = $farm['farmname'];
+// 			$elastic->management_area = $farm['management_area'];
+// 			$elastic->measure = $farm['measure'];
+// 			$elastic->zongdi = $farm['zongdi'];
+// 			$elastic->address = $farm['address'];
+// 			$elastic->create_at = $farm['create_at'];
+// 			$elastic->update_at = $farm['update_at'];
+// 			$elastic->pinyin = $farm['pinyin'];
+// 			$elastic->cardid = $farm['cardid'];
+// 			$elastic->telephone = $farm['telephone'];
+// 			$elastic->farmerpinyin = $farm['farmerpinyin'];
+// 			$elastic->notclear = $farm['notclear'];
+// 			$elastic->contractnumber = $farm['contractnumber'];
+// 			$elastic->locked = $farm['locked'];
+// 			$elastic->notstate = $farm['notstate'];
+// 			$elastic->notstateinfo = $farm['notstateinfo'];
+// 			$elastic->insert();
+// 		}
+// 		echo 'done';
+// 		$elastic = new Elasticsearch();
+		var_dump(Elasticsearch::find()->where(['farmername'=>'王'])->all());
 // 		$sum = 0.0;
 // 		$farms = Farms::find ()->where(['management_area'=>5])->all ();
 // 		foreach ( $farms as $farm ) {
 // 			$sum += Farms::getNowContractnumberArea ($farm['id']);
->>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
 // 			if (($farm->measure - Farms::getNowContractnumberArea ( $farm->id )) > Farms::getNowContractnumberArea ( $farm->id ) * 0.1) {
 // 				if (! ($farm ['zongdi'] == ''))
 // 					$data [] = $farm;
@@ -540,13 +557,6 @@ class FarmsController extends Controller {
 // 				$model->measure = $model->measure - $farm->notstate;
 // 				$model->save();
 // 			}
-<<<<<<< HEAD
-		}
-		echo $sum;
-=======
-// 		}
-// 		echo $sum;
->>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
 // 		return $this->render ( 'farmslist', [ 
 // 				'data' => $data 
 // 		] );

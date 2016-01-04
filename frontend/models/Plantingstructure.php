@@ -328,19 +328,11 @@ class Plantingstructure extends \yii\db\ActiveRecord
     
     public static function getPlanter($params)
     {
-<<<<<<< HEAD
-=======
-
->>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
 //     	$cacheKey = 'plantingstructure-planter'.\Yii::$app->getUser()->id;
 //     	$result = Yii::$app->cache->get ( $cacheKey );
 //     	if (! empty ( $result )) {
 //     		return $result;
 //     	}
-<<<<<<< HEAD
-=======
-
->>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
     	$where = [];
     	foreach ($params['plantingstructureSearch'] as $key => $value) {
     		if($value !== '')
@@ -351,21 +343,12 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	$data = [];
     	foreach($Plantingstructure as $value) {
 			$allid[] = $value['farms_id'];	
-<<<<<<< HEAD
-    	}
-    	$farm = Farms::find()->where(['id'=>$allid])->all();
-    	foreach ($farm as $val) {
-    		$data[] = ['farmername'=>$val['farmername'],'cardid'=>$val['cardid']];
-    	}
-    	
-=======
     	}
     	$farm = Farms::find()->where(['id'=>$allid])->all();
     	foreach ($farm as $val) {
     		$data[] = ['farmername'=>$val['farmername'],'cardid'=>$val['cardid']];
     	}
 
->>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
     	if($data) {
     		$newdata = Farms::unique_arr($data);
     		$result = count($newdata);
@@ -397,20 +380,12 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	$data = [];
     	foreach($Plantingstructure as $value) {
     		$allid[] = $value['lease_id'];
-<<<<<<< HEAD
-    	}
-    	$lease = Lease::find()->where(['id'=>$allid])->all();
-    	foreach ($lease as $val) {
-    		$data[] = ['lessee'=>$val['lessee'],'lessee_cardid'=>$val['lessee_cardid']];
-    	}
-=======
     	}
     	$lease = Lease::find()->where(['id'=>$allid])->all();
     	foreach ($lease as $val) {
     		$data[] = ['lessee'=>$val['lessee'],'lessee_cardid'=>$val['lessee_cardid']];
     	}
 
->>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
     		
     	if($data) {
     		$newdata = Farms::unique_arr($data);
@@ -429,12 +404,6 @@ class Plantingstructure extends \yii\db\ActiveRecord
     		if($value !== '')
     			$where[$key] = $value;
     	}
-    	
-    	
-<<<<<<< HEAD
-    	
-=======
->>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
     	$Plantingstructure = Plantingstructure::find ()->where ($where)->all ();
     	$data = [];
     	foreach($Plantingstructure as $value) {

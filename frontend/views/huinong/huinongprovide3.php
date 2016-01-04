@@ -115,7 +115,7 @@ $this->params['breadcrumbs'][] = $this->title;
             			'title' => $title,
             	]);
             }
-            ],
+            ];
                 ?>
                 <?= GridView::widget([
         'dataProvider' => $dataProvider,

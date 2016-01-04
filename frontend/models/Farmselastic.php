@@ -86,7 +86,5 @@ class Farms extends \yii\elasticsearch\ActiveRecord
         	'notstateinfo' => '未明确状态信息',
         ]; 
     }
-    
-    public function 
 
 }

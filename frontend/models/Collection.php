@@ -353,13 +353,7 @@ class Collection extends \yii\db\ActiveRecord {
   	public static function getYear()
     {
 		$result = Collection::find ()->all ();
-<<<<<<< HEAD
 		$data = [];
-=======
-
-		$data = [];
-
->>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
         foreach ($result as $val) {
             $data[] = ['year'=>$val['ypayyear']];
         }
