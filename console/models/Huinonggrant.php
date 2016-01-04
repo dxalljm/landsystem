@@ -70,6 +70,7 @@ class Huinonggrant extends \yii\db\ActiveRecord
     		$huinong = Huinong::getHuinonginfo();
     		$huinonggrantSum = 0.0;
     		foreach ($huinong as $val) {
+//     			var_dump($val);
     			if($val['subsidiestype_id'] == 'plant') {
     				$name = Plant::find()->where(['id'=>$val['typeid']])->one()['cropname'];
     			}
@@ -91,6 +92,7 @@ class Huinonggrant extends \yii\db\ActiveRecord
     			$sum[$val['subsidiestype_id']]['stack'] = $val['subsidiestype_id'];
     		}	
     	}
+//     	var_dump($allSum);
     	foreach($allSum as $value) {
 //     		var_dump($value['key']);exit;
 	    	$result[] = 
@@ -136,7 +138,7 @@ class Huinonggrant extends \yii\db\ActiveRecord
 	    					]
     			];
     	}
-    	var_dump($result);
+//     	var_dump($result);
     	$jsonData = json_encode ( [ 
 				'result' => $result 
 		] );

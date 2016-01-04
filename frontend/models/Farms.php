@@ -40,10 +40,10 @@ class Farms extends \yii\db\ActiveRecord
     {
         return [
             [['farmname', 'farmername'], 'required'],
-            [['measure','notclear'], 'number'],
+            [['measure','notclear','notstate'], 'number'],
             [['zongdi'], 'string'],
             [['management_area','state','oldfarms_id','locked'], 'integer'],
-            [['farmname', 'farmername', 'cardid', 'telephone', 'address', 'cooperative_id', 'surveydate', 'groundsign', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate','latitude','longitude'], 'string', 'max' => 500],
+            [['farmname', 'farmername', 'cardid', 'telephone', 'address', 'cooperative_id', 'surveydate', 'groundsign', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate','latitude','longitude','notstateinfo'], 'string', 'max' => 500],
         	[['measure','spyear'],'safe'],
         ]; 
     }
@@ -81,6 +81,8 @@ class Farms extends \yii\db\ActiveRecord
         	'latitude' => '纬度',
         	'longitude' => '经度',
         	'locked' => '锁定',
+        	'notstate' => '未明确状态面积',
+        	'notstateinfo' => '未明确状态信息',
         ]; 
     }
     
@@ -249,6 +251,8 @@ class Farms extends \yii\db\ActiveRecord
     	return $contractnumber;
     }
     
+    
+    
     public static function getNowContractnumberArea($farms_id,$state=null)
     {
     	$farm = Farms::find()->where(['id'=>$farms_id])->one();
@@ -287,16 +291,33 @@ class Farms extends \yii\db\ActiveRecord
     	}
     	return $allid;
     }
-    public static function getRows($params) {
-    	$where['state'] = $params['farmsSearch']['state'];
-    	$where['management_area'] = $params['farmsSearch']['management_area'];
+    
+    public static function getRows($params = NULL) {
+    	if(empty($params)) {
+    		$where['management_area'] = self::getManagementArea()['id'];
+    	} else {
+	    	$where['state'] = $params['farmsSearch']['state'];
+	    	$where['management_area'] = $params['farmsSearch']['management_area'];
+    	}
     	$row = Farms::find ()->where ($where)->count ();
     	return $row;
     }
     public static function getFarmarea($params) {
+		$cacheKey = 'farmcachekey-'.Yii::$app->getUser()->id;
+    	$result = Yii::$app->cache->get($cacheKey);
+        if (!empty($result)) {
+            return $result;
+        }
     	$where = ['state'=>$params['farmsSearch']['state'],'management_area'=>$params['farmsSearch']['management_area']];
-    	$sum = Farms::find ()->where ($where)->sum ('measure');
-    	return (float)sprintf("%.2f", $sum/10000);
+    	$farms = Farms::find ()->where ($where)->all();
+    	$sum = 0.0;
+    	foreach ($farms as $farm) {
+    		$area = self::getNowContractnumberArea($farm['id']);
+    		$sum += $area;
+    	}
+    	$result = (float)sprintf("%.2f", $sum/10000);
+    	Yii::$app->cache->set($cacheKey, $result, 3600);
+    	return $result;
     }
     
     public static function totalNum()
@@ -311,6 +332,7 @@ class Farms extends \yii\db\ActiveRecord
     }
     
     private static function getPlate($controller, $menuUrl) {
+    	$where = self::getManagementArea()['id'];
     	switch ($controller) {
     		case 'farms' :
     			$value ['icon'] = 'fa fa-delicious';
@@ -326,21 +348,21 @@ class Farms extends \yii\db\ActiveRecord
     			$value ['icon'] = 'fa fa-pagelines';
     			$value ['title'] = $menuUrl ['menuname'];
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
-    			$value ['info'] = '种植了' . Plantingstructure::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '种作物';
+    			$value ['info'] = '种植了' . Plantingstructure::getPlantRows(['plantingstructureSearch'=>['management_area'=>self::getManagementArea()['id']]]) . '种作物';
     			$value ['description'] = '种植作物信息';
     			break;
     		case 'yields' :
     			$value ['icon'] = 'fa fa-line-chart';
     			$value ['title'] = $menuUrl ['menuname'];
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
-    			$value ['info'] = '现有' . Yields::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '条产品信息';
+    			$value ['info'] = '现有' . Yields::find ()->where(['management_area'=>$where])->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '条产品信息';
     			$value ['description'] = '农产品产量信息';
     			break;
     		case 'huinong' :
     			$value ['icon'] = 'fa fa-dollar';
     			$value ['title'] = $menuUrl ['menuname'];
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
-    			$value ['info'] = '现有' . Huinong::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '条惠农补贴信息';
+    			$value ['info'] = '现有' . Huinonggrant::find ()->where(['management_area'=>$where])->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '条惠农补贴信息';
     			$value ['description'] = '补贴发放情况';
     			break;
     		case 'collection' :
@@ -348,31 +370,37 @@ class Farms extends \yii\db\ActiveRecord
     			$value ['title'] = $menuUrl ['menuname'];
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
     			$value ['info'] = '完成' . Collection::getPercentage().'%';
-    			$value ['description'] = '纠纷具体事项';
+    			$value ['description'] = '承包费收缴情况';
     			break;
     		case 'fireprevention' :
     			$value ['icon'] = 'fa fa-fire-extinguisher';
     			$value ['title'] = $menuUrl ['menuname'];
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
-    			$value ['info'] = '参加了' . Cooperativeoffarm::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '个合作社';
-    			$value ['description'] = '注册资金等信息';
+    			$value ['info'] = '有' . Fireprevention::find ()->where(['management_area'=>$where])->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '户签订防火合同';
+    			$value ['description'] = '防火完成情况';
     			break;
-    		case 'breed' :
+    		case 'breedinfo' :
     			$value ['icon'] = 'fa fa-github-alt';
     			$value ['title'] = $menuUrl ['menuname'];
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
-    			$employeerows = Employee::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count ();
-    			$value ['info'] = '雇佣了' . $employeerows . '人';
-    			$value ['description'] = '雇佣人员的详细信息';
+    			$employeerows = Breed::find ()->where(['management_area'=>$where])->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count ();
+    			$value ['info'] = '共有' . $employeerows . '户养殖户';
+    			$value ['description'] = '养殖户基本信息';
     			break;
     		case 'disaster' :
     			$value ['icon'] = 'fa fa-soundcloud';
     			$value ['title'] = $menuUrl ['menuname'];
     			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
-    			$value ['info'] = '种植了' . Plantingstructure::find ()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '种作物';
-    			$value ['description'] = '种植作物信息';
+    			$value ['info'] = '有' . Disaster::find ()->where(['management_area'=>$where])->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '户受灾';
+    			$value ['description'] = '农户受灾情况';
     			break;
-    				
+    		case 'projectapplication' :
+    			$value ['icon'] = 'fa fa-road';
+    			$value ['title'] = $menuUrl ['menuname'];
+    			$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl']);
+    			$value ['info'] = '有' . Projectapplication::find ()->where(['management_area'=>$where])->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '条基础设施建设';
+    			$value ['description'] = '项目情况';
+    			break;
     		default :
     			$value = false;
     	}

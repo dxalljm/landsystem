@@ -79,7 +79,9 @@ $this->params ['breadcrumbs'] [] = $this->title;
 								<td align="center">
 								<?php 
 								$s = false;
+								
 								foreach ($field as $v) {
+									
 									if($value[$v] == 2 or $value[$v] == 0)
 										$s = true;
 								}

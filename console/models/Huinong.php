@@ -62,7 +62,8 @@ public function rules()
     public static function getHuinonginfo()
     {
     	$result = [];
-    	$huinong = Huinong::find()->andFilterWhere(['between','enddate',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
+    	$huinong = Huinong::find()->all();
+    	var_dump($huinong);
     	return $huinong;
     }
     public static function getHuinongname()

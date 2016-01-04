@@ -108,6 +108,7 @@ class SearchController extends Controller
 			$array['begindate'] = $whereDate['begindate'];
 			$array['enddate'] = $whereDate['enddate'];
 			$array['management_area'] = $post['managementarea'];
+			
 			foreach (Search::getParameter($post['tab']) as $value) {
 				$array[$value] = $post[$value];
 			}

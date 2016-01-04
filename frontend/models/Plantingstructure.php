@@ -156,25 +156,33 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	return $zongdi;
     }
 
-    public static function getPlantname()
+	public static function getPlantname($userid)
     {
-    	$area = Farms::getManagementArea ();
-    	foreach ( $area['id'] as $key => $value ) {
+    	$data = [];
+    	$result = [];
+    	$area = Farms::getUserManagementArea($userid);
+    	
 			// 农场区域
 			
 // 			$array['areaname'] = $area['areaname'][$key];
 			
-			$farm = Farms::find()->where(['management_area'=>$value])->all();
+			$farm = Farms::find()->where(['management_area'=>$area])->all();
     		foreach ($farm as $val) {
-    			$plantsum = 0;
-    			$goodseedsum = 0;
-    			$planting = Plantingstructure::find()->where(['farms_id'=>$val['id']])->all();
-    			foreach ($planting as $v) {
-    				$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname'];
-    				$data[$plantname] = $plantname;
-    			}
+    			$allid[] = $val['id'];
     		}
-    	}
+    		$plantsum = 0;
+    		$goodseedsum = 0;
+    		$planting = Plantingstructure::find()->where(['farms_id'=>$allid])->all();
+    		foreach ($planting as $v) {
+    			$plantallid[] = $v['plant_id'];
+    			
+    		}
+    		$plantname = Plant::find()->where(['id'=>$plantallid])->all();
+    		foreach ($plantname as $pname) {
+    			$data[$pname] = $pname;
+    		}
+    		
+    	
     	foreach ($data as $value) {
     		$result[] = $value;
     	}
@@ -318,9 +326,13 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	return $row;
     }
     
-    public static function getFarmerrows($params)
+    public static function getPlanter($params)
     {
-    	var_dump($params);
+//     	$cacheKey = 'plantingstructure-planter'.\Yii::$app->getUser()->id;
+//     	$result = Yii::$app->cache->get ( $cacheKey );
+//     	if (! empty ( $result )) {
+//     		return $result;
+//     	}
     	$where = [];
     	foreach ($params['plantingstructureSearch'] as $key => $value) {
     		if($value !== '')
@@ -330,19 +342,35 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	//     	var_dump($farms);exit;
     	$data = [];
     	foreach($Plantingstructure as $value) {
-    		$farm = Farms::find()->where(['id'=>$value['farms_id']])->one();
-    		$data[] = ['farmername'=>$farm['farmername'],'cardid'=>$farm['cardid']];
+			$allid[] = $value['farms_id'];	
     	}
+    	$farm = Farms::find()->where(['id'=>$allid])->all();
+    	foreach ($farm as $val) {
+    		$data[] = ['farmername'=>$val['farmername'],'cardid'=>$val['cardid']];
+    	}
+    	
     	if($data) {
     		$newdata = Farms::unique_arr($data);
-    		return count($newdata);
+    		$result = count($newdata);
     	}
     	else
-    		return 0;;
+    		$result = 0;
+//     	Yii::$app->cache->set ( $cacheKey, $result, 84600 );
+    	return $result;
     }
-    
+    public static function getFarmerRows($params)
+    {
+    	$p = self::getPlanter($params);
+    	$f = self::getLeaseRows($params);
+    	return $p-$f;
+    }
     public static function getLeaseRows($params)
     {
+//     	$cacheKey = 'plantingstructure-lease'.\Yii::$app->getUser()->id;
+//     	$result = Yii::$app->cache->get ( $cacheKey );
+//     	if (! empty ( $result )) {
+//     		return $result;
+//     	}
     	$where = [];
     	foreach ($params['plantingstructureSearch'] as $key => $value) {
     		if($value !== '')
@@ -351,16 +379,21 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	$Plantingstructure = Plantingstructure::find ()->where ($where)->all ();
     	$data = [];
     	foreach($Plantingstructure as $value) {
-    		$lease = Lease::find()->where(['id'=>$value['lease_id']])->one();
-    		if($lease)
-    			$data[] = ['lessee'=>$lease['lessee'],'lessee_cardid'=>$lease['lessee_cardid']];
+    		$allid[] = $value['lease_id'];
     	}
+    	$lease = Lease::find()->where(['id'=>$allid])->all();
+    	foreach ($lease as $val) {
+    		$data[] = ['lessee'=>$val['lessee'],'lessee_cardid'=>$val['lessee_cardid']];
+    	}
+    		
     	if($data) {
     		$newdata = Farms::unique_arr($data);
-    		return count($newdata);
-		}
-		else 
-			return 0;
+    		$result = count($newdata);
+    	}
+    	else
+    		$result = 0;
+//     	Yii::$app->cache->set ( $cacheKey, $result, 84600 );
+    	return $result;
     }
     
     public static function getPlantRows($params)
@@ -370,6 +403,9 @@ class Plantingstructure extends \yii\db\ActiveRecord
     		if($value !== '')
     			$where[$key] = $value;
     	}
+    	
+    	
+    	
     	$Plantingstructure = Plantingstructure::find ()->where ($where)->all ();
     	$data = [];
     	foreach($Plantingstructure as $value) {

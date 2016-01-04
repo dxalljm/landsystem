@@ -45,4 +45,18 @@ class MenuToUser extends \yii\db\ActiveRecord
         	'plate' => '板块',
         ];
     }
+    
+    public static function getUserMenu()
+    {
+    	$data = MenuToUser::find()->where(['role_id'=>User::getItemname()])->one()['menulist'];
+    	$data = explode(',', $data);
+    	$mainmenu = Mainmenu::find()->where(['id'=>$data])->all();
+    	foreach ($mainmenu as $value) {
+    		$menu[$value['id']] = $value['sort'];
+    	}
+    	asort($menu);
+    	$result = array_flip($menu);
+    	
+    	return $result;
+    }
 }

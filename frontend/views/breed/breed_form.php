@@ -5,6 +5,7 @@ use yii\widgets\ActiveFormrdiv;
 use yii\helpers\ArrayHelper;
 use app\models\Farms;
 use app\models\Breedtype;
+use app\models\ManagementArea;
 /* @var $this yii\web\View */
 /* @var $model app\models\Breed */
 /* @var $form yii\widgets\ActiveForm */
@@ -15,6 +16,7 @@ use app\models\Breedtype;
     <?php $form = ActiveFormrdiv::begin(); ?>
 <table class="table table-bordered table-hover">
 		<?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false)->error(false) ?>
+		<?= $form->field($model, 'management_area')->hiddenInput(['value'=>Farms::getFarmsAreaID($_GET['farms_id'])])->label(false)->error(false) ?>
 	<tr>
 		<td width=15% align='right'>养殖场名称</td><?php $farm = Farms::find()->where(['id'=>$_GET['farms_id']])->one();if($model->breedname !== '') $model->breedname = $farm['farmname'];if($model->breedname !== '') $model->breedaddress = $farm['address'];?>
 		<td align='right'><?= $form->field($model, 'breedname')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>

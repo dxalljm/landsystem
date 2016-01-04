@@ -11,7 +11,7 @@ use yii\filters\VerbFilter;
 use app\models\Breedtype;
 use app\models\Breedinfo;
 use app\models\Logs;
-
+use app\models\Farms;
 /**
  * BreedController implements the CRUD actions for Breed model.
  */
@@ -29,15 +29,15 @@ class BreedController extends Controller
         ];
     }
 
-    public function beforeAction($action)
-    {
-    	$action = Yii::$app->controller->action->id;
-    	if(\Yii::$app->user->can($action)){
-    		return true;
-    	}else{
-    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
-    	}
-    }
+//     public function beforeAction($action)
+//     {
+//     	$action = Yii::$app->controller->action->id;
+//     	if(\Yii::$app->user->can($action)){
+//     		return true;
+//     	}else{
+//     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+//     	}
+//     }
     
     /**
      * Lists all Breed models.
@@ -59,6 +59,7 @@ class BreedController extends Controller
         }
     }
 
+   
     /**
      * Displays a single Breed model.
      * @param integer $id
@@ -129,6 +130,7 @@ class BreedController extends Controller
 	    					$breedinfoModel = new Breedinfo();
 	    					$breedinfoModel->create_at = time();
 	    					$breedinfoModel->update_at = $breedinfoModel->create_at;
+	    					$breedinfoModel->management_area = Farms::getFarmsAreaID($farms_id);
 	    				}
 	    				
 	    				$breedinfoModel->breed_id = $model->id;
@@ -157,6 +159,7 @@ class BreedController extends Controller
     	else { 
         	$model = new Breed();
         	if ($model->load(Yii::$app->request->post())) {
+        		$model->management_area = Farms::getFarmsAreaID($farms_id);
         		$model->create_at = time();
         		$model->update_at = $model->create_at;
         		$model->save();
@@ -166,6 +169,7 @@ class BreedController extends Controller
         			for($i=1;$i<count($breedtypePost['breedtype_id']);$i++) {
         				$breedinfoModel = new Breedinfo();
         				$breedinfoModel->breed_id = $model->id;
+        				$breedinfoModel->management_area = Farms::getFarmsAreaID($farms_id);
         				$breedinfoModel->number = (int)$breedtypePost['number'][$i];
         				$breedinfoModel->basicinvestment = (float)$breedtypePost['basicinvestment'][$i];
         				$breedinfoModel->housingarea = (float)$breedtypePost['housingarea'][$i];

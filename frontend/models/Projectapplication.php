@@ -52,4 +52,61 @@ class Projectapplication extends \yii\db\ActiveRecord
         	'reviewprocess' => '流程ID',
         ];
     }
+    
+    public static function getFarmRows($params)
+    {
+    	$where = [];
+    	foreach ($params['projectapplicationSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
+    	$row = Projectapplication::find ()->where ($where)->count ();
+    	return $row;
+    }
+    
+    public static function getFarmerrows($params)
+    {
+    	$where = [];
+    	foreach ($params['projectapplicationSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
+    	$yields = Projectapplication::find ()->where ($where)->all ();
+    	//     	var_dump($farms);exit;
+    	$data = [];
+    	foreach($yields as $value) {
+    		$farmallid[] = $value['farms_id'];    		
+    	}
+    	$farms = Farms::find()->where(['id'=>$farmallid])->all();
+    	foreach ($farms as $value) {
+    		$data[] = ['farmername'=>$value['farmername'],'cardid'=>$value['cardid']];
+    	}
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		return count($newdata);
+    	}
+    	else
+    		return 0;;
+    }
+    
+    public static function getProjecttype($params)
+    {
+    	$where = [];
+    	foreach ($params['projectapplicationSearch'] as $key => $value) {
+    		if($value !== '')
+    			$where[$key] = $value;
+    	}
+    	$yields = Projectapplication::find ()->where ($where)->all ();
+    	//     	var_dump($farms);exit;
+    	$data = [];
+    	foreach($yields as $value) {
+    		$data[] = ['typeid'=>$value['projecttype']];
+    	}
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		return count($newdata);
+    	}
+    	else
+    		return 0;;
+    }
 }

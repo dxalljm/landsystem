@@ -19,7 +19,7 @@ class plantinputproductSearch extends Plantinputproduct
     public function rules()
     {
         return [
-            [['id', 'farms_id', 'lessee_id', 'father_id', 'son_id', 'inputproduct_id', 'plant_id','planting_id','management_area'], 'integer'],
+            [['id', 'farms_id', 'lessee_id', 'father_id', 'son_id', 'inputproduct_id', 'plant_id','planting_id'], 'integer'],
             [['pconsumption'], 'number'],
             [['zongdi'], 'safe'],
         ];
@@ -67,7 +67,6 @@ class plantinputproductSearch extends Plantinputproduct
             'inputproduct_id' => $this->inputproduct_id,
             'pconsumption' => $this->pconsumption,
             'plant_id' => $this->plant_id,
-        	'management_area' => $this->management_area,
         ]);
 
         $query->andFilterWhere(['like', 'zongdi', $this->zongdi])

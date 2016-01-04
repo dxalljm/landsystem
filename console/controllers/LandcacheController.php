@@ -10,13 +10,13 @@ use console\models\Plantingstructure;
 use console\models\Collection;
 use console\models\Huinonggrant;
 use console\models\Huinong;
+use console\models\Plantinputproduct;
+use console\models\Projectapplication;
+// use console\models\Projectapplication;
 class LandcacheController extends Controller
 {
 
-	public function actionIndex($str = NULL)
-	{
-		Huinonggrant::getHuinonggrantinfo(10);
-	}
+
 	  
 	public function getAllUser()
 	{
@@ -89,4 +89,37 @@ class LandcacheController extends Controller
 			$landcache->save();
 		}
 	}
+	
+	public function actionPlantinputproductcache()
+	{
+		$allid = $this->getAllUser();
+		foreach ($allid as $id) {
+			if($cache = Cache::find()->where(['user_id'=>$id])->one())
+				$landcache = Cache::findOne($cache->id);
+			else
+				$landcache = new Cache();
+			$landcache->user_id = $id;
+			$landcache->plantinputproductcache = Plantinputproduct::getInputproduct($id);
+			$landcache->plantinputproducttitle = '投入品使用情况';
+			$landcache->plantinputproductcategories = json_encode(Plantinputproduct::getTypenamelist($id));
+			$landcache->save();
+		}
+	}
+	
+	public function actionProjectapplicationcache()
+	{
+		$allid = $this->getAllUser();
+		foreach ($allid as $id) {
+			if($cache = Cache::find()->where(['user_id'=>$id])->one())
+				$landcache = Cache::findOne($cache->id);
+			else
+				$landcache = new Cache();
+			$landcache->user_id = $id;
+			$landcache->projectapplicationcache = Projectapplication::getProjectapplicationcache($id);
+			$landcache->projectapplicationtitle = '项目情况';
+			$landcache->projectapplicationcategories = json_encode(Projectapplication::getTypenamelist($id));
+			$landcache->save();
+		}
+	}
+	
 }

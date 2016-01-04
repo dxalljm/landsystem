@@ -29,15 +29,15 @@ use app\models\Search;
         'filterModel' => $searchModel,
         'total' => '<tr>
 			        <td></td>
-			        <td align="center"><strong>合计</strong></td>
-			        <td><strong>'.Plantingstructure::getFarmRows($params).'户</strong></td>
+			        <td align="center"><strong>合计（'.Farms::getRows().'户）</strong></td>
+			        <td><strong>种植者'.Plantingstructure::getPlanter($params).'个</strong></td>
 			        <td><strong>'.Plantingstructure::getFarmerrows($params).'个</strong></td>
 			        <td><strong>'.Plantingstructure::getLeaseRows($params).'个</strong></td>
 			        <td><strong>'.Plantingstructure::getPlantRows($params).'种</strong></td>
 			        <td><strong>'.Plantingstructure::getGoodseedRows($params).'种</strong></td>
 			        <td><strong>'.Plantingstructure::getArea($params).'万亩</strong></td>
 			        </tr>',
-        'columns' => Search::getColumns(['management_area','farms_id','lease_id','plant_id','goodseed_id','area'],$params),
+        'columns' => Search::getColumns(['management_area','farms_id','lease_id','plant_id','goodseed_id','area','operation'],$params),
     ]); ?>
                 </div>
             </div>

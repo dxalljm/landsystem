@@ -65,7 +65,7 @@ use dosamigos\datetimepicker\DateTimePicker;
             'format'=>'raw',
             
             'value' => function($model,$key){
-            	$url = ['/machineoffarm/machineoffarmcreate','farms_id'=>$model->id,'machine_id'=>$model->id];    	
+            	$url = ['/machineoffarm/machineoffarmcreate','farms_id'=>$_GET['farms_id'],'machine_id'=>$model->id];    	
             	$option = '添加此机具';
             	return Html::a($option,$url, [
             			//'id' => 'machineoffarm',
@@ -124,10 +124,10 @@ $('#lastClass').change(function(){
 	$('machineoffarm-machinetype_id').val(input);
 	$("form").submit();
 });
-$('.machineoffarm').click(function(){
-	if($('#machineoffarm-acquisitiontime').val() == '') {
-		alert('请输入购置年限');
-		$('#machineoffarm-acquisitiontime').focus();
-	}
-});
+// $('.machineoffarm').click(function(){
+// 	if($('#machineoffarm-acquisitiontime').val() == '') {
+// 		alert('请输入购置年限');
+// 		$('#machineoffarm-acquisitiontime').focus();
+// 	}
+// });
 </script>

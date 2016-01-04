@@ -3,7 +3,9 @@ namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
-
+use app\models\Farms;
+use app\models\Disastertype;
+use app\models\Plant;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\disasterSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -30,15 +32,33 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+//         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'farms_id',
-            'disastertype_id',
+//             'id',
+            [
+            	'attribute' => 'farms_id',
+            	'value' => function ($model) {
+            		return Farms::find()->where(['id'=>$model->farms_id])->one()['farmname'];
+            }
+            ],
+//             'farms_id',
+            [
+            'attribute' => 'disastertype_id',
+            'value' => function ($model) {
+            	return Disastertype::find()->where(['id'=>$model->disastertype_id])->one()['typename'];
+            }
+            ],
+//             'disastertype_id',
             'disasterarea',
-            'disasterplant',
+            [
+            'attribute' => 'disasterplant',
+            'value' => function ($model) {
+            	return Plant::find()->where(['id'=>$model->disasterplant])->one()['cropname'];
+            }
+            ],
+//             'disasterplant',
             // 'insurancearea',
             // 'yieldreduction',
             // 'socmoney',

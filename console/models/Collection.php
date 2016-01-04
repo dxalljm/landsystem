@@ -218,20 +218,25 @@ class Collection extends \yii\db\ActiveRecord {
 	public static function totalReal($userid)
 	{
 		$whereArray = Farms::getUserManagementArea($userid);
-		$farm = Farms::find()->where(['management_area'=>$whereArray])->all();
-		$sum = 0.0;
-		foreach ($farm as $value) {
-			$sum += Collection::find()->where(['farms_id'=>$value['id']])->sum('real_income_amount');
-		}
+		//$farm = Farms::find()->where(['management_area'=>$whereArray])->all();
+		//$sum = 0.0;
+		//foreach ($farm as $value) {
+			$sum = (float)Collection::find()->where(['management_area'=>$whereArray,'dckpay'=>1])->sum('real_income_amount');
+// 			var_dump($s);
+			
+		//}
+		
 		return sprintf("%.2f",$sum/10000).'万元';
 	}
 	public static function totalAmounts($userid)
 	{
 		$whereArray = Farms::getUserManagementArea($userid);
-		$allmeasure = Farms::find ()->where ( [
-				'management_area' => $whereArray
-		] )->sum ( 'measure' );
-		return (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [ 
+		$farms = Farms::find()->where(['management_area'=>$whereArray])->all();
+		$sum = 0.0;
+		foreach ($farms as $value) {
+			$sum += Farms::getNowContractnumberArea($value['id']);
+		}
+		return (float)sprintf("%.2f",$sum * PlantPrice::find ()->where ( [ 
 							'years' => date ( 'Y' ) 
 					] )->one ()['price']/10000).'万元';
 	}

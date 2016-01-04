@@ -77,7 +77,7 @@ use app\models\Goodseed;
               <td align="center"><?php echo Inputproduct::find()->where(['id'=>$value['father_id']])->one()['fertilizer'];?></td>
               <td align="center"><?php echo Inputproduct::find()->where(['id'=>$value['son_id']])->one()['fertilizer']; ?></td>
               <td align="center"><?php echo Inputproduct::find()->where(['id'=>$value['inputproduct_id']])->one()['fertilizer']; ?></td>
-              <td align="center"><?php echo $value['pconsumption'];?></td>
+              <td align="center"><?php echo $value['pconsumption'].'公斤/亩';?></td>
           </tr>
 <?php }}?>
 		
@@ -96,7 +96,7 @@ use app\models\Goodseed;
 		foreach ($plantpesticidesModel as $value) {?>
 		 <tr>
               <td align="center"><?php echo Pesticides::find()->where(['id'=>$value['pesticides_id']])->one()['pesticidename']; ?></td>
-              <td align="center"><?php echo $value['pconsumption']; ?></td>
+              <td align="center"><?php echo $value['pconsumption'].'公斤/亩'; ?></td>
           </tr>
 <?php }}?>
 		

@@ -34,15 +34,15 @@ class FarmerController extends Controller
     }
 
     
-    public function beforeAction($action)
-    {
-    	$action = Yii::$app->controller->action->id;
-    	if(\Yii::$app->user->can($action)){
-    		return true;
-    	}else{
-    		throw new \yii\web\UnauthorizedHttpException('瀵逛笉璧凤紝鎮ㄧ幇鍦ㄨ繕娌¤幏姝ゆ搷浣滅殑鏉冮檺');
-    	}
-    }
+//     public function beforeAction($action)
+//     {
+//     	$action = Yii::$app->controller->action->id;
+//     	if(\Yii::$app->user->can($action)){
+//     		return true;
+//     	}else{
+//     		throw new \yii\web\UnauthorizedHttpException('瀵逛笉璧凤紝鎮ㄧ幇鍦ㄨ繕娌¤幏姝ゆ搷浣滅殑鏉冮檺');
+//     	}
+//     }
     /**
      * Lists all farmer models.
      * @return mixed

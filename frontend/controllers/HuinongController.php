@@ -49,7 +49,7 @@ class HuinongController extends Controller
 	//惠农政策当年有效列表
     public function actionHuinonglist()
     {
-    	$whereArray = Farms::getManagementArea();
+//     	$whereArray = Farms::getManagementArea();
     	$huinongs = Huinong::find()->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->all();
     	return $this->render('huinonglist', [
     			'huinongs' => $huinongs,
@@ -76,15 +76,24 @@ class HuinongController extends Controller
    public function actionHuinongdata($id)
    {
    		$model = $this->findModel($id);
+   		$huinonggrantData = Huinonggrant::find()->where(['huinong_id'=>$id])->all();
+   		$yqr = [];
+   		foreach ($huinonggrantData as $value) {
+   			$yqr[] = $value['farms_id'];
+   		}
    		$farmsallid = Farms::getManagementAreaAllID();
+   		if($yqr)
+   			$idresult = array_diff($farmsallid, $yqr);
+   		else
+   			$idresult = $farmsallid;
    		switch ($model->subsidiestype_id) {
    			case 'plant':
    				$classname = 'plantingstructure';
-   				$data = Plantingstructure::find()->where(['plant_id'=>$model->typeid,'farms_id'=>$farmsallid])->all();
+   				$data = Plantingstructure::find()->where(['plant_id'=>$model->typeid,'farms_id'=>$idresult])->all();
    				break;
    			case 'goodseed':
    				$classname = 'plantingstructure';
-   				$data = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid,'farms_id'=>$farmsallid])->all();
+   				$data = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid,'farms_id'=>$idresult])->all();
    				break;
    		}
    		$isSubmit = Yii::$app->request->post('isSubmit');
@@ -118,6 +127,7 @@ class HuinongController extends Controller
    			}
    			return $this->redirect(['huinongsend']);
    		}
+   		
         return $this->render('huinongdata', [
         		'data' => $data,
         		'classname' => $classname,

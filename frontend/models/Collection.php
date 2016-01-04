@@ -56,7 +56,7 @@ class Collection extends \yii\db\ActiveRecord {
 				],
 				[ 
 						[ 
-								'billingtime' 
+								'billingtime','nonumber', 
 						],
 						'string',
 						'max' => 500 
@@ -206,6 +206,7 @@ class Collection extends \yii\db\ActiveRecord {
 				'update_at' => '更新日期',
 				'dckpay' => '地产科提交缴费', 
 				'management_area' => '管理区',
+				'nonumber' => '发票号',
 		];
 	}
 	public function getfarms() {
@@ -271,7 +272,7 @@ class Collection extends \yii\db\ActiveRecord {
 			return count($newdata);
 		}
 		else
-			return 0;;
+			return 0;
 	}
 	
 	public static function getAmounts($params)
@@ -348,4 +349,31 @@ class Collection extends \yii\db\ActiveRecord {
 		}
 		return (float)sprintf("%.2f", $sum/10000);
 	}
+	
+  	public static function getYear()
+    {
+		$result = Collection::find ()->all ();
+		$data = [];
+        foreach ($result as $val) {
+            $data[] = ['year'=>$val['ypayyear']];
+        }
+        if($data) {
+        	$newdata = Farms::unique_arr($data);
+        	foreach ($newdata as $value) {
+        		$year[$value['year']] = $value['year'];
+        	}
+//         	var_dump($year);exit;
+        	return $year;
+        }
+        else
+        	return [];
+    }
+    
+    public static function getYearOne($id)
+    {
+//     	var_dump($id);
+    	$data = self::getYear();
+//     	var_dump($data);exit;
+    	return  $data[$id];   //主要通过此种方式实现
+    }
 }

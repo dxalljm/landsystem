@@ -4,7 +4,7 @@ namespace console\models;
 
 use Yii;
 use console\models\Plant;
-use app\models\Plantingstructure;
+
 /**
  * This is the model class for table "{{%plantingstructure}}".
  *
@@ -152,23 +152,31 @@ class Plantingstructure extends \yii\db\ActiveRecord
     {
     	$data = [];
     	$result = [];
+    	$allid = [];
     	$area = Farms::getUserManagementArea($userid);
-    	foreach ( $area as $key => $value ) {
+    	$plantallid = [];
 			// 农场区域
 			
 // 			$array['areaname'] = $area['areaname'][$key];
 			
-			$farm = Farms::find()->where(['management_area'=>$value])->all();
+			$farm = Farms::find()->where(['management_area'=>$area])->all();
     		foreach ($farm as $val) {
-    			$plantsum = 0;
-    			$goodseedsum = 0;
-    			$planting = Plantingstructure::find()->where(['farms_id'=>$val['id']])->all();
-    			foreach ($planting as $v) {
-    				$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname'];
-    				$data[$plantname] = $plantname;
-    			}
+    			$allid[] = $val['id'];
     		}
-    	}
+    		$plantsum = 0;
+    		$goodseedsum = 0;
+    		$planting = Plantingstructure::find()->where(['farms_id'=>$allid])->all();
+    		foreach ($planting as $v) {
+    			$plantallid[] = $v['plant_id'];
+    			
+    		}
+    		$plantname = Plant::find()->where(['id'=>$plantallid])->all();
+//     		var_dump($plantname);exit;
+    		foreach ($plantname as $pname) {
+    			$data[$pname['cropname']] = $pname['cropname'];
+    		}
+    		
+    	
     	foreach ($data as $value) {
     		$result[] = $value;
     	}
@@ -318,8 +326,8 @@ class Plantingstructure extends \yii\db\ActiveRecord
     			foreach ($planting as $v) {
     				$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname'];
     	
-    				$plantsum += $v['area'];
-    				$plant[$plantname][] = $plantsum;
+//     				$plantsum += $v['area'];
+    				$plant[$plantname][] = $v['area'];
     				if($v['goodseed_id'] !== 0)
     					$goodseedarea = $v['area'];
     				else

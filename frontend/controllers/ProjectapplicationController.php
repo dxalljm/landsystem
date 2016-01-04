@@ -29,15 +29,15 @@ class ProjectapplicationController extends Controller
         ];
     }
 
-    public function beforeAction($action)
-    {
-    	$action = Yii::$app->controller->action->id;
-    	if(\Yii::$app->user->can($action)){
-    		return true;
-    	}else{
-    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
-    	}
-    }
+//     public function beforeAction($action)
+//     {
+//     	$action = Yii::$app->controller->action->id;
+//     	if(\Yii::$app->user->can($action)){
+//     		return true;
+//     	}else{
+//     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+//     	}
+//     }
     /**
      * Lists all Projectapplication models.
      * @return mixed
@@ -54,6 +54,42 @@ class ProjectapplicationController extends Controller
             'dataProvider' => $dataProvider,
         	'farms_id' => $farms_id,
         ]);
+    }
+    
+    public function actionManagementarea()
+    {
+    	$project = Projectapplication::find()->all();
+    	foreach ($project as $value) {
+    		$model = $this->findModel($value['id']);
+    		$model->management_area = Farms::getFarmsAreaID($value['farms_id']);
+    		$model->save();
+    	}
+    	echo 'finished';
+    }
+    
+    public function actionProjectapplicationinfo()
+    {
+    	$where = Farms::getManagementArea()['id'];
+    	$searchModel = new projectapplicationSearch();
+    	$params = Yii::$app->request->queryParams;
+    	$params ['projectapplicationSearch'] ['state'] = 1;
+		// 管理区域是否是数组
+		if (empty($params['projectapplicationSearch']['management_area'])) {
+			$params ['projectapplicationSearch'] ['management_area'] = $where;
+		}
+
+		$dataProvider = $searchModel->search ( $params );
+
+		// 如果选择多个区域, 默认为空
+		if (is_array($searchModel->management_area)) {
+			$searchModel->management_area = null;
+		}
+    
+    	return $this->render('projectapplicationinfo', [
+    			'searchModel' => $searchModel,
+    			'dataProvider' => $dataProvider,
+    			'params' => $params,
+    	]);
     }
 
     public function actionProjectapplicationlist()

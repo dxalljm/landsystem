@@ -30,17 +30,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     </h3>
                 </div>
                 <div class="box-body">
-    <p>
-    	 <?= Html::a('添加', ['farmscreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('更新', ['farmsupdate', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('删除', ['farmsdelete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => '您确定要删除这项吗？',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
 
     <table class="table table-bordered table-hover">
 		<tr>

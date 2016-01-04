@@ -90,12 +90,15 @@ class Machinetype extends \yii\db\ActiveRecord
     
     public static function getClass($type_id)
     {
-    	$machinetype3 = self::find()->where(['id'=>$type_id])->one();
-    	$three = $machinetype3->typename;
-    	$machinetype2 = self::find()->where(['id'=>$machinetype3->father_id])->one();
-    	$two = $machinetype2->typename;
-    	$machinetype1 = self::find()->where(['id'=>$machinetype2->father_id])->one();
-    	$one = $machinetype1->typename;
-    	return [$one,$two,$three];
+    	if($type_id) {
+	    	$machinetype3 = self::find()->where(['id'=>$type_id])->one();
+	    	$three = $machinetype3['typename'];
+	    	$machinetype2 = self::find()->where(['id'=>$machinetype3->father_id])->one();
+	    	$two = $machinetype2['typename'];
+	    	$machinetype1 = self::find()->where(['id'=>$machinetype2->father_id])->one();
+	    	$one = $machinetype1['typename'];
+	    	return [$one,$two,$three];
+    	} else 
+    		return ['','',''];
     }
 }

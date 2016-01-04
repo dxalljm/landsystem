@@ -46,9 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				            		} ?>
             		</td>
             		<td align="center"><?php 
-            		if(Huinonggrant::isInHuinonggrant($value['id'])) 
-            			echo html::a('补贴发放情况',Url::to('index.php?r=huinong/huinongdatainfo&id='.$value['id']),['class'=>'btn btn-success']);
-            		else 
+            		 
             			echo html::a('补贴对象确认',Url::to('index.php?r=huinong/huinongdata&id='.$value['id']),['class'=>'btn btn-success']);?></td>
     				</tr>
     				<?php }?>
