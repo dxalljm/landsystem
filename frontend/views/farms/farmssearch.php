@@ -30,7 +30,13 @@ use app\models\Search;
  <?= GridView::widget([
         'dataProvider' => $dataProvider,
 //         'filterModel' => $searchModel,
+<<<<<<< HEAD
         'columns' => Search::getColumns(['management_area','farmname','farmername','address','telephone','measure','operation'],$params),
+=======
+
+        'columns' => Search::getColumns(['management_area','farmname','farmername','address','telephone','measure','operation'],$params),
+
+>>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
     ]); ?>
                 </div>
             </div>

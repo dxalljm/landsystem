@@ -458,6 +458,10 @@ class CollectionController extends Controller
     	if (empty($params['collectionSearch']['management_area'])) {
 			$params ['collectionSearch'] ['management_area'] = $whereArray;
 		}
+<<<<<<< HEAD
+=======
+
+>>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
 		$params['collectionSearch']['dckpay'] = 1;
 		$dataProvider = $searchModel->search ( $params );
     	if (is_array($searchModel->management_area)) {

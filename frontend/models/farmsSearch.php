@@ -145,8 +145,15 @@ class farmsSearch extends Farms
 		
 //         var_dump($dataProvider);exit;
      	$this->load($params);
+<<<<<<< HEAD
 //      	$this->management_area = 6;
 //         var_dump($dataProvider);
+=======
+
+//      	$this->management_area = 6;
+//         var_dump($dataProvider);
+
+>>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
         $query->andFilterWhere([
             'id' => $this->id,
         	'locked' => $this->locked,

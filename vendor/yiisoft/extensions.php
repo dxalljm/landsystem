@@ -12,15 +12,6 @@ return array (
       '@yii/swiftmailer' => $vendorDir . '/yiisoft/yii2-swiftmailer',
     ),
   ),
-  'yiisoft/yii2-codeception' => 
-  array (
-    'name' => 'yiisoft/yii2-codeception',
-    'version' => '2.0.0.0',
-    'alias' => 
-    array (
-      '@yii/codeception' => $vendorDir . '/yiisoft/yii2-codeception',
-    ),
-  ),
   'yiisoft/yii2-bootstrap' => 
   array (
     'name' => 'yiisoft/yii2-bootstrap',
@@ -28,6 +19,34 @@ return array (
     'alias' => 
     array (
       '@yii/bootstrap' => $vendorDir . '/yiisoft/yii2-bootstrap',
+    ),
+  ),
+  '2amigos/yii2-date-time-picker-widget' => 
+  array (
+    'name' => '2amigos/yii2-date-time-picker-widget',
+    'version' => '0.1.1.0',
+    'alias' => 
+    array (
+      '@dosamigos/datetimepicker' => $vendorDir . '/2amigos/yii2-date-time-picker-widget',
+    ),
+  ),
+  'mdmsoft/yii2-upload-file' => 
+  array (
+    'name' => 'mdmsoft/yii2-upload-file',
+    'version' => '1.3.0.0',
+    'alias' => 
+    array (
+      '@mdm/upload' => $vendorDir . '/mdmsoft/yii2-upload-file',
+    ),
+    'bootstrap' => 'mdm\\upload\\Bootstrap',
+  ),
+  'yiisoft/yii2-codeception' => 
+  array (
+    'name' => 'yiisoft/yii2-codeception',
+    'version' => '2.0.0.0',
+    'alias' => 
+    array (
+      '@yii/codeception' => $vendorDir . '/yiisoft/yii2-codeception',
     ),
   ),
   'yiisoft/yii2-debug' => 
@@ -57,13 +76,13 @@ return array (
       '@yii/faker' => $vendorDir . '/yiisoft/yii2-faker',
     ),
   ),
-  '2amigos/yii2-date-time-picker-widget' => 
+  'yiisoft/yii2-elasticsearch' => 
   array (
-    'name' => '2amigos/yii2-date-time-picker-widget',
-    'version' => '0.1.1.0',
+    'name' => 'yiisoft/yii2-elasticsearch',
+    'version' => '2.0.3.0',
     'alias' => 
     array (
-      '@dosamigos/datetimepicker' => $vendorDir . '/2amigos/yii2-date-time-picker-widget',
+      '@yii/elasticsearch' => $vendorDir . '/yiisoft/yii2-elasticsearch',
     ),
   ),
 );

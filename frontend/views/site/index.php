@@ -14,13 +14,17 @@ use app\models\Cache;
 use app\models\MenuToUser;
 $this->title = '岭南管委会';
 ?>
-<script type="text/javascript" src="js/showhighcharts.js"></script>
+
+<script type="text/javascript" src="js/showEcharts.js"></script>
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <ol class="breadcrumb">
     <li><a href="<?= Url::to('index.php?r=site/index')?>"><i class="fa fa-dashboard"></i> 首页</a></li>
   </ol>
+<<<<<<< HEAD
   <?php $plate = explode(',', MenuToUser::find()->where(['role_id'=>User::getItemname()])->one()['plate']);?>
+=======
+>>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
 <div class="row">
         <div class="col-md-4">
           <!-- Box Comment -->
@@ -41,11 +45,15 @@ $this->title = '岭南管委会';
             </div>
             <!-- /.box-header -->
             <div class="box-body">
+<<<<<<< HEAD
            
 				<div id="statis-area" style="width: 430px; height: 300px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
    			showCombination('statis-area','',<?= Cache::getCache(\Yii::$app->getUser()->getId())['farmscategories']?>,'',<?= Cache::getCache(\Yii::$app->getUser()->getId())['farmscache']?>,'万亩');
 		</script>
+=======
+
+>>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
             </div>
         
           </div>
@@ -73,10 +81,16 @@ $this->title = '岭南管委会';
             <!-- /.box-header -->
             <div class="box-body">
               <?php //var_dump(Collection::getCollection());?>
+<<<<<<< HEAD
         		<div id="collection" style="width: 430px; height: 300px; margin: 0 auto;" ></div>
    			 <script type="text/javascript">
    			showColumn('collection','',<?php echo Cache::getCache(\Yii::$app->getUser()->getId())['collectioncategories'];?>,'',<?php echo Cache::getCache(\Yii::$app->getUser()->getId())['collectioncache']?>,'','万元');
 		</script>
+=======
+              <div id="collection" style="width:510px;height:300px"></div>
+<script type="text/javascript">showShadow('collection',['应收金额','实收金额'],<?php echo Cache::getCache(\Yii::$app->getUser()->getId())['collectioncategories'];?>,<?php echo Cache::getCache(\Yii::$app->getUser()->getId())['collectioncache']?>,'万元')</script>
+
+>>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
             </div>
             <!-- /.box-body -->
           </div>

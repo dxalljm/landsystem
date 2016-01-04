@@ -8,7 +8,13 @@ use app\models\ManagementArea;
 use app\models\Fireprevention;
 use app\models\Collection;
 use yii\helpers\Html;
+<<<<<<< HEAD
 use yii\helpers\Url;
+=======
+
+use yii\helpers\Url;
+
+>>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
 /**
  * This is the model class for table "{{%session}}".
  *
@@ -44,6 +50,7 @@ class Search extends \yii\db\ActiveRecord {
 		];
 		// var_dump(yii::$app->controller->id);
 // 		if (yii::$app->controller->id !== 'farms') {
+
 			foreach ( $field as $value ) {
 				
 				switch ($value) {
@@ -55,8 +62,15 @@ class Search extends \yii\db\ActiveRecord {
 				                'value' => function($model,$key){
 				                	if(Yii::$app->controller->id == 'plantingstructure')
 				                    	$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'view','id'=>$model->id,'farms_id'=>$model->farms_id,'lease_id'=>$model->lease_id];
+<<<<<<< HEAD
 				                	if(Yii::$app->controller->id == 'farms')
 				                		$url = Url::to(['farms/farmsfile','farms_id'=>$model->id]);
+=======
+
+				                	if(Yii::$app->controller->id == 'farms')
+				                		$url = Url::to(['farms/farmsfile','farms_id'=>$model->id]);
+
+>>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
 				                    $option = '查看详情';
 					            	$title = '';
 					            	return Html::a($option,$url, [
@@ -436,7 +450,10 @@ class Search extends \yii\db\ActiveRecord {
 						$columns [] = [ 
 								'attribute' => $value,
 								'value' => function($model) {
+<<<<<<< HEAD
 								
+=======
+>>>>>>> eaec1d78e94b3bce8fc1937e082afd1c832da24f
 									return Plant::getNameOne($model->plant_id);
 								},
 								'filter' => Plant::getAllname(),
