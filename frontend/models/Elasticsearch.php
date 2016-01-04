@@ -26,8 +26,25 @@ use yii\helpers\Html;
  */
 class Elasticsearch extends \yii\elasticsearch\ActiveRecord
 {
+	public $modelname;
+	public $attributes = [];
+
+	public function setModel($modelname)
+	{
+		$this->modelname = $modelname;
+		$classname = "app\\models\\".$this->modelname;
+		$model = new $classname;
+		$attributes = $model->getAttributes();
+		$result = ['index','type'];
+		foreach($attributes as $key => $value) {
+			$result[] = $key;
+		}
+		$this->attributes = $result;
+	}
+	
  	public function attributes()
     {
+//     	return $this->attributes;
         return [
         		'id', 
         		'index', 
@@ -48,7 +65,13 @@ class Elasticsearch extends \yii\elasticsearch\ActiveRecord
         		'contractnumber',
         		'locked',
         		'notstate',
-        		'notstateinfo'
+        		'notstateinfo',
         ];
+    }
+    
+    public function getSearch($modelname,array $where)
+    {	
+    	$this->setModel($modelname);
+    	return self::find()->where($where)->all();
     }
 }

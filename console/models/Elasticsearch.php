@@ -21,8 +21,18 @@ namespace console\models;
  */
 class Elasticsearch extends \yii\elasticsearch\ActiveRecord
 {
+ 	public static function getAtt()
+	{
+		$model = new Farms();
+		$attributes = $model->getAttributes();
+		$result = ['index','type'];
+		foreach($attributes as $key => $value) {
+			$result[] = $key;
+		}
+		return $result;
+	}
  	public function attributes()
     {
-        return ['id', 'index', 'type', 'value'];
+    	return self::getAtt();
     }
 }

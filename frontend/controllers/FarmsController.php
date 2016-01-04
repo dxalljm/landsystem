@@ -49,7 +49,7 @@ use app\models\Search;
 use app\models\Farmermembers;
 use app\models\Machineoffarm;
 use app\models\elasticsearchtest;
-use app\models\Elasticsearch;
+use app\models\Farmselastic;
 
 /**
  * FarmsController implements the CRUD actions for farms model.
@@ -516,34 +516,32 @@ class FarmsController extends Controller {
 	}
 	public function actionFarmslist() 
 	{
-		
+// 		set_time_limit ( 0 );
+// 		$farms = Farms::find ()->all ();
+// 		$attributes = Farmselastic::getAtt();
+// 		foreach ( $farms as $farm ) {
+// 			$elastic = new Farmselastic();
+// 			foreach ( $attributes as $value ) {
+// 				if ($value !== 'index' and $value !== 'type')
+// 					$elastic->$value = $farm[$value];
+// 			}
+// 			$elastic->insert();
+// 		}
+		// 		var_dump(Farmselastic::index());
+		echo 'insert done';
 // 		set_time_limit ( 0 );
 // 		$farms = Farms::find()->all();
 // 		foreach ($farms as $farm) {
 // 			$elastic = new Elasticsearch();
-// 			$elastic->id = $farm['id'];
-// 			$elastic->farmername = $farm['farmername'];
-// 			$elastic->farmname = $farm['farmname'];
-// 			$elastic->management_area = $farm['management_area'];
-// 			$elastic->measure = $farm['measure'];
-// 			$elastic->zongdi = $farm['zongdi'];
-// 			$elastic->address = $farm['address'];
-// 			$elastic->create_at = $farm['create_at'];
-// 			$elastic->update_at = $farm['update_at'];
-// 			$elastic->pinyin = $farm['pinyin'];
-// 			$elastic->cardid = $farm['cardid'];
-// 			$elastic->telephone = $farm['telephone'];
-// 			$elastic->farmerpinyin = $farm['farmerpinyin'];
-// 			$elastic->notclear = $farm['notclear'];
-// 			$elastic->contractnumber = $farm['contractnumber'];
-// 			$elastic->locked = $farm['locked'];
-// 			$elastic->notstate = $farm['notstate'];
-// 			$elastic->notstateinfo = $farm['notstateinfo'];
+// 			$elastic->setModel('Farms');
+// 			foreach ($elastic->attributes as $value) {
+// 				if($value !== 'index' and $value !== 'type')
+// 					$elastic->$value = $farm[$value];
+// 			}
 // 			$elastic->insert();
 // 		}
 // 		echo 'done';
-// 		$elastic = new Elasticsearch();
-		var_dump(Elasticsearch::find()->where(['farmername'=>'王'])->all());
+		var_dump(Farmselastic::getDb());
 // 		$sum = 0.0;
 // 		$farms = Farms::find ()->where(['management_area'=>5])->all ();
 // 		foreach ( $farms as $farm ) {
@@ -1224,7 +1222,7 @@ class FarmsController extends Controller {
 				$value ['icon'] = 'fa fa-github-alt';
 				$value ['title'] = $menuUrl ['menuname'];
 				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
-				$breedinfo = Breedinfo::find ()->where ( [ 
+				$breedinfo = breedinfo::find ()->where ( [ 
 						'breed_id' => Breed::find ()->where ( [ 
 								'farms_id' => $_GET ['farms_id'] 
 						] )->one ()['id'] 
