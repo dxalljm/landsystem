@@ -7,15 +7,19 @@ use yii\bootstrap\ActiveForm;
 /* @var $model \common\models\LoginForm */
 
 ?>
+<style type="text/css">
+.checkbox {
+	color:#FFF;
+}
+</style> 
+<div class="site-index">
 
-<div class="site-index login-bg">
-
- <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
-        <table background="images/login.jpg" height="639" width="1024px" border="0" align="center" cellpadding="0" cellspacing="0">
+ <?php $form = ActiveForm::begin(['id' => 'login-form']); ?><br /><br /><br /><br />
+        <table background="images/login3.jpg" height="849" width="1680px" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
-            <td width="602" height="279"></td>
-            <td width="233">&nbsp;</td>
-            <td width="189">&nbsp;</td>
+            <td width="690" height="361"></td>
+            <td width="288">&nbsp;</td>
+            <td width="702">&nbsp;</td>
           </tr>
           <tr>
             <td height="36"> </td>
@@ -34,7 +38,7 @@ use yii\bootstrap\ActiveForm;
           </tr>
           <tr>
             <td height="36"></td>
-            <td><?= $form->field($model, 'rememberMe')->checkbox()->label('记住此用户') ?></td>
+            <td><?= $form->field($model, 'rememberMe')->checkbox(['class'=>"rememberme"])->label('记住此用户') ?></td>
             <td>&nbsp;</td>
           </tr>
           <tr>

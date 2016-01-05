@@ -24,7 +24,7 @@ use app\models\Farms;
 
 <tr>
 
-<td width=8% align='center'>文火合同</td>
+<td width=8% align='center'>防火合同</td>
 
 <td width="11%" align='center'>安全生产<br />
   合同</td>

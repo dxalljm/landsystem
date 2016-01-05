@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 use app\models\Farms;
 use frontend\helpers\MoneyFormat;
-
+use app\models\Theyear;
 /**
  * This is the model class for table "{{%collection}}".
  *
@@ -226,7 +226,7 @@ class Collection extends \yii\db\ActiveRecord {
 				'management_area' => $whereArray['id']
 		] )->sum ( 'measure' );
 		return (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [ 
-							'years' => date ( 'Y' ) 
+							'years' => Theyear::findOne(1)['years'] 
 					] )->one ()['price']/10000);
 	}
 	

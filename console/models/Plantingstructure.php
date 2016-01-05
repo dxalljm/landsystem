@@ -4,7 +4,6 @@ namespace console\models;
 
 use Yii;
 use console\models\Plant;
-use app\models\Plantingstructure;
 /**
  * This is the model class for table "{{%plantingstructure}}".
  *

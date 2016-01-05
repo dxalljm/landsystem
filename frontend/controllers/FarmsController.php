@@ -117,6 +117,15 @@ class FarmsController extends Controller {
 				
 		] );
 	}
+	
+	public function actionFarmscontractprint($farms_id)
+	{
+		$model = $this->findModel($farms_id);
+		return $this->render('farmscontractprint',[
+				'model' => $model,
+		]);
+	}
+	
 	public function getFarmsid() {
 		$departmentid = User::find ()->where ( [ 
 				'id' => \Yii::$app->getUser ()->id 
