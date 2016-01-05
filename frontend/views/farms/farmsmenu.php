@@ -35,7 +35,11 @@ use app\models\Prevention;
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">
+<<<<<<< HEAD
                         业务办理&nbsp;&nbsp;<?= html::a('农场档案打印',Url::to(['farms/farmsfileprint','farms_id'=>$farm->id]),['class'=>'btn btn-primary'])?>&nbsp;&nbsp;<?= html::a('承包合同打印',Url::to(['farms/farmscontractprint','farms_id'=>$farm->id]),['class'=>'btn btn-primary'])?>
+=======
+                        业务办理&nbsp;&nbsp;&nbsp;&nbsp;<?= html::a('农场档案打印',Url::to(['farms/farmsfile','farms_id'=>$farm->id]),['class'=>'btn btn-primary'])?>
+>>>>>>> 45fc62d906003e87654d2a744573963a9ec5e4ec
                     </h3>
                 </div>
                 <div class="box-body">
@@ -63,13 +67,16 @@ use app\models\Prevention;
         </tr>
       <tr>
         <td align="right"><?php if(!empty($farm->zongdi)) {?>宗地(<?= count(explode('、',$farm->zongdi))?>宗)：<?php }?></td>
-        <td colspan="7" align="left">&nbsp;
+        <td colspan="5" align="left">&nbsp;
           <?= $farm->zongdi;?></td>
+          <td width="23" align="left"><?= $farm->notstateinfo?></td>
+          <td width="23" align="left"><?php if($farm->notstate) echo $farm->notstate.'亩'?></td>
         </tr>
       
     </table>
     <br>
 <?= $farmsmenu?>
+<?php Farms::showRow($_GET['farms_id']);?>
     <script type="text/javascript">
     
 	function geturl(farmid)

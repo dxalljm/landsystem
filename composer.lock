@@ -1,10 +1,11 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6cf802c9199a5dc7082137cca9c40e2b",
+    "hash": "b5e7202a999de650871b2754f484b857",
+    "content-hash": "8d49258123916c03d839286ad6834dab",
     "packages": [
         {
             "name": "2amigos/yii2-date-time-picker-widget",
@@ -355,6 +356,53 @@
             "time": "2013-11-30 08:25:19"
         },
         {
+            "name": "mdmsoft/yii2-upload-file",
+            "version": "1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mdmsoft/yii2-upload-file.git",
+                "reference": "c44f0d9694e02a7b62a270f142ae1cc1f2638435"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mdmsoft/yii2-upload-file/zipball/c44f0d9694e02a7b62a270f142ae1cc1f2638435",
+                "reference": "c44f0d9694e02a7b62a270f142ae1cc1f2638435",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "~2.0"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "bootstrap": "mdm\\upload\\Bootstrap",
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "mdm\\upload\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Misbahul Munir",
+                    "email": "misbahuldmunir@gmail.com"
+                }
+            ],
+            "description": "Yii2 upload file tools",
+            "keywords": [
+                "file",
+                "upload",
+                "yii"
+            ],
+            "time": "2015-10-26 10:58:52"
+        },
+        {
             "name": "phpoffice/phpexcel",
             "version": "1.8.1",
             "source": {
@@ -645,6 +693,55 @@
             "time": "2014-10-12 17:09:06"
         },
         {
+            "name": "yiisoft/yii2-elasticsearch",
+            "version": "2.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-elasticsearch.git",
+                "reference": "b6e74c25d58d8d87020671b74fa9c2b28032947c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/yii2-elasticsearch/zipball/b6e74c25d58d8d87020671b74fa9c2b28032947c",
+                "reference": "b6e74c25d58d8d87020671b74fa9c2b28032947c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "yii\\elasticsearch\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Carsten Brandt",
+                    "email": "mail@cebe.cc"
+                }
+            ],
+            "description": "Elasticsearch integration and ActiveRecord for the Yii framework",
+            "keywords": [
+                "active-record",
+                "elasticsearch",
+                "fulltext",
+                "search",
+                "yii2"
+            ],
+            "time": "2015-03-01 06:22:44"
+        },
+        {
             "name": "yiisoft/yii2-swiftmailer",
             "version": "2.0.0",
             "source": {
@@ -725,16 +822,16 @@
         },
         {
             "name": "fzaninotto/faker",
-            "version": "v1.4.0",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fzaninotto/Faker.git",
-                "reference": "010c7efedd88bf31141a02719f51fb44c732d5a0"
+                "reference": "d0190b156bcca848d401fb80f31f504f37141c8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/010c7efedd88bf31141a02719f51fb44c732d5a0",
-                "reference": "010c7efedd88bf31141a02719f51fb44c732d5a0",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/d0190b156bcca848d401fb80f31f504f37141c8d",
+                "reference": "d0190b156bcca848d401fb80f31f504f37141c8d",
                 "shasum": ""
             },
             "require": {
@@ -744,14 +841,18 @@
                 "phpunit/phpunit": "~4.0",
                 "squizlabs/php_codesniffer": "~1.5"
             },
+            "suggest": {
+                "ext-intl": "*"
+            },
             "type": "library",
             "extra": {
-                "branch-alias": []
+                "branch-alias": {
+                    "dev-master": "1.5.x-dev"
+                }
             },
             "autoload": {
-                "psr-0": {
-                    "Faker": "src/",
-                    "Faker\\PHPUnit": "test/"
+                "psr-4": {
+                    "Faker\\": "src/Faker/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -760,7 +861,7 @@
             ],
             "authors": [
                 {
-                    "name": "François Zaninotto"
+                    "name": "Francois Zaninotto"
                 }
             ],
             "description": "Faker is a PHP library that generates fake data for you.",
@@ -769,7 +870,7 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2014-06-04 14:43:02"
+            "time": "2015-05-29 06:29:14"
         },
         {
             "name": "phpspec/php-diff",

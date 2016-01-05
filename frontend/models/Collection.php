@@ -56,7 +56,7 @@ class Collection extends \yii\db\ActiveRecord {
 				],
 				[ 
 						[ 
-								'billingtime' 
+								'billingtime','nonumber', 
 						],
 						'string',
 						'max' => 500 
@@ -206,6 +206,7 @@ class Collection extends \yii\db\ActiveRecord {
 				'update_at' => '更新日期',
 				'dckpay' => '地产科提交缴费', 
 				'management_area' => '管理区',
+				'nonumber' => '发票号',
 		];
 	}
 	public function getfarms() {
@@ -352,7 +353,7 @@ class Collection extends \yii\db\ActiveRecord {
   	public static function getYear()
     {
 		$result = Collection::find ()->all ();
-
+		$data = [];
         foreach ($result as $val) {
             $data[] = ['year'=>$val['ypayyear']];
         }

@@ -1,6 +1,8 @@
 <?php
 return [
     'components' => [
+    		
+    		
 		'assetManager' => [
 			'bundles' => [
 				'yii\bootstrap\BootstrapPluginAsset' => [

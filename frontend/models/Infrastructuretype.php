@@ -83,5 +83,41 @@ class Infrastructuretype extends \yii\db\ActiveRecord
         return $name;
 
     }
-
+    public static function getAllname()
+    {
+//     	$cache = 'cache-key-infrastructure2';
+//     	$result = Yii::$app->cache->get($cache);
+//     	if (!empty($result)) {
+//     		return $result;
+//     	}
+    	 
+    	 
+    	$result = [];
+    	$where = Farms::getManagementArea()['id'];
+    	$project = Projectapplication::find ()->where (['management_area'=>$where])->all ();
+    	$data = [];
+    	foreach($project as $value) {
+    		$data[] = ['id'=>$value['projecttype']];
+    	}
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		foreach($newdata as $value) {
+    			$allid[] = $value['id'];
+    			//     		var_dump($value);exit;
+    			// 	    		$result[$value['id']] = Plant::find()->where(['id'=>$value['id']])->one()['cropname'];
+    		}
+    		$type = Infrastructuretype::find()->where(['id'=>$allid])->all();
+    		foreach ($type as $value) {
+    			$result[$value->id] = $value->typename;
+    		}
+    	}
+//     	Yii::$app->cache->set($cache, $result, 86400);
+    	return $result;
+    }
+    
+    public static function getNameOne($id)
+    {
+    	$data = self::getAllname();
+    	return $data[$id];
+    }
 }

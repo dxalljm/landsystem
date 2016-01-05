@@ -90,6 +90,8 @@ class PlantingstructureController extends Controller
     	]);
     }
     
+    
+    
     public function actionPlantingstructuresearch($tab,$begindate,$enddate,$management_area,$plantfather,$plantson,$goodseed)
     {
     	$post = Yii::$app->request->post();

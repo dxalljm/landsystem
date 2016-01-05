@@ -9,6 +9,7 @@ use console\models\ManagementArea;
 use console\models\User;
 use yii\helpers\Url;
 use yii\helpers\Html;
+
 /**
  * This is the model class for table "{{%farms}}".
  *
@@ -92,7 +93,7 @@ class Farms extends \yii\db\ActiveRecord
     {
     	return $this->hasOne(Farmer::className(), ['farms_id' => 'id']);
     }
-
+    
     /**
      * 修改农场保存之后
      */
@@ -446,11 +447,20 @@ class Farms extends \yii\db\ActiveRecord
     public static function totalNum($userid)
     {
     	$whereArray = self::getUserManagementArea($userid);
-    	return Farms::find()->where(['management_area'=>$whereArray])->count().'户';
+    	return Farms::find()->where(['management_area'=>$whereArray,'state'=>1])->count().'户';
     }
     public static function totalArea($userid)
     {
     	$whereArray = self::getUserManagementArea($userid);
-    	return sprintf("%.2f",Farms::find()->where(['management_area'=>$whereArray])->sum ( 'measure' )/10000).'万亩';
+    	$farms = Farms::find()->where(['management_area'=>$whereArray,'state'=>1])->all();
+    	$measue = 0.0;
+    	$notclear = 0.0;
+    	foreach ($farms as $farm) {
+    		$measue += $farm['measure'];
+    		if($farm['measure'] < self::getNowContractnumberArea($farm['id']))
+    			$notclear += $farm['notclear'];
+    	}
+    	$area = $measue + $notclear;
+    	return sprintf("%.2f",$area/10000).'万亩';
     }
 }

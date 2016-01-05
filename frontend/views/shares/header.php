@@ -24,9 +24,9 @@ use app\models\User;
 
                 <?php
                 if(yii::$app->user->identity->username != 'admin') {
-                    $menuliststr = MenuToUser::find()->where(['role_id'=>User::getItemname()])->one()['menulist'];
-                    $menulistarr = explode(',', $menuliststr);
-
+                    //$menuliststr = MenuToUser::find()->where(['role_id'=>User::getItemname()])->one()['menulist'];
+                    $menulistarr = MenuToUser::getUserMenu();
+					//asort($menulistarr);
                     foreach($menulistarr as $val) {
                         $menu = Mainmenu::find()->where(['id'=>$val])->one();
                         if($menu['menuurl'] == 'dropdown') {?>

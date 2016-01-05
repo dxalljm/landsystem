@@ -29,15 +29,15 @@ class FirepreventionController extends Controller
             ],
         ];
     }
-    public function beforeAction($action)
-    {
-    	$action = Yii::$app->controller->action->id;
-    	if(\Yii::$app->user->can($action)){
-    		return true;
-    	}else{
-    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
-    	}
-    }
+//     public function beforeAction($action)
+//     {
+//     	$action = Yii::$app->controller->action->id;
+//     	if(\Yii::$app->user->can($action)){
+//     		return true;
+//     	}else{
+//     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+//     	}
+//     }
 
     /**
      * Lists all Fireprevention models.
@@ -109,6 +109,7 @@ class FirepreventionController extends Controller
     		$model = new Fireprevention();
     		$model->create_at = time();
     		$model->update_at = time();
+    		$model->management_area = Farms::getFarmsAreaID($farms_id);
     	}
 
         //$lease = Lease::find()->where(['farms_id'=>$farms_id])->all();

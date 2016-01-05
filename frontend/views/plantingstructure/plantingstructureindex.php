@@ -73,7 +73,7 @@ use app\models\Lease;
     	  //echo $val['lease_area'];
     ?>
     <td align="center"><?= $isView?>亩</td>
-    <td align="center"><?php if($isView - $sumArea) {?><?= Html::a('添加','index.php?r=plantingstructure/plantingstructurecreate&lease_id=0&farms_id='.$_GET['farms_id'], [
+    <td align="center"><?php if(bcsub($isView,$sumArea)) {?><?= Html::a('添加','index.php?r=plantingstructure/plantingstructurecreate&lease_id=0&farms_id='.$_GET['farms_id'], [
             			'id' => 'employeecreate',
             			'title' => '给'.$farms['farmername'].'添加',
             			'class' => 'btn btn-primary',
@@ -144,9 +144,9 @@ if($leases) {
     	  	$sumArea += $value['area'];
     	  }
     	  $leaseSumArea = Lease::getListArea($val['lease_area']);
-    	  //echo $val['lease_area'];
+//     	  var_dump(bcsub($sumArea, $leaseSumArea));var_dump($leaseSumArea);
     ?>
-    <td align="center"><?php if($sumArea !== $leaseSumArea) {?><?= Html::a('添加','index.php?r=plantingstructure/plantingstructurecreate&lease_id='.$val['id'].'&farms_id='.$_GET['farms_id'], [
+    <td align="center"><?php if(bcsub($sumArea, $leaseSumArea)) {?><?= Html::a('添加','index.php?r=plantingstructure/plantingstructurecreate&lease_id='.$val['id'].'&farms_id='.$_GET['farms_id'], [
             			'id' => 'employeecreate',
             			'title' => '给'.$val['lessee'].'添加',
             			'class' => 'btn btn-primary',

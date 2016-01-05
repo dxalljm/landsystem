@@ -74,8 +74,9 @@ class MachineoffarmController extends Controller
     	$save = false;
     	$searchModel = new MachineSearch();
     	$params = Yii::$app->request->queryParams;
-    	$dataProvider = $searchModel->search($params);
+    	
    		if($machine_id !== 0) {
+//    			var_dump($farms_id);exit;
     		$machinename = Machine::find()->where(['id'=>$machine_id])->one();
     		$model->farms_id = $farms_id;
     		$model->machinename = $machinename['productname'];
@@ -90,8 +91,9 @@ class MachineoffarmController extends Controller
     	
     	$post = Yii::$app->request->post();
     		if($post) {
-	    		
-    			$params['MachineSearch']['machinetype_id'] = $post['lastclass'];
+//     			var_dump($farms_id);exit;
+    			if(isset($post['lastclass']))
+    				$params['MachineSearch']['machinetype_id'] = $post['lastclass'];
     			if(isset($post['MachineSearch']['productname']))
     				$params['MachineSearch']['productname'] = $post['MachineSearch']['productname'];
     			if(isset($post['MachineSearch']['implementmodel']))
@@ -100,12 +102,14 @@ class MachineoffarmController extends Controller
     				$params['MachineSearch']['filename'] = $post['MachineSearch']['filename'];
     			if(isset($post['MachineSearch']['enterprisename']))
     				$params['MachineSearch']['enterprisename'] = $post['MachineSearch']['enterprisename'];
-    			$lastclass = $post['lastclass'];
+    			if(isset($post['lastclass']))
+    				$lastclass = $post['lastclass'];
     			$smallclass = Machinetype::find()->where(['id'=>$lastclass])->one()['father_id'];
     			$bigclass = Machinetype::find()->where(['id'=>$smallclass])->one()['father_id'];
     			if ($model->load(Yii::$app->request->post())) {
-    				//     		var_dump($model);exit;
+    				    		
     				if($model->machinename !== '') {
+//     					var_dump($model);exit;
     					$model->farms_id = $farms_id;
     					$model->machinename = $model->machinename;
     					$model->machinetype_id = $lastclass;
@@ -119,7 +123,7 @@ class MachineoffarmController extends Controller
     					return $this->redirect(['machineoffarmindex', 'farms_id' => $model->farms_id]);
     			}
     		}
-
+    		$dataProvider = $searchModel->search($params);
     	 
             return $this->render('machineoffarmcreate', [
                 	'model' => $model,

@@ -29,15 +29,15 @@ class BreedController extends Controller
         ];
     }
 
-    public function beforeAction($action)
-    {
-    	$action = Yii::$app->controller->action->id;
-    	if(\Yii::$app->user->can($action)){
-    		return true;
-    	}else{
-    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
-    	}
-    }
+//     public function beforeAction($action)
+//     {
+//     	$action = Yii::$app->controller->action->id;
+//     	if(\Yii::$app->user->can($action)){
+//     		return true;
+//     	}else{
+//     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+//     	}
+//     }
     
     /**
      * Lists all Breed models.
@@ -169,6 +169,7 @@ class BreedController extends Controller
         			for($i=1;$i<count($breedtypePost['breedtype_id']);$i++) {
         				$breedinfoModel = new Breedinfo();
         				$breedinfoModel->breed_id = $model->id;
+        				$breedinfoModel->management_area = Farms::getFarmsAreaID($farms_id);
         				$breedinfoModel->number = (int)$breedtypePost['number'][$i];
         				$breedinfoModel->basicinvestment = (float)$breedtypePost['basicinvestment'][$i];
         				$breedinfoModel->housingarea = (float)$breedtypePost['housingarea'][$i];

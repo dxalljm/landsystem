@@ -84,4 +84,10 @@ class Farmer extends \yii\db\ActiveRecord
     {
     	return $this->hasOne(Farms::className(), ['id' => 'farms_id']);
     }
+    public static function getRelationship($id)
+    {
+    	$array = ['妻子','丈夫','儿子','女儿','父亲','母亲','岳父','岳母','公公','婆婆','弟兄','姐妹'];
+    	return $array[$id];
+    }
+    
 }

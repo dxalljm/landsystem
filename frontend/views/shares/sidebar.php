@@ -137,6 +137,7 @@ else echo '晚上好';
         </ul>
     </section>
 </aside>
+
 <script type="text/javascript" charset="utf-8">
   var json = <?= Farms::searchAll() ?>;
   $('#sidebarSearch').autocomplete({

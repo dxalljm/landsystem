@@ -37,15 +37,15 @@ class CollectionController extends Controller
     }
 
     
-    public function beforeAction($action)
-    {
-    	$action = Yii::$app->controller->action->id;
-    	if(\Yii::$app->user->can($action)){
-    		return true;
-    	}else{
-    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
-    	}
-    }
+//     public function beforeAction($action)
+//     {
+//     	$action = Yii::$app->controller->action->id;
+//     	if(\Yii::$app->user->can($action)){
+//     		return true;
+//     	}else{
+//     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+//     	}
+//     }
     /**
      * Lists all Collection models.
      * @return mixed
@@ -69,6 +69,27 @@ class CollectionController extends Controller
             'dataProvider' => $dataProvider,
         	'years' => $year,
         ]);
+    }
+    
+    public function actionCollectionprint($farms_id = null,$year=null)
+    {
+    	if($year === null)
+    		$year = Theyear::findOne(1)['years'];
+    	$searchModel = new collectionSearch();
+    	$params = Yii::$app->request->queryParams;
+    	if(!empty($farms_id))
+    		$params['collectionSearch']['farms_id'] = $farms_id;
+    	$params['collectionSearch']['dckpay'] = 1;
+    	//         var_dump($params);
+    	//         exit;
+    	$dataProvider = $searchModel->search($params);
+    
+    	Logs::writeLog('进入承包费打印页面');
+    	return $this->render('collectionprint', [
+    			'searchModel' => $searchModel,
+    			'dataProvider' => $dataProvider,
+    			'years' => $year,
+    	]);
     }
     
     public function actionCollectionsend($farms_id,$year = NULL)
@@ -187,6 +208,7 @@ class CollectionController extends Controller
     {
     	Logs::writeLog('确认并打印',$id);
     	$model = $this->findModel($id);
+    	
     	$model->dckpay = 1;
     	$model->save();
     	return $this->render('collectionview', [
@@ -436,7 +458,8 @@ class CollectionController extends Controller
     	if (empty($params['collectionSearch']['management_area'])) {
 			$params ['collectionSearch'] ['management_area'] = $whereArray;
 		}
-		
+
+		$params['collectionSearch']['dckpay'] = 1;
 		$dataProvider = $searchModel->search ( $params );
     	if (is_array($searchModel->management_area)) {
 			$searchModel->management_area = null;

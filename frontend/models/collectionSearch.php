@@ -21,7 +21,7 @@ class collectionSearch extends Collection
     {
         return [
             [['id', 'payyear','farms_id', 'ypayyear', 'isupdate','dckpay','create_at','update_at','management_area'], 'integer'],
-            [['farmname', 'billingtime'], 'safe'],
+            [['farmname', 'billingtime','nonumber'], 'safe'],
             [['ypayarea', 'amounts_receivable', 'real_income_amount', 'ypaymoney', 'owe'], 'number'],
         ];
     }
@@ -105,6 +105,7 @@ class collectionSearch extends Collection
         $query->andFilterWhere(['like', 'billingtime', $this->billingtime])
             ->andFilterWhere($this->betweenSearch('amounts_receivable'))
     		->andFilterWhere($this->betweenSearch('real_income_amount'))
+    		->andFilterWhere(['like', 'nonumber', $this->nonumber])
     		->andFilterWhere($this->betweenSearch('ypayarea'))
     		->andFilterWhere($this->betweenSearch('ypaymoney'))
             ->andFilterWhere(['like', 'land_farms.farmname', $this->farmname])

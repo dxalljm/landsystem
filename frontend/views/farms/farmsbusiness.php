@@ -69,6 +69,10 @@ use app\models\Dispute;
             		$option .= '<i class="fa fa-lock text-red"></i>';
             		$title = '已冻结';
             	}
+//             	if($model->notstate) {
+//             		$option.='<i class="fa fa-lock text-red"></i>';
+//             		$title = '未明确状态面积';
+//             	}
             	return Html::a($option,$url, [
             			'id' => 'farmermenu',
             			'title' => $title,

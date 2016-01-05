@@ -28,14 +28,25 @@ class YieldsController extends Controller
         ];
     }
 
-    public function beforeAction($action)
+//     public function beforeAction($action)
+//     {
+//     	$action = Yii::$app->controller->action->id;
+//     	if(\Yii::$app->user->can($action)){
+//     		return true;
+//     	}else{
+//     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+//     	}
+//     }
+
+    public function actionSetmanagementarea()
     {
-    	$action = Yii::$app->controller->action->id;
-    	if(\Yii::$app->user->can($action)){
-    		return true;
-    	}else{
-    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+    	$data=Yields::find()->all();
+    	foreach ($data as $value) {
+    		$model = $this->findModel($value['id']);
+    		$model->management_area = Farms::getFarmsAreaID($value['farms_id']);
+    		$model->save();
     	}
+    	return 'finished';
     }
     /**
      * Lists all Yields models.

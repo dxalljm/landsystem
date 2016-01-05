@@ -48,6 +48,8 @@ use app\models\Contractnumber;
 use app\models\Search;
 use app\models\Farmermembers;
 use app\models\Machineoffarm;
+use app\models\elasticsearchtest;
+use app\models\Farmselastic;
 
 /**
  * FarmsController implements the CRUD actions for farms model.
@@ -502,21 +504,17 @@ class FarmsController extends Controller {
 	// }
 	// 业务办理列表页面
 	public function actionFarmsbusiness() {
-		$departmentid = User::find ()->where ( [ 
-				'id' => \Yii::$app->getUser ()->id 
-		] )->one ()['department_id'];
-		$departmentData = Department::find ()->where ( [ 
-				'id' => $departmentid 
-		] )->one ();
-		$whereArray = explode ( ',', $departmentData ['membership'] );
+		
+		$whereArray = Farms::getManagementArea()['id'];
+		
 		$searchModel = new farmsSearch ();
 		$params = Yii::$app->request->queryParams;
-		
+// 		var_dump($params);exit;
 		// 管理区域是否是数组
 		if (! empty ( $whereArray ) && count ( $whereArray ) > 0) {
 			$params ['farmsSearch'] ['management_area'] = $whereArray;
 		}
-		// $params ['farmsSearch'] ['state'] = 1;
+		$params ['farmsSearch'] ['state'] = 1;
 		// $params ['farmsSearch'] ['update_at'] = date('Y');
 		$dataProvider = $searchModel->search ( $params );
 		Logs::writeLog ( '业务办理' );
@@ -525,17 +523,50 @@ class FarmsController extends Controller {
 				'dataProvider' => $dataProvider 
 		] );
 	}
-	public function actionFarmslist() {
-		$farms = Farms::find ()->all ();
-		foreach ( $farms as $farm ) {
-			if (($farm->measure - Farms::getNowContractnumberArea ( $farm->id )) > Farms::getNowContractnumberArea ( $farm->id ) * 0.1) {
-				if (! ($farm ['zongdi'] == ''))
-					$data [] = $farm;
-			}
-		}
-		return $this->render ( 'farmslist', [ 
-				'data' => $data 
-		] );
+	public function actionFarmslist() 
+	{
+// 		set_time_limit ( 0 );
+// 		$farms = Farms::find ()->all ();
+// 		$attributes = Farmselastic::getAtt();
+// 		foreach ( $farms as $farm ) {
+// 			$elastic = new Farmselastic();
+// 			foreach ( $attributes as $value ) {
+// 				if ($value !== 'index' and $value !== 'type')
+// 					$elastic->$value = $farm[$value];
+// 			}
+// 			$elastic->insert();
+// 		}
+		// 		var_dump(Farmselastic::index());
+		echo 'insert done';
+// 		set_time_limit ( 0 );
+// 		$farms = Farms::find()->all();
+// 		foreach ($farms as $farm) {
+// 			$elastic = new Elasticsearch();
+// 			$elastic->setModel('Farms');
+// 			foreach ($elastic->attributes as $value) {
+// 				if($value !== 'index' and $value !== 'type')
+// 					$elastic->$value = $farm[$value];
+// 			}
+// 			$elastic->insert();
+// 		}
+// 		echo 'done';
+		var_dump(Farmselastic::getDb());
+// 		$sum = 0.0;
+// 		$farms = Farms::find ()->where(['management_area'=>5])->all ();
+// 		foreach ( $farms as $farm ) {
+// 			$sum += Farms::getNowContractnumberArea ($farm['id']);
+// 			if (($farm->measure - Farms::getNowContractnumberArea ( $farm->id )) > Farms::getNowContractnumberArea ( $farm->id ) * 0.1) {
+// 				if (! ($farm ['zongdi'] == ''))
+// 					$data [] = $farm;
+// 			}
+// 			if($farm->notstate) {
+// 				$model = $this->findModel($farm->id);
+// 				$model->measure = $model->measure - $farm->notstate;
+// 				$model->save();
+// 			}
+// 		return $this->render ( 'farmslist', [ 
+// 				'data' => $data 
+// 		] );
 	}
 	// 得到所有农场ID
 	public function actionGetfarmid($id) {
@@ -792,8 +823,8 @@ class FarmsController extends Controller {
 			$params ['farmsSearch'] ['farmname'] = $search;
 			$params ['farmsSearch'] ['farmername'] = $search;
 			$params ['farmsSearch'] ['management_area'] = $management_area ['id'];
-			$params ['farmsSearch'] ['state'] = 1;
-			$params ['farmsSearch'] ['locked'] = 0;
+// 			$params ['farmsSearch'] ['state'] = 1;
+// 			$params ['farmsSearch'] ['locked'] = 0;
 			$dataProvider = $farmsSearch->search ( $params );
 		}
 		return $this->render ( 'farmsttpozongdi', [ 
@@ -1200,7 +1231,7 @@ class FarmsController extends Controller {
 				$value ['icon'] = 'fa fa-github-alt';
 				$value ['title'] = $menuUrl ['menuname'];
 				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
-				$breedinfo = Breedinfo::find ()->where ( [ 
+				$breedinfo = breedinfo::find ()->where ( [ 
 						'breed_id' => Breed::find ()->where ( [ 
 								'farms_id' => $_GET ['farms_id'] 
 						] )->one ()['id'] 
@@ -1355,6 +1386,7 @@ class FarmsController extends Controller {
 			return $this->render ( 'farmssearch', [ 
 					'searchModel' => $searchModel,
 					'dataProvider' => $dataProvider,
+					'params' => $params,
 					'tab' => $tab,
 					'management_area' => $management_area,
 					'begindate' => $begindate,

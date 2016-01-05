@@ -8,6 +8,8 @@ use app\models\ManagementArea;
 use app\models\Fireprevention;
 use app\models\Collection;
 use yii\helpers\Html;
+
+use yii\helpers\Url;
 /**
  * This is the model class for table "{{%session}}".
  *
@@ -55,8 +57,10 @@ class Search extends \yii\db\ActiveRecord {
 				                'value' => function($model,$key){
 				                	if(Yii::$app->controller->id == 'plantingstructure')
 				                    	$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'view','id'=>$model->id,'farms_id'=>$model->farms_id,'lease_id'=>$model->lease_id];
-				                	else 
-				                		$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'view','id'=>$model->id,'farms_id'=>$model->farms_id];
+
+				                	if(Yii::$app->controller->id == 'farms')
+				                		$url = Url::to(['farms/farmsfile','farms_id'=>$model->id]);
+
 				                    $option = '查看详情';
 					            	$title = '';
 					            	return Html::a($option,$url, [
@@ -136,6 +140,16 @@ class Search extends \yii\db\ActiveRecord {
 								} 
 						];
 						break;
+						case 'projecttype' :
+							$columns [] = [
+							'attribute' => $value,
+							'value'=> function($model) {
+// 				            	var_dump($model);exit;
+				            		return Infrastructuretype::getNameOne($model->projecttype);
+				           	 	},
+				            	'filter' => Infrastructuretype::getAllname(),
+							];
+							break;
 					case 'planting_id' :
 						$columns [] = [ 
 								'label' => '作物',
@@ -426,7 +440,6 @@ class Search extends \yii\db\ActiveRecord {
 						$columns [] = [ 
 								'attribute' => $value,
 								'value' => function($model) {
-// 									return '111';
 									return Plant::getNameOne($model->plant_id);
 								},
 								'filter' => Plant::getAllname(),

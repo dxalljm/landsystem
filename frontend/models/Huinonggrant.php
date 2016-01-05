@@ -59,8 +59,8 @@ class Huinonggrant extends \yii\db\ActiveRecord
     
     public static function isInHuinonggrant($huinong_id)
     {
-    	$whereArray = Farms::getManagementArea();
-    	if(Huinonggrant::find()->where(['management_area'=>$whereArray,'huinong_id'=>$huinong_id])->count())
+    	
+    	if(Huinonggrant::find()->where(['huinong_id'=>$huinong_id])->count())
     		return true;
     	else 
     		return false;

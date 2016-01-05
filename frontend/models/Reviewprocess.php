@@ -131,6 +131,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$rows = count($processs);
     	$i = 0;
     	$no = true;
+    	//var_dump($processs);exit;
     	foreach ($processs as $value) {
     		if($model->$value == 0)
     			$no = false;
@@ -223,6 +224,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
     //返回审核流程
     public static function getProcess($actionname = NULL)
     {
+    	
     	return explode('>', self::getAuditprocess($actionname)['process']);
     }
     //判断当前角色是否审核流程
@@ -250,6 +252,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$reviewprocessModel->actionname = self::getAction();
     	$reviewprocessModel->create_at = time();
     	$reviewprocessModel->update_at = $reviewprocessModel->create_at;
+    	//var_dump($processs);exit;
     	for($i=0;$i<count($processs);$i++) {
     		$reviewprocessModel->$processs[$i] = 2;
     		if($processs[$i] == 'leader')
@@ -284,7 +287,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$mamangmentarea = Farms::getManagementArea();
     	
     	$process = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
-
+		
     	$processRows = Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$process=>2])->count();
 
     	if($processRows)

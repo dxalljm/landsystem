@@ -27,15 +27,15 @@ class BreedinfoController extends Controller
         ];
     }
 
-    public function beforeAction($action)
-    {
-    	$action = Yii::$app->controller->action->id;
-    	if(\Yii::$app->user->can($action)){
-    		return true;
-    	}else{
-    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
-    	}
-    }
+//     public function beforeAction($action)
+//     {
+//     	$action = Yii::$app->controller->action->id;
+//     	if(\Yii::$app->user->can($action)){
+//     		return true;
+//     	}else{
+//     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+//     	}
+//     }
     
     /**
      * Lists all Breedinfo models.
@@ -95,6 +95,7 @@ class BreedinfoController extends Controller
         $model = new Breedinfo();
 
         if ($model->load(Yii::$app->request->post())) {
+        	$model->management_area = Farms::getFarmsAreaID($farms_id);
         	$model->create_at = time();
         	$model->update_at = $model->create_at;
         	$model->save();

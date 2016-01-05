@@ -190,6 +190,7 @@ class Farms extends \yii\db\ActiveRecord {
 	 * @author wubaiqing <wubaiqing@vip.qq.com>
 	 */
 	public static function searchAll() {
+<<<<<<< HEAD
 		$cacheKey = 'farms-search-all2';
 		
 		$result = Yii::$app->cache->get($cacheKey);
@@ -263,6 +264,81 @@ class Farms extends \yii\db\ActiveRecord {
 // 		}
 // 		$jsonData = Json::encode ( $data );
 // 		return $jsonData;
+=======
+		// $cacheKey = 'farms-search-all2';
+		
+		// $result = Yii::$app->cache->get($cacheKey);
+		// if (!empty($result)) {
+		// return $result;
+		// }
+		// $departmentid = User::find()->where(['id'=>Yii::$app->getUser()->id])->one()['department_id'];
+		// $keshi = Department::find()->where(['id'=>$departmentid])->one();
+		// switch ($keshi['departmentname'])
+		// {
+		// case '财务科';
+		// $url = 'index.php?r=collection/collectionindex&farms_id=';
+		// break;
+		// default:
+		// $url = 'index.php?r=farms/farmsmenu&farms_id=';
+		// }
+		
+		// // 所有农场
+		// $data = [];
+		// $where = explode(',', $keshi['membership']);
+		// $result = Farms::find()->where(['management_area'=>$where])->all();
+		// foreach ($result as $farm) {
+		// $data[] = [
+		// 'value' => $farm['pinyin'], // 拼音
+		// 'data' => $farm['farmname'], // 下拉框显示的名称
+		// 'url' => Url::to($url.$farm['id']),
+		// ];
+		// $data[] = [
+		// 'value' => $farm['farmerpinyin'],
+		// 'data' => $farm['farmername'],
+		// 'url' => Url::to($url.$farm['id']),
+		
+		// ];
+		// }
+		// $jsonData = Json::encode($data);
+		// Yii::$app->cache->set($cacheKey, $jsonData, 3600);
+		
+		// return $jsonData;
+		$departmentid = User::find ()->where ( [ 
+				'id' => Yii::$app->getUser ()->id 
+		] )->one ()['department_id'];
+		$keshi = Department::find ()->where ( [ 
+				'id' => $departmentid 
+		] )->one ();
+		switch ($keshi ['departmentname']) {
+			case '财务科' :
+				$url = 'index.php?r=collection/collectionindex&farms_id=';
+				break;
+			default :
+				$url = 'index.php?r=farms/farmsmenu&farms_id=';
+		}
+		// 所有农场
+		$data = [ ];
+		$where = self::getManagementArea ()['id'];
+		$result = Farmselastic::find ()->where ( [ 
+				'management_area' => $where 
+		] )->all ();
+// 		var_dump($result);exit;
+		foreach ( $result as $farm ) {
+			$data [] = [ 
+					'value' => $farm ['pinyin'], // 拼音
+					'data' => $farm ['farmname'], // 下拉框显示的名称
+					'url' => Url::to ( $url . $farm ['id'] ) 
+			];
+			$data [] = [ 
+					'value' => $farm ['farmerpinyin'],
+					'data' => $farm ['farmername'],
+					'url' => Url::to ( $url . $farm ['id'] ) 
+			]
+			;
+		}
+		$jsonData = Json::encode ( $data );
+		return $jsonData;
+>>>>>>> 45fc62d906003e87654d2a744573963a9ec5e4ec
 	}
 	public static function getFarmArray($management_area = NULL) {
 		if (empty ( $management_area )) {
