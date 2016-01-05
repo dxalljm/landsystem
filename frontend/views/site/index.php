@@ -45,8 +45,9 @@ $this->title = '岭南管委会';
             <!-- /.box-header -->
             <div class="box-body">
 				<div id="statis-area" style="width: 530px; height: 300px; margin: -50 auto"; ></div>
+				<?php var_dump(Farms::getFarmsarea());?>
 				<script type="text/javascript">
-   			showBar('statis-area',['面积','数量']);
+   			showBar('statis-area',['面积','数量'],<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= Farms::getFarmsarea()?>);
 		</script>
 
             </div>
