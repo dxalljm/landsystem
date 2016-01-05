@@ -76,12 +76,6 @@ class LandcacheController extends Controller
 // 		var_dump(Farmselastic::index());
     	echo 'insert done';
 	}
-	
-	public function actionFarmsecharts()
-	{
-		
-	}
-	
 	public function actionCollectioncache()
 	{
 		$allid = $this->getAllUser();

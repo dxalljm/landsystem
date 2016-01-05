@@ -356,8 +356,6 @@ class Farms extends \yii\db\ActiveRecord {
 		return $array [2];
 	}
 	public static function getManagementArea($str = NULL) {
-// 		$result = [];
-// var_dump(yii::$app->user->identity->username);exit;
 		$dep_id = User::findByUsername ( yii::$app->user->identity->username )['department_id'];
 		$departmentData = Department::find ()->where ( [ 
 				'id' => $dep_id 
@@ -399,7 +397,6 @@ class Farms extends \yii\db\ActiveRecord {
 		$row = Farms::find ()->where ( $where )->count ();
 		return $row;
 	}
-	
 	public static function getFarmarea($params) {
 		$cacheKey = 'farmcachekey-' . Yii::$app->getUser ()->id;
 		$result = Yii::$app->cache->get ( $cacheKey );
@@ -420,90 +417,12 @@ class Farms extends \yii\db\ActiveRecord {
 		Yii::$app->cache->set ( $cacheKey, $result, 3600 );
 		return $result;
 	}
-	
-	public static function getFarmsarea() {
-		
-		$areas = [];
-		//     	$sum = 0.0;
-		$farmsID = [];
-		$percent = [];
-		$rows = [];
-		$rowpercent = [];
-		$i=0;
-		$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
-		$start = explode(' ', microtime());
-		$all = Farmselastic::sum('measure');
-		$endtime = explode(' ', microtime());
-		$times =  $endtime[0]+$endtime[1]-($start[0]+$start[1]);
-		echo $times;exit;
-		foreach (self::getManagementArea()['id'] as $value) {
-	
-			$area = ( float ) Farmselastic::sum ('measure',['management_area' => $value]);
-				
-			$areas[] = (float)sprintf("%.2f", $area/10000);
-			$percent[] = sprintf("%.2f", $area/$all*100);
-			$i++;
-		}
-		$end = microtime(true);
-		echo 'jjjjjjjjjjjjjj=========';
-		echo $end - $start;exit;
-		$all = Farmselastic::find ()->count ();
-		foreach (self::getManagementArea()['id'] as $value) {
-			$row = ( float ) Farmselastic::find ()->limit(9999)->where ( [
-					'management_area' => $value
-			] )->count ();
-			 
-			$rows[] = $row;
-			$rowpercent[] = sprintf("%.2f", $row/$all*100);
-		}
-		$result = [
-	    	        [
-	    	            'name'=>'面积',
-	    	            'type'=>'bar',
-	    	            'data'=>$areas,
-// 	    	            'markPoint' => [
-// 	    	                'data' =>  [
-// 	    	                    ['type' =>  'max', 'name' =>  '最大值'],
-// 	    	                    ['type' =>  'min', 'name' =>  '最小值']
-// 	    	                ]
-// 	    	            ],
-// 	    	            'markLine' =>  [
-// 	    	                'data' =>  [
-// 	    	                    ['type' =>  'average', 'name' =>  '平均值']
-// 	    	                ]
-// 	    	            ]
-	    	        ],
-	    	        [
-	    	            'name' => '数量',
-	    	            'type' => 'bar',
-	    	            'data' => $rows,
-// 	    	            'markPoint' =>  [
-// 	    	                'data ' =>  [
-// 	    	                    ['name' =>  '年最高', 'value' =>  182.2, 'xAxis' =>  7, 'yAxis' =>  183, 'symbolSize' => 18],
-// 	    	                    ['name' =>  '年最低', 'value' =>  2.3, 'xAxis' =>  11, 'yAxis' =>  3]
-// 	    	                ]
-// 	    	            ],
-// 	    	            'markLine' =>  [
-// 	    	                'data' =>  [
-// 	    	                    ['type' =>  'average', 'name' =>  '平均值']
-// 	    	                ]
-// 	    	            ]
-	    	        ]
-	    	    ];
-	
-// 		    	var_dump($result);exit;
-		$jsonData = json_encode(['result'=>$result]);
-		//     	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
-		return $jsonData;
-	}
-	
 	public static function totalNum() {
 		$whereArray = self::getManagementArea ();
 		return Farms::find ()->where ( [ 
 				'management_area' => $whereArray ['id'] 
 		] )->count () . '户';
 	}
-	
 	public static function totalArea() {
 		$whereArray = self::getManagementArea ();
 		return sprintf ( "%.2f", Farms::find ()->where ( [ 

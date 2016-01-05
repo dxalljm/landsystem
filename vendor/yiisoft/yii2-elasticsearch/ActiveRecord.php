@@ -134,22 +134,6 @@ class ActiveRecord extends BaseActiveRecord
         return null;
     }
 
-    public static function sum($field,$where = [])
-    {
-//     	$start = microtime(true);
-    	if($where)
-    		$query = static::find()->limit(9999)->where($where)->all();
-    	else 
-    		$query = static::find()->limit(9999)->all();
-    	$sum = 0.0;
-    	foreach($query as $value) {
-    		$sum += $value[$field];
-    	}
-//     	$end = microtime(true);
-//     	var_dump( $end - $start);exit;
-    	return $sum;
-    }
-    
     /**
      * Gets a list of records by its primary keys.
      *
