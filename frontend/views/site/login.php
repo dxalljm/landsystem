@@ -14,23 +14,14 @@ use yii\bootstrap\ActiveForm;
 </style> 
 <div class="site-index">
 
-<<<<<<< HEAD
+
  <?php $form = ActiveForm::begin(['id' => 'login-form']); ?><br /><br /><br /><br />
         <table background="images/login3.jpg" height="849" width="1680px" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
             <td width="690" height="361"></td>
             <td width="288">&nbsp;</td>
             <td width="702">&nbsp;</td>
-=======
-<div class="site-index">
 
- <?php $form = ActiveForm::begin(['id' => 'login-form']); ?><br /><br /><br /><br />
-        <table background="images/login3.jpg" height="758" width="1500px" border="0" align="center" cellpadding="0" cellspacing="0">
-          <tr>
-            <td width="593" height="369"></td>
-            <td width="325">&nbsp;</td>
-            <td width="582">&nbsp;</td>
->>>>>>> 45fc62d906003e87654d2a744573963a9ec5e4ec
           </tr>
           <tr>
             <td height="36"> </td>

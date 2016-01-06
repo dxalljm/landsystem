@@ -4,6 +4,7 @@ namespace console\models;
 use Yii;
 use console\models\Farms;
 use frontend\helpers\MoneyFormat;
+use console\models\Theyear;
 
 /**
  * This is the model class for table "{{%collection}}".
@@ -126,7 +127,7 @@ class Collection extends \yii\db\ActiveRecord {
 					'management_area' => $value 
 			] )->sum ( 'measure' );
 			$amountsSum =  (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [
-							'years' => date ( 'Y' ) 
+							'years' => Theyear::findOne(1)['years'] 
 					] )->one ()['price']/10000);
 			$amounts_receivable[] = $amountsSum;
 // 			$amounts_receivable [] = [ 
@@ -139,21 +140,27 @@ class Collection extends \yii\db\ActiveRecord {
 			$farm = Farms::find()->where(['management_area' => $value])->all();
 			$collectionSUm = 0.0;
 			foreach ($farm as $val) {
-				$collectionSUm +=  ( float ) sprintf("%.2f",Collection::find ()->where ( [ 
+				$collectionSUm +=  Collection::find ()->where ( [ 
 						'farms_id' => $val['id'] 
-				] )->sum ( 'real_income_amount' )/10000);
+				] )->sum ( 'real_income_amount' );
 			}
 // 			$real_income_amount [] = [
 // 					'color' => $color[$i],
 // 					'y' => $collectionSUm,
 // 			];
-			$real_income_amount[] = $collectionSUm;
+			if($collectionSUm !== 0.0)
+				$real_income_amount[] = ( float ) sprintf("%.2f",$collectionSUm/10000);
+			else 
+				$real_income_amount[] = 0;
 			$i ++;
 		}
 		$cha = [];
 // 		var_dump($amounts_receivable);
 		for($i=0;$i<count($amounts_receivable);$i++) {
-			$cha[$i] = $amounts_receivable[$i] - $real_income_amount[$i];
+			if($real_income_amount[$i])
+				$cha[$i] = $amounts_receivable[$i] - $real_income_amount[$i];
+			else
+				$cha[$i] = 0;
 		}
 // 		exit;
 		$result = [[
@@ -241,9 +248,7 @@ class Collection extends \yii\db\ActiveRecord {
 // 				]
 // 		];
 		var_dump($result);
-		$jsonData = json_encode ( [ 
-				'result' => $result 
-		] );
+		$jsonData = json_encode ($result);
 		return $jsonData;
 	}
 	/**

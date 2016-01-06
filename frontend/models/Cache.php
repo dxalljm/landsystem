@@ -64,6 +64,9 @@ class Cache extends \yii\db\ActiveRecord
             'plantinputproductcategories' => '投入品列表',
             'infrastructuretitle' => '基础设施标题',
             'infrastructurecategories' => '基础设施列表',
+        	'projectapplicationtitle' => '项目标题',
+        	'projectapplicationcache' => '项目暂存',
+        	'projectapplicationcategories' => '项目列表',
         ]; 
     } 
     

@@ -4,10 +4,7 @@ namespace console\models;
 
 use Yii;
 use console\models\Plant;
-<<<<<<< HEAD
-=======
 
->>>>>>> 45fc62d906003e87654d2a744573963a9ec5e4ec
 /**
  * This is the model class for table "{{%plantingstructure}}".
  *

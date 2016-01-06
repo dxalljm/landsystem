@@ -100,13 +100,14 @@ function showBar(divID,legenddata,xdata,series)
 	    	    },
 	    	    toolbox: {
 	    	        show : true,
-//	    	        feature : {
+	    	        feature : {
+	    	        	dataZoom:{x:0,y:0},
 //	    	            mark : {show: false},
 //	    	            dataView : {show: false, readOnly: false},
 //	    	            magicType : {show: false, type: ['line', 'bar']},
 //	    	            restore : {show: false},
 //	    	            saveAsImage : {show: false}
-//	    	        }
+	    	        }
 	    	    },
 	    	    calculable : true,
 	    	    xAxis : [
@@ -120,7 +121,7 @@ function showBar(divID,legenddata,xdata,series)
 	    	            type : 'value'
 	    	        }
 	    	    ],
-	    	    series : series.result
+	    	    series : series
 	    	};
 	    	                    
 

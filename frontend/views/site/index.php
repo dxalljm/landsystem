@@ -44,16 +44,10 @@ $this->title = '岭南管委会';
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-				<div id="statis-area" style="width: 530px; height: 300px; margin: -50 auto"; ></div>
-<<<<<<< HEAD
-				<?php //var_dump(Farms::getFarmsarea());?>
+				<div id="statis-area" style="width: 100%; height: 300px; margin: -50 auto"; ></div>
+				<?php //var_dump(Cache::getCache(\Yii::$app->getUser()->getId())['farmscache']);?>
 				<script type="text/javascript">
-   			showBar('statis-area',['面积','数量'],<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?//= Farms::getFarmsarea()?>);
-=======
-				<?php var_dump(Farms::getFarmsarea());?>
-				<script type="text/javascript">
-   			showBar('statis-area',['面积','数量'],<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= Farms::getFarmsarea()?>);
->>>>>>> 45fc62d906003e87654d2a744573963a9ec5e4ec
+   			showBar('statis-area',['面积','数量'],<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['farmscache']?>);
 		</script>
 
             </div>
@@ -84,8 +78,8 @@ $this->title = '岭南管委会';
             <div class="box-body">
               <?php //var_dump(Collection::getCollection());?>
 
-              <div id="collection" style="width:510px;height:300px"></div>
-<script type="text/javascript">showShadow('collection',['应收金额','实收金额'],<?php echo Cache::getCache(\Yii::$app->getUser()->getId())['collectioncategories'];?>,<?php echo Cache::getCache(\Yii::$app->getUser()->getId())['collectioncache']?>,'万元')</script>
+              <div id="collection" style="width:100%;height:300px"></div>
+<script type="text/javascript">showBar('collection',['应收金额','实收金额'],<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?php echo Cache::getCache(\Yii::$app->getUser()->getId())['collectioncache']?>)</script>
 
 
             </div>

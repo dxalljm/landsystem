@@ -44,38 +44,38 @@ class LandcacheController extends Controller
 		return $allID;
 	}
 	
-// 	public function actionFarmscache()
-// 	{
-// 		$allid = $this->getAllUser();
-// 		foreach ($allid as $id) {
-// 			if($cache = Cache::find()->where(['user_id'=>$id])->one())
-// 				$landcache = Cache::findOne($cache->id);
-// 			else 
-// 				$landcache = new Cache();
-// 			$landcache->user_id = $id;
-// 			$landcache->farmscache = Farms::getFarmarea($id);
-// 			$landcache->farmstitle = '面积：'.Farms::totalArea($id).' 农场户数：'.Farms::totalNum($id);
-// 			$landcache->farmscategories = json_encode(Farms::getUserManagementAreaname($id));
-// 			$landcache->save();
-// 		}
-// 	}
 	public function actionFarmscache()
 	{
-// 		var_dump(Farmselastic::getDb());exit;
-		set_time_limit ( 0 );
-		$farms = Farms::find ()->all ();
-		$attributes = Farmselastic::getAtt();
-		foreach ( $farms as $farm ) {
-			$elastic = new Farmselastic();
-			foreach ( $attributes as $value ) {
-				if ($value !== 'index' and $value !== 'type')
-    				$elastic->$value = $farm[$value];
-    		}
-    		$elastic->insert();
-    	}
-// 		var_dump(Farmselastic::index());
-    	echo 'insert done';
+		$allid = $this->getAllUser();
+		foreach ($allid as $id) {
+			if($cache = Cache::find()->where(['user_id'=>$id])->one())
+				$landcache = Cache::findOne($cache->id);
+			else 
+				$landcache = new Cache();
+			$landcache->user_id = $id;
+			$landcache->farmscache = Farms::getFarmarea($id);
+			$landcache->farmstitle = '面积：'.Farms::totalArea($id).' 农场户数：'.Farms::totalNum($id);
+			$landcache->farmscategories = json_encode(Farms::getUserManagementAreaname($id));
+			$landcache->save();
+		}
 	}
+// 	public function actionFarmscache()
+// 	{
+// // 		var_dump(Farmselastic::getDb());exit;
+// 		set_time_limit ( 0 );
+// 		$farms = Farms::find ()->all ();
+// 		$attributes = Farmselastic::getAtt();
+// 		foreach ( $farms as $farm ) {
+// 			$elastic = new Farmselastic();
+// 			foreach ( $attributes as $value ) {
+// 				if ($value !== 'index' and $value !== 'type')
+//     				$elastic->$value = $farm[$value];
+//     		}
+//     		$elastic->insert();
+//     	}
+// // 		var_dump(Farmselastic::index());
+//     	echo 'insert done';
+// 	}
 	
 	public function actionFarmsecharts()
 	{

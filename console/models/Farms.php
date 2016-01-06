@@ -392,7 +392,7 @@ class Farms extends \yii\db\ActiveRecord
     		  		'management_area' => $value
     		 ] )->sum ( 'measure' );
 			
-    		$areas[] = ['color'=>$color[$i],'y'=>(float)sprintf("%.2f", $area/10000)];
+    		$areas[] = (float)sprintf("%.2f", $area/10000);
     		$percent[] = sprintf("%.2f", $area/$all*100);
     		$i++;
     	}
@@ -413,33 +413,20 @@ class Farms extends \yii\db\ActiveRecord
 //     		$data[] = ['name'=>'其他管理区','y'=>$allvalue];
 //     	}
     	$result = [[
-    			'type' => 'column',
     			'name' => '面积',
+    			'type' => 'bar',
     			'percent' => $percent,
-    			'data' => $areas,
-				'rows' => $rows,
+    			'data' => $areas,	
+    		],
+    		[
+    			'name' => '数量',
+    			'type' => 'bar',
+    			'data' => $rows,
     			'rowpercent' => $rowpercent,
-    			'Legend' => [
-    					'backgroundColor' => '#FFFFFF',
-    			],
-    			'dataLabels'=> [
-						'verticalAlign' => 'top',
-    					'enabled'=> true,
-    					'rotation'=> 0,
-    					'color'=> '#FFFFFF',
-    					'align'=> 'center',
-    					'x'=> 0,
-    					'y'=> -19,
-//     					'style'=> [
-//     							'fontSize'=> '13px',
-//     							'fontFamily'=> 'Verdana, sans-serif',
-//     							'textShadow'=> '0 0 3px black'
-//     					]
-    			]
-    	]];
+    		]];
 
 //     	var_dump($result);
-    	$jsonData = json_encode(['result'=>$result]);
+    	$jsonData = json_encode($result);
 //     	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
     	return $jsonData;
     }
