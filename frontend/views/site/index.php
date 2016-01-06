@@ -47,7 +47,7 @@ $this->title = '岭南管委会';
 				<div id="statis-area" style="width: 100%; height: 300px; margin: -50 auto"; ></div>
 				<?php //var_dump(Cache::getCache(\Yii::$app->getUser()->getId())['farmscache']);?>
 				<script type="text/javascript">
-   			showBar('statis-area',['面积','数量'],<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['farmscache']?>);
+   			showBar('statis-area',['面积','数量'],<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['farmscache']?>,['万亩','户']);
 		</script>
 
             </div>

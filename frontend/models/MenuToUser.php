@@ -55,6 +55,7 @@ class MenuToUser extends \yii\db\ActiveRecord
     		$menu[$value['id']] = $value['sort'];
     	}
     	asort($menu);
+//     	var_dump($menu);exit;
     	$result = array_flip($menu);
     	
     	return $result;

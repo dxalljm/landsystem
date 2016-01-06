@@ -1288,7 +1288,7 @@ class FarmsController extends Controller {
 				if ($isCollection)
 					$value ['info'] = '已收缴本年度承包费';
 				else
-					$value ['info'] = '本年度承包佛未收缴或有欠费';
+					$value ['info'] = '本年度承包费未收缴或有欠费';
 				$value ['description'] = '地产科确认承包费并发送至财务科';
 				break;
 			case 'machineoffarm' :

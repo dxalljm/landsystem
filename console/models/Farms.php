@@ -417,12 +417,30 @@ class Farms extends \yii\db\ActiveRecord
     			'type' => 'bar',
     			'percent' => $percent,
     			'data' => $areas,	
+    			'itemStyle'=> [
+    					'normal'=> [
+			    			'label' => [
+			    					'show'=> true,
+			    					'position'=> 'top',
+			    					'formatter'=> '{c}万亩',
+			    				]
+    						]
+    					]
     		],
     		[
     			'name' => '数量',
     			'type' => 'bar',
     			'data' => $rows,
     			'rowpercent' => $rowpercent,
+    			'itemStyle'=> [
+    					'normal'=> [
+			    			'label' => [
+			    					'show'=> true,
+			    					'position'=> 'top',
+			    					'formatter'=> '{c}户',
+			    				]
+    						]
+    					]
     		]];
 
 //     	var_dump($result);

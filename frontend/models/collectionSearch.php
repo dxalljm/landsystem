@@ -85,7 +85,7 @@ class collectionSearch extends Collection
         ]);
         
 		if(empty($this->ypayyear))
-			$this->ypayyear = date('Y');
+			$this->ypayyear = Theyear::findOne(1)['years'];
 // 		var_dump($this->ypayyear);exit;
         $this->load($params);        
         
@@ -108,8 +108,8 @@ class collectionSearch extends Collection
     		->andFilterWhere(['like', 'nonumber', $this->nonumber])
     		->andFilterWhere($this->betweenSearch('ypayarea'))
     		->andFilterWhere($this->betweenSearch('ypaymoney'))
-            ->andFilterWhere(['like', 'land_farms.farmname', $this->farmname])
-            ->andFilterWhere(['between','land_collection.update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
+            ->andFilterWhere(['like', 'land_farms.farmname', $this->farmname]);
+//             ->andFilterWhere(['between','land_collection.update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

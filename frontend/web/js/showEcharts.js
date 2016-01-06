@@ -68,7 +68,7 @@ function showShadow(divID,legendata,xdata,seriesdata,dw)
 	);
 }
 
-function showBar(divID,legenddata,xdata,series)
+function showBar(divID,legenddata,xdata,series,dw)
 {
 	require.config({
 		  paths: {
@@ -93,7 +93,7 @@ function showBar(divID,legenddata,xdata,series)
 	    	    },
 	    	    tooltip : {
 	    	        trigger: 'axis',
-//	    	        formatter: ''
+//	    	        formatter: '{a}<br/>{b}:{c}' + dw
 	    	    },
 	    	    legend: {
 	    	        data:legenddata

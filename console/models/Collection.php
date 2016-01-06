@@ -137,34 +137,34 @@ class Collection extends \yii\db\ActiveRecord {
 // 							'years' => date ( 'Y' ) 
 // 					] )->one ()['price']/10000)
 // 			];
-			$farm = Farms::find()->where(['management_area' => $value])->all();
 			$collectionSUm = 0.0;
-			foreach ($farm as $val) {
-				$collectionSUm +=  Collection::find ()->where ( [ 
-						'farms_id' => $val['id'] 
+
+			$collectionSUm =  Collection::find ()->where ( [ 
+						'management_area' => $value,
+						'dckpay' => 1,
 				] )->sum ( 'real_income_amount' );
-			}
+			
 // 			$real_income_amount [] = [
 // 					'color' => $color[$i],
 // 					'y' => $collectionSUm,
 // 			];
-			if($collectionSUm !== 0.0)
+// 			if($collectionSUm)
 				$real_income_amount[] = ( float ) sprintf("%.2f",$collectionSUm/10000);
-			else 
-				$real_income_amount[] = 0;
+// 			else 
+// 				$real_income_amount[] = 0;
 			$i ++;
 		}
-		$cha = [];
-// 		var_dump($amounts_receivable);
-		for($i=0;$i<count($amounts_receivable);$i++) {
-			if($real_income_amount[$i])
-				$cha[$i] = $amounts_receivable[$i] - $real_income_amount[$i];
-			else
-				$cha[$i] = 0;
-		}
+// 		$cha = [];
+// 		var_dump($real_income_amount);
+// 		for($i=0;$i<count($amounts_receivable);$i++) {
+// 			if($real_income_amount[$i])
+// 				$cha[$i] = $amounts_receivable[$i] - $real_income_amount[$i];
+// 			else
+// 				$cha[$i] = 0;
+// 		}
 // 		exit;
 		$result = [[
-			'name'=>'应收金额',
+			'name'=>'实收金额',
 			'type'=>'bar',
 			'stack'=>'sum',
 			'barCategoryGap'=>'50%',
@@ -172,7 +172,7 @@ class Collection extends \yii\db\ActiveRecord {
 				'normal'=> [
 					'color'=> 'tomato',
 					'barBorderColor'=> 'tomato',
-					'barBorderWidth'=> 6,
+					'barBorderWidth'=> 3,
 					'barBorderRadius'=>0,
 					'label'=>[
 						'show'=> true, 
@@ -180,35 +180,29 @@ class Collection extends \yii\db\ActiveRecord {
 					]
 				]
 			],
-			'data'=>$amounts_receivable,
+			'data'=>$real_income_amount,
 		],
 		[
-			'name'=>'实收金额',
+			'name'=>'应收金额',
 			'type'=>'bar',
 			'stack'=>'sum',
 			'itemStyle'=> [
 				'normal'=> [
 					'color'=>'#fff',
 					'barBorderColor'=> 'tomato',
-					'barBorderWidth'=> 6,
+					'barBorderWidth'=> 3,
 					'barBorderRadius'=>0,
 					'label' => [
 						'show'=> true,
 						'position'=> 'top',
-// 						'formatter'=> 'function (params) {
-// 							for (var i = 0, l = option.xAxis[0].data.length; i < l; i++) {
-// 								if (option.xAxis[0].data[i] == params.name) {
-// 									return option.series[0].data[i] + params.value;
-// 								}
-// 							}
-// 						}',
+// 						'formatter'=> '{c}',
 						'textStyle'=>[
 							'color'=> 'tomato'
 						]
 					]
 				]
 			],
-			'data'=>$cha,
+			'data'=>$amounts_receivable,
 		]];
 // 		$result = [ 
 // 				[
@@ -247,7 +241,7 @@ class Collection extends \yii\db\ActiveRecord {
 // 						]
 // 				]
 // 		];
-		var_dump($result);
+// 		var_dump($result);
 		$jsonData = json_encode ($result);
 		return $jsonData;
 	}
@@ -300,7 +294,7 @@ class Collection extends \yii\db\ActiveRecord {
 			$sum += Farms::getNowContractnumberArea($value['id']);
 		}
 		return (float)sprintf("%.2f",$sum * PlantPrice::find ()->where ( [ 
-							'years' => date ( 'Y' ) 
+							'years' => Theyear::findOne(1)['years'] 
 					] )->one ()['price']/10000).'万元';
 	}
 }
