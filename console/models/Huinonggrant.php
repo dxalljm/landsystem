@@ -93,7 +93,30 @@ class Huinonggrant extends \yii\db\ActiveRecord
     		}	
     	}
 //     	var_dump($allSum);
-    	
+    	foreach($sum as $value) {
+    		//     		var_dump($value['key']);exit;
+    		$result[] =
+    		[
+    				// 					'color' => '#FFF',
+    				'name' => '实发',
+    				'type' => 'bar',
+    				'data' => $value['data'],
+    				'stack'=>'sum',
+    				'barCategoryGap'=>'50%',
+    				'itemStyle'=>[
+    						'normal'=> [
+    						'color'=> 'tomato',
+    						'barBorderColor'=> 'tomato',
+    						'barBorderWidth'=> 3,
+    						'barBorderRadius'=>0,
+    						'label'=>[
+    	    								'show'=> true,
+    	    								'position'=> 'insideTop'
+    	    						]
+    						]
+    	    						],
+    				];
+    	}
     	foreach ($allSum as $value) {
     			$result[] = 
 	    			[
@@ -120,30 +143,7 @@ class Huinonggrant extends \yii\db\ActiveRecord
 						],
     			];
     	}
-    	foreach($sum as $value) {
-    		//     		var_dump($value['key']);exit;
-    		$result[] =
-    		[
-    				// 					'color' => '#FFF',
-    				'name' => '实发',
-    				'type' => 'bar',
-    				'data' => $value['data'],
-    				'stack'=>'sum',
-    				'barCategoryGap'=>'50%',
-    				'itemStyle'=>[
-    						'normal'=> [
-    						'color'=> 'tomato',
-    						'barBorderColor'=> 'tomato',
-    						'barBorderWidth'=> 3,
-    						'barBorderRadius'=>0,
-    						'label'=>[
-    								'show'=> true,
-    								'position'=> 'insideTop'
-    						]
-    						]
-    				],
-    		];
-    	}
+    	
 //     	var_dump($result);
     	$jsonData = json_encode ($result);
 		return $jsonData;
