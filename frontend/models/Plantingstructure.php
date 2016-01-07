@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-
+use app\models\Farms;
 /**
  * This is the model class for table "{{%plantingstructure}}".
  *
@@ -156,35 +156,21 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	return $zongdi;
     }
 
-	public static function getPlantname($userid)
+	public static function getPlantname()
     {
-    	$data = [];
     	$result = [];
-    	$area = Farms::getUserManagementArea($userid);
-    	
-			// 农场区域
-			
-// 			$array['areaname'] = $area['areaname'][$key];
-			
-			$farm = Farms::find()->where(['management_area'=>$area])->all();
-    		foreach ($farm as $val) {
-    			$allid[] = $val['id'];
+    	$where = Farms::getManagementArea()['id'];
+    	$Plantingstructure = Plantingstructure::find ()->where (['management_area' => $where])->all ();
+    	$data = [];
+    	foreach($Plantingstructure as $value) {
+    		$data[] = ['id'=>$value['plant_id']];
+    	}
+//     	var_dump($data);exit;
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		foreach ($newdata as $value) {
+    			$result[] = Plant::find()->where(['id' => $value['id']])->one()['cropname'];
     		}
-    		$plantsum = 0;
-    		$goodseedsum = 0;
-    		$planting = Plantingstructure::find()->where(['farms_id'=>$allid])->all();
-    		foreach ($planting as $v) {
-    			$plantallid[] = $v['plant_id'];
-    			
-    		}
-    		$plantname = Plant::find()->where(['id'=>$plantallid])->all();
-    		foreach ($plantname as $pname) {
-    			$data[$pname] = $pname;
-    		}
-    		
-    	
-    	foreach ($data as $value) {
-    		$result[] = $value;
     	}
     	return $result;
     }

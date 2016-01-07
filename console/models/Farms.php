@@ -279,6 +279,8 @@ class Farms extends \yii\db\ActiveRecord
     {
     	$result = [];
     	$dep_id = User::findIdentity($userid)['department_id'];
+//     	var_dump($userid);
+//     	var_dump($dep_id);
     	$departmentData = Department::find ()->where ( [
     			'id' => $dep_id
     	] )->one ();
@@ -422,7 +424,7 @@ class Farms extends \yii\db\ActiveRecord
 			    			'label' => [
 			    					'show'=> true,
 			    					'position'=> 'top',
-			    					'formatter'=> '{c}万亩',
+// 			    					'formatter'=> '{c}万亩',
 			    				]
     						]
     					]
@@ -437,7 +439,7 @@ class Farms extends \yii\db\ActiveRecord
 			    			'label' => [
 			    					'show'=> true,
 			    					'position'=> 'top',
-			    					'formatter'=> '{c}户',
+// 			    					'formatter'=> '{c}户',
 			    				]
     						]
     					]
@@ -467,5 +469,39 @@ class Farms extends \yii\db\ActiveRecord
     	}
     	$area = $measue + $notclear;
     	return sprintf("%.2f",$area/10000).'万亩';
+    }
+    
+    public static function unique_arr($array2D, $stkeep = false, $ndformat = true) {
+    	// 判断是否保留一级数组键 (一级数组键可以为非数字)
+    	if ($stkeep)
+    		$stArr = array_keys ( $array2D );
+    		
+    	// var_dump($array2D);exit;
+    	// 判断是否保留二级数组键 (所有二级数组键必须相同)
+    	if ($ndformat)
+    		$ndArr = array_keys ( end ( $array2D ) );
+    		
+    	// 降维,也可以用implode,将一维数组转换为用逗号连接的字符串
+    	foreach ( $array2D as $v ) {
+    		$v = join ( ",", $v );
+    		$temp [] = $v;
+    	}
+    
+    	// 去掉重复的字符串,也就是重复的一维数组
+    	$temp = array_unique ( $temp );
+    
+    	// 再将拆开的数组重新组装
+    	foreach ( $temp as $k => $v ) {
+    		if ($stkeep)
+    			$k = $stArr [$k];
+    		if ($ndformat) {
+    			$tempArr = explode ( ",", $v );
+    			foreach ( $tempArr as $ndkey => $ndval )
+    				$output [$k] [$ndArr [$ndkey]] = $ndval;
+    		} else
+    			$output [$k] = explode ( ",", $v );
+    	}
+    
+    	return $output;
     }
 }

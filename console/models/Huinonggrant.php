@@ -93,55 +93,59 @@ class Huinonggrant extends \yii\db\ActiveRecord
     		}	
     	}
 //     	var_dump($allSum);
-    	foreach($allSum as $value) {
-//     		var_dump($value['key']);exit;
-	    	$result[] = 
-	    			[
-	    			// 					'color' => '#FFF',
-	    					'name' => Huinong::getName($value['key']).'应发',    
-	    					'data' => $value['data'],
-	    					'stack' => $value['stack'],
-	    					'dataLabels' => [
-	    							'enabled' => false,
-	    							'rotation' => 0,
-	    							'color' => '#FFFFFF',
-	    							'align' => 'center',
-	    							'x' => 0,
-	    							'y' => 0,
-	    							'style' => [
-	    									'fontSize' => '13px',
-	    									'fontFamily' => 'Verdana, sans-serif',
-	    									'textShadow' => '0 0 3px black'
-	    							]
-	    					]
-    			];
-    	}
-    	foreach ($sum as $value) {
+    	
+    	foreach ($allSum as $value) {
     			$result[] = 
 	    			[
 	    			// 					'color' => '#FFF',
-	    					'name' => Huinong::getName($value['key']).'实发',    
+	    					'name' => '应发',  
+	    					'type' => 'bar',  
 	    					'data' => $value['data'],
-	    					'stack' => $value['stack'],
-	    					'dataLabels' => [
-	    							'enabled' => false,
-	    							'rotation' => 0,
-	    							'color' => '#FFFFFF',
-	    							'align' => 'center',
-	    							'x' => 0,
-	    							'y' => 0,
-	    							'style' => [
-	    									'fontSize' => '13px',
-	    									'fontFamily' => 'Verdana, sans-serif',
-	    									'textShadow' => '0 0 3px black'
-	    							]
-	    					]
+	    					'stack'=>'sum',
+							'itemStyle'=> [
+							'normal'=> [
+								'color'=>'#fff',
+								'barBorderColor'=> 'tomato',
+								'barBorderWidth'=> 3,
+								'barBorderRadius'=>0,
+								'label' => [
+									'show'=> true,
+									'position'=> 'top',
+			// 						'formatter'=> '{c}',
+									'textStyle'=>[
+										'color'=> 'tomato'
+									]
+								]
+							]
+						],
     			];
     	}
+    	foreach($sum as $value) {
+    		//     		var_dump($value['key']);exit;
+    		$result[] =
+    		[
+    				// 					'color' => '#FFF',
+    				'name' => '实发',
+    				'type' => 'bar',
+    				'data' => $value['data'],
+    				'stack'=>'sum',
+    				'barCategoryGap'=>'50%',
+    				'itemStyle'=>[
+    						'normal'=> [
+    						'color'=> 'tomato',
+    						'barBorderColor'=> 'tomato',
+    						'barBorderWidth'=> 3,
+    						'barBorderRadius'=>0,
+    						'label'=>[
+    								'show'=> true,
+    								'position'=> 'insideTop'
+    						]
+    						]
+    				],
+    		];
+    	}
 //     	var_dump($result);
-    	$jsonData = json_encode ( [ 
-				'result' => $result 
-		] );
+    	$jsonData = json_encode ($result);
 		return $jsonData;
     }
 }

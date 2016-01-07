@@ -7,6 +7,7 @@ use console\models\Farms;
 use console\models\Plantinputproduct;
 use console\models\Lease;
 use console\models\Inputproduct;
+use console\models\Plantingstructure;
 
 //use frontend\helpers\eActionColumn;
 
@@ -74,77 +75,58 @@ class Plantinputproduct extends \yii\db\ActiveRecord
     
     public static function getInputproduct($userid)
     {
-    	$where = Farms::getUserManagementArea(15);
-    	$farms = Farms::find()->where(['management_area'=>$where])->all();
-    	foreach ($farms as $farm) {
-    		$farmid[] = $farm['id'];
-    	}
-    	$input = Plantinputproduct::find()->where(['farms_id'=>$farmid])->all();
-//     	var_dump($input);exit;
+//     	var_dump($userid);
+    	$where = Farms::getUserManagementArea($userid);
+    	$typenamelist = self::getTypenamelist($userid);
+    	$plantlist = Plantingstructure::getPlantname($userid);
+//     	var_dump($typenamelist);exit;
     	$data = [];
+    	$result = [];
     	$lastresult = [];
-    	foreach ($input as $value) {
-    		$data[$value['inputproduct_id']][] = Lease::getArea($value['zongdi'])*$value['pconsumption'];
+    	$name = '';
+    	foreach ($plantlist['id'] as $plantkey => $plant) {
+    		$name = Plant::find()->where(['id'=>$plant])->one()['cropname'];
+    		foreach ($typenamelist['id'] as $typenamekey => $val) {
+    			$input = Plantinputproduct::find()->where(['management_area'=>$where,'inputproduct_id'=>$val['id'],'plant_id'=>$plant['id']])->all();
+	    		$sum = 0.0;
+	    		foreach ($input as $value) {
+	    			$sum += (float)Lease::getArea($value->attributes['zongdi'])*$value->attributes['pconsumption'];
+	    		}
+	    		$data[$name][$typenamekey] = (float)sprintf("%.2f", $sum/10000);
+	    	}
     	}
-    	$sum = 0.0;
-//     	var_dump($val);exit;
-    	foreach ($data as $key => $val) {
-    		foreach ($val as $v) {
-    			$sum += $v;
-    		}
-    		
-    		$name = Inputproduct::find()->where(['id'=>$key])->one()['fertilizer'];
-    		$lastresult[] = (float)sprintf("%.2f", $sum/10000);
+    	foreach ($data as $key => $value) {
+    		$result[] = [
+    				'name' => $key,
+    				'type' => 'bar',
+    				'data' => $value,
+    		];
     	}
-    	$result = [[
-    			'type' => 'column',
-    			'name' => '投入品',
-    			'data' => $lastresult,
-    			'dataLabels'=> [
-    					'enabled'=> true,
-    					'rotation'=> 0,
-    					'color'=> '#FFFFFF',
-    					'align'=> 'center',
-    					'x'=> 0,
-    					'y'=> 0,
-    					'style'=> [
-    							'fontSize'=> '13px',
-    							'fontFamily'=> 'Verdana, sans-serif',
-    							'textShadow'=> '0 0 3px black'
-    					]
-    			],
-    			'tooltip' => [
-    					'shared' => true,
-    					'formatter' => ''
-    			]
-    	]];
-    	$jsonData = json_encode ( [
-    			'result' => $result
-    	] );
+    	
+//     	sort($result);
+    	var_dump($result);
+    	
+    	$jsonData = json_encode ($result);
     	
     	return $jsonData;
     }
     
     public static function getTypenamelist($userid)
     {
-    	$result = [];
-    	$where = Farms::getUserManagementArea(15);
-    	$farms = Farms::find()->where(['management_area'=>$where])->all();
-    	foreach ($farms as $farm) {
-    		$farmid[] = $farm['id'];
-    	}
-    	$input = Plantinputproduct::find()->where(['farms_id'=>$farmid])->all();
+    	
+    	$input = Plantinputproduct::find()->all();
 //     	var_dump($input);exit;
     	$data = [];
-    	$lastresult = [];
+    	$result = [];
     	foreach ($input as $value) {
-    		$data[$value['inputproduct_id']][] = Lease::getArea($value['zongdi'])*$value['pconsumption'];
+    		$data[] = ['id'=>$value['inputproduct_id']];
     	}
-    	$sum = 0.0;
-//     	var_dump($val);exit;
-    	foreach ($data as $key => $val) {
-    		$name = Inputproduct::find()->where(['id'=>$key])->one()['fertilizer'];
-    		$result[] = $name;
+   		if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		foreach ($newdata as $value) {
+    			$result['id'][] = $value;
+    			$result['typename'][] = Inputproduct::find()->where(['id' => $value])->one()['fertilizer'];
+    		}
     	}
 
 //     	var_dump($result);exit;

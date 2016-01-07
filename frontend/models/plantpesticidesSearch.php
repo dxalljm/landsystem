@@ -18,7 +18,7 @@ class plantpesticidesSearch extends Plantpesticides
     public function rules()
     {
         return [
-            [['id', 'farms_id', 'lessee_id', 'pesticides_id','plant_id','planting_id'], 'integer'],
+            [['id', 'farms_id', 'lessee_id', 'pesticides_id','plant_id','planting_id','management_area'], 'integer'],
             [['pconsumption'], 'number'],
         ];
     }
@@ -63,6 +63,7 @@ class plantpesticidesSearch extends Plantpesticides
             'lessee_id' => $this->lessee_id,
             'pesticides_id' => $this->pesticides_id,
             'pconsumption' => $this->pconsumption,
+        	'management_area' => $this->management_area,
         ]);
 		$query->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
         return $dataProvider;

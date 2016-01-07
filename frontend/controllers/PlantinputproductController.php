@@ -10,6 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Plantingstructure;
 use app\models\Logs;
+use app\models\ManagementArea;
+use app\models\Farms;
 
 /**
  * PlantinputproductController implements the CRUD actions for Plantinputproduct model.
@@ -37,6 +39,16 @@ class PlantinputproductController extends Controller
 //     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
 //     	}
 //     }
+	public function actionSetmanagement()
+	{
+		$input = Plantinputproduct::find()->all();
+		foreach ($input as $value) {
+			$model = $this->findModel($value['id']);
+			$model->management_area = Farms::find()->where(['id'=>$value['farms_id']])->one()['management_area'];
+			$model->save();
+		}
+		echo 'done';
+	}
     /**
      * Lists all Plantinputproduct models.
      * @return mixed

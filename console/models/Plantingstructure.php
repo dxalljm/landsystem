@@ -4,6 +4,9 @@ namespace console\models;
 
 use Yii;
 use console\models\Plant;
+use console\models\ManagementArea;
+use console\models\Farms;
+use app\models\Goodseed;
 
 /**
  * This is the model class for table "{{%plantingstructure}}".
@@ -148,37 +151,77 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	return $zongdi;
     }
 
-    public static function getPlantname($userid)
-    {
-    	$data = [];
-    	$result = [];
-    	$allid = [];
-    	$area = Farms::getUserManagementArea($userid);
-    	$plantallid = [];
-			// 农场区域
+//     public static function getPlantname($userid)
+//     {
+//     	$data = [];
+//     	$result = [];
+//     	$allid = [];
+//     	$area = Farms::getUserManagementArea($userid);
+//     	$plantallid = [];
+// 			// 农场区域
 			
-// 			$array['areaname'] = $area['areaname'][$key];
+// // 			$array['areaname'] = $area['areaname'][$key];
 			
-			$farm = Farms::find()->where(['management_area'=>$area])->all();
-    		foreach ($farm as $val) {
-    			$allid[] = $val['id'];
-    		}
-    		$plantsum = 0;
-    		$goodseedsum = 0;
-    		$planting = Plantingstructure::find()->where(['farms_id'=>$allid])->all();
-    		foreach ($planting as $v) {
-    			$plantallid[] = $v['plant_id'];
+// 			$farm = Farms::find()->where(['management_area'=>$area])->all();
+//     		foreach ($farm as $val) {
+//     			$allid[] = $val['id'];
+//     		}
+//     		$plantsum = 0;
+//     		$goodseedsum = 0;
+//     		$planting = Plantingstructure::find()->where(['farms_id'=>$allid])->all();
+//     		foreach ($planting as $v) {
+//     			$plantallid[] = $v['plant_id'];
     			
-    		}
-    		$plantname = Plant::find()->where(['id'=>$plantallid])->all();
-//     		var_dump($plantname);exit;
-    		foreach ($plantname as $pname) {
-    			$data[$pname['cropname']] = $pname['cropname'];
-    		}
+//     		}
+//     		$plantname = Plant::find()->where(['id'=>$plantallid])->all();
+// //     		var_dump($plantname);exit;
+//     		foreach ($plantname as $pname) {
+//     			$data[$pname['cropname']] = $pname['cropname'];
+//     		}
     		
     	
-    	foreach ($data as $value) {
-    		$result[] = $value;
+//     	foreach ($data as $value) {
+//     		$result[] = $value;
+//     	}
+//     	return $result;
+//     }
+    
+    public static function getPlantname($userid)
+    {
+    	$result = ['id','plantname'];
+    	$where = Farms::getUserManagementArea($userid);
+//     	var_dump($userid);
+//     	var_dump($where);
+    	$Plantingstructure = Plantingstructure::find ()->where (['management_area' => $where])->all ();
+    	$data = [];
+    	foreach($Plantingstructure as $value) {
+    		$data[] = ['id'=>$value['plant_id']];
+    	}
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		foreach ($newdata as $value) {
+    			$result['id'][] = $value;
+    			$result['plantname'][] = Plant::find()->where(['id' => $value])->one()['cropname'];
+    		}
+    	}
+    	return $result;
+    }
+    
+    public static function getGoodseedname($userid)
+    {
+    	$result = [];
+    	$where = Farms::getUserManagementArea($userid);
+    	$Plantingstructure = Plantingstructure::find ()->where (['management_area' => $where])->all ();
+    	$data = [];
+    	foreach($Plantingstructure as $value) {
+    		$data[] = ['id'=>$value['goodseed_id']];
+    	}
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		foreach ($newdata as $value) {
+    			$result['id'][] = $value;
+    			$result['goodseedname'][] = Goodseed::find()->where(['id' => $value])->one()['plant_model'];
+    		}
     	}
     	return $result;
     }
@@ -193,6 +236,8 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	$goodseedresult = [];
     	$plantresult = [];
 		$area = Farms::getUserManagementArea($userid);
+		$plantid = self::getPlantname($userid);
+// 		$goodseedid = self::getGoodseedname($userid)['id'];
     	foreach ( $area as $key => $value ) {
     		$areaNum++;
 
@@ -200,112 +245,23 @@ class Plantingstructure extends \yii\db\ActiveRecord
 			
 // 			$array['areaname'] = $area['areaname'][$key];
 			
-			$farm = Farms::find()->where(['management_area'=>$value])->all();
-    		foreach ($farm as $val) {
-    			$plantsum = 0;
-    			$goodseedsum = 0;
-    			$planting = Plantingstructure::find()->where(['farms_id'=>$val['id']])->all();
-    			foreach ($planting as $v) {
-    				$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname'];
-    				
-					$plantsum += $v['area'];
-					$plant[$plantname][] = $plantsum;
-					if($v['goodseed_id'] !== 0)
-						$goodseedarea = $v['area'];
-					else
-						$goodseedarea = 0.0;
-					$goodseedsum += $goodseedarea;
-					$goodseed[$plantname][] = $goodseedsum;
-// 					var_dump($goodseed);
-    			}
+// 			$farm = Farms::find()->where(['management_area'=>$value])->all();
+    		$plantArea = [];
+    		foreach ($plantid['id'] as $val) {
+    			$plantsum = 0.0;
+    			$goodseedsum = 0.0;
+    			$area = Plantingstructure::find()->where(['management_area'=>$value,'plant_id'=>$val])->sum('area');
+    			$plantArea[] = (float)sprintf("%.2f", $area/10000);
     		}
+    		$result[] = [
+    				'name' => str_ireplace('管理区', '', ManagementArea::find()->where(['id'=>$value])->one()['areaname']),
+    				'type' => 'bar',
+    				'stack' => $value,
+    				'data' => $plantArea
+    		];
     	}
-// 		var_dump($goodseed);exit;
-		// 作物统计
-		$plantdata = [];
-		$goodseeddata = [];
-		$plantPie = [];
-		// 总数计算
-		foreach ($plant as $key => $value) {
-			$area = 0;
-			foreach($value as $ke => $val) {
-	// 			var_dump($val);
-				if (!isset($val)) {
-					$planting[$key] = 0.00;
-				}
-				$area += $val;
-				$plantdata[$key] = $area;
-			}
-		}
-		foreach ($goodseed as $key => $value) {
-			$area = 0;
-			foreach($value as $ke => $val) {
-				// 			var_dump($val);
-				if (!isset($val)) {
-					$planting[$key] = 0.00;
-				}
-				$area += $val;
-				$goodseeddata[$key] = $area;
-			}
-		}
-		foreach($plantdata as $key => $value) {
-			$plantresult[] = (float)sprintf("%.2f", $value/10000);
-			$plantPie['name'] = $key;
-			$plantPie['y'] = $value;
-		}
-		foreach($goodseeddata as $value) {
-			$goodseedresult[] = (float)sprintf("%.2f", $value/10000);
-		}
-		$result = [
-				[
-						'color' => '#bdfdc9',
-						'type' => 'column',
-						'name' => '作物',
-						'data' => $plantresult,
-// 						'dataLabels' => [
-// 								'enabled' => false,
-// 								'rotation' => 0,
-// 								'color' => '#FFFFFF',
-// 								'align' => 'center',
-// 								'x' => 0,
-// 								'y' => 0,
-// 								'style' => [
-// 										'fontSize' => '13px',
-// 										'fontFamily' => 'Verdana, sans-serif',
-// 										'textShadow' => '0 0 3px black'
-// 								]
-// 						]
-				],
-				[
-						'color' => '#02c927',
-						'type' => 'column',
-						'name' => '良种',
-						'data' => $goodseedresult,
-// 						'dataLabels' => [
-// 								'enabled' => true,
-// 								'rotation' => 0,
-// 								'color' => '#FFFFFF',
-// 								'align' => 'center',
-// 								'x' => 0,
-// 								'y' => 0,
-// 								'style' => [
-// 										'fontSize' => '13px',
-// 										'fontFamily' => 'Verdana, sans-serif',
-// 										'textShadow' => '0 0 3px black'
-// 								]
-// 						]
-				],
-				[
-					'type' => 'pie',
-					'name' => '',
-					'data' => $plantPie,						
-				],
-		];
-// 		var_dump($result);
-
-    	$jsonData = json_encode ( [
-    			'result' => $result
-    	] );
+    	var_dump($result);
+    	$jsonData = json_encode ($result);
     	
     	return $jsonData;
     }

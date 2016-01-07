@@ -108,7 +108,10 @@ class LandcacheController extends Controller
 			$landcache->user_id = $id;
 			$landcache->plantingstructurecache = Plantingstructure::getPlantingstructure($id);
 			$landcache->plantingstructuretitle = '作物面积：'.Plantingstructure::getPlantGoodseedSum($id)['plantSum'].'万亩&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;良种面积：'.Plantingstructure::getPlantGoodseedSum($id)['goodseedSum'].'万亩';
-			$landcache->plantingstructurecategories = json_encode(Plantingstructure::getPlantname($id));
+			$plant = Plantingstructure::getPlantname($id);
+// 			var_dump($id);
+// 			var_dump($plant);
+			$landcache->plantingstructurecategories = json_encode($plant['plantname']);
 			$landcache->save();
 		}
 	}
@@ -132,6 +135,7 @@ class LandcacheController extends Controller
 	public function actionPlantinputproductcache()
 	{
 		$allid = $this->getAllUser();
+// 		var_dump($allid);exit;
 		foreach ($allid as $id) {
 			if($cache = Cache::find()->where(['user_id'=>$id])->one())
 				$landcache = Cache::findOne($cache->id);
@@ -140,7 +144,7 @@ class LandcacheController extends Controller
 			$landcache->user_id = $id;
 			$landcache->plantinputproductcache = Plantinputproduct::getInputproduct($id);
 			$landcache->plantinputproducttitle = '投入品使用情况';
-			$landcache->plantinputproductcategories = json_encode(Plantinputproduct::getTypenamelist($id));
+			$landcache->plantinputproductcategories = json_encode(Plantinputproduct::getTypenamelist($id)['typename']);
 			$landcache->save();
 		}
 	}

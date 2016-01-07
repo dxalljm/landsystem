@@ -32,7 +32,7 @@ $this->title = '岭南管委会';
               <div class="user-block">
                 <span class="username"><a href="#">您所辖管理区农场面积统计数据</a></span>
                 <span class="description navbar-left"><?= Cache::getCache(\Yii::$app->getUser()->getId())['farmstitle']?></span>
-                <span class="description navbar-right">单位（万亩）</span>
+                <span class="description navbar-right">单位（万亩）|（户）</span>
               </div>
               <!-- /.user-block -->
               <div class="box-tools">
@@ -47,7 +47,7 @@ $this->title = '岭南管委会';
 				<div id="statis-area" style="width: 100%; height: 300px; margin: -50 auto"; ></div>
 				<?php //var_dump(Cache::getCache(\Yii::$app->getUser()->getId())['farmscache']);?>
 				<script type="text/javascript">
-   			showBar('statis-area',['面积','数量'],<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['farmscache']?>,['万亩','户']);
+   			showBar('statis-area',['面积','数量'],<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['farmscache']?>,'万亩,户');
 		</script>
 
             </div>
@@ -79,7 +79,7 @@ $this->title = '岭南管委会';
               <?php //var_dump(Collection::getCollection());?>
 
               <div id="collection" style="width:100%;height:300px"></div>
-<script type="text/javascript">showBar('collection',['应收金额','实收金额'],<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?php echo Cache::getCache(\Yii::$app->getUser()->getId())['collectioncache']?>)</script>
+<script type="text/javascript">showShadow('collection',['应收金额','实收金额'],<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?php echo Cache::getCache(\Yii::$app->getUser()->getId())['collectioncache']?>,'万元')</script>
 
 
             </div>
@@ -114,10 +114,10 @@ $this->title = '岭南管委会';
             //$string = '{"result":[{"color":"#bdfdc9","type":"column","name":"\u4f5c\u7269", "dataLabels": { "enabled": false} ,"data":[0.07,0.16,0.03,0.06,0,0.02]},{"color":"#02c927","type":"column","name":"\u826f\u79cd", "dataLabels": { "color": "#000"}, "data":[0,0,0.01,0,0,0]},{"type":"pie","name":"wubaiqing-test", "center": [200, 20], "size": 50, "showInLegend": false, dataLabels: {"enabled": false}, "data":[{"name":"\u9ec4\u82aa","y":207.1}, {"name":"\u9ec4\u82aa2","y":27.1}]}]}';
             ?>
             <div class="box-body">
-				<div id="plantingstructure" style="width: 430px; height: 300px; margin: 0 auto"; ></div>
+				<div id="plantingstructure" style="width: 100%; height: 300px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
 //				showStacked('plantingstructure','',<?//= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecategories']?>//,'',<?//= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecache']?>//,'万亩');
-				showColumn('plantingstructure','',<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecategories']?>,'',<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecache']?>,'','万亩');
+				showAllShadow('plantingstructure',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecategories']?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecache']?>,'万亩');
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
             </div>
@@ -136,7 +136,8 @@ $this->title = '岭南管委会';
             <div class="box-header with-border">
               <div class="user-block">
                 <span class="username"><a href="#">您所辖管理区投入品使用情况统计数据</a></span>
-                <span class="description navbar-right">单位（万亩）</span>
+                <span class="description navbar-left"><?= Cache::getCache(\Yii::$app->getUser()->getId())['plantinputproducttitle']?></span>
+                <span class="description navbar-right">单位（万斤）</span>
               </div>
               <!-- /.user-block -->
               <div class="box-tools">
@@ -148,9 +149,10 @@ $this->title = '岭南管委会';
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-				<div id="plantinputproduct" style="width: 430px; height: 300px; margin: 0 auto"; ></div>
+				<div id="plantinputproduct" style="width: 100%; height: 300px; margin: 0 auto"; ></div>
+				<?php //var_dump(Plantingstructure::getPlantname());?>
 				<script type="text/javascript">
-				showColumn('plantinputproduct','',<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantinputproductcategories']?>,'',<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantinputproductcache']?>,'','斤/万亩');
+				showAllShadow('plantinputproduct',<?= json_encode(Plantingstructure::getPlantname())?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantinputproductcategories']?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantinputproductcache']?>,'万亩');
 		</script>
             </div>
         
@@ -178,9 +180,9 @@ $this->title = '岭南管委会';
             <!-- /.box-header -->
             <div class="box-body">
               <?php //var_dump(Collection::getCollection());?>
-        		<div id="huinong-info" style="width: 430px; height: 300px; margin: 0 auto;" ></div>
+        		<div id="huinong-info" style="width: 100%; height: 300px; margin: 0 auto;" ></div>
    			 <script type="text/javascript">
-   			showColumn('huinong-info','',<?= Cache::getCache(\Yii::$app->getUser()->getId())['huinongcategories']?>,'',<?= Cache::getCache(\Yii::$app->getUser()->getId())['huinongcache']?>,'','万元');
+   			showShadow('huinong-info',['应发','实发'],<?= Cache::getCache(\Yii::$app->getUser()->getId())['huinongcategories']?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['huinongcache']?>,'万元');
 		</script>
             </div>
             <!-- /.box-body -->
@@ -211,7 +213,7 @@ $this->title = '岭南管委会';
 				<div id="project" style="width: 430px; height: 300px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
 //				showStacked('plantingstructure','',<?//= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecategories']?>//,'',<?//= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecache']?>//,'亩');
-showColumn('project','',<?= Cache::getCache(\Yii::$app->getUser()->getId())['projectapplicationcategories']?>,'',<?= Cache::getCache(\Yii::$app->getUser()->getId())['projectapplicationcache']?>,'','个');
+
 		</script>
             </div>
         

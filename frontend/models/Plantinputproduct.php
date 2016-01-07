@@ -41,7 +41,7 @@ class Plantinputproduct extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['farms_id', 'lessee_id', 'father_id', 'son_id', 'inputproduct_id', 'plant_id','planting_id'], 'integer'],
+            [['farms_id', 'lessee_id', 'father_id', 'son_id', 'inputproduct_id', 'plant_id','planting_id','management_area'], 'integer'],
             [['pconsumption'], 'number'],
             [['zongdi'], 'string', 'max' => 500]
         ];
@@ -65,6 +65,7 @@ class Plantinputproduct extends \yii\db\ActiveRecord
             'plant_id' => '种植结构',
         	'create_at' => '创建日期',
         	'update_at' => '更新日期',
+        	'management_area' => '管理区',
         ];
     }
 }

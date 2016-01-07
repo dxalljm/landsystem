@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Logs;
 use app\models\Plantingstructure;
+use app\models\Farms;
 /**
  * PlantpesticidesController implements the CRUD actions for Plantpesticides model.
  */
@@ -36,6 +37,17 @@ class PlantpesticidesController extends Controller
 //     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
 //     	}
 //     }
+
+    public function actionSetmanagement()
+    {
+    	$input = Plantpesticides::find()->all();
+    	foreach ($input as $value) {
+    		$model = $this->findModel($value['id']);
+    		$model->management_area = Farms::find()->where(['id'=>$value['farms_id']])->one()['management_area'];
+    		$model->save();
+    	}
+    	echo 'done';
+    }
     /**
      * Lists all Plantpesticides models.
      * @return mixed
