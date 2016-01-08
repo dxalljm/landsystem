@@ -432,8 +432,8 @@ class Farms extends \yii\db\ActiveRecord
     		[
     			'name' => '数量',
     			'type' => 'bar',
-    			'data' => $rows,
-    			'rowpercent' => $rowpercent,
+    			'percent' => $rowpercent,
+    			'data' => $rows,    			
     			'itemStyle'=> [
     					'normal'=> [
 			    			'label' => [

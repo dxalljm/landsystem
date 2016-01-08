@@ -114,18 +114,22 @@ function showBar(divID,legenddata,xdata,series,dw)
 	    	    },
 	    	    tooltip : {
 	    	        trigger: 'axis',
-//	    	        formatter: function (params,ticket,callback) {
-//	    	            console.log(params)
-//	    	            var res = params[0].name;
-//	    	            var s = new Array();
-//	    	            for (var i = 0, l = params.length; i < l; i++) {
-//	    	                res += '<br/>' + params[i].seriesName + ' : ' + params[i].value;
-//	    	                
-//	    	            }
-//	    	            
-//	    	            return res;
-//	    	        }
-	    	        formatter: '{b0}<br/>{a0}:{c0}'+dwarr[0]+'<br/>{a1}:{c1}' + dwarr[1]
+	    	        formatter: function (params,ticket,callback) {
+	    	        	var row = eval(ticket); 
+	    	            console.log(params)
+	    	            var res = params[0].name;
+	    	            var percent = new Array();
+	    	            for (var i = 0, l = params.length; i < l; i++) {
+	    	            	alert(i);
+	    	            	percent[i] = params[i].series.percent;
+	    	            	alert(percent);
+	    	                res += '<br/>' + params[i].seriesName + ' : ' + params[i].value;
+	    	                res += '<br/>' + '占比：' + percent[i][row] +'%';
+	    	            }
+	    	            
+	    	            return res;
+	    	        }
+//	    	        formatter: '{b0}<br/>{a0}:{c0}'+dwarr[0]+'<br/>{a1}:{c1}' + dwarr[1]
 	    	    },
 	    	    legend: {
 	    	        data:legenddata
@@ -231,3 +235,28 @@ function showAllShadow(divID,legendData,xData,series,dw)
 	  }
 	);    
 }
+//对象转字符串
+function obj2string(o){ 
+	 var r=[]; 
+	 if(typeof o=="string"){ 
+	  return "\""+o.replace(/([\'\"\\])/g,"\\$1").replace(/(\n)/g,"\\n").replace(/(\r)/g,"\\r").replace(/(\t)/g,"\\t")+"\""; 
+	 } 
+	 if(typeof o=="object"){ 
+	  if(!o.sort){ 
+	   for(var i in o){ 
+	    r.push(i+":"+obj2string(o[i])); 
+	   } 
+	   if(!!document.all&&!/^\n?function\s*toString\(\)\s*\{\n?\s*\[native code\]\n?\s*\}\n?\s*$/.test(o.toString)){ 
+	    r.push("toString:"+o.toString.toString()); 
+	   } 
+	   r="{"+r.join()+"}"; 
+	  }else{ 
+	   for(var i=0;i<o.length;i++){ 
+	    r.push(obj2string(o[i])) 
+	   } 
+	   r="["+r.join()+"]"; 
+	  } 
+	  return r; 
+	 } 
+	 return o.toString(); 
+	}

@@ -25,7 +25,13 @@ $this->title = '岭南管委会';
   <?php $plate = explode(',', MenuToUser::find()->where(['role_id'=>User::getItemname()])->one()['plate']);?>
 
 <div class="row">
+        <?php if(count($plate) == 2) {?>
+        <div class="col-md-6">
+        <?php } elseif(count($plate == 3)) {?>
         <div class="col-md-4">
+        <?php } else {?>
+         <div class="box box-default color-palette-box">        
+        <?php }?>
           <!-- Box Comment -->
           <div class="box box-widget">
             <div class="box-header with-border">
@@ -57,7 +63,11 @@ $this->title = '岭南管委会';
         </div>
         <!-- /.col -->
     <?php if(in_array(24, $plate)) {?>  
+        <?php if(count($plate) == 2) {?>
+        <div class="col-md-6">
+        <?php } elseif(count($plate == 3)) {?>
         <div class="col-md-4">
+        <?php }?>
           <!-- Box Comment -->
           <div class="box box-widget">
             <div class="box-header with-border">
@@ -91,7 +101,11 @@ $this->title = '岭南管委会';
         <?php }
         if(in_array(21, $plate)) {
         ?>
+        <?php if(count($plate) == 2) {?>
+        <div class="col-md-6">
+        <?php } elseif(count($plate == 3)) {?>
         <div class="col-md-4">
+        <?php } ?>
           <!-- Box Comment -->
           <div class="box box-widget">
             <div class="box-header with-border">
@@ -130,7 +144,11 @@ $this->title = '岭南管委会';
 <!--       </div> -->
 <!-- <div class="row"> -->
 <?php if(in_array(21, $plate)) {?>
+        <?php if(count($plate) == 2) {?>
+        <div class="col-md-6">
+        <?php } elseif(count($plate == 3)) {?>
         <div class="col-md-4">
+        <?php } ?>
           <!-- Box Comment -->
           <div class="box box-widget">
             <div class="box-header with-border">
@@ -161,7 +179,11 @@ $this->title = '岭南管委会';
         </div>
         <!-- /.col -->
 <?php }?>  <?php if(in_array(23, $plate)) {?>
+        <?php if(count($plate) == 2) {?>
+        <div class="col-md-6">
+        <?php } elseif(count($plate == 3)) {?>
         <div class="col-md-4">
+        <?php } ?>
           <!-- Box Comment -->
           <div class="box box-widget">
             <div class="box-header with-border">
@@ -191,7 +213,11 @@ $this->title = '岭南管委会';
         </div>
         <!-- /.col -->
         <?php }?><?php if(in_array(53, $plate)) {?>
+        <?php if(count($plate) == 2) {?>
+        <div class="col-md-6">
+        <?php } elseif(count($plate == 3)) {?>
         <div class="col-md-4">
+        <?php } ?>
           <!-- Box Comment -->
           <div class="box box-widget">
             <div class="box-header with-border">
