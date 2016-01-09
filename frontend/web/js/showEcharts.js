@@ -120,9 +120,9 @@ function showBar(divID,legenddata,xdata,series,dw)
 	    	            var res = params[0].name;
 	    	            var percent = new Array();
 	    	            for (var i = 0, l = params.length; i < l; i++) {
-	    	            	alert(i);
+//	    	            	alert(i);
 	    	            	percent[i] = params[i].series.percent;
-	    	            	alert(percent);
+//	    	            	alert(percent);
 	    	                res += '<br/>' + params[i].seriesName + ' : ' + params[i].value;
 	    	                res += '<br/>' + '占比：' + percent[i][row] +'%';
 	    	            }

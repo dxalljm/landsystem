@@ -47,6 +47,14 @@ use frontend\widgets\CategorySelect;
 <td width=15% align='right'>申请内容</td>
 <td align='left'><?= $form->field($model, 'content')->textInput()->label(false)->error(false) ?></td>
 </tr>
+<tr>
+<td width=15% align='right'>数量</td>
+<td align='left'><?= $form->field($model, 'projectdata')->textInput()->label(false)->error(false) ?></td>
+</tr>
+<tr>
+<td width=15% align='right'>单位</td>
+<td align='left'><?= $form->field($model, 'unit')->dropDownList(['公里'=>'公里','平方米'=>'平方米','个'=>'个'],['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
+</tr>
 </table>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -19,8 +19,9 @@ class projectapplicationSearch extends Projectapplication
     {
         return [
             [['id','farms_id', 'create_at', 'update_at', 'is_agree','management_area','reviewprocess_id'], 'integer'],
-            [['projecttype'], 'safe'],
-        	[['content'],'string']
+            [['projectdata'],'number'],
+        	[['projecttype'], 'safe'],
+        	[['content','unit'],'string']
         ];
     }
 
@@ -59,10 +60,12 @@ class projectapplicationSearch extends Projectapplication
             'update_at' => $this->update_at,
             'is_agree' => $this->is_agree,
         	'management_area' => $this->management_area,
+        	'projectdata' => $this->projectdata,
         ]);
 
         $query->andFilterWhere(['like', 'projecttype', $this->projecttype])
         ->andFilterWhere(['like', 'content', $this->content])
+        ->andFilterWhere(['like', 'unit', $this->unit])
         ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;

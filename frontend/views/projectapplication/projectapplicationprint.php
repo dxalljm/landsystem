@@ -76,7 +76,8 @@ style='font-size:30.0pt;font-family:宋体'><?= $projecttypename?>建设申请</
 <p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
 <p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
 <p class=MsoNormal style='text-indent:46.0pt;line-height:30.0pt'><span
-style='font-size:22.0pt;font-family:仿宋;letter-spacing:0pt'>我是<?= $farm->farmername?>，农场法人<?= $farm->farmername?>，农场位于<?= $farm->address?>，我申请在<?= $model->content?>，我承诺严格按森林防火及林政部门要求建房，不非法占用林地及破坏森林资源，如违反自愿承担一节法律责任和经济责任。</span></p>
+style='font-size:22.0pt;font-family:仿宋;letter-spacing:0pt'>我是<?= $farm->farmername?>，农场法人<?= $farm->farmername?>，农场位于<?= $farm->address?>。</span></p><p class=MsoNormal style='text-indent:46.0pt;line-height:30.0pt'><span
+style='font-size:22.0pt;font-family:仿宋;letter-spacing:0pt'>我申请<?= $model->content.$model->projectdata.$model->unit?>，我承诺严格按森林防火及林政部门要求建房，不非法占用林地及破坏森林资源，如违反自愿承担一节法律责任和经济责任。</span></p>
 
 <p class=MsoNormal style='line-height:50.0pt'><span style='font-size:22.0pt;
 font-family:仿宋;letter-spacing:0pt'>房舍坐标点：<?= $farm->longitude.'&nbsp;&nbsp;&nbsp;'.$farm->latitude?></span></p>

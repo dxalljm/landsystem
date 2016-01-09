@@ -30,7 +30,8 @@ class Projectapplication extends \yii\db\ActiveRecord
     {
         return [
             [['create_at', 'update_at', 'is_agree','farms_id','management_area','reviewprocess_id'], 'integer'],
-            [['projecttype'], 'string', 'max' => 500],
+        	[['projectdata'],'number'],
+            [['projecttype','unit'], 'string', 'max' => 500],
         	[['content'],'string']
         ];
     }
@@ -50,6 +51,8 @@ class Projectapplication extends \yii\db\ActiveRecord
         	'content' => '申请内容',
         	'management_area' => '管理区ID',
         	'reviewprocess' => '流程ID',
+        	'projectdata' => '数量',
+        	'unit' => '单位',
         ];
     }
     
@@ -71,22 +74,29 @@ class Projectapplication extends \yii\db\ActiveRecord
     		if($value !== '')
     			$where[$key] = $value;
     	}
-    	$yields = Projectapplication::find ()->where ($where)->all ();
+    	if($where)
+    		$project = Projectapplication::find ()->where ($where)->all ();
+    	else 
+    		$project = Projectapplication::find ()->all ();
     	//     	var_dump($farms);exit;
     	$data = [];
-    	foreach($yields as $value) {
-    		$farmallid[] = $value['farms_id'];    		
-    	}
-    	$farms = Farms::find()->where(['id'=>$farmallid])->all();
-    	foreach ($farms as $value) {
-    		$data[] = ['farmername'=>$value['farmername'],'cardid'=>$value['cardid']];
-    	}
-    	if($data) {
-    		$newdata = Farms::unique_arr($data);
-    		return count($newdata);
-    	}
-    	else
-    		return 0;;
+    	if($project) {
+    		foreach($project as $value) {
+    			$farmallid[] = $value['farms_id'];
+    		}
+    		$farms = Farms::find()->where(['id'=>$farmallid])->all();
+    		foreach ($farms as $value) {
+    			$data[] = ['farmername'=>$value['farmername'],'cardid'=>$value['cardid']];
+    		}
+    		if($data) {
+    			$newdata = Farms::unique_arr($data);
+    			return count($newdata);
+    		}
+    		else
+    			return 0;
+    	} else 
+    		return 0;
+    	
     }
     
     public static function getProjecttype($params)
