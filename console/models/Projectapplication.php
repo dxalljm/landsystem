@@ -116,69 +116,53 @@ class Projectapplication extends \yii\db\ActiveRecord
     public static function getProjectapplicationcache($userid)
     {
     	$where = Farms::getUserManagementArea($userid);
-    	$farms = Farms::find()->where(['management_area'=>$where])->all();
-    	$farmid = [];
-    	foreach ($farms as $farm) {
-    		$farmid[] = $farm['id'];
-    	}
-    	$project = Projectapplication::find()->where(['farms_id'=>$farmid])->all();
+// 		var_dump($where);
+//     	$project = Projectapplication::find()->where(['management_area'=>$where])->all();
+    	$type = self::getTypenamelist($userid)['id'];
+//     	var_dump($type);
     	//     	var_dump($input);exit;
     	$data = [];
-    	$lastresult = [];
-    	foreach ($project as $value) {
-    		$data[$value['projecttype']] = Projectapplication::find()->where(['projecttype'=>$value['projecttype'],'state'=>1])->count();
+    	$result = [];
+    	foreach ($where as $areaid) {
+    		foreach ($type as $value) {
+    			$sum = Projectapplication::find()->where(['management_area'=>$areaid,'projecttype'=>$value,'state'=>1])->sum('projectdata');
+    			if($sum)
+    				$data[$areaid][] = (float)$sum;
+    			else 
+    				$data[$areaid][] = 0.0; 
+    		}
     	}
-    	$d = [];
-		foreach ($data as $val) {
-			$d[] = (int)$val;
-		}
-// 		var_dump($d);
-    	$result = [[
-    			'type' => 'column',
-    			'name' => '项目',
-    			'data' => $d,
-    			'dataLabels'=> [
-    					'enabled'=> true,
-    					'rotation'=> 0,
-    					'color'=> '#FFFFFF',
-    					'align'=> 'center',
-    					'x'=> 0,
-    					'y'=> 0,
-    					'style'=> [
-    							'fontSize'=> '13px',
-    							'fontFamily'=> 'Verdana, sans-serif',
-    							'textShadow'=> '0 0 3px black'
-    					]
-    			],
-    			'tooltip' => [
-    					'shared' => true,
-    					'formatter' => ''
-    			]
-    	]];
-    	$jsonData = json_encode ( [
-    			'result' => $result
-    	] );
+		
+    	foreach ($data as $key => $value) {
+    		$result[] = [
+    			'name' => str_ireplace('管理区', '', ManagementArea::find()->where(['id'=>$key])->one()['areaname']),
+    			'type' => 'bar',
+    			'stack' => $key,
+    			'data' => $value,
+    		];
+    	}
+    	var_dump($result);
+    	$jsonData = json_encode ($result);
     	 
     	return $jsonData;
     }
     public static function getTypenamelist($userid)
     {
-    	$result = [];
     	$where = Farms::getUserManagementArea($userid);
-    	$farms = Farms::find()->where(['management_area'=>$where])->all();
-    	$farmid = [];
-    	foreach ($farms as $farm) {
-    		$farmid[] = $farm['id'];
-    	}
-    	$input = Projectapplication::find()->where(['farms_id'=>$farmid])->all();
+
+    	$input = Projectapplication::find()->where(['management_area'=>$where])->all();
     	//     	var_dump($input);exit;
     	$data = [];
-    	$lastresult = [];
+    	$result = ['id'=>[],'projecttype'=>[]];
     	foreach ($input as $value) {
-    		$data[$value['projecttype']] = Infrastructuretype::find()->where(['id'=>$value['projecttype']])->one()['typename'];
+    		$data[] = ['id'=>Infrastructuretype::find()->where(['id'=>$value['projecttype']])->one()['id']];
     	}
-    	foreach ($data as $v) {
-    		$result[] = $v;
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		foreach ($newdata as $value) {
+    			$result['id'][] = $value['id'];
+    			$result['projecttype'][] = Infrastructuretype::find()->where(['id' => $value['id']])->one()['typename'];
+    		}
     	}
 //     	    	var_dump($result);
     	return $result;

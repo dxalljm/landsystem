@@ -12,6 +12,7 @@ use app\models\Collection;
 use app\models\Plantingstructure;
 use app\models\Cache;
 use app\models\MenuToUser;
+use app\models\Projectapplication;
 $this->title = '岭南管委会';
 ?>
 
@@ -212,7 +213,7 @@ $this->title = '岭南管委会';
           <!-- /.box -->
         </div>
         <!-- /.col -->
-        <?php }?><?php if(in_array(53, $plate)) {?>
+        <?php }?><?php if(in_array(52, $plate)) {?>
         <?php if(count($plate) == 2) {?>
         <div class="col-md-6">
         <?php } elseif(count($plate == 3)) {?>
@@ -236,9 +237,9 @@ $this->title = '岭南管委会';
             <!-- /.box-header -->
             <?php //var_dump(Plantingstructure::getPlantingstructure());?>
             <div class="box-body">
-				<div id="project" style="width: 430px; height: 300px; margin: 0 auto"; ></div>
+				<div id="project" style="width: 100%; height: 300px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-//				showStacked('plantingstructure','',<?//= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecategories']?>//,'',<?//= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecache']?>//,'亩');
+				showAllShadow('project',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['projectapplicationcategories']?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['projectapplicationcache']?>,'');
 
 		</script>
             </div>

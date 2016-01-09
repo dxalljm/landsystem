@@ -41,7 +41,13 @@ $this->params['breadcrumbs'][] = $this->title;
             		return Infrastructuretype::find()->where(['id'=>$model->projecttype])->one()['typename'];
             }
             ],
-            'content',
+            [
+            	'attribute' => 'content',
+            	'value' => function ($model) {
+            		return $model->content.$model->projectdata.$model->unit;
+            }
+            ],
+            
 			[
 				'label'=>'审核状态',
 				'value' => function ($model) {

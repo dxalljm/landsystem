@@ -3,6 +3,9 @@ namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\Projectapplication;
+use app\models\Inputproduct;
+use app\models\Infrastructuretype;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Projectplan */
@@ -24,13 +27,24 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'project_id',
-            'begindate',
-            'enddate',
-            'content:ntext',
-            'create_at',
-            'update_at',
-            'state',
+            [
+            	'label' => '项目内容',
+            	'attribute' => 'project_id',
+            	'value' => Projectapplication::find()->where(['id'=>$model->project_id])->one()['content'].Projectapplication::find()->where(['id'=>$model->project_id])->one()['projectdata'].Projectapplication::find()->where(['id'=>$model->project_id])->one()['unit'],
+            ],
+            [
+            	'attribute' => 'begindate',
+            	'value' => date('Y年m月d日',$model->begindate),
+            ],
+            [
+            'attribute' => 'begindate',
+            'value' => date('Y年m月d日',$model->enddate),
+            ],
+            [
+            	'label' => '项目计划',
+            	'value' => $model->content,
+            ],
+            
         ],
     ]) ?>
                 </div>

@@ -95,7 +95,7 @@ class ProjectapplicationController extends Controller
     public function actionProjectapplicationlist()
     {
     	$searchModel = new projectapplicationSearch();
-    	$whereArray = Farms::getManagementArea();
+    	$whereArray = Farms::getManagementArea()['id'];
     	$params = Yii::$app->request->queryParams;
     	$params['projectapplicationSearch']['management_area'] = $whereArray;
     	$params['projectapplicationSearch']['state'] = 1;
@@ -126,11 +126,14 @@ class ProjectapplicationController extends Controller
     public function actionProjectapplicationcreate($farms_id)
     {
         $model = new Projectapplication();
-
+		$farm = Farms::find()->where(['id'=>$farms_id])->one();
         if ($model->load(Yii::$app->request->post())) {
 //         	var_dump($model);exit;
         	$reviewprocessID =Reviewprocess::processRun($farms_id);
         	$model->farms_id = $farms_id;
+        	$model->content = Yii::$app->request->post('projectapplication-content');
+        	$model->projectdata = Yii::$app->request->post('projectapplication-projectdata');
+        	$model->unit = Yii::$app->request->post('projectapplication-unit');
         	$model->reviewprocess_id = $reviewprocessID;
         	$model->management_area = Farms::find()->where(['id'=>$farms_id])->one()['management_area'];
         	$model->create_at = time();
@@ -143,6 +146,7 @@ class ProjectapplicationController extends Controller
         } else {
             return $this->render('projectapplicationcreate', [
                 'model' => $model,
+            	'farm' => $farm,
             ]);
         }
     }

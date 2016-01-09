@@ -152,7 +152,7 @@ use app\models\Infrastructuretype;
 			  ?>
   <tr>
     <td align="right">申请内容：</td>
-    <td colspan="5"><?= $project['content']?></td>
+    <td colspan="5"><?= $project['content'].$project['projectdata'],$project['unit']?></td>
     </tr>
   <tr>
     <td align="right"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?>：</td>

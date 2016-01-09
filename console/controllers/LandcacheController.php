@@ -160,7 +160,7 @@ class LandcacheController extends Controller
 			$landcache->user_id = $id;
 			$landcache->projectapplicationcache = Projectapplication::getProjectapplicationcache($id);
 			$landcache->projectapplicationtitle = '项目情况';
-			$landcache->projectapplicationcategories = json_encode(Projectapplication::getTypenamelist($id));
+			$landcache->projectapplicationcategories = json_encode(Projectapplication::getTypenamelist($id)['projecttype']);
 			$landcache->save();
 		}
 	}

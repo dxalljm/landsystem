@@ -3,6 +3,7 @@ namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\Inputproduct;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Projectapplication */
@@ -40,10 +41,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'projecttype',
-            'create_at',
-            'update_at',
-            'is_agree',
+            [ 
+            	'attribute'=>'projecttype',
+            	'value' => Inputproduct::find()->where(['id'=>$model->projecttype])->one()['typename'],
+            ],
+            [
+            	'attribute' => 'create_at',
+            	'value' => date('Y年m月d日',$model->update_at),
+            ],
         ],
     ]) ?>
                 </div>

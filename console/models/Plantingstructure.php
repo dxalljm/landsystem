@@ -260,7 +260,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     				'data' => $plantArea
     		];
     	}
-    	var_dump($result);
+//     	var_dump($result);
     	$jsonData = json_encode ($result);
     	
     	return $jsonData;

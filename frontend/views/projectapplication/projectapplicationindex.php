@@ -45,6 +45,12 @@ $this->params['breadcrumbs'][] = $this->title;
             }
             ],
             'content',
+            [
+            	'attribute' => 'projectdata',
+            	'value' => function ($model) {
+            		return $model->projectdata.$model->unit;
+            }
+            ],
 			[
 				'label' => '审核状态',
 				'attribute' => 'state',

@@ -290,7 +290,7 @@ class Farms extends \yii\db\ActiveRecord
     		$result[] = $value['id'];
     	}
 //     	var_dump($userid)
-//     	var_dump($result);exit;
+//     	var_dump($result);
     	return $result;
     }
     public static function getUserManagementAreaname($userid)

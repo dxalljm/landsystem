@@ -104,7 +104,7 @@ class Plantinputproduct extends \yii\db\ActiveRecord
     	}
     	
 //     	sort($result);
-    	var_dump($result);
+//     	var_dump($result);
     	
     	$jsonData = json_encode ($result);
     	

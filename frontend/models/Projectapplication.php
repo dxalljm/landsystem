@@ -119,4 +119,25 @@ class Projectapplication extends \yii\db\ActiveRecord
     	else
     		return 0;;
     }
+    public static function getTypenamelist()
+    {
+    	$where = Farms::getManagementArea();
+    
+    	$input = Projectapplication::find()->where(['management_area'=>$where])->all();
+    	//     	var_dump($input);exit;
+    	$data = [];
+    	$result = ['id'=>[],'projecttype'=>[]];
+    	foreach ($input as $value) {
+    		$data[] = ['id'=>Infrastructuretype::find()->where(['id'=>$value['projecttype']])->one()['id']];
+    	}
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		foreach ($newdata as $value) {
+    			$result['id'][] = $value['id'];
+    			$result['projecttype'][] = Infrastructuretype::find()->where(['id' => $value['id']])->one()['typename'];
+    		}
+    	}
+    	//     	    	var_dump($result);
+    	return $result;
+    }
 }
