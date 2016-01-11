@@ -38,7 +38,7 @@ function showShadow(divID,legendata,xdata,seriesdata,dw)
 	    	            var res = params[0].name;
 	    	            var s = new Array();
 	    	            for (var i = 0, l = params.length; i < l; i++) {
-	    	                res += '<br/>' + params[i].seriesName + ' : ' + params[i].value;
+	    	                res += '<br/>' + params[i].seriesName + ' : ' + params[i].value + dw;
 	    	                s [i] = params[i].value;
 	    	            }
 	    	            var v = s[1]/s[0];
@@ -84,7 +84,7 @@ function showShadow(divID,legendata,xdata,seriesdata,dw)
 
 function showBar(divID,legenddata,xdata,series,dw)
 {
-	var dwarr = dw.split(',');
+//	var dwarr = dw.split(',');
 	require.config({
 		  paths: {
 		    echarts: 'vendor/bower/echarts/build/dist/'
@@ -122,8 +122,8 @@ function showBar(divID,legenddata,xdata,series,dw)
 	    	            for (var i = 0, l = params.length; i < l; i++) {
 //	    	            	alert(i);
 	    	            	percent[i] = params[i].series.percent;
-//	    	            	alert(percent);
-	    	                res += '<br/>' + params[i].seriesName + ' : ' + params[i].value;
+//	    	            	alert(obj2string(params[i]));
+	    	                res += '<br/>' + params[i].seriesName + ' : ' + params[i].value + dw[params[i].seriesName];
 	    	                res += '<br/>' + '占比：' + percent[i][row] +'%';
 	    	            }
 	    	            
@@ -167,6 +167,83 @@ function showBar(divID,legenddata,xdata,series,dw)
 	);    
 }
 
+function showAllShadowProject(divID,legendData,xData,series,dw)
+{
+	require.config({
+		  paths: {
+		    echarts: 'vendor/bower/echarts/build/dist/'
+		  }
+		});
+
+	//使用
+	require(
+	  [
+	    'echarts',
+	    'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+	  ],
+	  function (ec) {
+	    // 基于准备好的dom，初始化echarts图表
+	    var myChart = ec.init(document.getElementById(divID)); 
+	    //设置数据
+	   var option = {
+			   grid : {
+	    	    	x:30,
+	    	    	y:30,
+	    	    	x2:15,
+	    	    	y2:30,
+	    	    },
+	    	    tooltip : {
+	    	        trigger: 'axis',
+	    	        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+	    	            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+	    	        },
+	    	    	formatter: function (params,ticket,callback) {
+	    	        	var row = eval(ticket); 
+	    	            console.log(params)
+	    	            var res = params[0].name;
+	    	            for (var i = 0, l = params.length; i < l; i++) {
+	    	                res += '<br/>' + params[i].seriesName + ' : ' + params[i].value + dw[params[i].name];
+	    	            }
+	    	            
+	    	            return res;
+	    	    	}
+	    	    },
+	    	    legend: {
+	    	        data:legendData
+	    	    },
+//	    	    toolbox: {
+//	    	        show : true,
+//	    	        orient: 'vertical',
+//	    	        x: 'right',
+//	    	        y: 'center',
+//	    	        feature : {
+//	    	            mark : {show: true},
+//	    	            dataView : {show: true, readOnly: false},
+//	    	            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+//	    	            restore : {show: true},
+//	    	            saveAsImage : {show: true}
+//	    	        }
+//	    	    },
+	    	    calculable : true,
+	    	    xAxis : [
+	    	        {
+	    	            type : 'category',
+	    	            data : xData
+	    	        }
+	    	    ],
+	    	    yAxis : [
+	    	        {
+	    	            type : 'value'
+	    	        }
+	    	    ],
+	    	    series : series
+	    	};
+	    	                    
+	    // 为echarts对象加载数据 
+	    myChart.setOption(option); 
+	  }
+	);    
+}
 function showAllShadow(divID,legendData,xData,series,dw)
 {
 	require.config({
@@ -196,8 +273,17 @@ function showAllShadow(divID,legendData,xData,series,dw)
 	    	        trigger: 'axis',
 	    	        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
 	    	            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-	    	        }
-	    	    
+	    	        },
+	    	    	formatter: function (params,ticket,callback) {
+	    	        	var row = eval(ticket); 
+	    	            console.log(params)
+	    	            var res = params[0].name;
+	    	            for (var i = 0, l = params.length; i < l; i++) {
+	    	                res += '<br/>' + params[i].seriesName + ' : ' + params[i].value + dw;
+	    	            }
+	    	            
+	    	            return res;
+	    	    	}
 	    	    },
 	    	    legend: {
 	    	        data:legendData

@@ -121,12 +121,12 @@ class Projectapplication extends \yii\db\ActiveRecord
     }
     public static function getTypenamelist()
     {
-    	$where = Farms::getManagementArea();
-    
-    	$input = Projectapplication::find()->where(['management_area'=>$where])->all();
-    	//     	var_dump($input);exit;
+    	$where = Farms::getManagementArea()['id'];
+//     	var_dump($where);exit;
+    	$input = Projectapplication::find()->where(['management_area'=>$where,'state'=>1])->all();
+//     	    	var_dump($input);exit;
     	$data = [];
-    	$result = ['id'=>[],'projecttype'=>[]];
+    	$result = ['id'=>[],'projecttype'=>[],'unit'=>[]];
     	foreach ($input as $value) {
     		$data[] = ['id'=>Infrastructuretype::find()->where(['id'=>$value['projecttype']])->one()['id']];
     	}
@@ -135,6 +135,7 @@ class Projectapplication extends \yii\db\ActiveRecord
     		foreach ($newdata as $value) {
     			$result['id'][] = $value['id'];
     			$result['projecttype'][] = Infrastructuretype::find()->where(['id' => $value['id']])->one()['typename'];
+    			$result['unit'][Infrastructuretype::find()->where(['id' => $value['id']])->one()['typename']] = Projectapplication::find()->where(['projecttype'=>$value['id']])->one()['unit'];
     		}
     	}
     	//     	    	var_dump($result);

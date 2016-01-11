@@ -54,7 +54,7 @@ $this->title = '岭南管委会';
 				<div id="statis-area" style="width: 100%; height: 300px; margin: -50 auto"; ></div>
 				<?php //var_dump(Cache::getCache(\Yii::$app->getUser()->getId())['farmscache']);?>
 				<script type="text/javascript">
-   			showBar('statis-area',['面积','数量'],<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['farmscache']?>,'万亩,户');
+   			showBar('statis-area',['面积','数量'],<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['farmscache']?>,<?= json_encode(['面积'=>'万亩','数量'=>'户'])?>);
 		</script>
 
             </div>
@@ -171,7 +171,7 @@ $this->title = '岭南管委会';
 				<div id="plantinputproduct" style="width: 100%; height: 300px; margin: 0 auto"; ></div>
 				<?php //var_dump(Plantingstructure::getPlantname());?>
 				<script type="text/javascript">
-				showAllShadow('plantinputproduct',<?= json_encode(Plantingstructure::getPlantname())?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantinputproductcategories']?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantinputproductcache']?>,'万亩');
+				showAllShadow('plantinputproduct',<?= json_encode(Plantingstructure::getPlantname())?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantinputproductcategories']?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantinputproductcache']?>,'万斤');
 		</script>
             </div>
         
@@ -237,9 +237,10 @@ $this->title = '岭南管委会';
             <!-- /.box-header -->
             <?php //var_dump(Plantingstructure::getPlantingstructure());?>
             <div class="box-body">
+            <?php //var_dump(Projectapplication::getTypenamelist());exit;?>
 				<div id="project" style="width: 100%; height: 300px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-				showAllShadow('project',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['projectapplicationcategories']?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['projectapplicationcache']?>,'');
+				showAllShadowProject('project',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['projectapplicationcategories']?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['projectapplicationcache']?>,<?= json_encode(Projectapplication::getTypenamelist()['unit'])?>);
 
 		</script>
             </div>

@@ -17,19 +17,22 @@ use app\models\Search;
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 ?>
-<div class="lease-index">
-<section class="content">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="box">
-                <div class="box-body">
-
-              
+     
   <?= $this->render('..//search/searchindex',['tab'=>$tab,'management_area'=>$management_area,'begindate'=>$begindate,'enddate'=>$enddate]);?>
 
  <?= GridView::widget([
         'dataProvider' => $dataProvider,
-//         'filterModel' => $searchModel,
+        'filterModel' => $searchModel,
+        'total' => '<tr>
+						<td></td>
+						<td align="center"><strong>合计</strong></td>
+						<td><strong>'.Farms::getRows($params).'户</strong></td>
+						<td><strong>'.Farms::getFarmerrows($params).'个</strong></td>
+						<td></td>
+						<td></td>
+						<td><strong>'.Farms::getFarmarea($params).'万亩</strong></td>						
+						<td></td>
+					</tr>',
         'columns' => Search::getColumns(['management_area','farmname','farmername','address','telephone','measure','operation'],$params),
 
     ]); ?>
@@ -38,4 +41,14 @@ use app\models\Search;
         </div>
     </div>
 </section>
-</div>
+<script>
+
+	$('#tablename').change(function(){
+		var input = $(this).val();
+		if(input == 'parmpt')
+			$('#searchButton').attr('disabled',"true"); 
+		else
+			$('#searchButton').removeAttr("disabled");
+	});
+
+</script>

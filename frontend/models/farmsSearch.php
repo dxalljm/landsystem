@@ -7,6 +7,7 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\farms;
 use app\models\ManagementArea;
+use yii\db\Query;
 
 /**
  * farmsSearch represents the model behind the search form about `app\models\farms`.
@@ -57,17 +58,35 @@ class farmsSearch extends Farms
     	return $tj;
     }
     
+    public function measureSearch($str = NULL)
+    {
+    	$this->measure = $str;
+    	if(!empty($this->measure)) {
+    		preg_match_all('/(.*)([0-9]+?)/iU', $this->measure, $where);
+    		//print_r($where);
+    
+    		// 		string(2) ">="
+    		// 		string(3) "300"
+    		if($where[1][0] == '>' or $where[1][0] == '>=')
+    			$tj = ['between', 'measure', (float)$where[2][0],(float)99999.0];
+    		if($where[1][0] == '<' or $where[1][0] == '<=')
+    			$tj = ['between', 'measure', (float)0.0,(float)$where[2][0]];
+    		if($where[1][0] == '')
+    			$tj = ['like', 'measure', $this->measure];
+    	} else
+    		$tj = ['like', 'measure', $this->measure];
+    	//var_dump($tj);
+    	return $tj;
+    }
+    
     public function pinyinSearch($str = NULL)
     {
     	
-    	if(empty($str))
-    		$farmname = $this->farmname;
-    	else
-    		$farmname = $str;
-    	if (preg_match ("/^[A-Za-z]/", $farmname)) {
-    		$tj = ['like','pinyin',$farmname];
+    	$this->farmname = $str;
+    	if (preg_match ("/^[A-Za-z]/", $this->farmname)) {
+    		$tj = ['like','pinyin',$this->farmname];
     	} else {
-    		$tj = ['like','farmname',$farmname];
+    		$tj = ['like','farmname',$this->farmname];
     	}
     	
 		return $tj;
@@ -76,14 +95,11 @@ class farmsSearch extends Farms
     public function farmerpinyinSearch($str = NULL)
     {
 //     	var_dump($str);exit;
-    	if(empty($str))
-    		$farmername = $this->farmername;
-    	else
-    		$farmername = $str;
-    	if (preg_match ("/^[A-Za-z]/", $farmername)) {
-    		$tj = ['like','farmerpinyin',$farmername];
+    	$this->farmername = $str;
+    	if (preg_match ("/^[A-Za-z]/", $this->farmername)) {
+    		$tj = ['like','farmerpinyin',$this->farmername];
     	} else {
-    		$tj = ['like','farmername',$farmername];
+    		$tj = ['like','farmername',$this->farmername];
     	}
 //     	var_dump($tj);exit;
     	return $tj;
@@ -185,74 +201,40 @@ class farmsSearch extends Farms
     }
     public function searchIndex($params)
     {
-//     	    	var_dump($params);
+//     	    	var_dump($params);exit;
 //     	       exit;
     	$query = farms::find();
     	//$query->joinWith(['farmer']);
     
     	$dataProvider = new ActiveDataProvider([
     			'query' => $query,
-//     			'pagination' => [
-//     					'pageSize' => 20,
-//     			],
     	]);    
-    
-    	if(isset($params['management_area']) and $params['management_area'] !== 0)
-    		$management_area = $params['management_area'];
-    	else
-    		$management_area = $this->management_area;
+//     	if(isset($params['farmsSearch']['management_area'])) {
+    		if($params['farmsSearch']['management_area'] == 0)
+    			$this->management_area = NULL;
+    		else
+    			$this->management_area = $params['farmsSearch']['management_area'];
+//     	} 
+    	$query->andFilterWhere(['management_area' => $this->management_area]);
+    	if(isset($params['farmsSearch']['state']))
+    		$query->andFilterWhere(['state' => $params['farmsSearch']['state']]);
     	
-    	if(isset($params['farmname']))
-    		$farmname = $params['farmname'];
-    	else
-    		$farmname = $this->farmname;
+    	if(isset($params['farmsSearch']['farmname']))
+    		$query->andFilterWhere($this->pinyinSearch($params['farmsSearch']['farmname']));
+    	if(isset($params['farmsSearch']['farmername']))
+    		$query->andFilterWhere($this->farmerpinyinSearch($params['farmsSearch']['farmername']));
     	
-    	if(isset($params['farmername']))
-    		$farmername = $params['farmername'];
-    	else
-    		$farmername = $this->farmername;
-    	
-    	if(isset($params['address']))
-    		$address = $params['address'];
-    	else
-    		$address = $this->address;
-    	
-    	if(isset($params['telephone']))
-    		$telephone = $params['telephone'];
-    	else
-    		$telephone = $this->telephone;
-    	
-    	$query->andFilterWhere([
-    			'id' => $this->id,
-    			'locked' => $this->locked,
-    			'management_area' => $management_area,
-    	]);
-//     	var_dump($management_area);exit;
-    
-    	$query->andFilterWhere($this->pinyinSearch($farmname))
-    	->andFilterWhere($this->farmerpinyinSearch($farmername))
-    	
-    	->andFilterWhere(['like', 'cardid', $this->cardid])
-    	->andFilterWhere(['like', 'telephone', $telephone])
-    	->andFilterWhere(['like', 'address', $address])
-    	->andFilterWhere(['like', 'state', $this->state])
-    	->andFilterWhere(['like', 'oldfarms_id', $this->oldfarms_id])
-//     	->andWhere(['management_area' => $this->management_area])
-    	->andFilterWhere(['like', 'spyear', $this->spyear])
-    	->andFilterWhere(['like', 'zongdi', $this->zongdi])
-    	->andFilterWhere(['like', 'notclear', $this->notclear])
-    	->andFilterWhere(['like', 'cooperative_id', $this->cooperative_id])
-    	->andFilterWhere(['like', 'surveydate', $this->surveydate])
-    	->andFilterWhere(['like', 'groundsign', $this->groundsign])
-    	->andFilterWhere(['like', 'farmersign', $this->farmersign])
-    	->andFilterWhere(['like', 'pinyin', $this->pinyin])
-    	->andFilterWhere(['like', 'farmerpinyin', $this->farmerpinyin])
-    	->andFilterWhere(['like', 'contractnumber', $this->contractnumber])
-    	->andFilterWhere(['like', 'latitude', $this->latitude])
-    	->andFilterWhere(['like', 'longitude', $this->longitude])
-    	->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
-    	//->andFilterWhere(['between', 'measure', $this->measure,$this->measure]);
-    
+    	if(isset($params['farmsSearch']['telephone']))
+    		$this->telephone = $params['farmsSearch']['telephone'];
+    	$query->andFilterWhere(['like','telephone',$this->telephone]);
+    	if(isset($params['farmsSearch']['address']))
+    		$this->address = $params['farmsSearch']['address'];
+    		$query->andFilterWhere(['like','address',$this->address]);
+    	if(isset($params['farmsSearch']['update_at']))
+    		$query->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+    	if(isset($params['farmsSearch']['measure']))
+    		$query->andFilterWhere($this->measureSearch($params['farmsSearch']['measure']));
+
     	return $dataProvider;
     }
     

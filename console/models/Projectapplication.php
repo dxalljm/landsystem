@@ -123,6 +123,7 @@ class Projectapplication extends \yii\db\ActiveRecord
     	//     	var_dump($input);exit;
     	$data = [];
     	$result = [];
+    	$dw = [];
     	foreach ($where as $areaid) {
     		foreach ($type as $value) {
     			$sum = Projectapplication::find()->where(['management_area'=>$areaid,'projecttype'=>$value,'state'=>1])->sum('projectdata');
@@ -162,6 +163,7 @@ class Projectapplication extends \yii\db\ActiveRecord
     		foreach ($newdata as $value) {
     			$result['id'][] = $value['id'];
     			$result['projecttype'][] = Infrastructuretype::find()->where(['id' => $value['id']])->one()['typename'];
+    			$result['unit'][Infrastructuretype::find()->where(['id' => $value['id']])->one()['typename']] = Projectapplication::find()->where(['projecttype'=>$value['id']])->one()['unit'];
     		}
     	}
 //     	    	var_dump($result);

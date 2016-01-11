@@ -430,35 +430,110 @@ class Farms extends \yii\db\ActiveRecord {
 		}
 		return $allid;
 	}
-	public static function getRows($params = NULL) {
-		if (empty ( $params )) {
-			$where ['management_area'] = self::getManagementArea ()['id'];
+	public static function farmSearch($str)
+	{
+
+		if (preg_match ("/^[A-Za-z]/", $str)) {
+			$tj = ['like','pinyin',$str];
 		} else {
-			$where ['state'] = $params ['farmsSearch'] ['state'];
-			$where ['management_area'] = $params ['farmsSearch'] ['management_area'];
+			$tj = ['like','farmname',$str];
 		}
-		$row = Farms::find ()->where ( $where )->count ();
-		return $row;
+		 
+		return $tj;
 	}
 	
-	public static function getFarmarea($params) {
-		$cacheKey = 'farmcachekey-' . Yii::$app->getUser ()->id;
-		$result = Yii::$app->cache->get ( $cacheKey );
-		if (! empty ( $result )) {
-			return $result;
+	public static function farmerSearch($str)
+	{
+
+		if (preg_match ("/^[A-Za-z]/", $str)) {
+			$tj = ['like','farmerpinyin',$str];
+		} else {
+			$tj = ['like','farmername',$str];
 		}
-		$where = [ 
-				'state' => $params ['farmsSearch'] ['state'],
-				'management_area' => $params ['farmsSearch'] ['management_area'] 
-		];
-		$farms = Farms::find ()->where ( $where )->all ();
+		//     	var_dump($tj);exit;
+		return $tj;
+	}
+	public static function getRows($params = NULL) {
+// 		var_dump($params);
+		$farm = Farms::find ();
+		$farm->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+		if($params['farmsSearch']['management_area'])
+			$management_area = $params['farmsSearch']['management_area'];
+		else 
+			$management_area = self::getManagementArea ()['id'];
+		if (empty ( $params )) {
+			$farm->andWhere(['management_area' => self::getManagementArea ()['id']]);
+			$farm->andWhere(['state' => 1]);
+		} else {
+			foreach ($params['farmsSearch'] as $key => $value) {
+				switch ($key) {
+					case 'farmname':
+						$farm->andFilterWhere(self::farmSearch($value));
+						break;
+					case 'farmername':
+						$farm->andFilterWhere(self::farmerSearch($value));
+						break;
+					case 'management_area':
+						$farm->andWhere([$key=>$management_area]);
+						break;
+					case 'state':
+						$farm->andWhere([$key=>$value]);
+						break;
+					case 'measure':
+						$farm->andWhere($key.$value);
+						break;
+					default:
+						$farm->andFilterWhere(['like',$key,$value]);
+				}
+			}
+		}
+// 		var_dump($farm->where);
+		$row = $farm->count ();
+		return $row;
+	}
+
+	
+	public static function getFarmarea($params) 
+	{
+		$farm = Farms::find ();
+		$farm->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+		if($params['farmsSearch']['management_area'])
+			$management_area = $params['farmsSearch']['management_area'];
+		else
+			$management_area = self::getManagementArea ()['id'];
+		if (empty ( $params )) {
+			$farm->andWhere(['management_area' => self::getManagementArea ()['id']]);
+			$farm->andWhere(['state' => 1]);
+		} else {
+			foreach ($params['farmsSearch'] as $key => $value) {
+				switch ($key) {
+					case 'farmname':
+						$farm->andFilterWhere(self::farmSearch($value));
+						break;
+					case 'farmername':
+						$farm->andFilterWhere(self::farmerSearch($value));
+						break;
+					case 'management_area':
+						$farm->andWhere([$key=>$management_area]);
+						break;
+					case 'state':
+						$farm->andWhere([$key=>$value]);
+						break;	
+					case 'measure':
+						$farm->andWhere($key.$value);
+						break;
+					default:
+						$farm->andFilterWhere(['like',$key,$value]);
+				}
+			}
+		}
 		$sum = 0.0;
-		foreach ( $farms as $farm ) {
-			$area = self::getNowContractnumberArea ( $farm ['id'] );
+		foreach ( $farm->all() as $value ) {
+			$area = self::getNowContractnumberArea ( $value ['id'] );
 			$sum += $area;
 		}
 		$result = ( float ) sprintf ( "%.2f", $sum / 10000 );
-		Yii::$app->cache->set ( $cacheKey, $result, 3600 );
+		
 		return $result;
 	}
 	
@@ -716,15 +791,42 @@ class Farms extends \yii\db\ActiveRecord {
 		return $output;
 	}
 	// 获取管理区法人个数
-	public static function getFarmerrows($params) {
-		$where = [ 
-				'state' => $params ['farmsSearch'] ['state'],
-				'management_area' => $params ['farmsSearch'] ['management_area'] 
-		];
-		$farms = Farms::find ()->where ( $where )->all ();
-		// var_dump($farms);exit;
+	public static function getFarmerrows($params) 
+	{
+		$farm = Farms::find ();
+		$farm->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+		if($params['farmsSearch']['management_area'])
+			$management_area = $params['farmsSearch']['management_area'];
+		else
+			$management_area = self::getManagementArea ()['id'];
+		if (empty ( $params )) {
+			$farm->andWhere(['management_area' => self::getManagementArea ()['id']]);
+			$farm->andWhere(['state' => 1]);
+		} else {
+			foreach ($params['farmsSearch'] as $key => $value) {
+				switch ($key) {
+					case 'farmname':
+						$farm->andFilterWhere(self::farmSearch($value));
+						break;
+					case 'farmername':
+						$farm->andFilterWhere(self::farmerSearch($value));
+						break;
+					case 'management_area':
+						$farm->andWhere([$key=>$management_area]);
+						break;
+					case 'state':
+						$farm->andWhere([$key=>$value]);
+						break;					
+					case 'measure':
+						$farm->andWhere($key.$value);
+						break;
+					default:
+						$farm->andFilterWhere(['like',$key,$value]);
+				}
+			}
+		}
 		$data = [ ];
-		foreach ( $farms as $value ) {
+		foreach ( $farm->all() as $value ) {
 			$data [] = [ 
 					'farmername' => $value ['farmername'],
 					'cardid' => $value ['cardid'] 

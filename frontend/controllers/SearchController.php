@@ -97,7 +97,7 @@ class SearchController extends Controller
 	public function actionSearchindex($tab = '',$management_area = '',$begindate = '',$enddate = '')
 	{
 		$post = Yii::$app->request->post();	
-// 		var_dump($tab);exit;
+// 		var_dump($post);exit;
 		$getDate = Theyear::formatDate($begindate,$enddate);
 		if($post) {
     		if($post['tab'] == 'parmpt')
@@ -107,12 +107,9 @@ class SearchController extends Controller
 			$array['tab'] = $post['tab'];
 			$array['begindate'] = $whereDate['begindate'];
 			$array['enddate'] = $whereDate['enddate'];
-			$array['management_area'] = $post['managementarea'];
+			$array['management_area'] = $post['management_area'];
 			
-			foreach (Search::getParameter($post['tab']) as $value) {
-				$array[$value] = $post[$value];
-			}
-// 			var_dump($array);exit;
+// 			var_dump($array);
 			return $this->redirect ($array);
 		} else {
 			return $this->render('searchindex',['tab'=>$tab,'management_area'=>$management_area,'begindate'=>$getDate['begindate'],'enddate'=>$getDate['enddate']]);
