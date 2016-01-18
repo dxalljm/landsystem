@@ -111,6 +111,7 @@ class YieldsController extends Controller
         	$model->management_area = Farms::getFarmsAreaID($farms_id);
         	$model->create_at = time();
         	$model->update_at = $model->create_at;
+        	$model->plant_id = Plantingstructure::find()->where(['id'=>$planting_id])->one()['plant_id'];
         	$model->save();
             return $this->redirect(['yieldsindex', 'farms_id' => $farms_id,'plantings'=>$planting]);
         } else {
@@ -154,34 +155,47 @@ class YieldsController extends Controller
         return $this->redirect(['yieldsindex']);
     }
     
-    public function actionYieldssearch($begindate,$enddate,$management_area)
+    public function actionYieldssearch($tab,$begindate,$enddate,$management_area)
     {
     	$post = Yii::$app->request->post();
-    
-    	if($post) {
-    		if($post['tab'] == 'parmpt')
-    			return $this->redirect(['search/searchindex']);
-    		$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
+    	
+    	if(isset($post['tab']) and $post['tab'] !== \Yii::$app->controller->id) {
     		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
-    				'begindate' => $whereDate['begindate'],
-    				'enddate' => $whereDate['enddate'],
-    				'management_area' => $post['managementarea'],
+    				'tab' => $post['tab'],
+    				'begindate' => strtotime($post['begindate']),
+    				'enddate' => strtotime($post['enddate']),
+    				'management_area' => $post['management_area'],
     		]);
     	} else {
-    		 
-    		$searchModel = new yieldsSearch();
-    		$params = Yii::$app->request->queryParams;
-    		if($management_area) {
-	    		$arrayID = Farms::getFarmArray($management_area);
-	    		$params ['yieldsSearch']['farms_id'] = $arrayID;
-    		}
-    		$params ['yieldsSearch']['begindate'] = $begindate;
-    		$params ['yieldsSearch']['enddate'] = $enddate;
-    		$dataProvider = $searchModel->searchIndex ( $params['yieldsSearch'] );
-    		return $this->render('yieldssearch',[
-    				'searchModel' => $searchModel,
-    				'dataProvider' => $dataProvider,
-    		]);
+	    	$searchModel = new yieldsSearch();
+	    	$post = Yii::$app->request->post();
+	    	$params = Yii::$app->request->queryParams;
+	    	if($post) {
+// 	    		var_dump($post);
+	    		$params['yieldsSearch']['management_area'] = $post['management_area'];
+				$management_area = $post['management_area'];
+				$begindate = strtotime($post['begindate']);
+				$enddate = strtotime($post['enddate']);
+	    	} else {
+	    		if(isset($params['yieldsSearch']))
+	    			$management_area = $params['yieldsSearch']['management_area'];
+	    		else {
+	    			$params['yieldsSearch']['management_area'] = $params['management_area'];
+	    			$management_area = $params['management_area'];
+	    		}
+	    	}
+	    	$params['begindate'] = $begindate;
+	    	$params['enddate'] = $enddate;
+	    	$dataProvider = $searchModel->searchIndex( $params );
+	    	return $this->render('yieldsSearch',[
+	    			'searchModel' => $searchModel,
+	    			'dataProvider' => $dataProvider,
+	    			'tab' => $tab,
+	    			'management_area' => $management_area,
+	    			'begindate' => $begindate,
+	    			'enddate' => $enddate,
+	    			'params' => $params,
+	    	]);
     	}
     }
 

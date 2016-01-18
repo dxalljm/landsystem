@@ -43,22 +43,57 @@ class Plant extends \yii\db\ActiveRecord
             'father_id' => '类别',
         ];
     }
-    
-    public static function getAllname()
+    public static function areaWhere($str = NULL)
     {
-    	$cache = 'cache-key-plants';
-    	$result = Yii::$app->cache->get($cache);
-    	if (!empty($result)) {
-    		return $result;
+    	 
+    	if(!empty($str)) {
+    		preg_match_all('/(.*)([0-9]+?)/iU', $str, $where);
+    		//print_r($where);
+    
+    		// 		string(2) ">="
+    		// 		string(3) "300"
+    		if($where[1][0] == '>' or $where[1][0] == '>=')
+    			$tj = ['between', 'area', (float)$where[2][0],(float)99999.0];
+    		if($where[1][0] == '<' or $where[1][0] == '<=')
+    			$tj = ['between', 'area', (float)0.0,(float)$where[2][0]];
+    		if($where[1][0] == '')
+    			$tj = ['like', 'area', $str];
+    	} else
+    		$tj = ['like', 'area', $str];
+    	//var_dump($tj);
+    	return $tj;
+    }
+    public static function farmSearch($str)
+    {
+    
+    	if (preg_match ("/^[A-Za-z]/", $str)) {
+    		$tj = ['like','pinyin',$str];
+    	} else {
+    		$tj = ['like','farmname',$str];
     	}
+    
+    	return $tj;
+    }
+    
+    public static function farmerSearch($str)
+    {
+    
+    	if (preg_match ("/^[A-Za-z]/", $str)) {
+    		$tj = ['like','farmerpinyin',$str];
+    	} else {
+    		$tj = ['like','farmername',$str];
+    	}
+    	//     	var_dump($tj);exit;
+    	return $tj;
+    }
+    public static function getAllname($totalData)
+    {
+//     	var_dump($totalData);exit;
+    	$result = [];
     	
-    	
-     	$result = [];
-    	$where = Farms::getManagementArea()['id'];
-    	$Plantingstructure = Plantingstructure::find ()->where (['management_area'=>$where])->all ();
-    	$data = [];
-    	foreach($Plantingstructure as $value) {
-    		$data[] = ['id'=>$value['plant_id']];
+    	foreach($totalData->getModels() as $value) {
+//     		var_dump($value->attributes);
+    		$data[] = ['id'=>$value->attributes['plant_id']];
     	}
     	if($data) {
     	$newdata = Farms::unique_arr($data);
@@ -72,13 +107,14 @@ class Plant extends \yii\db\ActiveRecord
 	    		$result[$value->id] = $value->cropname;
 	    	}
     	}
-    	Yii::$app->cache->set($cache, $result, 86400);
+//     	Yii::$app->cache->set($cache, $result, 86400);
     	return $result;
     }
     
-    public static function getNameOne($id)
+    public static function getNameOne($totalData,$id)
     {
-    	$data = self::getAllname();
+//     	var_dump($totalData);exit;
+    	$data = self::getAllname($totalData);
     	return $data[$id];
     }
 }

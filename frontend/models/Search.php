@@ -18,6 +18,7 @@ use yii\helpers\Url;
  * @property string $value
  */
 class Search extends \yii\db\ActiveRecord {
+	public static $totalData;
 	public static function getParameter($tab) {
 		$array = [ 
 				'farms' => [ 
@@ -39,7 +40,7 @@ class Search extends \yii\db\ActiveRecord {
 	}
 	public static function getColumns(array $field,$params=NULL) {
 // 		var_dump($params);exit;
-		// $controller = Yii::$app->controller->id;
+		self::$totalData = $params;
 		$columns [] = [ 
 				'class' => 'yii\grid\SerialColumn' 
 		];
@@ -100,6 +101,8 @@ class Search extends \yii\db\ActiveRecord {
 									] )->one ()['farmname'];
 								} 
 						];
+						break;
+					case 'farmer_id':
 						$columns [] = [ 
 								'label' => '法人姓名',
 								'attribute' => $value,
@@ -125,11 +128,12 @@ class Search extends \yii\db\ActiveRecord {
 						$columns [] = [ 
 								'label' => '良种信息',
 								'attribute' => $value,
-								'value' => function ($model) {
-									return Goodseed::find ()->where ( [ 
-											'id' => $model->goodseed_id 
-									] )->one ()['plant_model'];
-								} 
+								'value'=> function($model,$params) {
+// 				            	var_dump($model);exit;
+				            		return Plantingstructure::getNameOne(self::$totalData,$model->goodseed_id);
+				           	 	},
+				            	'filter' => Plantingstructure::getAllname(self::$totalData),
+							
 						];
 						break;
 					case 'area' :
@@ -143,23 +147,20 @@ class Search extends \yii\db\ActiveRecord {
 						case 'projecttype' :
 							$columns [] = [
 							'attribute' => $value,
-							'value'=> function($model) {
+							'value'=> function($model,$params) {
 // 				            	var_dump($model);exit;
-				            		return Infrastructuretype::getNameOne($model->projecttype);
+				            		return Infrastructuretype::getNameOne($params,$model->projecttype);
 				           	 	},
-				            	'filter' => Infrastructuretype::getAllname(),
+				            	'filter' => Infrastructuretype::getAllname($params),
 							];
 							break;
 					case 'planting_id' :
 						$columns [] = [ 
 								'label' => '作物',
-								'attribute' => $value,
+								'attribute' => 'plant_id',
 								'value' => function ($model) {
-									$planting = Plantingstructure::find ()->where ( [ 
-											'id' => $model->planting_id 
-									] )->one ();
-								
-									return Yields::getNameOne($planting['plant_id']);
+																
+									return Yields::getNameOne($model->plant_id);
 								},
 								'filter' => Yields::getAllname(),
 						];
@@ -440,9 +441,10 @@ class Search extends \yii\db\ActiveRecord {
 						$columns [] = [ 
 								'attribute' => $value,
 								'value' => function($model) {
-									return Plant::getNameOne($model->plant_id);
+// 								var_dump($params);exit;
+									return Plant::getNameOne(self::$totalData,$model->plant_id);
 								},
-								'filter' => Plant::getAllname(),
+								'filter' => Plant::getAllname(self::$totalData),
 								];
 						break;
 					case 'firewcd' :

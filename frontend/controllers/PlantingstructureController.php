@@ -76,8 +76,10 @@ class PlantingstructureController extends Controller
     	if (empty($params['plantingstructureSearch']['management_area'])) {
 			$params ['plantingstructureSearch'] ['management_area'] = $whereArray;
 		}
-		
-		$dataProvider = $searchModel->search ( $params );
+		$params['begindate'] = Theyear::getYeartime()[0];
+		$params['enddate'] = Theyear::getYeartime()[1];
+// 		var_dump($params);
+		$dataProvider = $searchModel->searchIndex ( $params );
     	if (is_array($searchModel->management_area)) {
 			$searchModel->management_area = null;
 		}
@@ -92,49 +94,38 @@ class PlantingstructureController extends Controller
     
     
     
-    public function actionPlantingstructuresearch($tab,$begindate,$enddate,$management_area,$plantfather,$plantson,$goodseed)
+    public function actionPlantingstructuresearch($tab,$begindate,$enddate,$management_area)
     {
     	$post = Yii::$app->request->post();
     	
-    	if($post) {
-    		if($post['tab'] == 'parmpt')
-    			return $this->redirect(['search/searchindex','tab'=>$tab,'management_area'=>$management_area,'begindate'=>$begindate,'enddate'=>$enddate]);
-    		$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
-    		$array[] = $post['tab'].'/'.$post['tab'].'search';
-    		$array['tab'] = $post['tab'];
-			$array['begindate'] = $whereDate['begindate'];
-			$array['enddate'] = $whereDate['enddate'];
-			$array['management_area'] = $post['managementarea'];
-			foreach (Search::getParameter($post['tab']) as $value) {
-				$array[$value] = $post[$value];
-			}
-			return $this->redirect ($array);
+    	if(isset($post['tab']) and $post['tab'] !== \Yii::$app->controller->id) {
+    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
+    				'tab' => $post['tab'],
+    				'begindate' => strtotime($post['begindate']),
+    				'enddate' => strtotime($post['enddate']),
+    				'management_area' => $post['management_area'],
+    		]);
     	} else {
-    	
 	    	$searchModel = new plantingstructureSearch();
+	    	$post = Yii::$app->request->post();
 	    	$params = Yii::$app->request->queryParams;
-	    	if($management_area) {
-		    	$arrayID = Farms::getFarmArray($management_area);
-		    	$params ['plantingstructureSearch']['farms_id'] = $arrayID;
-	    	}
-	    	$params ['plantingstructureSearch']['begindate'] = $begindate;
-	    	$params ['plantingstructureSearch']['enddate'] = $enddate;
-	    	if($plantfather and $plantfather !== 'prompt') {
-	    		if($plantson and $plantson !== 'prompt') {
-	    			if($goodseed and $goodseed !== 'prompt') {
-	    				$params ['plantingstructureSearch']['goodseed_id'] = $goodseed;
-	    			} else {
-	    				$params ['plantingstructureSearch']['plant_id'] = $plantson;
-	    			}
-	    		} else {
-	    			$plants = Plant::find()->where(['father_id'=>$plantfather])->all();
-	    			foreach ($plants as $value) {
-	    				$arrayPlantID[] = $value['id'];
-	    			}
-	    			$params ['plantingstructureSearch']['plant_id'] = $arrayPlantID;
+	    	if($post) {
+// 	    		var_dump($post);
+	    		$params['plantingstructureSearch']['management_area'] = $post['management_area'];
+				$management_area = $post['management_area'];
+				$begindate = strtotime($post['begindate']);
+				$enddate = strtotime($post['enddate']);
+	    	} else {
+	    		if(isset($params['plantingstructureSearch']))
+	    			$management_area = $params['plantingstructureSearch']['management_area'];
+	    		else {
+	    			$params['plantingstructureSearch']['management_area'] = $params['management_area'];
+	    			$management_area = $params['management_area'];
 	    		}
 	    	}
-	    	$dataProvider = $searchModel->searchIndex ( $params['plantingstructureSearch'] );
+	    	$params['begindate'] = $begindate;
+	    	$params['enddate'] = $enddate;
+	    	$dataProvider = $searchModel->searchIndex ( $params );
 	    	return $this->render('plantingstructuresearch',[
 	    			'searchModel' => $searchModel,
 	    			'dataProvider' => $dataProvider,
@@ -142,6 +133,7 @@ class PlantingstructureController extends Controller
 	    			'management_area' => $management_area,
 	    			'begindate' => $begindate,
 	    			'enddate' => $enddate,
+	    			'params' => $params,
 	    	]);
     	}
     }

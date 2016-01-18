@@ -561,8 +561,6 @@ class Farms extends \yii\db\ActiveRecord {
 			$i++;
 		}
 		$end = microtime(true);
-		echo 'jjjjjjjjjjjjjj=========';
-		echo $end - $start;exit;
 		$all = Farmselastic::find ()->count ();
 		foreach (self::getManagementArea()['id'] as $value) {
 			$row = ( float ) Farmselastic::find ()->limit(9999)->where ( [
@@ -643,10 +641,10 @@ class Farms extends \yii\db\ActiveRecord {
 				$value ['icon'] = 'fa fa-pagelines';
 				$value ['title'] = $menuUrl ['menuname'];
 				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] );
-				$value ['info'] = '种植了' . Plantingstructure::getPlantRows ( [ 
-						'plantingstructureSearch' => [ 
-								'management_area' => self::getManagementArea ()['id'] 
-						] 
+				$value ['info'] = '种植了' . Plantingstructure::getPlantRowsMenu ( [ 
+						'begindate'=>Theyear::getYeartime()[0],
+						'enddate' =>Theyear::getYeartime()[1],
+						'management_area' => self::getManagementArea ()['id'], 
 				] ) . '种作物';
 				$value ['description'] = '种植作物信息';
 				break;

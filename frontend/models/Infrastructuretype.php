@@ -83,7 +83,7 @@ class Infrastructuretype extends \yii\db\ActiveRecord
         return $name;
 
     }
-    public static function getAllname()
+    public static function getAllname($params)
     {
 //     	$cache = 'cache-key-infrastructure2';
 //     	$result = Yii::$app->cache->get($cache);
@@ -115,9 +115,9 @@ class Infrastructuretype extends \yii\db\ActiveRecord
     	return $result;
     }
     
-    public static function getNameOne($id)
+    public static function getNameOne($params,$id)
     {
-    	$data = self::getAllname();
+    	$data = self::getAllname($params);
     	return $data[$id];
     }
 }

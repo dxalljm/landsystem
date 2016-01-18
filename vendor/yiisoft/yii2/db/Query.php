@@ -120,7 +120,7 @@ class Query extends Component implements QueryInterface
             $db = Yii::$app->getDb();
         }
         list ($sql, $params) = $db->getQueryBuilder()->build($this);
-
+		
         return $db->createCommand($sql, $params);
     }
 
@@ -203,6 +203,7 @@ class Query extends Component implements QueryInterface
      */
     public function all($db = null)
     {
+//     	var_dump($db);
         $rows = $this->createCommand($db)->queryAll();
         return $this->populate($rows);
     }

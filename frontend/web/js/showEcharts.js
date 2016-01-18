@@ -268,6 +268,7 @@ function showAllShadow(divID,legendData,xData,series,dw)
 	    	    	y:30,
 	    	    	x2:15,
 	    	    	y2:30,
+//	    	    	width:200,
 	    	    },
 	    	    tooltip : {
 	    	        trigger: 'axis',

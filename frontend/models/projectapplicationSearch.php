@@ -7,18 +7,20 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Projectapplication;
 use app\models\Theyear;
+use app\models\Farms;
 /**
  * projectapplicationSearch represents the model behind the search form about `app\models\Projectapplication`.
  */
 class projectapplicationSearch extends Projectapplication
 {
+	public $farmer_id;
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id','farms_id', 'create_at', 'update_at', 'is_agree','management_area','reviewprocess_id'], 'integer'],
+            [['id','farms_id', 'farmer_id','create_at', 'update_at', 'is_agree','management_area','reviewprocess_id'], 'integer'],
             [['projectdata'],'number'],
         	[['projecttype'], 'safe'],
         	[['content','unit'],'string']
@@ -69,5 +71,66 @@ class projectapplicationSearch extends Projectapplication
         ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
+    }
+    public function pinyinSearch($str = NULL)
+    {
+    	if (preg_match ("/^[A-Za-z]/", $str)) {
+    		$tj = ['like','pinyin',$str];
+    	} else {
+    		$tj = ['like','farmname',$str];
+    	}
+    
+    	return $tj;
+    }
+    
+    public function farmerpinyinSearch($str = NULL)
+    {
+    	if (preg_match ("/^[A-Za-z]/", $str)) {
+    		$tj = ['like','farmerpinyin',$str];
+    	} else {
+    		$tj = ['like','farmername',$str];
+    	}
+    	//     	var_dump($tj);exit;
+    	return $tj;
+    }
+    public function searchIndex($params)
+    {
+    	//     	var_dump($params);exit;
+    	$query = Projectapplication::find();
+    
+    	$dataProvider = new ActiveDataProvider([
+    			'query' => $query,
+    	]);
+    
+    	$this->load($params);
+    	if($params['projectapplicationSearch']['management_area'] == 0)
+    		$this->management_area = NULL;
+    	else
+    		$this->management_area = $params['projectapplicationSearch']['management_area'];
+    	$farmid = [];
+    	$farm = Farms::find();
+    	$farm->andFilterWhere(['management_area'=>$this->management_area]);
+    	if(isset($params['projectapplicationSearch']['farms_id'])) {
+    		$this->farms_id = $params['projectapplicationSearch']['farms_id'];
+    		$farm->andFilterWhere($this->pinyinSearch($this->farms_id));
+    	
+    	}
+    	$farmerid = [];
+    	if(isset($params['projectapplicationSearch']['farmer_id'])) {
+    		$this->farmer_id = $params['projectapplicationSearch']['farmer_id'];
+    		$farm->andFilterWhere($this->farmerpinyinSearch($this->farmer_id));
+    	}
+    	foreach ($farm->all() as $value) {
+    		$farmid[] = $value['id'];
+    	}
+    	$query->andFilterWhere([
+//     			'id' => $this->id,
+    			'farms_id' => $farmid,
+    			'projecttype' => $this->projecttype,
+    	]);
+    
+    	$query->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
+    
+    	return $dataProvider;
     }
 }

@@ -55,61 +55,142 @@ class Projectapplication extends \yii\db\ActiveRecord
         	'unit' => '单位',
         ];
     }
+    public static function farmSearch($str)
+    {
     
+    	if (preg_match ("/^[A-Za-z]/", $str)) {
+    		$tj = ['like','pinyin',$str];
+    	} else {
+    		$tj = ['like','farmname',$str];
+    	}
+    
+    	return $tj;
+    }
+    
+    public static function farmerSearch($str)
+    {
+    
+    	if (preg_match ("/^[A-Za-z]/", $str)) {
+    		$tj = ['like','farmerpinyin',$str];
+    	} else {
+    		$tj = ['like','farmername',$str];
+    	}
+    	//     	var_dump($tj);exit;
+    	return $tj;
+    }
     public static function getFarmRows($params)
     {
+    	if($params['projectapplicationSearch']['management_area'] == 0){
+    		$management_area = [1,2,3,4,5,6,7];
+    	} else
+    		$management_area = $params['projectapplicationSearch']['management_area'];
     	$where = [];
-    	foreach ($params['projectapplicationSearch'] as $key => $value) {
-    		if($value !== '')
-    			$where[$key] = $value;
+    	$Farm = Farms::find();
+    	$Projectapplication = Projectapplication::find ();
+    	$data = [];
+    	$Projectapplication->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+    	$Projectapplication->andFilterWhere(['management_area'=>$management_area]);
+    	$farmid = [];
+    	$farm = Farms::find();
+    	$farm->andFilterWhere(['management_area'=>$management_area]);
+    	if(isset($params['plantingstructureSearch']['farms_id'])) {
+	    	$farm->andFilterWhere(self::farmSearch($params['plantingstructureSearch']['farms_id']));
+	    		 
+	    }
+	    if(isset($params['plantingstructureSearch']['farmer_id'])) {
+	    	$farm->andFilterWhere(self::farmerSearch($params['plantingstructureSearch']['farmer_id']));
+	    }
+    	foreach ($farm->all() as $value) {
+    		$farmid[] = $value['id'];
     	}
-    	$row = Projectapplication::find ()->where ($where)->count ();
-    	return $row;
+    	if($farmid) 
+    		$Projectapplication->andFilterWhere(['farms_id'=>$farmid]);
+    	//     	var_dump($farmid);exit;
+    	if(isset($params['projectapplicationSearch']['projecttype']))
+    		$Projectapplication->andFilterWhere(['projecttype'=>$params['projectapplicationSearch']['projecttype']]);
+    	
+    	foreach($Projectapplication->all() as $value) {
+    		$data[] = ['id'=>$value['farms_id']];
+    	}
+//     	var_dump($data);
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		$result = count($newdata);
+    	}
+    	else
+    		$result = 0;
+    	return $result;
     }
     
     public static function getFarmerrows($params)
     {
+   		if($params['projectapplicationSearch']['management_area'] == 0){
+    		$management_area = [1,2,3,4,5,6,7];
+    	} else
+    		$management_area = $params['projectapplicationSearch']['management_area'];
     	$where = [];
-    	foreach ($params['projectapplicationSearch'] as $key => $value) {
-    		if($value !== '')
-    			$where[$key] = $value;
-    	}
-    	if($where)
-    		$project = Projectapplication::find ()->where ($where)->all ();
-    	else 
-    		$project = Projectapplication::find ()->all ();
-    	//     	var_dump($farms);exit;
+    	$Farm = Farms::find();
+    	$Projectapplication = Projectapplication::find ();
     	$data = [];
-    	if($project) {
-    		foreach($project as $value) {
-    			$farmallid[] = $value['farms_id'];
-    		}
-    		$farms = Farms::find()->where(['id'=>$farmallid])->all();
-    		foreach ($farms as $value) {
-    			$data[] = ['farmername'=>$value['farmername'],'cardid'=>$value['cardid']];
-    		}
-    		if($data) {
-    			$newdata = Farms::unique_arr($data);
-    			return count($newdata);
-    		}
-    		else
-    			return 0;
-    	} else 
-    		return 0;
-    	
-    }
+    	$Projectapplication->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+    	$Projectapplication->andFilterWhere(['management_area'=>$management_area]);
+    	$farmid = [];
+
+    	//     	var_dump($farmid);exit;
+    	if(isset($params['projectapplicationSearch']['projecttype']))
+    		$Projectapplication->andFilterWhere(['projecttype'=>$params['projectapplicationSearch']['projecttype']]);
+		$data = [ ];
+		$farm = Farms::find();
+		if(isset($params['plantingstructureSearch']['farms_id'])) {
+			$farm->andFilterWhere(self::farmSearch($params['plantingstructureSearch']['farms_id']));
+		
+		}
+		if(isset($params['plantingstructureSearch']['farmer_id'])) {
+			$farm->andFilterWhere(self::farmerSearch($params['plantingstructureSearch']['farmer_id']));
+		}
+		foreach ($Projectapplication->all() as $value) {
+			$farmid[] = $value['farms_id'];
+		}
+		foreach ( $farm->where(['id'=>$farmid])->all() as $value ) {
+			$data [] = [ 
+					'farmername' => $value ['farmername'],
+					'cardid' => $value ['cardid'] 
+			];
+		}
+		if ($data) {
+			$newdata = Farms::unique_arr ( $data );
+			return count ( $newdata );
+		} else
+			return 0;
+	}
     
     public static function getProjecttype($params)
     {
+    	if($params['projectapplicationSearch']['management_area'] == 0){
+    		$management_area = [1,2,3,4,5,6,7];
+    	} else
+    		$management_area = $params['projectapplicationSearch']['management_area'];
     	$where = [];
-    	foreach ($params['projectapplicationSearch'] as $key => $value) {
-    		if($value !== '')
-    			$where[$key] = $value;
-    	}
-    	$yields = Projectapplication::find ()->where ($where)->all ();
-    	//     	var_dump($farms);exit;
+    	$Farm = Farms::find();
+    	$Projectapplication = Projectapplication::find ();
     	$data = [];
-    	foreach($yields as $value) {
+    	$Projectapplication->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+    	$Projectapplication->andFilterWhere(['management_area'=>$management_area]);
+    	$farmid = [];
+
+    	//     	var_dump($farmid);exit;
+    	if(isset($params['projectapplicationSearch']['projecttype']))
+    		$Projectapplication->andFilterWhere(['projecttype'=>$params['projectapplicationSearch']['projecttype']]);
+		$data = [ ];
+		$farm = Farms::find();
+		if(isset($params['plantingstructureSearch']['farms_id'])) {
+			$farm->andFilterWhere(self::farmSearch($params['plantingstructureSearch']['farms_id']));
+		
+		}
+		if(isset($params['plantingstructureSearch']['farmer_id'])) {
+			$farm->andFilterWhere(self::farmerSearch($params['plantingstructureSearch']['farmer_id']));
+		}
+    	foreach($Projectapplication->all() as $value) {
     		$data[] = ['typeid'=>$value['projecttype']];
     	}
     	if($data) {
@@ -119,16 +200,68 @@ class Projectapplication extends \yii\db\ActiveRecord
     	else
     		return 0;;
     }
-    public static function getTypenamelist()
+    public static function getProjecttypename($params)
     {
-    	$where = Farms::getManagementArea()['id'];
-//     	var_dump($where);exit;
-    	$input = Projectapplication::find()->where(['management_area'=>$where,'state'=>1])->all();
-//     	    	var_dump($input);exit;
+    	if($params['projectapplicationSearch']['management_area'] == 0){
+    		$management_area = [1,2,3,4,5,6,7];
+    	} else
+    		$management_area = $params['projectapplicationSearch']['management_area'];
+    	$where = [];
+    	$Farm = Farms::find();
+    	$Projectapplication = Projectapplication::find ();
+    	$data = [];
+    	$Projectapplication->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+    	$Projectapplication->andFilterWhere(['management_area'=>$management_area]);
+    	$farmid = [];
+    
+    	//     	var_dump($farmid);exit;
+    	if(isset($params['projectapplicationSearch']['projecttype']))
+    		$Projectapplication->andFilterWhere(['projecttype'=>$params['projectapplicationSearch']['projecttype']]);
+    	$data = [ ];
+    	$farm = Farms::find();
+    	if(isset($params['plantingstructureSearch']['farms_id'])) {
+    		$farm->andFilterWhere(self::farmSearch($params['plantingstructureSearch']['farms_id']));
+    
+    	}
+    	if(isset($params['plantingstructureSearch']['farmer_id'])) {
+    		$farm->andFilterWhere(self::farmerSearch($params['plantingstructureSearch']['farmer_id']));
+    	}
+    	foreach($Projectapplication->all() as $value) {
+    		$data['id'][] = $value['projecttype'];
+    		$data['typename'][] = Infrastructuretype::find()->where(['id'=>$value['projecttype']])->one()['typename'];
+    	}
+    	return $data;
+    }
+    public static function getTypenamelist($params = NULL)
+    {
+    	if($params['projectapplicationSearch']['management_area'] == 0){
+    		$management_area = [1,2,3,4,5,6,7];
+    	} else
+    		$management_area = $params['projectapplicationSearch']['management_area'];
+    	$where = [];
+    	$Farm = Farms::find();
+    	$Projectapplication = Projectapplication::find ();
+    	$data = [];
+    	$Projectapplication->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+    	$Projectapplication->andFilterWhere(['management_area'=>$management_area]);
+    	$farmid = [];
+    
+    	//     	var_dump($farmid);exit;
+    	if(isset($params['projectapplicationSearch']['projecttype']))
+    		$Projectapplication->andFilterWhere(['projecttype'=>$params['projectapplicationSearch']['projecttype']]);
+    	$data = [ ];
+    	$farm = Farms::find();
+    	if(isset($params['plantingstructureSearch']['farms_id'])) {
+    		$farm->andFilterWhere(self::farmSearch($params['plantingstructureSearch']['farms_id']));
+    
+    	}
+    	if(isset($params['plantingstructureSearch']['farmer_id'])) {
+    		$farm->andFilterWhere(self::farmerSearch($params['plantingstructureSearch']['farmer_id']));
+    	}
     	$data = [];
     	$result = ['id'=>[],'projecttype'=>[],'unit'=>[]];
-    	foreach ($input as $value) {
-    		$data[] = ['id'=>Infrastructuretype::find()->where(['id'=>$value['projecttype']])->one()['id']];
+    	foreach ($Projectapplication->all() as $value) {
+    		$data[] = ['id'=>$value['projecttype']];
     	}
     	if($data) {
     		$newdata = Farms::unique_arr($data);
@@ -140,5 +273,70 @@ class Projectapplication extends \yii\db\ActiveRecord
     	}
     	//     	    	var_dump($result);
     	return $result;
+    }
+    public static function getProjectapplication($params) 
+    {
+    	if($params['projectapplicationSearch']['management_area'] == 0){
+    		$management_area = [1,2,3,4,5,6,7];
+    	} else
+    		$management_area = $params['projectapplicationSearch']['management_area'];
+    	$where = [];
+    	$Farm = Farms::find();
+    	$Projectapplication = Projectapplication::find ();
+    	$data = [];
+    	$Projectapplication->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+    	$Projectapplication->andFilterWhere(['management_area'=>$management_area]);
+    	$farmid = [];
+    	
+    	//     	var_dump($farmid);exit;
+    	if(isset($params['projectapplicationSearch']['projecttype']))
+    		$Projectapplication->andFilterWhere(['projecttype'=>$params['projectapplicationSearch']['projecttype']]);
+    	$data = [ ];
+    	$farm = Farms::find();
+    	if(isset($params['projectapplicationSearch']['farms_id'])) {
+    		$farm->andFilterWhere(self::farmSearch($params['projectapplicationSearch']['farms_id']));
+    	
+    	}
+    	if(isset($params['projectapplicationSearch']['farmer_id'])) {
+    		$farm->andFilterWhere(self::farmerSearch($params['projectapplicationSearch']['farmer_id']));
+    	}
+    	$projecttype = self::getTypenamelist($params);
+    	$oldp = $Projectapplication->where;
+    	if(is_array($management_area)) {
+    		foreach ($management_area as $value) {
+    			$plantArea = [];
+    			foreach ($projecttype['id'] as $val) {
+    				$Projectapplication->where = $oldp;
+    				$Projectapplication->andFilterWhere(['projecttype'=>$val,'management_area'=>$value]);
+    				$nums = $Projectapplication->sum('projectdata');
+    				$plantArea[] = $nums;
+    			}
+    			// 				var_dump($plantArea);
+    			$result[] = [
+    					'name' => str_ireplace('管理区', '', ManagementArea::find()->where(['id'=>$value])->one()['areaname']),
+    					'type' => 'bar',
+    					'stack' => $value,
+    					'data' => $plantArea
+    			];
+    		}
+    	} else {
+    		$plantArea = [];
+    		foreach ($projecttype['id'] as $val) {
+    			$Projectapplication->where = $oldp;
+    			$Projectapplication->andFilterWhere(['projecttype'=>$val,'management_area'=>$management_area]);
+    			//     			var_dump($Plantingstructure->where);
+    			$area = $Projectapplication->sum('projectdata');
+    			//     			var_dump($area);
+    			$plantArea[] = $area;
+    		}
+    		//     		var_dump($plantArea);
+    		$result[] = [
+    				'name' => str_ireplace('管理区', '', ManagementArea::find()->where(['id'=>$management_area])->one()['areaname']),
+    				'type' => 'bar',
+    				'stack' => $val,
+    				'data' => $plantArea
+    		];
+    	}
+    	return json_encode($result);
     }
 }

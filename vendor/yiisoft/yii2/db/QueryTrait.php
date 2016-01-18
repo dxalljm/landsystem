@@ -218,6 +218,7 @@ trait QueryTrait
      */
     protected function filterCondition($condition)
     {
+//     	var_dump($condition);exit;
         if (!is_array($condition)) {
             return $condition;
         }
@@ -235,7 +236,7 @@ trait QueryTrait
         // operator format: operator, operand 1, operand 2, ...
 
         $operator = array_shift($condition);
-
+// 		var_dump($operator);exit;
         switch (strtoupper($operator)) {
             case 'NOT':
             case 'AND':
@@ -268,7 +269,7 @@ trait QueryTrait
         }
 
         array_unshift($condition, $operator);
-
+// 		var_dump($condition);
         return $condition;
     }
 
