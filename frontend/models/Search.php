@@ -10,6 +10,7 @@ use app\models\Collection;
 use yii\helpers\Html;
 
 use yii\helpers\Url;
+use frontend\helpers\arraySearch;
 /**
  * This is the model class for table "{{%session}}".
  *
@@ -130,9 +131,9 @@ class Search extends \yii\db\ActiveRecord {
 								'attribute' => $value,
 								'value'=> function($model,$params) {
 // 				            	var_dump($model);exit;
-				            		return Plantingstructure::getNameOne(self::$totalData,$model->goodseed_id);
+				            		return arraySearch::find(self::$totalData)->getName('Goodseed', 'plant_model', 'goodseed_id')->getOne($model->goodseed_id);
 				           	 	},
-				            	'filter' => Plantingstructure::getAllname(self::$totalData),
+				            	'filter' => arraySearch::find(self::$totalData)->getName('Goodseed', 'plant_model', 'goodseed_id')->getList(),
 							
 						];
 						break;
@@ -442,9 +443,9 @@ class Search extends \yii\db\ActiveRecord {
 								'attribute' => $value,
 								'value' => function($model) {
 // 								var_dump($params);exit;
-									return Plant::getNameOne(self::$totalData,$model->plant_id);
+									return arraySearch::find(self::$totalData)->getName('Plant', 'cropname', 'plant_id')->getOne($model->plant_id);
 								},
-								'filter' => Plant::getAllname(self::$totalData),
+								'filter' => arraySearch::find(self::$totalData)->getName('Plant', 'cropname', 'plant_id')->getList(),
 								];
 						break;
 					case 'firewcd' :

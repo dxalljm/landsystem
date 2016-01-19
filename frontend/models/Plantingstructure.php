@@ -529,22 +529,29 @@ class Plantingstructure extends \yii\db\ActiveRecord
     public static function getAllname($totalData)
     {
     	$result = [];
-    	
-    	foreach($totalData->getModels() as $value) {
-    		if($value->attributes['goodseed_id'])
-    			$data[] = ['id'=>$value->attributes['goodseed_id']];
+    	$data = [];
+//     	var_dump($totalData->query->where);exit;
+    	if(isset($totalData->query->where['plant_id']) and $totalData->query->where !== 0 and $totalData->query->where !== '') {
+    		$type = Goodseed::find()->where(['plant_id'=>$totalData->query->where['plant_id']])->all();
+    	} else {
+	    	foreach($totalData->getModels() as $value) {
+	    		if($value->attributes['goodseed_id'])
+	    			$data[] = ['id'=>$value->attributes['goodseed_id']];
+	    	}
+	    	if($data) {
+	    		$newdata = Farms::unique_arr($data);
+	    		foreach($newdata as $value) {
+	    			$allid[] = $value['id'];
+	    			//     		var_dump($value);exit;
+	    			// 	    		$result[$value['id']] = Plant::find()->where(['id'=>$value['id']])->one()['cropname'];
+	    		}
+	    		$type = Goodseed::find()->where(['id'=>$allid])->all();
+	    		
+	    	}
     	}
-    	if($data) {
-    		$newdata = Farms::unique_arr($data);
-    		foreach($newdata as $value) {
-    			$allid[] = $value['id'];
-    			//     		var_dump($value);exit;
-    			// 	    		$result[$value['id']] = Plant::find()->where(['id'=>$value['id']])->one()['cropname'];
-    		}
-    		$type = Goodseed::find()->where(['id'=>$allid])->all();
-    		foreach ($type as $value) {
-    			$result[$value['id']] = Plant::find()->where(['id'=>$value['plant_id']])->one()['cropname'].'->'.$value['plant_model'];
-    		}
+//     	var_dump($type);exit;
+    	foreach ($type as $value) {
+    		$result[$value['id']] = Plant::find()->where(['id'=>$value['plant_id']])->one()['cropname'].'->'.$value['plant_model'];
     	}
 //     	var_dump($result);
     	return $result;

@@ -125,17 +125,17 @@ class plantingstructureSearch extends Plantingstructure
     	else
     		$this->management_area = $params['plantingstructureSearch']['management_area'];
     	$farmid = [];
-    	if(isset($params['plantingstructureSearch']['farms_id']) or isset($params['plantingstructureSearch']['farmer_id'])) {
+    	if((isset($params['plantingstructureSearch']['farms_id']) and $params['plantingstructureSearch']['farms_id'] !== '') or (isset($params['plantingstructureSearch']['farmer_id']) and $params['plantingstructureSearch']['farmer_id'] !== '')) {
 	    	$farm = Farms::find();
 	    	$farm->andFilterWhere(['management_area'=>$this->management_area]);
     	}
-    	if(isset($params['plantingstructureSearch']['farms_id'])) {
+    	if(isset($params['plantingstructureSearch']['farms_id']) and $params['plantingstructureSearch']['farms_id'] !== '') {
     		$this->farms_id = $params['plantingstructureSearch']['farms_id'];
     		$farm->andFilterWhere($this->pinyinSearch($this->farms_id));
     		    		
     	}
 
-    	if(isset($params['plantingstructureSearch']['farmer_id'])) {
+    	if(isset($params['plantingstructureSearch']['farmer_id']) and $params['plantingstructureSearch']['farmer_id'] !== '') {
     		$this->farmer_id = $params['plantingstructureSearch']['farmer_id'];
     		$farm->andFilterWhere($this->farmerpinyinSearch($this->farmer_id));
     	}
@@ -166,7 +166,7 @@ class plantingstructureSearch extends Plantingstructure
     	]);
     	
     	$query->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
-//     	var_dump($dataProvider->getModels());exit;
+//     	var_dump($dataProvider->query->where);exit;
     	return $dataProvider;
     }
 }
