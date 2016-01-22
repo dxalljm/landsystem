@@ -24,22 +24,18 @@ use frontend\helpers\arraySearch;
 <?php 
 	$totalData = clone $dataProvider;
 	$totalData->pagination = ['pagesize'=>0];
-	
-// 	var_dump(Farms::find()->where(['management_area'=>[1,2,3]])->all());
-// 	var_dump(arraySearch::find($totalData)->search()->count());
-// 	exit;
-?>
-<?php
-// 	arraySearch::find($totalData)->search()->count('goodseed_id',true);exit;
-	$planter = arraySearch::find($totalData)->search()->count('farmer_id',true);
-	$leaseer = arraySearch::find($totalData)->search()->count('lease_id',true);
+	$data = arraySearch::find($totalData)->search();
+// 	$data->getName('Plant', 'cropname', 'plant_id')->getEchartsData('area',10000);
+	$planter = $data->count('farmer_id');
+	$leaseer = $data->count('lease_id');
 	$plantFarmer = $planter - $leaseer;
 ?>
+
 <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
               <li class="active"><a href="#activity" data-toggle="tab" aria-expanded="true">数据表</a></li>
               <li class=""><a href="#plantingstructure" data-toggle="tab" aria-expanded="false">种植结构图表</a></li>
-              <?php if(Plantingstructure::getGoodseedname($totalData)) {?>
+              <?php if($data->getName('Goodseed', 'plant_model', 'goodseed_id')->getList()) {?>
               <li class=""><a href="#goodseedEcharts" data-toggle="tab" aria-expanded="false">良种图表</a></li>
               <?php }?>
             </ul>
@@ -50,13 +46,13 @@ use frontend\helpers\arraySearch;
 			        'filterModel' => $searchModel,
 			        'total' => '<tr>
 						        <td></td>
-						        <td align="center"><strong>合计（'.arraySearch::find($totalData)->search()->count('farms_id',true).'户）</strong></td>
+						        <td align="center"><strong>合计（'.$data->count('farms_id').'户）</strong></td>
 						        <td><strong>种植者'.$planter.'个</strong></td>
 						        <td><strong>法人种植'.$plantFarmer.'个</strong></td>
 						        <td><strong>'.$leaseer.'个</strong></td>
-						        <td><strong>'.arraySearch::find($totalData)->search()->count('plant_id',true).'种</strong></td>
-						        <td><strong>'.arraySearch::find($totalData)->search()->count('goodseed_id',true).'种</strong></td>
-						        <td><strong>'.arraySearch::find($totalData)->search()->sum('area',10000).'万亩</strong></td>
+						        <td><strong>'.$data->count('plant_id').'种</strong></td>
+						        <td><strong>'.$data->count('goodseed_id').'种</strong></td>
+						        <td><strong>'.$data->sum('area',10000).'万亩</strong></td>
 						        </tr>',
 			        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','lease_id','plant_id','goodseed_id','area'],$totalData),
 			    ]); ?>
@@ -64,15 +60,21 @@ use frontend\helpers\arraySearch;
               <!-- /.tab-pane -->
               <div class='tab-pane' id="plantingstructure">
               <div id="plantingstructuredata" style="width:1000px; height: 600px; margin: 0 auto"></div>
-             <!--  -->
+				<?php $data->getName('Plant', 'cropname', 'plant_id')->getEchartsData('area',10000);?>
+              </div>
+              <script type="text/javascript">
+				showAllShadow('plantingstructuredata',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode(Plantingstructure::getPlantname($totalData)['typename'])?>,<?= $data->getName('Plant', 'cropname', 'plant_id')->getEchartsData('area',10000);?>,'万亩');
+			</script>
               <!-- /.tab-pane -->
 
-               <?php if(Plantingstructure::getGoodseedname($totalData)) {?>
+               <?php if($data->getName('Goodseed', 'plant_model', 'goodseed_id')->getList()) {?>
             <div id="goodseedEcharts" class='tab-pane'>
             <div id="goodseedinfo" style="width: 1000px; height: 600px; margin: 0 auto;"></div>
               <?php //var_dump(Plantingstructure::getGoodseedname($params));?>
             </div>
-            <!--  -->
+            <script type="text/javascript">
+				showAllShadow('goodseedinfo',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode(Plantingstructure::getGoodseedname($totalData)['typename'])?>,<?= $data->getName('Goodseed', 'plant_model', 'goodseed_id')->getEchartsData('area',10000);?>,'万亩');
+		</script>
             <?php }?>
               <!-- /.tab-pane -->
             </div>

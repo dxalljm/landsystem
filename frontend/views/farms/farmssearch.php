@@ -13,27 +13,33 @@ use dosamigos\datetimepicker\DateTimePicker;
 use yii\helpers\Url;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Search;
+use frontend\helpers\arraySearch;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 ?>
-     
-  <?= $this->render('..//search/searchindex',['tab'=>$tab,'management_area'=>$management_area,'begindate'=>$begindate,'enddate'=>$enddate]);?>
-
+     <?php //var_dump($_GET);?>
+  <?= $this->render('..//search/searchindex',['tab'=>$tab,'begindate'=>$begindate,'enddate'=>$enddate]);?>
+<?php 
+	$totalData = clone $dataProvider;
+	$totalData->pagination = ['pagesize'=>0];
+// 	var_dump($totalData->getModels());exit;
+	$data = arraySearch::find($totalData)->search();
+?>
  <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'total' => '<tr>
 						<td></td>
 						<td align="center"><strong>合计</strong></td>
-						<td><strong>'.Farms::getRows($params).'户</strong></td>
-						<td><strong>'.Farms::getFarmerrows($params).'个</strong></td>
+						<td><strong>'.$data->count('id').'户</strong></td>
+						<td><strong>'.$data->count('farmer_id').'个</strong></td>
 						<td></td>
 						<td></td>
-						<td><strong>'.Farms::getFarmarea($params).'万亩</strong></td>						
+						<td><strong>'.$data->sum('measure').'万亩</strong></td>						
 						<td></td>
 					</tr>',
-        'columns' => Search::getColumns(['management_area','farmname','farmername','address','telephone','measure','operation'],$params),
+        'columns' => Search::getColumns(['management_area','farmname','farmername','address','telephone','measure','operation'],$totalData),
 
     ]); ?>
                 </div>

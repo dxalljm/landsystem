@@ -94,25 +94,23 @@ class SearchController extends Controller
 
 	
 
-	public function actionSearchindex($tab = '',$management_area = '',$begindate = '',$enddate = '')
+	public function actionSearchindex($tab = '',$begindate = '',$enddate = '')
 	{
-		$post = Yii::$app->request->post();	
-// 		var_dump($post);exit;
+		$get = Yii::$app->request->get();	
+		var_dump($get);
 		$getDate = Theyear::formatDate($begindate,$enddate);
-		if($post) {
-    		if($post['tab'] == 'parmpt')
+		if(isset($get['tab'])) {
+    		if($get['tab'] == 'parmpt')
     			return $this->render('searchindex');
-			$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
-			$array[] = $post['tab'].'/'.$post['tab'].'search';
-			$array['tab'] = $post['tab'];
+			$whereDate = Theyear::formatDate($get['begindate'],$get['enddate']);
+			$array[] = $get['tab'].'/'.$get['tab'].'search';
+			$array['tab'] = $get['tab'];
 			$array['begindate'] = $whereDate['begindate'];
 			$array['enddate'] = $whereDate['enddate'];
-			$array['management_area'] = $post['management_area'];
-			
-// 			var_dump($array);
+			$array[$get['tab'].'Search']['management_area'] = $get['management_area'];
 			return $this->redirect ($array);
 		} else {
-			return $this->render('searchindex',['tab'=>$tab,'management_area'=>$management_area,'begindate'=>$getDate['begindate'],'enddate'=>$getDate['enddate']]);
+			return $this->render('searchindex',['tab'=>$tab,'begindate'=>$getDate['begindate'],'enddate'=>$getDate['enddate']]);
 		}
 	}
     
@@ -128,7 +126,7 @@ class SearchController extends Controller
 
 //     public function actionSearchindex()
 //     {
-//     	$post = Yii::$app->request->post();
+//     	$get = Yii::$app->request->post();
 //     	if($post)
 //     		$this->formatDate($post['begindate'],$post['enddate']);
 //     	else 

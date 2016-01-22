@@ -14,6 +14,7 @@ use yii\helpers\Url;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Search;
 use app\models\Yields;
+use frontend\helpers\arraySearch;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -23,11 +24,14 @@ use app\models\Yields;
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
-                <div class="box-body">
-
-              
+                <div class="box-body">        
 <?= $this->render('..//search/searchindex',['tab'=>$tab,'management_area'=>$management_area,'begindate'=>$begindate,'enddate'=>$enddate]);?>
-<?php //var_dump($dataProvider->getModels());?>
+<?php 
+	$totalData = clone $dataProvider;
+	$totalData->pagination = ['pagesize'=>0];
+// 	var_dump($totalData->getModels());exit;
+	$data = arraySearch::find($totalData)->search();
+?>
  
 <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
@@ -39,25 +43,26 @@ use app\models\Yields;
                 <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'options' => ['method'=>'get'],
         'total' => '<tr>
 			        <td></td>
 			        <td align="center"><strong>合计</strong></td>
-			        <td><strong>'.Yields::getFarmRows($params).'户</strong></td>
-			        <td><strong>'.Yields::getFarmerrows($params).'个</strong></td>
-			        <td><strong>'.Yields::getPlantRows($params).'个</strong></td>
-			        <td><strong>'.Yields::getArea($params).'万亩</strong></td>
-			        <td><strong>'.Yields::getPlantG($params).'万斤</strong></td>
-			        <td><strong>'.Yields::getPlantA($params).'万斤</strong></td>
+			        <td><strong>'.$data->count('farms_id',true).'户</strong></td>
+			        <td><strong>'.$data->count('farmer_id',true).'个</strong></td>
+			        <td><strong>'.$data->count('plant_id',true).'个</strong></td>
+			        <td><strong>'.$data->sum('area').'万亩</strong></td>
+			        <td><strong>'.$data->sum('single',10000).'万斤</strong></td>
+			        <td><strong>'.$data->sum(['*','single',['Plantingstructure',['planting_id','area']]],10000).'万斤</strong></td>
 			        </tr>',
-        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','planting_id','single','allsingle'],$params),
+        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','planting_id','single','allsingle'],$totalData),
     ]); ?>
               </div>
               <!-- /.tab-pane -->
               <div class="tab-pane" id="timeline">
-              <?php //var_dump(Yields::getYields($params));?>
+              <?php //var_dump($data->getName('Plant', 'cropname', 'plant_id')->getEchartsData(['*','single',['Plantingstructure',['planting_id','area']]],10000));exit;?>
                 <div id="yields" style="width: 900px; height: 600px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-				showAllShadow('yields',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode(yields::getTypenamelist($params)['typename'])?>,<?= yields::getYields($params)?>,'万斤');
+				showAllShadow('yields',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Plant', 'cropname', 'plant_id')->typenameList())?>,<?= $data->getName('Plant', 'cropname', 'plant_id')->getEchartsData(['*','single',['Plantingstructure',['planting_id','area']]],10000)?>,'万斤');
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
 

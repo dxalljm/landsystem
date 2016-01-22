@@ -95,38 +95,43 @@ class projectapplicationSearch extends Projectapplication
     }
     public function searchIndex($params)
     {
-    	//     	var_dump($params);exit;
+//     	    	var_dump($params);exit;
     	$query = Projectapplication::find();
     
     	$dataProvider = new ActiveDataProvider([
     			'query' => $query,
     	]);
-    
-    	$this->load($params);
     	if($params['projectapplicationSearch']['management_area'] == 0)
     		$this->management_area = NULL;
     	else
     		$this->management_area = $params['projectapplicationSearch']['management_area'];
     	$farmid = [];
-    	$farm = Farms::find();
-    	$farm->andFilterWhere(['management_area'=>$this->management_area]);
-    	if(isset($params['projectapplicationSearch']['farms_id'])) {
+    	if((isset($params['projectapplicationSearch']['farms_id']) and $params['projectapplicationSearch']['farms_id'] !== '') or (isset($params['projectapplicationSearch']['farmer_id']) and $params['projectapplicationSearch']['farmer_id'] !== '')) {
+	    	$farm = Farms::find();
+	    	$farm->andFilterWhere(['management_area'=>$this->management_area]);
+    	}
+    	if(isset($params['projectapplicationSearch']['farms_id']) and $params['projectapplicationSearch']['farms_id'] !== '') {
     		$this->farms_id = $params['projectapplicationSearch']['farms_id'];
     		$farm->andFilterWhere($this->pinyinSearch($this->farms_id));
-    	
+    		    		
     	}
-    	$farmerid = [];
-    	if(isset($params['projectapplicationSearch']['farmer_id'])) {
+
+    	if(isset($params['projectapplicationSearch']['farmer_id']) and $params['projectapplicationSearch']['farmer_id'] !== '') {
     		$this->farmer_id = $params['projectapplicationSearch']['farmer_id'];
     		$farm->andFilterWhere($this->farmerpinyinSearch($this->farmer_id));
     	}
-    	foreach ($farm->all() as $value) {
-    		$farmid[] = $value['id'];
+    	if(isset($farm)) {
+	    	foreach ($farm->all() as $value) {
+	    		$farmid[] = $value['id'];
+	    	}
     	}
+    	if(isset($params['projectapplicationSearch']['projecttype']) and $params['projectapplicationSearch']['projecttype'] !== '')
+    		$this->projecttype = $params['projectapplicationSearch']['projecttype'];
     	$query->andFilterWhere([
 //     			'id' => $this->id,
     			'farms_id' => $farmid,
     			'projecttype' => $this->projecttype,
+    			'management_area' => $this->management_area,
     	]);
     
     	$query->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);

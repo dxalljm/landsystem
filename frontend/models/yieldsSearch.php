@@ -85,40 +85,36 @@ class yieldsSearch extends Yields
     }
     public function searchIndex($params)
     {
-//     	var_dump($params);exit;
+//     	var_dump($params);
     	$query = Yields::find();
     
     	$dataProvider = new ActiveDataProvider([
     			'query' => $query,
     	]);
-    	
-//     	$this->load($params);
-    	
     	if($params['yieldsSearch']['management_area'] == 0)
     		$this->management_area = NULL;
     	else
     		$this->management_area = $params['yieldsSearch']['management_area'];
-    	if(isset($params['yieldsSearch']['farms_id']) or isset($params['yieldsSearch']['farmer_id'])) {
-    		$farm = Farms::find();
-    		$farm->andFilterWhere(['management_area'=>$this->management_area]);
+    	$farmid = [];
+    	if((isset($params['yieldsSearch']['farms_id']) and $params['yieldsSearch']['farms_id'] !== '') or (isset($params['yieldsSearch']['farmer_id']) and $params['yieldsSearch']['farmer_id'] !== '')) {
+	    	$farm = Farms::find();
+	    	$farm->andFilterWhere(['management_area'=>$this->management_area]);
     	}
     	if(isset($params['yieldsSearch']['farms_id']) and $params['yieldsSearch']['farms_id'] !== '') {
     		$this->farms_id = $params['yieldsSearch']['farms_id'];
     		$farm->andFilterWhere($this->pinyinSearch($this->farms_id));
-    		 
+    		    		
     	}
-    	$farmid = [];
+
     	if(isset($params['yieldsSearch']['farmer_id']) and $params['yieldsSearch']['farmer_id'] !== '') {
     		$this->farmer_id = $params['yieldsSearch']['farmer_id'];
     		$farm->andFilterWhere($this->farmerpinyinSearch($this->farmer_id));
     	}
-//     	var_dump($query->where);exit;
     	if(isset($farm)) {
 	    	foreach ($farm->all() as $value) {
 	    		$farmid[] = $value['id'];
 	    	}
     	}
-    	$query->andFilterWhere(['management_area'=>$this->management_area]);
     	if(isset($params['yieldsSearch']['plant_id']) and $params['yieldsSearch']['plant_id'] !== '')
     		$this->plant_id = $params['yieldsSearch']['plant_id'];
     	

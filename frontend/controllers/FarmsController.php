@@ -1341,49 +1341,40 @@ class FarmsController extends Controller {
 				'data' => $data 
 		] );
 	}
-	public function actionFarmssearch($tab,$begindate, $enddate, $management_area) 
+	public function actionFarmssearch($tab,$begindate, $enddate) 
 	{
-		$post = Yii::$app->request->post();
-// 		var_dump($post);exit;
-		if(isset($post['tab']) and $post['tab'] !== \Yii::$app->controller->id) {
-			return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
-					'tab' => $post['tab'],
-					'begindate' => strtotime($post['begindate']),
-					'enddate' => strtotime($post['enddate']),
-					'management_area' => $post['management_area'],
-			]);
-		} else  {
-// 			var_dump(\Yii::$app->controller->id);
-			$searchModel = new farmsSearch();
-			$params = Yii::$app->request->queryParams;
-			
-	// 		var_dump($params);exit;
-			if($post) {
-				$params['farmsSearch']['management_area'] = $post['management_area'];
-				$management_area = $post['management_area'];
-				$begindate = strtotime($post['begindate']);
-				$enddate = strtotime($post['enddate']);
-			} else {
-				if(isset($params['farmsSearch']))
-					$management_area = $params['farmsSearch']['management_area'];
-				else {
-					$params['farmsSearch']['management_area'] = $params['management_area'];
-					$management_area = $params['management_area'];
-				}
-			}
-			$params ['farmsSearch'] ['state'] = 1;
-			
-			$dataProvider = $searchModel->searchIndex ( $params );
-			return $this->render ( 'farmssearch', [ 
-						'tab' => $tab,
-						'management_area' => $management_area,
-						'begindate' => $begindate,
-						'enddate' => $enddate,
-						'searchModel' => $searchModel,
-						'dataProvider' => $dataProvider,
-						'params' => $params,
-				] );
-		}
+		$get = Yii::$app->request->get();
+//     	var_dump($get);exit;
+    	if(isset($get['tab']) and $get['tab'] !== \Yii::$app->controller->id) {
+//     		var_dump($get);exit;
+    		return $this->redirect ([$get['tab'].'/'.$get['tab'].'search',
+    				'tab' => $get['tab'],
+    				'begindate' => strtotime($get['begindate']),
+    				'enddate' => strtotime($get['enddate']),
+    				$get['tab'].'Search' => ['management_area'=>$get['management_area']],
+//     				'management_area' => $get['management_area'],
+    		]);
+    	} else {
+	    	$searchModel = new farmsSearch();
+			if(is_numeric($get['begindate']))
+				$begindate = $get['begindate'];
+			else 
+				$begindate = strtotime($get['begindate']);
+			if(is_numeric($get['enddate']))
+				$enddate = $get['enddate'];
+			else
+				$enddate = strtotime($get['enddate']);
+// 			var_dump($get);exit;
+	    	$dataProvider = $searchModel->searchIndex ( $get );
+	    	return $this->render('farmssearch',[
+	    			'searchModel' => $searchModel,
+	    			'dataProvider' => $dataProvider,
+	    			'tab' => $tab,
+	    			'begindate' => $begindate,
+	    			'enddate' => $enddate,
+	    			'params' => $get,
+	    	]);
+    	}
 	}
 	
 	/**

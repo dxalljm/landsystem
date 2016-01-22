@@ -24,11 +24,15 @@ use app\models\Farms;
             <div class="box">
 
                 <div class="box-body">
-                <?php $form = ActiveFormrdiv::begin(); ?>
+                <?php $form = ActiveFormrdiv::begin(['method'=>'get']); ?>
                 <?php $managementArea_array = ArrayHelper::map(ManagementArea::find()->where(['id'=>Farms::getManagementArea()['id']])->all(), 'id', 'areaname');
                 	if(count($managementArea_array) > 1)
                 		array_splice($managementArea_array,0,0,[0=>'全部']);
-//                 var_dump($begindate);exit;
+					if(isset($_GET[\Yii::$app->controller->id.'Search']['management_area']))
+						$management_area = $_GET[\Yii::$app->controller->id.'Search']['management_area'];
+					else 
+						$management_area = '';
+// 					var_dump($management_area);
                 ?>
 <table class="table table-hover">
   <tr>

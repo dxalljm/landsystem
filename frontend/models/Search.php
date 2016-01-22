@@ -41,7 +41,7 @@ class Search extends \yii\db\ActiveRecord {
 	}
 	public static function getColumns(array $field,$params=NULL) {
 // 		var_dump($params);exit;
-		self::$totalData = $params;
+		self::$totalData = arraySearch::find($params)->search();
 		$columns [] = [ 
 				'class' => 'yii\grid\SerialColumn' 
 		];
@@ -75,7 +75,7 @@ class Search extends \yii\db\ActiveRecord {
 						break;
 					case 'management_area' :
 						$columns [] = [
-// 				            	'label'=>'管理区',
+				            	'label'=>'管理区',
 				            	'attribute'=>$value,
 				            	'value'=> function($model) {
 // 				            	var_dump($model);exit;
@@ -130,10 +130,10 @@ class Search extends \yii\db\ActiveRecord {
 								'label' => '良种信息',
 								'attribute' => $value,
 								'value'=> function($model,$params) {
-// 				            	var_dump($model);exit;
-				            		return arraySearch::find(self::$totalData)->getName('Goodseed', 'plant_model', 'goodseed_id')->getOne($model->goodseed_id);
+// 				            	var_dump( arraySearch::find(self::$totalData)->getName('Goodseed', 'plant_model', 'goodseed_id')->getList());exit;
+				            		return self::$totalData->getName('Goodseed', 'plant_model', 'goodseed_id')->getOne($model->goodseed_id);
 				           	 	},
-				            	'filter' => arraySearch::find(self::$totalData)->getName('Goodseed', 'plant_model', 'goodseed_id')->getList(),
+				            	'filter' => self::$totalData->getName('Goodseed', 'plant_model', 'goodseed_id')->getList(),
 							
 						];
 						break;
@@ -150,9 +150,9 @@ class Search extends \yii\db\ActiveRecord {
 							'attribute' => $value,
 							'value'=> function($model,$params) {
 // 				            	var_dump($model);exit;
-				            		return Infrastructuretype::getNameOne($params,$model->projecttype);
+				            		return self::$totalData->getName('Infrastructuretype', 'typename', 'projecttype')->getOne($model->projecttype);
 				           	 	},
-				            	'filter' => Infrastructuretype::getAllname($params),
+				            	'filter' => self::$totalData->getName('Infrastructuretype', 'typename', 'projecttype')->getList(),
 							];
 							break;
 					case 'planting_id' :
@@ -443,9 +443,9 @@ class Search extends \yii\db\ActiveRecord {
 								'attribute' => $value,
 								'value' => function($model) {
 // 								var_dump($params);exit;
-									return arraySearch::find(self::$totalData)->getName('Plant', 'cropname', 'plant_id')->getOne($model->plant_id);
+									return self::$totalData->getName('Plant', 'cropname', 'plant_id')->getOne($model->plant_id);
 								},
-								'filter' => arraySearch::find(self::$totalData)->getName('Plant', 'cropname', 'plant_id')->getList(),
+								'filter' => self::$totalData->getName('Plant', 'cropname', 'plant_id')->getList(),
 								];
 						break;
 					case 'firewcd' :

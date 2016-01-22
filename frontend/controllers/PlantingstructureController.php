@@ -96,25 +96,30 @@ class PlantingstructureController extends Controller
     
     public function actionPlantingstructuresearch($tab,$begindate,$enddate,$management_area)
     {
-    	$post = Yii::$app->request->post();
+    	$get = Yii::$app->request->get();
     	
-    	if(isset($post['tab']) and $post['tab'] !== \Yii::$app->controller->id) {
-    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
-    				'tab' => $post['tab'],
-    				'begindate' => strtotime($post['begindate']),
-    				'enddate' => strtotime($post['enddate']),
-    				'management_area' => $post['management_area'],
+    	if(isset($get['tab']) and $get['tab'] !== \Yii::$app->controller->id) {
+    		return $this->redirect ([$get['tab'].'/'.$get['tab'].'search',
+    				'tab' => $get['tab'],
+    				'begindate' => strtotime($get['begindate']),
+    				'enddate' => strtotime($get['enddate']),
+    				'management_area' => $get['management_area'],
     		]);
     	} else {
 	    	$searchModel = new plantingstructureSearch();
-	    	$post = Yii::$app->request->post();
 	    	$params = Yii::$app->request->queryParams;
-	    	if($post) {
-// 	    		var_dump($post);
-	    		$params['plantingstructureSearch']['management_area'] = $post['management_area'];
-				$management_area = $post['management_area'];
-				$begindate = strtotime($post['begindate']);
-				$enddate = strtotime($post['enddate']);
+	    	if($get) {
+// 	    		var_dump($get);
+	    		$params['plantingstructureSearch']['management_area'] = $get['management_area'];
+				$management_area = $get['management_area'];
+				if(is_numeric($get['begindate']))
+					$begindate = $get['begindate'];
+				else 
+					$begindate = strtotime($get['begindate']);
+				if(is_numeric($get['enddate']))
+					$enddate = $get['enddate'];
+				else
+					$enddate = strtotime($get['enddate']);
 	    	} else {
 	    		if(isset($params['plantingstructureSearch']))
 	    			$management_area = $params['plantingstructureSearch']['management_area'];

@@ -198,43 +198,40 @@ class ProjectapplicationController extends Controller
         return $this->redirect(['projectapplicationindex','farms_id'=>$farms_id]);
     }
 
-    public function actionProjectapplicationsearch($tab,$begindate,$enddate,$management_area)
+    public function actionProjectapplicationsearch($tab,$begindate,$enddate)
     {
-    	$post = Yii::$app->request->post();
-    	if(isset($post['tab']) and $post['tab'] !== \Yii::$app->controller->id) {
-    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
-    				'tab' => $post['tab'],
-    				'begindate' => strtotime($post['begindate']),
-    				'enddate' => strtotime($post['enddate']),
-    				'management_area' => $post['management_area'],
+    	$get = Yii::$app->request->get();
+//     	var_dump($get);exit;
+    	if(isset($get['tab']) and $get['tab'] !== \Yii::$app->controller->id) {
+//     		var_dump($get);exit;
+    		return $this->redirect ([$get['tab'].'/'.$get['tab'].'search',
+    				'tab' => $get['tab'],
+    				'begindate' => strtotime($get['begindate']),
+    				'enddate' => strtotime($get['enddate']),
+    				$get['tab'].'Search' => ['management_area'=>$get['management_area']],
+//     				'management_area' => $get['management_area'],
     		]);
     	} else {
-    		$searchModel = new projectapplicationSearch();
-    		$post = Yii::$app->request->post();
-    		$params = Yii::$app->request->queryParams;
-    		if($post) {
-    			$params['projectapplicationSearch']['management_area'] = $post['management_area'];
-    			$management_area = $post['management_area'];
-    			$begindate = strtotime($post['begindate']);
-    			$enddate = strtotime($post['enddate']);
-    		} else {
-    			if(isset($params['projectapplicationSearch']))
-    				$management_area = $params['projectapplicationSearch']['management_area'];
-    			else {
-    				$params['projectapplicationSearch']['management_area'] = $params['management_area'];
-    				$management_area = $params['management_area'];
-    			}
-    		}
-    		$dataProvider = $searchModel->searchIndex ( $params );
-    		return $this->render('projectapplicationSearch',[
-    				'searchModel' => $searchModel,
-    				'dataProvider' => $dataProvider,
-    				'tab' => $tab,
-    				'management_area' => $management_area,
-    				'begindate' => $begindate,
-    				'enddate' => $enddate,
-    				'params' => $params,
-    		]);
+//     		var_dump($get);exit;
+	    	$searchModel = new projectapplicationSearch();
+			if(is_numeric($get['begindate']))
+				$begindate = $get['begindate'];
+			else 
+				$begindate = strtotime($get['begindate']);
+			if(is_numeric($get['enddate']))
+				$enddate = $get['enddate'];
+			else
+				$enddate = strtotime($get['enddate']);
+			
+	    	$dataProvider = $searchModel->searchIndex ( $get );
+	    	return $this->render('projectapplicationsearch',[
+	    			'searchModel' => $searchModel,
+	    			'dataProvider' => $dataProvider,
+	    			'tab' => $tab,
+	    			'begindate' => $begindate,
+	    			'enddate' => $enddate,
+	    			'params' => $get,
+	    	]);
     	}
     }
     

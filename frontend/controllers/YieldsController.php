@@ -157,43 +157,48 @@ class YieldsController extends Controller
     
     public function actionYieldssearch($tab,$begindate,$enddate,$management_area)
     {
-    	$post = Yii::$app->request->post();
-    	
-    	if(isset($post['tab']) and $post['tab'] !== \Yii::$app->controller->id) {
-    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
-    				'tab' => $post['tab'],
-    				'begindate' => strtotime($post['begindate']),
-    				'enddate' => strtotime($post['enddate']),
-    				'management_area' => $post['management_area'],
+    	$get = Yii::$app->request->get();
+//     	var_dump($get);exit;
+    	if(isset($get['tab']) and $get['tab'] !== \Yii::$app->controller->id) {
+    		return $this->redirect ([$get['tab'].'/'.$get['tab'].'search',
+    				'tab' => $get['tab'],
+    				'begindate' => strtotime($get['begindate']),
+    				'enddate' => strtotime($get['enddate']),
+    				'management_area' => $get['management_area'],
     		]);
     	} else {
 	    	$searchModel = new yieldsSearch();
-	    	$post = Yii::$app->request->post();
 	    	$params = Yii::$app->request->queryParams;
-	    	if($post) {
-// 	    		var_dump($post);
-	    		$params['yieldsSearch']['management_area'] = $post['management_area'];
-				$management_area = $post['management_area'];
-				$begindate = strtotime($post['begindate']);
-				$enddate = strtotime($post['enddate']);
+	    	if($get) {
+// 	    		var_dump($get);exit;
+	    		$params['yieldsSearch']['management_area'] = $get['management_area'];
+				$management_area = $get['management_area'];
+				if(is_numeric($get['begindate']))
+					$begindate = $get['begindate'];
+				else 
+					$begindate = strtotime($get['begindate']);
+				if(is_numeric($get['enddate']))
+					$enddate = $get['enddate'];
+				else
+					$enddate = strtotime($get['enddate']);
+				
 	    	} else {
-	    		if(isset($params['yieldsSearch']))
-	    			$management_area = $params['yieldsSearch']['management_area'];
-	    		else {
-	    			$params['yieldsSearch']['management_area'] = $params['management_area'];
-	    			$management_area = $params['management_area'];
-	    		}
+	    		
+	    			$params['yieldsSearch']['management_area'] = $management_area;
+
 	    	}
 	    	$params['begindate'] = $begindate;
 	    	$params['enddate'] = $enddate;
-	    	$dataProvider = $searchModel->searchIndex( $params );
-	    	return $this->render('yieldsSearch',[
+// 	    	var_dump($get['enddate']);exit;
+	    	$dataProvider = $searchModel->searchIndex ( $params );
+// 	    	var_dump(yii::$app->request->get());
+	    	return $this->render('yieldssearch',[
 	    			'searchModel' => $searchModel,
 	    			'dataProvider' => $dataProvider,
 	    			'tab' => $tab,
 	    			'management_area' => $management_area,
-	    			'begindate' => $begindate,
-	    			'enddate' => $enddate,
+	    			'begindate' => $params['begindate'],
+	    			'enddate' => $params['enddate'],
 	    			'params' => $params,
 	    	]);
     	}
