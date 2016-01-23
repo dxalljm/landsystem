@@ -13,8 +13,10 @@ class baseArraySearch
 	public function __construct($data)
 	{
 // 		var_dump($data->getModels());exit;
-		if($data->getModels())
+		if(!empty($data->getModels()))
 			$this->data = $data->getModels();	
+		else 
+			return null;
 		$this->temp = [];
 		$this->where = $this->whereToStr($data->query->where);
 		return $this;
@@ -113,7 +115,7 @@ class baseArraySearch
 	
 	public function sum($field,$num = 1)
 	{
-// 		var_dump($this->echartsWhere);
+// 		var_dump($field);exit;s
 		$sum = 0.0;
 		if($this->temp)
 			$data = $this->temp;
@@ -146,7 +148,8 @@ class baseArraySearch
 					}
 					break;
 				case '*':
-// 					
+// 					var_dump($field);exit;
+					
 					if($this->echartsWhere) {
 						
 						$keys = array_keys($this->echartsWhere);
@@ -162,14 +165,16 @@ class baseArraySearch
 							}
 						}
 					} else {
-						foreach ($data as $value) {
 						
-							if(is_array($field[1])) {
-								$model = 'app\\models\\'.$field[1][0];
-								// 							var_dump($field);exit;
-								$fieldValue = $model::find()->where(['id'=>$value->getAttribute($field[1][1][0])])->one()[$field[1][1][1]];
+						foreach ($data as $value) {
+							if(isset($field[0]) and is_array($field[0])) {
+								$sum += bcmul($value->getAttribute($field[0][0]),$value->getAttribute($field[0][1]));
 							}
-							$sum += bcmul($value->getAttribute($field[0]),$fieldValue);
+							if(isset($field[1]) and is_array($field[1])) {
+								$model = 'app\\models\\'.$field[1][0];;
+								$fieldValue = $model::find()->where(['id'=>$value->getAttribute($field[1][1][0])])->one()[$field[1][1][1]];
+								$sum += bcmul($value->getAttribute($field[0]),$fieldValue);
+							}
 						}
 					}
 					break;
@@ -199,6 +204,7 @@ class baseArraySearch
 					}	
 				}
 			} else {
+				var_dump($field);exit;
 				foreach ($data as $key => $value) {
 					if(is_numeric($value->getAttribute($field))) {
 						$sum += $value->getAttribute($field);
@@ -207,7 +213,10 @@ class baseArraySearch
 				
 			}
 		}
-		return  sprintf("%.2f", $sum/$num);
+		if($sum)
+			return sprintf("%.2f", $sum/$num);
+		else
+			return 0;
 	}
 	public function count($field = NULL,$state = TRUE)
 	{

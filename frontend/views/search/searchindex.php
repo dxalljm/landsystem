@@ -29,9 +29,9 @@ use app\models\Farms;
                 	if(count($managementArea_array) > 1)
                 		array_splice($managementArea_array,0,0,[0=>'全部']);
 					if(isset($_GET[\Yii::$app->controller->id.'Search']['management_area']))
-						$management_area = $_GET[\Yii::$app->controller->id.'Search']['management_area'];
+						$management_area = $params[\Yii::$app->controller->id.'Search']['management_area'];
 					else 
-						$management_area = '';
+						$management_area = $params['management_area'];
 // 					var_dump($management_area);
                 ?>
 <table class="table table-hover">

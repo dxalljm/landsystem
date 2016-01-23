@@ -18,8 +18,8 @@ use frontend\helpers\arraySearch;
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 ?>
-     <?php //var_dump($_GET);?>
-  <?= $this->render('..//search/searchindex',['tab'=>$tab,'begindate'=>$begindate,'enddate'=>$enddate]);?>
+     <?php //echo '_GET';var_dump($_GET);//echo 'get';var_dump($params);?>
+  <?= $this->render('..//search/searchindex',['tab'=>$tab,'begindate'=>$begindate,'enddate'=>$enddate,'params'=>$params]);?>
 <?php 
 	$totalData = clone $dataProvider;
 	$totalData->pagination = ['pagesize'=>0];
@@ -36,7 +36,7 @@ use frontend\helpers\arraySearch;
 						<td><strong>'.$data->count('farmer_id').'个</strong></td>
 						<td></td>
 						<td></td>
-						<td><strong>'.$data->sum('measure').'万亩</strong></td>						
+						<td><strong>'.$data->sum('measure',10000).'万亩</strong></td>						
 						<td></td>
 					</tr>',
         'columns' => Search::getColumns(['management_area','farmname','farmername','address','telephone','measure','operation'],$totalData),

@@ -127,35 +127,31 @@ class SalesController extends Controller
         return $this->redirect(['salesindex']);
     }
 
-    public function actionSalessearch($begindate,$enddate,$management_area)
+    public function actionSalessearch($begindate,$enddate)
     {
-    	$post = Yii::$app->request->post();
-    
-    	if($post) {
-    		if($post['tab'] == 'parmpt')
-    			return $this->redirect(['search/searchindex']);
-    		$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
-    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
-    				'begindate' => $whereDate['begindate'],
-    				'enddate' => $whereDate['enddate'],
-    				'management_area' => $post['managementarea'],
+    	if(isset($_GET['tab']) and $_GET['tab'] !== \Yii::$app->controller->id) {
+    		return $this->redirect ([$_GET['tab'].'/'.$_GET['tab'].'search',
+    				'tab' => $_GET['tab'],
+    				'begindate' => strtotime($_GET['begindate']),
+    				'enddate' => strtotime($_GET['enddate']),
+    				$_GET['tab'].'Search' => ['management_area'=>$_GET['management_area']],
     		]);
-    	} else {
-    		 
-    		$searchModel = new salesSearch();
-    		$params = Yii::$app->request->queryParams;
-    		if($management_area) {
-    			$arrayID = Farms::getFarmArray($management_area);
-    			$params ['salesSearch']['farms_id'] = $arrayID;
-    		}
-    		$params ['salesSearch']['begindate'] = $begindate;
-    		$params ['salesSearch']['enddate'] = $enddate;
-    		$dataProvider = $searchModel->searchIndex ( $params['salesSearch'] );
-    		return $this->render('salessearch',[
-    				'searchModel' => $searchModel,
-    				'dataProvider' => $dataProvider,
-    		]);
-    	}
+    	} 
+    	$searchModel = new salesSearch();
+		if(!is_numeric($_GET['begindate']))
+			 $_GET['begindate'] = strtotime($_GET['begindate']);
+		if(!is_numeric($_GET['enddate']))
+			 $_GET['enddate'] = strtotime($_GET['enddate']);
+
+    	$dataProvider = $searchModel->searchIndex ( $_GET );
+    	return $this->render('salessearch',[
+	    			'searchModel' => $searchModel,
+	    			'dataProvider' => $dataProvider,
+	    			'tab' => $_GET['tab'],
+	    			'begindate' => $_GET['begindate'],
+	    			'enddate' => $_GET['enddate'],
+	    			'params' => $_GET,
+    	]);    	
     }
     /**
      * Finds the Sales model based on its primary key value.

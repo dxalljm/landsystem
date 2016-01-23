@@ -25,7 +25,7 @@ use frontend\helpers\arraySearch;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-body">        
-<?= $this->render('..//search/searchindex',['tab'=>$tab,'management_area'=>$management_area,'begindate'=>$begindate,'enddate'=>$enddate]);?>
+<?= $this->render('..//search/searchindex',['tab'=>$tab,'begindate'=>$begindate,'enddate'=>$enddate,'params'=>$params]);?>
 <?php 
 	$totalData = clone $dataProvider;
 	$totalData->pagination = ['pagesize'=>0];

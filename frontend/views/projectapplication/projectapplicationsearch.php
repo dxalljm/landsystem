@@ -22,7 +22,7 @@ use frontend\helpers\arraySearch;
 ?>
 <div class="lease-index">
 
-<?= $this->render('..//search/searchindex',['tab'=>$tab,'begindate'=>$begindate,'enddate'=>$enddate]);?>
+<?= $this->render('..//search/searchindex',['tab'=>$tab,'begindate'=>$begindate,'enddate'=>$enddate,'params'=>$params]);?>
 <?php 
 	$totalData = clone $dataProvider;
 	$totalData->pagination = ['pagesize'=>0];

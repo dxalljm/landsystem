@@ -200,39 +200,29 @@ class ProjectapplicationController extends Controller
 
     public function actionProjectapplicationsearch($tab,$begindate,$enddate)
     {
-    	$get = Yii::$app->request->get();
-//     	var_dump($get);exit;
-    	if(isset($get['tab']) and $get['tab'] !== \Yii::$app->controller->id) {
-//     		var_dump($get);exit;
-    		return $this->redirect ([$get['tab'].'/'.$get['tab'].'search',
-    				'tab' => $get['tab'],
-    				'begindate' => strtotime($get['begindate']),
-    				'enddate' => strtotime($get['enddate']),
-    				$get['tab'].'Search' => ['management_area'=>$get['management_area']],
-//     				'management_area' => $get['management_area'],
+    	if(isset($_GET['tab']) and $_GET['tab'] !== \Yii::$app->controller->id) {
+    		return $this->redirect ([$_GET['tab'].'/'.$_GET['tab'].'search',
+    				'tab' => $_GET['tab'],
+    				'begindate' => strtotime($_GET['begindate']),
+    				'enddate' => strtotime($_GET['enddate']),
+    				$_GET['tab'].'Search' => ['management_area'=>$_GET['management_area']],
     		]);
-    	} else {
-//     		var_dump($get);exit;
-	    	$searchModel = new projectapplicationSearch();
-			if(is_numeric($get['begindate']))
-				$begindate = $get['begindate'];
-			else 
-				$begindate = strtotime($get['begindate']);
-			if(is_numeric($get['enddate']))
-				$enddate = $get['enddate'];
-			else
-				$enddate = strtotime($get['enddate']);
-			
-	    	$dataProvider = $searchModel->searchIndex ( $get );
-	    	return $this->render('projectapplicationsearch',[
+    	} 
+    	$searchModel = new projectapplicationSearch();
+		if(!is_numeric($_GET['begindate']))
+			 $_GET['begindate'] = strtotime($_GET['begindate']);
+		if(!is_numeric($_GET['enddate']))
+			 $_GET['enddate'] = strtotime($_GET['enddate']);
+
+    	$dataProvider = $searchModel->searchIndex ( $_GET );
+    	return $this->render('projectapplicationsearch',[
 	    			'searchModel' => $searchModel,
 	    			'dataProvider' => $dataProvider,
-	    			'tab' => $tab,
-	    			'begindate' => $begindate,
-	    			'enddate' => $enddate,
-	    			'params' => $get,
-	    	]);
-    	}
+	    			'tab' => $_GET['tab'],
+	    			'begindate' => $_GET['begindate'],
+	    			'enddate' => $_GET['enddate'],
+	    			'params' => $_GET,
+    	]);    	
     }
     
     /**
