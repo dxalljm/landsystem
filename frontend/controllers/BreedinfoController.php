@@ -98,6 +98,7 @@ class BreedinfoController extends Controller
         	$model->management_area = Farms::getFarmsAreaID($farms_id);
         	$model->create_at = time();
         	$model->update_at = $model->create_at;
+        	$model->management_area = Farms::getFarmsAreaID($farms_id);
         	$model->save();
             return $this->redirect(['breedinfoview', 'id' => $model->id]);
         } else {
@@ -141,35 +142,31 @@ class BreedinfoController extends Controller
         return $this->redirect(['breedinfoindex']);
     }
     
-    public function actionBreedinfosearch($begindate,$enddate,$management_area)
+    public function actionBreedinfosearch($tab,$begindate,$enddate)
     {
-    	$post = Yii::$app->request->post();
-    
-    	if($post) {
-    		if($post['tab'] == 'parmpt')
-    			return $this->redirect(['search/searchindex']);
-    		$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
-    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
-    				'begindate' => $whereDate['begindate'],
-    				'enddate' => $whereDate['enddate'],
-    				'management_area' => $post['managementarea'],
+    	if(isset($_GET['tab']) and $_GET['tab'] !== \Yii::$app->controller->id) {
+    		return $this->redirect ([$_GET['tab'].'/'.$_GET['tab'].'search',
+    				'tab' => $_GET['tab'],
+    				'begindate' => strtotime($_GET['begindate']),
+    				'enddate' => strtotime($_GET['enddate']),
+    				$_GET['tab'].'Search' => ['management_area'=>$_GET['management_area']],
     		]);
-    	} else {
-    		 
-    		$searchModel = new breedinfoSearch();
-    		$params = Yii::$app->request->queryParams;
-    		if($management_area) {
-    			$arrayID = Farms::getFarmArray($management_area);
-    			$params ['breedinfoSearch']['farms_id'] = $arrayID;
-    		}
-    		$params ['breedinfoSearch']['begindate'] = $begindate;
-    		$params ['breedinfoSearch']['enddate'] = $enddate;
-    		$dataProvider = $searchModel->search ( $params );
-    		return $this->render('breedinfosearch',[
-    				'searchModel' => $searchModel,
-    				'dataProvider' => $dataProvider,
-    		]);
-    	}
+    	} 
+    	$searchModel = new breedinfoSearch();
+		if(!is_numeric($_GET['begindate']))
+			 $_GET['begindate'] = strtotime($_GET['begindate']);
+		if(!is_numeric($_GET['enddate']))
+			 $_GET['enddate'] = strtotime($_GET['enddate']);
+
+    	$dataProvider = $searchModel->searchIndex ( $_GET );
+    	return $this->render('breedinfosearch',[
+	    			'searchModel' => $searchModel,
+	    			'dataProvider' => $dataProvider,
+	    			'tab' => $_GET['tab'],
+	    			'begindate' => $_GET['begindate'],
+	    			'enddate' => $_GET['enddate'],
+	    			'params' => $_GET,
+    	]);    	
     }
 
     /**

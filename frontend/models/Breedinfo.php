@@ -33,7 +33,7 @@ class Breedinfo extends \yii\db\ActiveRecord
     public function rules() 
     { 
         return [
-            [['breed_id', 'number', 'breedtype_id', 'create_at', 'update_at', 'management_area'], 'integer'],
+            [['breed_id', 'farms_id','number', 'breedtype_id', 'create_at', 'update_at', 'management_area'], 'integer'],
             [['basicinvestment', 'housingarea'], 'number']
         ]; 
     } 
@@ -46,6 +46,7 @@ class Breedinfo extends \yii\db\ActiveRecord
         return [ 
             'id' => 'ID',
             'breed_id' => '养殖户ID',
+        	'farms_id' => '农场ID',
             'number' => '数量',
             'basicinvestment' => '基础投资',
             'housingarea' => '圈舍面积',

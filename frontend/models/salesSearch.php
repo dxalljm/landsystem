@@ -19,7 +19,7 @@ class salesSearch extends Sales
     public function rules()
     {
         return [
-            [['id', 'planting_id','farms_id','farmer_id','create_at','update_at','management_area'], 'integer'],
+            [['id', 'planting_id','farms_id','plant_id','farmer_id','create_at','update_at','management_area'], 'integer'],
             [['whereabouts'], 'safe'],
             [['volume', 'price'], 'number'],
         ];
@@ -60,6 +60,7 @@ class salesSearch extends Sales
         $query->andFilterWhere([
             'id' => $this->id,
             'planting_id' => $this->planting_id,
+        	'plant_id' => $this->plant_id,
         	'farms_id' => $this->farms_id,
             'volume' => $this->volume,
             'price' => $this->price,
@@ -128,6 +129,7 @@ class salesSearch extends Sales
     	$query->andFilterWhere([
     			'id' => $this->id,
     			'planting_id' => $this->planting_id,
+    			'plant_id' => $this->plant_id,
     			'farms_id' => $farmid,
     			'volume' => $this->volume,
     			'price' => $this->price,

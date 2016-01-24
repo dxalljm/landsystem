@@ -197,14 +197,23 @@ class baseArraySearch
 			if($this->echartsWhere) {
 				$keys = array_keys($this->echartsWhere);
 				$values = array_values($this->echartsWhere);
-// 				var_dump($values);
-				foreach ($data as $value) {
-					if($value->getAttribute($keys[0]) == $values[0] and $value->getAttribute($keys[1]) == $values[1]) {
-						$sum += $value->getAttribute($field);
-					}	
+				if(isset($this->echartsWhere['management_area'])) {
+					foreach ($this->echartsWhere['management_area'] as $areaid) {
+						foreach ($data as $value) {
+							if($value->getAttribute($keys[0]) == $areaid and $value->getAttribute($keys[1]) == $values[1]) {
+								$sum += $value->getAttribute($field);
+							}	
+						}
+					}
+				} else {
+					foreach ($data as $value) {
+						if($value->getAttribute($keys[0]) == $values[0] and $value->getAttribute($keys[1]) == $values[1]) {
+							$sum += $value->getAttribute($field);
+						}
+					}
 				}
 			} else {
-				var_dump($field);exit;
+// 				var_dump($field);exit;
 				foreach ($data as $key => $value) {
 					if(is_numeric($value->getAttribute($field))) {
 						$sum += $value->getAttribute($field);
@@ -248,8 +257,10 @@ class baseArraySearch
 				foreach ($farm as $k => $v) {
 					$olddata[] = ['name'=>$v['farmername'],'cardid'=>$v['cardid']];
 				}
-// 				var_dump($farmid);exit;
-				$newdata = $this->unique_arr($olddata);
+				if($this->arrayLevel($olddata) == 2) {
+					$newdata = $this->unique_arr($olddata);
+				} else 
+					return 0;
 				return count($newdata);
 			} else {
 				
@@ -317,7 +328,7 @@ class baseArraySearch
 		return $this->namelist;
 	}
 	
-	public function getEchartsData($field,$num = 1)
+	public function getEchartsData($field,$num = 1,$function = 'showAllShadow')
 	{
 		if($this->temp)
 			$data = $this->temp;
@@ -325,25 +336,80 @@ class baseArraySearch
 			$data = $this->data;
 		
 // 		var_dump($this->namelist);
+		
 		if(isset($this->where[0]['management_area'])) 
 			$management_area = [$this->where[0]['management_area']];
 		else
 			$management_area = [1,2,3,4,5,6,7];
 		foreach ($management_area as $areaid) {
-			$sum = [];
-			foreach ($this->namelist as $key => $list) {
-// 				var_dump($key);exit;
-				$sum[] = $this->where(['management_area'=>$areaid,$this->field=>$key])->sum($field,$num);
-// 				var_dump($sum);
+			if($function == 'showAllShadow') {
+				$sum = [];
+				foreach ($this->namelist as $key => $list) {
+	// 				var_dump($key);exit;
+					$sum[] = $this->where(['management_area'=>$areaid,$this->field=>$key])->sum($field,$num);
+	// 				var_dump($sum);
+				}
+				$result[] = [
+						'name' => str_ireplace('管理区', '', ManagementArea::find()->where(['id'=>$areaid])->one()['areaname']),
+						'type' => 'bar',
+						'stack' => $areaid,
+						'data' => $sum
+				];
 			}
-		
-			$result[] = [
-					'name' => str_ireplace('管理区', '', ManagementArea::find()->where(['id'=>$areaid])->one()['areaname']),
-					'type' => 'bar',
-					'stack' => $areaid,
-					'data' => $sum
-			];
 		}
+// 		var_dump($management_area);
+			if($function == 'showShadowThermometer') {
+				$sum = [];
+				foreach ($this->namelist as $key => $list) {
+					$sum0 = (float)$this->where(['management_area'=>$management_area,$this->field=>$key])->sum($field[0],$num);
+					$sum1 = (float)$this->where(['management_area'=>$management_area,$this->field=>$key])->sum($field[1],$num);
+					$sum[$field[0]][] = $sum0;
+					$sum[$field[1]][] = $sum1 - $sum0;
+				}
+
+				$result = [[
+					'name' => '免疫数量',
+					'type' => 'bar',
+					'stack' => 'sum',
+					'barCategoryGap'=>'50%',
+					'itemStyle'=>[
+						'normal'=> [
+							'color'=> 'tomato',
+							'barBorderColor'=> 'tomato',
+							'barBorderWidth'=> 3,
+							'barBorderRadius'=>0,
+							'label'=>[
+								'show'=> true, 
+								'position'=> 'insideTop'
+							]
+						]
+					],
+					'data'=>$sum[$field[0]],
+				],
+				[
+					'name' => '应免数量',
+					'type' => 'bar',
+					'stack' => 'sum',
+					'itemStyle'=> [
+						'normal'=> [
+							'color'=>'#fff',
+							'barBorderColor'=> 'tomato',
+							'barBorderWidth'=> 3,
+							'barBorderRadius'=>0,
+							'label' => [
+								'show'=> true,
+								'position'=> 'top',
+		// 						'formatter'=> '{c}',
+								'textStyle'=>[
+									'color'=> 'tomato'
+								]
+							]
+						]
+					],
+					'data'=>$sum[$field[1]],
+				]];
+			}
+// 		}
 // 		var_dump($result);
 		return json_encode($result);
 	}

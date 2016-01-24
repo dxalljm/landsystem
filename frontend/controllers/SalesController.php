@@ -12,6 +12,7 @@ use app\models\Plantingstructure;
 use app\models\Yields;
 use app\models\Theyear;
 use app\models\Farms;
+use app\models\Plant;
 
 /**
  * SalesController implements the CRUD actions for Sales model.
@@ -73,12 +74,13 @@ class SalesController extends Controller
     {
     	
         $model = new Sales();
-        $planting = Plantingstructure::find()->where(['farms_id'=>$farms_id])->all();
+//         $planting = Plantingstructure::find()->where(['farms_id'=>$farms_id])->all();
 		$volume = Sales::getVolume($planting_id);
         if ($model->load(Yii::$app->request->post())) {
         	$model->create_at = time();
         	$model->update_at = $model->create_at;
         	$model->management_area = Farms::getFarmsAreaID($farms_id);
+        	$model->plant_id = Plantingstructure::find()->where(['id'=>$planting_id])->one()['plant_id'];
         	$model->save();
             return $this->redirect(['salesindex', 'farms_id' => $farms_id,'plantings'=>$planting]);
         } else {

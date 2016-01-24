@@ -110,12 +110,7 @@ class Collection extends \yii\db\ActiveRecord {
 			return '未缴纳';
 	}
 	public static function getCollection($userid) {
-// 		$cacheKey = 'collection-hcharts';
-// 		$result = Yii::$app->cache->get ( $cacheKey );
-// 		$result =false;
-// 		if (! empty ( $result )) {
-// 			return $result;
-// 		}
+
 		$i = 0;
 		$amounts_receivable = [];
 		$real_income_amount = [];

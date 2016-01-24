@@ -187,6 +187,32 @@ class FirepreventionController extends Controller
 //         return $this->redirect(['firepreventionindex']);
 //     }
 
+    public function actionFirepreventionSearch($begindate,$enddate)
+    {
+    	if(isset($_GET['tab']) and $_GET['tab'] !== \Yii::$app->controller->id) {
+    		return $this->redirect ([$_GET['tab'].'/'.$_GET['tab'].'search',
+    				'tab' => $_GET['tab'],
+    				'begindate' => strtotime($_GET['begindate']),
+    				'enddate' => strtotime($_GET['enddate']),
+    				$_GET['tab'].'Search' => ['management_area'=>$_GET['management_area']],
+    		]);
+    	}
+    	$searchModel = new firepreventionSearch();
+    	if(!is_numeric($_GET['begindate']))
+    		$_GET['begindate'] = strtotime($_GET['begindate']);
+    	if(!is_numeric($_GET['enddate']))
+    		$_GET['enddate'] = strtotime($_GET['enddate']);
+    
+    	$dataProvider = $searchModel->searchIndex ( $_GET );
+    	return $this->render('firepreventionsearch',[
+    			'searchModel' => $searchModel,
+    			'dataProvider' => $dataProvider,
+    			'tab' => $_GET['tab'],
+    			'begindate' => $_GET['begindate'],
+    			'enddate' => $_GET['enddate'],
+    			'params' => $_GET,
+    	]);
+    }
     /**
      * Finds the Fireprevention model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

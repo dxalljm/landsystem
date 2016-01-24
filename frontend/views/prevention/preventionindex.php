@@ -10,6 +10,7 @@ use app\models\Breedtype;
 use frontend\helpers\MoneyFormat;
 use yii\helpers\Url;
 use app\models\Breedinfo;
+use app\models\Prevention;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\preventionSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -89,7 +90,8 @@ $this->params['breadcrumbs'][] = $this->title;
             					'aria-label' => Yii::t('yii', 'prevention'),
             					'data-pjax' => '0',
             			];
-            		
+            		$row = Prevention::find()->where(['breedinfo_id'=>$model->id])->count();
+            		if(!$row)
             			return Html::a('防疫', $url, ['class'=>'btn btn-success']);
             		},
                                 

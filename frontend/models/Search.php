@@ -223,6 +223,7 @@ class Search extends \yii\db\ActiveRecord {
 					case 'breed_id' :
 						$columns [] = [ 
 								'label' => '农场名称',
+								'attribute' => 'farms_id',
 								'value' => function ($model) {
 									$breed = Breed::find ()->where ( [ 
 											'id' => $model->breed_id 
@@ -234,6 +235,7 @@ class Search extends \yii\db\ActiveRecord {
 						];
 						$columns [] = [ 
 								'label' => '法人姓名',
+								'attribute' => 'farmer_id',
 								'value' => function ($model) {
 									$breed = Breed::find ()->where ( [ 
 											'id' => $model->breed_id 
@@ -245,6 +247,7 @@ class Search extends \yii\db\ActiveRecord {
 						];
 						$columns [] = [ 
 								'label' => '养殖场名称',
+								'attribute' => 'breedname',
 								'value' => function ($model) {
 									$breed = Breed::find ()->where ( [ 
 											'id' => $model->breed_id 
@@ -254,6 +257,7 @@ class Search extends \yii\db\ActiveRecord {
 						];
 						$columns [] = [ 
 								'label' => '养殖场位置',
+								'attribute' => 'breedaddress',
 								'value' => function ($model) {
 									$breed = Breed::find ()->where ( [ 
 											'id' => $model->breed_id 
@@ -263,12 +267,14 @@ class Search extends \yii\db\ActiveRecord {
 						];
 						$columns [] = [ 
 								'label' => '示范户',
+								'attribute' => 'is_demonstration',
 								'value' => function ($model) {
 									$breed = Breed::find ()->where ( [ 
 											'id' => $model->breed_id 
 									] )->one ();
 									return $breed->is_demonstration ? '是' : '否';
-								} 
+								} ,
+								'filter' => ['否','是'],
 						];
 						break;
 					case 'basicinvestment' :
@@ -292,9 +298,9 @@ class Search extends \yii\db\ActiveRecord {
 								'attribute' => $value,
 								'value'=> function($model) {
 // 				            	var_dump($model);exit;
-				            		return Breedtype::getTypenameOne($model->breedtype_id);
+				            		return self::$totalData->getName('Breedtype', 'typename', 'breedtype_id')->getOne($model->breedtype_id);
 				           	 	},
-				            	'filter' => Breedtype::getAllTypename(), 
+				            	'filter' => self::$totalData->getName('Breedtype', 'typename', 'breedtype_id')->getList(),
 								
 						];
 						break;
@@ -313,6 +319,7 @@ class Search extends \yii\db\ActiveRecord {
 					case 'breedinfo_id' :
 						$columns [] = [ 
 								'label' => '养殖场名称',
+								'attribute' => $value,
 								'value' => function ($model) {
 									$breedinfo = Breedinfo::find ()->where ( [ 
 											'id' => $model->breedinfo_id 
@@ -321,18 +328,6 @@ class Search extends \yii\db\ActiveRecord {
 											'id' => $breedinfo->breed_id 
 									] )->one ();
 									return $breed->breedname;
-								} 
-						];
-						$columns [] = [ 
-								'label' => '种类',
-								'value' => function ($model) {
-									$breedinfo = Breedinfo::find ()->where ( [ 
-											'id' => $model->breedinfo_id 
-									] )->one ();
-									$breedtype = Breedtype::find ()->where ( [ 
-											'id' => $breedinfo->breedtype_id 
-									] )->one ();
-									return $breedtype->typename;
 								} 
 						];
 						break;
@@ -448,6 +443,16 @@ class Search extends \yii\db\ActiveRecord {
 								'filter' => self::$totalData->getName('Plant', 'cropname', 'plant_id')->getList(),
 								];
 						break;
+					case 'isepidemic' :
+							$columns [] = [
+							'attribute' => $value,
+							'value' => function($model) {
+							// 								var_dump($params);exit;
+							return $model->isepidemic;
+							},
+							'filter' => ['无'=>'无','有'=>'有'],
+							];
+							break;
 					case 'firewcd' :
 						$columns [] = [
         				'label' => '完成情况',

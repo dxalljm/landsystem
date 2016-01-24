@@ -12,6 +12,8 @@ use frontend\models\breedinfoSearch;
 use app\models\Breed;
 use app\models\Theyear;
 use app\models\Farms;
+use app\models\Breedtype;
+use app\models\Breedinfo;
 /**
  * PreventionController implements the CRUD actions for Prevention model.
  */
@@ -83,13 +85,15 @@ class PreventionController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionPreventioncreate($farms_id)
+    public function actionPreventioncreate($id,$farms_id)
     {
         $model = new Prevention();
 
         if ($model->load(Yii::$app->request->post())) {
         	$model->create_at = time();
         	$model->update_at = $model->create_at;
+        	$model->management_area = Farms::getFarmsAreaID($farms_id);
+        	$model->breedtype_id = Breedinfo::find()->where(['id'=>$id])->one()['breedtype_id'];
         	$model->save();
             return $this->redirect(['preventionindex', 'farms_id'=>$farms_id]);
         } else {
@@ -131,35 +135,31 @@ class PreventionController extends Controller
         return $this->redirect(['preventionindex']);
     }
 
-    public function actionPreventionsearch($begindate,$enddate,$management_area)
+    public function actionPreventionsearch($begindate,$enddate)
     {
-    	$post = Yii::$app->request->post();
-    
-    	if($post) {
-    		if($post['tab'] == 'parmpt')
-    			return $this->redirect(['search/searchindex']);
-    		$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
-    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
-    				'begindate' => $whereDate['begindate'],
-    				'enddate' => $whereDate['enddate'],
-    				'management_area' => $post['managementarea'],
+    	if(isset($_GET['tab']) and $_GET['tab'] !== \Yii::$app->controller->id) {
+    		return $this->redirect ([$_GET['tab'].'/'.$_GET['tab'].'search',
+    				'tab' => $_GET['tab'],
+    				'begindate' => strtotime($_GET['begindate']),
+    				'enddate' => strtotime($_GET['enddate']),
+    				$_GET['tab'].'Search' => ['management_area'=>$_GET['management_area']],
     		]);
-    	} else {
-    		 
-    		$searchModel = new preventionSearch();
-    		$params = Yii::$app->request->queryParams;
-    		if($management_area) {
-    			$arrayID = Farms::getFarmArray($management_area);
-    			$params ['preventionSearch']['farms_id'] = $arrayID;
-    		}
-    		$params ['preventionSearch']['begindate'] = $begindate;
-    		$params ['preventionSearch']['enddate'] = $enddate;
-    		$dataProvider = $searchModel->searchIndex ( $params['preventionSearch'] );
-    		return $this->render('preventionsearch',[
-    				'searchModel' => $searchModel,
-    				'dataProvider' => $dataProvider,
-    		]);
-    	}
+    	} 
+    	$searchModel = new preventionSearch();
+		if(!is_numeric($_GET['begindate']))
+			 $_GET['begindate'] = strtotime($_GET['begindate']);
+		if(!is_numeric($_GET['enddate']))
+			 $_GET['enddate'] = strtotime($_GET['enddate']);
+
+    	$dataProvider = $searchModel->searchIndex ( $_GET );
+    	return $this->render('preventionsearch',[
+	    			'searchModel' => $searchModel,
+	    			'dataProvider' => $dataProvider,
+	    			'tab' => $_GET['tab'],
+	    			'begindate' => $_GET['begindate'],
+	    			'enddate' => $_GET['enddate'],
+	    			'params' => $_GET,
+    	]);    	
     }
     
     /**
