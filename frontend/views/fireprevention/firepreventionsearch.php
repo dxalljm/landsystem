@@ -13,6 +13,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 use yii\helpers\Url;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Search;
+use frontend\helpers\arraySearch;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -29,7 +30,7 @@ use app\models\Search;
 	$totalData = clone $dataProvider;
 	$totalData->pagination = ['pagesize'=>0];
 	$data = arraySearch::find($totalData)->search();
-	$preventionrate = sprintf("%.2f", $data->sum('preventionnumber')/$data->sum('breedinfonumber'))*100;
+	//'firecontract','safecontract','environmental_agreement','firetools','mechanical_fire_cover','chimney_fire_cover','isolation_belt','propagandist','fire_administrator','fieldpermit','propaganda_firecontract','employee_firecontract'
 ?>
 
     <div class="nav-tabs-custom">
@@ -42,19 +43,19 @@ use app\models\Search;
                 <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'total' => '<tr>
-	        <td></td>
-	        <td align="center"><strong>合计</strong></td>
-	        <td><strong>'.$data->count('farms_id').'户</strong></td>
-	        <td><strong>'.$data->count('farmer_id').'个</strong></td>
-	        <td></td>
-			<td><strong>'.$data->count('breedtype_id').'种</strong></td>
-			<td><strong>'.$data->count('id').'个</strong></td>
-	        <td><strong>'.$data->sum('preventionnumber').'</strong></td>
-	        <td><strong>'.$data->sum('breedinfonumber').'</strong></td>
-			<td><strong>'.$preventionrate.'%</strong></td>
-	        </tr>',
-        'columns' => Search::getColumns(['management_area','farms_id','breedinfo_id','isepidemic','preventionnumber','breedinfonumber','preventionrate']),
+//         'total' => '<tr>
+// 	        <td></td>
+// 	        <td align="center"><strong>合计</strong></td>
+// 	        <td><strong>'.$data->count('farms_id').'户</strong></td>
+// 	        <td><strong>'.$data->count('farmer_id').'个</strong></td>
+// 	        <td></td>
+// 			<td><strong>'.$data->count('breedtype_id').'种</strong></td>
+// 			<td><strong>'.$data->count('id').'个</strong></td>
+// 	        <td><strong>'.$data->sum('preventionnumber').'</strong></td>
+// 	        <td><strong>'.$data->sum('breedinfonumber').'</strong></td>
+// 			<td><strong>'.$preventionrate.'%</strong></td>
+// 	        </tr>',
+        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','percent','percentvalue'],$totalData),
     ]); ?>
               </div>
               <!-- /.tab-pane -->

@@ -58,7 +58,7 @@ class Fireprevention extends \yii\db\ActiveRecord
 			'id' => 'ID',
             'farms_id' => '农场ID',
         	'management_area' => '管理区',
-            'firecontract' => '文火合同',
+            'firecontract' => '防火合同',
             'safecontract' => '安全生产合同',
             'environmental_agreement' => '环境保护协议',
             'firetools' => '扑火工具',
@@ -69,7 +69,7 @@ class Fireprevention extends \yii\db\ActiveRecord
             'fire_administrator' => '一盒火管理员',
             'cooker' => '液化气灶具',
             'fieldpermit' => '野外作业许可证',
-            'propaganda_firecontract' => '防火合同',
+            'propaganda_firecontract' => '消防宣传合同',
             'leaflets' => '防火宣传单',
             'employee_firecontract' => '雇工防火合同',
             'rectification_record' => '防火检查整改记录',
@@ -81,6 +81,38 @@ class Fireprevention extends \yii\db\ActiveRecord
         ];
     }
     
+    public static function setPercent()
+    {
+    	return [
+	    	'firecontract' => 30,
+	    	'safecontract' => 5,
+	    	'environmental_agreement' => 1,
+	    	'firetools' => 5,
+	    	'mechanical_fire_cover' => 1,
+	    	'chimney_fire_cover' => 1,
+	    	'isolation_belt' => 1,
+	    	'propagandist' => 1,
+	    	'fire_administrator' => 10,
+	    	'cooker' => 1,
+	    	'fieldpermit' => 3,
+	    	'propaganda_firecontract' => 5,
+	    	'leaflets' => 2,
+	    	'employee_firecontract' => 20,
+	    	'rectification_record' => 2,
+	    	'equipmentpic' => 5,
+	    	'peoplepic' => 5,
+	    	'facilitiespic' => 2,
+    	];
+    }
+    public static function getPercent($model) {
+    	$percent = 0;
+    	foreach (self::setPercent() as $key => $value) {
+    		if($model->$key) {
+    			$percent += $value; 
+    		}
+    	}
+    	return $percent.'%';
+    }
     public static function getFinir($id)
     {
     	$yes = 0;

@@ -139,7 +139,7 @@ class FirepreventionController extends Controller
         	$fireemployeeModel->employee_id = $ArrEmployeesFire['employee_id'][$i];
         	$fireemployeeModel->is_smoking = $ArrEmployeesFire['is_smoking'][$i];
         	$fireemployeeModel->is_retarded = $ArrEmployeesFire['is_retarded'][$i];
-        	$fireemployeeModel->management_area = Farms::getFarmsAreaID($farms_id);
+//         	$fireemployeeModel->management_area = Farms::getFarmsAreaID($farms_id);
         	$fireemployeeModel->save();
         	$new = $fireemployeeModel->attributes;
         	Logs::writeLog($message,$fireemployeeModel->id,$old,$new);
@@ -187,7 +187,7 @@ class FirepreventionController extends Controller
 //         return $this->redirect(['firepreventionindex']);
 //     }
 
-    public function actionFirepreventionSearch($begindate,$enddate)
+    public function actionFirepreventionsearch($begindate,$enddate)
     {
     	if(isset($_GET['tab']) and $_GET['tab'] !== \Yii::$app->controller->id) {
     		return $this->redirect ([$_GET['tab'].'/'.$_GET['tab'].'search',

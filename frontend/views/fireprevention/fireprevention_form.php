@@ -73,7 +73,7 @@ use app\models\Farms;
 <tr>
 
 <td width=8% align='center'>野外作业许可证</td>
-<td align='center'>防火合同</td>
+<td align='center'>消防宣传合同</td>
 <td align='center'>防火宣传单</td>
 <td align='center'>雇工防火合同</td>
 <td align='center'>防火检查整改记录</td>

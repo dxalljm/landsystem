@@ -7,7 +7,8 @@ use app\models\ManagementArea;
 use app\models\Farms;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
-
+use frontend\helpers\arraySearch;
+use app\models\Search;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\farmsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -24,71 +25,29 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-body">
-
-    <?= GridView::widget([
+<?php 
+	$totalData = clone $dataProvider;
+	$totalData->pagination = ['pagesize'=>0];
+// 	var_dump($totalData->getModels());exit;
+	$data = arraySearch::find($totalData)->search();
+?>
+ <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'total' => '<tr>
 						<td></td>
 						<td align="center"><strong>合计</strong></td>
-						<td><strong>'.Farms::getRows($params).'户</strong></td>
-						<td><strong>'.Farms::getFarmerrows($params).'个</strong></td>
+						<td><strong>'.$data->count('id').'户</strong></td>
+						<td><strong>'.$data->count('farmer_id').'个</strong></td>
 						<td></td>
-						<td><strong>'.Farms::getFarmarea($params).'万亩</strong></td>
 						<td></td>
+						<td><strong>'.$data->sum('measure',10000).'万亩</strong></td>						
 						<td></td>
 					</tr>',
-//         'layout' => "{summary}\n wubaiqign - test 合计,合计合计..... {items}\n {pager}",
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+        'columns' => Search::getColumns(['management_area','farmname','farmername','address','telephone','measure','operation'],$totalData),
 
-            //'id',
-            [
-            	'label'=>'管理区',
-            	'attribute'=>'management_area',
-            	'value'=> function($model) {
-            		return ManagementArea::getAreanameOne($model->management_area);
-           	 	},
-            	'filter' => ManagementArea::getAreaname(),     //此处我们可以将筛选项组合成key-value形式
-            ],
-            [
-            	'attribute' => 'farmname',
-
-            ],
-            'farmername',
-//             [
-//             	'label' => '管理区',
-//               	'attribute' => 'areaname',      						
-//             	'value' => 'managementarea.areaname',
-//             ],
-			//'management_area',
-            'telephone',
-            'measure',
-            'contractnumber',
-
-//             ['class' => 'yii\grid\ActionColumn'],
-            [
-	            'label'=>'操作',
-	            'format'=>'raw',
-	            //'class' => 'btn btn-primary btn-lg',
-	            'value' => function($model,$key){
-	            	$url = Url::to(['farms/farmsfile','farms_id'=>$model->id]);
-	            	$option = '农场档案';
-	            	$title = '';
-	            	if($model->measure > Farms::getNowContractnumberArea($model->id)) {
-	            		$option = '<i class="fa fa-check text-red"></i>';
-	            		$title = '地块面积大于合同面积';
-	            		
-	            	}
-	            	return Html::a($option,$url, [
-	            			'id' => 'farmerland',
-	            			'title' => $title,
-	            			'class' => 'btn btn-primary btn-xs',
-	            	]);
-	            }
-            ],
-        ],
     ]); ?>
+    
 <?php \yii\bootstrap\Modal::begin([
     'id' => 'farmercontract-modal',
 	'size'=>'modal-lg',

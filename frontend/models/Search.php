@@ -465,7 +465,25 @@ class Search extends \yii\db\ActiveRecord {
 	        			}
 	        			];
 						break;
-						
+					case 'percent' :
+						$columns[] = [
+							'label' => '完成进度',
+							'value' => function ($model) {
+								$html = '<div class="progress progress-xs progress-striped active">';
+								$html .= '<div class="progress-bar progress-bar-success" style="width: '.Fireprevention::getPercent($model).'"></div>';
+								$html .= '</div>';
+								echo $html;
+						}
+						];
+						break;
+					case 'percentvalue' :
+						$columns[] = [
+							'label' => '完成度',
+							'value' => function ($model) {
+								return '<span class="badge bg-green">'.Fireprevention::getPercent($model).'</span>';
+						}
+						];
+						break;
 					default :
 						$columns [] = $value;
 				}
