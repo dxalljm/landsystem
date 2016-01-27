@@ -13,6 +13,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 use yii\helpers\Url;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Search;
+use frontend\helpers\arraySearch;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -24,14 +25,47 @@ use app\models\Search;
             <div class="box">
                 <div class="box-body">
 
-              
-  <?= $this->render('..//search/searchindex.php');?>
-
- <?= GridView::widget([
+<?= $this->render('..//search/searchindex',['tab'=>$tab,'begindate'=>$begindate,'enddate'=>$enddate,'params'=>$params]);?>
+<?php 
+	$totalData = clone $dataProvider;
+	$totalData->pagination = ['pagesize'=>0];
+	$data = arraySearch::find($totalData)->search();
+// 	var_dump($tab);exit;
+?>
+<div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#activity" data-toggle="tab" aria-expanded="true">数据表</a></li>
+              <li class=""><a href="#timeline" data-toggle="tab" aria-expanded="false">图表</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="activity">
+                <?= GridView::widget([
         'dataProvider' => $dataProvider,
-//         'filterModel' => $searchModel,
-        'columns' => Search::getColumns(['management_area','farms_id','mortgagearea','mortgagebank','mortgagemoney','begindate','enddate']),
+        'filterModel' => $searchModel,
+        'total' => '<tr>
+			        <td></td>
+			        <td align="center"><strong>合计</strong></td>
+			        <td><strong>'.$data->count('farms_id').'户</strong></td>
+			        <td><strong>'.$data->count('farmer_id').'个</strong></td>
+			        <td><strong>'.$data->sum('mortgagearea',10000).'万元</strong></td>			        
+					<td><strong>'.$data->count('mortgagebank').'个</strong></td>
+					<td><strong>'.$data->sum('mortgagemoney',10000).'万元</strong></td>
+			        </tr>',
+        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','mortgagearea','mortgagebank','mortgagemoney','begindate','enddate'],$totalData),
     ]); ?>
+              </div>
+              <!-- /.tab-pane -->
+              <div class="tab-pane" id="timeline">
+              <?php var_dump($data->getName('self', 'mortgagebank', 'mortgagebank')->getEchartsData('mortgagemoney'));?>
+                <div id="loan" style="width: 900px; height: 600px; margin: 0 auto"; ></div>
+				<script type="text/javascript">
+				showAllShadow('loan',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Loan', 'mortgagebank', 'mortgagebank')->typenameList())?>,<?= $data->getName('Loan', 'mortgagebank', 'mortgagebank')->getEchartsData('mortgagemoney',10000);?>,'万元');
+				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
+		</script>
+
+            </div>
+          </div>        
+
                 </div>
             </div>
         </div>

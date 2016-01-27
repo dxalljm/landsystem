@@ -115,7 +115,7 @@ class baseArraySearch
 	
 	public function sum($field,$num = 1)
 	{
-// 		var_dump($field);exit;s
+// 		var_dump($this->echartsWhere);exit;
 		$sum = 0.0;
 		if($this->temp)
 			$data = $this->temp;
@@ -193,11 +193,11 @@ class baseArraySearch
 // 			return sprintf("%.2f", $sum/$num);
 		} else {
 			$strArr = '';
-// 			var_dump($this->echartsWhere);
+// 			var_dump($this->echartsWhere);exit;
 			if($this->echartsWhere) {
 				$keys = array_keys($this->echartsWhere);
 				$values = array_values($this->echartsWhere);
-				if(isset($this->echartsWhere['management_area'])) {
+				if(isset($this->echartsWhere['management_area']) and is_array($this->echartsWhere['management_area'])) {
 					foreach ($this->echartsWhere['management_area'] as $areaid) {
 						foreach ($data as $value) {
 							if($value->getAttribute($keys[0]) == $areaid and $value->getAttribute($keys[1]) == $values[1]) {
@@ -225,7 +225,7 @@ class baseArraySearch
 		if($sum)
 			return sprintf("%.2f", $sum/$num);
 		else
-			return 0;
+			return 0.0;
 	}
 	public function count($field = NULL,$state = TRUE)
 	{
@@ -284,7 +284,9 @@ class baseArraySearch
 	public function getName($model,$getfield,$field)
 	{
 		$this->field = $field;
-		$modelclass = 'app\\models\\'.$model;
+		if($model !== 'self')
+			$modelclass = 'app\\models\\'.$model;
+
 		$data = [];
 		$result = [];
 		$newdata = [];
@@ -292,12 +294,18 @@ class baseArraySearch
 			if($value->getAttribute($field) !== '' and $value->getAttribute($field) !== 0)
 			$data[] = $value->getAttribute($field);
 		}
-
 		$newdata = array_unique($data);
+		
 		if($newdata) {
-			$nameArray = $modelclass::find()->where(['id'=>$newdata])->all();
-			foreach ($nameArray as $value) {
-				$result[$value['id']] = $value[$getfield];
+			if($model !== 'self') {
+				$nameArray = $modelclass::find()->where(['id'=>$newdata])->all();
+				foreach ($nameArray as $value) {
+					$result[$value['id']] = $value[$getfield];
+				}
+			} else {
+				foreach ($newdata as $value) {
+					$result[$value] = $value;
+				}
 			}
 		}
 		$this->namelist = $result;
@@ -345,9 +353,9 @@ class baseArraySearch
 			if($function == 'showAllShadow') {
 				$sum = [];
 				foreach ($this->namelist as $key => $list) {
-	// 				var_dump($key);exit;
-					$sum[] = $this->where(['management_area'=>$areaid,$this->field=>$key])->sum($field,$num);
-	// 				var_dump($sum);
+// 					var_dump($areaid);exit;
+					$sum[] = (float)$this->where(['management_area'=>$areaid,$this->field=>$key])->sum($field,$num);
+// 					var_dump($sum);exit;
 				}
 				$result[] = [
 						'name' => str_ireplace('管理区', '', ManagementArea::find()->where(['id'=>$areaid])->one()['areaname']),

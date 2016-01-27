@@ -77,6 +77,7 @@ class Search extends \yii\db\ActiveRecord {
 						$columns [] = [
 				            	'label'=>'管理区',
 				            	'attribute'=>$value,
+				            	'headerOptions' => ['width' => '200'],
 				            	'value'=> function($model) {
 // 				            	var_dump($model);exit;
 				            		return ManagementArea::getAreanameOne($model->management_area);
@@ -339,6 +340,15 @@ class Search extends \yii\db\ActiveRecord {
 								} 
 						];
 						break;
+					case 'mortgagebank' :
+						$columns[] = [
+								'attribute' => $value,
+								'value' => function ($model) {
+									return Loan::getOneBank($model->mortgagebank);
+								},
+								'filter' => Loan::getBankName(),
+						];
+						break;
 					case 'mortgagemoney' :
 						$columns [] = [ 
 								'attribute' => $value,
@@ -453,36 +463,41 @@ class Search extends \yii\db\ActiveRecord {
 							'filter' => ['无'=>'无','有'=>'有'],
 							];
 							break;
-					case 'firewcd' :
-						$columns [] = [
-        				'label' => '完成情况',
-        				'value' => function($model) {
-		        				$html = '<div class="progress progress-xs progress-striped active">';
-		        				$html.= '<div class="progress-bar progress-bar-success" style="width: '.Fireprevention::getFinir($model->id).'%'.'"></div>';
-		        				$html.='</div><span class="badge bg-green">'.Fireprevention::getFinir($model->id).'%'.'</span>';
-        						$str = '<span class="badge bg-green">'.Fireprevention::getFinir($model->id).'%'.'</span>';
-		        				return Fireprevention::getFinir($model->id).'%';
-	        			}
-	        			];
-						break;
 					case 'percent' :
 						$columns[] = [
-							'label' => '完成进度',
-							'value' => function ($model) {
-								$html = '<div class="progress progress-xs progress-striped active">';
-								$html .= '<div class="progress-bar progress-bar-success" style="width: '.Fireprevention::getPercent($model).'"></div>';
-								$html .= '</div>';
-								echo $html;
-						}
-						];
+					           //动作列yii\grid\ActionColumn 
+					           //用于显示一些动作按钮，如每一行的更新、删除操作。
+					          'class' => 'yii\grid\ActionColumn',
+					          'header' => '完成进度', 
+					          'template' => '{percent}',//只需要展示删除和更新
+					          'headerOptions' => ['width' => '440'],
+					          'buttons' => [
+					            'percent' => function($url, $model, $key){
+					            $html = '<div class="progress progress-xs progress-striped active">';
+					            $html .= '<div class="progress-bar progress-bar-success" style="width: '.Fireprevention::getPercent($model).'"></div>';
+					            $html .='</div>';
+					               return Html::a($html);
+					             },                     
+					           ],
+					         ];
+						
 						break;
 					case 'percentvalue' :
 						$columns[] = [
-							'label' => '完成度',
-							'value' => function ($model) {
-								return '<span class="badge bg-green">'.Fireprevention::getPercent($model).'</span>';
-						}
-						];
+					           //动作列yii\grid\ActionColumn 
+					           //用于显示一些动作按钮，如每一行的更新、删除操作。
+					          'class' => 'yii\grid\ActionColumn',
+					          'header' => '完成进度', 
+					          'template' => '{percentvalue}',//只需要展示删除和更新
+					          'headerOptions' => ['width' => '40'],
+					          'buttons' => [
+					            'percentvalue' => function($url, $model, $key){
+					            $html = '<span class="badge bg-green">'.Fireprevention::getPercent($model).'</span>';
+					               return Html::a($html);
+					             },                     
+					           ],
+					         ];
+						
 						break;
 					default :
 						$columns [] = $value;

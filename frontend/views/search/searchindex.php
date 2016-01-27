@@ -12,7 +12,7 @@ use app\models\Search;
 use yii\grid\GridView;
 use app\models\Farms;
 ?>
-
+<?php //var_dump($params[\Yii::$app->controller->id.'Search']['management_area']);exit;?>
 <script type="text/javascript" src="js/jquery.flip.min.js"></script>
 <?php $this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
 <script type="text/javascript" src="js/script.js"></script>
@@ -26,25 +26,26 @@ use app\models\Farms;
                 <div class="box-body">
                 <?php $form = ActiveFormrdiv::begin(['method'=>'get']); ?>
                 <?php $managementArea_array = ArrayHelper::map(ManagementArea::find()->where(['id'=>Farms::getManagementArea()['id']])->all(), 'id', 'areaname');
+//                 	var_dump($tab);exit;
                 	if(count($managementArea_array) > 1)
                 		array_splice($managementArea_array,0,0,[0=>'全部']);
 					if(isset($_GET[\Yii::$app->controller->id.'Search']['management_area']))
-						$management_area = $params[\Yii::$app->controller->id.'Search']['management_area'];
+						$management_area = $_GET[\Yii::$app->controller->id.'Search']['management_area'];
 					else 
-						$management_area = $params['management_area'];
-// 					var_dump($management_area);
+						$management_area = $_GET['management_area'];
+// 					var_dump($management_area)o
                 ?>
 <table class="table table-hover">
   <tr>
   	<td align="right">管理区</td>
     <td><?= html::dropDownList('management_area',$management_area,$managementArea_array,['class'=>'form-control','id'=>'management_area'])?></td><?= html::hiddenInput('oldtablename','',['id'=>'old-tablename'])?>
     <td align="right">选项</td><?php $class = ['parmpt'=>'请选择...','farms'=>'农场法人','plantingstructure'=>'种植作物','projectapplication'=>'基础设施','yields'=>'产量信息','sales'=>'销量信息','breedinfo'=>'养殖信息','prevention'=>'防疫情况','fireprevention'=>'防火情况','loan'=>'贷款情况','collection'=>'缴费情况','disaster'=>'灾害情况']?>
-    <td><?php echo html::dropDownList('tab',$tab,$class,['class'=>'form-control','id'=>'tablename'])?></td>
+    <td><?php echo html::dropDownList('tab',$_GET['tab'],$class,['class'=>'form-control','id'=>'tablename'])?></td>
     <td align="right">自</td>
     <td><?php echo DateTimePicker::widget([
 				'name' => 'begindate',
     			'language' => 'zh-CN',
-				'value' => date('Y-m-d',$begindate),
+				'value' => date('Y-m-d',$_GET['begindate']),
 				'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
 				'options' => [
 					'readonly' => true
@@ -62,7 +63,7 @@ use app\models\Farms;
     <td><?php echo DateTimePicker::widget([
 				'name' => 'enddate',
     			'language' => 'zh-CN',
-				'value' => date('Y-m-d',$enddate),
+				'value' => date('Y-m-d',$_GET['enddate']),
 				'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
 				//'type' => DatePicker::TYPE_COMPONENT_APPEND,
 				'options' => [

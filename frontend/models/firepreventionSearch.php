@@ -7,6 +7,7 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Fireprevention;
 use app\models\Theyear;
+use app\models\Farms;
 /**
  * firepreventionSearch represents the model behind the search form about `app\models\Fireprevention`.
  */

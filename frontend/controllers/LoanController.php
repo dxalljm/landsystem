@@ -81,6 +81,7 @@ class LoanController extends Controller
         if ($model->load(Yii::$app->request->post())) {
         	$model->create_at = time();
         	$model->update_at = time();
+        	$model->management_area = Farms::getFarmsAreaID($farms_id);
         	if($model->save())
         	{
         		$farmsModel = Farms::findOne($farms_id);
@@ -146,35 +147,31 @@ class LoanController extends Controller
         return $this->redirect(['loanindex','farms_id'=>$farms_id]);
     }
 
-    public function actionLoansearch($begindate,$enddate,$management_area)
+    public function actionLoansearch($tab,$begindate,$enddate)
     {
-    	$post = Yii::$app->request->post();
-    
-    	if($post) {
-    		if($post['tab'] == 'parmpt')
-    			return $this->redirect(['search/searchindex']);
-    		$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
-    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
-    				'begindate' => $whereDate['begindate'],
-    				'enddate' => $whereDate['enddate'],
-    				'management_area' => $post['managementarea'],
+    	if(isset($_GET['tab']) and $_GET['tab'] !== \Yii::$app->controller->id) {
+    		return $this->redirect ([$_GET['tab'].'/'.$_GET['tab'].'search',
+    				'tab' => $_GET['tab'],
+    				'begindate' => strtotime($_GET['begindate']),
+    				'enddate' => strtotime($_GET['enddate']),
+    				$_GET['tab'].'Search' => ['management_area'=>$_GET['management_area']],
     		]);
-    	} else {
-    		 
-    		$searchModel = new loanSearch();
-    		$params = Yii::$app->request->queryParams;
-    		if($management_area) {
-    			$arrayID = Farms::getFarmArray($management_area);
-    			$params ['loanSearch']['farms_id'] = $arrayID;
-    		}
-    		$params ['loanSearch']['begindate'] = $begindate;
-    		$params ['loanSearch']['enddate'] = $enddate;
-    		$dataProvider = $searchModel->searchIndex ( $params['loanSearch'] );
-    		return $this->render('loansearch',[
-    				'searchModel' => $searchModel,
-    				'dataProvider' => $dataProvider,
-    		]);
-    	}
+    	} 
+    	$searchModel = new loanSearch();
+		if(!is_numeric($_GET['begindate']))
+			 $_GET['begindate'] = strtotime($_GET['begindate']);
+		if(!is_numeric($_GET['enddate']))
+			 $_GET['enddate'] = strtotime($_GET['enddate']);
+
+    	$dataProvider = $searchModel->searchIndex ( $_GET );
+    	return $this->render('loansearch',[
+	    			'searchModel' => $searchModel,
+	    			'dataProvider' => $dataProvider,
+	    			'tab' => $_GET['tab'],
+	    			'begindate' => $_GET['begindate'],
+	    			'enddate' => $_GET['enddate'],
+	    			'params' => $_GET,
+    	]);    	
     }
     
     /**

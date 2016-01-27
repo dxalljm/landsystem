@@ -5,6 +5,7 @@ use yii\widgets\ActiveFormrdiv;
 use app\models\Lease;
 use app\models\Farms;
 use dosamigos\datetimepicker\DateTimePicker;
+use app\models\Loan;
 /* @var $this yii\web\View */
 /* @var $model app\models\Loan */
 /* @var $form yii\widgets\ActiveForm */
@@ -21,7 +22,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 </tr>
 <tr>
 <td width=15% align='right'>抵押银行</td>
-<td colspan="5" align='left'><?= $form->field($model, 'mortgagebank')->dropDownList(['中国建设银行'=>'中国建设银行','中国工商银行'=>'中国工商银行','中国银行'=>'中国银行','中国农业银行'=>'中国农业银行','大兴安岭农村商业银行'=>'大兴安岭农村商业银行','龙江银行'=>'龙江银行','邮政储蓄'=>'邮政储蓄'])->label(false)->error(false) ?></td>
+<td colspan="5" align='left'><?= $form->field($model, 'mortgagebank')->dropDownList(Loan::getBankName())->label(false)->error(false) ?></td>
 </tr>
 <tr>
 <td width=15% align='right'>贷款金额</td>
