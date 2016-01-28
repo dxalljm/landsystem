@@ -59,7 +59,7 @@ use frontend\helpers\arraySearch;
               </div>
               <!-- /.tab-pane -->
               <div class="tab-pane" id="timeline">
-              <?php //var_dump($data->getName('Plant', 'cropname', 'plant_id')->getEchartsData(['*','single',['Plantingstructure',['planting_id','area']]],10000));exit;?>
+              <?php var_dump($data->getName('Plant', 'cropname', 'plant_id')->getEchartsData(['*','single',['Plantingstructure',['planting_id','area']]],10000));?>
                 <div id="yields" style="width: 900px; height: 600px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
 				showAllShadow('yields',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Plant', 'cropname', 'plant_id')->typenameList())?>,<?= $data->getName('Plant', 'cropname', 'plant_id')->getEchartsData(['*','single',['Plantingstructure',['planting_id','area']]],10000)?>,'万斤');

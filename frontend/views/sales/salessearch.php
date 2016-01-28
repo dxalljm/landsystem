@@ -49,8 +49,10 @@ use frontend\helpers\arraySearch;
 	        <td><strong>'.$data->count('farms_id').'户</strong></td>
 	        <td><strong>'.$data->count('farmer_id').'个</strong></td>
 	        <td></td>
-	        <td></td>
+	        <td><strong>'.$data->sum('volume',10000).'万斤</strong></td>
+			<td></td>
 	        <td><strong>'.$data->sum(['*',['volume','price']],10000).'万元</strong></td>
+			<td></td>
 	        </tr>',
         'columns' => Search::getColumns(['management_area','farms_id','farmer_id','plant_id','volume','price','whereabouts'],$totalData),
     ]); ?>

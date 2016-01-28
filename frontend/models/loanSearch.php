@@ -155,6 +155,7 @@ class loanSearch extends Loan
     	$query->andFilterWhere([
     			'id' => $this->id,
     			'farms_id' => $farmid,
+    			'management_area' => $this->management_area,
 //     			'mortgagearea' => $this->mortgagearea,
     			'mortgagebank' => $this->mortgagebank,
 //     			'mortgagemoney' => $this->mortgagemoney,

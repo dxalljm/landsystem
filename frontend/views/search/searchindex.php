@@ -40,12 +40,12 @@ use app\models\Farms;
   	<td align="right">管理区</td>
     <td><?= html::dropDownList('management_area',$management_area,$managementArea_array,['class'=>'form-control','id'=>'management_area'])?></td><?= html::hiddenInput('oldtablename','',['id'=>'old-tablename'])?>
     <td align="right">选项</td><?php $class = ['parmpt'=>'请选择...','farms'=>'农场法人','plantingstructure'=>'种植作物','projectapplication'=>'基础设施','yields'=>'产量信息','sales'=>'销量信息','breedinfo'=>'养殖信息','prevention'=>'防疫情况','fireprevention'=>'防火情况','loan'=>'贷款情况','collection'=>'缴费情况','disaster'=>'灾害情况']?>
-    <td><?php echo html::dropDownList('tab',$_GET['tab'],$class,['class'=>'form-control','id'=>'tablename'])?></td>
+    <td><?php echo html::dropDownList('tab',$tab,$class,['class'=>'form-control','id'=>'tablename'])?></td>
     <td align="right">自</td>
     <td><?php echo DateTimePicker::widget([
 				'name' => 'begindate',
     			'language' => 'zh-CN',
-				'value' => date('Y-m-d',$_GET['begindate']),
+				'value' => date('Y-m-d',$begindate),
 				'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
 				'options' => [
 					'readonly' => true
@@ -63,7 +63,7 @@ use app\models\Farms;
     <td><?php echo DateTimePicker::widget([
 				'name' => 'enddate',
     			'language' => 'zh-CN',
-				'value' => date('Y-m-d',$_GET['enddate']),
+				'value' => date('Y-m-d',$enddate),
 				'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
 				//'type' => DatePicker::TYPE_COMPONENT_APPEND,
 				'options' => [

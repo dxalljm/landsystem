@@ -7,12 +7,13 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Collection;
 use app\models\Theyear;
+use app\models\Farms;
 /**
  * collectionSearch represents the model behind the search form about `app\models\Collection`.
  */
 class collectionSearch extends Collection
 {
-	
+	public $farmer_id;
     /**
      * @inheritdoc
      */
@@ -20,7 +21,7 @@ class collectionSearch extends Collection
 	public function rules()
     {
         return [
-            [['id', 'payyear','farms_id', 'ypayyear', 'isupdate','dckpay','create_at','update_at','management_area'], 'integer'],
+            [['id', 'payyear','farms_id', 'farmer_id','ypayyear', 'isupdate','dckpay','create_at','update_at','management_area'], 'integer'],
             [['farmname', 'billingtime','nonumber'], 'safe'],
             [['ypayarea', 'amounts_receivable', 'real_income_amount', 'ypaymoney', 'owe'], 'number'],
         ];
@@ -61,6 +62,42 @@ class collectionSearch extends Collection
      *
      * @return ActiveDataProvider
      */
+    public function pinyinSearch($str = NULL)
+    {
+    	if (preg_match ("/^[A-Za-z]/", $str)) {
+    		$tj = ['like','pinyin',$str];
+    	} else {
+    		$tj = ['like','farmname',$str];
+    	}
+    
+    	return $tj;
+    }
+    
+    public function farmerpinyinSearch($str = NULL)
+    {
+    	if (preg_match ("/^[A-Za-z]/", $str)) {
+    		$tj = ['like','farmerpinyin',$str];
+    	} else {
+    		$tj = ['like','farmername',$str];
+    	}
+    	//     	var_dump($tj);exit;
+    	return $tj;
+    }
+    public function numberSearch($field,$str = NULL)
+    {
+    	$this->$field = $str;
+    	if(!empty($this->$field)) {
+    		preg_match_all('/(.*)([0-9]+?)/iU', $this->$field, $where);
+    		if($where[1][0] == '>' or $where[1][0] == '>=')
+    			$tj = ['between', $field, (float)$where[2][0],(float)99999.0];
+    		if($where[1][0] == '<' or $where[1][0] == '<=')
+    			$tj = ['between', $field, (float)0.0,(float)$where[2][0]];
+    		if($where[1][0] == '')
+    			$tj = ['like', $field, $this->$field];
+    	} else
+    		$tj = ['like', $field, $this->$field];
+    	return $tj;
+    }
     public function search($params)
     {
 //     	var_dump($params);
@@ -121,34 +158,48 @@ class collectionSearch extends Collection
     			'query' => $query,
     	]);
     
-    	$dataProvider->setSort([
-    			'attributes' => [
-    
-    					'farmname' => [
-    							'asc' => ['farms.farmname' => SORT_ASC],
-    							'desc' => ['farms.farmname' => SORT_DESC],
-    							//'label' => '管理区',
-    					],
-    
-    			]
-    	]);
-    
-    	if(isset($params['farms_id']))
-    		$farms_id = $params['farms_id'];
+    	if($params['collectionSearch']['management_area'] == 0)
+    		$this->management_area = NULL;
     	else
-    		$farms_id = $this->farms_id;
-    
-    	if (!$this->validate()) {
-    		// uncomment the following line if you do not want to any records when validation fails
-    		// $query->where('0=1');
-    		return $dataProvider;
+    		$this->management_area = $params['collectionSearch']['management_area'];
+    	$farmid = [];
+    	if((isset($params['collectionSearch']['farms_id']) and $params['collectionSearch']['farms_id'] !== '') or (isset($params['collectionSearch']['farmer_id']) and $params['collectionSearch']['farmer_id'] !== '')) {
+	    	$farm = Farms::find();
+	    	$farm->andFilterWhere(['management_area'=>$this->management_area]);
     	}
-    
-    
-    
+    	if(isset($params['collectionSearch']['farms_id']) and $params['collectionSearch']['farms_id'] !== '') {
+    		$this->farms_id = $params['collectionSearch']['farms_id'];
+    		$farm->andFilterWhere($this->pinyinSearch($this->farms_id));
+    		    		
+    	}
+
+    	if(isset($params['collectionSearch']['farmer_id']) and $params['collectionSearch']['farmer_id'] !== '') {
+    		$this->farmer_id = $params['collectionSearch']['farmer_id'];
+    		$farm->andFilterWhere($this->farmerpinyinSearch($this->farmer_id));
+    	}
+    	if(isset($farm)) {
+	    	foreach ($farm->all() as $value) {
+	    		$farmid[] = $value['id'];
+	    	}
+    	}
+    	if(isset($params['loanSearch']['amounts_receivable']) and $params['loanSearch']['amounts_receivable'] !== '') {
+    		$query->andFilterWhere($this->numberSearch('amounts_receivable',$params['loanSearch']['amounts_receivable']));
+    	}
+    	if(isset($params['loanSearch']['real_income_amount']) and $params['loanSearch']['real_income_amount'] !== '') {
+    		$query->andFilterWhere($this->numberSearch('real_income_amount',$params['loanSearch']['real_income_amount']));
+    	}
+    	if(isset($params['loanSearch']['owe']) and $params['loanSearch']['owe'] !== '') {
+    		$query->andFilterWhere($this->numberSearch('owe',$params['loanSearch']['owe']));
+    	}
+    	if(isset($params['loanSearch']['ypayarea']) and $params['loanSearch']['ypayarea'] !== '') {
+    		$query->andFilterWhere($this->numberSearch('ypayarea',$params['loanSearch']['ypayarea']));
+    	}
+    	if(isset($params['loanSearch']['ypaymoney']) and $params['loanSearch']['ypaymoney'] !== '') {
+    		$query->andFilterWhere($this->numberSearch('ypaymoney',$params['loanSearch']['ypaymoney']));
+    	}
     	$query->andFilterWhere([
     			'id' => $this->id,
-    			'farms_id' => $farms_id,
+    			'farms_id' => $farmid,
     			'payyear' => $this->payyear,
     			'ypayyear' => $this->ypayyear,
     			'ypayarea' => $this->ypayarea,
@@ -156,13 +207,10 @@ class collectionSearch extends Collection
     			'owe' => $this->owe,
     			'dckpay' => $this->dckpay,
     			'isupdate' => $this->isupdate,
+    			'management_area' => $this->management_area,
     	]);
     
-    	$query->andFilterWhere(['like', 'billingtime', $this->billingtime])
-    	->andFilterWhere(['like', 'amounts_receivable', $this->amounts_receivable])
-    	->andFilterWhere(['like', 'real_income_amount', $this->real_income_amount])
-    	->andFilterWhere(['like', 'land_farms.farmname', $this->farmname])
-    	->andFilterWhere(['between','land.collection.update_at',$params['begindate'],$params['enddate']]);
+    	$query->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
     
     	return $dataProvider;
     }

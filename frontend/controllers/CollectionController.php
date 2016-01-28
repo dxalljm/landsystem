@@ -19,6 +19,7 @@ use app\models\User;
 use app\models\Department;
 use yii\bootstrap\Collapse;
 use app\models\ManagementArea;
+use app\models\Lease;
 /**
  * CollectionController implements the CRUD actions for Collection model.
  */
@@ -270,6 +271,7 @@ class CollectionController extends Controller
         	$model->real_income_amount = $model->real_income_amount + $old_real_income_amount;
         	$model->ypayarea = $model->getYpayarea($year, $model->real_income_amount);
         	$model->ypaymoney = $model->getYpaymoney($year, $model->real_income_amount);
+        	$model->measure = Farms::getMeasure($farms_id);
         	//$owe = $model->getOwe($farmerid, $farmsid,$year);
         	if($owe)
         		$model->owe = $owe+$model->amounts_receivable-$model->real_income_amount;
@@ -419,35 +421,32 @@ class CollectionController extends Controller
 //         return $this->redirect(['collectionindex']);
 //     }
 
-    public function actionCollectionsearch($begindate,$enddate,$management_area)
+    public function actionCollectionsearch($begindate,$enddate)
     {
-    	$post = Yii::$app->request->post();
-    
-    	if($post) {
-    		if($post['tab'] == 'parmpt')
-    			return $this->redirect(['search/searchindex']);
-    		$whereDate = Theyear::formatDate($post['begindate'],$post['enddate']);
-    		return $this->redirect ([$post['tab'].'/'.$post['tab'].'search',
-    				'begindate' => $whereDate['begindate'],
-    				'enddate' => $whereDate['enddate'],
-    				'management_area' => $post['managementarea'],
+    	
+    	if(isset($_GET['tab']) and $_GET['tab'] !== \Yii::$app->controller->id) {
+    		return $this->redirect ([$_GET['tab'].'/'.$_GET['tab'].'search',
+    				'tab' => $_GET['tab'],
+    				'begindate' => strtotime($_GET['begindate']),
+    				'enddate' => strtotime($_GET['enddate']),
+    				$_GET['tab'].'Search' => ['management_area'=>$_GET['management_area']],
     		]);
-    	} else {
-    		 
-    		$searchModel = new collectionSearch();
-    		$params = Yii::$app->request->queryParams;
-    		if($management_area) {
-    			$arrayID = Farms::getFarmArray($management_area);
-    			$params ['collectionSearch']['farms_id'] = $arrayID;
-    		}
-    		$params ['collectionSearch']['begindate'] = $begindate;
-    		$params ['collectionSearch']['enddate'] = $enddate;
-    		$dataProvider = $searchModel->searchIndex ( $params['collectionSearch'] );
-    		return $this->render('collectionsearch',[
-    				'searchModel' => $searchModel,
-    				'dataProvider' => $dataProvider,
-    		]);
-    	}
+    	} 
+    	$searchModel = new collectionSearch();
+		if(!is_numeric($_GET['begindate']))
+			 $_GET['begindate'] = strtotime($_GET['begindate']);
+		if(!is_numeric($_GET['enddate']))
+			 $_GET['enddate'] = strtotime($_GET['enddate']);
+
+    	$dataProvider = $searchModel->searchIndex ( $_GET );
+    	return $this->render('collectionsearch',[
+	    			'searchModel' => $searchModel,
+	    			'dataProvider' => $dataProvider,
+	    			'tab' => $_GET['tab'],
+	    			'begindate' => $_GET['begindate'],
+	    			'enddate' => $_GET['enddate'],
+	    			'params' => $_GET,
+    	]);    	
     }
     
     public function actionCollectioninfo()

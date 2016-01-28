@@ -836,4 +836,9 @@ class Farms extends \yii\db\ActiveRecord {
 		} else
 			return 0;
 	}
+	
+	public static function getMeasure($farmsid) {
+		$model = $this->findOne($farmsid);
+		return $model->measure;
+	}
 }

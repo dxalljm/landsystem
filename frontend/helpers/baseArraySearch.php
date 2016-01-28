@@ -10,6 +10,7 @@ class baseArraySearch
 	private $namelist;
 	private $echartsWhere = [];
 	private $field;
+	private $echartsName;
 	public function __construct($data)
 	{
 // 		var_dump($data->getModels());exit;
@@ -112,11 +113,14 @@ class baseArraySearch
 	{
 		return $this->data;
 	}
-	
-	public function sum($field,$num = 1)
+	//$state: 0-$sum为总和，1-$sum为数组
+	public function sum($field,$num = 1,$state = 0)
 	{
 // 		var_dump($this->echartsWhere);exit;
-		$sum = 0.0;
+		if($state)
+			$sum = [];
+		else
+			$sum = 0.0;
 		if($this->temp)
 			$data = $this->temp;
 		else
@@ -148,33 +152,66 @@ class baseArraySearch
 					}
 					break;
 				case '*':
-// 					var_dump($field);exit;
+// 					var_dump($this->echartsWhere);
 					
 					if($this->echartsWhere) {
-						
+// 						echo '111';
 						$keys = array_keys($this->echartsWhere);
 						$values = array_values($this->echartsWhere);
-// 						var_dump($keys);var_dump($field);exit;
-						foreach ($data as $value) {
-							if($value->getAttribute($keys[0]) == $values[0] and $value->getAttribute($keys[1]) == $values[1]) {
-								if(is_array($field[1])) {
-									$model = 'app\\models\\'.$field[1][0];
-									$fieldValue = $model::find()->where(['id'=>$value->getAttribute($field[1][1][0])])->one()[$field[1][1][1]];
+						if(isset($this->echartsWhere['management_area']) and is_array($this->echartsWhere['management_area'])) {
+							foreach ($this->echartsWhere['management_area'] as $areaid) {
+								foreach ($data as $value) {
+									if(count($values) == 2) {
+										if($value->getAttribute($keys[0]) == $areaid and $value->getAttribute($keys[1]) == $values[1]) {
+		// 									echo '111';
+											if(is_array($field[1])) {
+												$model = 'app\\models\\'.$field[1][0];
+												$fieldValue = $model::find()->where(['id'=>$value->getAttribute($field[1][1][0])])->one()[$field[1][1][1]];
+											}
+											if($state)
+												$sum[] = (float)sprintf("%.2f",bcmul($value->getAttribute($field[0]),$fieldValue)/$num);
+											else
+												$sum += bcmul($value->getAttribute($field[0]),$fieldValue);
+										}
+									} else {
+		// 								var_dump($this->echartsWhere);exit;
+		// 								if($values[0])
+										if($value->getAttribute($keys[0]) == $areaid) {
+		// 									var_dump($field[1]);
+											if(is_array($field[1])) {
+												$model = 'app\\models\\'.$field[1][0];
+												$fieldValue = $model::find()->where($field[1][1])->one()[$field[1][2]];
+		
+											if($state)
+												$sum[] = (float)sprintf("%.2f",bcmul($value->getAttribute($field[0]),$fieldValue)/$num);
+											else
+												$sum += bcmul($value->getAttribute($field[0]),$fieldValue);
+											}
+		// 									var_dump($sum);
+											
+										}
+									}
 								}
-								$sum += bcmul($value->getAttribute($field[0]),$fieldValue);
 							}
 						}
 					} else {
-						
+// 						echo '44444';
 						foreach ($data as $value) {
 							if(isset($field[0]) and is_array($field[0])) {
+// 								echo '555';
 								$sum += bcmul($value->getAttribute($field[0][0]),$value->getAttribute($field[0][1]));
 							}
 							if(isset($field[1]) and is_array($field[1])) {
-								$model = 'app\\models\\'.$field[1][0];;
+// 								echo '666';
+								$model = 'app\\models\\'.$field[1][0];
 								$fieldValue = $model::find()->where(['id'=>$value->getAttribute($field[1][1][0])])->one()[$field[1][1][1]];
-								$sum += bcmul($value->getAttribute($field[0]),$fieldValue);
+// 								var_dump($value->getAttribute($field[0]));
+								if($state)
+									$sum[] = (float)sprintf("%.2f",bcmul($value->getAttribute($field[0]),$fieldValue)/$num);
+								else
+									$sum += bcmul($value->getAttribute($field[0]),$fieldValue);
 							}
+// 							var_dump($sum);
 						}
 					}
 					break;
@@ -186,7 +223,10 @@ class baseArraySearch
 // 							var_dump($field);exit;
 							$fieldValue = $model::find()->where(['id'=>$value->getAttribute($field[1][1][0])])->one()[$field[1][1][1]];
 						}
-						$sum += bcdiv($value->getAttribute($field[0]),$fieldValue);
+						if($state)
+							$sum[] = (float)sprintf("%.2f",bcmul($value->getAttribute($field[0]),$fieldValue)/$num);
+						else
+							$sum += bcmul($value->getAttribute($field[0]),$fieldValue);
 					}
 					break;
 			}
@@ -197,35 +237,67 @@ class baseArraySearch
 			if($this->echartsWhere) {
 				$keys = array_keys($this->echartsWhere);
 				$values = array_values($this->echartsWhere);
+// 				var_dump($keys);exit;
 				if(isset($this->echartsWhere['management_area']) and is_array($this->echartsWhere['management_area'])) {
 					foreach ($this->echartsWhere['management_area'] as $areaid) {
-						foreach ($data as $value) {
-							if($value->getAttribute($keys[0]) == $areaid and $value->getAttribute($keys[1]) == $values[1]) {
-								$sum += $value->getAttribute($field);
-							}	
+						if(count($keys) == 2) {
+							$Sum = 0.0;
+							foreach ($data as $value) {
+								if($value->getAttribute($keys[0]) == $areaid and $value->getAttribute($keys[1]) == $values[1]) {
+									$Sum += (float)sprintf("%.2f",$value->getAttribute($field)/$num);
+								}								
+							}
+							if($state)
+								$sum[] = $Sum;
+							else
+								$sum = $Sum;
+						} else {
+// 							echo 'jjjjjj';
+							$Sum = 0.0;
+							foreach ($data as $value) {
+								if($value->getAttribute($keys[0]) == $areaid) {
+									$Sum += (float)sprintf("%.2f",$value->getAttribute($field)/$num);
+								}								
+							}
+							if($state)
+								$sum[] = $Sum;
+							else
+								$sum = $Sum;
 						}
 					}
 				} else {
+// 					var_dump($values);exit;
+					$Sum = 0.0;
 					foreach ($data as $value) {
 						if($value->getAttribute($keys[0]) == $values[0] and $value->getAttribute($keys[1]) == $values[1]) {
-							$sum += $value->getAttribute($field);
-						}
+							$Sum += (float)sprintf("%.2f",$value->getAttribute($field)/$num);
+						}						
 					}
+					if($state)
+						$sum[] = $Sum;
+					else
+						$sum = $Sum;
 				}
 			} else {
-// 				var_dump($field);exit;
+				var_dump($field);
+				$Sum = 0.0;
 				foreach ($data as $key => $value) {
 					if(is_numeric($value->getAttribute($field))) {
-						$sum += $value->getAttribute($field);
+						$Sum += (float)sprintf("%.2f",$value->getAttribute($field)/$num);
 					}
 				}
-				
+				if($state)
+					$sum[] = $Sum;
+				else
+					$sum = $Sum;
 			}
 		}
 		if($sum)
-			return sprintf("%.2f", $sum/$num);
+			return $sum;
 		else
 			return 0.0;
+		
+			
 	}
 	public function count($field = NULL,$state = TRUE)
 	{
@@ -331,12 +403,17 @@ class baseArraySearch
 		else 
 			return $this->namelist[$id];
 	}
+	public function setEchartsName($array) 
+	{
+		$this->echartsName = $array;
+		return $this;
+	}
 	public function getList()
 	{
 		return $this->namelist;
 	}
 	
-	public function getEchartsData($field,$num = 1,$function = 'showAllShadow')
+	public function getEchartsData($field,$num = 1,$function = 'showAllShadow',$state = 0)
 	{
 		if($this->temp)
 			$data = $this->temp;
@@ -352,10 +429,14 @@ class baseArraySearch
 		foreach ($management_area as $areaid) {
 			if($function == 'showAllShadow') {
 				$sum = [];
-				foreach ($this->namelist as $key => $list) {
-// 					var_dump($areaid);exit;
-					$sum[] = (float)$this->where(['management_area'=>$areaid,$this->field=>$key])->sum($field,$num);
-// 					var_dump($sum);exit;
+				if($this->namelist) {
+					foreach ($this->namelist as $key => $list) {
+// 						var_dump($this->field);
+						$sum[] = $this->where(['management_area'=>$areaid,$this->field=>$key])->sum($field,$num,$state);
+// 						var_dump($sum);
+					}
+				} else {
+					$sum[] = $this->where(['management_area'=>$areaid])->sum($field,$num,$state);
 				}
 				$result[] = [
 						'name' => str_ireplace('管理区', '', ManagementArea::find()->where(['id'=>$areaid])->one()['areaname']),
@@ -368,15 +449,36 @@ class baseArraySearch
 // 		var_dump($management_area);
 			if($function == 'showShadowThermometer') {
 				$sum = [];
-				foreach ($this->namelist as $key => $list) {
-					$sum0 = (float)$this->where(['management_area'=>$management_area,$this->field=>$key])->sum($field[0],$num);
-					$sum1 = (float)$this->where(['management_area'=>$management_area,$this->field=>$key])->sum($field[1],$num);
+				if($this->namelist) {
+					foreach ($this->namelist as $key => $list) {
+// 						var_dump($list);
+						$sum0 = (float)$this->where(['management_area'=>$management_area,$this->field=>$key])->sum($field[0],$num,$state);
+						$sum1 = (float)$this->where(['management_area'=>$management_area,$this->field=>$key])->sum($field[1],$num,$state);
+						$sum[$field[0]][] = $sum0;
+						$sum[$field[1]][] = $sum1 - $sum0;
+						
+					}
+				} else {
+					echo 'iiiiii';
+					$sum0 = $this->where(['management_area'=>$management_area])->sum($field[0],$num,$state);
+					$sum1 = $this->where(['management_area'=>$management_area])->sum($field[1],$num,$state);
 					$sum[$field[0]][] = $sum0;
-					$sum[$field[1]][] = $sum1 - $sum0;
+// 					var_dump($sum1);
+					if(is_array($field[1]))
+						$key1 = $field[1][1][1].$field[1][0].$field[1][1][2];
+					else
+						$key1 = $field[1];
+					if($state) {
+						for($i=0;$i<count($sum0);$i++) {
+// 							var_dump($sum1);
+							$sum[$key1][] = $sum1[$i] - $sum0[$i];
+						}
+					} else 
+						$sum[$key1][] = $sum1 - $sum0;
 				}
-
-				$result = [[
-					'name' => '免疫数量',
+				var_dump($sum);
+				$result[] = [[
+					'name' => $this->echartsName[0],
 					'type' => 'bar',
 					'stack' => 'sum',
 					'barCategoryGap'=>'50%',
@@ -395,7 +497,7 @@ class baseArraySearch
 					'data'=>$sum[$field[0]],
 				],
 				[
-					'name' => '应免数量',
+					'name' => $this->echartsName[1],
 					'type' => 'bar',
 					'stack' => 'sum',
 					'itemStyle'=> [
@@ -414,7 +516,7 @@ class baseArraySearch
 							]
 						]
 					],
-					'data'=>$sum[$field[1]],
+					'data'=>$sum[$key1],
 				]];
 			}
 // 		}
