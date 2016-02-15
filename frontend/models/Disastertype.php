@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use frontend\helpers\arraySearch;
 
 /**
  * This is the model class for table "{{%disastertype}}".

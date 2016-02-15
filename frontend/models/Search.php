@@ -401,10 +401,9 @@ class Search extends \yii\db\ActiveRecord {
 						$columns [] = [ 
 								'attribute' => $value,
 								'value' => function ($model) {
-									return Disastertype::find ()->where ( [ 
-											'id' => $model->disastertype_id 
-									] )->one ()['typename'];
-								} 
+									return self::$totalData->getName('Disastertype', 'typename', 'disastertype_id')->getOne($model->disastertype_id);
+						},
+								'filter' => self::$totalData->getName('Disastertype', 'typename', 'disastertype_id')->getList()
 						];
 						break;
 					
@@ -420,10 +419,9 @@ class Search extends \yii\db\ActiveRecord {
 						$columns [] = [ 
 								'attribute' => $value,
 								'value' => function ($model) {
-									return Plant::find ()->where ( [ 
-											'id' => $model->disasterplant 
-									] )->one ()['cropname'];
-								} 
+									return self::$totalData->getName('Plant', 'cropname', 'disasterplant')->getOne($model->disasterplant);
+								},
+								'filter' => self::$totalData->getName('Plant', 'cropname', 'disasterplant')->getList()
 						];
 						break;
 					case 'isinsurance' :
@@ -431,7 +429,8 @@ class Search extends \yii\db\ActiveRecord {
 								'attribute' => $value,
 								'value' => function ($model) {
 									return $model->isinsurance ? '是' : '否';
-								} 
+								},
+								'filter' => ['否','是'],
 						];
 						break;
 					case 'yieldreduction' :

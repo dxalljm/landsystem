@@ -44,6 +44,7 @@ class loanSearch extends Loan
      */
     public function search($params)
     {
+//     	var_dump($params);exit;
         $query = Loan::find();
 
         $dataProvider = new ActiveDataProvider([
@@ -52,11 +53,6 @@ class loanSearch extends Loan
 
         $this->load($params);
 
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
 
         $query->andFilterWhere([
             'id' => $this->id,

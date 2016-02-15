@@ -46,7 +46,7 @@ class LoanController extends Controller
     {
         $searchModel = new loanSearch();
         $params = Yii::$app->request->queryParams;
-        $params['loanSearch']['farms_id'] = $farms_id;
+        $params['loanSearch']['farms_id'] = (integer)$farms_id;
         $dataProvider = $searchModel->search($params);
 		Logs::writeLog('贷款列表');
         return $this->render('loanindex', [

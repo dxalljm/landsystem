@@ -108,13 +108,74 @@ class baseArraySearch
 		else 
 			return $this->data;
 	}
-	
-	public function one()
+
+	public function allcount()
 	{
-		return $this->data;
+		return count($this->data);
+	}
+	
+	public function sum($field,$num = 1) 
+	{
+		$Sum = 0.0;
+		if($this->temp)
+			$data = $this->temp;
+		else
+			$data = $this->data;
+		foreach ($data as $key => $value) {
+			if(is_numeric($value->getAttribute($field))) {
+				$Sum += (float)sprintf("%.2f",$value->getAttribute($field)/$num);
+			} else {
+				return false;
+			}
+		}
+		return $Sum;
+	}
+	public function mulOtherSum($field,$where,$otherfield,$num = 1)
+	{
+		$sum = 0.0;
+		if($this->temp)
+			$data = $this->temp;
+		else
+			$data = $this->data;
+		foreach ($data as $key => $value) {
+			$model = 'app\\models\\'.$otherfield[0];
+			$fieldValue = $model::find()->where(['id'=>$value->getAttribute($where)])->one()[$otherfield[1]];
+			$sum += bcmul($value->getAttribute($field),$fieldValue);
+		}
+		return sprintf("%.2f",$sum/$num);
+	}
+	public function otherSum($where,$otherfield,$num = 1)
+	{
+		$sum = 0.0;
+		if($this->temp)
+			$data = $this->temp;
+		else
+			$data = $this->data;
+		foreach ($data as $key => $value) {
+			$model = 'app\\models\\'.$otherfield[0];
+			$sum += $model::find()->where(['id'=>$value->getAttribute($where)])->one()[$otherfield[1]];
+		}
+		return sprintf("%.2f",$sum/$num);
+	}
+	public function mulSum($field,$num = 1)
+	{
+		$Sum = 0.0;
+		if($this->temp)
+			$data = $this->temp;
+		else
+			$data = $this->data;
+		foreach ($data as $key => $value) {
+			if(is_numeric($value->getAttribute($field[0])) and is_numeric($value->getAttribute($field[1]))) {
+				$mul = bcmul($value->getAttribute($field[0]), $value->getAttribute($field[1]));
+				$Sum += (float)sprintf("%.2f",$mul/$num);
+			} else {
+				return false;
+			}
+		}
+		return $Sum;
 	}
 	//$state: 0-$sum为总和，1-$sum为数组
-	public function sum($field,$num = 1,$state = 0)
+	public function sumold($field,$where,$otherdb,$num = 1,$state = 0)
 	{
 // 		var_dump($this->echartsWhere);exit;
 		if($state)
