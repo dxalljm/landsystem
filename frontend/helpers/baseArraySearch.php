@@ -113,7 +113,41 @@ class baseArraySearch
 	{
 		return $this->data;
 	}
-	//$state: 0-$sum为总和，1-$sum为数组
+	
+	public function calculation($field)
+	{
+		switch ($this->analysis($field)) {
+			case 'symbol':
+				
+			case 'across':
+			case 'routine':
+		}
+		$model = 'app\\models\\'.$field[1][0];
+		
+	}
+	
+	public function analysis($field)
+	{
+		$type = gettype($field);
+		switch ($type) {
+			case 'string':
+				$result = 1;
+				break;
+			case 'array':
+		}
+		if(is_array($field)) {
+			$operator = array_shift($field);
+			if($operator == '+' or $operator == '-' or $operator == '*' or $operator == '/') {
+				$result = 'symbol';
+			} else {
+				$result = 'across ';
+			}
+		} else {
+			$result = 'routine';
+		}
+		return $result;
+	}
+	//$state: 0-$sum为总和，1-$sum为数组,$field=string|array[*,fieldname,[Tablename,[]]
 	public function sum($field,$num = 1,$state = 0)
 	{
 // 		var_dump($this->echartsWhere);exit;
