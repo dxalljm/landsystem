@@ -60,7 +60,7 @@ use frontend\helpers\arraySearch;
               </div>
               <!-- /.tab-pane -->
               <div class="tab-pane" id="timeline">
-              <?php var_dump($data->getName('Breedtype', 'typename', 'breedtype_id')->setEchartsName(['应免数量','免疫数量'])->showShadowThermometer(['preventionnumber','breedinfonumber'],1))?>
+              <?php //var_dump($data->getName('Breedtype', 'typename', 'breedtype_id')->setEchartsName(['应免数量','免疫数量'])->showShadowThermometer(['preventionnumber','breedinfonumber'],1))?>
                 <div id="prevention" style="width: 900px; height: 600px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
 				showShadowThermometer('prevention',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Breedtype', 'typename', 'breedtype_id')->typenameList())?>,<?= $data->getName('Breedtype', 'typename', 'breedtype_id')->setEchartsName(['应免数量','免疫数量'])->showShadowThermometer(['preventionnumber','breedinfonumber'],1)?>,'');

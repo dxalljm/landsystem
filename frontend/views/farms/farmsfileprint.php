@@ -160,7 +160,7 @@ use app\models\Reviewprocess;
 
 <script language="javascript" type="text/javascript">
     var LODOP; //声明为全局变量 
-	
+
 	function prn_preview4() {	
 		CreateOnePage();	
 		LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT","Auto-Width");	

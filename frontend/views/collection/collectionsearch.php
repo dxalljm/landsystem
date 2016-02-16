@@ -32,7 +32,7 @@ use app\models\Theyear;
 	$totalData->pagination = ['pagesize'=>0];
 	$data = arraySearch::find($totalData)->search();
 // 	var_dump($data->getEchartsData(['real_income_amount','amounts_receivable'],1,'showShadowThermometer'));
-	var_dump($_GET);
+// 	var_dump($_GET);
 ?>
 <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
@@ -63,7 +63,7 @@ use app\models\Theyear;
               <?php //var_dump($data->setEchartsName(['应收金额','实收金额'])->getEchartsData(['real_income_amount',['*','measure',['PlantPrice',['years'=>Theyear::getYear()],'price']]],10000,'showShadowThermometer',1))?>
                 <div id="collection" style="width: 900px; height: 600px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-				showShadowThermometer('collection',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?//= $data->setEchartsName(['应收金额','实收金额'])->getEchartsData(['real_income_amount',['*','measure',['PlantPrice',['price'=>Theyear::getYear()],'price']]],10000,'showShadowThermometer',1)?>,'万元');
+				collectionShowEchart('collection',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= $data->setEchartsName(['实收金额','应收金额'])->collectionShowShadow()?>,'万元');
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
 

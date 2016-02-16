@@ -38,7 +38,13 @@ use app\models\Farms;
 <table class="table table-hover">
   <tr>
   	<td align="right">管理区</td>
-    <td><?= html::dropDownList('management_area',$management_area,$managementArea_array,['class'=>'form-control','id'=>'management_area'])?></td><?= html::hiddenInput('oldtablename','',['id'=>'old-tablename'])?>
+    <td><?= html::dropDownList('management_area',$management_area,$managementArea_array,['class'=>'form-control test','id'=>'management_area'])?></td><?= html::hiddenInput('oldtablename','',['id'=>'old-tablename'])?>
+    
+    <script>
+// 		$('#management_area').change(function () {
+// 			$('select[name="farmsSearch[management_area]"]').val('123');
+// 		});
+    </script>
     <td align="right">选项</td><?php $class = ['parmpt'=>'请选择...','farms'=>'农场法人','plantingstructure'=>'种植作物','projectapplication'=>'基础设施','yields'=>'产量信息','sales'=>'销量信息','breedinfo'=>'养殖信息','prevention'=>'防疫情况','fireprevention'=>'防火情况','loan'=>'贷款情况','collection'=>'缴费情况','disaster'=>'灾害情况']?>
     <td><?php echo html::dropDownList('tab',$tab,$class,['class'=>'form-control','id'=>'tablename'])?></td>
     <td align="right">自</td>

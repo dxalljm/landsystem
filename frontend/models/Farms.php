@@ -716,6 +716,9 @@ class Farms extends \yii\db\ActiveRecord {
 		return $value;
 	}
 	public static function showEightPlantmenu() {
+		
+// 		$cachekey = Yii::$app->cache->get('')
+		
 		$businessmenu = MenuToUser::find ()->where ( [ 
 				'role_id' => User::getItemname () 
 		] )->one ()['plate'];

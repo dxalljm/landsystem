@@ -59,7 +59,7 @@ use frontend\helpers\arraySearch;
               <?php //var_dump($data->getName('self', 'mortgagebank', 'mortgagebank')->typenameList());?>
                 <div id="loan" style="width: 900px; height: 600px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-				showAllShadow('loan',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('self', 'mortgagebank', 'mortgagebank')->typenameList())?>,<?= $data->getName('self', 'mortgagebank', 'mortgagebank')->getEchartsData('mortgagemoney',10000)?>,'万元');
+				showAllShadow('loan',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('self', 'mortgagebank', 'mortgagebank')->typenameList())?>,<?= $data->getName('self', 'mortgagebank', 'mortgagebank')->showAllShadow('sum','mortgagemoney',10000)?>,'万元');
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
 

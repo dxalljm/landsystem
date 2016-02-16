@@ -91,7 +91,7 @@ class DisasterController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionDisastercreate()
+    public function actionDisastercreate($farms_id)
     {
         $model = new Disaster();
 
@@ -100,7 +100,7 @@ class DisasterController extends Controller
         	$model->update_at = $model->create_at;
         	$model->management_area = Farms::getFarmsAreaID($farms_id);
         	$model->save();
-            return $this->redirect(['disasterview', 'id' => $model->id]);
+            return $this->redirect(['disasterindex', 'farms_id' => $farms_id]);
         } else {
             return $this->render('disastercreate', [
                 'model' => $model,

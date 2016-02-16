@@ -50,11 +50,7 @@ use frontend\helpers\arraySearch;
 			        <td><strong>'.$data->count('farms_id',true).'户</strong></td>
 			        <td><strong>'.$data->count('farmer_id',true).'个</strong></td>
 			        <td><strong>'.$data->count('plant_id',true).'个</strong></td>
-<<<<<<< HEAD
-			        <td><strong>'.$data->sum(['Plantingstructure','area'],10000).'万亩</strong></td>
-=======
 			        <td><strong>'.$data->otherSum('planting_id',['Plantingstructure','area'],10000).'万亩</strong></td>
->>>>>>> bdb5e22114a7803a08080ac1a42b56cb77a2b231
 			        <td><strong>'.$data->sum('single',10000).'万斤</strong></td>
 			        <td><strong>'.$data->mulOtherSum('single','planting_id',['Plantingstructure','area'],10000).'万斤</strong></td>
 			        </tr>',

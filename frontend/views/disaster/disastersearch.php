@@ -31,7 +31,8 @@ use frontend\helpers\arraySearch;
 	$totalData = clone $dataProvider;
 	$totalData->pagination = ['pagesize'=>0];
 	$data = arraySearch::find($totalData)->search();
-	if($data->sum('yieldreduction') !== 0.0)
+// 	var_dump($data->);exit;
+	if($data->is_data() and $data->sum('yieldreduction') !== 0.0)
 		$yieldreduction = sprintf("%.2f",$data->sum('yieldreduction')/$data->allcount())*100;
 	else 
 		$yieldreduction = 0;
@@ -66,7 +67,7 @@ use frontend\helpers\arraySearch;
               <?php //var_dump($data->getName('self', 'mortgagebank', 'mortgagebank')->typenameList());?>
                 <div id="loan" style="width: 900px; height: 600px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-				showAllShadow('loan',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('self', 'mortgagebank', 'mortgagebank')->typenameList())?>,<?= $data->getName('self', 'mortgagebank', 'mortgagebank')->getEchartsData('mortgagemoney',10000)?>,'万元');
+				showAllShadow('loan',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Disastertype', 'typename', 'disastertype_id')->typenameList())?>,<?= $data->getName('Disastertype', 'typename', 'disastertype_id')->showAllShadow('sum','disasterarea',10000)?>,'万元');
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
 

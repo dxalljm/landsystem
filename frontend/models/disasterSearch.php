@@ -7,6 +7,7 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Disaster;
 use app\models\Theyear;
+use app\models\Farms;
 /**
  * disasterSearch represents the model behind the search form about `app\models\Disaster`.
  */
@@ -141,6 +142,15 @@ class disasterSearch extends Disaster
     	if(isset($params['disasterSearch']['isinsurance']) and $params['disasterSearch']['isinsurance'] !== '') {
     		$this->isinsurance = $params['disasterSearch']['isinsurance'];
     	}
+    	
+    	if(isset($params['disasterSearch']['disastertype_id']) and $params['disasterSearch']['disastertype_id'] !== '') {
+    		$this->disastertype_id = $params['disasterSearch']['disastertype_id'];
+    	}
+    	
+    	if(isset($params['disasterSearch']['disasterplant']) and $params['disasterSearch']['disasterplant'] !== '') {
+    		$this->disasterplant = $params['disasterSearch']['disasterplant'];
+    	}
+    	
     	if(isset($params['disasterSearch']['disasterarea']) and $params['disasterSearch']['disasterarea'] !== '') {
     		$query->andFilterWhere($this->numberSearch('disasterarea',$params['disasterSearch']['disasterarea']));
     	}
@@ -151,6 +161,7 @@ class disasterSearch extends Disaster
     			'disastertype_id' => $this->disastertype_id,
 //     			'disasterarea' => $this->disasterarea,
     			'insurancearea' => $this->insurancearea,
+    			'disasterplant' => $this->disasterplant,
     			'yieldreduction' => $this->yieldreduction,
     			'socmoney' => $this->socmoney,
     			'isinsurance' => $this->isinsurance,
