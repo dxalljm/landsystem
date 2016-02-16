@@ -1358,7 +1358,7 @@ class FarmsController extends Controller {
 			 $_GET['enddate'] = strtotime($_GET['enddate']);
 
     	$dataProvider = $searchModel->searchIndex ( $_GET );
-    	return $this->render('plantingstructureSearch',[
+    	return $this->render('farmssearch',[
 	    			'searchModel' => $searchModel,
 	    			'dataProvider' => $dataProvider,
 	    			'tab' => $_GET['tab'],

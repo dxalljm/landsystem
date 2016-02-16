@@ -60,10 +60,10 @@ use frontend\helpers\arraySearch;
               <!-- /.tab-pane -->
               <div class='tab-pane' id="plantingstructure">
               <div id="plantingstructuredata" style="width:1000px; height: 600px; margin: 0 auto"></div>
-				<?php $data->getName('Plant', 'cropname', 'plant_id')->getEchartsData('area',10000);?>
+				<?php $data->getName('Plant', 'cropname', 'plant_id')->typenameList();?>
               </div>
               <script type="text/javascript">
-				showAllShadow('plantingstructuredata',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode(Plantingstructure::getPlantname($totalData)['typename'])?>,<?= $data->getName('Plant', 'cropname', 'plant_id')->getEchartsData('area',10000);?>,'万亩');
+				showAllShadow('plantingstructuredata',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Plant', 'cropname', 'plant_id')->typenameList())?>,<?= $data->getName('Plant', 'cropname', 'plant_id')->showAllShadow('sum','area',10000);?>,'万亩');
 			</script>
               <!-- /.tab-pane -->
 
@@ -73,7 +73,7 @@ use frontend\helpers\arraySearch;
               <?php //var_dump(Plantingstructure::getGoodseedname($params));?>
             </div>
             <script type="text/javascript">
-				showAllShadow('goodseedinfo',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode(Plantingstructure::getGoodseedname($totalData)['typename'])?>,<?= $data->getName('Goodseed', 'plant_model', 'goodseed_id')->getEchartsData('area',10000);?>,'万亩');
+				showAllShadow('goodseedinfo',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Goodseed', 'plant_model', 'goodseed_id')->typenameList())?>,<?= $data->getName('Goodseed', 'plant_model', 'goodseed_id')->showAllShadow('sum','area',10000);?>,'万亩');
 		</script>
             <?php }?>
               <!-- /.tab-pane -->

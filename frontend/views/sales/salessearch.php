@@ -48,10 +48,10 @@ use frontend\helpers\arraySearch;
 	        <td align="center"><strong>合计</strong></td>
 	        <td><strong>'.$data->count('farms_id').'户</strong></td>
 	        <td><strong>'.$data->count('farmer_id').'个</strong></td>
-	        <td></td>
+	        <td><strong>'.$data->count('plant_id').'个</strong></td>
 	        <td><strong>'.$data->sum('volume',10000).'万斤</strong></td>
 			<td></td>
-	        <td><strong>'.$data->sum(['*',['volume','price']],10000).'万元</strong></td>
+	        <td><strong>'.$data->mulSum(['volume','price'],10000).'万元</strong></td>
 			<td></td>
 	        </tr>',
         'columns' => Search::getColumns(['management_area','farms_id','farmer_id','plant_id','volume','price','whereabouts'],$totalData),
@@ -62,7 +62,7 @@ use frontend\helpers\arraySearch;
               <?php //var_dump($data->getName('Plant', 'cropname', 'plant_id')->getEchartsData(['*','single',['Plantingstructure',['planting_id','area']]],10000));exit;?>
                 <div id="yields" style="width: 900px; height: 600px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-				showAllShadow('yields',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Plant', 'cropname', 'plant_id')->typenameList())?>,<?= $data->getName('Plant', 'cropname', 'plant_id')->getEchartsData('volume',10000)?>,'万斤');
+				showAllShadow('yields',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Plant', 'cropname', 'plant_id')->typenameList())?>,<?= $data->getName('Plant', 'cropname', 'plant_id')->showAllShadow('sum','volume',10000)?>,'万斤');
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
 

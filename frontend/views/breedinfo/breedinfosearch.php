@@ -64,7 +64,7 @@ use frontend\helpers\arraySearch;
               <?php //var_dump($data->getName('Breedtype', 'unit', 'breedtype_id')->typenameList());?>
                 <div id="breedinfo" style="width: 900px; height: 600px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-				showAllShadow('breedinfo',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Breedtype', 'typename', 'breedtype_id')->typenameList())?>,<?= $data->getName('Breedtype', 'typename', 'breedtype_id')->getEchartsData('number')?>,<?= json_encode($data->getName('Breedtype', 'unit', 'breedtype_id')->typenameList())?>);
+				showShadow('breedinfo',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Breedtype', 'typename', 'breedtype_id')->typenameList())?>,<?= $data->getName('Breedtype', 'typename', 'breedtype_id')->showAllShadow('sum','number')?>,<?= json_encode($data->getName('Breedtype', 'unit', 'breedtype_id')->typenameList())?>);
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
 

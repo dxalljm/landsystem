@@ -47,7 +47,7 @@ use frontend\helpers\arraySearch;
 			        <td align="center"><strong>合计</strong></td>
 			        <td><strong>'.$data->count('farms_id').'户</strong></td>
 			        <td><strong>'.$data->count('farmer_id').'个</strong></td>
-			        <td><strong>'.$data->sum('mortgagearea',10000).'万元</strong></td>			        
+			        <td><strong>'.$data->sum('mortgagearea',10000).'万亩</strong></td>			        
 					<td><strong>'.$data->count('mortgagebank').'个</strong></td>
 					<td><strong>'.$data->sum('mortgagemoney',10000).'万元</strong></td>
 			        </tr>',
