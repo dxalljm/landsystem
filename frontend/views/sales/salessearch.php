@@ -62,7 +62,7 @@ use frontend\helpers\arraySearch;
               <?php //var_dump($data->getName('Plant', 'cropname', 'plant_id')->getEchartsData(['*','single',['Plantingstructure',['planting_id','area']]],10000));exit;?>
                 <div id="yields" style="width: 900px; height: 600px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-				showAllShadow('yields',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Plant', 'cropname', 'plant_id')->typenameList())?>,<?= $data->getName('Plant', 'cropname', 'plant_id')->getEchartsData('volume',10000)?>,'万斤');
+				showAllShadow('yields',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Plant', 'cropname', 'plant_id')->typenameList())?>,<?= $data->getName('Plant', 'cropname', 'plant_id')->showAllShadow('sum','volume',10000)?>,'万斤');
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
 
