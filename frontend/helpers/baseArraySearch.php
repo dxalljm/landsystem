@@ -87,18 +87,26 @@ class baseArraySearch {
 			return false;
 	}
 	public function search() {
-		// var_dump($this->where);
+// 		var_dump($this->where);
 		if ($this->where) {
 			$data = [ ];
 			foreach ( $this->where as $optionvalue ) {
 				if (is_array ( $optionvalue )) {
 					foreach ( $optionvalue as $okey => $oval ) {
-						// var_dump($optionvalue);exit;
+// 						var_dump($oval);
 						foreach ( $this->data as $key => $value ) {
-							if ($value->getAttribute ( $okey ) == ( int ) $oval) {
-								// var_dump($oval);
-								// echo $value->getAttribute($okey).'-----'.$oval.'<br>';
-								$data [] = $this->data [$key];
+							if(is_array($oval)) {
+								foreach ($oval as $v) {
+									if ($value->getAttribute ( $okey ) == ( int ) $v) {
+										$data [] = $this->data [$key];
+									}
+								}
+							} else {
+								foreach ($oval as $v) {
+									if ($value->getAttribute ( $okey ) == ( int ) $oval) {
+										$data [] = $this->data [$key];
+									}
+								}
 							}
 						}
 					}
@@ -106,6 +114,7 @@ class baseArraySearch {
 			}
 			$this->temp = $this->unique_obj ( $data );
 		}
+// 		var_dump($this->data);
 		return $this;
 	}
 	
@@ -159,7 +168,7 @@ class baseArraySearch {
 				}
 			}
 		} else {
-// 			var_dump($field);
+// 			var_dump($data);
 			foreach ( $data as $value ) {
 				$sum += $value->getAttribute ( $field );
 			}
