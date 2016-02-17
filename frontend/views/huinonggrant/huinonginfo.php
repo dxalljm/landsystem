@@ -18,8 +18,6 @@ use frontend\helpers\arraySearch;
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 ?>
-<script type="text/javascript" src="vendor/bower/echarts/build/dist/echarts.js"></script>
-<script type="text/javascript" src="vendor/bower/echarts/build/dist/echarts.min.js"></script>
 <div class="lease-index">
 <section class="content">
     <div class="row">
@@ -31,7 +29,6 @@ use frontend\helpers\arraySearch;
 	$totalData = clone $dataProvider;
 	$totalData->pagination = ['pagesize'=>0];
 	$data = arraySearch::find($totalData)->search();
-// 	var_dump($data->sum('area'));
 // 	$data->getName('Plant', 'cropname', 'plant_id')->getEchartsData('area',10000);
 	$planter = $data->count('farmer_id');
 	$leaseer = $data->count('lease_id');
@@ -67,7 +64,7 @@ use frontend\helpers\arraySearch;
               <!-- /.tab-pane -->
               <div class='tab-pane' id="plantingstructure">
               <div id="plantingstructuredata" style="width:1000px; height: 600px; margin: 0 auto"></div>
-				<?php //var_dump($data->getName('Plant', 'cropname', 'plant_id')->showAllShadow('sum','area',10000));?>
+				<?php var_dump($data->getName('Plant', 'cropname', 'plant_id')->showAllShadow('sum','area',10000));?>
               </div>
               <script type="text/javascript">
 				showAllShadow('plantingstructuredata',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Plant', 'cropname', 'plant_id')->typenameList())?>,<?= $data->getName('Plant', 'cropname', 'plant_id')->showAllShadow('sum','area',10000);?>,'万亩');

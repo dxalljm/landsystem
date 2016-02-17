@@ -18,6 +18,8 @@ use app\models\Fireprevention;
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 ?>
+<script type="text/javascript" src="vendor/bower/echarts/build/dist/echarts.js"></script>
+<script type="text/javascript" src="vendor/bower/echarts/build/dist/echarts.min.js"></script>
 <div class="lease-index">
 <section class="content">
     <div class="row">
