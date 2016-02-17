@@ -43,7 +43,7 @@ class AppAsset extends AssetBundle
         'js/main.js',
     	'js/showEcharts.js',
         'js/print.js',
-
+        'vendor/bower/blueimp-file-upload/js/jquery.fileupload.js',
     ];
 
     // 依赖
