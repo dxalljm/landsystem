@@ -1,5 +1,8 @@
 <?php
 namespace frontend\controllers;
+
+use Yii;
+use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Tables;
@@ -23,8 +26,16 @@ use app\models\Reviewprocess;
     <div class="row">
         <div class="col-xs-12">
         <div class="form-group">
-    	   	&nbsp;&nbsp;<?= Html::Button('打印', ['class' => 'btn btn-primary','onclick'=>'print.preview("ttpoprint")']) ?> 			
-    	</div>
+    	   	&nbsp;&nbsp;<?= Html::Button('打印', ['class' => 'btn btn-primary','onclick'=>'print.preview("ttpoprint")']) ?>
+
+			<span class="btn btn-success fileinput-button">
+                <i class="glyphicon glyphicon-plus"></i>
+                <span>Select files...</span>
+                        <!-- The file input field used as target for the file upload widget -->
+                <input id="fileupload" type="file" name="files[]" multiple="">
+            </span>
+
+		</div>
 <!--             <div class="box"> -->
 
 <!--                 <div class="box-body"> -->
@@ -159,22 +170,16 @@ use app\models\Reviewprocess;
 </div>
 
 <script language="javascript" type="text/javascript">
-    var LODOP; //声明为全局变量 
 
-	function prn_preview4() {	
-		CreateOnePage();	
-		LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT","Auto-Width");	
-		LODOP.PREVIEW();	
-	};		
-	
-	function CreateOnePage(){
-		LODOP=getLodop();  
-		LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_整页缩放打印输出");
-		strCenterStyle="<style/>form {text-align: center}</style>"; 
-		LODOP.ADD_PRINT_HTM("25mm","20mm","RightMargin:0mm","BottomMargin:9mm",strCenterStyle+document.getElementById("ttpoprint").innerHTML); //上下边距9mm，左右边距0mm
-		//LODOP.ADD_PRINT_HTM("14%","10%","100%","90%","<body leftmargin=0 topmargin=0>"+document.getElementById('ttpoprint').innerHTML+"</body>");
-		LODOP.SET_PRINT_STYLEA(0,"Horient",2);        
-		LODOP.SET_PRINT_STYLEA(0,"Vorient",2);
-		LODOP.SET_PREVIEW_WINDOW(0,0,0,0,0,"");	
-	};	
+	$(function () {
+		var url = "<?= Url::to(['farms/fileupload']);?>";
+        $('#fileupload').fileupload({
+            url: url,
+            dataType: 'json',
+			done: function () {
+				alert('12');
+            }
+        });
+	});
+
 </script>
