@@ -42,7 +42,8 @@ class AppAsset extends AssetBundle
     	'vendor/bower/echarts/build/dist/echarts.min.js',
         'js/main.js',
     	'js/showEcharts.js',
-    	
+        'js/print.js',
+
     ];
 
     // 依赖
