@@ -48,4 +48,12 @@ class Tablefields extends \yii\db\ActiveRecord
             'cfields' => '中文标识',
         ];
     }
+    
+    public static function getCfields($modelfield)
+    {
+//     	var_dump($modelfield);exit;
+    	$tableid = Tables::find()->where(['tablename'=>\Yii::$app->controller->id])->one()['id'];
+    	$field = Tablefields::find()->where(['tables_id'=>$tableid,'fields'=>$modelfield])->one();
+    	return $field['cfields'];
+    }
 }

@@ -68,13 +68,7 @@ class FarmsController extends Controller {
 		];
 	}
 
-	public function actionFileupload()
-	{
-		$file = UploadedFile::getInstanceByName('upload_file');
-		$path = dirname(dirname(__FILE__)) . '/web/static/1/1.png';
-		$file->saveAs($path);
-		echo json_encode(['url' => $path]);
-	}
+	
 
 	public function actionGetallaction() {
 		$result = self::actionName ();

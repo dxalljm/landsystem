@@ -9,7 +9,9 @@ use app\models\Theyear;
 use yii\web\View;
 use dosamigos\datetimepicker\DateTimePicker;
 use app\models\Farms;
-
+use yii\helpers\Url;
+use frontend\helpers\fileUtil;
+use app\models\Tablefields;
 /* @var $this yii\web\View */
 /* @var $model app\models\farmer */
 
@@ -27,8 +29,14 @@ use app\models\Farms;
         <td colspan="2" valign="middle"><?= $farm->farmername?></td>
         <td width="9%" height="25" align="right" valign="middle">曾用名</td>
         <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'farmerbeforename')->textInput(['maxlength' => 8])->label(false)->error(false); else echo '&nbsp;'.$model->farmerbeforename; ?></td>
-        <td width="19%" rowspan="6" align="center" valign="middle"><p>
-          <?php if(!$model->isupdate) echo $form->field($model, 'photo')->fileInput(['maxlength' => 200])->label(false)->error(false); echo Html::img($model->photo,['width'=>'180px','height'=>'200px']); ?>
+        <td width="19%" rowspan="6" align="center" valign="middle">
+        <span class="btn btn-success fileinput-button">
+		    <i class="glyphicon glyphicon-plus"></i>
+		    <span>请选择...</span>
+		    <input id="fileuploadphoto" type="file" name="upload_file" multiple="">
+		</span>
+        <p>
+          <?php echo Html::img($model->photo,['width'=>'180px','height'=>'200px','id'=>'photo']); ?>
         </p></td>
      </tr>
       <tr>
@@ -60,8 +68,13 @@ use app\models\Farms;
 	  
       
       <tr>
-        <td align="right" valign="middle">身份证扫描件</td>
-        <td colspan="6" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'cardpic')->fileInput(['maxlength' => 200])->label(false)->error(false);  echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px']); ?></td>
+        <td align="right" valign="middle">身份证扫描件<br><span class="btn btn-success fileinput-button">
+		    <i class="glyphicon glyphicon-plus"></i>
+		    <span>请选择...</span>
+		    <input id="fileuploadcardpic" type="file" name="upload_file" multiple="">
+		</span></td>
+        <td colspan="6" valign="middle">
+       <?php echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px','id'=>'cardpic']); ?></td>
       </tr>
   </table>
 <h3>家庭主要成员</h3>
@@ -203,3 +216,32 @@ function submittype(v) {
 	});
 </script>
 </div>
+<?php 
+	var_dump(Tables::getCtablename());
+	var_dump(Tablefields::getCfields('cardpic'));
+?>
+<script language="javascript" type="text/javascript">
+
+	$(function () {
+		var url = "<?= Url::to(['photogallery/fileupload','controller'=>Tables::getCtablename(),'action'=>Tablefields::getCfields('cardpic'),'farms_id'=>$_GET['farms_id']]);?>";
+        $('#fileuploadcardpic').fileupload({
+            url: url,
+            dataType: 'json',
+			done: function (e, data) {
+				var url2 = data.result.url;
+				$('#cardpic').attr('src', url2);
+            }
+        });
+	});
+	$(function () {
+		var url = "<?= Url::to(['photogallery/fileupload']);?>";
+        $('#fileuploadphoto').fileupload({
+            url: url,
+            dataType: 'json',
+			done: function (e, data) {
+				var url2 = data.result.url;
+				$('#photo').attr('src', url2);
+            }
+        });
+	});
+</script>
