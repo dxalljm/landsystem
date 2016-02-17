@@ -12,13 +12,14 @@ var print = {
         return this.element;
     },
 
-    preview: function() {
-        CreateOnePage();
+    preview: function(id) {
+        this.createOnPage(id);
         this.lodop.SET_PRINT_MODE("PRINT_PAGE_PERCENT","Auto-Width");
         this.lodop.PREVIEW();
     },
 
-    createOnPage : function() {
+    createOnPage : function(id) {
+    	this.setElement(id);
         this.lodop=getLodop();
         this.lodop.PRINT_INIT("打印控件功能演示_Lodop功能_整页缩放打印输出");
         var strCenterStyle = "<style/>form {text-align: center}</style>";

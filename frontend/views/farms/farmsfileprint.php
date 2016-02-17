@@ -23,7 +23,7 @@ use app\models\Reviewprocess;
     <div class="row">
         <div class="col-xs-12">
         <div class="form-group">
-    	   	&nbsp;&nbsp;<?= Html::Button('打印', ['class' => 'btn btn-primary','onclick'=>'prn_preview4()']) ?> 			
+    	   	&nbsp;&nbsp;<?= Html::Button('打印', ['class' => 'btn btn-primary','onclick'=>'print.preview("ttpoprint")']) ?> 			
     	</div>
 <!--             <div class="box"> -->
 

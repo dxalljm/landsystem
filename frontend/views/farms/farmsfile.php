@@ -25,7 +25,7 @@ use app\models\Farmer;
     <div class="row">
         <div class="col-xs-12">
          <div class="form-group">
-    	   	&nbsp;&nbsp;<?= Html::Button('打印', ['class' => 'btn btn-primary','onclick'=>'print.preview()']) ?>
+    	   	&nbsp;&nbsp;<?= Html::Button('打印', ['class' => 'btn btn-primary','onclick'=>'print.preview("ttpoprint")']) ?>
     	</div>
 <!--             <div class="box"> -->
 
@@ -184,7 +184,3 @@ use app\models\Farmer;
     </div>
 </section>
 </div>
-
-<script language="javascript" type="text/javascript">
-
-</script>
