@@ -32,7 +32,7 @@ use app\models\Reviewprocess;
                 <i class="glyphicon glyphicon-plus"></i>
                 <span>Select files...</span>
                         <!-- The file input field used as target for the file upload widget -->
-                <input id="fileupload" type="file" name="files[]" multiple="">
+                <input id="fileupload" type="file" name="upload_file" multiple="">
             </span>
 
 		</div>
@@ -176,8 +176,9 @@ use app\models\Reviewprocess;
         $('#fileupload').fileupload({
             url: url,
             dataType: 'json',
-			done: function () {
-				alert('12');
+			done: function (e, data) {
+				var url2 = data.result.url;
+				$('img').attr('src', url2);
             }
         });
 	});
