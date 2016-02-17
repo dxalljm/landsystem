@@ -19,7 +19,8 @@ use frontend\helpers\arraySearch;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 ?>
 
-              
+   <script type="text/javascript" src="vendor/bower/echarts/build/dist/echarts.js"></script>
+<script type="text/javascript" src="vendor/bower/echarts/build/dist/echarts.min.js"></script>           
    <?= $this->render('..//search/searchindex',['tab'=>$tab,'begindate'=>$begindate,'enddate'=>$enddate,'params'=>$params]);?>
 <?php 
 	$totalData = clone $dataProvider;
