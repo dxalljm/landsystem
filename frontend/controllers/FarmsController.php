@@ -67,6 +67,13 @@ class FarmsController extends Controller {
 				] 
 		];
 	}
+
+	public function actionFileupload()
+	{
+//		var_dump($_FILES);
+		echo json_encode(array());
+	}
+
 	public function actionGetallaction() {
 		$result = self::actionName ();
 		return $result;

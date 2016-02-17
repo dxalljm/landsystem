@@ -493,8 +493,6 @@ var leaseEvent = function () {
 }
 
 
-// Apply the theme
-var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
 
 // 实例化租凭合同
 lease = leaseEvent();
