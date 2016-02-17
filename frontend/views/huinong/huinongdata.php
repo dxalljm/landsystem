@@ -80,11 +80,10 @@ $this->params['breadcrumbs'][] = $this->title;
     					<td align="center"><b></b></td>
     					<td align="center" width="150px"><b><?php echo html::textInput('areaSum',0,['readonly'=>'readonly','class'=>'form-control','id'=>'area'])?></b></td>
     					<td align="center" width="150px"><b><?php echo html::textInput('moneySum',0,['readonly'=>'readonly','class'=>'form-control','id'=>'money'])?></b></td>
-    					<td align="center"><b></b></td>
+    					<td align="center"><label><input type="checkbox" class="all"/> 全选</label><label><input type="checkbox" class="invert"/> 反选</label><label><input type="checkbox" class="revoke"/> 取消选择 </label></td>
     				</tr>
     				<?php }?>
     			</table>
-
     <div class="form-group">
         <?= Html::submitButton('提交', ['class' => 'btn btn-primary'])?>
     </div>
@@ -98,24 +97,89 @@ $this->params['breadcrumbs'][] = $this->title;
 </section>
 </div>
 <script>
-$('input:checkbox[name="isSubmit[]"]').click(function(){
-	var input = $(this).is(":checked");
-	var areaSum = $('#area').val();
-	var moneySum = $('#money').val();
-	var val = $(this).val();
-	var valArr = val.split('/');
+selected.all('.all', '.nodes');
+selected.invert('.invert', '.nodes');
+selected.revoke('.revoke', '.nodes');
+$('.all').click(function(){
+	 if ($(this).is(':checked') == true) {
+		$('.nodes').each(function(){
+			var areaSum = $('#area').val();
+			var moneySum = $('#money').val();
+			var val = $(this).val();
+			var valArr = val.split('/');
+			 if ($(this).is(':checked') == true) {
+				 areasum = areaSum*1 + valArr[3]*1;
+				 moneysum = moneySum*1 + valArr[2]*1;
 	
-	if(input == true) {
-		var areaResult = areaSum*1 + valArr[3]*1;
-		$('#area').val(areaResult.toFixed(2));
-		var moneyResult = moneySum*1 + valArr[2]*1;
-		$('#money').val(moneyResult.toFixed(2));
+		         $('#area').val(areasum.toFixed(2));
+		         $('#money').val(moneysum.toFixed(2));
+		     }
+		});
+	 } else {
+		 $('#area').val(0);
+         $('#money').val(0);
+	 }
+});
+$('.invert').click(function(){
+	if ($(this).is(':checked') == true) {
+		$('#area').val(0);
+        $('#money').val(0);
+	$('.nodes').each(function(){
+		var areaSum = $('#area').val();
+		var moneySum = $('#money').val();
+		var val = $(this).val();
+		var valArr = val.split('/');
+		 if ($(this).is(':checked') == true) {
+			 areasum = areaSum*1 + valArr[3]*1;
+			 moneysum = moneySum*1 + valArr[2]*1;
+
+	         $('#area').val(areasum.toFixed(2));
+	         $('#money').val(moneysum.toFixed(2));
+	     }
+	});
 	} else {
-		var areaResult = areaSum*1 - valArr[3]*1;
-		$('#area').val(areaResult.toFixed(2));
-		var moneyResult = moneySum*1 - valArr[2]*1;
-		$('#money').val(moneyResult.toFixed(2));
+		$('#area').val(0);
+        $('#money').val(0);
+		$('.nodes').each(function(){
+			var areaSum = $('#area').val();
+			var moneySum = $('#money').val();
+			var val = $(this).val();
+			var valArr = val.split('/');
+			 if ($(this).is(':checked') == true) {
+				 areasum = areaSum*1 + valArr[3]*1;
+				 moneysum = moneySum*1 + valArr[2]*1;
+
+		         $('#area').val(areasum.toFixed(2));
+		         $('#money').val(moneysum.toFixed(2));
+		     }
+		});
 	}
+});
+$('.revoke').click(function(){
+	 $('#area').val(0);
+     $('#money').val(0);
+});
+$("document").ready(function(){
+	
+	$('.nodes').click(function(){
+		var input = $(this).is(":checked");
+		var areaSum = $('#area').val();
+		var moneySum = $('#money').val();
+		var val = $(this).val();
+		var valArr = val.split('/');
+		
+		if(input == true) {
+			var areaResult = areaSum*1 + valArr[3]*1;
+			$('#area').val(areaResult.toFixed(2));
+			var moneyResult = moneySum*1 + valArr[2]*1;
+			$('#money').val(moneyResult.toFixed(2));
+		} else {
+			var areaResult = areaSum*1 - valArr[3]*1;
+			$('#area').val(areaResult.toFixed(2));
+			var moneyResult = moneySum*1 - valArr[2]*1;
+			$('#money').val(moneyResult.toFixed(2));
+		}
+	});
 });
 // function setSum(money,area)
 // {

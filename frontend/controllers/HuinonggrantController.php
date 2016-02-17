@@ -103,6 +103,59 @@ class HuinonggrantController extends Controller
         return $this->redirect(['huinonggrantindex']);
     }
 
+    public function actionHuinonggrantinfo()
+    {
+    	$searchModel = new HuinonggrantSearch();
+    	$params = Yii::$app->request->queryParams;
+    	$whereArray = Farms::getManagementArea()['id'];
+    	if (empty($params['HuinonggrantSearch']['management_area'])) {
+    		$params ['HuinonggrantSearch'] ['management_area'] = $whereArray;
+    	}
+    	$params['begindate'] = Theyear::getYeartime()[0];
+    	$params['enddate'] = Theyear::getYeartime()[1];
+    	// 		var_dump($params);
+    	$dataProvider = $searchModel->searchIndex ( $params );
+    	if (is_array($searchModel->management_area)) {
+    		$searchModel->management_area = null;
+    	}
+    	 
+    
+    	return $this->render('huinonggrantinfo',[
+    			'searchModel' => $searchModel,
+    			'dataProvider' => $dataProvider,
+    			'params' => $params,
+    	]);
+    }
+    
+    
+    
+    public function actionHuinonggrantsearch($tab,$begindate,$enddate)
+    {
+    	if(isset($_GET['tab']) and $_GET['tab'] !== \Yii::$app->controller->id) {
+    		return $this->redirect ([$_GET['tab'].'/'.$_GET['tab'].'search',
+    				'tab' => $_GET['tab'],
+    				'begindate' => strtotime($_GET['begindate']),
+    				'enddate' => strtotime($_GET['enddate']),
+    				$_GET['tab'].'Search' => ['management_area'=>$_GET['management_area']],
+    		]);
+    	}
+    	$searchModel = new HuinonggrantSearch();
+    	if(!is_numeric($_GET['begindate']))
+    		$_GET['begindate'] = strtotime($_GET['begindate']);
+    	if(!is_numeric($_GET['enddate']))
+    		$_GET['enddate'] = strtotime($_GET['enddate']);
+    
+    	$dataProvider = $searchModel->searchIndex ( $_GET );
+    	return $this->render('huinonggrantsearch',[
+    			'searchModel' => $searchModel,
+    			'dataProvider' => $dataProvider,
+    			'tab' => $_GET['tab'],
+    			'begindate' => $_GET['begindate'],
+    			'enddate' => $_GET['enddate'],
+    			'params' => $_GET,
+    	]);
+    }
+    
     /**
      * Finds the Huinonggrant model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

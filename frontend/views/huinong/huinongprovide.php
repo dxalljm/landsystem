@@ -76,6 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
     				
     				<tr>
     					<td width="28" align="center"><b>序号</b></td>
+    					<td width="51" align="center"><b>管理区</b></td>
     					<td width="51" align="center"><b>农场名称</b></td>
     					<td width="28" align="center"><b>法人</b></td>
     					<td width="40" align="center"><b>租赁者</b></td>
@@ -94,6 +95,7 @@ $this->params['breadcrumbs'][] = $this->title;
     				</tr>
     				<tr>
     					<td width="28" align="center"><b></b></td>
+    					<td width="28" align="center"><b><?= html::dropDownList('management_area',$post['farmname'],['class'=>'form-control'])?></b></td>
     					<td align="center"><?= html::textInput('farmname',$post['farmname'],['class'=>'form-control'])?></td>
     					<td align="center"><b><?= html::textInput('farmername',$post['farmername'],['class'=>'form-control'])?></b></td>
     					<td align="center"><b><?= html::textInput('lesseename',$post['lesseename'],['class'=>'form-control'])?></b></td>

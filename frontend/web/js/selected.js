@@ -10,6 +10,8 @@ var selected = {
     all: function(control, nodes) {
         $(control).click(function () {
             if ($(this).is(':checked') == true) {
+            	$('.invert').prop('checked',false);
+            	$('.revoke').prop('checked',false);
                 $(nodes).prop('checked', true);
             } else {
                 $(nodes).prop('checked', false);
@@ -23,6 +25,8 @@ var selected = {
         $(control).click(function () {
             $(nodes).each(function () {
                 if ($(this).is(':checked') == true) {
+                	$('.all').prop('checked',false);
+                	$('.revoke').prop('checked',false);
                     $(this).prop('checked', false);
                 } else {
                     $(this).prop('checked', true);
@@ -35,6 +39,8 @@ var selected = {
      */
     revoke: function(control, nodes) {
         $(control).click(function () {
+        	$('.all').prop('checked',false);
+        	$('.invert').prop('checked',false);
             $(nodes).prop('checked', false);
         });
     }

@@ -102,11 +102,10 @@ class baseArraySearch {
 									}
 								}
 							} else {
-								foreach ($oval as $v) {
-									if ($value->getAttribute ( $okey ) == ( int ) $oval) {
-										$data [] = $this->data [$key];
-									}
+								if ($value->getAttribute ( $okey ) == ( int ) $oval) {
+									$data [] = $this->data [$key];
 								}
+								
 							}
 						}
 					}
