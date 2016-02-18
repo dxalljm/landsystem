@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('photogallery_form', [
         'model' => $model,
+    	'file' => $file,
     ]) ?>
 
 </div>

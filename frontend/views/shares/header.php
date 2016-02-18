@@ -64,11 +64,17 @@ use app\models\User;
                         if($menu['menuurl'] == 'reviewprocess/reviewprocessindex') {
                         	echo Reviewprocess::getUserProcessCount();
                         }
-                        echo "</a></li>";                       
-                    } ?>
+                        echo "</a></li>";  
+                       
+                    } 
+                    
+                    ?>
                     
                
-                <?php }} ?>
+                <?php }} 
+                echo "<li ><a href=" . Url::to('index.php?r=photogallery/photogalleryindex') . ">". '图库';
+                echo "</a></li>";
+                ?>
             </ul>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">

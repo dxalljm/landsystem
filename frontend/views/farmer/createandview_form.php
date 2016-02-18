@@ -37,6 +37,7 @@ use app\models\Tablefields;
 		</span>
         <p>
           <?php echo Html::img($model->photo,['width'=>'180px','height'=>'200px','id'=>'photo']); ?>
+          <?php echo $form->field($model,'photo')->hiddenInput(['id'=>'photoresult'])->label(false)?>
         </p></td>
      </tr>
       <tr>
@@ -74,7 +75,9 @@ use app\models\Tablefields;
 		    <input id="fileuploadcardpic" type="file" name="upload_file" multiple="">
 		</span></td>
         <td colspan="6" valign="middle">
-       <?php echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px','id'=>'cardpic']); ?></td>
+       <?php echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px','id'=>'cardpic']); ?>
+       <?php echo $form->field($model,'cardpic')->hiddenInput(['id'=>'cardpicresult'])->label(false)?>
+       </td>
       </tr>
   </table>
 <h3>家庭主要成员</h3>
@@ -216,31 +219,29 @@ function submittype(v) {
 	});
 </script>
 </div>
-<?php 
-	var_dump(Tables::getCtablename());
-	var_dump(Tablefields::getCfields('cardpic'));
-?>
 <script language="javascript" type="text/javascript">
 
 	$(function () {
-		var url = "<?= Url::to(['photogallery/fileupload','controller'=>Tables::getCtablename(),'action'=>Tablefields::getCfields('cardpic'),'farms_id'=>$_GET['farms_id']]);?>";
+		var url = "<?= Url::to(['photogallery/fileupload','controller'=>yii::$app->controller->id,'field'=>'cardpic','farms_id'=>$_GET['farms_id']]);?>";
         $('#fileuploadcardpic').fileupload({
             url: url,
             dataType: 'json',
 			done: function (e, data) {
 				var url2 = data.result.url;
 				$('#cardpic').attr('src', url2);
+				$('#cardpicresult').attr('value', url2);
             }
         });
 	});
 	$(function () {
-		var url = "<?= Url::to(['photogallery/fileupload']);?>";
+		var url = "<?= Url::to(['photogallery/fileupload','controller'=>yii::$app->controller->id,'field'=>'photo','farms_id'=>$_GET['farms_id']]);?>";
         $('#fileuploadphoto').fileupload({
             url: url,
             dataType: 'json',
 			done: function (e, data) {
 				var url2 = data.result.url;
 				$('#photo').attr('src', url2);
+				$('#photoresult').attr('value', url2);
             }
         });
 	});

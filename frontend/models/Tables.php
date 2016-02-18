@@ -44,9 +44,9 @@ class Tables extends \yii\db\ActiveRecord
         ];
     }
     
-    public static function getCtablename()
+    public static function getCtablename($controller)
     {
-    	$tablename = Tables::find()->where(['tablename'=>yii::$app->controller->id])->one();
+    	$tablename = Tables::find()->where(['tablename'=>$controller])->one();
     	return $tablename['Ctablename'];
     }
 }

@@ -49,10 +49,10 @@ class Tablefields extends \yii\db\ActiveRecord
         ];
     }
     
-    public static function getCfields($modelfield)
+    public static function getCfields($contrller,$modelfield)
     {
 //     	var_dump($modelfield);exit;
-    	$tableid = Tables::find()->where(['tablename'=>\Yii::$app->controller->id])->one()['id'];
+    	$tableid = Tables::find()->where(['tablename'=>$contrller])->one()['id'];
     	$field = Tablefields::find()->where(['tables_id'=>$tableid,'fields'=>$modelfield])->one();
     	return $field['cfields'];
     }
