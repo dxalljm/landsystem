@@ -625,6 +625,11 @@ class Farms extends \yii\db\ActiveRecord {
 		] )->sum ( 'measure' ) / 10000 ) . '万亩';
 	}
 	private static function getPlate($controller, $menuUrl) {
+// 		$cacheKey = 'cache-key-plate1'.\Yii::$app->getUser()->id;
+// 		$value = Yii::$app->cache->get($cacheKey);
+// 		if (!empty($value)) {
+// 			return $value;
+// 		}
 		$where = self::getManagementArea ()['id'];
 		switch ($controller) {
 			case 'farms' :
@@ -713,11 +718,16 @@ class Farms extends \yii\db\ActiveRecord {
 			default :
 				$value = false;
 		}
+// 		Yii::$app->cache->set($cacheKey, $value, 0);
 		return $value;
 	}
 	public static function showEightPlantmenu() {
 		
-// 		$cachekey = Yii::$app->cache->get('')
+		$cache = 'cache-key-plantmenu12'.\Yii::$app->getUser()->id;
+    	$html = Yii::$app->cache->get($cache);
+    	if (!empty($html)) {
+    		return $html;
+    	}
 		
 		$businessmenu = MenuToUser::find ()->where ( [ 
 				'role_id' => User::getItemname () 
@@ -733,7 +743,7 @@ class Farms extends \yii\db\ActiveRecord {
 			$html .= self::showEightPlant ( $menuUrl );
 		}
 		$html .= '</div>';
-		
+		Yii::$app->cache->set($cache, $html, 0);
 		return $html;
 	}
 	private static function showEightPlant($menuUrl) {

@@ -23,6 +23,8 @@ class AppAsset extends AssetBundle
 
     // 注册CSS
     public $css = [
+        'vendor/bower/blueimp-file-upload/css/jquery.fileupload.css',
+        'vendor/bower/blueimp-file-upload/css/jquery.fileupload-ui.css',
         'vendor/bower/font-awesome/css/font-awesome.min.css',
         'vendor/bower/font-awesome/css/font-awesome.min.css',
         'vendor/bower/AdminLTE/dist/css/AdminLTE.min.css',
@@ -34,15 +36,24 @@ class AppAsset extends AssetBundle
     public $js = [
         'js/date.js',
         'js/selected.js',
+        'vendor/bower/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
+        'vendor/bower/blueimp-file-upload/js/jquery.fileupload.js',
         'vendor/bower/AdminLTE/bootstrap/js/bootstrap.min.js',
         'vendor/bower/AdminLTE/dist/js/app.min.js',
         'vendor/bower/devbridge-autocomplete/dist/jquery.autocomplete.min.js',
     	'js/vendor/bower/lodop/LodopFuncs.js',
+<<<<<<< HEAD
 //         'vendor/bower/echarts/build/dist/echarts.js',
 //     	'vendor/bower/echarts/build/dist/echarts.min.js',
         'js/main.js',
 //     	'js/showEcharts.js',
     	
+=======
+
+        'js/main.js',
+    	'js/showEcharts.js',
+        'js/print.js',
+>>>>>>> 712370ae730cca3dbccf90829f6ad8da2806a46f
     ];
 
     // 依赖

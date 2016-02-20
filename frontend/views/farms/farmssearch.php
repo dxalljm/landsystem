@@ -18,6 +18,7 @@ use frontend\helpers\arraySearch;
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 ?>
+
      <?php //echo '_GET';var_dump($_GET);//echo 'get';var_dump($params);?>
   <?= $this->render('..//search/searchindex',['tab'=>$tab,'begindate'=>$begindate,'enddate'=>$enddate,'params'=>$params]);?>
 <?php 

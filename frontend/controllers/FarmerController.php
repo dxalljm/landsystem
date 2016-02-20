@@ -139,34 +139,7 @@ class FarmerController extends Controller
     		 $old = $model->attributes;
 			 //$membermodel = Farmermembers::find()->where(['farmer_id' => $farmerid])->all();
 			 if ($model->load(Yii::$app->request->post())) {
-			 		//var_dump($_FILES);
-			 		//if($model->photo !== '') {
-			 			$upload = new UploadedFile();
-			 			$photo =  $upload->getInstance($model,'photo');
-			 			//var_dump($photo);
-			 			if(!empty($photo)) {
-				 			$extphoto = $photo->getExtension();
-				 			$photoName = time().rand(100,999).'.'.$extphoto;
-				 			$photo->saveAs('uploads/'.$photoName);
-				 			$model->photo = 'uploads/'.$photoName;
-			 			} else 
-			 				$model->photo = $old['photo'];
-			 		//} else {
-			 			//$model->photo = $old['photo'];
-			 		//}
-			 		//if($model->cardpic !== '') {
-			 			$cardpic =  UploadedFile::getInstance($model,'cardpic');
-			 			//var_dump($cardpic);
-			 			if(!empty($cardpic)) {
-				 			$extcardpic = $cardpic->getExtension();
-				 			$cardpicName = time().rand(100,999).'.'.$extcardpic;
-				 			$cardpic->saveAs('uploads/'.$cardpicName);
-				 			$model->cardpic = 'uploads/'.$cardpicName;
-			 			} else 
-			 				$model->cardpic = $old['cardpic'];
-// 			 		//} else {
-			 			//$model->cardpic = $old['cardpic'];
-			 		//}
+
 			 	$model->update_at = time();
 			 	$model->save();
 			 	//var_dump($_FILES);
@@ -214,24 +187,7 @@ class FarmerController extends Controller
     		
     		$membermodel = Farmermembers::find()->where(['farmer_id' => $farmerid])->all();
     		if ($model->load(Yii::$app->request->post())) {
-	    	 	var_dump($_FILES);
-	    	 	//if($model->photo !== '') {
-	    	 		$upload = new UploadedFile();
-		    	 	$photo =  $upload->getInstance($model,'photo');
-		    	 if(!empty($photo)) {
-	 	    	 	$extphoto = $photo->getExtension();
-	 	    	 	$photoName = time().rand(100,999).'.'.$extphoto;
-	 	    	 	$photo->saveAs('uploads/'.$photoName);
-	 	    	 	$model->photo = 'uploads/'.$photoName;
-	    	 	}
-	    	 	$cardpic =  UploadedFile::getInstance($model,'cardpic');
-	    	 	if(!empty($cardpic)) {
-	 	    	 	
-	 	    	 	$extcardpic = $cardpic->getExtension();
-		    	 	$cardpicName = time().rand(100,999).'.'.$extcardpic;
-		    	 	$cardpic->saveAs('uploads/'.$cardpicName);
-		    	 	$model->cardpic = 'uploads/'.$cardpicName;
-	    	 	}
+	    	 	
 	    	 	$model->create_at = time();
 	    	 	$model->update_at = $model->create_at;
 	    	 	$model->years = $year;

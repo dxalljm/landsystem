@@ -43,4 +43,10 @@ class Tables extends \yii\db\ActiveRecord
             'Ctablename' => '中文标识',
         ];
     }
+    
+    public static function getCtablename($controller)
+    {
+    	$tablename = Tables::find()->where(['tablename'=>$controller])->one();
+    	return $tablename['Ctablename'];
+    }
 }

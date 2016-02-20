@@ -86,10 +86,12 @@ class HuinongController extends Controller
    			$idresult = array_diff($farmsallid, $yqr);
    		else
    			$idresult = $farmsallid;
+//    		var_dump($idresult);exit;
    		switch ($model->subsidiestype_id) {
    			case 'plant':
    				$classname = 'plantingstructure';
    				$data = Plantingstructure::find()->where(['plant_id'=>$model->typeid,'farms_id'=>$idresult])->all();
+//    				var_dump($data);exit;
    				break;
    			case 'goodseed':
    				$classname = 'plantingstructure';
@@ -127,7 +129,7 @@ class HuinongController extends Controller
    			}
    			return $this->redirect(['huinongsend']);
    		}
-   		
+//    		var_dump($data);exit;
         return $this->render('huinongdata', [
         		'data' => $data,
         		'classname' => $classname,

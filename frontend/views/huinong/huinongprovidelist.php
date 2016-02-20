@@ -31,6 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
     				<tr>
     					<td align="center">补贴类型</td>
     					<td align="center">补贴种类</td>
+    					<td align="center">状态</td>
     					<td align="center">操作</td>
     				</tr>
     				<?php foreach ($huinongs as $value) {?>
@@ -45,9 +46,10 @@ $this->params['breadcrumbs'][] = $this->title;
 				            			echo $plantcropname.'/'.$data['plant_model'];
 				            		} ?>
             		</td>
+            		<td></td>
             		<td align="center"><?php 
             		if(Huinonggrant::find()->where(['huinong_id'=>$value['id']])->count()) 
-            			echo html::a('补贴对象确认',Url::to('index.php?r=huinong/huinongprovide&id='.$value['id']),['class'=>'btn btn-success']);
+            			echo html::a('补贴发放',Url::to('index.php?r=huinong/huinongprovide&id='.$value['id']),['class'=>'btn btn-success']);
             		else 
             			echo '等待地产科确认提交'?></td>
     				</tr>

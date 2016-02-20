@@ -17,6 +17,8 @@ $this->title = '岭南管委会';
 ?>
 
 <script type="text/javascript" src="js/showEcharts.js"></script>
+<script type="text/javascript" src="vendor/bower/echarts/build/dist/echarts.js"></script>
+<script type="text/javascript" src="vendor/bower/echarts/build/dist/echarts.min.js"></script>
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <ol class="breadcrumb">

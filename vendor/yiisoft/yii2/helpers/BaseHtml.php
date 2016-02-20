@@ -859,6 +859,7 @@ class BaseHtml
                 $lines[] = static::checkbox($name, $checked, array_merge($itemOptions, [
                     'value' => $value,
                     'label' => $encode ? static::encode($label) : $label,
+                	'class' => 'nodes',
                 ]));
             }
             $index++;
