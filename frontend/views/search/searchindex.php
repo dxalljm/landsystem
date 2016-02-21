@@ -11,6 +11,7 @@ use app\models\ManagementArea;
 use app\models\Search;
 use yii\grid\GridView;
 use app\models\Farms;
+use app\models\User;
 ?>
 <?php //var_dump($params[\Yii::$app->controller->id.'Search']['management_area']);exit;?>
 <script type="text/javascript" src="js/jquery.flip.min.js"></script>
@@ -32,8 +33,8 @@ use app\models\Farms;
 					if(isset($_GET[\Yii::$app->controller->id.'Search']['management_area']))
 						$management_area = $_GET[\Yii::$app->controller->id.'Search']['management_area'];
 					else 
-						$management_area = $_GET['management_area'];
-// 					var_dump($management_area)o
+						$management_area = User::getUserManagementArea();
+// 					var_dump($management_area);
                 ?>
 <table class="table table-hover">
   <tr>
@@ -88,6 +89,7 @@ use app\models\Farms;
     <td><?= html::submitButton('查询',['class'=>'btn btn-success','disabled'=>'disabled','id'=>'searchButton'])?></td>
   </tr>
 </table>
+<?php ActiveFormrdiv::end(); ?>
 <script>
 if($('#tablename').val() !== 'parmpt')
 	$('#searchButton').removeAttr("disabled"); 

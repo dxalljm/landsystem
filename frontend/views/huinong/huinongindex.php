@@ -4,6 +4,8 @@ use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\Plant;
+use app\models\Subsidiestype;
+use app\models\Goodseed;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\HuinongSearch */
@@ -36,18 +38,26 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            //'subsidiestype_id',
+//             'id',
+			[
+				'attribute' => 'subsidiestype_id',
+				'value' => function ($model) {
+					return Subsidiestype::find()->where(['id'=>$model->subsidiestype_id])->one()['typename'];
+			}
+			],
+            
             [
             	'attribute' => 'typeid',
             	'value' => function($model) {
-            		$classFile = 'app\\models\\'. $model->subsidiestype_id;
+            		$sub = Subsidiestype::find()->where(['id'=>$model->subsidiestype_id])->one()['urladdress'];
+            		
+            		$classFile = 'app\\models\\'. $sub;
             		$data = $classFile::find()->where(['id'=>$model->typeid])->one();
-            		if($model->subsidiestype_id == 'plant')
+            		if($sub == 'Plant')
             			return $data['cropname'];
-            		if($model->subsidiestype_id == 'goodseed') {
-            			$plantcropname = Plant::find()->where(['id'=>$data['plant_id']])->one()['cropname'];
-            			return $plantcropname.'/'.$data['plant_model'];
+            		if($sub == 'Goodseed') {
+            			$plant = Plant::find()->where(['id'=>$data['plant_id']])->one();
+				        return $plant['cropname'].'/'.$data['plant_model'];
             		}
             	}
             ],

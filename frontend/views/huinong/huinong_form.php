@@ -21,14 +21,15 @@ use dosamigos\datetimepicker\DateTimePicker;
 </style>
 <div class="huinong-form">
 <?php 
-switch ($model->subsidiestype_id) {
-	case 'plant':
+$typename = Subsidiestype::find()->where(['id'=>$model->subsidiestype_id])->one()['urladdress'];
+switch ($typename) {
+	case 'Plant':
 		$fatherid = Plant::find()->where(['id'=>$model->typeid])->one()['father_id'];
 		$sonid = '';
 		$goodseeds = [];
 		$son = ArrayHelper::map(Plant::find()->where(['father_id'=>$fatherid])->all(),'id','cropname');
 		break;
-	case 'goodseed':
+	case 'Goodseed':
 		$plantid = Goodseed::find()->where(['id'=>$model->typeid])->one()['plant_id'];
 		$fatherid = Plant::find()->where(['id'=>$plantid])->one()['father_id'];
 		$sonid = Plant::find()->where(['id'=>$plantid])->one()['id'];
@@ -46,7 +47,7 @@ switch ($model->subsidiestype_id) {
 	<table class="table table-bordered table-hover">
 		<tr>
 			<td width=15% align='right'>补贴类型</td>
-			<td colspan="6" align='left'><?= $form->field($model, 'subsidiestype_id')->dropDownList(ArrayHelper::map(Subsidiestype::find()->all(), 'urladdress', 'typename'),['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
+			<td colspan="6" align='left'><?= $form->field($model, 'subsidiestype_id')->dropDownList(ArrayHelper::map(Subsidiestype::find()->all(), 'id', 'typename'),['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
 		</tr>
 		<tr class="goodseed">
 			<td align='right'>良种型号</td>
@@ -115,11 +116,11 @@ if($('#huinong-subsidiestype_id').val() !== '')
 	$('.'+$('#huinong-subsidiestype_id').val()).css('display', 'table-row');
 $('#huinong-subsidiestype_id').change(function(){
 	var input = $(this).val();
-	if(input == 'goodseed') {
+	if(input == 1) {
 		$('.plant').css('display', 'none');
 		$('.goodseed').css('display', 'table-row');
 	}
-	if(input == 'plant') {
+	if(input == 2) {
 		$('.goodseed').css('display', 'none');
 		$('.plant').css('display', 'table-row');
 	}

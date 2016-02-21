@@ -13,6 +13,7 @@ use app\models\User;
 use app\models\Projectapplication;
 use app\models\Projecttype;
 use app\models\Infrastructuretype;
+use app\models\Tempauditing;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\ReviewprocessSearch */
@@ -30,8 +31,12 @@ $this->params ['breadcrumbs'] [] = $this->title;
 			<div class="col-xs-12">
 				<div class="box">
 					<div class="box-header">
-						<h3 class="box-title">
-                        任务列表                    </h3>
+						<h3 class="box-title">任务列表 </h3>
+						<?php if(Tempauditing::is_tempauditing()) echo Html::a('申请延长时间', ['tempauditing/tempauditingextend','id'=>Tempauditing::is_tempauditing()], ['class' => 'btn btn-success','id'=>'extendDate','data' => [
+			                'confirm' => '您确定要延长授权时间吗？',
+			                'method' => 'post',
+			            ]]).'注：每次申请可延长3天时间。'; ?>
+						
 					</div>
 					<div class="box-body">
     <?php if($farmstransfer) {?>
@@ -107,12 +112,13 @@ $this->params ['breadcrumbs'] [] = $this->title;
 								<td align="center">操作</td>
 							</tr>
 							<?php foreach ($projectapplication as $value) {
-								
+// 								var_dump($value);
 							$project = Projectapplication::find()->where(['reviewprocess_id'=>$value['id']])->one();
 							$oldfarm = Farms::find()->where(['id'=>$value['oldfarms_id']])->one();
+// 							var_dump($value['actionname']);
 							if(Reviewprocess::isShowProess($value['actionname'])) {
 								$field = Reviewprocess::getProcessIdentification();
-								
+							
 								?>
 							<tr height="40px">
 								<td align="center"><?= $oldfarm->farmname?></td>
@@ -137,6 +143,7 @@ $this->params ['breadcrumbs'] [] = $this->title;
 								<td align="center">
 								<?php 
 								$s = false;
+// 								var_dump(($field));
 								foreach ($field as $v) {
 									if($value[$v] == 2 or $value[$v] == 0)
 										$s = true;

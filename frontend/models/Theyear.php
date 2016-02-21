@@ -71,4 +71,10 @@ class Theyear extends \yii\db\ActiveRecord
     	$whereDate = ['begindate'=>$timeFront,'enddate'=>$timeBack];
     	return $whereDate;
     }
+    
+    public static function extendDate($date,$location,$num) 
+    {
+    	$strDate = strtotime(date('Y-m-d',$date).' +'.$num.' '.$location);
+    	return $strDate;
+    }
 }

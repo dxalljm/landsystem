@@ -4,6 +4,8 @@ use app\models\Mainmenu;
 use yii\helpers\Url;
 use app\models\Reviewprocess;
 use app\models\User;
+use yii\helpers\Html;
+use app\models\Tempauditing;
 ?>
 
 <header class="main-header">
@@ -72,8 +74,16 @@ use app\models\User;
                     
                
                 <?php }} 
-                echo "<li ><a href=" . Url::to('index.php?r=photogallery/photogalleryindex') . ">". '图库';
+                echo "<li >";
+                echo Html::a('图库','#', [
+            			'onclick' => "javascript:window.open('".Url::to(['photogallery/photogalleryindex'])."','','width=1200,height=800,top=50,left=80, location=no, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
+            
+            	]);
                 echo "</a></li>";
+                $tempauditing = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+                if($tempauditing) {
+                	 echo '<li><a href="'.Url::to('index.php?r=reviewprocess/reviewprocessindex').'">审核任务'.Reviewprocess::getUserProcessCount().'</a></li>';
+                }
                 ?>
             </ul>
             <div class="navbar-custom-menu">

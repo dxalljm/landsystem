@@ -15,6 +15,7 @@ use app\models\Huinonggrant;
 $this->title = 'huinong';
 $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctablename'];
 $this->params['breadcrumbs'][] = $this->title;
+// var_dump($huinongs);
 ?>
 <div class="huinong-index">
 
@@ -33,21 +34,22 @@ $this->params['breadcrumbs'][] = $this->title;
     					<td align="center">补贴种类</td>
     					<td align="center">操作</td>
     				</tr>
-    				<?php foreach ($huinongs as $value) {?>
+    				<?php foreach ($huinongs as $value) {
+    					$type = Subsidiestype::find()->where(['id'=>$value['subsidiestype_id']])->one();
+    					?>
     				<tr>
-    					<td align="center"><?= Subsidiestype::find()->where(['urladdress'=>$value['subsidiestype_id']])->one()['typename']?></td>
-    					<td align="center"><?php $classFile = 'app\\models\\'. $value['subsidiestype_id'];
+    					<td align="center"><?= $type['typename']?></td>
+    					<td align="center"><?php $classFile = 'app\\models\\'. $type['urladdress'];
 				            		$data = $classFile::find()->where(['id'=>$value['typeid']])->one();
-				            		if($value['subsidiestype_id'] == 'plant')
+				    				if($type['urladdress'] == 'Plant')
 				            			echo $data['cropname'];
-				            		if($value['subsidiestype_id'] == 'goodseed') {
-				            			$plantcropname = Plant::find()->where(['id'=>$data['plant_id']])->one()['cropname'];
-				            			echo $plantcropname.'/'.$data['plant_model'];
-				            		} ?>
+				            		if($type['urladdress'] == 'Goodseed') {
+				            			$plant = Plant::find()->where(['id'=>$data['plant_id']])->one();
+								        echo $plant['cropname'].'/'.$data['plant_model'];
+				            		}
+				            		 ?>
             		</td>
-            		<td align="center"><?php 
-            		 
-            			echo html::a('补贴对象确认',Url::to('index.php?r=huinong/huinongdata&id='.$value['id']),['class'=>'btn btn-success']);?></td>
+            		<td align="center"><?php echo html::a('补贴对象确认',Url::to('index.php?r=huinong/huinongdata&id='.$value['id']),['class'=>'btn btn-success']);?></td>
     				</tr>
     				<?php }?>
     			</table>

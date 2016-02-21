@@ -498,6 +498,27 @@ class Search extends \yii\db\ActiveRecord {
 					         ];
 						
 						break;
+						case 'subsidiestype_id' :
+						$columns [] = [ 
+								'label' => '补贴种类',
+								'attribute' => $value,
+								'value' => function ($model) {
+									return self::$totalData->getName('Subsidiestype', 'typename','subsidiestype_id')->getOne($model->subsidiestype_id);
+								},
+								'filter' => self::$totalData->getName('Subsidiestype', 'typename', 'subsidiestype_id')->getList()
+								
+						];
+						break;
+						case 'typeid' :
+							$columns [] = [
+							'label' => '作物',
+							'attribute' => $value,
+							'value' => function ($model) {
+									return self::$totalData->getName('Plant', 'cropname', 'typeid')->getOne($model->typeid);
+								},
+								'filter' => self::$totalData->getName('Plant', 'cropname', 'typeid')->getList()
+							];
+							break;
 					default :
 						$columns [] = $value;
 				}

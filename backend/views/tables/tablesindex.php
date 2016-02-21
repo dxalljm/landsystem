@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
             			'data-toggle' => 'modal',
             			'data-target' => '#activity-modal',
             			//'data-id' => $key,
-            			'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/tablefields/tablefieldsindex','id'=>$model->id])."','','width=1200,height=800,top=50,left=80, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
+            			'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/tablefields/tablefieldsindex','id'=>$model->id])."','','width=1200,height=800,top=50,left=80, location=no, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
             			//'data-pjax' => '0',
             
             	]);

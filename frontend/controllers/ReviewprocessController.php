@@ -12,6 +12,7 @@ use app\models\Farms;
 use app\models\Auditprocess;
 use app\models\User;
 use app\models\Projectapplication;
+use app\models\Tempauditing;
 /**
  * ReviewprocessController implements the CRUD actions for Reviewprocess model.
  */
@@ -35,10 +36,17 @@ class ReviewprocessController extends Controller
      */
     public function actionReviewprocessindex()
     {
-    	$whereArray = Farms::getManagementArea();
-//     	var_dump($whereArray);exit;
+    	
+    	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+    	if($temp) {
+    		$whereArray = Farms::getUserManagementArea($temp['user_id']);
+    	} else {
+    		$whereArray = Farms::getManagementArea();
+    	}
         $farmstransfer = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer'])->all();
+        
 		$projectapplication = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'projectapplication'])->all();
+// 		var_dump($projectapplication);exit;
         return $this->render('reviewprocessindex', [
 			'farmstransfer' => $farmstransfer,
         	'projectapplication' => $projectapplication,

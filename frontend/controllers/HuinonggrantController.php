@@ -4,7 +4,7 @@ namespace frontend\controllers;
 
 use Yii;
 use app\models\Huinonggrant;
-use frontend\models\HuinonggrantSearch;
+use frontend\models\huinonggrantSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -32,7 +32,7 @@ class HuinonggrantController extends Controller
      */
     public function actionHuinonggrantindex()
     {
-        $searchModel = new HuinonggrantSearch();
+        $searchModel = new huinonggrantSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('huinonggrantindex', [
@@ -105,11 +105,11 @@ class HuinonggrantController extends Controller
 
     public function actionHuinonggrantinfo()
     {
-    	$searchModel = new HuinonggrantSearch();
+    	$searchModel = new huinonggrantSearch();
     	$params = Yii::$app->request->queryParams;
     	$whereArray = Farms::getManagementArea()['id'];
-    	if (empty($params['HuinonggrantSearch']['management_area'])) {
-    		$params ['HuinonggrantSearch'] ['management_area'] = $whereArray;
+    	if (empty($params['huinonggrantSearch']['management_area'])) {
+    		$params ['huinonggrantSearch'] ['management_area'] = $whereArray;
     	}
     	$params['begindate'] = Theyear::getYeartime()[0];
     	$params['enddate'] = Theyear::getYeartime()[1];
@@ -139,12 +139,12 @@ class HuinonggrantController extends Controller
     				$_GET['tab'].'Search' => ['management_area'=>$_GET['management_area']],
     		]);
     	}
-    	$searchModel = new HuinonggrantSearch();
+    	$searchModel = new huinonggrantSearch();
     	if(!is_numeric($_GET['begindate']))
     		$_GET['begindate'] = strtotime($_GET['begindate']);
     	if(!is_numeric($_GET['enddate']))
     		$_GET['enddate'] = strtotime($_GET['enddate']);
-    
+    	$_GET['state'] = 1;
     	$dataProvider = $searchModel->searchIndex ( $_GET );
     	return $this->render('huinonggrantsearch',[
     			'searchModel' => $searchModel,

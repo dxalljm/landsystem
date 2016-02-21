@@ -107,8 +107,9 @@ class UploadedFile extends Object
      */
     public static function getInstanceByName($name)
     {
-//     	$this->name = $name;
+    	
         $files = self::loadFiles();
+//         $this->name =  $files[$name];
         return isset($files[$name]) ? $files[$name] : null;
     }
 

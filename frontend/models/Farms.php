@@ -416,6 +416,30 @@ class Farms extends \yii\db\ActiveRecord {
 		}
 		return $result;
 	}
+	
+	public static function getUserManagementArea($user_id,$str = NULL) {
+		$result = [];
+// 		var_dump(>username);exit;
+		$dep_id = User::findIdentity( $user_id )['department_id'];
+		$departmentData = Department::find ()->where ( [
+				'id' => $dep_id
+		] )->one ();
+// 		var_dump($departmentData);exit;
+		$whereArray = explode ( ',', $departmentData ['membership'] );
+		$managementarea = ManagementArea::find ()->where ( [
+				'id' => $whereArray
+		] )->all ();
+		foreach ( $managementarea as $value ) {
+			$result ['id'] [] = $value ['id'];
+			if ($str == 'small')
+				$result ['areaname'] [] = str_ireplace ( '管理区', '', $value ['areaname'] );
+			else
+				$result ['areaname'] [] = $value ['areaname'];
+		}
+// 		var_dump($result);exit;
+		return $result;
+	}
+	
 	public static function getManagementAreaAllID() {
 		$allid = [ ];
 		$management_ids = self::getManagementArea ()['id'];

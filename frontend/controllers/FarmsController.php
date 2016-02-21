@@ -1346,6 +1346,7 @@ class FarmsController extends Controller {
 	}
 	public function actionFarmssearch($tab,$begindate, $enddate) 
 	{
+// 		var_dump($_GET);exit;
     	if(isset($_GET['tab']) and $_GET['tab'] !== \Yii::$app->controller->id) {
     		return $this->redirect ([$_GET['tab'].'/'.$_GET['tab'].'search',
     				'tab' => $_GET['tab'],

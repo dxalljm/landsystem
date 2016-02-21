@@ -15,6 +15,9 @@ use app\models\Goodseed;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Huinong;
 use app\models\Huinonggrant;
+use app\models\ManagementArea;
+use yii\helpers\ArrayHelper;
+use frontend\helpers\arraySearch;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\HuinongSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -22,6 +25,7 @@ use app\models\Huinonggrant;
 $this->title = 'huinong';
 $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctablename'];
 $this->params['breadcrumbs'][] = $this->title;
+$total = arraySearch::find($data)->search();
 ?>
 <style type="text/css">
 #textSubmit { display:none }
@@ -42,30 +46,30 @@ $this->params['breadcrumbs'][] = $this->title;
                 	<tr>
                 		<td align="right"><strong>享受补贴人数：</strong></td>
                 		<td align="left"><strong>
-               		    <?= $huinongGrant->where(['huinong_id'=>$model->id])->count()?>
+               		    <?= $total->count()?>
                		    人</strong></td>
                 		<td align="right"><strong>已发放补贴人数：</strong></td>
                 		<td align="left"><strong>
-               		    <?= $huinongGrant->where(['huinong_id'=>$model->id,'state'=>1])->count()?>
+               		    <?= $total->count(['state'=>1])?>
                		    人</strong></td>
                 		<td align="right"><strong>未发放补贴人数：</strong></td>
                 		<td align="left"><strong>
-               		    <?= $huinongGrant->where(['huinong_id'=>$model->id,'state'=>0])->count()?>
+               		    <?= $total->count(['state'=>0])?>
                		    人</strong></td>
                 		<td align="right"><strong>应发放金额：</strong></td>
                 		<td align="left"><strong>
-               		    <?= $huinongGrant->where(['huinong_id'=>$model->id])->sum('money')?>
+               		    <?= $total->sum('money')?>
                		    元</strong></td>
                 		<td align="right"><strong>已发放金额：</strong></td>
                 		<td align="left"><strong>
-               		    <?= $huinongGrant->where(['huinong_id'=>$model->id,'state'=>1])->sum('money')?>
+               		    <?= $total->where(['state'=>1])->sum('money')?>
                		    元</strong></td>
                 		<td align="right"><strong>差额：</strong></td>
                 		<td align="left"><strong>
-               		    <?= $huinongGrant->where(['huinong_id'=>$model->id,'state'=>0])->sum('money')?>
+               		    <?= $total->where(['state'=>0])->sum('money')?>
                		    元</strong></td>
                 		<td align="right"><strong>完成度：</strong></td>
-                		<td align="left"><strong><?php $wcd = $huinongGrant->where(['huinong_id'=>$model->id,'state'=>1])->count()/$huinongGrant->where(['huinong_id'=>$model->id])->count()*100;echo $wcd.'%'?></strong></td>
+                		<td align="left"><strong><?php $wcd = $total->count(['state'=>1])/$total->count()*100;echo sprintf ( "%.2f", $wcd ).'%'?></strong></td>
                 	</tr>
                 </table>
                
@@ -95,7 +99,15 @@ $this->params['breadcrumbs'][] = $this->title;
     				</tr>
     				<tr>
     					<td width="28" align="center"><b></b></td>
-    					<td width="28" align="center"><b><?= html::dropDownList('management_area',$post['farmname'],['class'=>'form-control'])?></b></td>
+    					<?php $managementArea_array = ArrayHelper::map(ManagementArea::find()->where(['id'=>Farms::getManagementArea()['id']])->all(), 'id', 'areaname');
+                	if(count($managementArea_array) > 1)
+                		array_splice($managementArea_array,0,0,[0=>'全部']);
+                	if(isset($post['management_area']))
+                		$areaValue = $post['management_area'];
+                	else 
+                		$areaValue = '';
+                	?>
+    					<td width="28" align="center"><b><?= html::dropDownList('management_area',$areaValue,$managementArea_array,['class'=>'form-control','id'=>'managementarea'])?></b></td>
     					<td align="center"><?= html::textInput('farmname',$post['farmname'],['class'=>'form-control'])?></td>
     					<td align="center"><b><?= html::textInput('farmername',$post['farmername'],['class'=>'form-control'])?></b></td>
     					<td align="center"><b><?= html::textInput('lesseename',$post['lesseename'],['class'=>'form-control'])?></b></td>
@@ -118,6 +130,7 @@ $this->params['breadcrumbs'][] = $this->title;
     				?>
     				<tr><?php $farm = Farms::find()->where(['id'=>$value['farms_id']])->one();?>
     					<td align="center"><?= $i++ ?></td>
+    					<td align="center"><?= ManagementArea::find()->where(['id'=>$farm->management_area])->one()['areaname'] ?></td>
     					<td align="center"><?= $farm->farmname ?></td>
     					<td align="center"><?= $farm->farmername ?></td>
     					<td align="center"><?= Lease::find()->where(['id'=>$value['lease_id']])->one()['lessee']?></td>
@@ -171,7 +184,6 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <script>
 $('input:checkbox[name="isSubmit[]"]').click(function(){
-
 	var input = $(this).is(":checked");
 	var areaSum = $('#area').val();
 	var moneySum = $('#money').val();
@@ -197,6 +209,9 @@ $('input:checkbox[name="isSubmit[]"]').click(function(){
 	}
 });
 $('#isprovide').click(function(){
+	$("form").submit();
+});
+$('#managementarea').change(function(){
 	$("form").submit();
 });
 // function setSum(money,area)

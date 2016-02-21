@@ -96,10 +96,13 @@ class SearchController extends Controller
 
 	public function actionSearchindex($tab = '',$begindate = '',$enddate = '',$params = '')
 	{
-// 		$get = Yii::$app->request->get();	
-		$_GET['management_area'] = '';
+// 		$get = Yii::$app->request->get();
+		
+// 		if(!isset($_GET['management_area']))
+// 			$_GET['management_area'] = '';
 		$getDate = Theyear::formatDate($begindate,$enddate);
 		if(isset($_GET['tab'])) {
+			
     		if($_GET['tab'] == 'parmpt')
     			return $this->render('searchindex');
 			$whereDate = Theyear::formatDate($_GET['begindate'],$_GET['enddate']);

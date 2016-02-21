@@ -15,6 +15,7 @@ use app\models\Farms;
 use frontend\models\HuinonggrantSearch;
 use yii\data\ActiveDataProvider;
 use app\models\Lease;
+use app\models\Subsidiestype;
 /**
  * HuinongController implements the CRUD actions for Huinong model.
  */
@@ -87,13 +88,15 @@ class HuinongController extends Controller
    		else
    			$idresult = $farmsallid;
 //    		var_dump($idresult);exit;
-   		switch ($model->subsidiestype_id) {
-   			case 'plant':
+		$typename = Subsidiestype::find()->where(['id'=>$model->subsidiestype_id])->one()['urladdress'];
+   		switch ($typename) {
+   			
+   			case 'Plant':
    				$classname = 'plantingstructure';
    				$data = Plantingstructure::find()->where(['plant_id'=>$model->typeid,'farms_id'=>$idresult])->all();
 //    				var_dump($data);exit;
    				break;
-   			case 'goodseed':
+   			case 'Goodseed':
    				$classname = 'plantingstructure';
    				$data = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid,'farms_id'=>$idresult])->all();
    				break;
@@ -114,6 +117,8 @@ class HuinongController extends Controller
    				$huinonggrantModel->farms_id = $farms_id;
    				$huinonggrantModel->management_area = Farms::find()->where(['id'=>$farms_id])->one()['management_area'];
    				$huinonggrantModel->huinong_id = $id;
+   				$huinonggrantModel->subsidiestype_id = $model->subsidiestype_id;
+   				$huinonggrantModel->typeid = $model->typeid;
    				$huinonggrantModel->lease_id = $lease_id;
    				$huinonggrantModel->money = $money;
    				$huinonggrantModel->area = $area;
@@ -190,19 +195,20 @@ class HuinongController extends Controller
    		$model = $this->findModel($id);
    		
 	   	$post = Yii::$app->request->post();
-	    
-	   	switch ($model->subsidiestype_id) {
-	   		case 'plant':
+	   	$typename = Subsidiestype::find()->where(['id'=>$model->subsidiestype_id])->one()['urladdress'];
+	   	switch ($typename) {
+	   		case 'Plant':
 	   			$classname = 'plantingstructure';
 	   			break;
-	   		case 'goodseed':
+	   		case 'Goodseed':
 	   			$classname = 'plantingstructure';
 	   			break;
 	   	}
-	   	
+// 	   	var_dump($post);exit;
 	   	if($post) {
 // 	   		var_dump($_POST);exit;
 	   		$query = Huinonggrant::find();
+	   		$query->andFilterWhere(['huinong_id'=>$id]);
 	   		if($post['farmname']) {
 	   			$farmid = [];
 	   			$farm = Farms::find()->orFilterWhere(['like','farmname',$post['farmname']])->orFilterWhere(['like','pinyin',$post['farmname']])->all();
@@ -211,6 +217,10 @@ class HuinongController extends Controller
 	   				$farmid[] = $value['id'];
 	   			}
 	   			$query->andFilterWhere(['farms_id'=>$farmid]);
+	   		}
+// 	   		var_dump($post);
+	   		if($post['management_area'] !== '0') {
+	   			$query->andFilterWhere(['management_area'=>$post['management_area']]);
 	   		}
 	   		if($post['farmername']) {
 	   			$farm = Farms::find()->orFilterWhere(['like','farmername',$post['farmername']])->orFilterWhere(['like','farmerpinyin',$post['farmername']])->all();
@@ -244,9 +254,11 @@ class HuinongController extends Controller
 	   		$query = Huinonggrant::find();
 		   	$data =$query->where(['huinong_id'=>$id]);
 	   	} 	
+// 	   	var_dump($query);exit;
 	   	$data = $query->all();
 // 	   	var_dump($data);exit;
 		   	return $this->render('huinongprovide', [
+		   			'id' => $id,
 		   			'data' => $data,
 		   			'classname' => $classname,
 		   			'model' => $model,
@@ -281,7 +293,14 @@ class HuinongController extends Controller
         $model = new Huinong();
 
         if ($model->load(Yii::$app->request->post())) {
-        	$model->typeid = Yii::$app->request->post($model->subsidiestype_id);
+//         	var_dump($model);exit;
+//         	$model->subsidiestype_id = Yii::$app->request->post($model->subsidiestype_id);
+//         	$model->typeid = 
+// 			var_dump($model->typeid);exit;
+			if(Yii::$app->request->post('goodseed'))
+				$model->typeid = Yii::$app->request->post('goodseed');
+			if(Yii::$app->request->post('plant'))
+				$model->typeid = Yii::$app->request->post('plant');
         	$model->create_at = time();
         	$model->update_at = $model->create_at;
         	$model->begindate = (string)strtotime($model->begindate);

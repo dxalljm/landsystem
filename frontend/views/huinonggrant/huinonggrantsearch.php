@@ -27,6 +27,7 @@ use frontend\helpers\arraySearch;
 	$totalData = clone $dataProvider;
 	$totalData->pagination = ['pagesize'=>0];
 	$data = arraySearch::find($totalData)->search();
+// 	var_dump($data->getName('Subsidiestype', 'typename', ['Huinong','huinong_id','subsidiestype_id'])->getList());exit;
 ?>
 
 <div class="nav-tabs-custom">
@@ -41,24 +42,25 @@ use frontend\helpers\arraySearch;
 			        'filterModel' => $searchModel,
 			        'total' => '<tr>
 						        <td></td>
-						        <td align="center"><strong>合计（'.$data->count('farms_id').'户）</strong></td>
-						        <td><strong>种植者'.$planter.'个</strong></td>
-						        <td><strong>法人种植'.$plantFarmer.'个</strong></td>
-						        <td><strong>'.$leaseer.'个</strong></td>
-						        <td><strong>'.$data->count('plant_id').'种</strong></td>
-						        <td><strong>'.$data->count('goodseed_id').'种</strong></td>
+						        <td align="center"><strong>合计</strong></td>
+						        <td><strong>'.$data->count('farms_id').'个</strong></td>
+						        <td><strong>'.$data->count('farmer_id').'个</strong></td>
+						        <td><strong>'.$data->count('lease_id').'个</strong></td>
+								<td><strong></strong></td>
+								<td><strong>'.$data->count('huinong_id').'个</strong></td>
+						        <td><strong>'.$data->sum('money',10000).'万元</strong></td>
 						        <td><strong>'.$data->sum('area',10000).'万亩</strong></td>
 						        </tr>',
-			        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','subsidiestype_id','typeid','goodseed_id','area'],$totalData),
+			        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','lease_id','subsidiestype_id','typeid','money','area'],$totalData),
 			    ]); ?>
               </div>
               <!-- /.tab-pane -->
               <div class='tab-pane' id="plantingstructure">
-              <div id="plantingstructuredata" style="width:1000px; height: 600px; margin: 0 auto"></div>
-				<?php $data->getName('Plant', 'cropname', 'plant_id')->typenameList();?>
+              <div id="huinong" style="width:1000px; height: 600px; margin: 0 auto"></div>
+				<?php var_dump($data->getName('Subsidiestype', 'typename', 'subsidiestype_id')->huinongShowShadow());?>
               </div>
               <script type="text/javascript">
-				showAllShadow('plantingstructuredata',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Plant', 'cropname', 'plant_id')->typenameList())?>,<?= $data->getName('Plant', 'cropname', 'plant_id')->showAllShadow('sum','area',10000);?>,'万亩');
+              wdjShowEchart('huinong',<?= json_encode(['实发金额','应发金额'])?>,<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= $data->getName('Subsidiestype', 'typename', 'subsidiestype_id')->huinongShowShadow();?>,'万元');
 			</script>
               <!-- /.tab-pane -->
             <!-- /.tab-content -->

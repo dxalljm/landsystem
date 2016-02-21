@@ -168,7 +168,7 @@ function showShadowThermometer(divID,legendata,xdata,seriesdata,dw)
 	  }
 	);
 }
-function collectionShowEchart(divID,legendata,xdata,seriesdata,dw)
+function wdjShowEchart(divID,legendata,xdata,seriesdata,dw)
 {
 //	alert(obj2string(seriesdata));
 	require.config({
@@ -212,9 +212,9 @@ function collectionShowEchart(divID,legendata,xdata,seriesdata,dw)
 //	    	                res += '<br/>' + params[i].seriesName + ' : ' + params[i].value + dw;
 	    	                s [i] = params[i].value;
 	    	            }
-	    	            res += '<br/>'+params[1].seriesName+'：' + s[1];
+	    	            res += '<br/>'+params[1].seriesName+'：' + s[1] + dw;
 	    	            alls = s[0];
-	    	            res += '<br/>'+params[0].seriesName+'：' + alls;
+	    	            res += '<br/>'+params[0].seriesName+'：' + alls + dw;
 	    	            var v = s[1]/(s[0]+s[1]);
 	    	            res += '<br/>' + '完成：' + v.toFixed(2)*100 + '%';
 	    	            return res;

@@ -28,13 +28,6 @@ use app\models\Reviewprocess;
         <div class="form-group">
     	   	&nbsp;&nbsp;<?= Html::Button('打印', ['class' => 'btn btn-primary','onclick'=>'print.preview("ttpoprint")']) ?>
 
-			<span class="btn btn-success fileinput-button">
-                <i class="glyphicon glyphicon-plus"></i>
-                <span>Select files...</span>
-                        <!-- The file input field used as target for the file upload widget -->
-                <input id="fileupload" type="file" name="upload_file" multiple="">
-            </span>
-
 		</div>
 <!--             <div class="box"> -->
 

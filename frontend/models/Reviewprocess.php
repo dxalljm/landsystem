@@ -116,7 +116,13 @@ class Reviewprocess extends \yii\db\ActiveRecord
     public static function getProcessIdentification()
     {
 //     	$processname = Processname::find()->orWhere(['rolename'=>User::getItemname()])->orWhere(['sparerole'=>User::getItemname()])->one();
-    	$processname = Processname::find()->where(['rolename'=>User::getItemname()])->all();
+    	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+    	if($temp) {
+    		$processname = Processname::find()->where(['rolename'=>User::getUserItemname($temp['user_id'])])->all();
+    	} else {
+    		$processname = Processname::find()->where(['rolename'=>User::getItemname()])->all();
+    	}
+    	
     	foreach ($processname as $value) {
     		$result[] = $value['Identification'];
     	}
@@ -230,10 +236,17 @@ class Reviewprocess extends \yii\db\ActiveRecord
     //判断当前角色是否审核流程
     public static function isShowProess($actionname) {
     	$process = Reviewprocess::getProcess($actionname);
+    	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
     	foreach ($process as $p) {
 //     		if(self::getProcessRole($p)['rolename'] == User::getItemname() or self::getProcessRole($p)['sparerole'] == User::getItemname())
-			if(self::getProcessRole($p)['rolename'] == User::getItemname())
-    			return true;
+			
+			if($temp) {
+				if(self::getProcessRole($p)['rolename'] == User::getUserItemname($temp['user_id']))
+					return true;
+			} else {
+				if(self::getProcessRole($p)['rolename'] == User::getItemname())
+	    			return true;
+			}
     	}
     	return false;
     }
@@ -285,11 +298,17 @@ class Reviewprocess extends \yii\db\ActiveRecord
     public static function getUserProcessCount()
     {
     	$mamangmentarea = Farms::getManagementArea();
-    	
-    	$process = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
-		
-    	$processRows = Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$process=>2])->count();
-
+    	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+    	if($temp) {
+    		$process = Processname::find()->where(['rolename'=>User::getUserItemname($temp['user_id'])])->one()['Identification'];
+    			
+    		$processRows = Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$process=>2])->count();
+    	} else {	    	
+	    	
+	    	$process = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
+			
+	    	$processRows = Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$process=>2])->count();
+    	}
     	if($processRows)
     		return '<small class="label pull-right bg-red">'.$processRows.'</small>';
     	else 

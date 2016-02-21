@@ -9,6 +9,7 @@ use app\models\Reviewprocess;
 use app\models\User;
 use Yii;
 use app\models\Infrastructuretype;
+use app\models\Tempauditing;
 /* @var $this yii\web\View */
 /* @var $model app\models\Reviewprocess */
 
@@ -105,8 +106,13 @@ use app\models\Infrastructuretype;
 			    <?php foreach ($process as $value) { 
 			    //获取当前流程的角色信息
 			  	$role = Reviewprocess::getProcessRole($value);
+			  	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+			  	if($temp)
+			  		$itemname = User::getUserItemname($temp['user_id']);
+			  	else
+			  		$itemname = User::getItemname();
 			  	//审核角色或备分审核角色与当前用户角色相同，则显示该条目
-			  	if($role['rolename'] == User::getItemname() or $role['sparerole'] == User::getItemname()) {
+			  	if($role['rolename'] == $itemname or $role['sparerole'] == User::getItemname()) {
 			  ?>
 			  <tr>	  
 			    <td align="center"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?></td>
@@ -144,15 +150,21 @@ use app\models\Infrastructuretype;
     <td align="right">农场名称：</td>
     <td><?= $farm->farmname ?></td>
   </tr>
-  <?php foreach ($process as $value) { 
+  <?php 
+   foreach ($process as $value) { 
 			    //获取当前流程的角色信息
 			  	$role = Reviewprocess::getProcessRole($value);
 			  	//审核角色或备分审核角色与当前用户角色相同，则显示该条目
-			  	if($role['rolename'] == User::getItemname() or $role['sparerole'] == User::getItemname()) {
+			  	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+			  	if($temp) 
+			  		$itemname = User::getUserItemname($temp['user_id']);
+			  	else 
+			  		$itemname = User::getItemname();
+			  	if($role['rolename'] == $itemname or $role['sparerole'] == User::getItemname()) {
 			  ?>
   <tr>
     <td align="right">申请内容：</td>
-    <td colspan="5"><?= $project['content'].$project['projectdata'],$project['unit']?></td>
+    <td colspan="5"><?= $project['content'].$project['projectdata'].$project['unit']?></td>
     </tr>
   <tr>
     <td align="right"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?>：</td>

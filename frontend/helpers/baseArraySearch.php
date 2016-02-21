@@ -7,6 +7,9 @@ use app\models\ManagementArea;
 use app\models\PlantPrice;
 use app\models\Theyear;
 use app\models\Collection;
+use app\models\Huinonggrant;
+use app\models\Plant;
+
 class baseArraySearch {
 	private $data = [ ];
 	private $where;
@@ -16,8 +19,9 @@ class baseArraySearch {
 	private $field;
 	private $echartsName;
 	public function __construct($data) {
-		// var_dump($data->query->where);exit;
-		if (! empty ( $data->getModels () ))
+		if (is_array ( $data ))
+			$this->data = $data;
+		if (is_object ( $data ) and ! empty ( $data->getModels () ))
 			$this->data = $data->getModels ();
 		else
 			return NULL;
@@ -25,11 +29,10 @@ class baseArraySearch {
 		$this->where = $this->whereToStr ( $data->query->where );
 		return $this;
 	}
-	public function is_data()
-	{
-		if($this->data)
+	public function is_data() {
+		if ($this->data)
 			return true;
-		else 
+		else
 			return false;
 	}
 	public function whereToStr($condition) {
@@ -87,16 +90,16 @@ class baseArraySearch {
 			return false;
 	}
 	public function search() {
-// 		var_dump($this->where);
+		// var_dump($this->where);
 		if ($this->where) {
 			$data = [ ];
 			foreach ( $this->where as $optionvalue ) {
 				if (is_array ( $optionvalue )) {
 					foreach ( $optionvalue as $okey => $oval ) {
-// 						var_dump($oval);
+						// var_dump($oval);
 						foreach ( $this->data as $key => $value ) {
-							if(is_array($oval)) {
-								foreach ($oval as $v) {
+							if (is_array ( $oval )) {
+								foreach ( $oval as $v ) {
 									if ($value->getAttribute ( $okey ) == ( int ) $v) {
 										$data [] = $this->data [$key];
 									}
@@ -105,7 +108,6 @@ class baseArraySearch {
 								if ($value->getAttribute ( $okey ) == ( int ) $oval) {
 									$data [] = $this->data [$key];
 								}
-								
 							}
 						}
 					}
@@ -113,10 +115,9 @@ class baseArraySearch {
 			}
 			$this->temp = $this->unique_obj ( $data );
 		}
-// 		var_dump($this->data);
+		// var_dump($this->data);
 		return $this;
 	}
-	
 	public function unique_obj($data) {
 		$key = [ ];
 		$newdata = [ ];
@@ -139,8 +140,6 @@ class baseArraySearch {
 	public function allcount() {
 		return count ( $this->data );
 	}
-
-
 	public function sum($field, $num = 1) {
 		$sum = 0.0;
 		if ($this->temp)
@@ -155,19 +154,19 @@ class baseArraySearch {
 				foreach ( $data as $value ) {
 					
 					if ($value->getAttribute ( $keys [0] ) == $values [0] and $value->getAttribute ( $keys [1] ) == $values [1]) {
-// 						var_dump($value->getAttribute ( $field ));
+						// var_dump($value->getAttribute ( $field ));
 						$sum += $value->getAttribute ( $field );
 					}
 				}
 			} else {
 				foreach ( $data as $value ) {
-					if ($value->getAttribute ( $keys [0] ) == $values[0]) {
+					if ($value->getAttribute ( $keys [0] ) == $values [0]) {
 						$sum += $value->getAttribute ( $field );
 					}
 				}
 			}
 		} else {
-// 			var_dump($data);
+			// var_dump($data);
 			foreach ( $data as $value ) {
 				$sum += $value->getAttribute ( $field );
 			}
@@ -444,59 +443,71 @@ class baseArraySearch {
 	public function count($field = NULL, $state = TRUE) {
 		$newdata = [ ];
 		$olddata = [ ];
-		// if($this->temp)
-		// $data = $this->temp;
-		// else
-		// $data = $this->data;
+		
 		if (empty ( $this->data ))
 			return 0;
 		if (empty ( $field ))
 			return count ( $this->data );
 		else {
-			if ($field == 'farmer_id' and $state) {
-				$farm = [ ];
-				$farmid = [ ];
-				// var_dump($this->temp);
+			if (is_array ( $field )) {
 				foreach ( $this->data as $key => $value ) {
-					// var_dump($value->getAttribute('farms_id'));
-					if (\Yii::$app->controller->id == 'farms')
-						$farmid [] = $value->getAttribute ( 'id' );
-					else
-						$farmid [] = $value->getAttribute ( 'farms_id' );
+					if ($value->getAttribute ( key ( $field ) ) == $field [key ( $field )])
+						$olddata [] = $value->getAttribute ( 'id' );
 				}
-				// var_dump($farmid);exit;
-				$allid = array_unique ( $farmid );
-				$farm = Farms::find ()->where ( [ 
-						'id' => $allid 
-				] )->all ();
-				foreach ( $farm as $k => $v ) {
-					$olddata [] = [ 
-							'name' => $v ['farmername'],
-							'cardid' => $v ['cardid'] 
-					];
-				}
-				if ($this->arrayLevel ( $olddata ) == 2) {
-					$newdata = $this->unique_arr ( $olddata );
-				} else
-					return 0;
-				return count ( $newdata );
-			} else {
-				
-				foreach ( $this->data as $key => $value ) {
-					if (! empty ( $value->getAttribute ( $field ) ) and $value->getAttribute ( $field ) !== 0 and $value->getAttribute ( $field ) !== '')
-						$olddata [] = [ 
-								'id' => $value->getAttribute ( $field ) 
-						];
-				}
-				// var_dump($olddata);exit;
 				if ($state) {
 					if ($olddata) {
-						$newdata = $this->unique_arr ( $olddata );
+						$newdata = array_unique ( $olddata );
 						return count ( $newdata );
 					} else
 						return 0;
 				} else
 					return count ( $data );
+			} else {
+				if ($field == 'farmer_id' and $state) {
+					$farm = [ ];
+					$farmid = [ ];
+					// var_dump($this->temp);
+					foreach ( $this->data as $key => $value ) {
+						// var_dump($value->getAttribute('farms_id'));
+						if (\Yii::$app->controller->id == 'farms')
+							$farmid [] = $value->getAttribute ( 'id' );
+						else
+							$farmid [] = $value->getAttribute ( 'farms_id' );
+					}
+					// var_dump($farmid);exit;
+					$allid = array_unique ( $farmid );
+					$farm = Farms::find ()->where ( [ 
+							'id' => $allid 
+					] )->all ();
+					foreach ( $farm as $k => $v ) {
+						$olddata [] = [ 
+								'name' => $v ['farmername'],
+								'cardid' => $v ['cardid'] 
+						];
+					}
+					if ($this->arrayLevel ( $olddata ) == 2) {
+						$newdata = $this->unique_arr ( $olddata );
+					} else
+						return 0;
+					return count ( $newdata );
+				} else {
+					
+					foreach ( $this->data as $key => $value ) {
+						if (! empty ( $value->getAttribute ( $field ) ) and $value->getAttribute ( $field ) !== 0 and $value->getAttribute ( $field ) !== '')
+							$olddata [] = [ 
+									'id' => $value->getAttribute ( $field ) 
+							];
+					}
+					// var_dump($olddata);exit;
+					if ($state) {
+						if ($olddata) {
+							$newdata = $this->unique_arr ( $olddata );
+							return count ( $newdata );
+						} else
+							return 0;
+					} else
+						return count ( $data );
+				}
 			}
 		}
 	}
@@ -508,10 +519,28 @@ class baseArraySearch {
 		$data = [ ];
 		$result = [ ];
 		$newdata = [ ];
+		$allid = [ ];
 		foreach ( $this->data as $key => $value ) {
-			if ($value->getAttribute ( $field ) !== '' and $value->getAttribute ( $field ) !== 0)
-				$data [] = $value->getAttribute ( $field );
+			
+			if (is_array ( $field )) {
+				$allid [] = $value->getAttribute ( $field [1] );
+			} else {
+				if ($value->getAttribute ( $field ) !== '' and $value->getAttribute ( $field ) !== 0)
+					$data [] = $value->getAttribute ( $field );
+			}
 		}
+		if (is_array ( $field )) {
+			$unique_id = array_unique ( $allid );
+			$class = 'app\\models\\' . $field [0];
+			$d = $class::find ()->where ( [ 
+					'id' => $unique_id 
+			] )->all ();
+			// var_dump($d);
+			foreach ( $d as $value ) {
+				$data [] = $value [$field [2]];
+			}
+		}
+		// var_dump($allid);
 		$newdata = array_unique ( $data );
 		
 		if ($newdata) {
@@ -575,146 +604,231 @@ class baseArraySearch {
 					6,
 					7 
 			];
-		if(!is_array($management_area))
-			$management_area = (array)$management_area;
+		if (! is_array ( $management_area ))
+			$management_area = ( array ) $management_area;
 		foreach ( $management_area as $areaid ) {
-// 			var_dump($areaid);
-				$sum = [ ];
-				if ($this->namelist) {
-					foreach ( $this->namelist as $key => $list ) {
-						switch ($actionname) {
-							case 'mulOtherSum' :
-								$sum [] = $this->where ( [ 
-										'management_area' => $areaid,
-										$this->field => $key 
-								] )->mulOtherSum ( $field [0], $field [1], $field [2], $num );
-								break;
-							default :
-// 								echo 'default';
-								$sum [] = $this->where ( [ 
-										'management_area' => $areaid,
-										$this->field => $key 
-								] )->sum ( $field, $num );
-// 								break;
-						}
+			// var_dump($areaid);
+			$sum = [ ];
+			if ($this->namelist) {
+				foreach ( $this->namelist as $key => $list ) {
+					switch ($actionname) {
+						case 'mulOtherSum' :
+							$sum [] = $this->where ( [ 
+									'management_area' => $areaid,
+									$this->field => $key 
+							] )->mulOtherSum ( $field [0], $field [1], $field [2], $num );
+							break;
+						default :
+							
+							// echo 'default';
+							$sum [] = $this->where ( [ 
+									'management_area' => $areaid,
+									$this->field => $key 
+							] )->sum ( $field, $num );
+						// break;
 					}
-				} else {
-					$sum [] = $this->where ( [ 
-							'management_area' => $areaid 
-					] )->sum ( $field, $num );
 				}
-// 				var_dump($sum);
-				$result [] = [ 
-						'name' => str_ireplace ( '管理区', '', ManagementArea::find ()->where ( [ 
-								'id' => $areaid 
-						] )->one ()['areaname'] ),
-						'type' => 'bar',
-						'stack' => $areaid,
-						'data' => $sum 
-				];
-			
+			} else {
+				$sum [] = $this->where ( [ 
+						'management_area' => $areaid 
+				] )->sum ( $field, $num );
+			}
+			// var_dump($sum);
+			$result [] = [ 
+					'name' => str_ireplace ( '管理区', '', ManagementArea::find ()->where ( [ 
+							'id' => $areaid 
+					] )->one ()['areaname'] ),
+					'type' => 'bar',
+					'stack' => $areaid,
+					'data' => $sum 
+			];
 		}
 		return json_encode ( $result );
 	}
-	
-	public function collectionShowShadow()
-	{
-		$sum = [ ];
-		$amounts_receivable = [];
-		$real_income_amount = [];
+	public function huinongShowShadow() {
+		$result = [ ];
+		// var_dump($this->namelist);
+		$amounts_receivable = [ ];
+		$real_income_amount = [ ];
 		if (isset ( $this->where [0] ['management_area'] ))
-			$management_area = [
-					$this->where [0] ['management_area']
+			$management_area = [ 
+					$this->where [0] ['management_area'] 
 			];
 		else
-			$management_area = [
-						1,
-						2,
-						3,
-						4,
-						5,
-						6,
-						7
+			$management_area = [ 
+					1,
+					2,
+					3,
+					4,
+					5,
+					6,
+					7 
+			];
+		foreach ( $this->namelist as $key => $list ) {
+			foreach ( $management_area as $value ) {
+				$allmoney = Huinonggrant::find ()->where ( [ 
+						'management_area' => $value,
+						'subsidiestype_id' => $key 
+				] )->sum ( 'money' );
+				$amountsSum = ( float ) sprintf ( "%.2f", $allmoney / 10000 );
+				$amounts_receivable [] = $amountsSum;
+				
+				$yff = Huinonggrant::find ()->where ( [ 
+						'management_area' => $value,
+						'subsidiestype_id' => $key,
+						'state' => 1 
+				] )->sum ( 'money' );
+				
+				$real_income_amount [] = ( float ) sprintf ( "%.2f", $yff / 10000 );
+					$result[] = [[
+							'name'=>'实发金额',
+							'type'=>'bar',
+							'stack'=>$list,
+							'barCategoryGap'=>'50%',
+							'itemStyle'=>[
+									'normal'=> [
+									'color'=> 'tomato',
+									'barBorderColor'=> 'tomato',
+									'barBorderWidth'=> 3,
+										'barBorderRadius'=>0,
+										'label'=>[
+													'show'=> true,
+													'position'=> 'insideTop'
+											]
+								]
+						],
+							'data'=>$real_income_amount,
+					],
+									
+				
+				[ 
+						'name' => '应发金额',
+						'type' => 'bar',
+						'stack' => $list,
+						'itemStyle' => [ 
+								'normal' => [ 
+										'color' => '#fff',
+										'barBorderColor' => 'tomato',
+										'barBorderWidth' => 3,
+										'barBorderRadius' => 0,
+										'label' => [ 
+												'show' => true,
+												'position' => 'top',
+												
+												// 'formatter'=> '{c}',
+												'textStyle' => [ 
+														'color' => 'tomato' 
+												] 
+										] 
+								] 
+						],
+						'data' => $amounts_receivable 
+				]];
+			}
+		}
+		
+		var_dump($result);
+		return json_encode ( $result );
+	}
+	public function collectionShowShadow() {
+		$sum = [ ];
+		$amounts_receivable = [ ];
+		$real_income_amount = [ ];
+		if (isset ( $this->where [0] ['management_area'] ))
+			$management_area = [ 
+					$this->where [0] ['management_area'] 
+			];
+		else
+			$management_area = [ 
+					1,
+					2,
+					3,
+					4,
+					5,
+					6,
+					7 
 			];
 		foreach ( $management_area as $value ) {
-			$allmeasure = Farms::find ()->where ( [
-					'management_area' => $value
+			$allmeasure = Farms::find ()->where ( [ 
+					'management_area' => $value 
 			] )->sum ( 'measure' );
-			$amountsSum =  (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [
-					'years' => Theyear::findOne(1)['years']
-			] )->one ()['price']/10000);
-			$amounts_receivable[] = $amountsSum;
-
+			$amountsSum = ( float ) sprintf ( "%.2f", $allmeasure * PlantPrice::find ()->where ( [ 
+					'years' => Theyear::findOne ( 1 )['years'] 
+			] )->one ()['price'] / 10000 );
+			$amounts_receivable [] = $amountsSum;
+			
 			$collectionSUm = 0.0;
 			
-			$collectionSUm =  Collection::find ()->where ( [
+			$collectionSUm = Collection::find ()->where ( [ 
 					'management_area' => $value,
-					'dckpay' => 1,
+					'dckpay' => 1 
 			] )->sum ( 'real_income_amount' );
-
-			$real_income_amount[] = ( float ) sprintf("%.2f",$collectionSUm/10000);
+			
+			$real_income_amount [] = ( float ) sprintf ( "%.2f", $collectionSUm / 10000 );
 		}
-		$result = [[
-				'name'=>'实收金额',
-				'type'=>'bar',
-				'stack'=>'sum',
-				'barCategoryGap'=>'50%',
-				'itemStyle'=>[
-						'normal'=> [
-								'color'=> 'tomato',
-								'barBorderColor'=> 'tomato',
-								'barBorderWidth'=> 3,
-								'barBorderRadius'=>0,
-								'label'=>[
-										'show'=> true,
-										'position'=> 'insideTop'
-								]
-						]
+		$result = [ 
+				[ 
+						'name' => '实收金额',
+						'type' => 'bar',
+						'stack' => 'sum',
+						'barCategoryGap' => '50%',
+						'itemStyle' => [ 
+								'normal' => [ 
+										'color' => 'tomato',
+										'barBorderColor' => 'tomato',
+										'barBorderWidth' => 3,
+										'barBorderRadius' => 0,
+										'label' => [ 
+												'show' => true,
+												'position' => 'insideTop' 
+										] 
+								] 
+						],
+						'data' => $real_income_amount 
 				],
-			'data'=>$real_income_amount,
-		],
-				[
-						'name'=>'应收金额',
-						'type'=>'bar',
-			'stack'=>'sum',
-			'itemStyle'=> [
-							'normal'=> [
-									'color'=>'#fff',
-					'barBorderColor'=> 'tomato',
-					'barBorderWidth'=> 3,
-					'barBorderRadius'=>0,
-					'label' => [
-									'show'=> true,
-						'position'=> 'top',
-								// 						'formatter'=> '{c}',
-									'textStyle'=>[
-									'color'=> 'tomato'
-							]
-							]
-					]
-					],
-					'data'=>$amounts_receivable,
-				]];
-		return json_encode($result);
+				[ 
+						'name' => '应收金额',
+						'type' => 'bar',
+						'stack' => 'sum',
+						'itemStyle' => [ 
+								'normal' => [ 
+										'color' => '#fff',
+										'barBorderColor' => 'tomato',
+										'barBorderWidth' => 3,
+										'barBorderRadius' => 0,
+										'label' => [ 
+												'show' => true,
+												'position' => 'top',
+												
+												// 'formatter'=> '{c}',
+												'textStyle' => [ 
+														'color' => 'tomato' 
+												] 
+										] 
+								] 
+						],
+						'data' => $amounts_receivable 
+				] 
+		];
+		return json_encode ( $result );
 	}
-	
-	public function showShadowThermometer($field,$num = 1,$state = 0) {
+	public function showShadowThermometer($field, $num = 1, $state = 0) {
 		$sum = [ ];
 		
 		if (isset ( $this->where [0] ['management_area'] ))
-			$management_area = [
-					$this->where [0] ['management_area']
+			$management_area = [ 
+					$this->where [0] ['management_area'] 
 			];
-			else
-				$management_area = [
-						1,
-						2,
-						3,
-						4,
-						5,
-						6,
-						7
-				];
+		else
+			$management_area = [ 
+					1,
+					2,
+					3,
+					4,
+					5,
+					6,
+					7 
+			];
 		foreach ( $management_area as $areaid ) {
 			if ($this->namelist) {
 				foreach ( $this->namelist as $key => $list ) {
@@ -738,12 +852,12 @@ class baseArraySearch {
 						'management_area' => $areaid 
 				] )->sum ( $field [1], $num );
 				$sum [$field [0]] [] = $sum0;
-
+				
 				if (is_array ( $field [1] ))
 					$key1 = $field [1] [1] [1] . $field [1] [0] . $field [1] [1] [2];
 				else
 					$key1 = $field [1];
-// 				var_dump($key1);exit;
+					// var_dump($key1);exit;
 				if ($state) {
 					for($i = 0; $i < count ( $sum0 ); $i ++) {
 						// var_dump($sum1);
@@ -753,8 +867,8 @@ class baseArraySearch {
 					$sum [$key1] [] = $sum1 - $sum0;
 			}
 		}
-// 		var_dump($sum);
-		$result  = [ 
+		// var_dump($sum);
+		$result = [ 
 				[ 
 						'name' => $this->echartsName [0],
 						'type' => 'bar',
@@ -798,7 +912,7 @@ class baseArraySearch {
 						'data' => $sum [$field [1]] 
 				] 
 		];
-// 		var_dump($sum);
+		// var_dump($sum);
 		return json_encode ( $result );
 	}
 	public function where($array = NULL) {
@@ -846,7 +960,7 @@ class baseArraySearch {
 	
 	/**
 	 * 返回数组的维度
-	 * 
+	 *
 	 * @param [type] $arr
 	 *        	[description]
 	 * @return [type] [description]

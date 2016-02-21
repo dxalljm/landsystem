@@ -16,7 +16,7 @@ use app\models\Farms;
 use app\models\Collection;
 use frontend\models\tempprintbillSearch;
 use frontend\helpers\Pinyin;
-
+use app\models\Tempauditing;
 
 /**
  * Site controller
@@ -76,6 +76,7 @@ class SiteController extends Controller
 //     		return $this->redirect(['tempprintbill/tempprintbillindex', 'searchModel' => $searchModel,'dataProvider'=>$dataProvider]);
     		
 //     	} else {
+    	Tempauditing::tempauditingIsExpire();
 	    	Logs::writeLog('访问首页');
 	    	$user = User::find()->where(['id'=>yii::$app->getUser()->id])->one();
 	    	$dep_id = $user['department_id'];
