@@ -14,6 +14,7 @@ use yii\helpers\Url;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Search;
 use frontend\helpers\arraySearch;
+use app\models\Huinong;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\leaseSearch */
@@ -27,13 +28,18 @@ use frontend\helpers\arraySearch;
 	$totalData = clone $dataProvider;
 	$totalData->pagination = ['pagesize'=>0];
 	$data = arraySearch::find($totalData)->search();
-// 	var_dump($data->getName('Subsidiestype', 'typename', ['Huinong','huinong_id','subsidiestype_id'])->getList());exit;
+	$namelist = $data->getName('Subsidiestype', 'typename', ['Huinong','huinong_id','subsidiestype_id'])->getList();
+	
 ?>
 
 <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
               <li class="active"><a href="#activity" data-toggle="tab" aria-expanded="true">数据表</a></li>
-              <li class=""><a href="#plantingstructure" data-toggle="tab" aria-expanded="false">惠农政策图表</a></li>
+              <?php foreach(Huinong::getTypename() as $key => $value) {
+//               	var_dump($value);exit;
+              			echo '<li class=""><a href="#huinongview'.$key.'" data-toggle="tab" aria-expanded="false">'.$value.'图表</a></li>';
+			  		}
+			  	?>
             </ul>
             <div class="tab-content">
               <div class="tab-pane active" id="activity">
@@ -54,16 +60,20 @@ use frontend\helpers\arraySearch;
 			        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','lease_id','subsidiestype_id','typeid','money','area'],$totalData),
 			    ]); ?>
               </div>
+              <?php foreach(Huinong::getTypename() as $key => $value) {
+              $classname = 'huinong'.$key;
+              	?>
               <!-- /.tab-pane -->
-              <div class='tab-pane' id="plantingstructure">
-              <div id="huinong" style="width:1000px; height: 600px; margin: 0 auto"></div>
-				<?php var_dump($data->getName('Subsidiestype', 'typename', 'subsidiestype_id')->huinongShowShadow());?>
+              <div class='tab-pane' id="huinongview<?= $key?>">
+              <div id="<?= $classname?>" style="width:1000px; height: 600px; margin: 0 auto"></div>
+				<?php //var_dump($data->getName('Subsidiestype', 'typename', 'subsidiestype_id')->huinongShowShadow());?>
               </div>
               <script type="text/javascript">
-              wdjShowEchart('huinong',<?= json_encode(['实发金额','应发金额'])?>,<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= $data->getName('Subsidiestype', 'typename', 'subsidiestype_id')->huinongShowShadow();?>,'万元');
+              wdjShowEchart('<?= $classname?>',<?= json_encode(['实发金额','应发金额'])?>,<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= $data->getName('Subsidiestype', 'typename', 'subsidiestype_id')->huinongShowShadow($key);?>,'万元');
 			</script>
               <!-- /.tab-pane -->
             <!-- /.tab-content -->
+            <?php }?>
           </div>
                 </div>
             </div>

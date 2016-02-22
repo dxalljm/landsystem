@@ -221,6 +221,21 @@ class User extends \yii\db\ActiveRecord
     	return $whereArray;
     }
     
+    public static function searchManagearea()
+    {
+    	$departmentid = User::find ()->where ( [
+    			'id' => \Yii::$app->getUser ()->id
+    	] )->one ()['department_id'];
+    	$departmentData = Department::find ()->where ( [
+    			'id' => $departmentid
+    	] )->one ();
+    	$whereArray = explode ( ',', $departmentData ['membership'] );
+    	if(count($whereArray) > 1) {
+    		return '';
+    	} else
+    		return $whereArray;
+    }
+    
     public static function getItemname()
     {
     	return AuthAssignment::find()->where(['user_id'=>\Yii::$app->getUser ()->id])->one()['item_name'];

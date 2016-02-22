@@ -33,7 +33,7 @@ use app\models\User;
 					if(isset($_GET[\Yii::$app->controller->id.'Search']['management_area']))
 						$management_area = $_GET[\Yii::$app->controller->id.'Search']['management_area'];
 					else 
-						$management_area = User::getUserManagementArea();
+						$management_area = User::searchManagearea();
 // 					var_dump($management_area);
                 ?>
 <table class="table table-hover">

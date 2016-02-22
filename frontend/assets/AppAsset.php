@@ -42,18 +42,11 @@ class AppAsset extends AssetBundle
         'vendor/bower/AdminLTE/dist/js/app.min.js',
         'vendor/bower/devbridge-autocomplete/dist/jquery.autocomplete.min.js',
     	'js/vendor/bower/lodop/LodopFuncs.js',
-<<<<<<< HEAD
-//         'vendor/bower/echarts/build/dist/echarts.js',
-//     	'vendor/bower/echarts/build/dist/echarts.min.js',
-        'js/main.js',
-//     	'js/showEcharts.js',
-    	
-=======
 
+        'vendor/bower/echarts/build/dist/echarts.js',
+    	'vendor/bower/echarts/build/dist/echarts.min.js',
         'js/main.js',
     	'js/showEcharts.js',
-        'js/print.js',
->>>>>>> 712370ae730cca3dbccf90829f6ad8da2806a46f
     ];
 
     // 依赖

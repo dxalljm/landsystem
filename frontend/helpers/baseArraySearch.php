@@ -9,6 +9,7 @@ use app\models\Theyear;
 use app\models\Collection;
 use app\models\Huinonggrant;
 use app\models\Plant;
+use app\models\Huinong;
 
 class baseArraySearch {
 	private $data = [ ];
@@ -645,7 +646,7 @@ class baseArraySearch {
 		}
 		return json_encode ( $result );
 	}
-	public function huinongShowShadow() {
+	public function huinongShowShadow($huinong_id) {
 		$result = [ ];
 		// var_dump($this->namelist);
 		$amounts_receivable = [ ];
@@ -664,70 +665,72 @@ class baseArraySearch {
 					6,
 					7 
 			];
-		foreach ( $this->namelist as $key => $list ) {
+		$huinong = Huinong::find()->where(['id'=>$huinong_id])->one();
+// 		foreach ( $this->namelist as $key => $list ) {
 			foreach ( $management_area as $value ) {
-				$allmoney = Huinonggrant::find ()->where ( [ 
-						'management_area' => $value,
-						'subsidiestype_id' => $key 
-				] )->sum ( 'money' );
-				$amountsSum = ( float ) sprintf ( "%.2f", $allmoney / 10000 );
-				$amounts_receivable [] = $amountsSum;
-				
 				$yff = Huinonggrant::find ()->where ( [ 
 						'management_area' => $value,
-						'subsidiestype_id' => $key,
+						'subsidiestype_id' => Huinong::find()->where(['id'=>$huinong_id])->one()['subsidiestype_id'],
+						'typeid' => $huinong['typeid'],
 						'state' => 1 
 				] )->sum ( 'money' );
+				$realSum = ( float ) sprintf ( "%.2f", $yff / 10000 );
+				$real_income_amount [] = $realSum;
 				
-				$real_income_amount [] = ( float ) sprintf ( "%.2f", $yff / 10000 );
-					$result[] = [[
-							'name'=>'实发金额',
-							'type'=>'bar',
-							'stack'=>$list,
-							'barCategoryGap'=>'50%',
-							'itemStyle'=>[
-									'normal'=> [
-									'color'=> 'tomato',
-									'barBorderColor'=> 'tomato',
-									'barBorderWidth'=> 3,
+				$allmoney = Huinonggrant::find ()->where ( [
+						'management_area' => $value,
+						'subsidiestype_id' => $huinong['subsidiestype_id'],
+						'typeid' => $huinong['typeid'],
+				] )->sum ( 'money' );
+				$amountsSum = ( float ) sprintf ( "%.2f", $allmoney / 10000 );
+				$amounts_receivable [] = $amountsSum - $realSum;
+			}
+// 		}
+			$result = [[
+					'name'=>'实发金额',
+					'type'=>'bar',
+					'stack'=>'sum',
+					'barCategoryGap'=>'50%',
+					'itemStyle'=>[
+							'normal'=> [
+							'color'=> 'tomato',
+							'barBorderColor'=> 'tomato',
+							'barBorderWidth'=> 3,
 										'barBorderRadius'=>0,
 										'label'=>[
-													'show'=> true,
-													'position'=> 'insideTop'
-											]
+															'show'=> true,
+															'position'=> 'insideTop'
+													]
 								]
 						],
-							'data'=>$real_income_amount,
-					],
-									
-				
-				[ 
-						'name' => '应发金额',
-						'type' => 'bar',
-						'stack' => $list,
-						'itemStyle' => [ 
-								'normal' => [ 
-										'color' => '#fff',
-										'barBorderColor' => 'tomato',
-										'barBorderWidth' => 3,
-										'barBorderRadius' => 0,
-										'label' => [ 
-												'show' => true,
-												'position' => 'top',
-												
-												// 'formatter'=> '{c}',
-												'textStyle' => [ 
-														'color' => 'tomato' 
-												] 
-										] 
-								] 
+															'data'=>$real_income_amount,
+													],
+								
+			
+							[
+									'name' => '应发金额',
+									'type' => 'bar',
+									'stack' => 'sum',
+									'itemStyle' => [
+											'normal' => [
+													'color' => '#fff',
+													'barBorderColor' => 'tomato',
+													'barBorderWidth' => 3,
+													'barBorderRadius' => 0,
+										'label' => [
+															'show' => true,
+															'position' => 'top',
+			
+															// 'formatter'=> '{c}',
+															'textStyle' => [
+																	'color' => 'tomato'
+													]
+											]
+											]
 						],
-						'data' => $amounts_receivable 
-				]];
-			}
-		}
-		
-		var_dump($result);
+													'data' => $amounts_receivable
+											]];
+// 		var_dump($result);
 		return json_encode ( $result );
 	}
 	public function collectionShowShadow() {

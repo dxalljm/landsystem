@@ -3,7 +3,8 @@
 namespace app\models;
 
 use Yii;
-
+use app\models\Plant;
+use app\models\Goodseed;
 /**
  * This is the model class for table "{{%huinong}}".
  *
@@ -54,4 +55,24 @@ public function rules()
             'update_at' => '更新日期',
         ]; 
     } 
+    
+    public static function getTypename()
+    {
+    	$result = [];
+    	$huinongs = Huinong::find()->all();
+    	if($huinongs) {
+	    	foreach ($huinongs as $value) {
+// 	    		$result['id'][] = $value['id'];
+// 				var_dump($value);
+		    	$sub = Subsidiestype::find()->where(['id'=>$value['subsidiestype_id']])->one();
+// 		    	$modelname = 'app\\model\\'.$sub['urladdress'];
+		    	if($sub['urladdress'] == 'Plant')
+		    		$result[$value['id']] = Plant::find()->where(['id'=>$value['typeid']])->one()['cropname'].$sub['typename'];
+		    	if($sub['urladdress'] == 'Goodseed')
+		    		$result[$value['id']] = Goodseed::find()->where(['id'=>$value['typeid']])->one()['plant_model'].$sub['typename'];
+	    	}
+    	} 
+//     	var_dump($result);
+    	return $result;	
+    }
 }
