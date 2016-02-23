@@ -8,7 +8,8 @@ use frontend\models\huinonggrantSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use app\models\Farms;
+use app\models\Theyear;
 /**
  * HuinonggrantController implements the CRUD actions for Huinonggrant model.
  */
@@ -113,6 +114,7 @@ class HuinonggrantController extends Controller
     	}
     	$params['begindate'] = Theyear::getYeartime()[0];
     	$params['enddate'] = Theyear::getYeartime()[1];
+    	$params['state'] = 1;
     	// 		var_dump($params);
     	$dataProvider = $searchModel->searchIndex ( $params );
     	if (is_array($searchModel->management_area)) {

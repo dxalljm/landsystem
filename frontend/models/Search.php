@@ -8,7 +8,7 @@ use app\models\ManagementArea;
 use app\models\Fireprevention;
 use app\models\Collection;
 use yii\helpers\Html;
-
+use app\models\Subsidiestype;
 use yii\helpers\Url;
 use frontend\helpers\arraySearch;
 /**
@@ -20,6 +20,8 @@ use frontend\helpers\arraySearch;
  */
 class Search extends \yii\db\ActiveRecord {
 	public static $totalData;
+	public static $subsidiestypename;
+	public static $list;
 	public static function getParameter($tab) {
 		$array = [ 
 				'farms' => [ 
@@ -40,8 +42,18 @@ class Search extends \yii\db\ActiveRecord {
 		return $array [$tab];
 	}
 	public static function getColumns(array $field,$params=NULL) {
-// 		var_dump($params);exit;
 		self::$totalData = arraySearch::find($params)->search();
+// 		if(isset($_GET['huinonggrant']['subsidiestype_id'])) {
+// 			self::$subsidiestypename = Subsidiestype::find()->where(['id'=>$_GET['huinonggrant']['subsidiestype_id']])->one()['urladdress'];
+// 			self::$list = [];
+// 			if(self::$subsidiestypename == 'Plant') {
+// 				self::$list = self::$totalData->getName(self::$subsidiestypename, 'cropname', 'typeid')->getOne($model->typeid);
+// 			}
+// 			if(self::$subsidiestypename == 'Goodseed') {
+// 				self::$list = self::$totalData->getName(self::$subsidiestypename, 'plant_model', 'typeid')->getOne($model->typeid);
+				
+// 			}
+// 		}
 		$columns [] = [ 
 				'class' => 'yii\grid\SerialColumn' 
 		];
@@ -57,16 +69,22 @@ class Search extends \yii\db\ActiveRecord {
 				                'format'=>'raw',
 				            	//'class' => 'btn btn-primary btn-lg',
 				                'value' => function($model,$key){
-				                	if(Yii::$app->controller->id == 'plantingstructure')
-				                    	$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'view','id'=>$model->id,'farms_id'=>$model->farms_id,'lease_id'=>$model->lease_id];
-
-				                	if(Yii::$app->controller->id == 'farms')
-				                		$url = Url::to(['farms/farmsfile','farms_id'=>$model->id]);
-
+				                	switch (Yii::$app->controller->id)
+				                	{
+				                		case 'farms':
+				                			$url = Url::to(['farms/farmsfile','farms_id'=>$model->id]);
+				                			break;
+				                		case 'plantingstructure':
+				                			$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'view','id'=>$model->id,'farms_id'=>$model->farms_id,'lease_id'=>$model->lease_id];
+				                			break;
+				                		default:
+				                			$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'view','id'=>$model->id,'farms_id'=>$model->farms_id];
+				                	}
+				                	
 				                    $option = '查看详情';
 					            	$title = '';
 					            	return Html::a($option,$url, [
-					            			'id' => 'farmerland',
+					            			'id' => 'moreOperation',
 					            			'title' => $title,
 					            			'class' => 'btn btn-primary btn-xs',
 					            	]);
@@ -503,20 +521,58 @@ class Search extends \yii\db\ActiveRecord {
 								'label' => '补贴种类',
 								'attribute' => $value,
 								'value' => function ($model) {
-									return self::$totalData->getName('Subsidiestype', 'typename','subsidiestype_id')->getOne($model->subsidiestype_id);
+									return self::$totalData->getName('Subsidiestype', 'typename',['Huinong','huinong_id','subsidiestype_id'])->getOne($model->subsidiestype_id);
 								},
-								'filter' => self::$totalData->getName('Subsidiestype', 'typename', 'subsidiestype_id')->getList()
+								'filter' => self::$totalData->getName('Subsidiestype', 'typename', ['Huinong','huinong_id','subsidiestype_id'])->getList()
 								
 						];
 						break;
 						case 'typeid' :
 							$columns [] = [
 							'label' => '作物',
-							'attribute' => $value,
+// 							'attribute' => $value,
 							'value' => function ($model) {
-									return self::$totalData->getName('Plant', 'cropname', 'typeid')->getOne($model->typeid);
+								self::$subsidiestypename = Subsidiestype::find()->where(['id'=>$model->subsidiestype_id])->one()['urladdress'];
+									if(self::$subsidiestypename == 'Plant') {
+										$result = self::$totalData->getName(self::$subsidiestypename, 'cropname', 'typeid')->getOne($model->typeid);
+// 										self::$totalData->saveTemp[$model->typeid] = $result;
+										return $result;
+									}
+									if(self::$subsidiestypename == 'Goodseed') {
+										$result = self::$totalData->getName(self::$subsidiestypename, 'plant_model', 'typeid')->getOne($model->typeid);
+// 										self::$totalData->saveTemp[$model->typeid] = $result;
+										return $result;
+									}
 								},
-								'filter' => self::$totalData->getName('Plant', 'cropname', 'typeid')->getList()
+// 								'filter' => self::$totalData->saveTemp,
+							];
+							break;
+						case 'projectdata':
+							$columns [] = [
+// 									'label' => '数量',
+									'attribute' => $value,
+									'value' => function ($model) {
+										return $model->projectdata.$model->unit;
+									}
+									];
+							break;
+						case 'projectstate':
+							$columns [] = [
+							'label' => '工程情况',
+							'value' => function ($model) {
+								$plan = Projectplan::find()->where(['project_id'=>$model->id])->one();
+								if($plan) {
+									$now = time();
+									if($now<=$plan['begindate'])
+										return '未开始';
+									if($now<=$plan['enddate'] and $now >= $plan['begindate'])
+										return '施工中';
+									if($now >= $plan['enddate'])
+										return '工程结束';
+								} else {
+									return '还没有工程计划';
+								}
+							}
 							];
 							break;
 					default :

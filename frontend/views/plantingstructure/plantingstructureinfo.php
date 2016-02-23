@@ -61,7 +61,7 @@ use frontend\helpers\arraySearch;
 						        <td><strong>'.$data->count('goodseed_id').'种</strong></td>
 						        <td><strong>'.$data->sum('area',10000).'万亩</strong></td>
 						        </tr>',
-			        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','lease_id','plant_id','goodseed_id','area'],$totalData),
+			        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','lease_id','plant_id','goodseed_id','area','operation'],$totalData),
 			    ]); ?>
               </div>
               <!-- /.tab-pane -->

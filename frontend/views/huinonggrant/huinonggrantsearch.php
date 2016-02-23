@@ -20,8 +20,6 @@ use app\models\Huinong;
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 ?>
-<script type="text/javascript" src="vendor/bower/echarts/build/dist/echarts.js"></script>
-<script type="text/javascript" src="vendor/bower/echarts/build/dist/echarts.min.js"></script>
               
    <?= $this->render('..//search/searchindex',['tab'=>$tab,'begindate'=>$begindate,'enddate'=>$enddate,'params'=>$params]);?>
 <?php 
@@ -66,10 +64,10 @@ use app\models\Huinong;
               <!-- /.tab-pane -->
               <div class='tab-pane' id="huinongview<?= $key?>">
               <div id="<?= $classname?>" style="width:1000px; height: 600px; margin: 0 auto"></div>
-				<?php //var_dump($data->getName('Subsidiestype', 'typename', 'subsidiestype_id')->huinongShowShadow());?>
+				<?php $echartsData = $data->getName('Subsidiestype', 'typename', 'subsidiestype_id')->huinongShowShadow($key);?>
               </div>
               <script type="text/javascript">
-              wdjShowEchart('<?= $classname?>',<?= json_encode(['实发金额','应发金额'])?>,<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= $data->getName('Subsidiestype', 'typename', 'subsidiestype_id')->huinongShowShadow($key);?>,'万元');
+              wdjShowEchart('<?= $classname?>',<?= json_encode(['应发金额','实发金额'])?>,<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($echartsData['all'])?>,<?= json_encode($echartsData['real'])?>,'万元');
 			</script>
               <!-- /.tab-pane -->
             <!-- /.tab-content -->

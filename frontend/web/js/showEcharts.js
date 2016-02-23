@@ -168,7 +168,7 @@ function showShadowThermometer(divID,legendata,xdata,seriesdata,dw)
 	  }
 	);
 }
-function wdjShowEchart(divID,legendata,xdata,seriesdata,dw)
+function wdjShowEchart(divID,legendata,xdata,alldata,realdata,dw)
 {
 //	alert(obj2string(seriesdata));
 	require.config({
@@ -213,8 +213,8 @@ function wdjShowEchart(divID,legendata,xdata,seriesdata,dw)
 	    	                s [i] = params[i].value;
 	    	            }
 	    	            res += '<br/>'+params[1].seriesName+'：' + s[1] + dw;
-	    	            alls = s[0];
-	    	            res += '<br/>'+params[0].seriesName+'：' + alls + dw;
+	    	            alls = s[0]+s[1];
+	    	            res += '<br/>'+params[0].seriesName+'：' + alls.toFixed(2) + dw;
 	    	            var v = s[1]/(s[0]+s[1]);
 	    	            res += '<br/>' + '完成：' + v.toFixed(2)*100 + '%';
 	    	            return res;
@@ -247,7 +247,55 @@ function wdjShowEchart(divID,legendata,xdata,seriesdata,dw)
 	    	            boundaryGap: [0, 0.1]
 	    	        }
 	    	    ],
-	    	    series : seriesdata
+	    	    series : [
+	    	              {
+	    	                  name:legendata[0],
+	    	                  type:'bar',
+	    	                  stack: 'sum',
+	    	                  barCategoryGap: '50%',
+	    	                  itemStyle: {
+	    	                      normal: {
+	    	                          color: 'tomato',
+	    	                          barBorderColor: 'tomato',
+	    	                          barBorderWidth: 6,
+	    	                          barBorderRadius:0,
+	    	                          label : {
+	    	                              show: true, position: 'insideTop'
+	    	                          }
+	    	                      }
+	    	                  },
+	    	                  data:realdata,
+	    	              },
+	    	              {
+	    	                  name:legendata[1],
+	    	                  type:'bar',
+	    	                  stack: 'sum',
+	    	                  itemStyle: {
+	    	                      normal: {
+	    	                          color: '#fff',
+	    	                          barBorderColor: 'tomato',
+	    	                          barBorderWidth: 3,
+	    	                          barBorderRadius:0,
+	    	                          label : {
+	    	                              show: true, 
+	    	                              position: 'top',
+	    	                              formatter: function (params) {
+	    	                                  for (var i = 0, l = option.xAxis[0].data.length; i < l; i++) {
+	    	                                      if (option.xAxis[0].data[i] == params.name) {
+	    	                                    	  var d = option.series[0].data[i] + params.value; 
+	    	                                          return d.toFixed(2);
+	    	                                      }
+	    	                                  }
+	    	                              },
+	    	                              textStyle: {
+	    	                                  color: 'tomato'
+	    	                              }
+	    	                          }
+	    	                      }
+	    	                  },
+	    	                  data:alldata
+	    	              }
+	    	          ]
 	    	};
 
 	    // 为echarts对象加载数据 

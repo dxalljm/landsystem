@@ -12,6 +12,7 @@ use app\models\Farms;
 use app\models\Projecttype;
 use app\models\Infrastructuretype;
 use app\models\Reviewprocess;
+use app\models\Theyear;
 /**
  * ProjectapplicationController implements the CRUD actions for Projectapplication model.
  */
@@ -77,7 +78,8 @@ class ProjectapplicationController extends Controller
 		if (empty($params['projectapplicationSearch']['management_area'])) {
 			$params ['projectapplicationSearch'] ['management_area'] = $where;
 		}
-
+		$params['begindate'] = Theyear::getYeartime()[0];
+		$params['enddate'] = Theyear::getYeartime()[1];
 		$dataProvider = $searchModel->search ( $params );
 
 		// 如果选择多个区域, 默认为空

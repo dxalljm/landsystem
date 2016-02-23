@@ -1,5 +1,4 @@
 <?php
-
 use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
@@ -13,7 +12,9 @@ use dosamigos\datetimepicker\DateTimePicker;
 use yii\helpers\Url;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Search;
-use app\models\Collection;
+use frontend\helpers\arraySearch;
+use app\models\PlantPrice;
+use app\models\Theyear;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -26,24 +27,48 @@ use app\models\Collection;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-body">
-<?php //var_dump($dataProvider->getModels());exit;?>
- <?= GridView::widget([
+<?php 
+	$totalData = clone $dataProvider;
+	$totalData->pagination = ['pagesize'=>0];
+	$data = arraySearch::find($totalData)->search();
+// 	var_dump($data->getEchartsData(['real_income_amount','amounts_receivable'],1,'showShadowThermometer'));
+// 	var_dump($_GET);
+?>
+<div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#activity" data-toggle="tab" aria-expanded="true">数据表</a></li>
+              <li class=""><a href="#timeline" data-toggle="tab" aria-expanded="false">图表</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="activity">
+                <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'total' => '<tr>
 			        <td></td>
 			        <td align="center"><strong>合计</strong></td>
-					<td align="center"></td>
-			        <td><strong>'.Collection::getFarmRows($params).'户</strong></td>
-			        <td><strong>'.Collection::getFarmerrows($params).'个</strong></td>
-			        <td><strong>'.Collection::getAmounts($params).'万元</strong></td>
-			        <td><strong>'.Collection::getReal($params).'万元</strong></td>
-			        <td><strong>'.Collection::getAllOwe($params).'万元</strong></td>
-			        <td><strong>'.Collection::getAllYpayarea($params).'万亩</strong></td>
-            		<td><strong>'.Collection::getAllYpaymoney($params).'万元</strong></td>
+			        <td><strong>'.$data->count('farms_id').'户</strong></td>
+			        <td><strong>'.$data->count('farmer_id').'个</strong></td>
+			        <td><strong>'.$data->sum('amounts_receivable',10000).'万元</strong></td>			        
+					<td><strong>'.$data->sum('real_income_amount',10000).'万元</strong></td>
+					<td><strong>'.$data->sum('owe',10000).'万元</strong></td>
+					<td><strong>'.$data->sum('ypayarea',10000).'万亩</strong></td>
+    				<td><strong>'.$data->sum('ypaymoney',10000).'万元</strong></td>
 			        </tr>',
-        'columns' => Search::getColumns(['management_area','ypayyear','farms_id','amounts_receivable','real_income_amount','owe','ypayarea','ypaymoney'],$params),
+        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','amounts_receivable','real_income_amount','owe','ypayarea','ypaymoney'],$totalData),
     ]); ?>
+              </div>
+              <!-- /.tab-pane -->
+              <div class="tab-pane" id="timeline">
+              <?php $echartsData = $data->setEchartsName(['实收金额','应收金额'])->collectionShowShadow()?>
+                <div id="collection" style="width: 900px; height: 600px; margin: 0 auto"; ></div>
+				<script type="text/javascript">
+				wdjShowEchart('collection',<?= json_encode(['实收金额','应收金额'])?>,<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($echartsData['all'])?>,<?= json_encode($echartsData['real'])?>,'万元');
+				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
+		</script>
+
+            </div>
+          </div>        
                 </div>
             </div>
         </div>

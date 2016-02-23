@@ -686,13 +686,11 @@ class Farms extends \yii\db\ActiveRecord {
 				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '条产品信息';
 				$value ['description'] = '农产品产量信息';
 				break;
-			case 'huinong' :
+			case 'huinonggrant' :
 				$value ['icon'] = 'fa fa-dollar';
 				$value ['title'] = $menuUrl ['menuname'];
 				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] );
-				$value ['info'] = '现有' . Huinonggrant::find ()->where ( [ 
-						'management_area' => $where 
-				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '条惠农补贴信息';
+				$value ['info'] = '现有' . Huinong::find ()->andWhere ( 'enddate>=' . Theyear::getYeartime ()[0] )->andWhere ( 'enddate<=' . Theyear::getYeartime ()[1] )->count () . '条惠农补贴信息';
 				$value ['description'] = '补贴发放情况';
 				break;
 			case 'collection' :
@@ -747,7 +745,7 @@ class Farms extends \yii\db\ActiveRecord {
 	}
 	public static function showEightPlantmenu() {
 		
-		$cache = 'cache-key-plantmenu12'.\Yii::$app->getUser()->id;
+		$cache = 'cache-key-plantmenu6'.\Yii::$app->getUser()->id;
     	$html = Yii::$app->cache->get($cache);
     	if (!empty($html)) {
     		return $html;
@@ -767,7 +765,7 @@ class Farms extends \yii\db\ActiveRecord {
 			$html .= self::showEightPlant ( $menuUrl );
 		}
 		$html .= '</div>';
-		Yii::$app->cache->set($cache, $html, 0);
+		Yii::$app->cache->set($cache, $html, 3600);
 		return $html;
 	}
 	private static function showEightPlant($menuUrl) {

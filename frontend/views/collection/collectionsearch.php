@@ -62,10 +62,10 @@ use app\models\Theyear;
               </div>
               <!-- /.tab-pane -->
               <div class="tab-pane" id="timeline">
-              <?php //var_dump($data->setEchartsName(['应收金额','实收金额'])->getEchartsData(['real_income_amount',['*','measure',['PlantPrice',['years'=>Theyear::getYear()],'price']]],10000,'showShadowThermometer',1))?>
+              <?php $echartsData = $data->setEchartsName(['实收金额','应收金额'])->collectionShowShadow()?>
                 <div id="collection" style="width: 900px; height: 600px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-				wdjShowEchart('collection',<?= json_encode(['实收金额','应收金额'])?>,<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= $data->setEchartsName(['实收金额','应收金额'])->collectionShowShadow()?>,'万元');
+				wdjShowEchart('collection',<?= json_encode(['实收金额','应收金额'])?>,<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($echartsData['all'])?>,<?= json_encode($echartsData['real'])?>,'万元');
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
 

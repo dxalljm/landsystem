@@ -10,7 +10,16 @@ use app\models\Farms;
 ?>
 
 <div class="fireprevention-form">
-
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <?= $this->title ?>
+                    </h3>
+                </div>
+                <div class="box-body">
     <?php $form = ActiveFormrdiv::begin(); ?>
     <h2><?= Farms::find()->where(['id'=>$model->farms_id])->one()['farmname'] ?></h2>
 <table width="57%" class="table table-striped table-bordered table-hover table-condensed">
@@ -142,4 +151,9 @@ foreach($employees as $emp) {
 	else 
 		echo '是';
 }?>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>

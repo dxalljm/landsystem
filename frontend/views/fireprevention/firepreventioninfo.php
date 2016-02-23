@@ -13,7 +13,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 use yii\helpers\Url;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Search;
-use app\models\Fireprevention;
+use frontend\helpers\arraySearch;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -26,13 +26,40 @@ use app\models\Fireprevention;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-body">
+<?php 
+	$totalData = clone $dataProvider;
+	$totalData->pagination = ['pagesize'=>0];
+	$data = arraySearch::find($totalData)->search();
+	//'firecontract','safecontract','environmental_agreement','firetools','mechanical_fire_cover','chimney_fire_cover','isolation_belt','propagandist','fire_administrator','fieldpermit','propaganda_firecontract','employee_firecontract'
+?>
 
- <?= GridView::widget([
+    <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#activity" data-toggle="tab" aria-expanded="true">数据表</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="activity">
+                <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'columns' => Search::getColumns(['management_area','farms_id','firewcd'],$params),
-        			
+        'total' => '<tr>
+	        <td></td>
+	        <td align="center"><strong>合计</strong></td>
+	        <td><strong>'.$data->count('farms_id').'户</strong></td>
+	        <td><strong>'.$data->count('farmer_id').'个</strong></td>
+	        <td></td>
+			<td></td>
+	        </tr>',
+        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','percent','percentvalue','operation'],$totalData),
     ]); ?>
+              </div>
+              <!-- /.tab-pane -->
+
+          </div>
+ 
+                </div>                         
+
+
                 </div>
             </div>
         </div>

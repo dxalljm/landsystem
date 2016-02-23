@@ -19,6 +19,7 @@ class baseArraySearch {
 	private $echartsWhere = [ ];
 	private $field;
 	private $echartsName;
+	public $saveTemp;
 	public function __construct($data) {
 		if (is_array ( $data ))
 			$this->data = $data;
@@ -514,9 +515,10 @@ class baseArraySearch {
 	}
 	public function getName($model, $getfield, $field) {
 		$this->field = $field;
+// 		var_dump($field);exit;
 		if ($model !== 'self')
 			$modelclass = 'app\\models\\' . $model;
-		
+// 		var_dump($modelclass);exit;
 		$data = [ ];
 		$result = [ ];
 		$newdata = [ ];
@@ -546,6 +548,7 @@ class baseArraySearch {
 		
 		if ($newdata) {
 			if ($model !== 'self') {
+// 				var_dump($modelclass);exit;
 				$nameArray = $modelclass::find ()->where ( [ 
 						'id' => $newdata 
 				] )->all ();
@@ -572,7 +575,6 @@ class baseArraySearch {
 		return $result;
 	}
 	public function getOne($id) {
-		// var_dump($id);exit;
 		if ($id == 0)
 			return NULL;
 		else
@@ -583,6 +585,7 @@ class baseArraySearch {
 		return $this;
 	}
 	public function getList() {
+// 		var_dump($this->saveTemp);
 		return $this->namelist;
 	}
 	public function showAllShadow($actionname = 'sum', $field, $num = 1) {
@@ -684,54 +687,12 @@ class baseArraySearch {
 				] )->sum ( 'money' );
 				$amountsSum = ( float ) sprintf ( "%.2f", $allmoney / 10000 );
 				$amounts_receivable [] = $amountsSum - $realSum;
+				$result['all'] = $amounts_receivable;
+				$result['real'] = $real_income_amount;
 			}
 // 		}
-			$result = [[
-					'name'=>'实发金额',
-					'type'=>'bar',
-					'stack'=>'sum',
-					'barCategoryGap'=>'50%',
-					'itemStyle'=>[
-							'normal'=> [
-							'color'=> 'tomato',
-							'barBorderColor'=> 'tomato',
-							'barBorderWidth'=> 3,
-										'barBorderRadius'=>0,
-										'label'=>[
-															'show'=> true,
-															'position'=> 'insideTop'
-													]
-								]
-						],
-															'data'=>$real_income_amount,
-													],
-								
 			
-							[
-									'name' => '应发金额',
-									'type' => 'bar',
-									'stack' => 'sum',
-									'itemStyle' => [
-											'normal' => [
-													'color' => '#fff',
-													'barBorderColor' => 'tomato',
-													'barBorderWidth' => 3,
-													'barBorderRadius' => 0,
-										'label' => [
-															'show' => true,
-															'position' => 'top',
-			
-															// 'formatter'=> '{c}',
-															'textStyle' => [
-																	'color' => 'tomato'
-													]
-											]
-											]
-						],
-													'data' => $amounts_receivable
-											]];
-// 		var_dump($result);
-		return json_encode ( $result );
+		return $result;
 	}
 	public function collectionShowShadow() {
 		$sum = [ ];
@@ -768,52 +729,54 @@ class baseArraySearch {
 			] )->sum ( 'real_income_amount' );
 			
 			$real_income_amount [] = ( float ) sprintf ( "%.2f", $collectionSUm / 10000 );
+			$result['all'] = $amounts_receivable;
+			$result['real'] = $real_income_amount;
 		}
-		$result = [ 
-				[ 
-						'name' => '实收金额',
-						'type' => 'bar',
-						'stack' => 'sum',
-						'barCategoryGap' => '50%',
-						'itemStyle' => [ 
-								'normal' => [ 
-										'color' => 'tomato',
-										'barBorderColor' => 'tomato',
-										'barBorderWidth' => 3,
-										'barBorderRadius' => 0,
-										'label' => [ 
-												'show' => true,
-												'position' => 'insideTop' 
-										] 
-								] 
-						],
-						'data' => $real_income_amount 
-				],
-				[ 
-						'name' => '应收金额',
-						'type' => 'bar',
-						'stack' => 'sum',
-						'itemStyle' => [ 
-								'normal' => [ 
-										'color' => '#fff',
-										'barBorderColor' => 'tomato',
-										'barBorderWidth' => 3,
-										'barBorderRadius' => 0,
-										'label' => [ 
-												'show' => true,
-												'position' => 'top',
+// 		$result = [ 
+// 				[ 
+// 						'name' => '实收金额',
+// 						'type' => 'bar',
+// 						'stack' => 'sum',
+// 						'barCategoryGap' => '50%',
+// 						'itemStyle' => [ 
+// 								'normal' => [ 
+// 										'color' => 'tomato',
+// 										'barBorderColor' => 'tomato',
+// 										'barBorderWidth' => 3,
+// 										'barBorderRadius' => 0,
+// 										'label' => [ 
+// 												'show' => true,
+// 												'position' => 'insideTop' 
+// 										] 
+// 								] 
+// 						],
+// 						'data' => $real_income_amount 
+// 				],
+// 				[ 
+// 						'name' => '应收金额',
+// 						'type' => 'bar',
+// 						'stack' => 'sum',
+// 						'itemStyle' => [ 
+// 								'normal' => [ 
+// 										'color' => '#fff',
+// 										'barBorderColor' => 'tomato',
+// 										'barBorderWidth' => 3,
+// 										'barBorderRadius' => 0,
+// 										'label' => [ 
+// 												'show' => true,
+// 												'position' => 'top',
 												
-												// 'formatter'=> '{c}',
-												'textStyle' => [ 
-														'color' => 'tomato' 
-												] 
-										] 
-								] 
-						],
-						'data' => $amounts_receivable 
-				] 
-		];
-		return json_encode ( $result );
+// 												// 'formatter'=> '{c}',
+// 												'textStyle' => [ 
+// 														'color' => 'tomato' 
+// 												] 
+// 										] 
+// 								] 
+// 						],
+// 						'data' => $amounts_receivable 
+// 				] 
+// 		];
+		return $result;
 	}
 	public function showShadowThermometer($field, $num = 1, $state = 0) {
 		$sum = [ ];

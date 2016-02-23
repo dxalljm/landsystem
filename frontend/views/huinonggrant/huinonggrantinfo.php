@@ -14,23 +14,33 @@ use yii\helpers\Url;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Search;
 use frontend\helpers\arraySearch;
+use app\models\Huinong;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 ?>
-<script type="text/javascript" src="vendor/bower/echarts/build/dist/echarts.js"></script>
-<script type="text/javascript" src="vendor/bower/echarts/build/dist/echarts.min.js"></script>
+
 <?php 
 	$totalData = clone $dataProvider;
 	$totalData->pagination = ['pagesize'=>0];
 	$data = arraySearch::find($totalData)->search();
+	$namelist = $data->getName('Subsidiestype', 'typename', ['Huinong','huinong_id','subsidiestype_id'])->getList();
+	
 ?>
-
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
 <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
               <li class="active"><a href="#activity" data-toggle="tab" aria-expanded="true">数据表</a></li>
-              <li class=""><a href="#plantingstructure" data-toggle="tab" aria-expanded="false">惠农政策图表</a></li>
+              <?php foreach(Huinong::getTypename() as $key => $value) {
+//               	var_dump($value);exit;
+              			echo '<li class=""><a href="#huinongview'.$key.'" data-toggle="tab" aria-expanded="false">'.$value.'图表</a></li>';
+			  		}
+			  	?>
             </ul>
             <div class="tab-content">
               <div class="tab-pane active" id="activity">
@@ -39,27 +49,32 @@ use frontend\helpers\arraySearch;
 			        'filterModel' => $searchModel,
 			        'total' => '<tr>
 						        <td></td>
-						        <td align="center"><strong>合计（'.$data->count('farms_id').'户）</strong></td>
-						        <td><strong>种植者'.$planter.'个</strong></td>
-						        <td><strong>法人种植'.$plantFarmer.'个</strong></td>
-						        <td><strong>'.$leaseer.'个</strong></td>
-						        <td><strong>'.$data->count('plant_id').'种</strong></td>
-						        <td><strong>'.$data->count('goodseed_id').'种</strong></td>
+						        <td align="center"><strong>合计</strong></td>
+						        <td><strong>'.$data->count('farms_id').'个</strong></td>
+						        <td><strong>'.$data->count('farmer_id').'个</strong></td>
+						        <td><strong>'.$data->count('lease_id').'个</strong></td>
+								<td><strong></strong></td>
+								<td><strong>'.$data->count('huinong_id').'个</strong></td>
+						        <td><strong>'.$data->sum('money',10000).'万元</strong></td>
 						        <td><strong>'.$data->sum('area',10000).'万亩</strong></td>
 						        </tr>',
-			        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','lease_id','plant_id','goodseed_id','area'],$totalData),
+			        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','lease_id','subsidiestype_id','typeid','money','area'],$totalData),
 			    ]); ?>
               </div>
+              <?php foreach(Huinong::getTypename() as $key => $value) {
+              $classname = 'huinong'.$key;
+              	?>
               <!-- /.tab-pane -->
-              <div class='tab-pane' id="plantingstructure">
-              <div id="plantingstructuredata" style="width:1000px; height: 600px; margin: 0 auto"></div>
-				<?php $data->getName('Plant', 'cropname', 'plant_id')->typenameList();?>
+              <div class='tab-pane' id="huinongview<?= $key?>">
+              <div id="<?= $classname?>" style="width:1000px; height: 600px; margin: 0 auto"></div>
+				<?php $echartsData = $data->getName('Subsidiestype', 'typename', 'subsidiestype_id')->huinongShowShadow($key);?>
               </div>
               <script type="text/javascript">
-				showAllShadow('plantingstructuredata',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Plant', 'cropname', 'plant_id')->typenameList())?>,<?= $data->getName('Plant', 'cropname', 'plant_id')->showAllShadow('sum','area',10000);?>,'万亩');
+              wdjShowEchart('<?= $classname?>',<?= json_encode(['应发金额','实发金额'])?>,<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($echartsData['all'])?>,<?= json_encode($echartsData['real'])?>,'万元');
 			</script>
               <!-- /.tab-pane -->
             <!-- /.tab-content -->
+            <?php }?>
           </div>
                 </div>
             </div>
