@@ -33,7 +33,7 @@ if (CLI) {
 
 // Set titles and names
 $pageHeading = str_replace('_', ' ', SCRIPT_FILENAME);
-$pageTitle = IS_INDEX ? 'Welcome to ' : "{$pageHeading} - ";
+$pageTitle = '';
 $pageTitle .= 'PHPWord';
 $pageHeading = IS_INDEX ? '' : "<h1>{$pageHeading}</h1>";
 
@@ -102,11 +102,14 @@ function getEndingNotes($writers)
     } else {
         if (!IS_INDEX) {
             $types = array_values($writers);
+//             var_dump($types);
             $result .= '<p>&nbsp;</p>';
             $result .= '<p>Results: ';
             foreach ($types as $type) {
                 if (!is_null($type)) {
+//                 	var_dump($type);
                     $resultFile = 'results/' . SCRIPT_FILENAME . '.' . $type;
+//                     var_dump($resultFile);
                     if (file_exists($resultFile)) {
                         $result .= "<a href='{$resultFile}' class='btn btn-primary'>{$type}</a> ";
                     }

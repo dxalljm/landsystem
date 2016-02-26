@@ -54,9 +54,9 @@ $templateProcessor->setValue('userName#3', htmlspecialchars('Ray'));
 $templateProcessor->setValue('userPhone#3', htmlspecialchars('+1 428 889 775'));
 
 echo date('H:i:s'), ' Saving the result document...', EOL;
-$templateProcessor->saveAs('results/Sample_07_TemplateCloneRow.docx');
+$templateProcessor->saveAs('results/Sample_07_TemplateCloneRow.html');
 
-echo getEndingNotes(array('Word2007' => 'docx'));
+echo getEndingNotes($writers);
 if (!CLI) {
     include_once 'Sample_Footer.php';
 }

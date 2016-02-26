@@ -2,13 +2,13 @@
 include_once 'Sample_Header.php';
 
 // Read contents
-$name = basename(__FILE__, '.php');
+$name = 'abc';
+// var_dump($name);
 $source = __DIR__ . "/resources/{$name}.docx";
 
 echo date('H:i:s'), " Reading contents from `{$source}`", EOL;
 $phpWord = \PhpOffice\PhpWord\IOFactory::load($source);
-var_dump(get_class_methods($phpWord));
-var_dump($phpWord->getDocInfo());
+
 // Save file
 echo write($phpWord, basename(__FILE__, '.php'), $writers);
 if (!CLI) {

@@ -194,6 +194,7 @@ class ZipArchive
      */
     public function getFromName($filename)
     {
+//     	var_dump($filename);
         if (!$this->usePclzip) {
             $contents = $this->zip->getFromName($filename);
             if ($contents === false) {
