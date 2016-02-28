@@ -54,6 +54,16 @@ public function rules()
         ]; 
     }
 
+    public static function getRelationship($id = NULL)
+    {
+//     	var_dump($id);exit;
+    	$array = ['妻子','丈夫','儿子','女儿','父亲','母亲','岳父','岳母','公公','婆婆','弟兄','姐妹'];
+//     	var_dump($array[(integer)$id]);exit;
+    	if($id === NULL)
+    		return $array;
+    	else
+    		return $array[(integer)$id];
+    }
 
     /**
      * 格式化家庭成员数据

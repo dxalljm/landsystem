@@ -6,6 +6,7 @@ use yii\grid\GridView;
 use app\models\Farms;
 use app\models\Lease;
 use app\models\Plantingstructure;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\leaseSearch */
@@ -72,7 +73,7 @@ use app\models\Plantingstructure;
 
              [
             'class' => 'yii\grid\ActionColumn',
-            'template' => '{view} {update} {delete}',
+            'template' => '{view} {update} {delete} {print}',
             'buttons' => [
                 // 下面代码来自于 yii\grid\ActionColumn 简单修改了下
                 'view' => function ($url, $model, $key) {
@@ -103,6 +104,13 @@ use app\models\Plantingstructure;
                     ];
                     $url.='&farms_id='.$_GET['farms_id'];
                     return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, $options);
+                },
+                'print' => function ($url, $model, $key) {
+                	$url = Url::to(['print/printleasecontract','lease_id'=>$model->id]);
+                	$options = [
+                			'title' => Yii::t('yii', '打印租赁合同'),
+                	];
+                	return Html::a('租赁合同', $url, $options);
                 },
             	]
        	 	],

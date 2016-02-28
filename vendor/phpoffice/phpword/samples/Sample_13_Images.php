@@ -73,7 +73,8 @@ $section->addImage(
         'posVerticalRel'   => \PhpOffice\PhpWord\Style\Image::POSITION_RELATIVE_TO_LINE,
     )
 );
-
+// var_dump(get_class_methods($section));
+// var_dump($section);
 // Save file
 echo write($phpWord, basename(__FILE__, '.php'), $writers);
 if (!CLI) {

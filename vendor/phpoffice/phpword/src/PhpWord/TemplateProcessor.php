@@ -84,8 +84,10 @@ class TemplateProcessor
 
         // Temporary document content extraction
         $this->zipClass = new ZipArchive();
+//         var_dump($this->tempDocumentFilename);
         $this->zipClass->open($this->tempDocumentFilename);
 //         $this->content = $this->zipClass->getFromName($this->tempDocumentFilename);
+//         var_dump($this->content);
         $index = 1;
         while (false !== $this->zipClass->locateName($this->getHeaderName($index))) {
             $this->tempDocumentHeaders[$index] = $this->fixBrokenMacros(
@@ -144,7 +146,7 @@ class TemplateProcessor
      *
      * @return void
      */
-    public function setValue($macro, $replace, $limit = self::MAXIMUM_REPLACEMENTS_DEFAULT)
+    public function setValue($macro, $replace, $limit = self::MAXIMUM_REPLACEMENTS_DEFAULT,$line = false)
     {
         foreach ($this->tempDocumentHeaders as $index => $headerXML) {
             $this->tempDocumentHeaders[$index] = $this->setValueForPart($this->tempDocumentHeaders[$index], $macro, $replace, $limit);
@@ -404,14 +406,20 @@ class TemplateProcessor
         if (substr($search, 0, 2) !== '${' && substr($search, -1) !== '}') {
             $search = '${' . $search . '}';
         }
-
-        if (!String::isUTF8($replace)) {
-            $replace = utf8_encode($replace);
-        }
+		if(!is_array($replace)) {
+	        if (!String::isUTF8($replace)) {
+	            $replace = utf8_encode($replace);
+	        }
+		}
 
         // Note: we can't use the same function for both cases here, because of performance considerations.
         if (self::MAXIMUM_REPLACEMENTS_DEFAULT === $limit) {
-            return str_replace($search, $replace, $documentPartXML);
+        	if(!is_array($replace)) {
+           		return str_replace($search, $replace, $documentPartXML);
+        	} else {
+        		header('Content-Type: image/jpeg');
+        		return str_replace($search, $replace[1], $documentPartXML);
+        	}
         } else {
             $regExpDelim = '/';
             $escapedSearch = preg_quote($search, $regExpDelim);

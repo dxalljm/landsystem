@@ -81,7 +81,7 @@ function showShadow(divID,legendata,xdata,seriesdata,dw)
 	  }
 	);
 }
-function showShadowThermometer(divID,legendata,xdata,seriesdata,dw)
+function showShadowThermometer(divID,legendata,xdata,data1,data2,dw)
 {
 //	alert(obj2string(seriesdata));
 	require.config({
@@ -205,7 +205,7 @@ function wdjShowEchart(divID,legendata,xdata,alldata,realdata,dw)
 	    	            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
 	    	        },
 	    	        formatter: function (params,ticket,callback) {
-	    	            console.log(params)
+	    	            
 	    	            var res = params[0].name;
 	    	            var s = new Array();
 	    	            for (var i = 0, l = params.length; i < l; i++) {
@@ -214,12 +214,11 @@ function wdjShowEchart(divID,legendata,xdata,alldata,realdata,dw)
 	    	            }
 	    	            res += '<br/>'+params[1].seriesName+'：' + s[1] + dw;
 	    	            alls = s[0]+s[1];
-	    	            res += '<br/>'+params[0].seriesName+'：' + alls.toFixed(2) + dw;
+	    	            res += '<br/>'+params[0].seriesName+'：' + alls + dw;
 	    	            var v = s[1]/(s[0]+s[1]);
 	    	            res += '<br/>' + '完成：' + v.toFixed(2)*100 + '%';
 	    	            return res;
-	    	        }
-//	    	        formatter: '{b0}<br/>{a0}:{c0}'+dw+'<br/>{a1}:{c1}' + dw + '<br/>完成：' + '{c1}/{c0}*100' + '%'
+	    	        },
 	    	    },
 	    	    legend: {
 	    	        selectedMode:false,

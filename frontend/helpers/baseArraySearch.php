@@ -834,52 +834,9 @@ class baseArraySearch {
 			}
 		}
 		// var_dump($sum);
-		$result = [ 
-				[ 
-						'name' => $this->echartsName [0],
-						'type' => 'bar',
-						'stack' => 'sum',
-						'barCategoryGap' => '50%',
-						'itemStyle' => [ 
-								'normal' => [ 
-										'color' => 'tomato',
-										'barBorderColor' => 'tomato',
-										'barBorderWidth' => 3,
-										'barBorderRadius' => 0,
-										'label' => [ 
-												'show' => true,
-												'position' => 'insideTop' 
-										] 
-								] 
-						],
-						'data' => $sum [$field [0]] 
-				],
-				[ 
-						'name' => $this->echartsName [1],
-						'type' => 'bar',
-						'stack' => 'sum',
-						'itemStyle' => [ 
-								'normal' => [ 
-										'color' => '#fff',
-										'barBorderColor' => 'tomato',
-										'barBorderWidth' => 3,
-										'barBorderRadius' => 0,
-										'label' => [ 
-												'show' => true,
-												'position' => 'top',
-												
-												// 'formatter'=> '{c}',
-												'textStyle' => [ 
-														'color' => 'tomato' 
-												] 
-										] 
-								] 
-						],
-						'data' => $sum [$field [1]] 
-				] 
-		];
-		// var_dump($sum);
-		return json_encode ( $result );
+		$result[] = $sum [$field [0]];
+		$result[] = $sum [$field [1]];
+		return $result;
 	}
 	public function where($array = NULL) {
 		if (empty ( $array ))

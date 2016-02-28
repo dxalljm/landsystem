@@ -4,6 +4,18 @@ namespace frontend\controllers;
 use Yii;
 use app\models\Farms;
 use yii\web\Controller;
+use app\models\Farmer;
+use app\models\ManagementArea;
+use app\models\Farmermembers;
+use app\models\Machineoffarm;
+use app\models\Ttpo;
+use app\models\Ttpozongdi;
+use app\models\Lease;
+use app\models\Nation;
+use app\models\Machine;
+use yii\helpers\Url;
+use yii\helpers\Html;
+use PhpOffice\PhpWord\Shared\ZipArchive;
 
 class PrintController extends Controller
 {
@@ -45,7 +57,7 @@ class PrintController extends Controller
 		
 		$filename = $farm['contractnumber'].'.docx';
 // 		echo date('H:i:s'), ' 保存合同文件...', EOL;
-		if(!file_exists('contract_file/'.$filename))
+// 		if(file_exists('contract_file/'.$filename))
 			$templateProcessor->saveAs('contract_file/'.$filename);
 
 		
@@ -53,6 +65,193 @@ class PrintController extends Controller
                 'filename' => $filename,
             ]);
 		
+	}
+	
+	public function actionPrintfarmsfile($farms_id)
+	{
+		include_once '../../vendor/phpoffice/phpword/samples/Sample_Header.php';
+		
+		// Template processor instance creation
+		// 		echo date('H:i:s'), ' 生成新合同...', EOL;
+		$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('template/farmsfile.docx');
+		
+		// Variables on different parts of document
+		$templateProcessor->setValue('weekday', htmlspecialchars(date('l'))); // On section/content
+		$templateProcessor->setValue('time', htmlspecialchars(date('H:i'))); // On footer
+		$templateProcessor->setValue('serverName', htmlspecialchars(realpath(__DIR__))); // On header
+		
+		$farm = Farms::find()->where(['id'=>$farms_id])->one();
+		$farmer = Farmer::find()->where(['farms_id'=>$farms_id])->one();
+		
+		$templateProcessor->setValue('farmsname', htmlspecialchars($this->formatName($farm['farmname'],28)));
+		$templateProcessor->setValue('farmername', htmlspecialchars($this->formatName($farm['farmername'],28)));
+		$templateProcessor->setValue('farmsname2', htmlspecialchars($farm['farmname']));
+		$templateProcessor->setValue('farmername2', htmlspecialchars($farm['farmername']));
+		$templateProcessor->setValue('areaname', htmlspecialchars($this->formatName(ManagementArea::find()->where(['id'=>$farm['management_area']])->one()['areaname'],30)));
+		$templateProcessor->setValue('cyear', htmlspecialchars(date('Y',$farm['create_at'])));
+		$templateProcessor->setValue('cmonth', htmlspecialchars(date('m',$farm['create_at'])));
+		$templateProcessor->setValue('cday', htmlspecialchars(date('d',$farm['create_at'])));
+		$templateProcessor->setValue('beforename', htmlspecialchars($farmer['farmerbeforename']));
+		$templateProcessor->setValue('nation', htmlspecialchars(Nation::find()->where(['id'=>$farmer['nation']])->one()['nationname']));
+		$templateProcessor->setValue('p_o', htmlspecialchars($farmer['political_outlook']));
+		$templateProcessor->setValue('c_d', htmlspecialchars($farmer['cultural_degree']));
+		$templateProcessor->setValue('measure', htmlspecialchars($farm['measure']));
+		$templateProcessor->setValue('cardid', htmlspecialchars($farm['cardid']));
+		$templateProcessor->setValue('address', htmlspecialchars($farm['address']));
+		$templateProcessor->setValue('telephone', htmlspecialchars($farm['telephone']));
+		$templateProcessor->setValue('longitude', htmlspecialchars($farm['longitude']));
+		$templateProcessor->setValue('latitude', htmlspecialchars($farm['latitude']));
+		$templateProcessor->setValue('zongdi', htmlspecialchars($farm['zongdi']));
+		$templateProcessor->setValue('domicile', htmlspecialchars($farmer['domicile']));
+		$templateProcessor->setValue('nowlive', htmlspecialchars($farmer['nowlive']));
+// 		$templateProcessor->setValue('farmpic', htmlspecialchars(''));
+// 		$image = new \PhpOffice\PhpWord\Element\Image('images/plant.jpg');
+// 		$templateProcessor->saveAs($fileName)
+		$data=file_get_contents("images/plant.jpg");
+		$im = base64_encode($data);
+		
+// 		var_dump($im);exit;
+		$templateProcessor->setValue('cardpic', ['jpeg','frontend\helpers\image.php']);
+		
+		$member = Farmermembers::find()->where(['farmer_id'=>$farmer['id']])->all();
+		
+		$templateProcessor->cloneRow('relationship', count($member));
+// 		$templateProcessor->cloneRow('name', count($member));
+// 		$templateProcessor->cloneRow('mcardid', count($member));
+// 		$templateProcessor->cloneRow('remarks', count($member));
+		
+		for($i=1;$i<=count($member);$i++) {
+			$templateProcessor->setValue('relationship#'.$i, htmlspecialchars(Farmermembers::getRelationship($member[$i-1]['relationship'])));
+			$templateProcessor->setValue('name#'.$i, htmlspecialchars($member[$i-1]['membername']));
+			$templateProcessor->setValue('mcardid#'.$i, htmlspecialchars($member[$i-1]['cardid']));
+			$templateProcessor->setValue('remarks#'.$i, htmlspecialchars($member[$i-1]['remarks']));
+		}
+		
+		$machine = Machineoffarm::find()->where(['farms_id'=>$farms_id])->all();
+		
+		$templateProcessor->cloneRow('maname', count($machine));
+// 		$templateProcessor->cloneRow('name', count($machine));
+// 		$templateProcessor->cloneRow('mcardid', count($machine));
+// 		$templateProcessor->cloneRow('remarks', count($machine));
+		
+		for($i=1;$i<=count($machine);$i++) {
+			$m = Machine::find()->where(['id'=>$machine[$i-1]['machine_id']])->one();
+			$templateProcessor->setValue('maname#'.$i, htmlspecialchars($machine[$i-1]['machinename'].'('.$m['implementmodel'].')'));
+			$templateProcessor->setValue('filename#'.$i, htmlspecialchars($m['filename']));
+			$templateProcessor->setValue('atime#'.$i, htmlspecialchars($machine[$i-1]['acquisitiontime']));
+		}
+		
+		$ttpo = Ttpo::find()->orWhere(['newfarms_id'=>$farms_id])->orWhere(['oldfarms_id'=>$farms_id])->all();
+// 		if($ttpo) {
+			$templateProcessor->cloneRow('cdate', count($ttpo));
+	// 		$templateProcessor->cloneRow('ttopm', count($ttpo));
+	// 		$templateProcessor->cloneRow('ttopzongdi', count($ttpo));
+	// 		$templateProcessor->cloneRow('nname', count($ttpo));
+			$j = 1;
+			for($i=1;$i<=count($ttpo);$i++) {
+				$j++;
+				$templateProcessor->setValue('cdate#'.$i, htmlspecialchars(date('Y-m-d',$ttpo[$i-1]['create_at'])));
+				$templateProcessor->setValue('ttopm#'.$i, htmlspecialchars($farm['measure']));
+				$templateProcessor->setValue('ttopzongdi#'.$i, htmlspecialchars('整体过户'));
+				$templateProcessor->setValue('nname#'.$i, htmlspecialchars($farm['farmername']));
+			}
+// 		}
+		
+		$ttpozongdi = Ttpozongdi::find()->orWhere(['newfarms_id'=>$farms_id])->orWhere(['oldfarms_id'=>$farms_id])->all();
+		if($ttpozongdi) {
+// 		$templateProcessor->cloneRow('ttopm', count($ttpozongdi));
+// 		$templateProcessor->cloneRow('ttopm', count($ttpozongdi));
+// 		$templateProcessor->cloneRow('ttopzongdi', count($ttpozongdi));
+// 		$templateProcessor->cloneRow('nname', count($ttpozongdi));
+			$n = $j+count($ttpozongdi);
+			for($i=$j;$i<=$n;$i++) {
+				$templateProcessor->setValue('cdate#'.$i, htmlspecialchars(date('Y-m-d',$ttpozongdi['create_at'])));
+				$templateProcessor->setValue('ttopm#'.$i, htmlspecialchars(Lease::getListArea($Leasearea)));
+				$templateProcessor->setValue('ttopzongdi#'.$i, htmlspecialchars($ttpozongdi['ttpozongdi']));
+				$templateProcessor->setValue('nname#'.$i, htmlspecialchars($farm['farmername']));
+			}
+		}
+		
+		$filename = $farm['contractnumber'].'.docx';
+		// 		echo date('H:i:s'), ' 保存合同文件...', EOL;
+		// 		if(file_exists('contract_file/'.$filename))
+		$templateProcessor->saveAs('farmsfile/'.$filename);
+// 		$templateProcessor2 = new \PhpOffice\PhpWord\TemplateProcessor('farmsfile/'.$filename);
+// 		$zip = new ZipArchive();
+// 		if ($zip->open('farmsfile/'.$filename, ZipArchive::OVERWRITE) !== true) {
+// 			if ($zip->open('farmsfile/'.$filename, ZipArchive::CREATE) !== true) {
+// 				throw new \Exception("Could not open '{$filename}' for writing.");
+// 			}
+// 		}
+// 		$image = call_user_func('imagecreatefromjpeg', 'images/plant.jpg');
+// 		$target = 'Pictures/'.time().'.jpg';
+// 		ob_start();
+// 		call_user_func('imagegif', $image);
+// 		$imageContents = ob_get_contents();
+// 		ob_end_clean();
+// 		$zip->addFromString($target, $imageContents);
+// // 		imagedestroy($image);
+// 		// 		var_dump(get_class_methods($image));
+// 		// 		var_dump($image->getIsWatermark());
+// 		var_dump($imageContents);
+// 		header('Content-Type: image/jpeg'); //对应jpeg的类型
+// 		imagejpeg($imageContents);////也要对应jpeg的类型
+// 		var_dump(imagedestroy($imageContents));
+		
+// 		$templateProcessor2->saveAs('farmsfile/'.$filename);
+		
+		return $this->render('printfarmsfile', [
+				'filename' => $filename,
+		]);
+	}
+	public function actionPrintleasecontract($lease_id)
+	{
+		include_once '../../vendor/phpoffice/phpword/samples/Sample_Header.php';
+	
+		// Template processor instance creation
+		// 		echo date('H:i:s'), ' 生成新合同...', EOL;
+		$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('template/leasecontract.docx');
+	
+		// Variables on different parts of document
+		$templateProcessor->setValue('weekday', htmlspecialchars(date('l'))); // On section/content
+		$templateProcessor->setValue('time', htmlspecialchars(date('H:i'))); // On footer
+		$templateProcessor->setValue('serverName', htmlspecialchars(realpath(__DIR__))); // On header
+	
+		// Simple table
+		// 		$templateProcessor->cloneRow('rowValue', 10);
+	
+		$lease = Lease::find()->where(['id'=>$lease_id])->one();
+		$farm = Farms::find()->where(['id'=>$lease['farms_id']])->one();
+		
+		$templateProcessor->setValue('farmername', htmlspecialchars($this->formatName($farm['farmername'],28)));
+		$templateProcessor->setValue('lessee', htmlspecialchars($this->formatName($lease['lessee'],28)));
+		$templateProcessor->setValue('nowdate', htmlspecialchars($this->formatName(date('Y年m月d日'),26)));
+		$templateProcessor->setValue('farmername2', htmlspecialchars($farm['farmername']));
+		$templateProcessor->setValue('farmname', htmlspecialchars($this->formatName($farm['farmname'],54)));
+		$templateProcessor->setValue('cardid', htmlspecialchars($farm['cardid']));
+		$templateProcessor->setValue('address', htmlspecialchars($farm['address']));
+		$templateProcessor->setValue('telephone', htmlspecialchars($farm['telephone']));
+		$templateProcessor->setValue('lease', htmlspecialchars($lease['lessee']));
+		$templateProcessor->setValue('leasecardid', htmlspecialchars($lease['lessee_cardid']));
+		$templateProcessor->setValue('leaseaddress', htmlspecialchars($lease['address']));
+		$templateProcessor->setValue('leasetelephone', htmlspecialchars($lease['lessee_telephone']));
+		$templateProcessor->setValue('farmername3', htmlspecialchars($this->formatName($farm['farmname'],32)));
+		$templateProcessor->setValue('zongdimeasure', htmlspecialchars($this->formatName(Lease::getListArea($lease['lease_area']),44)));
+		$templateProcessor->setValue('begindate', htmlspecialchars($lease['begindate']));
+		$templateProcessor->setValue('enddate', htmlspecialchars($lease['enddate']));
+		$templateProcessor->setValue('zongdi', htmlspecialchars($this->formatName($farm['zongdi'],50)));
+		// 		$templateProcessor->setValue('addresspic', htmlspecialchars(date('d',$farm['update_at'])));
+	
+		$filename = $farm['id'].'-'.$lease['id'].'.docx';
+		// 		echo date('H:i:s'), ' 保存合同文件...', EOL;
+		// 		if(file_exists('contract_file/'.$filename))
+		$templateProcessor->saveAs('leasefile/'.$filename);
+	
+	
+		return $this->render('printleasecontract', [
+				'filename' => $filename,
+		]);
+	
 	}
 	private function formatName($name,$l)
 	{

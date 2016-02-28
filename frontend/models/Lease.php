@@ -25,6 +25,17 @@ class Lease extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    
+    public function rules()
+    {
+    	return [
+    			[['farms_id', 'years'], 'integer'],
+    			[['lessee_cardid', 'enddate', 'rentpaymode', 'policyholder', 'insured', 'huinongascription', 'address'], 'string'],
+    			[['rent'], 'number'],
+    			[['lease_area', 'lessee', 'lessee_telephone', 'begindate', 'photo', 'create_at', 'update_at'], 'string', 'max' => 500]
+    	];
+    }
+    
 
     //得到1-100（123）中的面积123
     public static function getArea($Leasearea)
@@ -230,14 +241,7 @@ class Lease extends \yii\db\ActiveRecord
     	$allarea = $farms->measure + $farms->notclear;
     	return bcsub($farms->measure, self::getOverArea($farms_id),2);
     }
-	public function rules() 
-    { 
-        return [
-            [['farms_id', 'years'], 'integer'],
-            [['lessee_cardid', 'enddate'], 'string'],
-            [['lease_area', 'lessee', 'lessee_telephone', 'begindate', 'photo'], 'string', 'max' => 500]
-        ]; 
-    } 
+
     //将数组中1-100(10),1-200(123)的面积进行累加
     public static function getListArea($Area)
     {
@@ -259,7 +263,7 @@ class Lease extends \yii\db\ActiveRecord
      */ 
     public function attributeLabels() 
     { 
-        return [ 
+         return [ 
             'id' => 'ID',
             'lease_area' => '租赁面积',
             'lessee' => '承租人',
@@ -272,6 +276,12 @@ class Lease extends \yii\db\ActiveRecord
             'photo' => '近期照片',
             'create_at' => '创建日期',
             'update_at' => '更新日期',
+            'rent' => '租金',
+            'rentpaymode' => '租金缴纳方式',
+            'policyholder' => '投保人',
+            'insured' => '被保险人',
+            'huinongascription' => '惠农补贴归属',
+            'address' => '住址',
         ]; 
     }
 }

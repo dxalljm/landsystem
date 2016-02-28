@@ -7,10 +7,11 @@ $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('resources/Sample_
 
 // Will clone everything between ${tag} and ${/tag}, the number of times. By default, 1.
 $templateProcessor->cloneBlock('CLONEME', 3);
-
+$templateProcessor->replaceBlock('CLONEME', $replacemen);
 // Everything between ${tag} and ${/tag}, will be deleted/erased.
 $templateProcessor->deleteBlock('DELETEME');
 
+var_dump($templateProcessor->content);
 echo date('H:i:s'), ' Saving the result document...', EOL;
 $templateProcessor->saveAs('results/Sample_23_TemplateBlock.docx');
 

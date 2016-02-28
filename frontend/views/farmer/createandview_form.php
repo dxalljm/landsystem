@@ -12,6 +12,7 @@ use app\models\Farms;
 use yii\helpers\Url;
 use frontend\helpers\fileUtil;
 use app\models\Tablefields;
+use app\models\Farmermembers;
 /* @var $this yii\web\View */
 /* @var $model app\models\farmer */
 
@@ -96,7 +97,7 @@ use app\models\Tablefields;
           <tr>
               <td><?php echo Html::hiddenInput('Parmembers[id][]', '', ['class' => 'form-control']); ?>
               <?php echo Html::hiddenInput('Parmembers[farmer_id][]', '', ['class' => 'form-control']); ?>
-              <?php echo Html::dropDownList('Parmembers[relationship][]', '', ['妻子','丈夫','儿子','女儿','父亲','母亲','岳父','岳母','公公','婆婆','弟兄','姐妹'],['class' => 'form-control']); ?></td>
+              <?php echo Html::dropDownList('Parmembers[relationship][]', '', Farmermembers::getRelationship(),['class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('Parmembers[membername][]', '', ['class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('Parmembers[cardid][]', '', ['class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('Parmembers[remarks][]', '', ['class' => 'form-control']); ?></td>
@@ -116,7 +117,7 @@ use app\models\Tablefields;
 		  <tr>
 			  <td><?php echo Html::hiddenInput('Parmembers[id][]', '', ['class' => 'form-control']); ?>
 			  <?php echo Html::hiddenInput('Parmembers[farmer_id][]', '', ['class' => 'form-control']); ?>
-			  <?php echo Html::dropDownList('Parmembers[relationship][]', '',['妻子','丈夫','儿子','女儿','父亲','母亲','岳父','岳母','公公','婆婆','弟兄','姐妹'], ['class' => 'form-control']); ?></td>
+			  <?php echo Html::dropDownList('Parmembers[relationship][]', '',Farmermembers::getRelationship(), ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[membername][]', '', ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[cardid][]', '', ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[remarks][]', '', ['class' => 'form-control']); ?></td>
@@ -127,7 +128,7 @@ use app\models\Tablefields;
 		 <tr>
 			  <td><?php echo Html::hiddenInput('Parmembers[id][]', $value['id'], ['class' => 'form-control']); ?>
 			  <?php echo Html::hiddenInput('Parmembers[farmer_id][]', $value['farmer_id'], ['class' => 'form-control']); ?>
-			  <?php echo Html::dropDownList('Parmembers[relationship][]', $value['relationship'],['妻子','丈夫','儿子','女儿','父亲','母亲','岳父','岳母','公公','婆婆','弟兄','姐妹'], ['class' => 'form-control']); ?></td>
+			  <?php echo Html::dropDownList('Parmembers[relationship][]', $value['relationship'],Farmermembers::getRelationship(), ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[membername][]', $value['membername'], ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[cardid][]', $value['cardid'], ['class' => 'form-control']); ?></td>
 			  <td><?php echo Html::textInput('Parmembers[remarks][]', $value['remarks'], ['class' => 'form-control']); ?></td>
@@ -149,7 +150,7 @@ use app\models\Tablefields;
 		  </tr>
 <?php foreach($membermodel as $value) {?>
 		  <tr>
-			  <td valign="middle" align="center"><?php echo $value['relationship']; ?></td>
+			  <td valign="middle" align="center"><?php echo Farmermembers::getRelationship($value['relationship']); ?></td>
 			  <td valign="middle" align="center"><?php echo $value['membername']; ?></td>
 			  <td valign="middle" align="center"><?php echo $value['cardid']; ?></td>
 			  <td valign="middle" align="center"><?php echo $value['remarks']; ?></td>

@@ -41,7 +41,7 @@ class Image extends AbstractElement
      *
      * @var string
      */
-    private $source;
+    public $source;
 
     /**
      * Source type: local|gd|archive
@@ -90,14 +90,14 @@ class Image extends AbstractElement
      *
      * @var string
      */
-    private $imageExtension;
+    public $imageExtension;
 
     /**
      * Is memory image
      *
      * @var boolean
      */
-    private $memoryImage;
+    public $memoryImage;
 
     /**
      * Image target file name

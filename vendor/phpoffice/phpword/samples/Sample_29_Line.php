@@ -10,15 +10,15 @@ $section = $phpWord->addSection();
 
 // Add Line elements
 // See Element/Line.php for all options
-$section->addText(htmlspecialchars('Horizontal Line (Inline style):'));
+$section->addText(htmlspecialchars('农场'));
 $section->addLine(
     array(
-        'width'       => \PhpOffice\PhpWord\Shared\Converter::cmToPixel(4),
+        'width'       => \PhpOffice\PhpWord\Shared\Converter::cmToPixel(6),
         'height'      => \PhpOffice\PhpWord\Shared\Converter::cmToPixel(0),
         'positioning' => 'absolute',
     )
 );
-$section->addText(htmlspecialchars('Vertical Line (Inline style):'));
+$section->addText(htmlspecialchars('        农场                        '));
 $section->addLine(
     array(
         'width'       => \PhpOffice\PhpWord\Shared\Converter::cmToPixel(0),
@@ -26,6 +26,7 @@ $section->addLine(
         'positioning' => 'absolute',
     )
 );
+
 // Two text break
 $section->addTextBreak(1);
 

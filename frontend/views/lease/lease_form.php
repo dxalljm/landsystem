@@ -85,12 +85,40 @@ use app\models\Lease;
     <td width="16" align="center">止</td>
     <td align="center">&nbsp;</td>
   </tr>
-</table>
+  <tr>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+    <td rowspan="7" align="center">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+  </tr>
+  </table>
 <datalist id="parcellist">
 <?php $parcel = explode('、', $farm->zongdi);
 	foreach($parcel as $val) {
 ?>
-	 <option label="宗地号（亩）" value="<?= $val.'('.Parcel::find()->where(['unifiedserialnumber'=>$val])->one()['grossarea'].')'?>" />
+    <option label="宗地号（亩）" value="<?= $val.'('.Parcel::find()->where(['unifiedserialnumber'=>$val])->one()['grossarea'].')'?>" />
 <?php }?>
 </datalist>
 <div class="form-group">

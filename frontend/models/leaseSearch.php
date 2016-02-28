@@ -16,13 +16,15 @@ class leaseSearch extends Lease
     /**
      * @inheritdoc
      */
-public function rules()
+	public function rules()
     {
         return [
             [['id', 'farms_id', 'years'], 'integer'],
-            [['lease_area', 'lessee', 'lessee_cardid', 'lessee_telephone', 'begindate', 'enddate', 'photo'], 'safe'],
+            [['lease_area', 'lessee', 'lessee_cardid', 'lessee_telephone', 'begindate', 'enddate', 'photo', 'create_at', 'update_at', 'rentpaymode', 'policyholder', 'insured', 'huinongascription', 'address'], 'safe'],
+            [['rent'], 'number'],
         ];
     }
+	
 
     /**
      * @inheritdoc
@@ -50,17 +52,13 @@ public function rules()
 
         $this->load($params);
 
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
-
          $query->andFilterWhere([
             'id' => $this->id,
             'farms_id' => $this->farms_id,
             'years' => $this->years,
+            'rent' => $this->rent,
         ]);
+        
 
         $query->andFilterWhere(['like', 'lease_area', $this->lease_area])
             ->andFilterWhere(['like', 'lessee', $this->lessee])
@@ -69,6 +67,11 @@ public function rules()
             ->andFilterWhere(['like', 'begindate', $this->begindate])
             ->andFilterWhere(['like', 'enddate', $this->enddate])
             ->andFilterWhere(['like', 'photo', $this->photo])
+            ->andFilterWhere(['like', 'rentpaymode', $this->rentpaymode])
+            ->andFilterWhere(['like', 'policyholder', $this->policyholder])
+            ->andFilterWhere(['like', 'insured', $this->insured])
+            ->andFilterWhere(['like', 'huinongascription', $this->huinongascription])
+            ->andFilterWhere(['like', 'address', $this->address])         
             ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
         
 

@@ -54,4 +54,5 @@ class Machine extends \yii\db\ActiveRecord
         	'content' => '备注',
         ];
     }
+
 }

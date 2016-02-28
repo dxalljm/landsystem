@@ -33,6 +33,7 @@ $styleCellBTLR = array('valign' => 'center', 'textDirection' => \PhpOffice\PhpWo
 $fontStyle = array('bold' => true, 'align' => 'center');
 $phpWord->addTableStyle('Fancy Table', $styleTable, $styleFirstRow);
 $table = $section->addTable('Fancy Table');
+
 $table->addRow(900);
 $table->addCell(2000, $styleCell)->addText(htmlspecialchars('Row 1'), $fontStyle);
 $table->addCell(2000, $styleCell)->addText(htmlspecialchars('Row 2'), $fontStyle);
@@ -48,7 +49,7 @@ for ($i = 1; $i <= 8; $i++) {
     $text = (0== $i % 2) ? 'X' : '';
     $table->addCell(500)->addText(htmlspecialchars($text));
 }
-
+var_dump($table->getRows()[8]);
 // 3. colspan (gridSpan) and rowspan (vMerge)
 
 $section->addPageBreak();

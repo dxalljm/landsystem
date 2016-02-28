@@ -62,10 +62,10 @@ use frontend\helpers\arraySearch;
               </div>
               <!-- /.tab-pane -->
               <div class="tab-pane" id="timeline">
-              <?php //var_dump($data->getName('Breedtype', 'typename', 'breedtype_id')->setEchartsName(['应免数量','免疫数量'])->showShadowThermometer(['preventionnumber','breedinfonumber'],1))?>
+              <?php $echartsData = $data->getName('Breedtype', 'typename', 'breedtype_id')->setEchartsName(['应免数量','免疫数量'])->showShadowThermometer(['preventionnumber','breedinfonumber'],1);?>
                 <div id="prevention" style="width: 900px; height: 600px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-				showShadowThermometer('prevention',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Breedtype', 'typename', 'breedtype_id')->typenameList())?>,<?= $data->getName('Breedtype', 'typename', 'breedtype_id')->setEchartsName(['应免数量','免疫数量'])->showShadowThermometer(['preventionnumber','breedinfonumber'],1)?>,'');
+				wdjShowEchart('prevention',<?= json_encode(['已免数量','应免数量'])?>,<?= json_encode($data->getName('Breedtype', 'typename', 'breedtype_id')->typenameList())?>,<?= json_encode($echartsData[1])?>,<?= json_encode($echartsData[0])?>,'');
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
 

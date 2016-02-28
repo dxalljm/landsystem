@@ -73,7 +73,7 @@ class PhpWord
      * @var array
      * @since 0.12.0
      */
-    private $metadata = array();
+    public $metadata = array();
 
     /**
      * Create new instance

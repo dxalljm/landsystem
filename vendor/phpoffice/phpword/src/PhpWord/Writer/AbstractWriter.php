@@ -339,6 +339,7 @@ abstract class AbstractWriter implements WriterInterface
      */
     protected function addFilesToPackage(ZipArchive $zip, $elements)
     {
+//     	var_dump($elements);
         foreach ($elements as $element) {
             $type = $element['type']; // image|object|link
 
@@ -347,10 +348,11 @@ abstract class AbstractWriter implements WriterInterface
                 continue;
             }
             $target = $this->mediaPaths[$type] . $element['target'];
-
+// 			var_dump($target);
             // Retrive GD image content or get local media
             if (isset($element['isMemImage']) && $element['isMemImage']) {
                 $image = call_user_func($element['createFunction'], $element['source']);
+                var_dump($element);
                 ob_start();
                 call_user_func($element['imageFunction'], $image);
                 $imageContents = ob_get_contents();

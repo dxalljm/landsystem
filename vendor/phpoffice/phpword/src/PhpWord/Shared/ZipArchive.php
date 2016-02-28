@@ -40,6 +40,7 @@ class ZipArchive
     const CREATE    = 1; // Emulate \ZipArchive::CREATE
     const OVERWRITE = 8; // Emulate \ZipArchive::OVERWRITE
 
+    public $result;
     /**
      * Number of files (emulate ZipArchive::$numFiles)
      *
@@ -127,6 +128,7 @@ class ZipArchive
      */
     public function open($filename, $flags = null)
     {
+//     	var_dump($filename);
         $result = true;
         $this->filename = $filename;
 
@@ -265,7 +267,7 @@ class ZipArchive
         /** @var \PclZip $zip Type hint */
         $zip = $this->zip;
         $filenameParts = pathinfo($localname);
-
+// 		var_dump($filenameParts);
         // Write $contents to a temp file
         $handle = fopen($this->tempDir . DIRECTORY_SEPARATOR . $filenameParts['basename'], 'wb');
         fwrite($handle, $contents);
@@ -273,11 +275,12 @@ class ZipArchive
 
         // Add temp file to zip
         $filename = $this->tempDir . DIRECTORY_SEPARATOR . $filenameParts['basename'];
+//         var_dump($filename);
         $pathRemoved = $this->tempDir;
         $pathAdded = $filenameParts['dirname'];
 
         $res = $zip->add($filename, PCLZIP_OPT_REMOVE_PATH, $pathRemoved, PCLZIP_OPT_ADD_PATH, $pathAdded);
-
+		$this->result = $res;
         // Remove temp file
         @unlink($this->tempDir . DIRECTORY_SEPARATOR . $filenameParts['basename']);
 
