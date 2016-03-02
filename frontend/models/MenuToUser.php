@@ -51,9 +51,11 @@ class MenuToUser extends \yii\db\ActiveRecord
     	$data = MenuToUser::find()->where(['role_id'=>User::getItemname()])->one()['menulist'];
     	$data = explode(',', $data);
     	$mainmenu = Mainmenu::find()->where(['id'=>$data])->all();
+    	$menu = [];
     	foreach ($mainmenu as $value) {
     		$menu[$value['id']] = $value['sort'];
     	}
+//     	var_dump($menu);exit;
     	asort($menu);
 //     	var_dump($menu);exit;
     	$result = array_flip($menu);

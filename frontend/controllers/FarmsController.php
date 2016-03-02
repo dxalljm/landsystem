@@ -709,7 +709,7 @@ class FarmsController extends Controller {
 			$oldModel = $this->findModel ( $farms_id );
 			$oldModel->locked = 1;
 			$oldModel->save ();
-			// var_dump($oldModel->getErrors());exit;
+			var_dump($oldModel->getErrors());exit;
 			$reviewprocessID = Reviewprocess::processRun ( $model->id, $nowModel->id );
 			$ttpoModel = new Ttpo ();
 			$ttpoModel->oldfarms_id = $model->id;
@@ -747,6 +747,7 @@ class FarmsController extends Controller {
 			$lockedinfoModel = new Lockedinfo ();
 			$lockedinfoModel->farms_id = $farms_id;
 			$lockedinfoModel->lockedcontent = '部分过户审核中，已被冻结。';
+			$lockedinfoModel->save();
 			// $oldmodel->state = 1;
 			$oldmodel = $this->findModel ( $farms_id );
 			$oldmodel->update_at = time ();
@@ -767,20 +768,21 @@ class FarmsController extends Controller {
 				$newmodel->farmername = $newmodel->farmername;
 				$newmodel->cardid = $newmodel->cardid;
 				$newmodel->telephone = $newmodel->telephone;
-				$newmodel->address = $newmodel->address;
-				$newmodel->management_area = $newmodel->management_area;
-				$newmodel->spyear = $newmodel->spyear;
+				$newmodel->address = $oldmodel->address;
+				$newmodel->management_area = $oldmodel->management_area;
+				$newmodel->spyear = $oldmodel->spyear;
 				$newmodel->measure = $newmodel->measure;
 				$newmodel->zongdi = $newmodel->zongdi;
 				$newmodel->cooperative_id = $newmodel->cooperative_id;
-				$newmodel->surveydate = $newmodel->surveydate;
-				$newmodel->groundsign = $newmodel->groundsign;
+				$newmodel->surveydate = $oldmodel->surveydate;
+				$newmodel->groundsign = $oldmodel->groundsign;
 				$newmodel->farmersign = $newmodel->farmersign;
 				$newmodel->create_at = time ();
-				$newmodel->update_at = time ();
-				$newmodel->pinyin = $newmodel->pinyin;
-				$newmodel->farmerpinyin = $newmodel->farmerpinyin;
-				$newmodel->state = 1;
+				$newmodel->update_at = $newmodel->create_at;
+				$newmodel->pinyin = Pinyin::encode($newmodel->pinyin);
+				$newmodel->farmerpinyin = Pinyin::encode($newmodel->farmerpinyin);
+				$newmodel->state = 0;
+				$newmodel->locked = 0;
 				$newmodel->notclear = $newmodel->notclear;
 				$newmodel->oldfarms_id = $farms_id;
 				
@@ -825,7 +827,7 @@ class FarmsController extends Controller {
 			$params = Yii::$app->request->queryParams;
 			$params ['farmsSearch'] ['farmname'] = $search;
 			$params ['farmsSearch'] ['farmername'] = $search;
-			$params ['farmsSearch'] ['management_area'] = $management_area ['id'];
+// 			$params ['farmsSearch'] ['management_area'] = $management_area ['id'];
 // 			$params ['farmsSearch'] ['state'] = 1;
 // 			$params ['farmsSearch'] ['locked'] = 0;
 			$dataProvider = $farmsSearch->search ( $params );
@@ -860,6 +862,11 @@ class FarmsController extends Controller {
 			$lockedinfoModel = new Lockedinfo ();
 			$lockedinfoModel->farms_id = $farms_id;
 			$lockedinfoModel->lockedcontent = '部分过户审核中，已被冻结。';
+			$lockedinfoModel->save();
+			$lockedinfoModel = new Lockedinfo ();
+			$lockedinfoModel->farms_id = $oldfarms_id;
+			$lockedinfoModel->lockedcontent = '部分过户审核中，已被冻结。';
+			$lockedinfoModel->save();
 			// $oldmodel->state = 1;
 			$oldmodel = $this->findModel ( $oldfarms_id );
 			$oldmodel->update_at = time ();
@@ -875,27 +882,30 @@ class FarmsController extends Controller {
 			// $newfarm->save();
 			
 			if ($newmodel->load ( Yii::$app->request->post () )) {
-				// var_dump($newmodel->zongdi);exit;
-				$newmodel->farmname = $newmodel->farmname;
-				$newmodel->farmername = $newmodel->farmername;
-				$newmodel->cardid = $newmodel->cardid;
-				$newmodel->telephone = $newmodel->telephone;
-				$newmodel->address = $newmodel->address;
-				$newmodel->management_area = $newmodel->management_area;
-				$newmodel->spyear = $newmodel->spyear;
+// 				var_dump($oldmodel);exit;
+// 				$newmodel->farmname = $newmodel->farmname;
+// 				$newmodel->farmername = $newmodel->farmername;
+// 				$newmodel->cardid = $newmodel->cardid;
+// 				$newmodel->telephone = $newmodel->telephone;
+// 				$newmodel->address = $oldmodel->address;
+// 				$newmodel->management_area = $oldmodel->management_area;
+// 				$newmodel->spyear = $oldmodel->spyear;
 				$newmodel->measure = $newmodel->measure;
 				$newmodel->zongdi = $newmodel->zongdi;
-				$newmodel->cooperative_id = $newmodel->cooperative_id;
-				$newmodel->surveydate = $newmodel->surveydate;
-				$newmodel->groundsign = $newmodel->groundsign;
-				$newmodel->farmersign = $newmodel->farmersign;
-				$newmodel->create_at = time ();
-				$newmodel->update_at = time ();
-				$newmodel->pinyin = $newmodel->pinyin;
-				$newmodel->farmerpinyin = $newmodel->farmerpinyin;
+// 				$newmodel->cooperative_id = $newmodel->cooperative_id;
+// 				$newmodel->surveydate = $oldmodel->surveydate;
+// 				$newmodel->groundsign = $oldmodel->groundsign;
+// 				$newmodel->farmersign = $newmodel->farmersign;
+// 				$newmodel->longitude = $oldmodel->longitude;
+// 				$newmodel->latitude = $oldmodel->latitude;
+				$newmodel->locked = 1;
+// 				$newmodel->create_at = time ();
+				$newmodel->update_at = time();
+// 				$newmodel->pinyin = Pinyin::encode($newmodel->farmname);
+// 				$newmodel->farmerpinyin = Pinyin::encode($newmodel->farmername);
 				$newmodel->state = 1;
 				$newmodel->notclear = $newmodel->notclear;
-				$newmodel->oldfarms_id = $farms_id;
+				$newmodel->oldfarms_id = $oldfarms_id;
 				
 				$newmodel->save ();
 			}

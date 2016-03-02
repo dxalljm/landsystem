@@ -12,6 +12,7 @@ use app\models\Farmer;
 use app\models\Farms;
 use app\models\Theyear;
 use app\models\Logs;
+use app\models\Parcel;
 
 /**
  * LeaseController implements the CRUD actions for Lease model.
@@ -96,7 +97,13 @@ class LeaseController extends Controller
     	$area = $lease::getOverArea();
     	echo Json::encode($area);
     }
-
+    public function actionGetarea($zongdiarea)
+    {
+    	$zongdi = Lease::getZongdi($zongdiarea);
+    	$area = Lease::getArea($zongdiarea);
+//    		$oldarea = Parcel::find()->where(['unifiedserialnumber'=>$zongdi])->one()['grossarea'];
+    	echo json_encode(['area'=>$area,'zongdi'=>$zongdi]);
+    }
     /**
      * Creates a new Lease model.
      * If creation is successful, the browser will be redirected to the 'view' page.

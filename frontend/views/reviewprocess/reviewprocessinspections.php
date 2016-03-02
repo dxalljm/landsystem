@@ -87,6 +87,10 @@ use app\models\Tempauditing;
 			    }?></table></td>
 			    </tr>
 			  <tr height="40px">
+			    <td align="center">原未明确地块</td>
+			    <td colspan="5" align="center">&nbsp;</td>
+		       </tr>
+			  <tr height="40px">
 			    <td align="center">现宗地信息</td><?php if(!empty($newfarm->zongdi)) $zongdiArray = explode('、', $newfarm->zongdi); else $zongdiArray = [];?>
 			    <td colspan="5" align="center"><table width="100%" border="0" align="center"><?php for($i = 0;$i<count($zongdiArray);$i++) {
 			    	
@@ -101,20 +105,29 @@ use app\models\Tempauditing;
 			    		echo '</tr>';
 			    	}
 			    	
-			    }?></table></td>
+			    }?>
+			    
+			    </table></td>
 			    </tr>
+			    <tr>
+			      <td align="center">现未明确地块</td>
+			      <td colspan="5" align="left" class='content'>&nbsp;</td>
+		       </tr>
 			    <?php foreach ($process as $value) { 
+// 			    	var_dump($value);
 			    //获取当前流程的角色信息
 			  	$role = Reviewprocess::getProcessRole($value);
+// 			  	var_dump($role);
 			  	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
 			  	if($temp)
-			  		$itemname = User::getUserItemname($temp['user_id']);
-			  	else
-			  		$itemname = User::getItemname();
-			  	//审核角色或备分审核角色与当前用户角色相同，则显示该条目
-			  	if($role['rolename'] == $itemname or $role['sparerole'] == User::getItemname()) {
+			  		$tempitem = User::getUserItemname($temp['user_id']);
+			  	$itemname = User::getItemname();
+			  	//审核角色或临时授权角色与当前用户角色相同，则显示该条目
+			  	if($role['rolename'] == $itemname or $role['rolename'] == $tempitem) {
+// 			  		var_dump($itemname);
 			  ?>
-			  <tr>	  
+		       
+		       <tr>	  
 			    <td align="center"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?></td>
 			    <td colspan="5" align="left" class='content'>
 			    <?php 
@@ -198,7 +211,7 @@ use app\models\Tempauditing;
     
 
     <?php ActiveFormrdiv::end(); ?>
-                </div>
+              </div>
             </div>
         </div>
     </div>

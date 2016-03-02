@@ -122,6 +122,7 @@ class ReviewprocessController extends Controller
 	    		$model->save();
 	    		$state = Reviewprocess::isNextProcess($model->id);
 	    		if($state) {
+	    			var_dump($model);exit;
 	    			$oldfarmsModel = Farms::findOne($model->oldfarms_id);
 	    			$oldfarmsModel->update_at = time();
 	    			$oldfarmsModel->state = 0;
@@ -132,6 +133,10 @@ class ReviewprocessController extends Controller
 	    			$newfarmModel->state = 1;
 	    			$newfarmModel->locked = 0;
 	    			$newfarmModel->save();
+	    			$projectID = Projectapplication::find()->where(['farms_id'=>$oldfarmsModel->id,'reviewprocess_id'=>$id])->one()['id'];
+	    			$projectModel = Projectapplication::findOne($projectID);
+	    			$projectModel->farms_id = $newfarmModel->id;
+	    			$projectModel->save();
 	    		}
 	    		 
 	    	}

@@ -224,32 +224,33 @@ function reset()
 </div><!-- /.modal -->
 </div>
 <?php
-    $script = <<<JS
-jQuery('#years').change(function(){
-    var year = $(this).val();
-    $.get('/landsystem/frontend/web/index.php?r=collection/collectionindex',{year:year},function (data) {
-              $('body').html(data);
-            });
-});
-JS;
-$this->registerJs($script);
-
 $this->registerJsFile('js/vendor/bower/devbridge-autocomplete/dist/jquery.autocomplete.js', ['position' => View::POS_HEAD]);
 $this->registerJsFile('js/lease.js', ['position' => View::POS_HEAD]);
 ?>
 <script type="text/javascript">
-$('#model-parcellist').blur(function(){
-	var input = $(this).val();
-	var measure = <?= $farm->measure?>;
-	if(input > measure) {
-		alert('输入的面积不能大于当前农场总面积'+measure+'亩');
-		$('#model-parcellist').focus();
-	}
-});
+// $('#model-parcellist').blur(function(){
+// 	var input = $(this).val();
+// 	alert(input);
+	//var measure = <?//= $farm->measure?>;
+// 	if(input > measure) {
+// 		alert('输入的面积不能大于当前农场总面积'+measure+'亩');
+// 		$('#model-parcellist').focus();
+// 	}
+// });
 function setFarmsid(id)
 {
     $('#lease-farms_id').val(id);
 }
+$('#model-parcellist').blur(function(){
+	var input = $(this).val();
+	$.getJSON('/landsystem/frontend/web/index.php?r=lease/getarea',{zongdiarea:input},function (data) {
+		var measure = <?= $farm->measure?>;
+        if(data.area > measure) {
+			alert('输入的面积不能大于地块面积  '+measure);
+			$('#model-parcellist').val(data.zongdi + '(' + measure +')');
+        }
+    });
+});
 </script>
 
 

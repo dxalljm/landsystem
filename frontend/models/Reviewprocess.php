@@ -109,22 +109,23 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$processname = Processname::find()->where(['Identification'=>$Identification])->one();
    		$result['rolename'] = $processname['rolename'];
    		$result['sparerole'] = $processname['sparerole'];
-    	
+    	$result['isFinished'] = Reviewprocess::find()->where([$Identification=>2])->count();
     	return $result;
     }
     
     public static function getProcessIdentification()
     {
 //     	$processname = Processname::find()->orWhere(['rolename'=>User::getItemname()])->orWhere(['sparerole'=>User::getItemname()])->one();
+    	$processname = [];
     	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
     	if($temp) {
-    		$processname = Processname::find()->where(['rolename'=>User::getUserItemname($temp['user_id'])])->all();
-    	} else {
-    		$processname = Processname::find()->where(['rolename'=>User::getItemname()])->all();
+    		$processname[] = Processname::find()->where(['rolename'=>User::getUserItemname($temp['user_id'])])->all();
     	}
-    	
+    	$processname[] = Processname::find()->where(['rolename'=>User::getItemname()])->all();
+    	    	
     	foreach ($processname as $value) {
-    		$result[] = $value['Identification'];
+    		foreach ($value as $val)
+    			$result[] = $val['Identification'];
     	}
     	    	 
     	return $result;
@@ -137,16 +138,16 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$rows = count($processs);
     	$i = 0;
     	$no = true;
-    	//var_dump($processs);exit;
+//     	var_dump($processs);
     	foreach ($processs as $value) {
-    		if($model->$value == 0)
+    		if($model->$value == 0 or $model->$value == 2)
     			$no = false;
     	}
     	foreach ($processs as $value) {
     		if(($model->$value == 3) and $no) {
     			$result = $model->$value-1;
     			$model->$value = $result;
-    		}	
+    		}
     		if($model->$value == 1)
     			$i++;
     		
@@ -200,7 +201,9 @@ class Reviewprocess extends \yii\db\ActiveRecord
     
     public static function state($num)
     {
+    	
     	$stateArray = [3=>'排队等待',2=>'待审核',1=>'同意',0=>'不同意',-1=>'无',4=>'审核中',7=>'通过',5=>'审核未通过'];
+//     	var_dump($stateArray[$num]);exit;
     	return $stateArray[$num];
     }
     //返回指定的审核流程
@@ -298,16 +301,19 @@ class Reviewprocess extends \yii\db\ActiveRecord
     public static function getUserProcessCount()
     {
     	$mamangmentarea = Farms::getManagementArea();
+    	$processRows = 0;
+    	//判断是否有临时授权人
     	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
     	if($temp) {
+    		$processself = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
+    		$processRows += Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$processself=>2])->count();
     		$process = Processname::find()->where(['rolename'=>User::getUserItemname($temp['user_id'])])->one()['Identification'];
-    			
-    		$processRows = Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$process=>2])->count();
+    		$processRows += Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$process=>2])->count();
     	} else {	    	
 	    	
 	    	$process = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
 			
-	    	$processRows = Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$process=>2])->count();
+	    	$processRows += Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$process=>2])->count();
     	}
     	if($processRows)
     		return '<small class="label pull-right bg-red">'.$processRows.'</small>';

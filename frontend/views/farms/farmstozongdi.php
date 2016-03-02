@@ -99,7 +99,7 @@ use yii\helpers\Url;
       <?= Html::hiddenInput('ttpozongdi','',['id'=>'ttpozongdi-zongdi']) ?>
       <?= Html::hiddenInput('ttpoarea',0,['id'=>'ttpozongdi-area']) ?>
         <td align='right' valign="middle">面积</td>
-        <td colspan="5" align='left' valign="middle"><?= html::textInput('oldmeasure',$oldFarm->measure,['readonly' => true,'id'=>'oldfarms-measure','class'=>'form-control']) ?></td>
+        <td colspan="5" align='left' valign="middle"><?= html::textInput('oldmeasure',$oldFarm->measure,['readonly' => true,'id'=>'oldfarms-measure','class'=>'form-control']) ?><?= html::hiddenInput('temp_oldmeasure',$oldFarm->measure,['id'=>'tempoldmeasure']) ?></td>
         </tr>
       <tr>
         <td align='right' valign="middle">未明确地块</td>
@@ -155,7 +155,7 @@ use yii\helpers\Url;
 		  </tr>
 		<tr>
         <td align='right'>面积</td>
-								  <?= html::hiddenInput('tempinput',0,['id'=>'temp_input']) ?>
+								  <?= html::hiddenInput('tempinput',0,['id'=>'temp_input']) ?><?= html::hiddenInput('newmeasure',$newFarm->measure,['id'=>'temp_newmeasure']) ?>
         <td colspan="5" align='left'><?= $form->field($newFarm, 'measure')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
         </tr>
       <tr>
@@ -437,9 +437,10 @@ $('#farms-zongdi').blur(function(){
     input = $.trim(input);
 	$.getJSON('index.php?r=parcel/areasum', {zongdi: input}, function (data) {
 		if (data.status == 1) {
-			$("#farms-measure").val(data.sum);	
-			var zarea = $("#temp_oldmeasure").val();
-			var result = zarea*1-data.sum*1-$("#farms-notclear").val()*1;
+			var tempmeasure = $("#temp_newmeasure").val();
+			$("#farms-measure").val(data.sum*1 + tempmeasure*1);	
+			var zarea = $("#tempoldmeasure").val();
+			var result = zarea*1-data.sum*1;
 			$('#oldfarms-measure').val(result.toFixed(2));
 			var hth = $('#farms-contractnumber').val();
 			var arrayhth = hth.split('-');

@@ -43,18 +43,22 @@ $this->params ['breadcrumbs'] [] = $this->title;
     <h3>宜农林地承包经营权转让审批</h3>
 						<table class="table table-bordered table-hover">
 							<tr height="40px">
-								<td align="center">原农场名称</td>
-								<td align="center">原法人</td>
-								<td align="center">原面积</td>
-								<td align="center">现农场名称</td>
-								<td align="center">现法人</td>
-								<td align="center">现面积</td>
-								<td align="center">状态</td>
-								<td align="center">操作</td>
+								<td align="center"><strong>原农场名称</strong></td>
+								<td align="center"><strong>原法人</strong></td>
+								<td align="center"><strong>原面积</strong></td>
+								<td align="center"><strong>现农场名称</strong></td>
+								<td align="center"><strong>现法人</strong></td>
+								<td align="center"><strong>现面积</strong></td>
+								<td align="center"><strong>状态</strong></td>
+								<td align="center"><strong>操作</strong></td>
 							</tr>
-							<?php foreach ($farmstransfer as $value) {
+							<?php 
+// 							var_dump($farmstransfer);exit;
+							foreach ($farmstransfer as $value) {
+// 								var_dump($value);exit;
 							$newfarm = Farms::find()->where(['id'=>$value['newfarms_id']])->one();
 							$oldfarm = Farms::find()->where(['id'=>$value['oldfarms_id']])->one();
+// 							var_dump($newfarm);exit;
 							if(Reviewprocess::isShowProess($value['actionname'])) {
 								$field = Reviewprocess::getProcessIdentification();
 								?>
@@ -67,7 +71,14 @@ $this->params ['breadcrumbs'] [] = $this->title;
 								<td align="center"><?= $newfarm->measure?>亩</td>
 								
 								<td align="center">
-								<?php if(User::getItemname() == '地产科科长' or User::getItemname() == '主任' or  User::getItemname() == '副主任' ) {?>
+								<?php 
+								$useritem = User::getItemname();
+								$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+								if($temp) {
+									$useritem = User::getUserItemname($temp['user_id']);
+								}
+// 								var_dump($useritem);
+								if($useritem == '地产科科长' or $useritem == '主任' or  $useritem == '副主任' ) {?>
 									<div class="btn-group">
 									<div class="btn dropdown-toggle" 
 								      data-toggle="dropdown" data-trigger="hover">
@@ -84,7 +95,7 @@ $this->params ['breadcrumbs'] [] = $this->title;
 								<td align="center">
 								<?php 
 								$s = false;
-								
+// 								var_dump($field);
 								foreach ($field as $v) {
 									
 									if($value[$v] == 2 or $value[$v] == 0)
@@ -104,12 +115,12 @@ $this->params ['breadcrumbs'] [] = $this->title;
 <h3>项目审批</h3>
 						<table class="table table-bordered table-hover">
 							<tr height="40px">
-								<td align="center">农场名称</td>
-								<td align="center">法人</td>
-								<td align="center">项目名称</td>
-								<td align="center">申请时间</td>
-								<td align="center">状态</td>
-								<td align="center">操作</td>
+								<td align="center"><strong>农场名称</strong></td>
+								<td align="center"><strong>法人</strong></td>
+								<td align="center"><strong>项目名称</strong></td>
+								<td align="center"><strong>申请时间</strong></td>
+								<td align="center"><strong>状态</strong></td>
+								<td align="center"><strong>操作</strong></td>
 							</tr>
 							<?php foreach ($projectapplication as $value) {
 // 								var_dump($value);

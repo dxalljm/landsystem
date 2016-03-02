@@ -168,21 +168,38 @@ class Farms extends \yii\db\ActiveRecord {
 		return self::findOne ( $farms_id )['locked'];
 	}
 	
+	public static function getReviewprocessState($farms_id)
+	{
+		$unlockFarm = Reviewprocess::find()->where(['oldfarms_id'=>$farms_id,'state'=>7])->count();
+		if($unlockFarm)
+			return true;
+		else 
+			return false;
+	}
+	
+	public static function getLoanState($farms_id)
+	{
+		$unlockLoan = Loan::find ()->where ( [
+				'farms_id' => $farms_id
+		] )->one ()['enddate'];
+		if ($unlockLoan) {
+			if (strtotime ( date ( 'Y-m-d' ) ) > strtotime ( $unlockLoan )) 
+				return true;
+			else
+				return false;
+		}
+	}
+	
 	// 解冻
 	public static function unLocked($farms_id) {
-		$unlockDate = Loan::find ()->where ( [ 
-				'farms_id' => $farms_id 
-		] )->one ()['enddate'];
-		if ($unlockDate) {
-			$model = self::findOne ( $farms_id );
-			if (strtotime ( date ( 'Y-m-d' ) ) > strtotime ( $unlockDate )) {
-				$model->locked = 0;
-				$model->save ();
-			} else {
-				$model->locked = 1;
-				$model->save ();
-			}
+		$model = Farms::findOne($farms_id);
+		if(self::getReviewprocessState($farms_id) and self::getLoanState($farms_id)) {
+			$lockid = Lockedinfo::find()->where(['farms_id'=>$farms_id])->one()['id'];
+			$lockedModel = Lockedinfo::findOne($lockid);
+			$lockedModel->delete();
+			$model->locked = 0;
 		}
+		$model->save();
 	}
 	/**
 	 * 搜索所有农场信息

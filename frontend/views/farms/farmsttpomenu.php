@@ -76,7 +76,7 @@ use app\models\Session;
     		<td align="center" valign="middle"><?= $oldfarm->farmname ?>(<?= $oldfarm->farmername ?>)</td>
     		<td align="center" valign="middle"><?= $newfarm->farmname ?>(<?= $newfarm->farmername ?>)</td>
     		<td align="center" valign="middle"><?= date('Y-m-d',$value['create_at']) ?></td>
-    		<td align="center" valign="middle"><?= Html::a('查看详情', ['farmsttpozongdiview', 'id' => $value['id']], ['class' => 'btn btn-success']) ?></td>
+    		<td align="center" valign="middle"><?= Html::a('查看详情', ['farmsttpozongdiview', 'id' => $value['id'],'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?></td>
     	</tr>
     	<?php }?>
     </table>

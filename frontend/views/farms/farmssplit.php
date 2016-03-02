@@ -107,10 +107,12 @@ use yii\helpers\Url;
         <td colspan="5" align='left' valign="middle"><?php $arrayZongdi = explode('、', $oldFarm->zongdi);
         $i=0;
         foreach($arrayZongdi as $value) {
-        	echo html::button($value,['onclick'=>'toZongdi("'.Lease::getZongdi($value).'","'.Lease::getArea($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
-        	$i++;
-        	if($i%5 == 0)
-        		echo '<br><br>';
+        	if($value !== '') {
+	        	echo html::button($value,['onclick'=>'toZongdi("'.Lease::getZongdi($value).'","'.Lease::getArea($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
+	        	$i++;
+	        	if($i%5 == 0)
+	        		echo '<br><br>';
+        	}
         }
         ?></td>
         </tr>

@@ -88,7 +88,7 @@ class farmsSearch extends Farms
     	} else {
     		$tj = ['like','farmname',$this->farmname];
     	}
-    	
+//     	var_dump($tj);exit;
 		return $tj;
     }
     
@@ -174,8 +174,8 @@ class farmsSearch extends Farms
         ]);
         
 
-          $query->andFilterWhere($this->pinyinSearch())
-            ->andFilterWhere($this->farmerpinyinSearch())
+          $query->andFilterWhere($this->pinyinSearch($this->farmname))
+            ->andFilterWhere($this->farmerpinyinSearch($this->farmername))
             ->andFilterWhere(['like', 'cardid', $this->cardid])
             ->andFilterWhere(['like', 'telephone', $this->telephone])
             ->andFilterWhere(['like', 'address', $this->address])
