@@ -121,12 +121,12 @@ class LeaseController extends Controller
         if ($model->load(Yii::$app->request->post())) {
         	$model->farms_id = $farms_id;
         	
-        	$model->create_at = time();
-        	$model->update_at = time();
+        	$model->create_at = (string)time();
+        	$model->update_at = $model->create_at;
         	$model->save();
         	$new = $model->attributes;
         	Logs::writeLog('创建租赁信息',$model->id,'',$new);
-        	//var_dump($model->getErrors());
+//         	var_dump($model->getErrors());exit;
             return $this->redirect(['leaseindex', 'farms_id' => $farms_id]);
         } else {
             return $this->render('leasecreate', [

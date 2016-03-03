@@ -62,9 +62,9 @@ use app\models\Dispute;
             		$option = '进入业务办理';
             		$title = '农场相关业务办理';
             	}
-            	if($model->zongdi) {
-            		$option .= '<i class="fa fa-check text-red"></i>';
-            	}
+//             	if($model->zongdi) {
+//             		$option .= '<i class="fa fa-check text-red"></i>';
+//             	}
             	if($model->locked == 1) {
             		$option .= '<i class="fa fa-lock text-red"></i>';
             		$title = '已冻结';

@@ -23,37 +23,40 @@ use app\models\Lease;
 
     <table class="table table-bordered table-hover">
   <tr>
-    <td width="20%" align="center">农场名称</td>
-    <td colspan="2" align="center" width="20%"><?= $farm->farmname?></td>
-    <td align="center" width="10%">法人</td>
-    <td colspan="2" align="center"><?= $farm->farmername?></td>
-    <td width="107" align="center">宜农林地面积</td>
-    <td width="20%" align="center"><?= $farm->measure.'(已经租凭'.$overarea.')'?></td>
+    <td align="center">农场名称</td>
+    <td colspan="2" align="center"><?= $farm->farmname?></td>
+    <td align="center" >法人</td>
+    <td align="center"><?= $farm->farmername?></td>
+    <td align="center">宜农林地面积</td>
+    <td colspan="2" align="center"><?= $farm->measure.'(已经租凭'.$overarea.')'?></td>
   </tr>
   <tr>
     <td colspan="8" align="center"><h4>承租人基础信息</h4></td>
   </tr>
   <tr>
     <td align="center">承租人姓名</td>
-    <td colspan="6" align="center"><?= $form->field($model, 'lessee')->textInput()->label(false)->error(false) ?></td>
-    <td rowspan="5" align="center">&nbsp;</td>
-  </tr>
+    <td colspan="7" align="center"><?= $form->field($model, 'lessee')->textInput()->label(false)->error(false) ?></td>
+    </tr>
   <tr>
     <td align="center">身份证号</td>
-    <td colspan="6" align="center"><?= $form->field($model, 'lessee_cardid')->textInput()->label(false)->error(false) ?></td>
+    <td colspan="7" align="center"><?= $form->field($model, 'lessee_cardid')->textInput()->label(false)->error(false) ?></td>
     </tr>
   <tr>
     <td align="center">电话</td>
-    <td colspan="6" align="center"><?= $form->field($model, 'lessee_telephone')->textInput()->label(false)->error(false) ?></td>
+    <td colspan="7" align="center"><?= $form->field($model, 'lessee_telephone')->textInput()->label(false)->error(false) ?></td>
     </tr>
   <tr>
+    <td align="center">住址</td>
+    <td colspan="7" align="center"><?= $form->field($model, 'address')->textInput()->label(false)->error(false) ?></td>
+  </tr>
+  <tr>
     <td align="center">租赁面积</td>
-    <td colspan="6" align="center"><?= $form->field($model, 'lease_area')->textInput(['data-target' => '#myModal','data-toggle' => 'modal','data-keyboard' => 'false', 'data-backdrop' => 'static',])->label(false)->error(false) ?></td>
+    <td colspan="7" align="center"><?= $form->field($model, 'lease_area')->textInput(['data-target' => '#myModal','data-toggle' => 'modal','data-keyboard' => 'false', 'data-backdrop' => 'static',])->label(false)->error(false) ?></td>
     </tr>
   <tr>
     <td align="center">租赁期限</td>
-    <td width="19" align="center">自</td>
-    <td width="61" align="center"><?= $form->field($model, 'begindate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+    <td align="center">自</td>
+    <td align="center"><?= $form->field($model, 'begindate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
         'inline' => false, 
@@ -67,8 +70,8 @@ use app\models\Lease;
             'format' => 'yyyy-mm-dd'
         ]
 ]);?></td>
-    <td width="22" align="center">至</td>
-    <td width="80" align="center"><?= $form->field($model, 'enddate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+    <td align="center">至</td>
+    <td colspan="3" align="center"><?= $form->field($model, 'enddate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
         'inline' => false, 
@@ -82,37 +85,26 @@ use app\models\Lease;
             'format' => 'yyyy-mm-dd'
         ]
 ]);?></td>
-    <td width="16" align="center">止</td>
-    <td align="center">&nbsp;</td>
+    <td align="center">止</td>
   </tr>
   <tr>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td rowspan="7" align="center">&nbsp;</td>
-  </tr>
+    <td align="center">租金</td>
+    <td colspan="2" align="center"><?= $form->field($model, 'rent')->textInput()->label(false)->error(false) ?></td>
+    <td align="center">租金交纳方式</td>
+    <td colspan="4" align="center"><?= $form->field($model, 'rentpaymode')->textInput()->label(false)->error(false) ?></td>
+    </tr>
   <tr>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-  </tr>
+    <td align="center">投保人</td>
+    <td colspan="2" align="center"><?= $form->field($model, 'policyholder')->textInput()->label(false)->error(false) ?></td>
+    <td align="center">被保险人</td>
+    <td colspan="4" align="center"><?= $form->field($model, 'insured')->textInput()->label(false)->error(false) ?></td>
+    </tr>
   <tr>
+    <td align="center">惠农补贴归属</td>
+    <td colspan="2" align="center"><?= $form->field($model, 'huinongascription')->textInput()->label(false)->error(false) ?></td>
     <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-  </tr>
+    <td colspan="4" align="center">&nbsp;</td>
+    </tr>
   </table>
 <datalist id="parcellist">
 <?php $parcel = explode('、', $farm->zongdi);
@@ -164,18 +156,17 @@ use app\models\Lease;
     		<td align='center'><?php 
     		//$arrayParcelValue = explode('、', $parcellistvalue);
 			$zongdiarr = Lease::getNOZongdi($_GET['farms_id']);
-			//var_dump($zongdiarr);
-			//exit;
-			echo html::hiddenInput('tempZongdiList',implode('、', $zongdiarr),['id'=>'temp-ZongdiList']);
-			$i=0;
-    		foreach($zongdiarr as $value) {
-    			echo html::button($value,['onclick'=>'toParcellist("'.$value.'","'.Lease::getZongdi($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
-    			$i++;
-    			if($i%4 == 0)
-    				echo '<br><br>';
-    		}
-    		echo html::button('全选',['onclick'=>'toAll()','class'=>'btn btn-primary']);
-    		?></td>
+			if($zongdiarr) {
+				echo html::hiddenInput('tempZongdiList',implode('、', $zongdiarr),['id'=>'temp-ZongdiList']);
+				$i=0;
+	    		foreach($zongdiarr as $value) {
+	    			echo html::button($value,['onclick'=>'toParcellist("'.$value.'","'.Lease::getZongdi($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
+	    			$i++;
+	    			if($i%4 == 0)
+	    				echo '<br><br>';
+	    		}
+	    		echo html::button('全选',['onclick'=>'toAll()','class'=>'btn btn-primary']);
+			}?></td>
 
     	</tr>
     </table>

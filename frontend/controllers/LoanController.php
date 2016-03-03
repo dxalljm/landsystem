@@ -90,7 +90,7 @@ class LoanController extends Controller
         		Logs::writeLog('冻结农场',$farms_id);
         		$lockedinfoModel = new Lockedinfo();
         		$lockedinfoModel->farms_id = $farms_id;
-        		$lockedinfoModel->lockedcontent = '因农场在贷款期限中，已被冻结，不能进行此操作，解冻日期为'.Loan::find()->where(['farms_id'=>$farms_id])->one()['enddate'];
+        		$lockedinfoModel->lockedcontent = '因农场在贷款期限中，已被冻结，不能进行此操作，解冻日期为'.Loan::find()->where(['farms_id'=>$farms_id])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->one()['enddate'];
         		$lockedinfoModel->save();
         		Logs::writeLog('增加冻结信息',$lockedinfoModel->id,'',$lockedinfoModel->attributes);
         	}

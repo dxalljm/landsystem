@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use app\models\Farms;
+use app\models\Theyear;
 /**
  * This is the model class for table "{{%lease}}".
  *
@@ -85,7 +86,7 @@ class Lease extends \yii\db\ActiveRecord
     public static function getAllLeaseArea($farms_id)
     {
     	$result = [];
-    	$leases = self::find()->where(['farms_id'=>$farms_id])->all();
+    	$leases = self::find()->where(['farms_id'=>$farms_id])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
     	foreach($leases as $value) {
     		if(strstr($value['lease_area'], '、')) {
     			$array = explode('、', $value['lease_area']);
@@ -139,7 +140,7 @@ class Lease extends \yii\db\ActiveRecord
     	//$zdarea——农场所有宗地（面积）
     	$zdarea = self::getFarmsZdarea($farms_id);
     	//$lease——已经被租赁的所有宗地（面积）
-    	$lease = self::find()->where(['farms_id'=>$farms_id])->all();
+    	$lease = self::find()->where(['farms_id'=>$farms_id])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
     	$result = 0;
     	if($lease) {
     		foreach ($lease as $value) {

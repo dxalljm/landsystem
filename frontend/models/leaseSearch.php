@@ -44,6 +44,7 @@ class leaseSearch extends Lease
      */
     public function search($params)
     {
+//     	var_dump($params);exit;
         $query = Lease::find();
 
         $dataProvider = new ActiveDataProvider([
@@ -74,7 +75,7 @@ class leaseSearch extends Lease
             ->andFilterWhere(['like', 'address', $this->address])         
             ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
         
-
+// 		var_dump($dataProvider->query);exit;
         return $dataProvider;
     }
 }

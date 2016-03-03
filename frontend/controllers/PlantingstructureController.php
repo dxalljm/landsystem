@@ -60,7 +60,7 @@ class PlantingstructureController extends Controller
      */
     public function actionPlantingstructureindex($farms_id)
     {
-        $lease = Lease::find()->where(['farms_id'=>$farms_id])->all();
+        $lease = Lease::find()->where(['farms_id'=>$farms_id])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
 		$farmname = Farms::findOne($farms_id)['farmname'];
 		Logs::writeLog($farmname.'的种植结构');
         return $this->render('Plantingstructureindex', [
