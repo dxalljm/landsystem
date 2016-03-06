@@ -18,6 +18,7 @@ use app\models\Logs;
 use app\models\Theyear;
 use app\models\Search;
 use app\models\Plant;
+use app\models\ManagementArea;
 /**
  * PlantingstructureController implements the CRUD actions for Plantingstructure model.
  */
@@ -49,7 +50,7 @@ class PlantingstructureController extends Controller
     	$planting = Plantingstructure::find()->all();
     	foreach ($planting as $value) {
     		$model = $this->findModel($value['id']);
-    		$model->management_area = Farms::find()->where(['id'=>$value['farms_id']])->one()['management_area'];
+    		$model->management_area = Farms::getFarmsAreaID($farms_id);
     		$model->save();
     	}
     }

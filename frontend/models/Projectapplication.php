@@ -339,4 +339,15 @@ class Projectapplication extends \yii\db\ActiveRecord
     	}
     	return json_encode($result);
     }
+    
+    public static function getUnit()
+    {
+    	$data = [];
+    	$project = Projectapplication::find()->all();
+    	foreach ($project as $value) {
+    		$data[$value['unit']] = $value['unit'];
+    	}
+    	$result = array_unique($data);
+    	return $result;
+    }
 }

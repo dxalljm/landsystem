@@ -50,6 +50,7 @@ use app\models\Farmermembers;
 use app\models\Machineoffarm;
 use app\models\elasticsearchtest;
 use app\models\Farmselastic;
+// use PHPExcel_IOFactory;
 
 /**
  * FarmsController implements the CRUD actions for farms model.
@@ -205,31 +206,40 @@ class FarmsController extends Controller {
 		$model = new UploadForm ();
 		$rows = 0;
 		$area = [];
+// 		require_once dirname(__FILE__) . '../vendor/phpoffice/phpexcel/Classes/PHPExcel/IOFactory.php';
 		if (Yii::$app->request->isPost) {
 			
 			$model->file = UploadedFile::getInstance ( $model, 'file' );
+			$extension = $model->file->getExtension();
 			if ($model->file == null)
 				throw new \yii\web\UnauthorizedHttpException ( '对不起，请先选择xls文件' );
 			if ($model->file && $model->validate ()) {
 				
 				$xlsName = time () . rand ( 100, 999 );
 				$model->file->name = $xlsName;
-				$model->file->saveAs ( 'uploads/' . $model->file->name . '.' . $model->file->extension );
-				$path = 'uploads/' . $model->file->name . '.' . $model->file->extension;
-				$loadxls = \PHPExcel_IOFactory::load ( $path );
+				$model->file->saveAs ( 'uploads/' . $model->file->name . '.' . $extension );
+				$path = 'uploads/' . $model->file->name . '.' . $extension;
+// 				var_dump($path);exit;
+// 				$loadxls = PHPExcel_IOFactory::load($path);
+				\Yii::$app->import('Vendor', 'PHPExcel/IOFactory');
+				if (!class_exists('PHPExcel/IOFactory')) {
+					throw new CakeException('Vendor class IOFactory not found!');
+				}
+				$loadxls = \PHPExcel_IOFactory::load($path);
 				$rows = $loadxls->getActiveSheet ()->getHighestRow ();
-				$farms = Farms::find()->where(['management_area'=>2])->all();
-				$zongdi = [ ];
-				$a = [];
-				for($i = 3; $i <= $rows; $i ++) {
-					$contract = $loadxls->getActiveSheet()->getCell('C'.$i)->getValue();
-					$array = explode('-', $contract);
-					foreach($farms as $value) {
-						if($contract == $value['contractnumber']) {
-							$area[] = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
-						}
+// 				$farms = Farms::find()->where(['management_area'=>2])->all();
+// 				$zongdi = [ ];
+// 				$a = [];
+				for($i = 2; $i <= 4; $i ++) {
+					$contract = $loadxls->getActiveSheet()->getCell('B'.$i)->getValue();
+					var_dump($contract);
+// 					$array = explode('-', $contract);
+// 					foreach($farms as $value) {
+// 						if($contract == $value['contractnumber']) {
+// 							$area[] = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
+// 						}
 							
-					}
+// 					}
 					
 					
 					// 导入农场基础信息
@@ -364,6 +374,19 @@ class FarmsController extends Controller {
 				'searchModel' => $searchModel,
 				'dataProvider' => $dataProvider,
 				'params' => $params,
+		] );
+	}
+	
+	public function actionFarmsinaccountnumber()
+	{
+		
+	}
+	
+	public function actionFarmstoxls()
+	{
+		$farms = Farms::find()->all();
+		return $this->render ( 'farmstoxls', [
+				'farms' => $farms,
 		] );
 	}
 	
@@ -1205,8 +1228,9 @@ class FarmsController extends Controller {
 				$value ['icon'] = 'fa fa-sun-o';
 				$value ['title'] = $menuUrl ['menuname'];
 				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
+// 				var_dump(Theyear::getYeartime()[1]);exit;
 				$value ['info'] = '种植了' . Plantingstructure::find ()->where ( [ 
-						'farms_id' => $_GET ['farms_id'] 
+						'farms_id' => $_GET ['farms_id'],
 				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '种作物';
 				$value ['description'] = '种植作物信息';
 				break;
@@ -1249,16 +1273,17 @@ class FarmsController extends Controller {
 								'farms_id' => $_GET ['farms_id'] 
 						] )->one ()['id'] 
 				] )->all ();
-				$breeds = false;
+				$breeds = '';
 				foreach ( $breedinfo as $val ) {
-					$breeds = $val ['number'] . Breedtype::find ()->where ( [ 
+					$breeds .= $val ['number'] . Breedtype::find ()->where ( [ 
 							'id' => $val ['breedtype_id'] 
 					] )->one ()['unit'] . Breedtype::find ()->where ( [ 
 							'id' => $val ['breedtype_id'] 
 					] )->one ()['typename'];
+					$breeds .= ' ';
 				}
 				if ($breeds)
-					$value ['info'] = '养殖' . $breeds;
+					$value ['info'] = $breeds;
 				else
 					$value ['info'] = '无养殖信息';
 				$value ['description'] = '养殖信息';

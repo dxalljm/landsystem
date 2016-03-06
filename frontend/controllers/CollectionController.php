@@ -53,6 +53,7 @@ class CollectionController extends Controller
      */
     public function actionCollectionindex($farms_id = null,$year=null)
     {
+    	Collection::dckpayReset();
     	if($year === null)
     		$year = Theyear::findOne(1)['years'];
         $searchModel = new collectionSearch();
@@ -96,7 +97,7 @@ class CollectionController extends Controller
     public function actionCollectionsend($farms_id,$year = NULL)
     {
     	if(empty($year))
-    		$year = Theyear::getYear();
+    		$year = User::getYear();
     	$farm = Farms::find()->where(['id'=>$farms_id])->one();
    		$collection = Collection::find()->where(['farms_id'=>$farms_id,'ypayyear'=>$year])->one();
     	//var_dump($collection);
@@ -248,6 +249,9 @@ class CollectionController extends Controller
     		$old_real_income_amount = $collection->real_income_amount;
     		$old_ypaymoney = $collection->ypaymoney;
     		$old_area = sprintf("%.2f",$collection->real_income_amount/30/PlantPrice::find()->where(['years'=>$model->ypayyear])->one()['price']);
+    		$model->dckpay = 1;
+    		$model->update_at = time();
+    		
     	}
     	else {
     		$model = new Collection();
@@ -277,8 +281,12 @@ class CollectionController extends Controller
         		$model->owe = $owe+$model->amounts_receivable-$model->real_income_amount;
         	else
         		$model->owe = $model->ypaymoney;
-			$model->create_at = time();
-			$model->update_at = time();
+        	if($collection) {
+				$model->create_at = time();
+				$model->update_at = $model->create_at;
+				
+        	} else 
+        		$model->update_at = time();
         	$model->save();
         	//var_dump($model->getErrors());
         	$newAttr = $model->attributes;

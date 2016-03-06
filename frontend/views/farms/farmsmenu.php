@@ -36,7 +36,9 @@ use app\models\Prevention;
                 <div class="box-header">
                     <h3 class="box-title">
 
-                        业务办理&nbsp;&nbsp;<?= html::a('农场档案打印',Url::to(['print/printfarmsfile','farms_id'=>$farm->id]),['class'=>'btn btn-primary'])?>&nbsp;&nbsp;<?= html::a('承包合同打印',Url::to(['print/printcontract','farms_id'=>$farm->id]),['class'=>'btn btn-primary'])?>
+                        业务办理&nbsp;&nbsp;<?= html::a('农场档案打印',Url::to(['print/printfarmsfile','farms_id'=>$farm->id]),['class'=>'btn btn-primary'])?>&nbsp;&nbsp;
+                        <?= html::a('承包合同打印',Url::to(['print/printcontract','farms_id'=>$farm->id]),['class'=>'btn btn-primary'])?>&nbsp;&nbsp;
+                        
 
                     </h3>
                 </div>

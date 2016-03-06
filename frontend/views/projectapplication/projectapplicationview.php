@@ -4,6 +4,7 @@ use app\models\tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\Inputproduct;
+use app\models\Infrastructuretype;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Projectapplication */
@@ -43,10 +44,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             [ 
             	'attribute'=>'projecttype',
-            	'value' => Inputproduct::find()->where(['id'=>$model->projecttype])->one()['typename'],
+            	'value' => Infrastructuretype::find()->where(['id'=>$model->projecttype])->one()['typename'],
             ],
+            'content',
+            'projectdata',
+            'unit',
             [
-            	'attribute' => 'create_at',
+            	'attribute' => 'update_at',
             	'value' => date('Y年m月d日',$model->update_at),
             ],
         ],

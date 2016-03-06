@@ -20,7 +20,7 @@ use yii\helpers\Url;
                 <div class="box-body">
                 <div id="remainSeconds" style="display:none">5</div>
          <div id="remainTime" style="font-size:20px;font-weight:800;color:#FF9900"></div>
-  <h4>资费信息已经成功发送到财务科，请到财务科进行交费。</h4>
+  <h4>缴费信息已经成功发送到财务科，请到财务科进行交费。</h4>
               </div>
             </div>
         </div>

@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	    	<td align="center"><?= Plant::find()->where(['id'=>$planting->plant_id])->one()['cropname']?></td>
 	    	<td align="center"><?= Goodseed::find()->where(['id'=>$planting->goodseed_id])->one()['plant_model']?></td>
 	    	<td align="center"><?= $yields['single']*$planting->area?>斤</td>
-	    	<td align="center"><?php if(Sales::getVolume($planting->id)) echo Html::a('添加销售信息', ['salescreate','planting_id'=>$planting->id,'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?></td>
+	    	<td align="center"><?php if(Sales::getVolume($planting->id)) echo Html::a('销售信息', ['salescreate','planting_id'=>$planting->id,'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?></td>
 	    </tr>
 		<?php $salses = Sales::find()->where(['planting_id'=>$planting->id])->all();
 		if($salses) {

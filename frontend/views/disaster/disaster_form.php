@@ -7,7 +7,7 @@ use app\models\Disastertype;
 use app\models\Plant;
 use app\models\Plantingstructure;
 use app\models\Farms;
-
+use app\models\Theyear;
 /* @var $this yii\web\View */
 /* @var $model app\models\Disaster */
 /* @var $form yii\widgets\ActiveForm */
@@ -31,7 +31,7 @@ use app\models\Farms;
 <tr>
 <td width=15% align='right'>受灾作物</td>
 <?php 
-	$plantingstracutres = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id']])->all();
+	$plantingstracutres = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id']])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
 	$plantValue = [];
 	if($plantingstracutres) {
 		foreach ($plantingstracutres as $value) {
@@ -95,6 +95,11 @@ $('#disaster-disasterarea').blur(function(){
 		$('#disaster-disasterarea').focus();
 	}
 });
+// alert($('#disaster-isinsurance').val());
+if($('#disaster-isinsurance').is(":checked")==true) {
+	$('.temp-isinsurance').css('display', 'table-row')
+}
+
 $('#disaster-isinsurance').click(function(){
 	//alert($(this).is(":checked"));
 	if($(this).is(":checked")==true) {
@@ -103,6 +108,7 @@ $('#disaster-isinsurance').click(function(){
 		$('.temp-isinsurance').css('display', 'none')
 	}
 });
+
 // $('#disaster-yieldreduction').blur(function(){
 // 	var input = $(this).val();
 // // 	var area = $('#disaster-disasterarea').val();

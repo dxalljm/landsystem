@@ -49,9 +49,9 @@ class User extends \yii\db\ActiveRecord
    public function rules()
     {
         return [
-			[['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at', 'department_id'], 'required'],
+			[['username', 'auth_key', 'password_hash', 'created_at', 'updated_at', 'department_id'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
+            [['username', 'password_hash', 'password_reset_token', 'email' ,'year'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
 			
 			['status', 'default', 'value' => self::STATUS_ACTIVE],
@@ -244,5 +244,11 @@ class User extends \yii\db\ActiveRecord
     public static function getUserItemname($user_id)
     {
     	return AuthAssignment::find()->where(['user_id'=>$user_id])->one()['item_name'];
+    }
+    
+    public static function getYear()
+    {
+    	$model = User::findOne(\Yii::$app->getUser()->id);
+    	return $model->year;
     }
 }

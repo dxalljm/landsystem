@@ -50,7 +50,7 @@ use app\models\ManagementArea;
       </thead>
 	<tbody>
 		<tr>
-			<td colspan="3" align='center'>养殖种类</td>
+			<td colspan="3" align='center'>牲畜类型</td>
 			<td align='center'>养殖数量</td>
             <td align='center'>基础投资</td>
 			<td align='center'>圈舍面积</td>
