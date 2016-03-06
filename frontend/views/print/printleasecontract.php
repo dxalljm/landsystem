@@ -1,7 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML><HEAD><TITLE>租赁合同</TITLE>
 <META http-equiv=Content-Type content="text/html; charset=gb2312">
-
 <OBJECT id=WebOffice1 height="768" width="100%" style="LEFT: 0px; TOP: 0px" 
 classid='clsid:E77E049B-23FC-4DB8-B756-60529A35FAD5' codebase='WebOffice.cab#Version=7,0,1,0'>
 	<PARAM NAME="_ExtentX" VALUE="6350">

@@ -110,11 +110,11 @@ class PrintController extends Controller
 // 		$templateProcessor->setValue('farmpic', htmlspecialchars(''));
 // 		$image = new \PhpOffice\PhpWord\Element\Image('images/plant.jpg');
 // 		$templateProcessor->saveAs($fileName)
-		$data=file_get_contents("images/plant.jpg");
-		$im = base64_encode($data);
+// 		$data=file_get_contents("images/plant.jpg");
+// 		$im = base64_encode($data);
 		
 // 		var_dump($im);exit;
-		$templateProcessor->setValue('cardpic', ['jpeg','frontend\helpers\image.php']);
+// 		$templateProcessor->setValue('cardpic', ['jpeg','frontend\helpers\image.php']);
 		
 		$member = Farmermembers::find()->where(['farmer_id'=>$farmer['id']])->all();
 		
@@ -205,6 +205,7 @@ class PrintController extends Controller
 		
 		return $this->render('printfarmsfile', [
 				'filename' => $filename,
+				'cardpic' => $farmer['cardpic'],
 		]);
 	}
 	public function actionPrintleasecontract($lease_id)

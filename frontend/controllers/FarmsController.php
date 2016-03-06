@@ -219,27 +219,26 @@ class FarmsController extends Controller {
 				$model->file->name = $xlsName;
 				$model->file->saveAs ( 'uploads/' . $model->file->name . '.' . $extension );
 				$path = 'uploads/' . $model->file->name . '.' . $extension;
-// 				var_dump($path);exit;
-// 				$loadxls = PHPExcel_IOFactory::load($path);
-				\Yii::$app->import('Vendor', 'PHPExcel/IOFactory');
-				if (!class_exists('PHPExcel/IOFactory')) {
-					throw new CakeException('Vendor class IOFactory not found!');
-				}
+
 				$loadxls = \PHPExcel_IOFactory::load($path);
 				$rows = $loadxls->getActiveSheet ()->getHighestRow ();
-// 				$farms = Farms::find()->where(['management_area'=>2])->all();
+				$farms = Farms::find()->all();
 // 				$zongdi = [ ];
 // 				$a = [];
-				for($i = 2; $i <= 4; $i ++) {
+				echo '<br><br><br><br><br><br><br><br>';
+				for($i = 2; $i <= $rows; $i ++) {
 					$contract = $loadxls->getActiveSheet()->getCell('B'.$i)->getValue();
-					var_dump($contract);
+// 					var_dump($contract);
 // 					$array = explode('-', $contract);
-// 					foreach($farms as $value) {
-// 						if($contract == $value['contractnumber']) {
-// 							$area[] = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
-// 						}
+					foreach($farms as $value) {
+						if($contract == $value['contractnumber']) {
+							echo $contract."<br>";
+							$farmModel = Farms::findOne($value['id']);
+							$farmModel->accountnumber = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
+							$farmModel->save();
+						}
 							
-// 					}
+					}
 					
 					
 					// 导入农场基础信息
@@ -341,11 +340,12 @@ class FarmsController extends Controller {
 		}
 		//var_dump($area);
 		// exit;
+// 		echo 'finished';
 		Logs::writeLog ( '农场XLS批量导入' );
 		return $this->render ( 'farmsxls', [ 
 				'model' => $model,
 				'rows' => $rows, 
-				'area' => $area
+// 				'area' => $area
 		] );
 	}
 	
@@ -1060,6 +1060,38 @@ class FarmsController extends Controller {
 	// ]);
 	// }
 	// }
+	
+	public function actionFarmsaccountnumber()
+	{
+		$searchModel = new farmsSearch ();
+		$whereArray = Farms::getManagementArea();
+		$params = Yii::$app->request->queryParams;
+		$params ['farmsSearch'] ['state'] = 1;
+		// 管理区域是否是数组
+		if (empty($params['farmsSearch']['mamagement_area'])) {
+			$params ['farmsSearch'] ['management_area'] = $whereArray['id'];
+		}
+		// var_dump($params);exit;
+		$dataProvider = $searchModel->search ( $params );
+		Logs::writeLog ( '农场管理' );
+		return $this->render ( 'farmsaccountnumber', [
+				'searchModel' => $searchModel,
+				'dataProvider' => $dataProvider,
+		
+		] );
+	}
+	
+	public function actionFarmsupdateaccountnumber($id)
+	{
+		$model = $this->findModel($id);
+		if($model->load(Yii::$app->request->post()) && $model->save()) {
+// 			var_dump($model->getErrors());exit;
+			return $this->redirect(['farmsaccountnumber']);
+		}
+		return $this->render('farmsupdateaccountnumber',[
+				'model' => $model,
+		]);
+	}
 	
 	/**
 	 * Updates an existing Farms model.

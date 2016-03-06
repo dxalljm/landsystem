@@ -25,6 +25,10 @@ return [
     				'name' => 'FRONTENDSSID',//可以自定义
     				//'savePath' => __DIR__ . '/../tmp',//手工在backend目录下新建文件夹TMP
     		],
+    		'excel'=>array(
+    				'class'=>'application.extensions.PHPExcel',
+    		),
+    		
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,

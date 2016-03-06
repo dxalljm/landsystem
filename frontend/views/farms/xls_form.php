@@ -16,10 +16,7 @@ use yii\widgets\ActiveFormrdiv;
 <?= $form->field($model, 'file')->fileInput()->label('请选择XLS文件') ?>
 
 <button id="btnSubmit">提交</button>
-<?php foreach($area as $value) {
-	echo $value;
-	echo "<br>";
-}?>
+
 <?php ActiveFormrdiv::end() ?>
 
 </div>

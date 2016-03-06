@@ -38,5 +38,11 @@
         "psr-0": {
             "PHPExcel": "Classes/"
         }
+    }   
+    "require": {
+        
+        "phpoffice/phpexcel": "^1.8"
+    
     }
+
 }
