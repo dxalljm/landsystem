@@ -117,14 +117,11 @@ switch ($typename) {
 
     <?php ActiveFormrdiv::end(); ?>
 <script>
-
-
 $(document).ready(function () {
 	NProgress.start();
-	NProgress.set(0.4)
+	NProgress.set(10)
 	NProgress.inc();
-	NProgress.done();
-	alert('123');
+//	NProgress.done();
 });
 </script>
 </div>
