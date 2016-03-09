@@ -435,6 +435,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     }
     public static function getPlantRowsMenu($where)
     {
+    	$data = [];
     	$planting = Plantingstructure::find();
     	$planting->andFilterWhere(['between','update_at',$where['begindate'],$where['enddate']]);
     	$planting->andFilterWhere(['management_area'=>$where['management_area']]);
