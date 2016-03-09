@@ -91,7 +91,7 @@ class MachineoffarmController extends Controller
     	
     	$post = Yii::$app->request->post();
     		if($post) {
-//     			var_dump($farms_id);exit;
+//     			var_dump($post);exit;
     			if(isset($post['lastclass']))
     				$params['MachineSearch']['machinetype_id'] = $post['lastclass'];
     			if(isset($post['MachineSearch']['productname']))

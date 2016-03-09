@@ -44,7 +44,7 @@ class Theyear extends \yii\db\ActiveRecord
     
     public static function getYeartime()
     {
-    	$year = Theyear::findOne(1)['years'];
+    	$year = User::getYear();
     	$thisyear = [strtotime($year.'-01-01 00:00:01'),strtotime($year.'-12-31 23:59:59')];
     	return $thisyear;
     }

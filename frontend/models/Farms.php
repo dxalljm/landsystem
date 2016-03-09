@@ -86,7 +86,8 @@ class Farms extends \yii\db\ActiveRecord {
 								'enddate',
 								'latitude',
 								'longitude',
-								'notstateinfo' 
+								'notstateinfo',
+								'accountnumber',
 						],
 						'string',
 						'max' => 500 
@@ -134,7 +135,8 @@ class Farms extends \yii\db\ActiveRecord {
 				'longitude' => '经度',
 				'locked' => '锁定',
 				'notstate' => '未明确状态面积',
-				'notstateinfo' => '未明确状态信息' 
+				'notstateinfo' => '未明确状态信息',
+				'accountnumber' => '账页号',
 		];
 	}
 	public static function getFarmsAreaID($farms_id) {

@@ -131,6 +131,7 @@ class BreedController extends Controller
 	    					$breedinfoModel->create_at = time();
 	    					$breedinfoModel->update_at = $breedinfoModel->create_at;
 	    					$breedinfoModel->management_area = Farms::getFarmsAreaID($farms_id);
+	    					$breedinfoModel->farms_id = $farms_id;
 	    				}
 	    				
 	    				$breedinfoModel->breed_id = $model->id;

@@ -54,7 +54,7 @@ class YieldsController extends Controller
      */
     public function actionYieldsindex($farms_id)
     {
-        $planting = Plantingstructure::find()->where(['farms_id'=>$farms_id])->all();
+        $planting = Plantingstructure::find()->where(['farms_id'=>$farms_id])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
 		
         return $this->render('yieldsindex', [
             'plantings' => $planting,

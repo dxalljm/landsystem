@@ -51,7 +51,7 @@ class User extends \yii\db\ActiveRecord
         return [
 			[['username', 'auth_key', 'password_hash', 'created_at', 'updated_at', 'department_id'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
+            [['username', 'password_hash', 'password_reset_token', 'email','year'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
         	[['realname'], 'string', 'max' => 200],
 			['status', 'default', 'value' => self::STATUS_ACTIVE],

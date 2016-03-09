@@ -79,7 +79,10 @@ class Collection extends \yii\db\ActiveRecord {
 		$plantprice = PlantPrice::find ()->where ( [ 
 				'years' => $year 
 		] )->one ();
-		$result = sprintf ( "%.2f", ($this->getAR ( $year ) - $real_income_amount) / $plantprice ['price'] );
+		if($plantprice)
+			$result = sprintf ( "%.2f", ($this->getAR ( $year ) - $real_income_amount) / $plantprice ['price'] );
+		else 
+			$result = 0;
 		return $result;
 	}
 	public function getYpaymoney($year, $real_income_amount) // 应追缴金额
@@ -235,7 +238,10 @@ class Collection extends \yii\db\ActiveRecord {
 	{
 		$real = self::totalReal();
 		$amounts = self::totalAmounts();
+<<<<<<< HEAD
 // 		var_dump($amounts);exit;
+=======
+>>>>>>> f26c01cfc0293b1162a308ff9ff3e7e5e781df80
 		if($real !== 0.0 and $amounts !== 0.0)
 			$percentage = sprintf("%.2f",$real/$amounts)*100;
 		else 
@@ -376,5 +382,29 @@ class Collection extends \yii\db\ActiveRecord {
     	$data = self::getYear();
 //     	var_dump($data);exit;
     	return  $data[$id];   //主要通过此种方式实现
+    }
+    
+    //地产科提交的收缴信息，当前有效
+    public static function dckpayReset()
+    {
+    	$colleciton = Collection::find()->where(['dckpay'=>0])->all();
+    	foreach ($colleciton as $coll) {
+    		$year = date('Y',$coll['update_at']);
+    		$month = date('m',$coll['update_at']);
+    		$day = date('d',$coll['update_at']);
+    		$nowyear = date('Y',time());
+    		$nowmonth = date('m',time());
+    		$nowday = date('d',time());
+    		if($year == $nowyear and $month == $nowmonth and $day == $nowday) {
+    			$h = (int)date('H',time());
+    			if($h >= 18) {
+    				$model = Collection::findOne($coll['id']);
+    				$model->delete();
+    			}
+    		} else {
+    			$model = Collection::findOne($coll['id']);
+    			$model->delete();
+    		}
+    	}
     }
 }

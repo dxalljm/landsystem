@@ -30,7 +30,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 		<td align='right'>机具名称</td>
 		<td align='left'><?= $form->field($model, 'machinename')->textInput()->label(false)->error(false)?></td>
 		<td align='right'>购置年限</td>
-		<td colspan="3"><?= $form->field($model, 'acquisitiontime')->textInput()->label(false)->error(false)->widget(
+		<td colspan="2"><?= $form->field($model, 'acquisitiontime')->textInput()->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
         'inline' => false, 
@@ -43,6 +43,7 @@ use dosamigos\datetimepicker\DateTimePicker;
         	'maxView' => 3,
             'format' => 'yyyy-mm-dd'
         ]]) ?></td>
+		<td><?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary','id'=>'createbutton']) ?></td>
 		
 	</tr>
 </table>
@@ -75,9 +76,7 @@ use dosamigos\datetimepicker\DateTimePicker;
             ],
         ],
     ]); ?>
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
+
 
     <?php ActiveFormrdiv::end(); ?>
 
@@ -124,10 +123,18 @@ $('#lastClass').change(function(){
 	$('machineoffarm-machinetype_id').val(input);
 	$("form").submit();
 });
-// $('.machineoffarm').click(function(){
+// $('#createbutton').click(function(){
 // 	if($('#machineoffarm-acquisitiontime').val() == '') {
 // 		alert('请输入购置年限');
 // 		$('#machineoffarm-acquisitiontime').focus();
 // 	}
+// });
+// $('#machineoffarm-machinename').focus(function(){
+// 	$('#createbutton').removeAttr("disabled");
+// });
+// $('#machineoffarm-machinename').blur(function(){
+// 	var input = $(this).val();
+// 	if(input == '')
+// 		$('#createbutton').attr('disabled',true);
 // });
 </script>

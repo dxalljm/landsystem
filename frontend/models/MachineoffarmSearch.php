@@ -63,8 +63,8 @@ class MachineoffarmSearch extends Machineoffarm
         	'machinetype_id' => $this->machine_id,
         	'acquisitiontime' => $this->acquisitiontime,
         ]);
-        $query->andFilterWhere(['like', 'machinename', $this->machinename])
-        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
+        $query->andFilterWhere(['like', 'machinename', $this->machinename]);
+//         ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
         return $dataProvider;
     }
 }

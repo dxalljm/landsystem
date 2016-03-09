@@ -34,6 +34,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+//         'id' => function ($model) {
+//         	return $model->id;
+//     	},
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
@@ -76,10 +79,12 @@ $this->params['breadcrumbs'][] = $this->title;
 						return $result;
 					
 			} ], 
-			['class' => 'yii\grid\ActionColumn'], [
-				'label'=>'操作', 'format'=>'raw',  
+			['class' => 'yii\grid\ActionColumn'], 
+			[
+				'label'=>'操作', 
+				'format'=>'raw',  
 				'value' => function($model,$key){ 
-					$url = Url::to(['projectapplication/projectapplicationprint','id'=>$model->id]);
+					$url = Url::to(['print/printproject','id'=>$model->id]);
 					$option = '打印申请'; 
 					$title = ''; 
 					return Html::a($option,$url, [ 

@@ -53,6 +53,7 @@ class SignupForm extends Model
             $user->department_id = $this->department_id;
             $user->setPassword($this->password);
             $user->generateAuthKey();
+            $user->year = date('Y');
             if ($user->save()) {
                 return $user;
             }

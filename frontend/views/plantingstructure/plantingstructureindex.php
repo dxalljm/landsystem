@@ -7,7 +7,7 @@ use app\models\Farms;
 use app\models\Plantingstructure;
 use app\models\Plant;
 use app\models\Lease;
-
+use app\models\Theyear;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -63,7 +63,7 @@ use app\models\Lease;
     <td colspan="2" align="center"><?= $farms['farmername'] ?></td>
     <td align="center"><?= $zongdilist?></td>
     <?php 
-    	  $plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id'],'lease_id'=>0])->all();
+    	  $plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id'],'lease_id'=>0])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
 //     	  var_dump($plantings);
     	  $sumArea = 0;
     	  foreach($plantings as $value) {
@@ -138,7 +138,7 @@ if($leases) {
     <td align="center"><?= $val['lease_area'] ?></td>
      <td align="center"><?= Lease::getListArea($val['lease_area'])?>亩</td>
     <?php 
-    	  $plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id'],'lease_id'=>$val['id']])->all();
+    	  $plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id'],'lease_id'=>$val['id']])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
     	  $sumArea = 0;
     	  foreach($plantings as $value) {
     	  	$sumArea += $value['area'];

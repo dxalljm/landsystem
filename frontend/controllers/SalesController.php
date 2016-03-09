@@ -82,7 +82,7 @@ class SalesController extends Controller
         	$model->management_area = Farms::getFarmsAreaID($farms_id);
         	$model->plant_id = Plantingstructure::find()->where(['id'=>$planting_id])->one()['plant_id'];
         	$model->save();
-            return $this->redirect(['salesindex', 'farms_id' => $farms_id,'plantings'=>$planting]);
+            return $this->redirect(['salesindex', 'farms_id' => $farms_id]);
         } else {
             return $this->render('salescreate', [
                 'model' => $model,
@@ -122,11 +122,11 @@ class SalesController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionSalesdelete($id)
+    public function actionSalesdelete($id,$farms_id)
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['salesindex']);
+        return $this->redirect(['salesindex','farms_id' => $farms_id]);
     }
 
     public function actionSalessearch($begindate,$enddate)

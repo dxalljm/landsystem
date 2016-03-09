@@ -85,6 +85,19 @@ class UserController extends Controller
         ]);
     }
 
+    public function actionUseryear()
+    {
+    	$model = User::findOne(Yii::$app->getUser()->id);
+    	if ($model->load(Yii::$app->request->post())) {
+    		$model->year = (string)$model->year;
+    		$model->save();
+//     		var_dump($model->getErrors());exit;
+    	} 
+	    return $this->render('useryear', [
+	    		'model' => $model,
+	    ]);
+    }
+    
     /**
      * Updates an existing user model.
      * If update is successful, the browser will be redirected to the 'view' page.

@@ -6,6 +6,8 @@ use yii\grid\GridView;
 use app\models\ManagementArea;
 use app\models\Farmer;
 use app\models\Dispute;
+use yii\helpers\Url;
+
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\farmsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -18,7 +20,7 @@ use app\models\Dispute;
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">
-                        业务办理
+                        业务办理&nbsp;&nbsp;<?= html::a('导出XLS',Url::to(['farms/farmstoxls']),['class'=>'btn btn-primary'])?>
                     </h3>
                 </div>
                 <div class="box-body">

@@ -16,6 +16,9 @@ use app\models\Machine;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use PhpOffice\PhpWord\Shared\ZipArchive;
+use app\models\Projectapplication;
+use app\models\Projecttype;
+use app\models\Infrastructuretype;
 
 class PrintController extends Controller
 {
@@ -107,11 +110,11 @@ class PrintController extends Controller
 // 		$templateProcessor->setValue('farmpic', htmlspecialchars(''));
 // 		$image = new \PhpOffice\PhpWord\Element\Image('images/plant.jpg');
 // 		$templateProcessor->saveAs($fileName)
-		$data=file_get_contents("images/plant.jpg");
-		$im = base64_encode($data);
+// 		$data=file_get_contents("images/plant.jpg");
+// 		$im = base64_encode($data);
 		
 // 		var_dump($im);exit;
-		$templateProcessor->setValue('cardpic', ['jpeg','frontend\helpers\image.php']);
+// 		$templateProcessor->setValue('cardpic', ['jpeg','frontend\helpers\image.php']);
 		
 		$member = Farmermembers::find()->where(['farmer_id'=>$farmer['id']])->all();
 		
@@ -202,6 +205,7 @@ class PrintController extends Controller
 		
 		return $this->render('printfarmsfile', [
 				'filename' => $filename,
+				'cardpic' => $farmer['cardpic'],
 		]);
 	}
 	public function actionPrintleasecontract($lease_id)
@@ -242,7 +246,7 @@ class PrintController extends Controller
 		$templateProcessor->setValue('zongdi', htmlspecialchars($this->formatName($farm['zongdi'],50)));
 		// 		$templateProcessor->setValue('addresspic', htmlspecialchars(date('d',$farm['update_at'])));
 	
-		$filename = $farm['id'].'-'.$lease['id'].'.docx';
+		$filename = $farm['id'].'-'.date('Ymd',$lease['update_at']).'.docx';
 		// 		echo date('H:i:s'), ' 保存合同文件...', EOL;
 		// 		if(file_exists('contract_file/'.$filename))
 		$templateProcessor->saveAs('leasefile/'.$filename);
@@ -253,6 +257,54 @@ class PrintController extends Controller
 		]);
 	
 	}
+	
+	public function actionPrintproject($id)
+	{
+		include_once '../../vendor/phpoffice/phpword/samples/Sample_Header.php';
+	
+		// Template processor instance creation
+		// 		echo date('H:i:s'), ' 生成新合同...', EOL;
+		$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('template/application.docx');
+// 		var_dump($templateProcessor);
+		// Variables on different parts of document
+		$templateProcessor->setValue('weekday', htmlspecialchars(date('l'))); // On section/content
+		$templateProcessor->setValue('time', htmlspecialchars(date('H:i'))); // On footer
+		$templateProcessor->setValue('serverName', htmlspecialchars(realpath(__DIR__))); // On header
+	
+		// Simple table
+		// 		$templateProcessor->cloneRow('rowValue', 10);
+	
+		$project = Projectapplication::find()->where(['id'=>$id])->one();
+		$farm = Farms::find()->where(['id'=>$project['farms_id']])->one();
+		$typename = Infrastructuretype::find()->where(['id'=>$project['projecttype']])->one()['typename'];
+		
+		$templateProcessor->setValue('projecttype', htmlspecialchars($typename));
+		$templateProcessor->setValue('farmername', htmlspecialchars($farm['farmername']));
+		$templateProcessor->setValue('farmname', htmlspecialchars($farm['farmname']));
+		$templateProcessor->setValue('farmaddress', htmlspecialchars($farm['address']));
+		$templateProcessor->setValue('projectcontent', htmlspecialchars($project['content']));
+		$templateProcessor->setValue('projectdata', htmlspecialchars($project['projectdata']));
+		$templateProcessor->setValue('unit', htmlspecialchars($project['unit']));
+		
+		$templateProcessor->setValue('nowyear', htmlspecialchars(date('Y',$project['update_at'])));
+		$templateProcessor->setValue('nowmonth', htmlspecialchars(date('m',$project['update_at'])));
+		$templateProcessor->setValue('nowday', htmlspecialchars(date('d',$project['update_at'])));
+	
+// 		$str = date('Y',$project['update_at']).$farm['farmername'].$typename.'申请.docx';
+// 		$filename = iconv("UTF-8","gbk//TRANSLIT", $str);
+		$filename = date('Y',$project['update_at']).'-'.$farm['id'].'-'.$project['id'].'.docx';
+		// 		echo date('H:i:s'), ' 保存合同文件...', EOL;
+		// 		if(file_exists('contract_file/'.$filename))
+// 		var_dump($templateProcessor);
+		$templateProcessor->saveAs('projectapplication/'.$filename);
+	
+	
+		return $this->render('printproject', [
+				'filename' => $filename,
+		]);
+	
+	}
+	
 	private function formatName($name,$l)
 	{
 		$strlen = strlen($name);

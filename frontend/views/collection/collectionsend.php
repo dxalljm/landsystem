@@ -11,6 +11,7 @@ use app\models\PlantPrice;
 use app\models\Collection;
 use yii\helpers\Url;
 use app\models\ManagementArea;
+use app\models\User;
 /* @var $this yii\web\View */
 /* @var $model app\models\Collection */
 /* @var $form yii\widgets\ActiveForm */
@@ -93,7 +94,9 @@ use app\models\ManagementArea;
     <td align="center">剩余欠缴金额</td>
 
   </tr>
-  <?php if(!$collectiondataProvider) {?>
+  <?php if($collectiondataProvider) {
+//   var_dump($collectiondataProvider)
+  	?>
   <tr>
     <td align="center"><?= $year?></td>
     <td align="center"><?= $model->real_income_amount;?></td>
@@ -158,23 +161,21 @@ jQuery('#collection-payyear').change(function(){
     $.getJSON('index.php?r=collection/getar', {year: year,farms_id: <?= $_GET['farms_id'] ?>}, function (data) {
 			if(data === 0) {
 				alert(year+'年度没有缴费基数，请添加缴费基数再试。');
-				var d = new Date();
-				$('#collection-payyear').val(d.getFullYear());
-			$.getJSON('index.php?r=collection/getar', {year: d.getFullYear(),farms_id: <?= $_GET['farms_id'] ?>}, function (data) {
-					$('#collection-amounts_receivable').val(data);
+				$('#collection-payyear').val(<?= User::getYear()?>);
+			} else {
+				$.get('/landsystem/frontend/web/index.php?r=collection/collectionsend',{year:year,farms_id:<?= $_GET['farms_id']?>},function (data) {
+					$('body').html(data);
 				});
 			}
     });
-    $.get('/landsystem/frontend/web/index.php?r=collection/collectionsend',{year:year,farms_id:<?= $_GET['farms_id']?>},function (data) {
-		$('body').html(data);
-	});
+    
 });
 
 	
 	$('#collection_realarea').keyup(function(event){
 		var input = $(this).val();
 		$.getJSON('index.php?r=collection/getplantprice', {formyear: $('#collection-payyear').val()}, function (data) {
-			$('#collection-real_income_amount').val(input*data*30);
+			$('#collection-real_income_amount').val(input*data);
 		});
 		
 	});

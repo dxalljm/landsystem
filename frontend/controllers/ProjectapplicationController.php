@@ -133,11 +133,11 @@ class ProjectapplicationController extends Controller
 //         	var_dump($model);exit;
         	$reviewprocessID =Reviewprocess::processRun($farms_id);
         	$model->farms_id = $farms_id;
-        	$model->content = Yii::$app->request->post('projectapplication-content');
-        	$model->projectdata = Yii::$app->request->post('projectapplication-projectdata');
-        	$model->unit = Yii::$app->request->post('projectapplication-unit');
+//         	$model->content = Yii::$app->request->post('projectapplication-content');
+//         	$model->projectdata = Yii::$app->request->post('projectapplication-projectdata');
+//         	$model->unit = Yii::$app->request->post('projectapplication-unit');
         	$model->reviewprocess_id = $reviewprocessID;
-        	$model->management_area = Farms::find()->where(['id'=>$farms_id])->one()['management_area'];
+        	$model->management_area = Farms::getFarmsAreaID($farms_id);
         	$model->create_at = time();
         	$model->update_at = $model->create_at;
         	$model->is_agree = 0;
