@@ -18,6 +18,7 @@ use app\models\Lease;
 use app\models\Subsidiestype;
 use app\models\Goodseed;
 use app\models\Tempprogress;
+
 /**
  * HuinongController implements the CRUD actions for Huinong model.
  */
@@ -53,7 +54,7 @@ class HuinongController extends Controller
     public function actionHuinonglist()
     {
 //     	$whereArray = Farms::getManagementArea();
-    	$huinongs = Huinong::find()->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->all();
+    	$huinongs = Huinong::find()->all();
     	return $this->render('huinonglist', [
     			'huinongs' => $huinongs,
     	]);
@@ -62,7 +63,7 @@ class HuinongController extends Controller
     public function actionHuinonginfo()
     {
     	$whereArray = Farms::getManagementArea();
-    	$huinongs = Huinong::find()->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->all();
+    	$huinongs = Huinong::find()->all();
     	return $this->render('huinonginfo', [
     			'huinongs' => $huinongs,
     	]);
@@ -70,7 +71,7 @@ class HuinongController extends Controller
     
     public function actionHuinongprovidelist()
     {
-    	$huinongs = Huinong::find()->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->all();
+    	$huinongs = Huinong::find()->all();
     	return $this->render('huinongprovidelist', [
     			'huinongs' => $huinongs,
     	]);
@@ -79,67 +80,41 @@ class HuinongController extends Controller
    public function actionHuinongdata($id)
    {
    		$model = $this->findModel($id);
-   		$huinonggrantData = Huinonggrant::find()->where(['huinong_id'=>$id])->all();
-   		$yqr = [];
-   		foreach ($huinonggrantData as $value) {
-   			$yqr[] = $value['farms_id'];
+   		$management_area = Farms::getManagementArea()['id'];
+   		$issubmitsearch = Yii::$app->request->post('issubmitSearch');
+   		$allData = Huinonggrant::find()->where(['huinong_id'=>$id,'management_area'=>$management_area])->all();
+   		if($issubmitsearch) 
+   			$huinonggrantData = Huinonggrant::find()->where(['huinong_id'=>$id,'management_area'=>$management_area,'issubmit'=>$issubmitsearch])->all();
+   		else {
+   			$huinonggrantData = Huinonggrant::find()->where(['huinong_id'=>$id,'management_area'=>$management_area,'issubmit'=>0])->all();
+   			$issubmitsearch = 0;
    		}
-   		$farmsallid = Farms::getManagementAreaAllID();
-   		if($yqr)
-   			$idresult = array_diff($farmsallid, $yqr);
-   		else
-   			$idresult = $farmsallid;
-//    		var_dump($idresult);exit;
+   		
 		$typename = Subsidiestype::find()->where(['id'=>$model->subsidiestype_id])->one()['urladdress'];
-   		switch ($typename) {
-   			
-   			case 'Plant':
-   				$classname = 'plantingstructure';
-   				$data = Plantingstructure::find()->where(['plant_id'=>$model->typeid,'farms_id'=>$idresult])->all();
-//    				var_dump($data);exit;
-   				break;
-   			case 'Goodseed':
-   				$classname = 'plantingstructure';
-   				$data = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid,'farms_id'=>$idresult])->all();
-   				break;
-   		}
+   		
    		$isSubmit = Yii::$app->request->post('isSubmit');
 //    		var_dump($isSubmit);
    		if($isSubmit) {
 //    			var_dump($isSubmit);exit;
    			
    			foreach ($isSubmit as $value) {
-   				$huinonggrantModel = new Huinonggrant();
    				$plantInfo = explode('/', $value);
-   				$farms_id = $plantInfo[0];
-   				$lease_id = $plantInfo[1];
-   				$money = $plantInfo[2];
-   				$area = $plantInfo[3];
-   				$farm = Plantingstructure::find()->where(['farms_id'=>$farms_id])->one();
-   				$huinonggrantModel->farms_id = $farms_id;
-   				$huinonggrantModel->management_area = Farms::find()->where(['id'=>$farms_id])->one()['management_area'];
-   				$huinonggrantModel->huinong_id = $id;
-   				$huinonggrantModel->subsidiestype_id = $model->subsidiestype_id;
-   				$huinonggrantModel->typeid = $model->typeid;
-   				$huinonggrantModel->lease_id = $lease_id;
-   				$huinonggrantModel->money = $money;
-   				$huinonggrantModel->area = $area;
-   				$huinonggrantModel->state = 0;
-   				$huinonggrantModel->create_at = time();
-   				$huinonggrantModel->update_at = $huinonggrantModel->create_at;
+   				$id = $plantInfo[0];
+   				$huinonggrantModel = Huinonggrant::findOne($id);
+   				
+   				$huinonggrantModel->issubmit = 1;
+   				$huinonggrantModel->update_at = time();
    				$huinonggrantModel->save();
-   				$huinongModel = $this->findModel($id);
-   				$huinongModel->totalamount = Huinonggrant::find()->where(['huinong_id'=>$id])->sum('money');
-   				$huinongModel->realtotalamount = Huinonggrant::find()->where(['huinong_id'=>$id,'state'=>1])->sum('money');
-   				$huinongModel->save();
    				Logs::writeLog('地产科提交符合惠农政策条件的农场用户',$huinonggrantModel->id,'',$huinonggrantModel->attributes);
    			}
    			return $this->redirect(['huinongsend']);
    		}
 //    		var_dump($data);exit;
         return $this->render('huinongdata', [
-        		'data' => $data,
-        		'classname' => $classname,
+        		'allData' => $allData,
+        		'data' => $huinonggrantData,
+        		'classname' => $typename,
+        		'issubmitSearch' => $issubmitsearch,
         		'model' => $model,
         ]);
    }
@@ -195,7 +170,8 @@ class HuinongController extends Controller
    public function actionHuinongprovide($id)
    {
    		$model = $this->findModel($id);
-   		
+   		$management_area = Farms::getManagementArea()['id'];
+   		$allData = Huinonggrant::find()->where(['huinong_id'=>$id,'management_area'=>$management_area])->all();
 	   	$post = Yii::$app->request->post();
 	   	$typename = Subsidiestype::find()->where(['id'=>$model->subsidiestype_id])->one()['urladdress'];
 	   	switch ($typename) {
@@ -260,6 +236,7 @@ class HuinongController extends Controller
 	   	$data = $query->all();
 // 	   	var_dump($data);exit;
 		   	return $this->render('huinongprovide', [
+		   			'allData' => $allData,
 		   			'id' => $id,
 		   			'data' => $data,
 		   			'classname' => $classname,

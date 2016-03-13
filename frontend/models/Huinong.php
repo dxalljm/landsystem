@@ -78,7 +78,7 @@ public function rules()
     
     public static function getHuinongCount()
     {
-    	$rows = Huinong::find()->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->count();
+    	$rows = Huinong::find()->count();
     	if($rows)
     		return '<small class="label pull-right bg-red">'.$rows.'</small>';
     	else

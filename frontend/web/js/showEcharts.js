@@ -205,17 +205,20 @@ function wdjShowEchart(divID,legendata,xdata,alldata,realdata,dw)
 	    	            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
 	    	        },
 	    	        formatter: function (params,ticket,callback) {
-	    	            
+	    	        	var row = eval(ticket); 
 	    	            var res = params[0].name;
 	    	            var s = new Array();
+	    	            var n = new Array();
 	    	            for (var i = 0, l = params.length; i < l; i++) {
 //	    	                res += '<br/>' + params[i].seriesName + ' : ' + params[i].value + dw;
 	    	                s [i] = params[i].value;
 	    	            }
 	    	            res += '<br/>'+params[1].seriesName+'：' + s[1] + dw;
 	    	            alls = s[0]+s[1];
-	    	            res += '<br/>'+params[0].seriesName+'：' + alls + dw;
-	    	            var v = s[1]/(s[0]+s[1]);
+	    	            res += '<br/>'+params[0].seriesName+'：' + alls.toFixed(2) + dw;
+	    	           
+	    	            var v = realdata['count'][row]/alldata['count'][row]*1; 
+//	    	            alert(v);
 	    	            res += '<br/>' + '完成：' + v.toFixed(2)*100 + '%';
 	    	            return res;
 	    	        },
@@ -263,7 +266,7 @@ function wdjShowEchart(divID,legendata,xdata,alldata,realdata,dw)
 	    	                          }
 	    	                      }
 	    	                  },
-	    	                  data:realdata,
+	    	                  data:realdata['sum'],
 	    	              },
 	    	              {
 	    	                  name:legendata[1],
@@ -292,7 +295,7 @@ function wdjShowEchart(divID,legendata,xdata,alldata,realdata,dw)
 	    	                          }
 	    	                      }
 	    	                  },
-	    	                  data:alldata
+	    	                  data:alldata['sum']
 	    	              }
 	    	          ]
 	    	};

@@ -67,7 +67,7 @@ use app\models\Huinong;
 				<?php $echartsData = $data->getName('Subsidiestype', 'typename', 'subsidiestype_id')->huinongShowShadow($key);?>
               </div>
               <script type="text/javascript">
-              wdjShowEchart('<?= $classname?>',<?= json_encode(['应发金额','实发金额'])?>,<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($echartsData['all'])?>,<?= json_encode($echartsData['real'])?>,'万元');
+              wdjShowEchart('<?= $classname?>',<?= json_encode(['实发金额','应发金额'])?>,<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($echartsData['all'])?>,<?= json_encode($echartsData['real'])?>,'万元');
 			</script>
               <!-- /.tab-pane -->
             <!-- /.tab-content -->

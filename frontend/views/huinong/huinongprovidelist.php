@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
             		<td align="center"><?php
             			$marea = [];
             			foreach (ManagementArea::find()->all() as $area) {
-            			$huinonggrant = Huinonggrant::find()->where(['management_area'=>$area['id'],'huinong_id'=>$value['id']])->count();
+            			$huinonggrant = Huinonggrant::find()->where(['management_area'=>$area['id'],'huinong_id'=>$value['id'],'issubmit'=>1])->count();
             			if($huinonggrant) 
             				$marea[] = ['areaname'=>$area['areaname'],'num'=>$huinonggrant];
             			}?>

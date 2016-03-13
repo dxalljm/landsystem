@@ -26,6 +26,7 @@ $this->title = 'huinong';
 $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctablename'];
 $this->params['breadcrumbs'][] = $this->title;
 $total = arraySearch::find($data)->search();
+$alltotal = arraySearch::find($allData)->search();
 ?>
 <style type="text/css">
 #textSubmit { display:none }
@@ -41,35 +42,40 @@ $total = arraySearch::find($data)->search();
                         <?= $this->title ?>                    </h3>
                 </div>
                 <div class="box-body">
-                <?php $huinongGrant = Huinonggrant::find();?>
+                <?php $huinongGrant = Huinonggrant::find();
+                $all = $alltotal->count();
+                $state1 = $alltotal->where(['state'=>1])->count();
+                $state0 = $alltotal->where(['state'=>0])->count();
+                ?>
                 <table class="table table-bordered table-hover">
                 	<tr>
                 		<td align="right"><strong>享受补贴人数：</strong></td>
                 		<td align="left"><strong>
-               		    <?= $total->count()?>
+               		    <?= $all?>
                		    人</strong></td>
                 		<td align="right"><strong>已发放补贴人数：</strong></td>
                 		<td align="left"><strong>
-               		    <?= $total->count(['state'=>1])?>
+               		    <?= $state1?>
                		    人</strong></td>
                 		<td align="right"><strong>未发放补贴人数：</strong></td>
                 		<td align="left"><strong>
-               		    <?= $total->count(['state'=>0])?>
+               		    <?= $state0?>
                		    人</strong></td>
                 		<td align="right"><strong>应发放金额：</strong></td>
                 		<td align="left"><strong>
-               		    <?= $total->sum('money')?>
+               		    <?= MoneyFormat::num_format($alltotal->sum('money'))?>
                		    元</strong></td>
                 		<td align="right"><strong>已发放金额：</strong></td>
                 		<td align="left"><strong>
-               		    <?= $total->where(['state'=>1])->sum('money')?>
+               		    <?= MoneyFormat::num_format($alltotal->where(['state'=>1])->sum('money'))?>
                		    元</strong></td>
                 		<td align="right"><strong>差额：</strong></td>
                 		<td align="left"><strong>
-               		    <?= $total->where(['state'=>0])->sum('money')?>
+               		    <?= MoneyFormat::num_format($alltotal->where(['state'=>0])->sum('money'))?>
                		    元</strong></td>
                 		<td align="right"><strong>完成度：</strong></td>
-                		<td align="left"><strong><?php $wcd = $total->count(['state'=>1])/$total->count()*100;echo sprintf ( "%.2f", $wcd ).'%'?></strong></td>
+                		
+                		<td align="left"><strong><?php if($state1) $wcd = $state1/$all;else $wcd = 0;echo sprintf ( "%.2f", $wcd ).'%'; ?></strong></td>
                 	</tr>
                 </table>
                
