@@ -384,9 +384,16 @@ class FarmsController extends Controller {
 	
 	public function actionFarmstoxls()
 	{
+		$ColumnNames = ['management_area','farmname','farmername','address','contractnumber','accountnumber','measure','zongdi','notclear','notstate','cardid','telephone'];
+// 		[
+// 			'Farms' => ['management_area','farmname','farmername','contractnumber','cardid','telephone','measure','zongdi','notclear','notstate','longitude','latitude'],
+// 			'Lease' => ['lessee','lessee_cardid','lessee_telephone','lease_area',],
+// 			'Plantingstructure' => ['plant_id','area'],
+// 		];
 		$farms = Farms::find()->all();
 		return $this->render ( 'farmstoxls', [
-				'farms' => $farms,
+// 				'farms' => $farms,
+				'ColumnNames' => $ColumnNames,
 		] );
 	}
 	

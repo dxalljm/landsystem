@@ -20,6 +20,7 @@ class baseArraySearch {
 	private $field;
 	private $echartsName;
 	public $saveTemp;
+	public $tempData = [];
 	public function __construct($data) {
 		if (is_array ( $data ))
 			$this->data = $data;
@@ -149,32 +150,58 @@ class baseArraySearch {
 		else
 			$data = $this->data;
 			// var_dump($this->temp);
-		if ($this->echartsWhere) {
-			$keys = array_keys ( $this->echartsWhere );
-			$values = array_values ( $this->echartsWhere );
-			if (count ( $keys ) == 2) {
-				foreach ( $data as $value ) {
+// 		if ($this->echartsWhere) {
+// 			$keys = array_keys ( $this->echartsWhere );
+// 			$values = array_values ( $this->echartsWhere );
+// 			if (count ( $keys ) == 2) {
+// 				foreach ( $data as $value ) {
 					
-					if ($value->getAttribute ( $keys [0] ) == $values [0] and $value->getAttribute ( $keys [1] ) == $values [1]) {
-						// var_dump($value->getAttribute ( $field ));
-						$sum += $value->getAttribute ( $field );
-					}
-				}
-			} else {
-				foreach ( $data as $value ) {
-					if ($value->getAttribute ( $keys [0] ) == $values [0]) {
-						$sum += $value->getAttribute ( $field );
-					}
-				}
+// 					if ($value->getAttribute ( $keys [0] ) == $values [0] and $value->getAttribute ( $keys [1] ) == $values [1]) {
+// 						// var_dump($value->getAttribute ( $field ));
+// 						$sum += $value->getAttribute ( $field );
+// 					}
+// 				}
+// 			} else {
+// 				foreach ( $data as $value ) {
+// 					if ($value->getAttribute ( $keys [0] ) == $values [0]) {
+// 						$sum += $value->getAttribute ( $field );
+// 					}
+// 				}
+// 			}
+// 		} else {
+// 			// var_dump($data);
+// 			foreach ( $data as $value ) {
+// 				$sum += $value->getAttribute ( $field );
+// 			}
+// 		}
+		if ($this->echartsWhere) {
+			
+			$this->tempData = $data;
+			foreach ($this->echartsWhere as $wherekey => $where) {
+				$this->sumWhere($wherekey, $where);
 			}
+			foreach ($this->tempData as $value) {
+				$sum += $value->getAttribute ( $field );
+			}
+			$this->echartsWhere = [];
 		} else {
 			// var_dump($data);
 			foreach ( $data as $value ) {
 				$sum += $value->getAttribute ( $field );
 			}
 		}
-		
 		return sprintf ( "%.2f", $sum / $num );
+	}
+	//SUM条件嵌套
+	public function sumWhere($wherekey,$where)
+	{
+		$newdata = [];
+		foreach ($this->tempData as $value) {
+			if ($value->getAttribute ( $wherekey ) == $where) {
+				$newdata[] = $value;
+			}
+		}
+		$this->tempData = $newdata;
 	}
 	public function mulOtherSum($field, $where, $otherfield, $num = 1) {
 		$sum = 0.0;
@@ -442,34 +469,34 @@ class baseArraySearch {
 		else
 			return 0.0;
 	}
-	public function count($field = NULL, $state = TRUE) {
+	public function count($field=NULL,$state = TRUE) {
 		$newdata = [ ];
 		$olddata = [ ];
+		if ($this->temp)
+			$data = $this->temp;
+		else
+			$data = $this->data;
 		
-		if (empty ( $this->data ))
+		if (empty ( $data ))
 			return 0;
-		if (empty ( $field ))
-			return count ( $this->data );
-		else {
-			if (is_array ( $field )) {
-				foreach ( $this->data as $key => $value ) {
-					if ($value->getAttribute ( key ( $field ) ) == $field [key ( $field )])
-						$olddata [] = $value->getAttribute ( 'id' );
-				}
-				if ($state) {
-					if ($olddata) {
-						$newdata = array_unique ( $olddata );
-						return count ( $newdata );
-					} else
-						return 0;
-				} else
-					return count ( $data );
+			
+		if ($this->echartsWhere) {
+			
+			$this->tempData = $data;
+			foreach ($this->echartsWhere as $wherekey => $where) {
+				$this->countWhere($wherekey, $where);
+			}
+			$this->echartsWhere = [];
+			return count($this->tempData);
+		} else {
+			if($field == null) {
+				return count($data);
 			} else {
 				if ($field == 'farmer_id' and $state) {
 					$farm = [ ];
 					$farmid = [ ];
 					// var_dump($this->temp);
-					foreach ( $this->data as $key => $value ) {
+					foreach ( $data as $key => $value ) {
 						// var_dump($value->getAttribute('farms_id'));
 						if (\Yii::$app->controller->id == 'farms')
 							$farmid [] = $value->getAttribute ( 'id' );
@@ -494,7 +521,7 @@ class baseArraySearch {
 					return count ( $newdata );
 				} else {
 					
-					foreach ( $this->data as $key => $value ) {
+					foreach ( $data as $key => $value ) {
 						if (! empty ( $value->getAttribute ( $field ) ) and $value->getAttribute ( $field ) !== 0 and $value->getAttribute ( $field ) !== '')
 							$olddata [] = [ 
 									'id' => $value->getAttribute ( $field ) 
@@ -513,6 +540,18 @@ class baseArraySearch {
 			}
 		}
 	}
+	//
+	public function countWhere($wherekey,$wherevalue)
+	{
+		$newdata = [];
+		foreach ($this->tempData as $value) {
+			if ($value->getAttribute ( $wherekey ) == $wherevalue) {
+				$newdata[] = $value;
+			}
+		}
+		$this->tempData = $newdata;
+	}
+	
 	public function getName($model, $getfield, $field) {
 		$this->field = $field;
 // 		var_dump($field);exit;
@@ -677,6 +716,12 @@ class baseArraySearch {
 						'typeid' => $huinong['typeid'],
 						'state' => 1 
 				] )->sum ( 'money' );
+				$realcount[] = Huinonggrant::find ()->where ( [ 
+						'management_area' => $value,
+						'subsidiestype_id' => Huinong::find()->where(['id'=>$huinong_id])->one()['subsidiestype_id'],
+						'typeid' => $huinong['typeid'],
+						'state' => 1 
+				] )->count();
 				$realSum = ( float ) sprintf ( "%.2f", $yff / 10000 );
 				$real_income_amount [] = $realSum;
 				
@@ -685,10 +730,17 @@ class baseArraySearch {
 						'subsidiestype_id' => $huinong['subsidiestype_id'],
 						'typeid' => $huinong['typeid'],
 				] )->sum ( 'money' );
+				$allcount[] = Huinonggrant::find ()->where ( [
+						'management_area' => $value,
+						'subsidiestype_id' => $huinong['subsidiestype_id'],
+						'typeid' => $huinong['typeid'],
+				] )->count();
 				$amountsSum = ( float ) sprintf ( "%.2f", $allmoney / 10000 );
 				$amounts_receivable [] = $amountsSum - $realSum;
-				$result['all'] = $amounts_receivable;
-				$result['real'] = $real_income_amount;
+				$result['all']['sum'] = $amounts_receivable;
+				$result['real']['sum'] = $real_income_amount;
+				$result['all']['count'] = $allcount;
+				$result['real']['count'] = $realcount;
 			}
 // 		}
 			

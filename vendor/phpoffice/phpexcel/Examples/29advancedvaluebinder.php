@@ -60,12 +60,12 @@ $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
 
 // Set default font
 echo date('H:i:s') , " Set default font" , EOL;
-$objPHPExcel->getActiveSheet()->getDefaultStyle()->getFont()->setName('Arial');
-$objPHPExcel->getActiveSheet()->getDefaultStyle()->getFont()->setSize(10);
+// $objPHPExcel->getActiveSheet()->getDefaultStyle()->getFont()->setName('Arial');
+// $objPHPExcel->getActiveSheet()->getDefaultStyle()->getFont()->setSize(10);
 
 // Set column widths
 echo date('H:i:s') , " Set column widths" , EOL;
-$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setColumnIndex($pValue)
 $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(14);
 
 // Add some data, resembling some different data types

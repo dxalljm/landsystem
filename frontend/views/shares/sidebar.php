@@ -5,6 +5,7 @@ use app\models\MenuToUser;
 use app\models\Mainmenu;
 use app\models\Reviewprocess;
 use app\models\User;
+use app\models\Huinong;
 ?>
 <aside class="main-sidebar">
     <section class="sidebar" style="height: auto;">
@@ -125,6 +126,9 @@ else echo '晚上好';
 	                   		echo '<i class="fa fa-calendar"></i> <span>'. $menu['menuname'] .'</span>';
 	                   		if($menu['menuurl'] == 'reviewprocess/reviewprocessindex')
 	                   			echo Reviewprocess::getUserProcessCount();
+	                   		if($menu['menuurl'] == 'huinong/huinonglist') {
+	                   			echo huinong::getHuinongCount();
+	                   		}
 	                   		echo '</a>';
 	                   		echo '</li>';
 // 	                       	echo "<li ><a href=""><i class='fa fa-dashboard'></i><span>" "</span></a></li>";

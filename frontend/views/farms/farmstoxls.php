@@ -1,4 +1,11 @@
 <?php
+use app\models\Farms;
+use app\models\Lease;
+use app\models\Plantingstructure;
+use app\models\Tables;
+use app\models\Tablefields;
+use app\models\ManagementArea;
+use frontend\helpers\arraySearch;
 /**
  * PHPExcel
  *
@@ -26,23 +33,10 @@
  */
 
 /** Error reporting */
-error_reporting(E_ALL);
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
-
-define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
-
-date_default_timezone_set('Europe/London');
-
-/** Include PHPExcel */
-require_once dirname(__FILE__) . '/../Classes/PHPExcel.php';
-
-// Create new PHPExcel object
-echo date('H:i:s').' 生成新的Excel文件'.EOL;
+$management_area = [0,1,2,3,4,5,6,7];
+foreach ($management_area as $mid) {
 $objPHPExcel = new PHPExcel();
 
-// Set document properties
-echo date('H:i:s').' 设置文档属性'.EOL;
 $objPHPExcel->getProperties()->setCreator('Maarten Balliauw')
 							 ->setLastModifiedBy('Maarten Balliauw')
 							 ->setTitle('PHPExcel Test Document')
@@ -52,120 +46,71 @@ $objPHPExcel->getProperties()->setCreator('Maarten Balliauw')
 							 ->setCategory('Test result file');
 
 // Create the worksheet
-echo date('H:i:s').' 添加数据'.EOL;
 $objPHPExcel->setActiveSheetIndex(0);
-$objPHPExcel->getActiveSheet()->setCellValue('A1', 'Year')
-                              ->setCellValue('B1', 'Quarter')
-                              ->setCellValue('C1', 'Country')
-                              ->setCellValue('D1', 'Sales');
+$excelSetValue = $objPHPExcel->getActiveSheet();
 
-$dataArray = array(array('2010',	'Q1',	'United States',	790),
-                   array('2010',	'Q2',	'United States',	730),
-                   array('2010',	'Q3',	'United States',	860),
-                   array('2010',	'Q4',	'United States',	850),
-                   array('2011',	'Q1',	'United States',	800),
-                   array('2011',	'Q2',	'United States',	700),
-                   array('2011',	'Q3',	'United States',	900),
-                   array('2011',	'Q4',	'United States',	950),
-                   array('2010',	'Q1',	'Belgium',			380),
-                   array('2010',	'Q2',	'Belgium',			390),
-                   array('2010',	'Q3',	'Belgium',			420),
-                   array('2010',	'Q4',	'Belgium',			460),
-                   array('2011',	'Q1',	'Belgium',			400),
-                   array('2011',	'Q2',	'Belgium',			350),
-                   array('2011',	'Q3',	'Belgium',			450),
-                   array('2011',	'Q4',	'Belgium',			500),
-                   array('2010',	'Q1',	'UK',				690),
-                   array('2010',	'Q2',	'UK',				610),
-                   array('2010',	'Q3',	'UK',				620),
-                   array('2010',	'Q4',	'UK',				600),
-                   array('2011',	'Q1',	'UK',				720),
-                   array('2011',	'Q2',	'UK',				650),
-                   array('2011',	'Q3',	'UK',				580),
-                   array('2011',	'Q4',	'UK',				510),
-                   array('2010',	'Q1',	'France',			510),
-                   array('2010',	'Q2',	'France',			490),
-                   array('2010',	'Q3',	'France',			460),
-                   array('2010',	'Q4',	'France', 			590),
-                   array('2011',	'Q1',	'France',			620),
-                   array('2011',	'Q2',	'France',			650),
-                   array('2011',	'Q3',	'France',			415),
-                   array('2011',	'Q4',	'France', 			570),
-                   array('2010',	'Q1',	'Germany',			720),
-                   array('2010',	'Q2',	'Germany',			680),
-                   array('2010',	'Q3',	'Germany',			640),
-                   array('2010',	'Q4',	'Germany',			660),
-                   array('2011',	'Q1',	'Germany',			680),
-                   array('2011',	'Q2',	'Germany',			620),
-                   array('2011',	'Q3',	'Germany',			710),
-                   array('2011',	'Q4',	'Germany',			690),
-                   array('2010',	'Q1',	'Spain',			510),
-                   array('2010',	'Q2',	'Spain',			490),
-                   array('2010',	'Q3',	'Spain',			470),
-                   array('2010',	'Q4',	'Spain',			420),
-                   array('2011',	'Q1',	'Spain',			460),
-                   array('2011',	'Q2',	'Spain',			390),
-                   array('2011',	'Q3',	'Spain',			430),
-                   array('2011',	'Q4',	'Spain',			415),
-                   array('2010',	'Q1',	'Italy',			440),
-                   array('2010',	'Q2',	'Italy',			410),
-                   array('2010',	'Q3',	'Italy',			420),
-                   array('2010',	'Q4',	'Italy',			450),
-                   array('2011',	'Q1',	'Italy',			430),
-                   array('2011',	'Q2',	'Italy',			370),
-                   array('2011',	'Q3',	'Italy',			350),
-                   array('2011',	'Q4',	'Italy',			335),
-                  );
-$objPHPExcel->getActiveSheet()->fromArray($dataArray, NULL, 'A2');
+$excelSetValue->getColumnDimension('A')->setAutoSize(true);
+
+$excelSetValue->setCellValue('A1','序号');
+$word = 'A';
+foreach ($ColumnNames as $column) {
+	$str1=ord($word);
+	$str1++;
+	$word=chr($str1);
+	$excelSetValue->getColumnDimension($word)->setAutoSize(true);
+	$table_id = Tables::find()->where(['tablename'=>'farms'])->one()['id'];
+	$value = Tablefields::find()->where(['tables_id'=>$table_id,'fields'=>$column])->one()['cfields'];
+	$excelSetValue->setCellValue($word.'1',$value);
+
+}
+$i = 1;
+if($mid !== 0)
+	$farms = Farms::find()->where(['management_area'=>$mid])->all();
+else 
+	$farms = Farms::find()->all();
+foreach ($farms as $farm) {
+	$dataOne[] = $i++;
+	foreach ($ColumnNames as $column) {
+// 		var_dump($column);
+		if($column == 'management_area') {
+			
+			$value = ManagementArea::find()->where(['id'=>$farm[$column]])->one()['areaname'];
+		} elseif($column == 'zongdi') {
+			$value = Lease::getListArea($farm[$column]);
+		} else
+			$value = $farm[$column];
+// 		var_dump($value);
+		$dataOne[] = $value; 
+	}
+	$dataArray[] = $dataOne;
+	$dataOne = [];
+// 	$excelSetValue->getStyle('K'.$i)->getAlignment()->setWrapText(true);
+}
+$arrayData = arraySearch::find($farms)->search();
+$dataArray[] = ['合计','',$arrayData->count(),$arrayData->count('farmer_id'),'','','',$arrayData->sum('measure'),'',$arrayData->sum('notclear'),$arrayData->sum('notstate')];
+$excelSetValue->fromArray($dataArray, NULL, 'A2');
 
 // Set title row bold
-echo date('H:i:s').' Set title row bold'.EOL;
-$objPHPExcel->getActiveSheet()->getStyle('A1:D1')->getFont()->setBold(true);
+
+$excelSetValue->getStyle('A1:'.$word.'1')->getFont()->setBold(true);
 
 // Set autofilter
-echo date('H:i:s').' Set autofilter'.EOL;
+
 // Always include the complete filter range!
 // Excel does support setting only the caption
 // row, but that's not a best practise...
-$objPHPExcel->getActiveSheet()->setAutoFilter($objPHPExcel->getActiveSheet()->calculateWorksheetDimension());
+$excelSetValue->setAutoFilter($excelSetValue->calculateWorksheetDimension());
 
 // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-$objPHPExcel->setActiveSheetIndex(0);
+// $objPHPExcel->setActiveSheetIndex(0);
 
 
 // Save Excel 2007 file
-echo date('H:i:s') , " Write to Excel2007 format" , EOL;
+
 $callStartTime = microtime(true);
 
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-$objWriter->save(str_replace('.php', '.xlsx', __FILE__));
-$callEndTime = microtime(true);
-$callTime = $callEndTime - $callStartTime;
-
-echo date('H:i:s') , " File written to " , str_replace('.php', '.xlsx', pathinfo(__FILE__, PATHINFO_BASENAME)) , EOL;
-echo 'Call time to write Workbook was ' , sprintf('%.4f',$callTime) , " seconds" , EOL;
-// Echo memory usage
-echo date('H:i:s') , ' Current memory usage: ' , (memory_get_usage(true) / 1024 / 1024) , " MB" , EOL;
-
-
-// Save Excel 95 file
-echo date('H:i:s') , " Write to Excel5 format" , EOL;
-$callStartTime = microtime(true);
-
-$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-$objWriter->save(str_replace('.php', '.xls', __FILE__));
-$callEndTime = microtime(true);
-$callTime = $callEndTime - $callStartTime;
-
-echo date('H:i:s') , " File written to " , str_replace('.php', '.xls', pathinfo(__FILE__, PATHINFO_BASENAME)) , EOL;
-echo 'Call time to write Workbook was ' , sprintf('%.4f',$callTime) , " seconds" , EOL;
-// Echo memory usage
-echo date('H:i:s') , ' Current memory usage: ' , (memory_get_usage(true) / 1024 / 1024) , " MB" , EOL;
-
-
-// Echo memory peak usage
-echo date('H:i:s').' Peak memory usage: '.(memory_get_peak_usage(true) / 1024 / 1024).' MB'.EOL;
-
-// Echo done
-echo date('H:i:s').' Done writing files'.EOL;
-echo 'Files have been created in ' , getcwd() , EOL;
+$objWriter->save($mid.'.xlsx');
+$objPHPExcel = '';
+$objWriter = '';
+}

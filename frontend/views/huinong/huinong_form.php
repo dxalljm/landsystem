@@ -14,7 +14,9 @@ use dosamigos\datetimepicker\DateTimePicker;
 .goodseed {
 	display: none
 }
-
+#jdt{
+	display: none
+}
 .plant {
 	display: none
 }
@@ -104,12 +106,24 @@ switch ($typename) {
 			<td colspan="2" align='center'>&nbsp;</td>
 		</tr>
 	</table>
+	<div class="progress" id="jdt">
+  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+    <span class="sr-only">60% Complete</span>
+  </div>
+</div>
 	<div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary'])?>
+        <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary','id'=>'isSubmit'])?>
     </div>
 
     <?php ActiveFormrdiv::end(); ?>
-
+<script>
+$(document).ready(function () {
+	NProgress.start();
+	NProgress.set(10)
+	NProgress.inc();
+//	NProgress.done();
+});
+</script>
 </div>
 <script>
 if($('#huinong-subsidiestype_id').val() !== '')
@@ -197,4 +211,5 @@ $('#goodseedplantson').change(function(){
 			
 	});
 });
+
 </script>

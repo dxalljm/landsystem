@@ -29,7 +29,7 @@ class Huinong extends \yii\db\ActiveRecord
 public function rules() 
     { 
         return [
-            [['subsidiesarea', 'subsidiesmoney', 'totalamount', 'realtotalamount'], 'number'],
+            [['subsidiesarea', 'subsidiesmoney', 'totalamount', 'realtotalamount','totalsubsidiesarea'], 'number'],
             [['typeid', 'create_at', 'update_at'], 'integer'],
             [['subsidiestype_id', 'begindate', 'enddate'], 'string', 'max' => 500]
         ]; 
@@ -46,7 +46,7 @@ public function rules()
             'subsidiesarea' => '补贴面积',
             'subsidiesmoney' => '补贴金额',
             'typeid' => '补贴种类',
-        	
+        	'totalsubsidiesarea' => '补贴总面积',
             'totalamount' => '补贴总金额',
             'realtotalamount' => '实际补贴金额',
             'begindate' => '开始日期',
@@ -74,5 +74,14 @@ public function rules()
     	} 
 //     	var_dump($result);
     	return $result;	
+    }
+    
+    public static function getHuinongCount()
+    {
+    	$rows = Huinong::find()->count();
+    	if($rows)
+    		return '<small class="label pull-right bg-red">'.$rows.'</small>';
+    	else
+    		return false;
     }
 }

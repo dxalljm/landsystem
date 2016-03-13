@@ -6,6 +6,7 @@ use yii\grid\GridView;
 use app\models\Plant;
 use app\models\Subsidiestype;
 use app\models\Goodseed;
+use frontend\helpers\MoneyFormat;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\HuinongSearch */
@@ -74,7 +75,18 @@ $this->params['breadcrumbs'][] = $this->title;
            			return $model->subsidiesmoney.'元';
             	}	 
             ],
-
+			[
+				'attribute' => 'totalsubsidiesarea',
+				'value' => function ($model) {
+					return $model->totalsubsidiesarea.'亩';
+            }
+            ],
+            [
+            	'attribute' => 'totalamount',
+            	'value' => function ($model) {
+            		return MoneyFormat::num_format($model->totalamount).'元';
+            }
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
