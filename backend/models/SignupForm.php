@@ -54,6 +54,7 @@ class SignupForm extends Model
             $user->setPassword($this->password);
             $user->generateAuthKey();
             $user->year = date('Y');
+            $user->autoyear = 1;
             if ($user->save()) {
                 return $user;
             }

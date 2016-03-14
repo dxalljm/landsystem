@@ -203,7 +203,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
     {
     	
     	$stateArray = [3=>'排队等待',2=>'待审核',1=>'同意',0=>'不同意',-1=>'无',4=>'审核中',7=>'通过',5=>'审核未通过'];
-//     	var_dump($stateArray[$num]);exit;
+    	
     	return $stateArray[$num];
     }
     //返回指定的审核流程

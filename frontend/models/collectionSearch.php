@@ -145,8 +145,8 @@ class collectionSearch extends Collection
     		->andFilterWhere(['like', 'nonumber', $this->nonumber])
     		->andFilterWhere($this->betweenSearch('ypayarea'))
     		->andFilterWhere($this->betweenSearch('ypaymoney'))
-            ->andFilterWhere(['like', 'land_farms.farmname', $this->farmname])
-            ->andFilterWhere(['between','land_collection.update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
+            ->andFilterWhere(['like', 'land_farms.farmname', $this->farmname]);
+//             ->andFilterWhere(['between','land_collection.update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

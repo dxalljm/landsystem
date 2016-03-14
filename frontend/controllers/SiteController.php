@@ -110,6 +110,13 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        	if(\Yii::$app->getUser()->getIdentity()['autoyear']) {
+        		$userModel = User::findOne(\Yii::$app->getUser()->id);
+        		if($userModel->year !== date('Y')) {
+        			$userModel->year = date('Y');
+        			$userModel->save();
+        		}
+        	}
         	if($model->username == 'admin')
         		throw new \yii\web\UnauthorizedHttpException('对不起，此用户不能在前台页面登录。');
         	

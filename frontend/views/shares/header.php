@@ -64,7 +64,9 @@ use app\models\Huinong;
                     </ul>
                         <?php } else {
                         echo "<li ><a href=" . Url::to('index.php?r='.$menu['menuurl']) . ">". $menu['menuname'];
+                        $isReviewprocess = false;
                         if($menu['menuurl'] == 'reviewprocess/reviewprocessindex') {
+                        	$isReviewprocess = true;
                         	echo Reviewprocess::getUserProcessCount();
                         }
                         if($menu['menuurl'] == 'huinong/huinonglist') {
@@ -85,7 +87,7 @@ use app\models\Huinong;
             	]);
                 echo "</a></li>";
                 $tempauditing = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
-                if($tempauditing) {
+                if($tempauditing and $isReviewprocess) {
                 	 echo '<li><a href="'.Url::to('index.php?r=reviewprocess/reviewprocessindex').'">审核任务'.Reviewprocess::getUserProcessCount().'</a></li>';
                 }
                 ?>
