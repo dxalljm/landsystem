@@ -239,6 +239,7 @@ class User extends \yii\db\ActiveRecord
     
     public static function getItemname()
     {
+//     	var_dump(\Yii::$app->getUser ()->id);exit;
     	return AuthAssignment::find()->where(['user_id'=>\Yii::$app->getUser ()->id])->one()['item_name'];
     }
     

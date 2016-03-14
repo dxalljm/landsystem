@@ -48,6 +48,7 @@ class MenuToUser extends \yii\db\ActiveRecord
     
     public static function getUserMenu()
     {
+//     	var_dump(User::getItemname());exit;
     	$data = MenuToUser::find()->where(['role_id'=>User::getItemname()])->one()['menulist'];
     	$data = explode(',', $data);
     	$mainmenu = Mainmenu::find()->where(['id'=>$data])->all();

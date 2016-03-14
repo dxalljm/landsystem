@@ -94,18 +94,7 @@ use app\models\User;
     <td align="center">剩余欠缴金额</td>
 
   </tr>
-  <?php if($collectiondataProvider) {
-//   var_dump($collectiondataProvider)
-  	?>
-  <tr>
-    <td align="center"><?= $year?></td>
-    <td align="center"><?= $model->real_income_amount;?></td>
-    <td align="center"><?= $model->getYpayarea($year, $model->real_income_amount)?></td>
-    <td align="center"><?= $model->getYpaymoney($year, $model->real_income_amount)?></td>
-    <td align="center"><?= $owe+$model->getAR($year)-$model->real_income_amount?></td>
 
-  </tr>
-  <?php }?>
   <?php //var_dump($collectiondataProvider);?>
   <?php foreach($collectiondataProvider as $val) {?>
   <tr>

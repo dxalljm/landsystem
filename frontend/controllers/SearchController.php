@@ -22,6 +22,7 @@ use app\models\Breedinfo;
 use app\models\Breedtype;
 use app\models\Goodseed;
 use app\models\Search;
+use app\models\MenuToUser;
 
 /**
  * BankAccountController implements the CRUD actions for BankAccount model.
@@ -96,10 +97,7 @@ class SearchController extends Controller
 
 	public function actionSearchindex($tab = '',$begindate = '',$enddate = '',$params = '')
 	{
-// 		$get = Yii::$app->request->get();
-		
-// 		if(!isset($_GET['management_area']))
-// 			$_GET['management_area'] = '';
+		$menu = MenuToUser::getUserMenu();
 		$getDate = Theyear::formatDate($begindate,$enddate);
 		if(isset($_GET['tab'])) {
 			
