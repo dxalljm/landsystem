@@ -89,9 +89,11 @@ class UserController extends Controller
     {
     	$model = User::findOne(Yii::$app->getUser()->id);
     	if ($model->load(Yii::$app->request->post())) {
+    		if($model->autoyear)
+    			$model->year = date('Y');
     		$model->year = (string)$model->year;
     		$model->save();
-//     		var_dump($model->getErrors());exit;
+//     		var_dump($model);
     	} 
 	    return $this->render('useryear', [
 	    		'model' => $model,

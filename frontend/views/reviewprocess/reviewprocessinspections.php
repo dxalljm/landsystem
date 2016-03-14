@@ -119,6 +119,7 @@ use app\models\Tempauditing;
 			  	$role = Reviewprocess::getProcessRole($value);
 // 			  	var_dump($role);
 			  	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+			  	$tempitem = '';
 			  	if($temp)
 			  		$tempitem = User::getUserItemname($temp['user_id']);
 			  	$itemname = User::getItemname();

@@ -50,7 +50,7 @@ class User extends \yii\db\ActiveRecord
     {
         return [
 			[['username', 'auth_key', 'password_hash', 'created_at', 'updated_at', 'department_id'], 'required'],
-            [['status', 'created_at', 'updated_at'], 'integer'],
+            [['status', 'created_at', 'updated_at','autoyear'], 'integer'],
             [['username', 'password_hash', 'password_reset_token', 'email','year'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
         	[['realname'], 'string', 'max' => 200],
@@ -77,7 +77,8 @@ class User extends \yii\db\ActiveRecord
             'status' => '状态',
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
-        	'department_id' => '科室ID'
+        	'department_id' => '科室ID',
+        	'autoyear' => '自动获取',
         ];
     }
 	

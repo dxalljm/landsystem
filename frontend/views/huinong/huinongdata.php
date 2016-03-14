@@ -55,6 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
     				
     				<?php 
     				$i=1;$areaSum=0.0;$moneySum=0.0;
+    				if($data) {
     				foreach ($data as $value) {
     					$areaSum += $value['area'];
     					$money = $model->subsidiesmoney*$value['area']*$model->subsidiesarea;
@@ -94,7 +95,7 @@ $this->params['breadcrumbs'][] = $this->title;
     					<td align="center" width="150px"><b><?php if($issubmitSearch) echo MoneyFormat::num_format($money).'元'; else echo html::textInput('moneySum',0,['readonly'=>'readonly','class'=>'form-control','id'=>'money'])?></b></td>
     					<td align="center"><?php if(!$issubmitSearch) {?><label><input type="checkbox" class="all"/> 全选</label><label><input type="checkbox" class="invert"/> 反选</label><label><input type="checkbox" class="revoke"/> 取消选择 </label><?php }?></td>
     				</tr>
-    				<?php }?>
+    				<?php }}?>
     			</table>
     <div class="form-group">
         <?= Html::submitButton('提交', ['class' => 'btn btn-primary'])?>

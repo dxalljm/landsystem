@@ -41,6 +41,7 @@ use app\models\Farms;
 	            	return ManagementArea::find()->where(['id'=>$model->management_area])->one()['areaname'];
             }
             ],
+           
             [
             	'label' => '农场名称',
               	'attribute' => 'farmname',
@@ -51,6 +52,13 @@ use app\models\Farms;
 	            'value' => function ($model){
             		return Farms::find()->where(['id'=>$model->farms_id])->one()['farmername'];
             	}
+            ],
+            [
+            'label' => '缴费年度',
+            'attribute' => 'ypayyear',
+            'value' => function($model) {
+            	return $model->ypayyear.'年度';
+            }
             ],
             [
             	//'label' => '应收金额',

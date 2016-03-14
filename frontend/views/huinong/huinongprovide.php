@@ -171,11 +171,10 @@ $alltotal = arraySearch::find($allData)->search();
     					<?php }?>
     					<td align="center"><b></b></td>
     					<td align="center"><b></b></td>
-    					<td align="center" width="100"><b><?php echo $areaSum.'亩';?></b></td>
-    					<td align="center" width="100"><b><?php echo $moneySum.'元';?></b></td>
-    					<?php $yfmoney = Huinonggrant::find()->where(['huinong_id'=>$model->id,'state'=>1])->sum('money')?>
-    					<td align="right" width="53"><b>已发：</b></td>
-    					<td align="center" width="95"><b><?php echo html::textInput('moneySum',$yfmoney,['readonly'=>'readonly','class'=>'form-control','id'=>'money']);?></b></td>
+    					<td align="center" width="100"><b></b></td>
+    					<td align="center" width="100"><b><?php echo MoneyFormat::num_format($areaSum).'亩';?></b></td>
+    					<td align="right" width="53"><b><?php echo MoneyFormat::num_format($moneySum).'元';?></b></td><?php $yfmoney = Huinonggrant::find()->where(['huinong_id'=>$model->id,'state'=>1])->sum('money')?>
+    					<td align="center" width="120"><b>已发：<?php echo html::textInput('moneySum',MoneyFormat::num_format($yfmoney),['readonly'=>'readonly','id'=>'money','width'=>14]);?></b></td>
     				</tr>
     				<?php }?>
     			</table>
