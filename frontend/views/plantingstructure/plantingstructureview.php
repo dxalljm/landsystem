@@ -103,7 +103,7 @@ use app\models\Goodseed;
 	</tbody>
 </table>
 	<p>
-	<?= Html::a('返回', [Yii::$app->controller->id.'index','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
+	<?= Html::a('返回', Yii::$app->getRequest()->getReferrer(), ['class' => 'btn btn-success'])?>
 	</p>
                 </div>
             </div>

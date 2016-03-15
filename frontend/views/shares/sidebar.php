@@ -45,46 +45,56 @@ else echo '晚上好';
 	    	<li class="header text-light-blue"><h4><?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']?></h4></li>
 	    	<?php }?>
 	    		<li class="treeview">
-                	<a href="<?= Url::to('index.php?r=farms/farmsmenu&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-list"></i><span>业务菜单</span></a>
+                	<a href="<?= Url::to(['farms/farmsmenu','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-list"></i><span>业务菜单</span></a>
            		</li>
+           		
 				<li class="treeview">
-                	<a href="<?= Url::to('index.php?r=farmer/farmercreate&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-user"></i><span>法人信息</span></a>
+                	<a href="<?= Url::to(['farmer/farmercreate','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-user"></i><span>法人信息</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="<?= Url::to('index.php?r=farms/farmsttpomenu&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-users"></i><span>转让</span></a>
+                	<a href="<?= Url::to(['farms/farmsttpomenu','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-users"></i><span>转让</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="<?= Url::to('index.php?r=lease/leaseindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-street-view"></i><span>租赁</span></a>
+                	<a href="<?= Url::to(['lease/leaseindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-street-view"></i><span>租赁</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="<?= Url::to('index.php?r=loan/loanindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-university"></i><span>贷款</span></a>
+                	<a href="<?= Url::to(['loan/loanindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-university"></i><span>贷款</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="<?= Url::to('index.php?r=dispute/disputeindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-commenting"></i><span>纠纷</span></a>
+                	<a href="<?= Url::to(['dispute/disputeindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-commenting"></i><span>纠纷</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="<?= Url::to('index.php?r=cooperativeoffarm/cooperativeoffarmindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-briefcase"></i><span>合作社信息</span></a>
+                	<a href="<?= Url::to(['cooperativeoffarm/cooperativeoffarmindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-briefcase"></i><span>合作社信息</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="<?= Url::to('index.php?r=employee/employeefathers&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-user-plus"></i><span>雇工信息</span></a>
+                	<a href="<?= Url::to(['employee/employeefathers','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-user-plus"></i><span>雇工信息</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="<?= Url::to('index.php?r=plantingstructure/plantingstructureindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-sun-o"></i><span>种植结构</span></a>
+                	<a href="<?= Url::to(['plantingstructure/plantingstructureindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-sun-o"></i><span>种植结构</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="<?= Url::to('index.php?r=fireprevention/firepreventioncreate&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-fire-extinguisher"></i><span>防火工作</span></a>
+                	<a href="<?= Url::to(['fireprevention/firepreventioncreate','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-fire-extinguisher"></i><span>防火工作</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="<?= Url::to('index.php?r=yields/yieldsindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-balance-scale"></i><span>产量信息</span></a>
+                	<a href="<?= Url::to(['yields/yieldsindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-balance-scale"></i><span>产量信息</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="<?= Url::to('index.php?r=sales/salesindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-cart-arrow-down"></i><span>销售信息</span></a>
+                	<a href="<?= Url::to(['sales/salesindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-cart-arrow-down"></i><span>销售信息</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="<?= Url::to('index.php?r=breed/breedcreate&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-cart-arrow-down"></i><span>养殖信息</span></a>
+                	<a href="<?= Url::to(['breed/breedcreate','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-github-alt"></i><span>养殖信息</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="<?= Url::to('index.php?r=prevention/preventionindex&farms_id='.$_GET['farms_id']) ?>"><i class="fa fa-cart-arrow-down"></i><span>防疫信息</span></a>
+                	<a href="<?= Url::to(['prevention/preventionindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-plus"></i><span>防疫情况</span></a>
+           		</li>
+           		<li class="treeview">
+                	<a href="<?= Url::to(['prevention/preventionindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-sticky-note-o"></i><span>项目申报</span></a>
+           		</li>
+           		<li class="treeview">
+                	<a href="<?= Url::to(['prevention/preventionindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-soundcloud"></i><span>灾害情况</span></a>
+           		</li>
+           		<li class="treeview">
+                	<a href="<?= Url::to(['prevention/preventionindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-truck"></i><span>农机器具</span></a>
            		</li>
            		
 	    	<?php } else {?>

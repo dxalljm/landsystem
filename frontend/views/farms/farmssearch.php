@@ -26,6 +26,7 @@ use frontend\helpers\arraySearch;
 	$totalData->pagination = ['pagesize'=>0];
 // 	var_dump($totalData->getModels());exit;
 	$data = arraySearch::find($totalData)->search();
+	var_dump($searchModel);
 ?>
  <?= GridView::widget([
         'dataProvider' => $dataProvider,

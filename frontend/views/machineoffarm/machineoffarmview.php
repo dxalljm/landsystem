@@ -3,7 +3,9 @@ namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-
+use app\models\Machine;
+use app\models\Machinetype;
+use app\models\Farms;
 /* @var $this yii\web\View */
 /* @var $model app\models\Machineoffarm */
 
@@ -40,10 +42,48 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'machine_id',
-            'farms_id',
-            'machinetype_id',
+            [
+            	'label' => '法人',
+            	'value' => Farms::find()->where(['id'=>$model->farms_id])->one()['farmername'],
+            ],
             'machinename',
+           	[
+				'label' => '农机大类',
+				'value' => Machinetype::getClass($model->machinetype_id)[0],
+			],
+			[
+				'label' => '农机小类',
+				'value' => Machinetype::getClass($model->machinetype_id)[1],
+			],
+			[
+				'label' => '农机品目',
+				'value' => Machinetype::getClass($model->machinetype_id)[2],
+			],
+			[
+			'label' => '型号',
+			'value' => Machine::find()->where(['id'=>$model->machine_id])->one()['implementmodel'],
+			],
+			[
+			'label' => '生产厂商',
+			'value' => Machine::find()->where(['id'=>$model->machine_id])->one()['enterprisename'],
+			],
+			[
+			'label' => '企业所在省份',
+			'value' => Machine::find()->where(['id'=>$model->machine_id])->one()['province'],
+			],
+			[
+			'label' => '分档名称',
+			'value' => Machine::find()->where(['id'=>$model->machine_id])->one()['filename'],
+			],
+			[
+			'label' => '基本配置及参数',
+			'value' => Machine::find()->where(['id'=>$model->machine_id])->one()['parameter'],
+			],
+			[
+			'label' => '备注',
+			'value' => Machine::find()->where(['id'=>$model->machine_id])->one()['content'],
+			],
+            
         ],
     ]) ?>
                 </div>

@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 use app\models\Inputproduct;
 use app\models\Infrastructuretype;
 use app\models\User;
-
+use Yii;
 /* @var $this yii\web\View */
 /* @var $model app\models\Projectapplication */
 
@@ -39,6 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 <?php }?>
+<?= Html::a('返回', Yii::$app->getRequest()->getReferrer(), ['class' => 'btn btn-success'])?>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
