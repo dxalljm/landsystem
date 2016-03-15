@@ -117,6 +117,7 @@ class SiteController extends Controller
         			$userModel->save();
         		}
         	}
+//         	var_dump(\Yii::$app->getUser());
         	if($model->username == 'admin')
         		throw new \yii\web\UnauthorizedHttpException('对不起，此用户不能在前台页面登录。');
         	

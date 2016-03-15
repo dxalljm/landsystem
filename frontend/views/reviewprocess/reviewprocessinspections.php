@@ -119,10 +119,15 @@ use app\models\Tempauditing;
 			  	$role = Reviewprocess::getProcessRole($value);
 // 			  	var_dump($role);
 			  	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+<<<<<<< HEAD
+			  	$tempitem = [];
+=======
 			  	$tempitem = '';
+>>>>>>> 5fe3824a6691ee9b9071fef656761bab35e635a5
 			  	if($temp)
 			  		$tempitem = User::getUserItemname($temp['user_id']);
 			  	$itemname = User::getItemname();
+			  	
 			  	//审核角色或临时授权角色与当前用户角色相同，则显示该条目
 			  	if($role['rolename'] == $itemname or $role['rolename'] == $tempitem) {
 // 			  		var_dump($itemname);

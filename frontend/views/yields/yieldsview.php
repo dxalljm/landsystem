@@ -3,6 +3,10 @@ namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\User;
+use app\models\Plantingstructure;
+use app\models\Plant;
+use app\models\Farms;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Yields */
@@ -24,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </h3>
                 </div>
                 <div class="box-body">
-
+<?php if(User::getItemname() == '地产科科长') {?>
     <p>
     	 <?= Html::a('添加', ['yieldscreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
         <?= Html::a('更新', ['yieldsupdate', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -36,13 +40,21 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-
+<?php }?>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
-            'planting_id',
-            'farms_id',
+            [
+            	'label' => '种植作物',
+            	'attribute' => 'planting_id',
+            	'value' => Plant::find()->where(['id'=>Plantingstructure::find()->where(['id'=>$model->planting_id])->one()['plant_id']])->one()['cropname'],
+            ],
+            [
+            	'label' => '法人',
+            	'attribute' => 'farmer_id',
+            	'value' => Farms::find()->where(['id'=>$model->farms_id])->one()['farmername'],
+            ],
             'single',
         ],
     ]) ?>

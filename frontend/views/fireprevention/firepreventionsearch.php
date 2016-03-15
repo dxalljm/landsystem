@@ -52,7 +52,7 @@ use frontend\helpers\arraySearch;
 	        <td></td>
 			<td></td>
 	        </tr>',
-        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','percent','percentvalue'],$totalData),
+        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','percent','percentvalue','operation'],$totalData),
     ]); ?>
               </div>
               <!-- /.tab-pane -->

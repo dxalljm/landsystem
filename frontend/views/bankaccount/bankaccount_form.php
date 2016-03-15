@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use app\models\Farmer;
+use app\models\Farms;
 use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
@@ -14,7 +14,7 @@ use yii\helpers\ArrayHelper;
 
     <?php $form = ActiveForm::begin(); ?>
 	
-	<?= $form->field($model, 'farmer_id')->dropDownList(ArrayHelper::map(Farmer::find()->all(), 'id', 'farmername')) ?>
+	<?= $form->field($model, 'farmer_id')->dropDownList(ArrayHelper::map(Farms::find()->all(), 'id', 'farmername')) ?>
 	
 	<?= $form->field($model, 'bank')->dropDownList(['工商银行'=>'工商银行','建设银行'=>'建设银行','农业银行'=>'农业银行','农村信用社'=>'农村信用社','龙江银行'=>'龙江银行','邮政储蓄'=>'邮政储蓄']) ?>
 	

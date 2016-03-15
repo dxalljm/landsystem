@@ -171,8 +171,8 @@ class CollectionController extends Controller
     public function actionCollectioncq($year=null)
     {
     	if($year === null)
-    		$year = Theyear::findOne(1)['years'];
-    	$model = new farmerSearch();
+    		$year = User::getYear();
+//     	$model = new farmerSearch();
     	return $this->render('collectioncq', [
     			'model' => $model,
     	]);

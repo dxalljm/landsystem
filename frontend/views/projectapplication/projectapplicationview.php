@@ -5,6 +5,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\Inputproduct;
 use app\models\Infrastructuretype;
+use app\models\User;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Projectapplication */
@@ -25,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                             </h3>
                 </div>
                 <div class="box-body">
-
+<?php if(User::getItemname() == '地产科科长') {?>
     <p>
     	 <?= Html::a('添加', ['projectapplicationcreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
         <?= Html::a('更新', ['projectapplicationupdate', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -37,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-
+<?php }?>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [

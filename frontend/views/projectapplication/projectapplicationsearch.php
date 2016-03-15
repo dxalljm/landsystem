@@ -47,7 +47,7 @@ use frontend\helpers\arraySearch;
 			        <td><strong>'.$data->count('projecttype').'个</strong></td>
 			        <td><strong></strong></td>
 			        </tr>',
-        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','projecttype','projectdata'],$totalData),
+        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','projecttype','projectdata','operation'],$totalData),
     ]); ?>
               </div>
               <!-- /.tab-pane -->
