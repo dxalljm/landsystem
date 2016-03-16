@@ -33,7 +33,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <table class="table table-bordered table-hover">
 	    <tr>
 	    	<td align="center">承租人/法人</td>
-	    	<td align="center">宗地</td>
 	    	<td align="center">承包面积</td>
 	    	<td align="center">作物</td>
 	    	<td align="center">良种型号</td>
@@ -43,7 +42,6 @@ $this->params['breadcrumbs'][] = $this->title;
 	    <?php $name = Lease::find()->where(['id'=>$planting->lease_id])->one()['lessee'];?>
 	    <tr>
 	    	<td align="center"><?php if($name == '') echo Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmername']; else echo $name;?></td>
-	    	<td align="center"><?= $planting->zongdi;?></td>
 	    	<td align="center"><?= $planting->area;?>亩</td>
 	    	<td align="center"><?= Plant::find()->where(['id'=>$planting->plant_id])->one()['cropname']?></td>
 	    	<td align="center"><?= Goodseed::find()->where(['id'=>$planting->goodseed_id])->one()['plant_model']?></td>

@@ -8,7 +8,6 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
-use app\models\SignupForm;
 /**
  * This is the model class for table "{{%user}}".
  *
@@ -49,9 +48,9 @@ class User extends \yii\db\ActiveRecord
    public function rules()
     {
         return [
-			[['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at', 'department_id'], 'required'],
-            [['status', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
+			[['username', 'auth_key', 'password_hash', 'created_at', 'updated_at', 'department_id'], 'required'],
+            [['status', 'created_at', 'updated_at','autoyear'], 'integer'],
+            [['username', 'password_hash', 'password_reset_token', 'email' ,'year'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
 			
 			['status', 'default', 'value' => self::STATUS_ACTIVE],
@@ -76,7 +75,8 @@ class User extends \yii\db\ActiveRecord
             'status' => '状态',
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
-        	'department_id' => '科室ID'
+        	'department_id' => '科室ID',
+        	'autoyear' => '自动获取',
         ];
     }
 	
@@ -221,8 +221,35 @@ class User extends \yii\db\ActiveRecord
     	return $whereArray;
     }
     
+    public static function searchManagearea()
+    {
+    	$departmentid = User::find ()->where ( [
+    			'id' => \Yii::$app->getUser ()->id
+    	] )->one ()['department_id'];
+    	$departmentData = Department::find ()->where ( [
+    			'id' => $departmentid
+    	] )->one ();
+    	$whereArray = explode ( ',', $departmentData ['membership'] );
+    	if(count($whereArray) > 1) {
+    		return '';
+    	} else
+    		return $whereArray;
+    }
+    
     public static function getItemname()
     {
+//     	var_dump(\Yii::$app->getUser ()->id);exit;
     	return AuthAssignment::find()->where(['user_id'=>\Yii::$app->getUser ()->id])->one()['item_name'];
+    }
+    
+    public static function getUserItemname($user_id)
+    {
+    	return AuthAssignment::find()->where(['user_id'=>$user_id])->one()['item_name'];
+    }
+    
+    public static function getYear($user_id)
+    {
+    	$model = User::findOne($user_id);
+    	return $model->year;
     }
 }

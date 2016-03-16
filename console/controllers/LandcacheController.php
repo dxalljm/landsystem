@@ -13,6 +13,7 @@ use console\models\Huinong;
 use console\models\Plantinputproduct;
 use console\models\Projectapplication;
 use console\models\Farmselastic;
+use console\models\Yields;
 class LandcacheController extends Controller
 {
 
@@ -145,6 +146,23 @@ class LandcacheController extends Controller
 			$landcache->plantinputproductcache = Plantinputproduct::getInputproduct($id);
 			$landcache->plantinputproducttitle = '投入品使用情况';
 			$landcache->plantinputproductcategories = json_encode(Plantinputproduct::getTypenamelist($id)['typename']);
+			$landcache->save();
+		}
+	}
+	
+	public function actionYieldscache()
+	{
+		$allid = $this->getAllUser();
+		// 		var_dump($allid);exit;
+		foreach ($allid as $id) {
+			if($cache = Cache::find()->where(['user_id'=>$id])->one())
+				$landcache = Cache::findOne($cache->id);
+			else
+				$landcache = new Cache();
+			$landcache->user_id = $id;
+			$landcache->plantinputproductcache = Yields::getUserYields($id);
+			$landcache->plantinputproducttitle = '农产品产量情况';
+			$landcache->plantinputproductcategories = json_encode(Yields::getUserTypenamelist($id)['typename']);
 			$landcache->save();
 		}
 	}

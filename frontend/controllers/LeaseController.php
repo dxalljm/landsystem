@@ -62,6 +62,24 @@ class LeaseController extends Controller
         ]);
     }
 	
+    public function actionLeasearea()
+    {
+    	$leases = Lease::find()->all();
+    	foreach ($leases as $lease) {
+    		$model = Lease::findOne($lease['id']);
+    		$arrayLeaseArea = explode('、', $model->lease_area);
+    		$area = 0.0;
+    		foreach ($arrayLeaseArea as $value) {
+    			$area += Lease::getArea($value);
+    		}
+    		$model->lease_area = (string)$area;
+    		var_dump($area);
+    		$model->save();
+    		var_dump($model->getErrors());
+    	}
+    	echo 'finished';
+    }
+    
     public function actionLeaseallview($farms_id)
     {
     	$lease = Lease::find()->where(['farms_id'=>$farms_id])->all();
@@ -115,7 +133,7 @@ class LeaseController extends Controller
     	$farm = Farms::find()->where(['id'=>$farms_id])->one();
     	$farmer = Farmer::find()->where(['farms_id'=>$farms_id])->one();
         $model = new lease();
-        
+
 		$overarea = Lease::getOverArea($farms_id);
 		$noarea = $model::getNoArea($farms_id);
         if ($model->load(Yii::$app->request->post())) {

@@ -238,7 +238,7 @@ class PlantingstructureController extends Controller
     	$model = new Plantingstructure();
     
     	$farm = Farms::find()->where(['id'=>$farms_id])->one();
-    	$zongdi = Plantingstructure::getNoZongdi($lease_id, $farms_id);
+    	$area = Plantingstructure::getNoZongdi($lease_id, $farms_id);
     	$plantinputproductModel = new Plantinputproduct();
     	$plantpesticidesModel = new Plantpesticides();
     	if ($model->load(Yii::$app->request->post())) {
@@ -304,7 +304,7 @@ class PlantingstructureController extends Controller
     				'plantpesticidesModel' => $plantpesticidesModel,
     				'model' => $model,
     				'farm' => $farm,
-    				'zongdi' => $zongdi,
+    				'area' => $area,
     		]);
     	}
     }

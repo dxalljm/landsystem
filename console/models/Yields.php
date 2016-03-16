@@ -1,8 +1,9 @@
 <?php
 
-namespace app\models;
+namespace console\models;
 
 use Yii;
+use console\models\Plantingstructure;
 
 /**
  * This is the model class for table "{{%yield}}".
@@ -463,8 +464,11 @@ class Yields extends \yii\db\ActiveRecord
     public static function getUserTypenamelist($user_id)
     {
     	$sum = 0.0;
+    	$data = [];
     	$result = ['id'=>[],'typename'=>[]];
     	$yields = Yields::find ();
+    	$time = Theyear::getYeartime($user_id);
+    	$yields->andFilterWhere(['between','update_at',$time[0],$time[1]]);
     	$where = Farms::getUserManagementArea($user_id);
     	
     	$yields->andFilterWhere(['management_area'=>$where]);
@@ -485,23 +489,32 @@ class Yields extends \yii\db\ActiveRecord
     {
     	$yields = Yields::find ();
     	$management_area = Farms::getUserManagementArea($id);
-    	
-    	$yields->andFilterWhere(['management_area'=>$management_area]);
+    	$time = Theyear::getYeartime($id);
+    	$yields->andFilterWhere(['between','update_at',$time[0],$time[1]]);
+//     	$yields->andFilterWhere(['management_area'=>$management_area]);
     	
     	$plantid = self::getUserTypenamelist($id);
-    	$oldp = $yields->where;
+		var_dump($plantid);
     	if(is_array($management_area)) {
     		foreach ($management_area as $value) {
+    			
     			$plantArea = [];
     			foreach ($plantid['id'] as $val) {
-    				$yields->where = $oldp;
-    				$plantsum = 0.0;
-    				$goodseedsum = 0.0;
+//     				var_dump($val);
+    				$sum = 0.0;
     				$yields->andFilterWhere(['plant_id'=>$val,'management_area'=>$value]);
-    				$area = $yields->sum('single');
-    				$plantArea[] = (float)sprintf("%.2f", $area/10000);
+    				$yieldsdata = $yields->all();
+//     				var_dump($yieldsdata);
+    				foreach ($yieldsdata as $y) {
+//     					var_dump($y);
+    					$area = Plantingstructure::find()->where(['id'=>$y['planting_id']])->one()['area'];
+    					$sum += $y['single']*$area;
+// 						echo $y['single'].'------'.$area;
+    				}
+//     				var_dump($sum);
+    				$plantArea[] = (float)sprintf("%.2f", $sum/10000);
     			}
-    			// 				var_dump($plantArea);
+//     							var_dump($plantArea);
     			$result[] = [
     					'name' => str_ireplace('管理区', '', ManagementArea::find()->where(['id'=>$value])->one()['areaname']),
     					'type' => 'bar',
@@ -511,17 +524,13 @@ class Yields extends \yii\db\ActiveRecord
     		}
     	} else {
     		$plantArea = [];
-    		//     		var_dump($Plantingstructure->where);
-    		$yields->andFilterWhere(['management_area'=>$management_area]);
-    		$oldp = $yields->where;
     		foreach ($plantid['id'] as $val) {
-    			//     			var_dump($oldp);
-    			$yields->where = $oldp;
-    			$yields->andFilterWhere(['plant_id'=>$val]);
-    			//     			var_dump($Plantingstructure->where);
-    			$area = $yields->sum('single');
-    			//     			var_dump($area);
-    			$plantArea[] = (float)sprintf("%.2f", $area/10000);
+    			$yields->andFilterWhere(['plant_id'=>$val,'management_area'=>$value]);
+    			foreach ($yields->all() as $value) {
+    				$area = Plantingstructure::find()->where(['id'=>$y['planting_id']])->one()['area'];
+    					$sum += $y['single']*$area;
+    				}
+    				$plantArea[] = (float)sprintf("%.2f", $sum/10000);
     		}
     		//     		var_dump($plantArea);
     		$result[] = [

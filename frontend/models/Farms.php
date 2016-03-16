@@ -764,7 +764,7 @@ class Farms extends \yii\db\ActiveRecord {
 	}
 	public static function showEightPlantmenu() {
 		
-		$cache = 'cache-key-plantmenu6'.\Yii::$app->getUser()->id;
+		$cache = 'cache-key-plantmenu9'.\Yii::$app->getUser()->id;
     	$html = Yii::$app->cache->get($cache);
     	if (!empty($html)) {
     		return $html;
@@ -774,14 +774,20 @@ class Farms extends \yii\db\ActiveRecord {
 				'role_id' => User::getItemname () 
 		] )->one ()['plate'];
 		$arrayBusinessMenu = explode ( ',', $businessmenu );
+		$sort = [];
+		foreach ($arrayBusinessMenu as $menu) {
+			$menuUrl = Mainmenu::find ()->where ( [
+					'id' => $menu
+			] )->one ();
+			$sort[$menuUrl['sort']] = $menuUrl;
+		}
+		asort($sort);
+//     	var_dump($menu);exit;
+//     	$result = array_flip($sort);
 		$html = '<div class="row" >';
 		
-		for($i = 0; $i < count ( $arrayBusinessMenu ); $i ++) {
-			
-			$menuUrl = Mainmenu::find ()->where ( [ 
-					'id' => $arrayBusinessMenu [$i] 
-			] )->one ();
-			$html .= self::showEightPlant ( $menuUrl );
+		for($i = 1; $i <= count ( $sort ); $i ++) {			
+			$html .= self::showEightPlant ( $sort[$i] );
 		}
 		$html .= '</div>';
 		Yii::$app->cache->set($cache, $html, 3600);
