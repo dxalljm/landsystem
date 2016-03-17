@@ -700,9 +700,7 @@ class Farms extends \yii\db\ActiveRecord {
 				$value ['icon'] = 'fa fa-line-chart';
 				$value ['title'] = $menuUrl ['menuname'];
 				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] );
-				$value ['info'] = '现有' . Yields::find ()->where ( [ 
-						'management_area' => $where 
-				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '条产品信息';
+				$value ['info'] = '产品信息';
 				$value ['description'] = '农产品产量信息';
 				break;
 			case 'huinonggrant' :
@@ -764,7 +762,7 @@ class Farms extends \yii\db\ActiveRecord {
 	}
 	public static function showEightPlantmenu() {
 		
-		$cache = 'cache-key-plantmenu9'.\Yii::$app->getUser()->id;
+		$cache = 'cache-key-plantmenu10'.\Yii::$app->getUser()->id;
     	$html = Yii::$app->cache->get($cache);
     	if (!empty($html)) {
     		return $html;
@@ -781,12 +779,12 @@ class Farms extends \yii\db\ActiveRecord {
 			] )->one ();
 			$sort[$menuUrl['sort']] = $menuUrl;
 		}
-		asort($sort);
-//     	var_dump($menu);exit;
+		sort($sort);
+//     	var_dump($sort);exit;
 //     	$result = array_flip($sort);
 		$html = '<div class="row" >';
 		
-		for($i = 1; $i <= count ( $sort ); $i ++) {			
+		for($i = 0; $i < count ( $sort ); $i ++) {			
 			$html .= self::showEightPlant ( $sort[$i] );
 		}
 		$html .= '</div>';

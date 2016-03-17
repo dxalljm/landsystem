@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use app\models\Plantingstructure;
 use app\models\Farms;
 use app\models\Theyear;
+use frontend\models\plantingstructureSearch;
 /**
  * YieldsController implements the CRUD actions for Yields model.
  */
@@ -165,7 +166,7 @@ class YieldsController extends Controller
     				$_GET['tab'].'Search' => ['management_area'=>$_GET['management_area']],
     		]);
     	} 
-    	$searchModel = new yieldsSearch();
+    	$searchModel = new plantingstructureSearch();
 		if(!is_numeric($_GET['begindate']))
 			 $_GET['begindate'] = strtotime($_GET['begindate']);
 		if(!is_numeric($_GET['enddate']))

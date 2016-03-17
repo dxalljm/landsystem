@@ -76,6 +76,9 @@ else echo '晚上好';
                 	<a href="<?= Url::to(['fireprevention/firepreventioncreate','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-fire-extinguisher"></i><span>防火工作</span></a>
            		</li>
            		<li class="treeview">
+                	<a href="<?= Url::to(['collection/collectionsend','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-cny"></i><span>缴费业务</span></a>
+           		</li>
+           		<li class="treeview">
                 	<a href="<?= Url::to(['yields/yieldsindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-balance-scale"></i><span>产量信息</span></a>
            		</li>
            		<li class="treeview">
@@ -88,13 +91,13 @@ else echo '晚上好';
                 	<a href="<?= Url::to(['prevention/preventionindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-plus"></i><span>防疫情况</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="<?= Url::to(['prevention/preventionindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-sticky-note-o"></i><span>项目申报</span></a>
+                	<a href="<?= Url::to(['projectapplication/projectapplicationindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-sticky-note-o"></i><span>项目申报</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="<?= Url::to(['prevention/preventionindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-soundcloud"></i><span>灾害情况</span></a>
+                	<a href="<?= Url::to(['disaster/disasterindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-soundcloud"></i><span>灾害情况</span></a>
            		</li>
            		<li class="treeview">
-                	<a href="<?= Url::to(['prevention/preventionindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-truck"></i><span>农机器具</span></a>
+                	<a href="<?= Url::to(['machineoffarm/machineoffarmindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-truck"></i><span>农机器具</span></a>
            		</li>
            		
 	    	<?php } else {?>

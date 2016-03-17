@@ -53,8 +53,8 @@ use frontend\helpers\arraySearch;
 			        <td><strong>'.$data->count('farmer_id',true).'个</strong></td>
 			        <td><strong>'.$data->count('plant_id',true).'个</strong></td>
 			        <td><strong>'.$data->otherSum('planting_id',['Plantingstructure','area'],10000).'万亩</strong></td>
-			        <td><strong>'.$data->sum('single',10000).'万斤</strong></td>
-			        <td><strong>'.$data->mulOtherSum('single','planting_id',['Plantingstructure','area'],10000).'万斤</strong></td>
+			        <td><strong></strong></td>
+			        <td><strong>'.$data->mulyieldSum(['Yieldbase','yield'],'planting_id',['Plantingstructure','area'],10000).'万斤</strong></td>
 			        </tr>',
         'columns' => Search::getColumns(['management_area','farms_id','farmer_id','planting_id','single','allsingle'],$totalData),
     ]); ?>
@@ -64,7 +64,7 @@ use frontend\helpers\arraySearch;
               <?php //var_dump($data->getName('Plant', 'cropname', 'plant_id')->getEchartsData(['*','single',['Plantingstructure',['planting_id','area']]],10000));?>
                 <div id="yields" style="width: 900px; height: 600px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-				showAllShadow('yields',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Plant', 'cropname', 'plant_id')->typenameList())?>,<?= $data->getName('Plant', 'cropname', 'plant_id')->showAllShadow('mulOtherSum',['single','planting_id',['Plantingstructure','area']],10000)?>,'万斤');
+				showAllShadow('yields',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Plant', 'cropname', 'plant_id')->typenameList())?>,<?= $data->getName('Plant', 'cropname', 'plant_id')->showAllShadow('mulyieldSum',[['Yieldbase','yield'],'planting_id',['Plantingstructure','area']],10000)?>,'万斤');
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
 

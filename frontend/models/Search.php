@@ -200,7 +200,7 @@ class Search extends \yii\db\ActiveRecord {
 								'label' => '单产（每亩）',
 								'attribute' => $value,
 								'value' => function ($model) {
-									return $model->single . '斤';
+									return Yieldbase::find()->where(['plant_id'=>$model->plant_id,'year'=>User::getYear()])->one()['yield'] . '斤';
 								} 
 						];
 						break;
@@ -211,7 +211,7 @@ class Search extends \yii\db\ActiveRecord {
 									$planting = Plantingstructure::find ()->where ( [ 
 											'id' => $model->planting_id 
 									] )->one ();
-									return $planting ['area'] * $model->single . '斤';
+									return $planting ['area'] * Yieldbase::find()->where(['plant_id'=>$model->plant_id,'year'=>User::getYear()])->one()['yield'] . '斤';
 								} 
 						];
 						break;

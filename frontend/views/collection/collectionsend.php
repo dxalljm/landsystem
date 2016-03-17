@@ -171,7 +171,7 @@ jQuery('#collection-payyear').change(function(){
 	$('#collection-real_income_amount').keyup(function(event){
 		input = $(this).val();
 		$.getJSON('index.php?r=collection/getplantprice', {formyear: $('#collection-payyear').val()}, function (data) {
-			var result = input/data/30;
+			var result = input/data;
 			$('#collection_realarea').val(result.toFixed(2));
 		});
 		

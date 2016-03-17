@@ -4,6 +4,7 @@ namespace console\models;
 
 use Yii;
 use console\models\Plantingstructure;
+use console\models\Yieldbase;
 
 /**
  * This is the model class for table "{{%yield}}".
@@ -494,7 +495,7 @@ class Yields extends \yii\db\ActiveRecord
 //     	$yields->andFilterWhere(['management_area'=>$management_area]);
     	
     	$plantid = self::getUserTypenamelist($id);
-		var_dump($plantid);
+// 		var_dump($plantid);
     	if(is_array($management_area)) {
     		foreach ($management_area as $value) {
     			
@@ -502,15 +503,8 @@ class Yields extends \yii\db\ActiveRecord
     			foreach ($plantid['id'] as $val) {
 //     				var_dump($val);
     				$sum = 0.0;
-    				$yields->andFilterWhere(['plant_id'=>$val,'management_area'=>$value]);
-    				$yieldsdata = $yields->all();
-//     				var_dump($yieldsdata);
-    				foreach ($yieldsdata as $y) {
-//     					var_dump($y);
-    					$area = Plantingstructure::find()->where(['id'=>$y['planting_id']])->one()['area'];
-    					$sum += $y['single']*$area;
-// 						echo $y['single'].'------'.$area;
-    				}
+    				$area = Plantingstructure::find()->where(['plant_id'=>$val,'management_area'=>$value])->sum('area');
+    				$sum += Yieldbase::find()->where(['plant_id'=>$val,'year'=>User::getYear($id)])->one()['yield']*$area;
 //     				var_dump($sum);
     				$plantArea[] = (float)sprintf("%.2f", $sum/10000);
     			}

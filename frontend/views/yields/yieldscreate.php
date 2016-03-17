@@ -28,6 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('yields_form', [
         'model' => $model,
+    	
     ]) ?>
                 </div>
             </div>

@@ -857,7 +857,7 @@ class FarmsController extends Controller {
 			$params = Yii::$app->request->queryParams;
 			$params ['farmsSearch'] ['farmname'] = $search;
 			$params ['farmsSearch'] ['farmername'] = $search;
-// 			$params ['farmsSearch'] ['management_area'] = $management_area ['id'];
+			$params ['farmsSearch'] ['management_area'] = $management_area ['id'];
 // 			$params ['farmsSearch'] ['state'] = 1;
 // 			$params ['farmsSearch'] ['locked'] = 0;
 			$dataProvider = $farmsSearch->search ( $params );
@@ -1289,9 +1289,7 @@ class FarmsController extends Controller {
 				$value ['icon'] = 'fa fa-balance-scale';
 				$value ['title'] = $menuUrl ['menuname'];
 				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
-				$value ['info'] = '有' . Yields::find ()->where ( [ 
-						'farms_id' => $_GET ['farms_id'] 
-				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count () . '条产量信息';
+				$value ['info'] = '农作物产量';
 				$value ['description'] = '农产品产量信息';
 				break;
 			case 'sales' :
@@ -1416,6 +1414,30 @@ class FarmsController extends Controller {
 		echo json_encode ( [ 
 				'status' => 1,
 				'data' => $data 
+		] );
+	}
+	public function actionGetcardidinfo($str) {
+		$search = Farms::find ()->where ( [
+				'cardid' => $str
+		] )->one ();
+		$data ['farmname'] = $search->farmname;
+		$data ['farmername'] = $search->farmername;
+		$data ['telephone'] = $search->telephone;
+		echo json_encode ( [
+				'status' => 1,
+				'data' => $data
+		] );
+	}
+	public function actionGettelephoneinfo($str) {
+		$search = Farms::find ()->where ( [
+				'telephone' => $str
+		] )->one ();
+		$data ['farmname'] = $search->farmname;
+		$data ['cardid'] = $search->cardid;
+		$data ['farmername'] = $search->farmername;
+		echo json_encode ( [
+				'status' => 1,
+				'data' => $data
 		] );
 	}
 	public function actionFarmssearch($tab,$begindate, $enddate) 

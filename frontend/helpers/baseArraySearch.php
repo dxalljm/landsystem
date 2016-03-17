@@ -10,6 +10,7 @@ use app\models\Collection;
 use app\models\Huinonggrant;
 use app\models\Plant;
 use app\models\Huinong;
+use app\models\User;
 
 class baseArraySearch {
 	private $data = [ ];
@@ -203,6 +204,36 @@ class baseArraySearch {
 		}
 		$this->tempData = $newdata;
 	}
+	
+	public function mulyieldSum($class,$where,$otherfield,$num = 1)
+	{
+		$sum = 0.0;
+		if ($this->temp)
+			$data = $this->temp;
+		else
+			$data = $this->data;
+		foreach ($data as $value) {
+			$model = 'app\\models\\' . $otherfield [0];
+			if ($this->echartsWhere) {
+				
+				$tempValue = $model::find ()->where ( [
+						'id' => $value->getAttribute ( $where )
+				] );
+				foreach ($this->echartsWhere as $key=>$val) {
+					$tempValue->andFilterWhere([$key=>$val]);
+				}
+				$fieldValue = $tempValue->one();
+			} else 
+				$fieldValue = $model::find ()->where ( [
+					'id' => $value->getAttribute ( $where )
+			] )->one ();
+			$model2 = 'app\\models\\'.$class[0];
+			$fieldValue2 = $model2::find()->where(['plant_id'=>$fieldValue['plant_id'],'year'=>User::getYear()])->one()[$class[1]];
+			$sum += bcmul($fieldValue[$otherfield[1]] , $fieldValue2);
+		}
+		return sprintf ( "%.2f", $sum / $num );
+	}
+	
 	public function mulOtherSum($field, $where, $otherfield, $num = 1) {
 		$sum = 0.0;
 		if ($this->temp)
@@ -660,6 +691,12 @@ class baseArraySearch {
 									'management_area' => $areaid,
 									$this->field => $key 
 							] )->mulOtherSum ( $field [0], $field [1], $field [2], $num );
+							break;
+						case 'mulyieldSum' :
+							$sum [] = $this->where ( [
+									'management_area' => $areaid,
+									$this->field => $key
+							] )->mulyieldSum ( $field [0], $field [1], $field [2], $num );
 							break;
 						default :
 							
