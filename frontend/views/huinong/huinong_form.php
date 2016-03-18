@@ -74,8 +74,8 @@ switch ($typename) {
 			<td colspan="6" align='left'><?= $form->field($model, 'subsidiesmoney')->textInput()->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
-			<td width=15% align='right'>起止日期</td><?php if($model->begindate == '') $model->begindate = date('Y-m-d'); else $model->begindate = date('Y-m-d',$model->begindate)?>
-			<td align='center'><?= $form->field($model, 'begindate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
+			<td width=15% align='right'>年度</td><?php if($model->begindate == '') $model->begindate = date('Y');?>
+			<td colspan="6" align='center'><?= $form->field($model, 'begindate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
         'inline' => false, 
@@ -83,27 +83,11 @@ switch ($typename) {
         
         'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
         'clientOptions' => [
-            'autoclose' => true,
-        	'minView' => 3,
-        	'maxView' => 3,
-            'format' => 'yyyy-mm-dd'
+		            'autoclose' => true,
+		        	'startView' => 4,
+		        	'minView' => 4,
+		            'format' => 'yyyy'
         ]]) ?></td>
-			<td align='center'>至</td><?php if($model->enddate =='') $model->enddate = '';else $model->enddate = date('Y-m-d',$model->enddate);?>
-			<td align='center'><?= $form->field($model, 'enddate')->textInput(['maxlength' => 500])->label(false)->widget(
-    DateTimePicker::className(), [
-        // inline too, not bad
-        'inline' => false, 
-    	'language'=>'zh-CN',
-        
-        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
-        'clientOptions' => [
-            'autoclose' => true,
-        	'minView' => 3,
-        	'maxView' => 3,
-            'format' => 'yyyy-mm-dd'
-        ]])?></td>
-			<td align='center'>&nbsp;</td>
-			<td colspan="2" align='center'>&nbsp;</td>
 		</tr>
 	</table>
 	<div class="progress" id="jdt">

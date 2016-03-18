@@ -53,10 +53,17 @@ class HuinongController extends Controller
 	//惠农政策当年有效列表
     public function actionHuinonglist()
     {
-//     	$whereArray = Farms::getManagementArea();
-    	$huinongs = Huinong::find()->all();
+    	$huinongs = Huinong::find();
+		$post = Yii::$app->request->post('setyear');
+
+		if($post) {
+			$huinongs->andFilterWhere(['begindate'=>$post]);
+		} else 
+			$huinongs->andFilterWhere(['begindate'=>date('Y')]);
+    	$data = $huinongs->all();
     	return $this->render('huinonglist', [
-    			'huinongs' => $huinongs,
+    			'huinongs' => $data,
+    			'date' => $post,
     	]);
     }
     
@@ -278,27 +285,28 @@ class HuinongController extends Controller
 				$model->typeid = Yii::$app->request->post('plant');
         	$model->create_at = time();
         	$model->update_at = $model->create_at;
-        	$model->begindate = (string)strtotime($model->begindate);
-        	$model->enddate = (string)strtotime($model->enddate);
+        	$model->begindate = (string)$model->begindate;
         	if(Yii::$app->request->post('goodseed'))
-        		$model->totalsubsidiesarea = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid])->sum('area');
+        		$model->totalsubsidiesarea = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid])->andFilterWhere(['between','create_at',strtotime($model->begindate.'-01-01'),strtotime($model->begindate.'-12-31')])->sum('area');
         	if(Yii::$app->request->post('plant'))
-        		$model->totalsubsidiesarea = Plantingstructure::find()->where(['plant_id'=>$model->typeid])->sum('area');
+        		$model->totalsubsidiesarea = Plantingstructure::find()->where(['plant_id'=>$model->typeid])->andFilterWhere(['between','create_at',strtotime($model->begindate.'-01-01'),strtotime($model->begindate.'-12-31')])->sum('area');
         	if(Yii::$app->request->post('goodseed'))
-        		$model->totalamount = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid])->sum('area')*$model->subsidiesmoney;
+        		$model->totalamount = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid])->andFilterWhere(['between','create_at',strtotime($model->begindate.'-01-01'),strtotime($model->begindate.'-12-31')])->sum('area')*$model->subsidiesmoney;
         	if(Yii::$app->request->post('plant'))
-        		$model->totalamount = Plantingstructure::find()->where(['plant_id'=>$model->typeid])->sum('area')*$model->subsidiesmoney;
+        		$model->totalamount = Plantingstructure::find()->where(['plant_id'=>$model->typeid])->andFilterWhere(['between','create_at',strtotime($model->begindate.'-01-01'),strtotime($model->begindate.'-12-31')])->sum('area')*$model->subsidiesmoney;
         	
         	if($model->save()) {
         		if(Yii::$app->request->post('goodseed'))
-        			$plantingsructure = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid])->all();
+        			$plantingsructure = Plantingstructure::find()->andFilterWhere(['goodseed_id'=>$model->typeid])->andFilterWhere(['between','create_at',strtotime($model->begindate.'-01-01'),strtotime($model->begindate.'-12-31')])->all();
         		if(Yii::$app->request->post('plant'))
-        			$plantingsructure = Plantingstructure::find()->where(['plant_id'=>$model->typeid])->all();
+        			$plantingsructure = Plantingstructure::find()->andFilterWhere(['plant_id'=>$model->typeid])->andFilterWhere(['between','create_at',strtotime($model->begindate.'-01-01'),strtotime($model->begindate.'-12-31')])->all();
+        		
         		foreach ($plantingsructure as $val) {
         			$temp = new Tempprogress();
         			$temp->id = $val['id'];
         			$temp->save();
         		}
+        		
         		foreach ($plantingsructure as $value) {
 	        		$huinonggrantModel = new Huinonggrant();
 
@@ -316,7 +324,7 @@ class HuinongController extends Controller
 	        		$huinonggrantModel->update_at = $huinonggrantModel->create_at;
 	        		$huinonggrantModel->save();
 	        		Logs::writeLog('建立所有符合条件用户数据',$huinonggrantModel->id,'',$huinonggrantModel->attributes);
-	        		$tempModel = Tempprogress::findOne($valur['id']);
+	        		$tempModel = Tempprogress::findOne($value['id']);
 	        		$tempModel->delete();
         		}
         	}

@@ -57,6 +57,18 @@ $this->params['breadcrumbs'][] = $this->title;
 					return Machinetype::getClass($model->machinetype_id)[2];
 				}
 			],
+			[
+			'label' => '型号',
+			'value' => function ($model) {
+				return Machine::find()->where(['id'=>$model->machine_id])->one()['implementmodel'];
+			}
+			],
+			[
+			'label' => '生产厂商',
+			'value' => function ($model) {
+				return Machine::find()->where(['id'=>$model->machine_id])->one()['enterprisename'];
+			}
+			],
 //             'machinetype_id',
 //             'machine_id',
 			'machinename',

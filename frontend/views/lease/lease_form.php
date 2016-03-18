@@ -50,8 +50,9 @@ use app\models\Lease;
     <td colspan="7" align="center"><?= $form->field($model, 'address')->textInput()->label(false)->error(false) ?></td>
   </tr>
   <tr>
-    <td align="center">租赁面积</td>
-    <td colspan="7" align="center"><?= $form->field($model, 'lease_area')->textInput(['data-target' => '#myModal','data-toggle' => 'modal','data-keyboard' => 'false', 'data-backdrop' => 'static',])->label(false)->error(false) ?></td>
+    <td align="center">租赁面积</td><?php $leaseareaValue = $farm->measure - $overarea;?>
+    <td colspan="7" align="center"><?php //= $form->field($model, 'lease_area')->textInput(['data-target' => '#myModal','data-toggle' => 'modal','data-keyboard' => 'false', 'data-backdrop' => 'static',])->label(false)->error(false) ?>
+    <?= $form->field($model, 'lease_area')->textInput(['value'=>$leaseareaValue])->label(false)->error(false) ?></td>
     </tr>
   <tr>
     <td align="center">租赁期限</td>
@@ -219,29 +220,29 @@ $this->registerJsFile('js/vendor/bower/devbridge-autocomplete/dist/jquery.autoco
 $this->registerJsFile('js/lease.js', ['position' => View::POS_HEAD]);
 ?>
 <script type="text/javascript">
-// $('#model-parcellist').blur(function(){
-// 	var input = $(this).val();
-// 	alert(input);
-	//var measure = <?//= $farm->measure?>;
-// 	if(input > measure) {
-// 		alert('输入的面积不能大于当前农场总面积'+measure+'亩');
-// 		$('#model-parcellist').focus();
-// 	}
-// });
+$('#lease-lease_area').blur(function(){
+	var input = $(this).val();
+	//alert(input);
+	var measure = <?= $farm->measure - $overarea?>;
+	if(input > measure) {
+		alert('输入的面积不能大于当前农场总面积'+measure+'亩');
+		$('#model-parcellist').focus();
+	}
+});
 function setFarmsid(id)
 {
     $('#lease-farms_id').val(id);
 }
-$('#model-parcellist').blur(function(){
-	var input = $(this).val();
-	$.getJSON('/landsystem/frontend/web/index.php?r=lease/getarea',{zongdiarea:input},function (data) {
-		var measure = <?= $farm->measure?>;
-        if(data.area > measure) {
-			alert('输入的面积不能大于地块面积  '+measure);
-			$('#model-parcellist').val(data.zongdi + '(' + measure +')');
-        }
-    });
-});
+// $('#model-parcellist').blur(function(){
+// 	var input = $(this).val();
+// 	$.getJSON('/landsystem/frontend/web/index.php?r=lease/getarea',{zongdiarea:input},function (data) {
+		//var measure = <?//= $farm->measure?>;
+//         if(data.area > measure) {
+// 			alert('输入的面积不能大于地块面积  '+measure);
+// 			$('#model-parcellist').val(data.zongdi + '(' + measure +')');
+//         }
+//     });
+// });
 </script>
 
 

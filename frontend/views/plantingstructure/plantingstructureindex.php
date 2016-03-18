@@ -55,13 +55,11 @@ use app\models\Theyear;
 <table class="table table-bordered table-hover">
   <tr>
     <td width="20%" colspan="2" align="center">法人</td>
-    <td align="center">宗地</td>
     <td width="12%" align="center">总面积</td>
     <td width="12%" align="center">操作</td>
     </tr>
   <tr>
     <td colspan="2" align="center"><?= $farms['farmername'] ?></td>
-    <td align="center"><?= $zongdilist?></td>
     <?php 
     	  $plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id'],'lease_id'=>0])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
 //     	  var_dump($plantings);
@@ -128,14 +126,12 @@ if($leases) {
 <table class="table table-bordered table-hover">
   <tr>
     <td width="20%" colspan="2" align="center">承租人</td>
-    <td align="center">宗地</td>
     <td width="12%" align="center">总面积</td>
     <td width="12%" align="center">操作</td>
     </tr>
   <?php foreach($leases as $val) {?>
   <tr>
     <td colspan="2" align="center"><?= $val['lessee'] ?></td>
-    <td align="center"><?= $val['lease_area'] ?></td>
      <td align="center"><?= Lease::getListArea($val['lease_area'])?>亩</td>
     <?php 
     	  $plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id'],'lease_id'=>$val['id']])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();

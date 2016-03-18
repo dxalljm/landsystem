@@ -156,7 +156,7 @@ $this->title = '岭南管委会';
           <div class="box box-widget">
             <div class="box-header with-border">
               <div class="user-block">
-                <span class="username"><a href="#">您所辖管理区投入品使用情况统计数据</a></span>
+                <span class="username"><a href="#">您所辖管理区农产品产量情况统计数据</a></span>
                 <span class="description navbar-left"><?= Cache::getCache(\Yii::$app->getUser()->getId())['plantinputproducttitle']?></span>
                 <span class="description navbar-right">单位（万斤）</span>
               </div>

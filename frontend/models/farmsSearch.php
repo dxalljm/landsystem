@@ -164,7 +164,9 @@ class farmsSearch extends Farms
 
 //      	$this->management_area = 6;
 //         var_dump($dataProvider);
-
+     	$query->orFilterWhere($this->pinyinSearch($this->farmname))
+     	->orFilterWhere($this->farmerpinyinSearch($this->farmername));
+     	
         $query->andFilterWhere([
             'id' => $this->id,
         	'locked' => $this->locked,
@@ -172,11 +174,9 @@ class farmsSearch extends Farms
         	'management_area' => $this->management_area,
 //         	'notstate' => $this->notstate,
         ]);
-        
+       
 
-          $query->andFilterWhere($this->pinyinSearch($this->farmname))
-            ->andFilterWhere($this->farmerpinyinSearch($this->farmername))
-            ->andFilterWhere(['like', 'cardid', $this->cardid])
+          $query->andFilterWhere(['like', 'cardid', $this->cardid])
             ->andFilterWhere(['like', 'telephone', $this->telephone])
             ->andFilterWhere(['like', 'address', $this->address])
             ->andFilterWhere(['like', 'state', $this->state])
@@ -197,7 +197,7 @@ class farmsSearch extends Farms
             ->andFilterWhere(['like', 'accountnumber', $this->accountnumber])
             ->andFilterWhere($this->betweenSearch());
           	//->andFilterWhere(['between', 'measure', $this->measure,$this->measure]);
-		
+// 		var_dump($dataProvider->query->where);exit;
         return $dataProvider;
     }
     public function searchIndex($params)

@@ -1,5 +1,6 @@
 <?php
 namespace frontend\controllers;
+use Yii;
 use yii\helpers\Html;
 use app\models\Machine;
 use yii\widgets\ActiveFormrdiv;
@@ -25,7 +26,7 @@ use app\models\Farmer;
     <div class="row">
         <div class="col-xs-12">
          <div class="form-group">
-    	   	&nbsp;&nbsp;<?= Html::Button('打印', ['class' => 'btn btn-primary','onclick'=>'print.preview("ttpoprint")']) ?>
+    	   	&nbsp;&nbsp;<?= Html::a('返回', Yii::$app->getRequest()->getReferrer(), ['class' => 'btn btn-success'])?>
     	</div>
 <!--             <div class="box"> -->
 

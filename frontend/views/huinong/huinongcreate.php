@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('huinong_form', [
         'model' => $model,
+    	'date' => $date,
     ]) ?>
 
 </div>

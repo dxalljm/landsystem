@@ -4,6 +4,7 @@ use app\models\tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\Farms;
+use frontend\helpers\MoneyFormat;
 /* @var $this yii\web\View */
 /* @var $model app\models\Loan */
 
@@ -49,7 +50,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'mortgagearea',
             'mortgagebank',
-            'mortgagemoney',
+            [
+            	'attribute' => 'mortgagemoney',
+            	'value' => MoneyFormat::num_format($model->mortgagemoney),
+            ],
             
         ],
     ]) ?>

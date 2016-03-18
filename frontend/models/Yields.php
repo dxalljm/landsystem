@@ -459,4 +459,79 @@ class Yields extends \yii\db\ActiveRecord
 // 		var_dump($result);
     	return  json_encode($result);
     }
+    
+    public static function getUserTypenamelist($user_id)
+    {
+    	$sum = 0.0;
+    	$result = ['id'=>[],'typename'=>[]];
+    	$yields = Yields::find ();
+    	$where = Farms::getUserManagementArea($user_id);
+    	
+    	$yields->andFilterWhere(['management_area'=>$where]);
+    	foreach ($yields->all() as $value) {
+    		$data[] = ['id'=>$value['plant_id']];
+    	}
+    	if($data) {
+    		$newdata = Farms::unique_arr($data);
+    		foreach ($newdata as $value) {
+    			$result['id'][] = $value['id'];
+    			$result['typename'][] = Plant::find()->where(['id' => $value['id']])->one()['cropname'];
+    		}
+    	}
+    	return  $result;
+    }
+    
+    public static function getUserYields($id)
+    {
+    	$yields = Yields::find ();
+    	$management_area = Farms::getUserManagementArea($id);
+    	
+    	$yields->andFilterWhere(['management_area'=>$management_area]);
+    	
+    	$plantid = self::getUserTypenamelist($id);
+    	$oldp = $yields->where;
+    	if(is_array($management_area)) {
+    		foreach ($management_area as $value) {
+    			$plantArea = [];
+    			foreach ($plantid['id'] as $val) {
+    				$yields->where = $oldp;
+    				$plantsum = 0.0;
+    				$goodseedsum = 0.0;
+    				$yields->andFilterWhere(['plant_id'=>$val,'management_area'=>$value]);
+    				$area = $yields->sum('single');
+    				$plantArea[] = (float)sprintf("%.2f", $area/10000);
+    			}
+    			// 				var_dump($plantArea);
+    			$result[] = [
+    					'name' => str_ireplace('管理区', '', ManagementArea::find()->where(['id'=>$value])->one()['areaname']),
+    					'type' => 'bar',
+    					'stack' => $value,
+    					'data' => $plantArea
+    			];
+    		}
+    	} else {
+    		$plantArea = [];
+    		//     		var_dump($Plantingstructure->where);
+    		$yields->andFilterWhere(['management_area'=>$management_area]);
+    		$oldp = $yields->where;
+    		foreach ($plantid['id'] as $val) {
+    			//     			var_dump($oldp);
+    			$yields->where = $oldp;
+    			$yields->andFilterWhere(['plant_id'=>$val]);
+    			//     			var_dump($Plantingstructure->where);
+    			$area = $yields->sum('single');
+    			//     			var_dump($area);
+    			$plantArea[] = (float)sprintf("%.2f", $area/10000);
+    		}
+    		//     		var_dump($plantArea);
+    		$result[] = [
+    				'name' => str_ireplace('管理区', '', ManagementArea::find()->where(['id'=>$management_area])->one()['areaname']),
+    				'type' => 'bar',
+    				'stack' => $management_area,
+    				'data' => $plantArea
+    		];
+    	}
+    	// 		var_dump($result);
+    	return  json_encode($result);
+    }
 }

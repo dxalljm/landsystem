@@ -147,11 +147,13 @@ use yii\helpers\Url;
         </tr>
       <tr>
         <td width="30%" align='right'>身份证号</td>
-        <td colspan="5" align='left'><?=  $form->field($newFarm, 'cardid')->textInput(['maxlength' => 500])->label(false)->error(false)?></td>
+        <td colspan="4" align='left'><?=  $form->field($newFarm, 'cardid')->textInput(['maxlength' => 500])->label(false)->error(false)?></td>
+        <td align='left'><?= html::a('查询','#',['id'=>'searchCardid','class'=>'btn btn-success'])?></td>
         </tr>
       <tr>
         <td width="30%" align='right'>电话号码</td>
-        <td colspan="5" align='left'><?=  $form->field($newFarm, 'telephone')->textInput(['maxlength' => 500])->label(false)->error(false)?></td>
+        <td colspan="4" align='left'><?=  $form->field($newFarm, 'telephone')->textInput(['maxlength' => 500])->label(false)->error(false)?></td>
+        <td align='left'><?= html::a('查询','#',['id'=>'searchTelephone','class'=>'btn btn-success'])?></td>
         </tr>
       <tr>
         <td width="30%" align='right'>农场位置</td>
@@ -407,6 +409,28 @@ $('#searchFarmer').click(function(){
 			$('#farms-farmname').val(data.data['farmname']);
 			$('#farms-cardid').val(data.data['cardid']);
 			$('#farms-telephone').val(data.data['telephone']);
+		}	
+	});
+});
+$('#searchCardid').click(function(){
+	var input = $('#farms-cardid').val();
+	
+	$.getJSON('index.php?r=farms/getcardidinfo', {str: input}, function (data) {
+		if (data.status == 1) {
+			$('#farms-farmname').val(data.data['farmname']);
+			$('#farms-farmername').val(data.data['farmername']);
+			$('#farms-telephone').val(data.data['telephone']);
+		}	
+	});
+});
+$('#searchTelephone').click(function(){
+	var input = $('#farms-telephone').val();
+	
+	$.getJSON('index.php?r=farms/gettelephoneinfo', {str: input}, function (data) {
+		if (data.status == 1) {
+			$('#farms-farmname').val(data.data['farmname']);
+			$('#farms-cardid').val(data.data['cardid']);
+			$('#farms-farmername').val(data.data['farmername']);
 		}	
 	});
 });

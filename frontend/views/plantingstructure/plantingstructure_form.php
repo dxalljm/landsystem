@@ -37,14 +37,12 @@ use app\models\Inputproductbrandmodel;
 <td align='right'><?= Lease::find()->where(['id'=>$_GET['lease_id']])->one()['lessee'] ?></td>
 <?php }?>
 <td align='right'>农场面积：<?= $farm->measure.' 亩'?></td>
-<td align='left'>种植面积：<?= Lease::getListArea($zongdi)?>亩</td>
+<td align='left'>租赁面积：<?= Lease::getListArea($area)?>亩</td>
 </tr>
 <tr>
-  <td align='right'>宗地</td>
-  <td colspan="3" align='left'><?= $form->field($model, 'zongdi')->textInput(['data-target' => '#myModal','data-toggle' => 'modal','data-keyboard' => 'false', 'data-backdrop' => 'static',])->label(false)->error(false) ?></td>
+  <td align='right'>种植面积</td>
   <?php if(isset($_GET['zongdi'])) $value = Parcel::find()->where(['id'=>$_GET['zongdi']->one()['grossarea']]); else $value = 0;?>
-  <td colspan="2" align='right'>种植面积</td><?php if($model->area !== 0.0) $value = $model->area;?>
-  <td colspan="2" align='right'><?= $form->field($model, 'area')->textInput(['value'=>$value])->label(false)->error(false) ?></td>
+  <td colspan="6" align='left'><?php if($model->area !== 0.0) $value = $farm->measure - Lease::getListArea($area);?><?= $form->field($model, 'area')->textInput(['value'=>$value])->label(false)->error(false) ?></td>
   </tr>
 <tr>
   <td align='right'>种植作物</td><?php $fatherid = Plant::find()->where(['id'=>$model->plant_id])->one()['father_id'];?>
@@ -179,7 +177,7 @@ use app\models\Inputproductbrandmodel;
     	</tr>
     	<tr>
     		<td align='left'><?php 
-			$zongdiarr = $zongdi;
+			$zongdiarr = $area;
 			//var_dump($zongdiarr);
 			if(is_array($zongdiarr)) {
 				echo html::hiddenInput('tempAllZongdi',implode('、', $zongdiarr),['id'=>'temp-allzongdi']);
@@ -366,6 +364,14 @@ $('#plantingstructure-zongdi').change(function(){
 		}
 	});
 });
+$('#plantingstructure-area').blur(function(){
+	var input = $(this).val();
+	var mease = <?= $farm->measure - Lease::getListArea($area)?>;
+	if(input > mease) {
+		alert('对不起，输入的面各不能大于'+mease+'亩');
+		$('#plantingstructure-area').focus();
+	}
+})
 $('#plantfather').change(function(){
 	father_id = $(this).val();
 	$.getJSON('index.php?r=plant/plantgetson', {father_id: father_id}, function (data) {

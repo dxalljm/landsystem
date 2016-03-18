@@ -72,20 +72,13 @@ class Plantingstructure extends \yii\db\ActiveRecord
     }
     
     //得到已经填写种植信息的宗地
-    public static function getOverZongdi($lease_id,$farms_id)
+    public static function getOverArea($lease_id,$farms_id)
     {
-    	$result = [];
+    	$result = 0.0;
     	$plantings = Plantingstructure::find()->where(['lease_id'=>$lease_id,'farms_id'=>$farms_id])->all();
     	if($plantings) {
     		foreach ($plantings as $value) {
-    			if(!strstr($value['zongdi'],'-')) {
-	    			$result[$value['zongdi']] = $value['area'];
-    			} else {
-	    			$arrZongdi = explode('、', $value['zongdi']);
-	    			foreach ($arrZongdi as $val) {
-	    				$result[] = $val;
-	    			}
-    			}
+    			$result += $value['area'];
     		}
     	}
 //     	var_dump($result);
@@ -96,16 +89,13 @@ class Plantingstructure extends \yii\db\ActiveRecord
     public static function getNoZongdi($lease_id,$farms_id)
     {
     	if($lease_id == 0) {
-    		$over = self::getOverZongdi($lease_id, $farms_id);
-    		$all = Lease::getNOZongdi($farms_id);
-    		if($over) {
-    			$result = self::getLastArea($over, $all);
-    		} else 
-    			$result = $all;
+    		$over = self::getOverArea($lease_id, $farms_id);
+    		$all = Lease::getNOArea($farms_id);
+    		$result = bcsub($all,$over,2);
     	} else {
-	    	$over = self::getOverZongdi($lease_id, $farms_id);
+	    	$over = self::getOverArea($lease_id, $farms_id);
 	    	$all = Lease::getLeaseArea($lease_id);
-	    	$result = self::getLastArea($over, $all);
+	    	$result = bcsub($all,$over,2);
     	}
     	return $result;
     }

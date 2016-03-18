@@ -7,7 +7,8 @@ use app\models\Plant;
 use app\models\Subsidiestype;
 use yii\helpers\Url;
 use app\models\Huinonggrant;
-
+use dosamigos\datetimepicker\DateTimePicker;
+use yii\widgets\ActiveFormrdiv;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\HuinongSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -18,16 +19,30 @@ $this->params['breadcrumbs'][] = $this->title;
 // var_dump($huinongs);
 ?>
 <div class="huinong-index">
-
+<?php $form = ActiveFormrdiv::begin(); ?>
     <section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>                    </h3>
+                <div class="box-header"><?php if(empty($date)) $date = date('Y');?>
+                    <table><tr><td><h3 class="box-title"><?= $this->title ?></h3></td><td width="30"></td><td width="60"><?= DateTimePicker::widget([
+                'id' => 'setYear',
+				'name' => 'setyear',
+				'value' => $date,
+				'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+// 				'options' => ['class'=>''],
+				'inline' => false, 
+		    	'language'=>'zh-CN',
+		        'clientOptions' => [
+		            'autoclose' => true,
+		        	'startView' => 4,
+		        	'minView' => 4,
+		            'format' => 'yyyy'
+				]
+			]);?></td><td>年度</td></tr></table>
                 </div>
                 <div class="box-body">
+                 
     			<table class="table table-bordered table-hover">
     				<tr>
     					<td align="center">补贴类型</td>
@@ -53,9 +68,16 @@ $this->params['breadcrumbs'][] = $this->title;
     				</tr>
     				<?php }?>
     			</table>
+    			
                 </div>
             </div>
         </div>
     </div>
 </section>
+<?php ActiveFormrdiv::end(); ?>
 </div>
+<script>
+	$('#setYear').change(function(){
+		$("form").submit();
+	});
+</script>

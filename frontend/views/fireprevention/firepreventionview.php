@@ -143,7 +143,7 @@ foreach($employees as $emp) {
 <?php }}?>
 </table>
 
-
+<?= Html::a('返回', Yii::$app->getRequest()->getReferrer(), ['class' => 'btn btn-success'])?>
     <?php ActiveFormrdiv::end(); ?>
 <?php function viewModel($modelname) {
 	if($modelname == 0)

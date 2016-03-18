@@ -165,9 +165,10 @@ class MachineoffarmController extends Controller
      */
     public function actionMachineoffarmdelete($id)
     {
-        $this->findModel($id)->delete();
+    	$model = $this->findModel($id);
+        $model->delete();
 
-        return $this->redirect(['machineoffarmindex']);
+        return $this->redirect(['machineoffarmindex','farms_id' => $model->farms_id]);
     }
 
     /**
