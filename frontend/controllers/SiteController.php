@@ -64,6 +64,11 @@ class SiteController extends Controller
         ];
     }
 
+    public function actionMainiframe()
+    {
+    	return $this->render('mainiframe');
+    }
+    
     public function actionIndex()
     {
 //       echo Pinyin::encode('杨淑华');
