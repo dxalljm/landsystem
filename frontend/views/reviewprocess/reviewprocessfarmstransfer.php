@@ -51,7 +51,7 @@ use app\models\Reviewprocess;
             <div class="box-body">
              <table width="100%" border="1" cellpadding="0" cellspacing="0" class="ttpoprint">
 			  <tr height="40px">
-			    <td align="center">原农场名称</td>
+			    <td width="25%" align="center">原农场名称</td>
 			    <td width="13%" align="center">原法人</td>
 			    <td width="17%" align="center">原面积</td>
 			    <td width="22%" align="center">现农场名称</td>
@@ -73,9 +73,9 @@ use app\models\Reviewprocess;
 			    <td colspan="2" align="center"><?= $newfarm->contractnumber?></td>
 			    </tr>
 			  <tr height="40px">
-			    <td align="center">原法人身份证号</td>
+			    <td align="center">原法人<br>身份证号</td>
 			    <td colspan="2" align="center"><?= $oldfarm->cardid?></td>
-			    <td align="center">现法人身份证号</td>
+			    <td align="center">现法人<br>身份证号</td>
 			    <td colspan="2" align="center"><?= $newfarm->cardid?></td>
 			    </tr>
 			  <tr height="40px">
@@ -117,7 +117,7 @@ use app\models\Reviewprocess;
 			    <td align="center"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?></td>
 			    <td colspan="5" align="left"><br>&nbsp;&nbsp;&nbsp;&nbsp;<?= Reviewprocess::state(Reviewprocess::find()->where(['id'=>$reviewprocessid])->one()[$value]);?>
 			    <br>
-		        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;签字：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日 </p></td>
+		        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;签字：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日 </p></td>
 			    </tr>
 			  <?php }?>
 			  <tr>

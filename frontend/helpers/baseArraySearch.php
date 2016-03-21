@@ -653,6 +653,7 @@ class baseArraySearch {
 		return $result;
 	}
 	public function getOne($id) {
+// 		var_dump($this->namelist);exit;
 		if ($id == 0)
 			return NULL;
 		else

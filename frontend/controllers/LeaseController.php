@@ -13,6 +13,7 @@ use app\models\Farms;
 use app\models\Theyear;
 use app\models\Logs;
 use app\models\Parcel;
+use app\models\Plantingstructure;
 
 /**
  * LeaseController implements the CRUD actions for Lease model.
@@ -51,14 +52,15 @@ class LeaseController extends Controller
          $params = Yii::$app->request->queryParams;
          $params['leaseSearch']['farms_id'] = $farms_id;
          $dataProvider = $searchModel->search($params);
-		//$this->getView()->registerJsFile($url)
-        //$notclear = Farms::find()->where(['id'=>$farms_id])->one()['notclear'];
+         $measure = Farms::find()->where(['id'=>$farms_id])->one()['measure'];
+         $plantingArea = Plantingstructure::getArea($farms_id);
+// 		var_dump($measure);var_dump($plantingArea);exit;
 		Logs::writeLog('租赁');
         return $this->render('leaseindex', [
              'searchModel' => $searchModel,
              'dataProvider' => $dataProvider,
         	 'areas' => Lease::getNoArea($farms_id),
-        	//'farmerarea' => $farmerarea,
+        	 'plantingArea' => $measure - $plantingArea,
         ]);
     }
 	
@@ -134,7 +136,7 @@ class LeaseController extends Controller
     	$farmer = Farmer::find()->where(['farms_id'=>$farms_id])->one();
         $model = new lease();
 
-		$overarea = Lease::getOverArea($farms_id);
+		$overarea = Lease::scanOverArea($farms_id);
 		$noarea = $model::getNoArea($farms_id);
         if ($model->load(Yii::$app->request->post())) {
         	$model->farms_id = $farms_id;

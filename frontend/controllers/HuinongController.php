@@ -316,7 +316,7 @@ class HuinongController extends Controller
 	        		$huinonggrantModel->subsidiestype_id = $model->subsidiestype_id;
 	        		$huinonggrantModel->typeid = $model->typeid;
 	        		$huinonggrantModel->lease_id = $value['lease_id'];
-	        		$huinonggrantModel->money = $value['area'] * $model->subsidiesmoney;
+	        		$huinonggrantModel->money = $model->subsidiesarea*0.01*$value['area'] * $model->subsidiesmoney;
 	        		$huinonggrantModel->area = $value['area'];
 	        		$huinonggrantModel->state = 0;
 	        		$huinonggrantModel->issubmit = 0;

@@ -96,6 +96,7 @@ class salesSearch extends Sales
     
     public function searchIndex($params)
     {
+//     	var_dump($params);exit;
     	$query = Sales::find();
     
     	$dataProvider = new ActiveDataProvider([

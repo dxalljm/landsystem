@@ -31,6 +31,7 @@ use frontend\helpers\arraySearch;
 	$totalData = clone $dataProvider;
 	$totalData->pagination = ['pagesize'=>0];
 	$data = arraySearch::find($totalData)->search();
+// 	var_dump($data);exit;
 // 	var_dump($data->sum('area'));
 // 	$data->getName('Plant', 'cropname', 'plant_id')->getEchartsData('area',10000);
 	$planter = $data->count('farmer_id');

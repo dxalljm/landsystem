@@ -66,8 +66,8 @@ $this->params['breadcrumbs'][] = $this->title;
             	'label' => '补贴比率',
             	'attribute' => 'subsidiesarea',
             	'value' => function ($model){
-            		$p = $model->subsidiesarea*100;
-            		return $p.'%';
+//             		$p = $model->subsidiesarea*100;
+            		return $model->subsidiesarea.'%';
             	}
             ],
             [

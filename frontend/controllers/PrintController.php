@@ -63,7 +63,11 @@ class PrintController extends Controller
 // 		if(file_exists('contract_file/'.$filename))
 			$templateProcessor->saveAs('contract_file/'.$filename);
 
+<<<<<<< HEAD
 		$url = 'http://localhost/'.\Yii::$app->getUrlManager()->baseUrl.'/contract_file/'.$filename;
+=======
+			$urlFielname = '/front/contract_file/'.$filename;
+>>>>>>> 1b9278bcb1af057b341e8f60b25b17f54efbfeb7
 		return $this->render('printcontract', [
                 'filename' => $url,
             ]);
@@ -203,7 +207,7 @@ class PrintController extends Controller
 // 		var_dump(imagedestroy($imageContents));
 		
 // 		$templateProcessor2->saveAs('farmsfile/'.$filename);
-		
+		$urlFielname = 'http://front.lngwh.gov:8001'.\Yii::$app->getUrlManager()->baseUrl.'/farmsfile/'.$filename;
 		return $this->render('printfarmsfile', [
 				'filename' => $filename,
 				'cardpic' => $farmer['cardpic'],
@@ -252,7 +256,8 @@ class PrintController extends Controller
 		// 		if(file_exists('contract_file/'.$filename))
 		$templateProcessor->saveAs('leasefile/'.$filename);
 	
-	
+		$urlFielname = \Yii::$app->getUrlManager()->baseUrl.$filename;
+// 		var_dump($urlFielname);exit;
 		return $this->render('printleasecontract', [
 				'filename' => $filename,
 		]);
@@ -299,7 +304,7 @@ class PrintController extends Controller
 // 		var_dump($templateProcessor);
 		$templateProcessor->saveAs('projectapplication/'.$filename);
 	
-	
+		
 		return $this->render('printproject', [
 				'filename' => $filename,
 		]);

@@ -32,7 +32,13 @@ use frontend\helpers\arraySearch;
 	$totalData = clone $dataProvider;
 	$totalData->pagination = ['pagesize'=>0];
 	$data = arraySearch::find($totalData)->search();
-	$preventionrate = sprintf("%.2f", $data->sum('preventionnumber')/$data->sum('breedinfonumber'))*100;
+// 	var_dump($data->sum('preventionnumber'));var_dump($data->sum('breedinfonumber'));exit;
+	$number = $data->sum('preventionnumber');
+// 	var_dump($number);exit;
+	if((integer)$number)
+		$preventionrate = sprintf("%.2f", $data->sum('preventionnumber')/$data->sum('breedinfonumber'))*100;
+	else
+		$preventionrate = 0;
 ?>
 
     <div class="nav-tabs-custom">

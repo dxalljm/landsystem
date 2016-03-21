@@ -64,11 +64,11 @@ class YieldsController extends Controller
 
     public function actionYieldsinfo()
     {
-    	$searchModel = new yieldsSearch();
+    	$searchModel = new plantingstructureSearch();
     	$params = Yii::$app->request->queryParams;
     	$whereArray = Farms::getManagementArea()['id'];
-    	if (empty($params['yieldsSearch']['management_area'])) {
-    		$params ['yieldsSearch'] ['management_area'] = $whereArray;
+    	if (empty($params['plantingstructureSearch']['management_area'])) {
+    		$params ['plantingstructureSearch'] ['management_area'] = $whereArray;
     	}
     	$dataProvider = $searchModel->search ( $params );
     	if (is_array($searchModel->management_area)) {
@@ -159,13 +159,21 @@ class YieldsController extends Controller
     public function actionYieldssearch($tab,$begindate,$enddate)
     {
     	if(isset($_GET['tab']) and $_GET['tab'] !== \Yii::$app->controller->id) {
+    		if($_GET['tab'] == 'yields')
+    			$class = 'plantingstructureSearch';
+    		else
+    			$class = $_GET['tab'].'Search';
     		return $this->redirect ([$_GET['tab'].'/'.$_GET['tab'].'search',
     				'tab' => $_GET['tab'],
     				'begindate' => strtotime($_GET['begindate']),
     				'enddate' => strtotime($_GET['enddate']),
+<<<<<<< HEAD
     				'plantingstructureSearch' => ['management_area'=>$_GET['management_area']],
+=======
+					$class =>['management_area' =>  $_GET['management_area']],
+>>>>>>> 1b9278bcb1af057b341e8f60b25b17f54efbfeb7
     		]);
-    	} 
+    	}
     	$searchModel = new plantingstructureSearch();
 		if(!is_numeric($_GET['begindate']))
 			 $_GET['begindate'] = strtotime($_GET['begindate']);

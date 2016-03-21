@@ -50,7 +50,7 @@ use app\models\Lease;
     <td colspan="7" align="center"><?= $form->field($model, 'address')->textInput()->label(false)->error(false) ?></td>
   </tr>
   <tr>
-    <td align="center">租赁面积</td><?php $leaseareaValue = $farm->measure - $overarea;?>
+    <td align="center">租赁面积</td><?php if($farm->measure == $overarea) $leaseareaValue = $farm->measure;else $leaseareaValue = $farm->measure - $overarea;?>
     <td colspan="7" align="center"><?php //= $form->field($model, 'lease_area')->textInput(['data-target' => '#myModal','data-toggle' => 'modal','data-keyboard' => 'false', 'data-backdrop' => 'static',])->label(false)->error(false) ?>
     <?= $form->field($model, 'lease_area')->textInput(['value'=>$leaseareaValue])->label(false)->error(false) ?></td>
     </tr>
@@ -120,100 +120,6 @@ use app\models\Lease;
   </div>
     <?php ActiveFormrdiv::end(); ?>
 
-<!-- 模态框（Modal） -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" 
-   aria-labelledby="myModalLabel" aria-hidden="true">
-   <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header">
-            <button type="button" class="close" 
-               data-dismiss="modal" aria-hidden="true">
-                  &times;
-            </button>
-            <h4 class="modal-title" id="myModalLabel">
-               请选择宗地（面积），如所租赁地块不是整块，可修改面积数值。
-            </h4>
-         </div>
-         <div class="modal-body">
-            <table class="table table-bordered table-hover">
-    
-    	<tr>
-    		<td align='center'>租赁面积（宗地）</td>
-    	</tr>
-    	<tr><?php 
-    	if(isset($_GET['id'])) {
-    		$result = Lease::getLeaseArea($_GET['id']);
-	    	if(is_array($result))
-	    		$parcellistvalue = implode('、', $result);
-	    	else 
-	    		$parcellistvalue = $result;
-		} else {
-			$parcellistvalue = '';
-		}?>
-    		<td align='center'><?= Html::textInput('parcellist',$parcellistvalue,['id'=>'model-parcellist','class'=>'form-control'])?></td>
-
-    	</tr>
-    	<tr>
-    		<td align='center'><?php 
-    		//$arrayParcelValue = explode('、', $parcellistvalue);
-			$zongdiarr = Lease::getNOZongdi($_GET['farms_id']);
-			if($zongdiarr) {
-				echo html::hiddenInput('tempZongdiList',implode('、', $zongdiarr),['id'=>'temp-ZongdiList']);
-				$i=0;
-	    		foreach($zongdiarr as $value) {
-	    			echo html::button($value,['onclick'=>'toParcellist("'.$value.'","'.Lease::getZongdi($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
-	    			$i++;
-	    			if($i%4 == 0)
-	    				echo '<br><br>';
-	    		}
-	    		echo html::button('全选',['onclick'=>'toAll()','class'=>'btn btn-primary']);
-			}?></td>
-
-    	</tr>
-    </table>
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">关闭  </button>
-            <button type="button" class="btn btn-primary" id="getParcellist" onclick="reset()">重置 </button>
-            <button type="button" class="btn btn-success" id="getParcellist" onclick="setLeasearea()">提交 </button>
-            <?php $this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
-<script type="text/javascript">
-function toParcellist(zdarea,id){
-	if($('#model-parcellist').val() == '') {
-		$('#'+id).attr('disabled',true);
-		$('#model-parcellist').val(zdarea);
-	}
-	else {
-		$('#'+id).attr('disabled',true);
-		var value = $('#model-parcellist').val()+'、'+zdarea;
-		$('#model-parcellist').val(value);
-	}
-}
-
-function toAll() {
-	$('#model-parcellist').val($('#temp-ZongdiList').val());
-}
-function setLeasearea() {
-	$('#myModal').modal('hide');
-	if($('#lease-lease_area').val() == '') {
-		$('#lease-lease_area').val($('#model-parcellist').val());
-	}
-	else {
-		//alert($('#lease-lease_area').val());
-		var value = $('#model-parcellist').val();
-		$('#lease-lease_area').val(value);	
-	}	
-}
-
-function reset()
-{
-	$('#model-parcellist').val('');
-	$('button').attr('disabled',false);
-}
-</script>
-         </div>
-      </div><!-- /.modal-content -->
-</div><!-- /.modal -->
 </div>
 <?php
 $this->registerJsFile('js/vendor/bower/devbridge-autocomplete/dist/jquery.autocomplete.js', ['position' => View::POS_HEAD]);
@@ -223,7 +129,7 @@ $this->registerJsFile('js/lease.js', ['position' => View::POS_HEAD]);
 $('#lease-lease_area').blur(function(){
 	var input = $(this).val();
 	//alert(input);
-	var measure = <?= $farm->measure - $overarea?>;
+	var measure = <?= $leaseareaValue?>;
 	if(input > measure) {
 		alert('输入的面积不能大于当前农场总面积'+measure+'亩');
 		$('#model-parcellist').focus();

@@ -152,6 +152,7 @@ class Search extends \yii\db\ActiveRecord {
 								'label' => '良种信息',
 								'attribute' => $value,
 								'value'=> function($model,$params) {
+// 								return $model->goodseed_id;
 // 				            	var_dump( arraySearch::find(self::$totalData)->getName('Goodseed', 'plant_model', 'goodseed_id')->getList());exit;
 				            		return self::$totalData->getName('Goodseed', 'plant_model', 'goodseed_id')->getOne($model->goodseed_id);
 				           	 	},
@@ -468,7 +469,7 @@ class Search extends \yii\db\ActiveRecord {
 						$columns [] = [ 
 								'attribute' => $value,
 								'value' => function($model) {
-// 								var_dump($params);exit;
+								
 									return self::$totalData->getName('Plant', 'cropname', 'plant_id')->getOne($model->plant_id);
 								},
 								'filter' => self::$totalData->getName('Plant', 'cropname', 'plant_id')->getList(),

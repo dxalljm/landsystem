@@ -63,7 +63,7 @@ public function rules()
     {
     	$result = [];
     	$huinong = Huinong::find()->all();
-    	var_dump($huinong);
+//     	var_dump($huinong);
     	return $huinong;
     }
     public static function getHuinongname()
