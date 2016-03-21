@@ -63,9 +63,9 @@ class PrintController extends Controller
 // 		if(file_exists('contract_file/'.$filename))
 			$templateProcessor->saveAs('contract_file/'.$filename);
 
-		
+		$url = 'http://localhost/'.\Yii::$app->getUrlManager()->baseUrl.'/contract_file/'.$filename;
 		return $this->render('printcontract', [
-                'filename' => $filename,
+                'filename' => $url,
             ]);
 		
 	}
@@ -167,10 +167,11 @@ class PrintController extends Controller
 // 		$templateProcessor->cloneRow('ttopzongdi', count($ttpozongdi));
 // 		$templateProcessor->cloneRow('nname', count($ttpozongdi));
 			$n = $j+count($ttpozongdi);
-			for($i=$j;$i<=$n;$i++) {
-				$templateProcessor->setValue('cdate#'.$i, htmlspecialchars(date('Y-m-d',$ttpozongdi['create_at'])));
+// 			var_dump($ttpozongdi);exit;
+			for($i=1;$i<=$n;$i++) {
+				$templateProcessor->setValue('cdate#'.$i, htmlspecialchars(date('Y-m-d',$ttpozongdi[$i-1]->getAttribute('create_at'))));
 				$templateProcessor->setValue('ttopm#'.$i, htmlspecialchars(Lease::getListArea($Leasearea)));
-				$templateProcessor->setValue('ttopzongdi#'.$i, htmlspecialchars($ttpozongdi['ttpozongdi']));
+				$templateProcessor->setValue('ttopzongdi#'.$i, htmlspecialchars($ttpozongdi[$i-1]['ttpozongdi']));
 				$templateProcessor->setValue('nname#'.$i, htmlspecialchars($farm['farmername']));
 			}
 		}

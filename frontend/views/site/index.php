@@ -215,7 +215,7 @@ $this->title = '岭南管委会';
           <!-- /.box -->
         </div>
         <!-- /.col -->
-        <?php }?><?php if(in_array(52, $plate)) {?>
+        <?php }?><?php if(in_array(27, $plate)) {?>
         <?php if(count($plate) == 2) {?>
         <div class="col-md-6">
         <?php } elseif(count($plate == 3)) {?>

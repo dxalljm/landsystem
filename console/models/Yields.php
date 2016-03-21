@@ -467,13 +467,13 @@ class Yields extends \yii\db\ActiveRecord
     	$sum = 0.0;
     	$data = [];
     	$result = ['id'=>[],'typename'=>[]];
-    	$yields = Yields::find ();
+    	$Plantingstructure = Plantingstructure::find ();
     	$time = Theyear::getYeartime($user_id);
-    	$yields->andFilterWhere(['between','update_at',$time[0],$time[1]]);
+    	$Plantingstructure->andFilterWhere(['between','update_at',$time[0],$time[1]]);
     	$where = Farms::getUserManagementArea($user_id);
     	
-    	$yields->andFilterWhere(['management_area'=>$where]);
-    	foreach ($yields->all() as $value) {
+    	$Plantingstructure->andFilterWhere(['management_area'=>$where]);
+    	foreach ($Plantingstructure->all() as $value) {
     		$data[] = ['id'=>$value['plant_id']];
     	}
     	if($data) {
@@ -488,6 +488,7 @@ class Yields extends \yii\db\ActiveRecord
     
     public static function getUserYields($id)
     {
+    	$result = [];
     	$yields = Yields::find ();
     	$management_area = Farms::getUserManagementArea($id);
     	$time = Theyear::getYeartime($id);
@@ -526,7 +527,7 @@ class Yields extends \yii\db\ActiveRecord
     				}
     				$plantArea[] = (float)sprintf("%.2f", $sum/10000);
     		}
-    		//     		var_dump($plantArea);
+    		    		var_dump($plantArea);
     		$result[] = [
     				'name' => str_ireplace('管理区', '', ManagementArea::find()->where(['id'=>$management_area])->one()['areaname']),
     				'type' => 'bar',
@@ -534,7 +535,7 @@ class Yields extends \yii\db\ActiveRecord
     				'data' => $plantArea
     		];
     	}
-    	// 		var_dump($result);
+//     			var_dump($result);
     	return  json_encode($result);
     }
 }

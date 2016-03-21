@@ -11,7 +11,7 @@ use app\models\Huinonggrant;
 use app\models\Plant;
 use app\models\Huinong;
 use app\models\User;
-
+use app\models\Yieldbase;
 class baseArraySearch {
 	private $data = [ ];
 	private $where;
@@ -205,32 +205,40 @@ class baseArraySearch {
 		$this->tempData = $newdata;
 	}
 	
-	public function mulyieldSum($class,$where,$otherfield,$num = 1)
+	public function mulyieldSum($field,$where,$num = 1)
 	{
 		$sum = 0.0;
 		if ($this->temp)
 			$data = $this->temp;
 		else
 			$data = $this->data;
-		foreach ($data as $value) {
-			$model = 'app\\models\\' . $otherfield [0];
-			if ($this->echartsWhere) {
-				
-				$tempValue = $model::find ()->where ( [
-						'id' => $value->getAttribute ( $where )
-				] );
-				foreach ($this->echartsWhere as $key=>$val) {
-					$tempValue->andFilterWhere([$key=>$val]);
+		if ($this->echartsWhere) {
+			$keys = array_keys ( $this->echartsWhere );
+			$values = array_values ( $this->echartsWhere );
+			if (count ( $keys ) == 2) {
+				foreach ($data as $value) {
+							if ($value->getAttribute ( $keys [0] ) == $values [0] and $value->getAttribute ( $keys [1] ) == $values [1]) {
+		
+								$yield = Yieldbase::find()->where(['plant_id'=>$value->getAttribute($where),'year'=>User::getYear()])->one()['yield'];
+								$sum += bcmul ( $value->getAttribute ( $field ), $yield );
+							}
+					}
+				} else {
+					foreach ( $data as $value ) {
+						if ($value->getAttribute ( $keys [0] ) == $areaid) {
+							$yield = Yieldbase::find()->where(['plant_id'=>$value->getAttribute($where),'year'=>User::getYear()])->one()['yield'];
+							$sum += bcmul ( $value->getAttribute ( $field ), $yield );
+						}
+					}
 				}
-				$fieldValue = $tempValue->one();
-			} else 
-				$fieldValue = $model::find ()->where ( [
-					'id' => $value->getAttribute ( $where )
-			] )->one ();
-			$model2 = 'app\\models\\'.$class[0];
-			$fieldValue2 = $model2::find()->where(['plant_id'=>$fieldValue['plant_id'],'year'=>User::getYear()])->one()[$class[1]];
-			$sum += bcmul($fieldValue[$otherfield[1]] , $fieldValue2);
+		} else {
+			foreach ( $data as $key => $value ) {
+				$yield = Yieldbase::find()->where(['plant_id'=>$value->getAttribute($where),'year'=>User::getYear()])->one()['yield'];
+// 				var_dump($value->getAttribute ( $field ));exit;
+				$sum += bcmul ( $value->getAttribute ( $field ), $yield );
+			}		
 		}
+
 		return sprintf ( "%.2f", $sum / $num );
 	}
 	
@@ -632,7 +640,7 @@ class baseArraySearch {
 			}
 		}
 		$this->namelist = $result;
-		// var_dump($result);
+// 		var_dump($result);
 		return $this;
 	}
 	public function typenameList() {
@@ -696,7 +704,7 @@ class baseArraySearch {
 							$sum [] = $this->where ( [
 									'management_area' => $areaid,
 									$this->field => $key
-							] )->mulyieldSum ( $field [0], $field [1], $field [2], $num );
+							] )->mulyieldSum ( $field [0], $field [1], $num );
 							break;
 						default :
 							

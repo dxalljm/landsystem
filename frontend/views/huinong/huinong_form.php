@@ -66,7 +66,7 @@ switch ($typename) {
 			<td align='left'>&nbsp;</td>
 		</tr>
 		<tr>
-			<td width=15% align='right'>补贴面积</td>
+			<td width=15% align='right'>补贴比率</td>
 			<td colspan="6" align='left'><?= $form->field($model, 'subsidiesarea')->textInput()->label(false)->error(false) ?></td>
 		</tr>
 		<tr>

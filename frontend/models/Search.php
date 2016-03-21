@@ -115,6 +115,7 @@ class Search extends \yii\db\ActiveRecord {
 						$columns [] = [ 
 								'label' => '农场名称',
 								'attribute' => $value,
+								'options' =>['width'=>120],
 								'value' => function ($model) {
 									return Farms::find ()->where ( [ 
 											'id' => $model->farms_id 
@@ -126,6 +127,7 @@ class Search extends \yii\db\ActiveRecord {
 						$columns [] = [ 
 								'label' => '法人姓名',
 								'attribute' => $value,
+								'options' =>['width'=>120],
 								'value' => function ($model) {
 									return Farms::find ()->where ( [ 
 											'id' => $model->farms_id 
@@ -137,6 +139,7 @@ class Search extends \yii\db\ActiveRecord {
 						$columns [] = [ 
 								'label' => '承租人',
 								'attribute' => $value,
+								'options' =>['width'=>120],
 								'value' => function ($model) {
 									return Lease::find ()->where ( [ 
 											'id' => $model->lease_id 
@@ -159,6 +162,7 @@ class Search extends \yii\db\ActiveRecord {
 					case 'area' :
 						$columns [] = [ 
 								'attribute' => $value,
+								'options' => ['width'=>120],
 								'value' => function ($model) {
 									return $model->area . '亩';
 								} 
@@ -199,6 +203,7 @@ class Search extends \yii\db\ActiveRecord {
 						$columns [] = [ 
 								'label' => '单产（每亩）',
 								'attribute' => $value,
+								'options' =>['width'=>150],
 								'value' => function ($model) {
 									return Yieldbase::find()->where(['plant_id'=>$model->plant_id,'year'=>User::getYear()])->one()['yield'] . '斤';
 								} 
@@ -207,11 +212,9 @@ class Search extends \yii\db\ActiveRecord {
 					case 'allsingle' :
 						$columns [] = [ 
 								'label' => '总产',
+								'options' =>['width'=>200],
 								'value' => function ($model) {
-									$planting = Plantingstructure::find ()->where ( [ 
-											'id' => $model->planting_id 
-									] )->one ();
-									return $planting ['area'] * Yieldbase::find()->where(['plant_id'=>$model->plant_id,'year'=>User::getYear()])->one()['yield'] . '斤';
+									return MoneyFormat::num_format($model->area * Yieldbase::find()->where(['plant_id'=>$model->plant_id,'year'=>User::getYear()])->one()['yield']) . '斤';
 								} 
 						];
 						break;
@@ -307,6 +310,7 @@ class Search extends \yii\db\ActiveRecord {
 					case 'housingarea' :
 						$columns [] = [ 
 								'attribute' => $value,
+// 								'options' =>['width'=>80],
 								'value' => function ($model) {
 									return $model->housingarea . '平方米';
 								} 
