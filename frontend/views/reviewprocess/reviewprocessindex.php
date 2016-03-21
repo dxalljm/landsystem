@@ -14,7 +14,7 @@ use app\models\Projectapplication;
 use app\models\Projecttype;
 use app\models\Infrastructuretype;
 use app\models\Tempauditing;
-
+use app\models\Loan;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\ReviewprocessSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -117,7 +117,7 @@ $temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'s
 if($temp) {
 	$useritem = User::getUserItemname($temp['user_id']);
 }
-if($useritem == '主任') {
+if($useritem == '服务大厅') {
 if($projectapplication) {?>
 <h3>项目审批</h3>
 						<table class="table table-bordered table-hover">
@@ -176,6 +176,71 @@ if($projectapplication) {?>
 							<?php }}?>
 						</table>
 <?php }}?>
+<?php 
+$useritem = User::getItemname();
+$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+if($temp) {
+	$useritem = User::getUserItemname($temp['user_id']);
+}
+if($useritem == '主任' or ) {
+if($loan) {?>
+<h3>贷款冻结审批</h3>
+						<table class="table table-bordered table-hover">
+							<tr height="40px">
+								<td align="center"><strong>农场名称</strong></td>
+								<td align="center"><strong>贷款人</strong></td>
+								<td align="center"><strong>抵押银行</strong></td>
+								<td align="center"><strong>抵押金额</strong></td>
+								<td align="center"><strong>状态</strong></td>
+								<td align="center"><strong>操作</strong></td>
+							</tr>
+							<?php foreach ($loan as $value) {
+// 								var_dump($value);
+							$loandata = Loan::find()->where(['reviewprocess_id'=>$value['id']])->one();
+							$oldfarm = Farms::find()->where(['id'=>$value['oldfarms_id']])->one();
+							
+							if(Reviewprocess::isShowProess($value['actionname'])) {
+								$field = Reviewprocess::getProcessIdentification();
+							
+								?>
+							<tr height="40px">
+								<td align="center"><?= $oldfarm->farmname?></td>
+								<td align="center"><?= $oldfarm->farmername?></td>
+								<td align="center"><?= $loandata['mortgagebank']?></td>
+								<td align="center"><?= $loandata['mortgagemoney']?></td>
+								<td align="center">
+								<?php if(User::getItemname() == '服务大厅贷款' or User::getItemname() == '主任' or  User::getItemname() == '副主任' ) {?>
+									<div class="btn-group">
+									<div class="btn dropdown-toggle" 
+								      data-toggle="dropdown" data-trigger="hover">
+								    	  <?= Reviewprocess::state($value['state']); ?> <span class="caret"></span>
+								   </div>
+								   <ul class="dropdown-menu" role="menu">
+								   <?php foreach (Reviewprocess::getProcess($value['actionname']) as $val) {?>
+								      <li><a href="#"><?= Processname::find()->where(['Identification'=>$val])->one()['processdepartment'].':'.Reviewprocess::state($value[$val])?></a></li>
+								   <?php }?>
+								   </ul>
+								   </div>
+								   <?php } else echo Reviewprocess::state($value['state']); ?>
+								</td>
+								<td align="center">
+								<?php 
+								$s = false;
+// 								var_dump(($field));
+								foreach ($field as $v) {
+									if($value[$v] == 2 or $value[$v] == 0)
+										$s = true;
+								}
+								if($s) 
+									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id'],'class'=>'projectapplication'],['class'=>'btn btn-success']); 
+								else {
+									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id']],['class'=>'btn btn-success','disabled'=>'disabled']);
+								}?></td>
+							</tr>
+							
+							<?php }}?>
+						</table>
+<?php }?>
 					</div>
 				</div>
 			</div>

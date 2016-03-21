@@ -12,6 +12,7 @@ use app\models\Farms;
 use app\models\Lockedinfo;
 use app\models\Logs;
 use app\models\Theyear;
+use app\models\Reviewprocess;
 /**
  * LoanController implements the CRUD actions for Loan model.
  */
@@ -69,6 +70,11 @@ class LoanController extends Controller
         ]);
     }
 
+    public function actionLoanexamine($farms_id)
+    {
+    	
+    }
+    
     /**
      * Creates a new Loan model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -77,10 +83,14 @@ class LoanController extends Controller
     public function actionLoancreate($farms_id)
     {
         $model = new Loan();
+        
 // 		var_dump(Yii::$app->request->post());
         if ($model->load(Yii::$app->request->post())) {
+        	$reviewprocessID =Reviewprocess::processRun($farms_id);
         	$model->create_at = time();
         	$model->update_at = time();
+        	$model->reviewprocess_id = $reviewprocessID;
+        	$model->state = 0;
         	$model->management_area = Farms::getFarmsAreaID($farms_id);
         	if($model->save())
         	{
@@ -93,9 +103,15 @@ class LoanController extends Controller
         		$lockedinfoModel->lockedcontent = '因农场在贷款期限中，已被冻结，不能进行此操作，解冻日期为'.Loan::find()->where(['farms_id'=>$farms_id])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->one()['enddate'];
         		$lockedinfoModel->save();
         		Logs::writeLog('增加冻结信息',$lockedinfoModel->id,'',$lockedinfoModel->attributes);
+        		
         	}
         	Logs::writeLog('新增贷款信息',$model->id,'',$model->attributes);
-            return $this->redirect(['loanindex', 'farms_id'=>$farms_id]);
+            return $this->redirect ( [ 
+					'print/printloan',
+					'farms_id' => $farms_id,
+            		'loan_id' => $model->id,
+					'reviewprocessid' => $reviewprocessID 
+			] );
         } else {
             return $this->render('loancreate', [
                 'model' => $model,
@@ -103,6 +119,15 @@ class LoanController extends Controller
         }
     }
 
+    public function actionLoanunlock($id)
+    {
+    	$model = $this->findModel($id);
+    	$farmModel = Farms::findOne($model->farms_id);
+    	$farmModel->locked = 0;
+    	$farmModel->save();
+    	return $this->render(['loanindex']);
+    }
+    
     /**
      * Updates an existing Loan model.
      * If update is successful, the browser will be redirected to the 'view' page.

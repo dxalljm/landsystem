@@ -38,9 +38,8 @@ use app\models\Prevention;
 
                         业务办理&nbsp;&nbsp;<?= html::a('农场档案打印',Url::to(['print/printfarmsfile','farms_id'=>$farm->id]),['class'=>'btn btn-primary'])?>&nbsp;&nbsp;
                         <?= html::a('承包合同打印',Url::to(['print/printcontract','farms_id'=>$farm->id]),['class'=>'btn btn-primary'])?>&nbsp;&nbsp;
-                        
-
                     </h3>
+                    
                 </div>
                 <div class="box-body">
 	<table width="600px" class="table table-bordered table-hover">

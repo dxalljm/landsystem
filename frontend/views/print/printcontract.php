@@ -10,14 +10,7 @@ classid='clsid:E77E049B-23FC-4DB8-B756-60529A35FAD5' codebase='WebOffice.cab#Ver
 <!-- --------------------=== 调用Weboffice初始化方法 ===--------------------- -->
 
 <?php 
-<<<<<<< HEAD
-	$urlstr = realpath('contract_file\\'.$filename);
-	$url = str_replace('\\','\\\\',$urlstr);
-	var_dump($url);exit;
-=======
-	
 	$url = '/contract_file/'.$filename;
->>>>>>> 1b9278bcb1af057b341e8f60b25b17f54efbfeb7
 ?>
 <SCRIPT LANGUAGE=javascript FOR=WebOffice1 EVENT=NotifyCtrlReady>
 <!--

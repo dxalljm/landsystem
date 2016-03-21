@@ -30,7 +30,7 @@ class Loan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['farms_id','management_area'], 'integer'],
+            [['farms_id','management_area','state','reviewprocess_id'], 'integer'],
             [['mortgagearea', 'mortgagemoney', 'create_at','update_at'], 'number'],
             [['mortgagebank','begindate','enddate'], 'string', 'max' => 500]
         ];
@@ -52,6 +52,8 @@ class Loan extends \yii\db\ActiveRecord
         	'enddate' => '结束日期',
         	'create_at' => '创建日期',
         	'update_at' => '更新日期',
+        	'state' => '状态',
+        	'reviewprocess_id' => '审核ID',
         ];
     }
     

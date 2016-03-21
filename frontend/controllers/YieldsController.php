@@ -167,11 +167,7 @@ class YieldsController extends Controller
     				'tab' => $_GET['tab'],
     				'begindate' => strtotime($_GET['begindate']),
     				'enddate' => strtotime($_GET['enddate']),
-<<<<<<< HEAD
-    				'plantingstructureSearch' => ['management_area'=>$_GET['management_area']],
-=======
 					$class =>['management_area' =>  $_GET['management_area']],
->>>>>>> 1b9278bcb1af057b341e8f60b25b17f54efbfeb7
     		]);
     	}
     	$searchModel = new plantingstructureSearch();

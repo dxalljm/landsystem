@@ -4,6 +4,8 @@ use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\Farms;
+use app\models\Reviewprocess;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\loanSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -43,8 +45,61 @@ $this->params['breadcrumbs'][] = $this->title;
             'mortgagebank',
             'mortgagemoney',
             // 'mortgagetimelimit',
-
+            [
+            'label' => '审核状态',
+            'attribute' => 'state',
+            'format'=>'raw',
+            'value' => function ($model) {
+            	$reviewprocess = Reviewprocess::find()->where(['id'=>$model->reviewprocess_id])->one();
+            	$html = '';
+            	$result = Reviewprocess::state($reviewprocess['state']);
+            	if($reviewprocess['state'] == 5) {
+            		$html.= '<div class="btn-group">';
+            		$html.=  '<div class="dropdown-toggle" data-toggle="dropdown" data-trigger="hover">';
+            		$html.= $result.'<span class="caret"></span>';
+            		$html.=  '</div>';
+            		$html.=  '<ul class="dropdown-menu" role="menu">';
+            		foreach (Reviewprocess::getProcess($reviewprocess['actionname']) as $val) {
+            			//$html.= '<li><a href="#">111</a></li>';
+            			$html.=  '<li>'.Processname::find()->where(['Identification'=>$val])->one()['processdepartment'].':'.Reviewprocess::state($reviewprocess[$val]).'</li>';
+            		}
+            		$html.=  '</ul>';
+            		$html.=  '</div>';
+            		return Html::a($html,'#',['class' => 'dropdown-toggle', ]);
+            	} else
+            		return $result;
+            		
+            } ],
             ['class' => 'yii\grid\ActionColumn'],
+            [
+//             		'label'=>'操作',
+            		'format'=>'raw',
+            		'value' => function($model,$key){
+            			$url = Url::to(['print/printloan','loan_id'=>$model->id,'farms_id'=>$model->farms_id]);
+            			$option = '打印申请';
+            			$title = '';
+            			$html = '';
+            			$html .= Html::a($option,$url, [
+            					'title' => $title,
+            					'class' => 'btn btn-primary	btn-xs',
+            			]);
+            			$html .= '&nbsp;&nbsp;';
+            			$url2 = Url::to(['loan/loanunlock','id'=>$model->id]);
+            			
+            			$option2 = '解冻';
+            			$title2 = '';
+            			if(Farms::getLocked($model->farms_id) == 1) {
+            				$option2 .= '&nbsp;<i class="fa fa-lock text-red"></i>';
+            				$title2 = '已冻结';
+            			}
+            			$html .= Html::a($option2,$url2, [
+            					 
+            					'title' => $title2,
+            					'class' => 'btn btn-primary	btn-xs',
+            		
+            			]);
+            			return $html;
+            		}],            
         ],
     ]); ?>
               </div>

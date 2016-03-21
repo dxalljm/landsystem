@@ -46,10 +46,13 @@ class ReviewprocessController extends Controller
         $farmstransfer = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer'])->all();
         
 		$projectapplication = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'projectapplication'])->all();
-// 		var_dump($projectapplication);exit;
+		
+		$loan = Reviewprocess::find()->where(['management_area' => $whereArray['id'],'actionname'=>'loancreate'])->all();
+		
         return $this->render('reviewprocessindex', [
 			'farmstransfer' => $farmstransfer,
         	'projectapplication' => $projectapplication,
+        	'loan' => $loan,
         ]);
     }
 
@@ -77,6 +80,24 @@ class ReviewprocessController extends Controller
     	] );
     }
 
+    public function actionReviewprocessloancreate($farms_id,$reviewprocessid)
+    {
+    	//     	var_dump($reviewprocessid);
+    	$model = new Reviewprocess();
+    	$newfarm = Farms::find()->where(['id'=>$newfarmsid])->one();
+    	$oldfarm = Farms::find()->where(['id'=>$oldfarmsid])->one();
+    	$reviewprocess = Reviewprocess::find()->where(['id'=>$reviewprocessid])->one();
+    	$process = Auditprocess::find()->where(['actionname'=>$reviewprocess['actionname']])->one()['process'];
+    	//     	var_dump($process);exit;
+    	return $this->render ( 'reviewprocessfarmstransfer', [
+    			'oldfarm' => $oldfarm,
+    			'newfarm' => $newfarm,
+    			'process' => explode('>', $process),
+    			'model' => $model,
+    			'reviewprocessid' => $reviewprocessid
+    	] );
+    }
+    
     public function actionReviewprocessfarmssplit($newfarmsid,$oldfarmsid,$reviewprocessid)
     {
     	$model = new Reviewprocess();

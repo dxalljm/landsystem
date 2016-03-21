@@ -19,6 +19,8 @@ use PhpOffice\PhpWord\Shared\ZipArchive;
 use app\models\Projectapplication;
 use app\models\Projecttype;
 use app\models\Infrastructuretype;
+use app\models\Loan;
+use frontend\helpers\MoneyFormat;
 
 class PrintController extends Controller
 {
@@ -62,16 +64,54 @@ class PrintController extends Controller
 // 		echo date('H:i:s'), ' 保存合同文件...', EOL;
 // 		if(file_exists('contract_file/'.$filename))
 			$templateProcessor->saveAs('contract_file/'.$filename);
-
-<<<<<<< HEAD
-		$url = 'http://localhost/'.\Yii::$app->getUrlManager()->baseUrl.'/contract_file/'.$filename;
-=======
-			$urlFielname = '/front/contract_file/'.$filename;
->>>>>>> 1b9278bcb1af057b341e8f60b25b17f54efbfeb7
 		return $this->render('printcontract', [
-                'filename' => $url,
+                'filename' => $filename,
             ]);
 		
+	}
+	
+	public function actionPrintloan($farms_id,$loan_id)
+	{
+		include_once '../../vendor/phpoffice/phpword/samples/Sample_Header.php';
+	
+		// Template processor instance creation
+		// 		echo date('H:i:s'), ' 生成新合同...', EOL;
+		$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('template/loan.docx');
+	
+		// Variables on different parts of document
+		$templateProcessor->setValue('weekday', htmlspecialchars(date('l'))); // On section/content
+		$templateProcessor->setValue('time', htmlspecialchars(date('H:i'))); // On footer
+		$templateProcessor->setValue('serverName', htmlspecialchars(realpath(__DIR__))); // On header
+	
+		// Simple table
+		// 		$templateProcessor->cloneRow('rowValue', 10);
+// 		var_dump($farms_id);exit;
+	
+		$farm = Farms::find()->where(['id'=>$farms_id])->one();
+		$loan = Loan::find()->where(['id'=>$loan_id])->one();
+// 		var_dump($farm['farmname']);exit;
+		
+		$templateProcessor->setValue('farmname', htmlspecialchars($farm['farmname']));
+		$templateProcessor->setValue('farmername', htmlspecialchars($farm['farmername']));
+		$templateProcessor->setValue('measure', htmlspecialchars($farm['measure']));
+		$templateProcessor->setValue('contractnumber', htmlspecialchars($farm['contractnumber']));
+		$templateProcessor->setValue('measure', htmlspecialchars($farm['measure']));
+		$templateProcessor->setValue('bankname', htmlspecialchars($loan['mortgagebank']));
+		$templateProcessor->setValue('money', htmlspecialchars(MoneyFormat::big($loan['mortgagemoney'])));
+		$templateProcessor->setValue('begindate', htmlspecialchars(date('Y年m月d日',strtotime($loan['begindate']))));
+		$templateProcessor->setValue('enddate', htmlspecialchars(date('Y年m月d日',strtotime($loan['enddate']))));
+		$templateProcessor->setValue('nowdate', htmlspecialchars(date('Y年m月d日')));
+		
+		// 		$templateProcessor->setValue('addresspic', htmlspecialchars(date('d',$farm['update_at'])));
+	
+		$filename = $farm['contractnumber'].'.docx';
+		// 		echo date('H:i:s'), ' 保存合同文件...', EOL;
+		// 		if(file_exists('contract_file/'.$filename))
+		$templateProcessor->saveAs('loan_file/'.$filename);
+		return $this->render('printloan', [
+				'filename' => $filename,
+		]);
+	
 	}
 	
 	public function actionPrintfarmsfile($farms_id)

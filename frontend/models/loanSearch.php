@@ -20,7 +20,7 @@ class loanSearch extends Loan
     public function rules()
     {
         return [
-            [['id', 'farms_id','management_area','farmer_id'], 'integer'],
+            [['id', 'farms_id','management_area','farmer_id','state','reviewproccess_id'], 'integer'],
             [['mortgagearea', 'mortgagemoney'], 'number'],
             [['mortgagebank'], 'safe'],
         ];
@@ -59,6 +59,7 @@ class loanSearch extends Loan
             'farms_id' => $this->farms_id,
             'mortgagearea' => $this->mortgagearea,
             'mortgagemoney' => $this->mortgagemoney,
+        	'state' => $this->state,
         ]);
 
         $query->andFilterWhere(['like', 'mortgagebank', $this->mortgagebank])
@@ -152,7 +153,7 @@ class loanSearch extends Loan
     			'id' => $this->id,
     			'farms_id' => $farmid,
     			'management_area' => $this->management_area,
-//     			'mortgagearea' => $this->mortgagearea,
+				'reviewprocess_id' => $this->reviewprocess_id,
     			'mortgagebank' => $this->mortgagebank,
 //     			'mortgagemoney' => $this->mortgagemoney,
     	]);
