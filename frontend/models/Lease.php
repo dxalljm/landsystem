@@ -148,7 +148,7 @@ class Lease extends \yii\db\ActiveRecord
     			$leasearea += $value['lease_area'];
     		}
     	}
-    	return $zdarea - $leasearea;
+    	return $leasearea;
     }
    
     //把相同宗地面积进行累加，返回处理后的数组

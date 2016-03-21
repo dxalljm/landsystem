@@ -80,12 +80,12 @@ use app\models\Huinong;
                     
                
                 <?php }} 
-                echo "<li >";
-                echo Html::a('图库','#', [
-            			'onclick' => "javascript:window.open('".Url::to(['photogallery/photogalleryindex'])."','','width=1200,height=800,top=50,left=80, location=no, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
+//                 echo "<li >";
+//                 echo Html::a('图库','#', [
+//             			'onclick' => "javascript:window.open('".Url::to(['photogallery/photogalleryindex'])."','','width=1200,height=800,top=50,left=80, location=no, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
             
-            	]);
-                echo "</a></li>";
+//             	]);
+//                 echo "</a></li>";
                 $tempauditing = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
                 if($tempauditing and $isReviewprocess) {
                 	 echo '<li><a href="'.Url::to('index.php?r=reviewprocess/reviewprocessindex').'">审核任务'.Reviewprocess::getUserProcessCount().'</a></li>';

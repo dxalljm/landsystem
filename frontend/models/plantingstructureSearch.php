@@ -166,7 +166,7 @@ class plantingstructureSearch extends Plantingstructure
     	]);
     	
     	$query->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
-//     	var_dump($dataProvider->getModels()->getAttribute())
+//     	var_dump($dataProvider->getModels());exit;
     	return $dataProvider;
     }
 }

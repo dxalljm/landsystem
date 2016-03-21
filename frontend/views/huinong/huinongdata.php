@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
     				if($data) {
     				foreach ($data as $value) {
     					$areaSum += $value['area'];
-    					$money = $model->subsidiesmoney*$value['area']*$model->subsidiesarea;
+    					$money = $model->subsidiesmoney*0.01*$value['area']*$model->subsidiesarea;
     				?>
     				<tr><?php $farm = Farms::find()->where(['id'=>$value['farms_id']])->one();?>
     					<td align="center"><?= $i++ ?></td>
@@ -75,7 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
     					<td align="center"><?= '有'.Dispute::find()->where(['farms_id'=>$value['farms_id']])->count().'条纠纷'?></td>
     					<td align="center"><?= Collection::getCollecitonInfo($value['farms_id'])?></td>
     					<td align="center"><?= $value['area'].' 亩'?></td>
-    					<td align="center"><?= MoneyFormat::num_format(sprintf("%.2f",$money)).' 元'?></td>
+    					<td align="center"><?= MoneyFormat::num_format($value['money']).' 元'?></td>
     					<td align="center"><?php if($value->issubmit) echo '已提交'; else echo html::checkboxList('isSubmit[]','',[$value['id'].'/'.$value['lease_id'].'/'.sprintf("%.2f",$money).'/'.$value['area']=>'是否提交'])?></td>
     				</tr>
     				<?php }?>

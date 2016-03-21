@@ -74,29 +74,24 @@ class Plantingstructure extends \yii\db\ActiveRecord
     //得到已经填写种植信息的宗地
     public static function getOverArea($lease_id,$farms_id)
     {
-    	$result = 0.0;
-    	$plantings = Plantingstructure::find()->where(['lease_id'=>$lease_id,'farms_id'=>$farms_id])->all();
-    	if($plantings) {
-    		foreach ($plantings as $value) {
-    			$result += $value['area'];
-    		}
-    	}
-//     	var_dump($result);
-//     	exit;
-    	return $result;
+    	$result = Plantingstructure::find()->where(['lease_id'=>$lease_id,'farms_id'=>$farms_id])->sum('area');
+		if($result)
+    		return $result;
+		else 
+			return 0;
     }
     
-    public static function getNoZongdi($lease_id,$farms_id)
+    public static function getNoArea($lease_id,$farms_id)
     {
-    	if($lease_id == 0) {
-    		$over = self::getOverArea($lease_id, $farms_id);
-    		$all = Lease::getNOArea($farms_id);
+    	$over = self::getOverArea($lease_id, $farms_id);
+    	
+    	$all = Lease::getAllLeaseArea($farms_id);
+//     	var_dump($all);
+    	if($over)
     		$result = bcsub($all,$over,2);
-    	} else {
-	    	$over = self::getOverArea($lease_id, $farms_id);
-	    	$all = Lease::getLeaseArea($lease_id);
-	    	$result = bcsub($all,$over,2);
-    	}
+    	else 
+    		$result = $all;
+
     	return $result;
     }
     
@@ -476,44 +471,49 @@ class Plantingstructure extends \yii\db\ActiveRecord
     
     public static function getArea($params)
     {
-   		if($params['plantingstructureSearch']['management_area'] == 0){
-	    		$management_area = [1,2,3,4,5,6,7];
-	    	} else
-	    		$management_area = $params['plantingstructureSearch']['management_area'];
-	    	$where = [];
-	    	$Farm = Farms::find();
-	    	$Plantingstructure = Plantingstructure::find ();
-	    	$data = [];
-	    	$Plantingstructure->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
-	    	$Plantingstructure->andFilterWhere(['management_area'=>$management_area]);
-	    	$farmid = [];
-	    	if(isset($params['plantingstructureSearch']['farms_id']) or isset($params['plantingstructureSearch']['farmer_id'])) {
-	    		$farm = Farms::find();
-	    		$farm->andFilterWhere(['management_area'=>$management_area]);
-	    	}
-    		if(isset($params['plantingstructureSearch']['farms_id'])) {
-	    		$farm->andFilterWhere(self::farmSearch($params['plantingstructureSearch']['farms_id']));
-	    		 
-	    	}
-	    	if(isset($params['plantingstructureSearch']['farmer_id'])) {
-	    		$farm->andFilterWhere(self::farmerSearch($params['plantingstructureSearch']['farmer_id']));
-	    	}
-	    	if(isset($farm)) {
-		    	foreach ($farm->all() as $value) {
-		    		$farmid[] = $value['id'];
+    	if(is_array($params)) {
+	   		if($params['plantingstructureSearch']['management_area'] == 0){
+		    		$management_area = [1,2,3,4,5,6,7];
+		    	} else
+		    		$management_area = $params['plantingstructureSearch']['management_area'];
+		    	$where = [];
+		    	$Farm = Farms::find();
+		    	$Plantingstructure = Plantingstructure::find ();
+		    	$data = [];
+		    	$Plantingstructure->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+		    	$Plantingstructure->andFilterWhere(['management_area'=>$management_area]);
+		    	$farmid = [];
+		    	if(isset($params['plantingstructureSearch']['farms_id']) or isset($params['plantingstructureSearch']['farmer_id'])) {
+		    		$farm = Farms::find();
+		    		$farm->andFilterWhere(['management_area'=>$management_area]);
 		    	}
-	    		$Plantingstructure->andFilterWhere(['farms_id'=>$farmid]);
-	    	}
-	    	if(isset($params['plantingstructureSearch']['plant_id']))
-	    		$Plantingstructure->andFilterWhere(['plant_id'=>$params['plantingstructureSearch']['plant_id']]);
-	    	 
-	    	
-	    	if(isset($params['plantingstructureSearch']['goodseed_id']))
-	    		$Plantingstructure->andFilterWhere(['goodseed_id'=>$params['plantingstructureSearch']['goodseed_id']]);
-	    	 
-	    	if(isset($params['plantingstructureSearch']['area']))
-	    		$Plantingstructure->andFilterWhere(self::areaWhere($params['plantingstructureSearch']['area']));
-    	$area = $Plantingstructure->sum ('area');
+	    		if(isset($params['plantingstructureSearch']['farms_id'])) {
+		    		$farm->andFilterWhere(self::farmSearch($params['plantingstructureSearch']['farms_id']));
+		    		 
+		    	}
+		    	if(isset($params['plantingstructureSearch']['farmer_id'])) {
+		    		$farm->andFilterWhere(self::farmerSearch($params['plantingstructureSearch']['farmer_id']));
+		    	}
+		    	if(isset($farm)) {
+			    	foreach ($farm->all() as $value) {
+			    		$farmid[] = $value['id'];
+			    	}
+		    		$Plantingstructure->andFilterWhere(['farms_id'=>$farmid]);
+		    	}
+		    	if(isset($params['plantingstructureSearch']['plant_id']))
+		    		$Plantingstructure->andFilterWhere(['plant_id'=>$params['plantingstructureSearch']['plant_id']]);
+		    	 
+		    	
+		    	if(isset($params['plantingstructureSearch']['goodseed_id']))
+		    		$Plantingstructure->andFilterWhere(['goodseed_id'=>$params['plantingstructureSearch']['goodseed_id']]);
+		    	 
+		    	if(isset($params['plantingstructureSearch']['area']))
+		    		$Plantingstructure->andFilterWhere(self::areaWhere($params['plantingstructureSearch']['area']));
+	    	$area = $Plantingstructure->sum ('area');
+    	} else {
+    		$area = Plantingstructure::find()->where(['farms_id'=>$params])->andFilterWhere(['between','create_at',strtotime(User::getYear().'-01-01'),strtotime(User::getYear().'-12-31')])->sum('area');
+    		return $area;
+    	}
     	return (float)sprintf("%.2f", $area/10000);
     }
     

@@ -30,6 +30,7 @@ use frontend\helpers\arraySearch;
               
 <?= $this->render('..//search/searchindex',['tab'=>$tab,'begindate'=>$begindate,'enddate'=>$enddate,'params'=>$params]);?>
 <?php 
+// var_dump($tab);exit;
 	$totalData = clone $dataProvider;
 	$totalData->pagination = ['pagesize'=>0];
 	$data = arraySearch::find($totalData)->search();

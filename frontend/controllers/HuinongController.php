@@ -301,11 +301,11 @@ class HuinongController extends Controller
         		if(Yii::$app->request->post('plant'))
         			$plantingsructure = Plantingstructure::find()->andFilterWhere(['plant_id'=>$model->typeid])->andFilterWhere(['between','create_at',strtotime($model->begindate.'-01-01'),strtotime($model->begindate.'-12-31')])->all();
         		
-        		foreach ($plantingsructure as $val) {
-        			$temp = new Tempprogress();
-        			$temp->id = $val['id'];
-        			$temp->save();
-        		}
+//         		foreach ($plantingsructure as $val) {
+//         			$temp = new Tempprogress();
+//         			$temp->id = $val['id'];
+//         			$temp->save();
+//         		}
         		
         		foreach ($plantingsructure as $value) {
 	        		$huinonggrantModel = new Huinonggrant();
@@ -316,7 +316,7 @@ class HuinongController extends Controller
 	        		$huinonggrantModel->subsidiestype_id = $model->subsidiestype_id;
 	        		$huinonggrantModel->typeid = $model->typeid;
 	        		$huinonggrantModel->lease_id = $value['lease_id'];
-	        		$huinonggrantModel->money = $value['area'] * $model->subsidiesmoney;
+	        		$huinonggrantModel->money = $model->subsidiesarea*0.01*$value['area'] * $model->subsidiesmoney;
 	        		$huinonggrantModel->area = $value['area'];
 	        		$huinonggrantModel->state = 0;
 	        		$huinonggrantModel->issubmit = 0;
@@ -324,8 +324,8 @@ class HuinongController extends Controller
 	        		$huinonggrantModel->update_at = $huinonggrantModel->create_at;
 	        		$huinonggrantModel->save();
 	        		Logs::writeLog('建立所有符合条件用户数据',$huinonggrantModel->id,'',$huinonggrantModel->attributes);
-	        		$tempModel = Tempprogress::findOne($value['id']);
-	        		$tempModel->delete();
+// 	        		$tempModel = Tempprogress::findOne($value['id']);
+// 	        		$tempModel->delete();
         		}
         	}
         	

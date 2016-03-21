@@ -739,7 +739,7 @@ class FarmsController extends Controller {
 			$oldModel = $this->findModel ( $farms_id );
 			$oldModel->locked = 1;
 			$oldModel->save ();
-			var_dump($oldModel->getErrors());exit;
+// 			var_dump($oldModel->getErrors());exit;
 			$reviewprocessID = Reviewprocess::processRun ( $model->id, $nowModel->id );
 			$ttpoModel = new Ttpo ();
 			$ttpoModel->oldfarms_id = $model->id;
@@ -1143,21 +1143,24 @@ class FarmsController extends Controller {
 	// }
 	public function showFarmmenu($farms_id) 
 	{
+		$html = '';
 		$businessmenu = MenuToUser::find ()->where ( [ 
 				'role_id' => User::getItemname () 
 		] )->one ()['businessmenu'];
+// 		var_dump($businessmenu);exit;
 		$arrayBusinessMenu = explode ( ',', $businessmenu );
-		$html = '<div class="row" >';
-		
-		for($i = 0; $i < count ( $arrayBusinessMenu ); $i ++) {
-
-			$menuUrl = Mainmenu::find ()->where ( [ 
-					'id' => $arrayBusinessMenu [$i] 
-			] )->one ();
-			$html .= $this->showMenuPic ( $menuUrl, $farms_id );
+		if($businessmenu) {
+			$html = '<div class="row" >';
+			
+			for($i = 0; $i < count ( $arrayBusinessMenu ); $i ++) {
+	
+				$menuUrl = Mainmenu::find ()->where ( [ 
+						'id' => $arrayBusinessMenu [$i] 
+				] )->one ();
+				$html .= $this->showMenuPic ( $menuUrl, $farms_id );
+			}
+			$html .= '</div>';
 		}
-		$html .= '</div>';
-		
 		return $html;
 	}
 	
@@ -1444,11 +1447,16 @@ class FarmsController extends Controller {
 	{
 // 		var_dump($_GET);exit;
     	if(isset($_GET['tab']) and $_GET['tab'] !== \Yii::$app->controller->id) {
+    		if($_GET['tab'] == 'yields')
+    			$class = 'plantingstructureSearch';
+    		else
+    			$class = $_GET['tab'].'Search';
     		return $this->redirect ([$_GET['tab'].'/'.$_GET['tab'].'search',
     				'tab' => $_GET['tab'],
     				'begindate' => strtotime($_GET['begindate']),
     				'enddate' => strtotime($_GET['enddate']),
-    				$_GET['tab'].'Search' => ['management_area'=>$_GET['management_area']],
+					$class =>['management_area' =>  $_GET['management_area']],
+
     		]);
     	} 
     	$searchModel = new farmsSearch();

@@ -6,6 +6,8 @@ use Yii;
 use console\models\Huinong;
 use console\models\Plant;
 use console\models\Goodseed;
+use console\models\Subsidiestype;
+
 /**
  * This is the model class for table "{{%huinonggrant}}".
  *
@@ -64,17 +66,19 @@ class Huinonggrant extends \yii\db\ActiveRecord
     	$areaid = Farms::getUserManagementArea($userid);
     	$sum = [];
     	$allSum = [];
-    	$result = [];
+    	$result = '';
+    	$name = '';
     	foreach ($areaid  as $key => $value ) {
     		$farms = Farms::find()->where(['management_area'=>$value]);
     		$huinong = Huinong::getHuinonginfo();
     		$huinonggrantSum = 0.0;
     		foreach ($huinong as $val) {
-//     			var_dump($val);
-    			if($val['subsidiestype_id'] == 'plant') {
+//     			var_dump($val['subsidiestype_id']);
+    			$class = Subsidiestype::find()->where(['id'=>$val['subsidiestype_id']])->one()['typename'];
+    			if($class == 'Plant') {
     				$name = Plant::find()->where(['id'=>$val['typeid']])->one()['cropname'];
     			}
-    			if($val['subsidiestype_id'] == 'goodseed') {
+    			if($class == 'Goodseed') {
     				$goodseed =  Goodseed::find()->where(['id'=>$val['typeid']])->one();
     				$name = Plant::find()->where(['id'=>$goodseed['plant_id']])->one()['cropname'].'/'.$goodseed['plant_model'];
     			}
@@ -92,7 +96,7 @@ class Huinonggrant extends \yii\db\ActiveRecord
     			$sum[$val['subsidiestype_id']]['stack'] = $val['subsidiestype_id'];
     		}	
     	}
-//     	var_dump($allSum);
+    	var_dump($sum);
     	foreach($sum as $value) {
     		//     		var_dump($value['key']);exit;
     		$result[] =

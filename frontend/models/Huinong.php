@@ -49,7 +49,7 @@ public function rules()
         	'totalsubsidiesarea' => '补贴总面积',
             'totalamount' => '补贴总金额',
             'realtotalamount' => '实际补贴金额',
-            'begindate' => '开始日期',
+            'begindate' => '补贴年度',
             'enddate' => '结束日期',
             'create_at' => '创建日期',
             'update_at' => '更新日期',

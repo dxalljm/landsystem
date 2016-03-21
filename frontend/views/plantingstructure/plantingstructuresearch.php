@@ -23,6 +23,7 @@ use frontend\helpers\arraySearch;
 <script type="text/javascript" src="vendor/bower/echarts/build/dist/echarts.min.js"></script>           
    <?= $this->render('..//search/searchindex',['tab'=>$tab,'begindate'=>$begindate,'enddate'=>$enddate,'params'=>$params]);?>
 <?php 
+
 	$totalData = clone $dataProvider;
 	$totalData->pagination = ['pagesize'=>0];
 	$data = arraySearch::find($totalData)->search();

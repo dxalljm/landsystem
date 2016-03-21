@@ -190,13 +190,17 @@ class FirepreventionController extends Controller
     public function actionFirepreventionsearch($begindate,$enddate)
     {
     	if(isset($_GET['tab']) and $_GET['tab'] !== \Yii::$app->controller->id) {
+    		if($_GET['tab'] == 'yields')
+    			$class = 'plantingstructureSearch';
+    		else
+    			$class = $_GET['tab'].'Search';
     		return $this->redirect ([$_GET['tab'].'/'.$_GET['tab'].'search',
     				'tab' => $_GET['tab'],
     				'begindate' => strtotime($_GET['begindate']),
     				'enddate' => strtotime($_GET['enddate']),
-    				$_GET['tab'].'Search' => ['management_area'=>$_GET['management_area']],
+					$class =>['management_area' =>  $_GET['management_area']],
     		]);
-    	}
+    	} 
     	$searchModel = new firepreventionSearch();
     	if(!is_numeric($_GET['begindate']))
     		$_GET['begindate'] = strtotime($_GET['begindate']);

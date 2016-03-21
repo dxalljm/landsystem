@@ -210,7 +210,7 @@ class Farms extends \yii\db\ActiveRecord {
 	 */
 	public static function searchAll() {
 
-		$cacheKey = 'farms-search-all2';
+		$cacheKey = 'farms-search-all3'.\Yii::$app->getUser()->id;
 		
 		$result = Yii::$app->cache->get($cacheKey);
 		if (!empty($result)) {
@@ -229,7 +229,7 @@ class Farms extends \yii\db\ActiveRecord {
 		
 		// 所有农场
 		$data = [];
-		$where = explode(',', $keshi['membership']);
+		$where = self::getManagementArea()['id'];
 		$result = Farms::find()->where(['management_area'=>$where])->all();
 		foreach ($result as $farm) {
 		$data[] = [
@@ -325,17 +325,9 @@ class Farms extends \yii\db\ActiveRecord {
 
 	}
 	public static function getFarmArray($management_area = NULL) {
-		if (empty ( $management_area )) {
-			$departmentid = User::find ()->where ( [ 
-					'id' => \Yii::$app->getUser ()->id 
-			] )->one ()['department_id'];
-			$strdepartment = Department::find ()->where ( [ 
-					'id' => $departmentid 
-			] )->one ()['membership'];
-		} else
-			$strdepartment = $management_area;
+		$management_area = self::getManagementArea()['id'];
 		$farms = self::find ()->where ( [ 
-				'management_area' => $strdepartment 
+				'management_area' => $management_area 
 		] )->all ();
 		
 		foreach ( $farms as $key => $value ) {
@@ -349,9 +341,12 @@ class Farms extends \yii\db\ActiveRecord {
 		$last = $arrayFarmsid [count ( $arrayFarmsid ) - 1];
 		$up = 0;
 		$down = 0;
+		$nownum = 0;
+		
 		for($i = 0; $i < count ( $arrayFarmsid ); $i ++) {
-			
+// 			echo $arrayFarmsid[$i].'<br>';
 			if ($farms_id == $arrayFarmsid [$i]) {
+// 				echo $arrayFarmsid [$i];
 				$nownum = $i + 1;
 				$farmsid = $arrayFarmsid [$i];
 				if ($i !== 0)

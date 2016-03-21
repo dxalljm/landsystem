@@ -188,7 +188,8 @@ class Plantingstructure extends \yii\db\ActiveRecord
     
     public static function getPlantname($userid)
     {
-    	$result = ['id','plantname'];
+    	$result['id'] = [];
+    	$result['plantname'] = [];
     	$where = Farms::getUserManagementArea($userid);
 //     	var_dump($userid);
 //     	var_dump($where);
@@ -273,26 +274,22 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	$goodseed = [];
     	$area = Farms::getUserManagementArea($userid);
     	foreach ( $area as $key => $value ) {
-    		   			
-    		$farm = Farms::find()->where(['management_area'=>$value])->all();
-    		foreach ($farm as $val) {
-    			$plantsum = 0;
-    			$goodseedsum = 0;
-    			$planting = Plantingstructure::find()->where(['farms_id'=>$val['id']])->all();
+
+    			$planting = Plantingstructure::find()->where(['management_area'=>$area])->all();
     			foreach ($planting as $v) {
     				$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname'];
     	
 //     				$plantsum += $v['area'];
     				$plant[$plantname][] = $v['area'];
-    				if($v['goodseed_id'] !== 0)
+    				if($v['goodseed_id'] !== 0 and $v['goodseed_id'] !== '')
     					$goodseedarea = $v['area'];
     				else
     					$goodseedarea = 0.0;
-    				$goodseedsum += $goodseedarea;
-    				$goodseed[$plantname][] = $goodseedsum;
+    				
+    				$goodseed[$plantname][] = $goodseedarea;
     				// 					var_dump($goodseed);
     			}
-    		}
+    		
     	}
     	$plantsum = 0.0;
     	$goodseedsum = 0.0;

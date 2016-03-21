@@ -55,7 +55,7 @@ use app\models\Projectapplication;
 </tr>
 <tr>
   <td align='right'>单位</td>
-  <td><?= $form->field($model, 'unit')->dropDownList(Projectapplication::getUnit(),['prompt'=>'请选择...'])->label(false)->error(false)?></td>
+  <td><?= $form->field($model, 'unit')->textInput()->label(false)->error(false)?></td>
 </tr>
 </table>
     <div class="form-group">

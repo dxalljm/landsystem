@@ -10,9 +10,7 @@ classid='clsid:E77E049B-23FC-4DB8-B756-60529A35FAD5' codebase='WebOffice.cab#Ver
 <!-- --------------------=== 调用Weboffice初始化方法 ===--------------------- -->
 
 <?php 
-	$urlstr = realpath('farmsfile\\'.$filename);
-	$url = str_replace('\\','\\\\',$urlstr);
-	var_dump($cardpic)
+	$url = '/farmsfile/'.$filename;
 ?>
 <SCRIPT LANGUAGE=javascript FOR=WebOffice1 EVENT=NotifyCtrlReady>
 <!--
@@ -26,7 +24,7 @@ classid='clsid:E77E049B-23FC-4DB8-B756-60529A35FAD5' codebase='WebOffice.cab#Ver
  function WebOffice1_NotifyCtrlReady() {
 	 	
 	    $loadfile = document.all.WebOffice1.LoadOriginalFile("<?= $url?>", "doc");
-	    document.all.WebOffice1.SetFieldValue("cardidpic","<?= 'http:://localhost/landsystem/frontend/web/'.iconv("UTF-8","gbk//TRANSLIT", $cardpic)?>","::JPG::");
+	    document.all.WebOffice1.SetFieldValue("cardidpic","<?= 'http:://front.lngwh.gov:8001/landsystem/frontend/web/'.iconv("UTF-8","gbk//TRANSLIT", $cardpic)?>","::JPG::");
 // 	    alert(strFieldValue);
 	    //AddPicture('cardidpic','d:\\wamp\\www\\landsystem\\frontend\\web\\photo_gallery\\1455778879.jpg',5);
 } 

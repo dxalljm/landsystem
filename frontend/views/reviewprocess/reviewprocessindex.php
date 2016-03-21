@@ -111,7 +111,14 @@ $this->params ['breadcrumbs'] [] = $this->title;
 							<?php }}?>
 						</table>
 <?php }?>
-<?php if($projectapplication) {?>
+<?php 
+$useritem = User::getItemname();
+$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+if($temp) {
+	$useritem = User::getUserItemname($temp['user_id']);
+}
+if($useritem == '主任') {
+if($projectapplication) {?>
 <h3>项目审批</h3>
 						<table class="table table-bordered table-hover">
 							<tr height="40px">
@@ -168,7 +175,7 @@ $this->params ['breadcrumbs'] [] = $this->title;
 							
 							<?php }}?>
 						</table>
-<?php }?>
+<?php }}?>
 					</div>
 				</div>
 			</div>

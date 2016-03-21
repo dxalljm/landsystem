@@ -9,8 +9,7 @@ classid='clsid:E77E049B-23FC-4DB8-B756-60529A35FAD5' codebase='WebOffice.cab#Ver
 <!-- --------------------=== 调用Weboffice初始化方法 ===--------------------- -->
 
 <?php 
-	$urlstr = realpath('leasefile\\'.$filename);
-	$url = str_replace('\\','\\\\',$urlstr);
+	$url = '/leasefile/'.$filename;
 ?>
 <SCRIPT LANGUAGE=javascript FOR=WebOffice1 EVENT=NotifyCtrlReady>
 <!--

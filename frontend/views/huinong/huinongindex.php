@@ -63,10 +63,11 @@ $this->params['breadcrumbs'][] = $this->title;
             	}
             ],
             [
+            	'label' => '补贴比率',
             	'attribute' => 'subsidiesarea',
             	'value' => function ($model){
-            		$p = $model->subsidiesarea*100;
-            		return $p.'%';
+//             		$p = $model->subsidiesarea*100;
+            		return $model->subsidiesarea.'%';
             	}
             ],
             [
@@ -87,6 +88,7 @@ $this->params['breadcrumbs'][] = $this->title;
             		return MoneyFormat::num_format($model->totalamount).'元';
             }
             ],
+            'begindate',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

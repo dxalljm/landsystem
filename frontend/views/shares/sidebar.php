@@ -6,6 +6,7 @@ use app\models\Mainmenu;
 use app\models\Reviewprocess;
 use app\models\User;
 use app\models\Huinong;
+
 ?>
 <aside class="main-sidebar">
     <section class="sidebar" style="height: auto;">
@@ -39,68 +40,29 @@ else echo '晚上好';
           	$controller = Yii::$app->controller->id;
           	$action = yii::$app->controller->action->id;
 // 	    	if($action == 'collectionsend' or $action == 'farmsmenu' or $action == 'farmsttpomenu' or $action == 'farmssplit'or $action == 'farmstransfer' or $action == 'farmsttpozongdi' or $action == 'farmstozongdi'  or $controller == 'plantpesticides' or $controller == 'prevention' or $controller == 'breed' or $controller == 'loan' or  $controller == 'sales' or $controller == 'yields' or $controller == 'farmer' or $controller == 'lease' or $controller == 'fireprevention' or $controller == 'dispute' or $controller == 'lease' or $controller == 'cooperativeoffarm' or $controller == 'employee' or $controller == 'plantingstructure' or $controller == 'plantinputproduct'){
+          	$businessmenu = MenuToUser::find ()->where ( [
+          			'role_id' => User::getItemname ()
+          	] )->one ()['businessmenu'];
+          	if($businessmenu) {
 	    	if(isset($_GET['farms_id'])) {
+	    		$menulistarr = MenuToUser::getUserBusinessMenu();
+	    		 
           	?>
-	    	<?php if(isset($_GET['farms_id'])) {?>
+	    	
 	    	<li class="header text-light-blue"><h4><?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']?></h4></li>
-	    	<?php }?>
+	    	
 	    		<li class="treeview">
                 	<a href="<?= Url::to(['farms/farmsmenu','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-list"></i><span>业务菜单</span></a>
            		</li>
+           	<?php foreach ($menulistarr as $Menuvalue) {
+           		$menu = Mainmenu::find()->where(['id'=>$Menuvalue])->one();
+           		echo '<li class="treeview">';
+           		echo '<a href="'. Url::to([$menu['menuurl'],'farms_id'=>$_GET['farms_id']]) .'"><i class="'.$menu['class'].'"></i><span>'.$menu['menuname'].'</span></a>';
+           		echo '</li>';
+           	?>
+				
            		
-				<li class="treeview">
-                	<a href="<?= Url::to(['farmer/farmercreate','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-user"></i><span>法人信息</span></a>
-           		</li>
-           		<li class="treeview">
-                	<a href="<?= Url::to(['farms/farmsttpomenu','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-users"></i><span>转让</span></a>
-           		</li>
-           		<li class="treeview">
-                	<a href="<?= Url::to(['lease/leaseindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-street-view"></i><span>租赁</span></a>
-           		</li>
-           		<li class="treeview">
-                	<a href="<?= Url::to(['loan/loanindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-university"></i><span>贷款</span></a>
-           		</li>
-           		<li class="treeview">
-                	<a href="<?= Url::to(['dispute/disputeindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-commenting"></i><span>纠纷</span></a>
-           		</li>
-           		<li class="treeview">
-                	<a href="<?= Url::to(['cooperativeoffarm/cooperativeoffarmindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-briefcase"></i><span>合作社信息</span></a>
-           		</li>
-           		<li class="treeview">
-                	<a href="<?= Url::to(['employee/employeefathers','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-user-plus"></i><span>雇工信息</span></a>
-           		</li>
-           		<li class="treeview">
-                	<a href="<?= Url::to(['plantingstructure/plantingstructureindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-sun-o"></i><span>种植结构</span></a>
-           		</li>
-           		<li class="treeview">
-                	<a href="<?= Url::to(['fireprevention/firepreventioncreate','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-fire-extinguisher"></i><span>防火工作</span></a>
-           		</li>
-           		<li class="treeview">
-                	<a href="<?= Url::to(['collection/collectionsend','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-cny"></i><span>缴费业务</span></a>
-           		</li>
-           		<li class="treeview">
-                	<a href="<?= Url::to(['yields/yieldsindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-balance-scale"></i><span>产量信息</span></a>
-           		</li>
-           		<li class="treeview">
-                	<a href="<?= Url::to(['sales/salesindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-cart-arrow-down"></i><span>销售信息</span></a>
-           		</li>
-           		<li class="treeview">
-                	<a href="<?= Url::to(['breed/breedcreate','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-github-alt"></i><span>养殖信息</span></a>
-           		</li>
-           		<li class="treeview">
-                	<a href="<?= Url::to(['prevention/preventionindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-plus"></i><span>防疫情况</span></a>
-           		</li>
-           		<li class="treeview">
-                	<a href="<?= Url::to(['projectapplication/projectapplicationindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-sticky-note-o"></i><span>项目申报</span></a>
-           		</li>
-           		<li class="treeview">
-                	<a href="<?= Url::to(['disaster/disasterindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-soundcloud"></i><span>灾害情况</span></a>
-           		</li>
-           		<li class="treeview">
-                	<a href="<?= Url::to(['machineoffarm/machineoffarmindex','farms_id'=>$_GET['farms_id']]) ?>"><i class="fa fa-truck"></i><span>农机器具</span></a>
-           		</li>
-           		
-	    	<?php } else {?>
+	    	<?php } } else {?>
           
           	 <?php
                 if(yii::$app->user->identity->username != 'admin') {
@@ -151,7 +113,7 @@ else echo '晚上好';
                 ?>
 	            
             <?php }?>
-        </ul>
+        </ul><?php }?>
     </section>
 </aside>
 

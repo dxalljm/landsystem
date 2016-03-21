@@ -46,13 +46,13 @@ $this->params['breadcrumbs'][] = $this->title;
 <table class="table table-bordered table-hover">
   <tr>
     <td width="20%" colspan="2" align="center">法人</td>
-    <td align="center">宗地</td>
-    <td width="12%" align="center">总面积</td>
+    
+    <td width="12%" align="center">面积</td>
     <td width="12%" align="center">操作</td>
   </tr>
   <tr>
     <td width="20%" colspan="2" align="center"><?= $farms->farmername?></td>
-    <td align="center"><?= implode('、',$arrayZongdi)?></td>
+   
     <td align="center"><?= round($farms['measure'] - $leaseSumArea)?>亩</td>
     
     <td align="center"><?= Html::a('雇佣','index.php?r=employee/employeecreate&father_id=0&farms_id='.$_GET['farms_id'], [
@@ -91,14 +91,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <table class="table table-bordered table-hover">
   <tr>
     <td width="20%" colspan="2" align="center">承租人</td>
-    <td align="center">宗地</td>
-    <td width="12%" align="center">总面积</td>
+    
+    <td width="12%" align="center">面积</td>
     <td width="12%" align="center">操作</td>
   </tr>
   <?php foreach($lease as $val) {?>
   <tr>
     <td colspan="2" align="center"><?= $val['lessee'] ?></td>
-    <td align="center"><?= $val['lease_area'] ?></td>
+    
     <td align="center"><?= Lease::getListArea($val['lease_area'])?>亩</td>
     <td align="center"><?= Html::a('雇佣','index.php?r=employee/employeecreate&father_id='.$val['id'].'&farms_id='.$_GET['farms_id'], [
             			'id' => 'employeecreate',

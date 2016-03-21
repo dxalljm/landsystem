@@ -56,6 +56,7 @@ use app\models\Theyear;
   <tr>
     <td width="20%" colspan="2" align="center">法人</td>
     <td width="12%" align="center">总面积</td>
+    
     <td width="12%" align="center">操作</td>
     </tr>
   <tr>
@@ -82,7 +83,7 @@ use app\models\Theyear;
 	  	foreach($plantings as $v) {
   ?>
   <tr>
-    <td colspan="2" width="20%" align="center">|_</td>
+    <td width="20%" align="center">|_</td>
     
     <td align="center">种植面积：<?= $v['area']?>亩</td>
     <td width="12%" align="center">作物：<?= Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname']?></td>
@@ -126,13 +127,13 @@ if($leases) {
 <table class="table table-bordered table-hover">
   <tr>
     <td width="20%" colspan="2" align="center">承租人</td>
-    <td width="12%" align="center">总面积</td>
+    <td width="12%" colspan="2" align="center">总面积</td>
     <td width="12%" align="center">操作</td>
     </tr>
   <?php foreach($leases as $val) {?>
   <tr>
     <td colspan="2" align="center"><?= $val['lessee'] ?></td>
-     <td align="center"><?= Lease::getListArea($val['lease_area'])?>亩</td>
+     <td colspan="2"  align="center"><?= Lease::getListArea($val['lease_area'])?>亩</td>
     <?php 
     	  $plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id'],'lease_id'=>$val['id']])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
     	  $sumArea = 0;
@@ -153,10 +154,10 @@ if($leases) {
 	  	foreach($plantings as $v) {
   ?>
   <tr>
-    <td colspan="2" width="20%" align="center">|_</td>
+    <td colspan="2" align="center">|_</td>
     <td align="center">种植面积：<?= $v['area']?>亩</td>
-    <td width="12%" align="center">作物：<?= Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname']?></td>
-    <td width="12%" align="center">
+    <td align="center">作物：<?= Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname']?></td>
+    <td align="center">
     			<?php 
     			$controller = Yii::$app->controller->id;
     			$action = $controller.'view';

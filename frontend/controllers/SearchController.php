@@ -108,7 +108,10 @@ class SearchController extends Controller
 			$array['tab'] = $_GET['tab'];
 			$array['begindate'] = $whereDate['begindate'];
 			$array['enddate'] = $whereDate['enddate'];
-			$array[$_GET['tab'].'Search']['management_area'] = $_GET['management_area'];
+			if($_GET['tab'] == 'yields')
+				$array['plantingstructureSearch']['management_area'] = $_GET['management_area'];
+			else
+				$array[$_GET['tab'].'Search']['management_area'] = $_GET['management_area'];
 			return $this->redirect ($array);
 		} else {
 			return $this->render('searchindex',['tab'=>$tab,'begindate'=>$getDate['begindate'],'enddate'=>$getDate['enddate'],'params'=>$_GET]);
