@@ -22,7 +22,7 @@ class collectionSearch extends Collection
     {
         return [
             [['id', 'payyear','farms_id', 'farmer_id','ypayyear', 'isupdate','dckpay','create_at','update_at','management_area'], 'integer'],
-            [['farmname', 'billingtime','nonumber'], 'safe'],
+            [['farmname', 'billingtime','nonumber','year'], 'safe'],
             [['ypayarea', 'amounts_receivable', 'real_income_amount', 'ypaymoney', 'owe'], 'number'],
         ];
     }
@@ -131,6 +131,7 @@ class collectionSearch extends Collection
             'farms_id' => $this->farms_id,
             'payyear' => $this->payyear,
        		'ypayyear' => $this->ypayyear,
+       		'year' => $this->year,
 //             'ypayarea' => $this->ypayarea,
 //             'ypaymoney' => $this->ypaymoney,
             'owe' => $this->owe,

@@ -56,7 +56,7 @@ class Collection extends \yii\db\ActiveRecord {
 				],
 				[ 
 						[ 
-								'billingtime','nonumber', 
+								'billingtime','nonumber', 'year'
 						],
 						'string',
 						'max' => 500 
@@ -210,6 +210,7 @@ class Collection extends \yii\db\ActiveRecord {
 				'dckpay' => '地产科提交缴费', 
 				'management_area' => '管理区',
 				'nonumber' => '发票号',
+				'year' => '年度',
 		];
 	}
 	public function getfarms() {

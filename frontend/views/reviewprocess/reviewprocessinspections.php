@@ -216,7 +216,16 @@ use app\models\Loan;
     <td align="right">抵押银行</td>
     <td><?= $loan['mortgagebank']?></td>
   </tr>
+    <tr>
+    <td align="right">抵押面积</td>
+    <td><?= $loan['mortgagearea']?></td>
+    <td align="right">抵押金额</td>
+    <td><?= $loan['mortgagemoney']?></td>
+    <td align="right">抵押期限</td>
+    <td><?= '自'.$loan['begindate'].'至'.$loan['enddate'].'止'?></td>
+    </tr>
   <?php 
+
    foreach ($process as $value) { 
 			    //获取当前流程的角色信息
 			  	$role = Reviewprocess::getProcessRole($value);
@@ -226,25 +235,19 @@ use app\models\Loan;
 			  		$itemname = User::getUserItemname($temp['user_id']);
 			  	else 
 			  		$itemname = User::getItemname();
-			  	if($role['rolename'] == $itemname or $role['sparerole'] == User::getItemname()) {
+			  	if($role['rolename'] == $itemname) {
+			  		
 			  ?>
-  <tr>
-    <td align="right">抵押面积</td>
-    <td><?= $loan['mortgagearea']?></td>
-    <td align="right">抵押金额</td>
-    <td><?= $loan['mortgagemoney']?></td>
-    <td align="right">抵押期限</td>
-    <td><?= '自'.$loan['begindate'].'至'.$loan['enddate'].'止'?></td>
-    </tr>
+
   <tr>
     <td align="right"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?>：</td>
 			    <td colspan="5" align="left" class='content'>
 			    <?php 
 			    if($model->$value == 2 or $model->$value == 0) {
-			    	if($model->$value == 3)
+			    	
 			    		$model->$value = 1; 
 			    	echo $form->field($model,$value)->radioList([1=>'同意',0=>'不同意'],['onclick'=>'CheckState("'.$value.'")'])->label(false)->error(false); 
-			    	echo $form->field($model,$value.'content')->textInput()->label(false)->error(false);
+			    	echo $form->field($model,$value.'content')->textarea(['rows'=>10])->label(false)->error(false);
 			    	echo $form->field($model,$value.'time')->hiddenInput(['value'=>time()])->label(false)->error(false);
 			    } else {
 			    	echo Reviewprocess::state($model->$value);

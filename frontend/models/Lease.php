@@ -31,7 +31,7 @@ class Lease extends \yii\db\ActiveRecord
     {
     	return [
     			[['farms_id', 'years'], 'integer'],
-    			[['lessee_cardid', 'enddate', 'rentpaymode', 'policyholder', 'insured', 'huinongascription', 'address'], 'string'],
+    			[['lessee_cardid', 'enddate', 'rentpaymode', 'policyholder', 'insured', 'huinongascription', 'address','year'], 'string'],
     			[['rent'], 'number'],
     			[['lease_area', 'lessee', 'lessee_telephone', 'begindate', 'photo', 'create_at', 'update_at'], 'string', 'max' => 500]
     	];
@@ -226,6 +226,7 @@ class Lease extends \yii\db\ActiveRecord
             'insured' => '被保险人',
             'huinongascription' => '惠农补贴归属',
             'address' => '住址',
+         	'year' => '年度',
         ]; 
     }
 }

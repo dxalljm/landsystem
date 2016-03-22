@@ -20,7 +20,7 @@ class leaseSearch extends Lease
     {
         return [
             [['id', 'farms_id', 'years'], 'integer'],
-            [['lease_area', 'lessee', 'lessee_cardid', 'lessee_telephone', 'begindate', 'enddate', 'photo', 'create_at', 'update_at', 'rentpaymode', 'policyholder', 'insured', 'huinongascription', 'address'], 'safe'],
+            [['lease_area', 'lessee', 'lessee_cardid', 'lessee_telephone', 'begindate', 'enddate', 'photo', 'create_at', 'update_at', 'rentpaymode', 'policyholder', 'insured', 'huinongascription', 'address','year'], 'safe'],
             [['rent'], 'number'],
         ];
     }
@@ -58,6 +58,7 @@ class leaseSearch extends Lease
             'farms_id' => $this->farms_id,
             'years' => $this->years,
             'rent' => $this->rent,
+         	'year' => $this->year,
         ]);
         
 
