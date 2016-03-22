@@ -69,7 +69,7 @@ class Tempauditing extends \yii\db\ActiveRecord
     	} else
     		return false;
     }
-    
+    //是否有临时授权
     public static function is_tempauditing()
     {
     	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->one();

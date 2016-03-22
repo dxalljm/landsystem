@@ -13,6 +13,7 @@ use app\models\Auditprocess;
 use app\models\User;
 use app\models\Projectapplication;
 use app\models\Tempauditing;
+use app\models\Loan;
 /**
  * ReviewprocessController implements the CRUD actions for Reviewprocess model.
  */
@@ -44,8 +45,7 @@ class ReviewprocessController extends Controller
     		$whereArray = Farms::getManagementArea();
     	}
         $farmstransfer = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer'])->all();
-       	
-        
+
 		$projectapplication = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'projectapplication'])->all();
        	
 		$loan = Reviewprocess::find()->where(['management_area' => $whereArray['id'],'actionname'=>'loancreate'])->all();
@@ -185,7 +185,7 @@ class ReviewprocessController extends Controller
     			$state = Reviewprocess::isNextProcess($model->id); 
     			
     			if($state) {
-    				$project = Projectapplication::find()->where(['reviewprocess_id'=>$model->id])->one();
+//     				$project = Projectapplication::find()->where(['reviewprocess_id'=>$model->id])->one();
     				$projectModel = Projectapplication::findOne($project->id);
     				$projectModel->state = 1;
     				$projectModel->save();
@@ -198,6 +198,36 @@ class ReviewprocessController extends Controller
     				'process' => explode('>', $process),
     				'class' => $class,
     				'project'=>$project,
+    		] );
+    	}
+    	if($class == 'loan') {
+    		$farm = Farms::find()->where(['id'=>$model->oldfarms_id])->one();
+    		//     		$whereArray = Farms::getManagementArea();
+    		$loan = Loan::find()->where(['reviewprocess_id'=>$id])->one();
+    		if($model->load(Yii::$app->request->post())) {
+    			 
+    			if($model->leader == 0)
+    				$model->state = 5;
+    			if($model->leader == 1)
+    				$model->state = 7;
+    			//     			var_dump($model);
+    			$model->save();
+    			$state = Reviewprocess::isNextProcess($model->id);
+    			 
+    			if($state) {
+    				
+    				$loanModel = Loan::findOne($loan->id);
+    				$loanModel->state = 1;
+    				$loanModel->save();
+    				return $this->redirect(['reviewprocess/reviewprocessindex']);
+    			}
+    		}
+    		return $this->render ( 'reviewprocessinspections', [
+    				'model' => $model,
+    				'farm' => $farm,
+    				'process' => explode('>', $process),
+    				'class' => $class,
+    				'loan'=>$loan,
     		] );
     	}
     }

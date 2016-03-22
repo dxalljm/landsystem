@@ -50,6 +50,7 @@ class Auditprocess extends \yii\db\ActiveRecord
     	$role = User::getItemname();
     	$processname = Processname::find()->where(['rolename'=>$role])->all();
     	$rolenames = [];
+    	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
     	foreach ($processname as $process) {
     		$rolenames[] = $process['Identification'];
     	}
@@ -61,7 +62,11 @@ class Auditprocess extends \yii\db\ActiveRecord
     			if(in_array($rolename, explode('>',$value['process'])))
     				return true;
     		}
+    		
     	}
-    	return false;
+    	if($temp)
+    		return true;
+    	else
+    		return false;
     }
 }

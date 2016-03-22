@@ -39,7 +39,9 @@ $this->params ['breadcrumbs'] [] = $this->title;
 						
 					</div>
 					<div class="box-body">
-    <?php if($farmstransfer) {?>
+    <?php 
+    if(Auditprocess::isShowProcess()) {
+    if($farmstransfer) {?>
     <h3>宜农林地承包经营权转让审批</h3>
 						<table class="table table-bordered table-hover">
 							<tr height="40px">
@@ -110,14 +112,14 @@ $this->params ['breadcrumbs'] [] = $this->title;
 							
 							<?php }}?>
 						</table>
-<?php }?>
+<?php }}?>
 <?php 
 $useritem = User::getItemname();
 $temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
 if($temp) {
 	$useritem = User::getUserItemname($temp['user_id']);
 }
-if($useritem == '服务大厅') {
+if(Auditprocess::isShowProcess()) {
 if($projectapplication) {?>
 <h3>项目审批</h3>
 						<table class="table table-bordered table-hover">
@@ -182,7 +184,7 @@ $temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'s
 if($temp) {
 	$useritem = User::getUserItemname($temp['user_id']);
 }
-if(Auditprocess::isShowProess()) {
+if(Auditprocess::isShowProcess()) {
 if($loan) {?>
 <h3>贷款冻结审批</h3>
 						<table class="table table-bordered table-hover">
@@ -232,7 +234,7 @@ if($loan) {?>
 										$s = true;
 								}
 								if($s) 
-									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id'],'class'=>'projectapplication'],['class'=>'btn btn-success']); 
+									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id'],'class'=>'loan'],['class'=>'btn btn-success']); 
 								else {
 									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id']],['class'=>'btn btn-success','disabled'=>'disabled']);
 								}?></td>
@@ -240,7 +242,7 @@ if($loan) {?>
 							
 							<?php }}?>
 						</table>
-<?php }?>
+<?php }}?>
 					</div>
 				</div>
 			</div>

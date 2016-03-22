@@ -10,6 +10,7 @@ use app\models\User;
 use Yii;
 use app\models\Infrastructuretype;
 use app\models\Tempauditing;
+use app\models\Loan;
 /* @var $this yii\web\View */
 /* @var $model app\models\Reviewprocess */
 
@@ -181,6 +182,59 @@ use app\models\Tempauditing;
   <tr>
     <td align="right">申请内容：</td>
     <td colspan="5"><?= $project['content'].$project['projectdata'].$project['unit']?></td>
+    </tr>
+  <tr>
+    <td align="right"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?>：</td>
+			    <td colspan="5" align="left" class='content'>
+			    <?php 
+			    if($model->$value == 2 or $model->$value == 0) {
+			    	if($model->$value == 3)
+			    		$model->$value = 1; 
+			    	echo $form->field($model,$value)->radioList([1=>'同意',0=>'不同意'],['onclick'=>'CheckState("'.$value.'")'])->label(false)->error(false); 
+			    	echo $form->field($model,$value.'content')->textInput()->label(false)->error(false);
+			    	echo $form->field($model,$value.'time')->hiddenInput(['value'=>time()])->label(false)->error(false);
+			    } else {
+			    	echo Reviewprocess::state($model->$value);
+			    	echo "<br>";
+			    	if(!$model->$value) {
+			    		$modelStr = $value.'content';
+			    		echo "原由：".$model->$modelStr;
+			    	}
+			    }?></td>
+    </tr>
+    <?php }}?>
+</table>
+<?php }?>
+<?php if($class == 'loan') {?>
+
+<table class="table table-bordered table-hover">
+  <tr>
+    <td align="right">农场名称：</td>
+    <td><?= $farm->farmname ?></td>
+    <td align="right">抵押人</td>
+    <td><?= $farm->farmername;?></td>
+    <td align="right">抵押银行</td>
+    <td><?= $loan['mortgagebank']?></td>
+  </tr>
+  <?php 
+   foreach ($process as $value) { 
+			    //获取当前流程的角色信息
+			  	$role = Reviewprocess::getProcessRole($value);
+			  	//审核角色或备分审核角色与当前用户角色相同，则显示该条目
+			  	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+			  	if($temp) 
+			  		$itemname = User::getUserItemname($temp['user_id']);
+			  	else 
+			  		$itemname = User::getItemname();
+			  	if($role['rolename'] == $itemname or $role['sparerole'] == User::getItemname()) {
+			  ?>
+  <tr>
+    <td align="right">抵押面积</td>
+    <td><?= $loan['mortgagearea']?></td>
+    <td align="right">抵押金额</td>
+    <td><?= $loan['mortgagemoney']?></td>
+    <td align="right">抵押期限</td>
+    <td><?= '自'.$loan['begindate'].'至'.$loan['enddate'].'止'?></td>
     </tr>
   <tr>
     <td align="right"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?>：</td>
