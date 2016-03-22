@@ -44,11 +44,12 @@ class ReviewprocessController extends Controller
     		$whereArray = Farms::getManagementArea();
     	}
         $farmstransfer = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer'])->all();
+       	
         
 		$projectapplication = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'projectapplication'])->all();
-		
+       	
 		$loan = Reviewprocess::find()->where(['management_area' => $whereArray['id'],'actionname'=>'loancreate'])->all();
-		
+       	
         return $this->render('reviewprocessindex', [
 			'farmstransfer' => $farmstransfer,
         	'projectapplication' => $projectapplication,

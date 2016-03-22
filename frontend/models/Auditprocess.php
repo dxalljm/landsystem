@@ -44,4 +44,24 @@ class Auditprocess extends \yii\db\ActiveRecord
             'actionname' => '方法名称',
         ];
     }
+    
+    public static function isShowProcess()
+    {
+    	$role = User::getItemname();
+    	$processname = Processname::find()->where(['rolename'=>$role])->all();
+    	$rolenames = [];
+    	foreach ($processname as $process) {
+    		$rolenames[] = $process['Identification'];
+    	}
+    	
+    	$auditprocess = self::find()->all();
+    	$audits = [];
+    	foreach($auditprocess as $value) {
+    		foreach ($rolenames as $rolename) {
+    			if(in_array($rolename, explode('>',$value['process'])))
+    				return true;
+    		}
+    	}
+    	return false;
+    }
 }
