@@ -98,22 +98,22 @@ class FarmsController extends Controller {
 	 * @return mixed
 	 */
 	public function actionFarmsindex() {
-		$departmentid = User::find ()->where ( [ 
-				'id' => \Yii::$app->getUser ()->id 
-		] )->one ()['department_id'];
-		$departmentData = Department::find ()->where ( [ 
-				'id' => $departmentid 
-		] )->one ();
-		$whereArray = explode ( ',', $departmentData ['membership'] );
+// 		$departmentid = User::find ()->where ( [ 
+// 				'id' => \Yii::$app->getUser ()->id 
+// 		] )->one ()['department_id'];
+// 		$departmentData = Department::find ()->where ( [ 
+// 				'id' => $departmentid 
+// 		] )->one ();
+// 		$whereArray = explode ( ',', $departmentData ['membership'] );
 		
 		$searchModel = new farmsSearch ();
 		
 		$params = Yii::$app->request->queryParams;
-		$params ['farmsSearch'] ['state'] = 1;
+// 		$params ['farmsSearch'] ['state'] = 1;
 		// 管理区域是否是数组
-		if (empty($params['farmsSearch']['mamagement_area'])) {
-			$params ['farmsSearch'] ['management_area'] = $whereArray;
-		}
+// 		if (empty($params['farmsSearch']['mamagement_area'])) {
+// 			$params ['farmsSearch'] ['management_area'] = $whereArray;
+// 		}
 		// var_dump($params);exit;
 		$dataProvider = $searchModel->search ( $params );
 		Logs::writeLog ( '农场管理' );

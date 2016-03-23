@@ -20,8 +20,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('添加', ['farmscreate'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('XLS导入', ['farmsxls'], ['class' => 'btn btn-success']) ?>
-        <?php echo Html::a('生成XLS表', ['farmstoxls'], ['class' => 'btn btn-success']) ?>
+        <?php //echo Html::a('XLS导入', ['farmsxls'], ['class' => 'btn btn-success']) ?>
+        <?php //echo Html::a('生成XLS表', ['farmstoxls'], ['class' => 'btn btn-success']) ?>
     </p>
 </section>
 <?php  //echo $this->render('farms_search', ['model' => $searchModel]); ?>
@@ -42,7 +42,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            //'id',
+            [
+            	'attribute' => 'management_area',
+            	'headerOptions' => ['width' => '200'],
+				'value'=> function($model) {
+				     return ManagementArea::getAreanameOne($model->management_area);
+				 },
+				 'filter' => ManagementArea::getAreaname(),     //此处我们可以将筛选项组合成key-value形式
+            ],
             [
             	'attribute' => 'farmname',
 
@@ -56,7 +63,15 @@ $this->params['breadcrumbs'][] = $this->title;
 			//'management_area',
             'measure',
             'contractnumber',
-            // 'contractlife',
+            [
+            	'attribute'=> 'state',
+            	'value' => function ($model) {
+            		if($model->state)
+            			return '正常';
+            		else 
+            			return '销户';
+            }
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
 //             [

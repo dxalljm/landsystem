@@ -131,6 +131,10 @@ use app\models\ManagementArea;
 			<td width=15% align='right'>农场法人签字</td>
 			<td colspan="5" align='left'><?= $form->field($model, 'farmersign')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		</tr>
+		<tr>
+			<td width=15% align='right'>状态</td>
+			<td colspan="5" align='left'><?= $form->field($model, 'state')->radioList(['销户','正常'])->label(false)->error(false) ?></td>
+		</tr>
 	</table>
 	<div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
