@@ -187,7 +187,7 @@ $('#farms-notclear').blur(function(){
 });
 $('#farms-notclear').keyup(function (event) {
 	var input = $(this).val();
-	if(/^\d+(\.\d+)?$/.test(input)) {
+	if(/^[0-9]{0}([0-9]|[.])+$/.test(input)) {
 		if(event.keyCode == 8) {
 			$(this).val('');
 			

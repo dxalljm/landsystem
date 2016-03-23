@@ -49,7 +49,8 @@ class Farms extends \yii\db\ActiveRecord {
 						[ 
 								'measure',
 								'notclear',
-								'notstate' 
+								'notstate',
+								'contractarea',
 						],
 						'number' 
 				],
@@ -137,6 +138,7 @@ class Farms extends \yii\db\ActiveRecord {
 				'notstate' => '未明确状态面积',
 				'notstateinfo' => '未明确状态信息',
 				'accountnumber' => '账页号',
+				'contractarea' => '合同面积',
 		];
 	}
 	public static function getFarmsAreaID($farms_id) {
@@ -410,6 +412,14 @@ class Farms extends \yii\db\ActiveRecord {
 		// var_dump($farms_id);
 		return $array [2];
 	}
+	
+	public static function getContractnumberArea($contractnumber)
+	{
+		$array = explode ( '-', $contractnumber );
+		// var_dump($farms_id);
+		return $array [2];
+	}
+	
 	public static function getManagementArea($str = NULL) {
 // 		$result = [];
 // var_dump(yii::$app->user->identity->username);exit;
@@ -890,8 +900,8 @@ class Farms extends \yii\db\ActiveRecord {
 			return 0;
 	}
 	
-	public static function getMeasure($farmsid) {
+	public static function getContractarea($farmsid) {
 		$model = $this->findOne($farmsid);
-		return $model->measure;
+		return $model->contractarea;
 	}
 }

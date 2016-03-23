@@ -206,10 +206,12 @@ class FarmsController extends Controller {
 		$model = new UploadForm ();
 		$rows = 0;
 		$area = [];
+		$data = [];
 // 		require_once dirname(__FILE__) . '../vendor/phpoffice/phpexcel/Classes/PHPExcel/IOFactory.php';
 		if (Yii::$app->request->isPost) {
 			
 			$model->file = UploadedFile::getInstance ( $model, 'file' );
+// 			var_dump($model);exit;
 			$extension = $model->file->getExtension();
 			if ($model->file == null)
 				throw new \yii\web\UnauthorizedHttpException ( '对不起，请先选择xls文件' );
@@ -222,24 +224,24 @@ class FarmsController extends Controller {
 
 				$loadxls = \PHPExcel_IOFactory::load($path);
 				$rows = $loadxls->getActiveSheet ()->getHighestRow ();
-				$farms = Farms::find()->all();
+// 				$farms = Farms::find()->all();
 // 				$zongdi = [ ];
 // 				$a = [];
-				echo '<br><br><br><br><br><br><br><br>';
-				for($i = 2; $i <= $rows; $i ++) {
-					$contract = $loadxls->getActiveSheet()->getCell('B'.$i)->getValue();
+// 				echo '<br><br><br><br><br><br><br><br>';
+				
+				for($i = 1; $i <= $rows; $i ++) {
+					$contract = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
 // 					var_dump($contract);
 // 					$array = explode('-', $contract);
-					foreach($farms as $value) {
-						if($contract == $value['contractnumber']) {
-							echo $contract."<br>";
-							$farmModel = Farms::findOne($value['id']);
-							$farmModel->accountnumber = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
-							$farmModel->save();
-						}
+// 					foreach($farms as $value) {
+// 						if($contract !== $value['contractnumber']) {
+// 							$data[] = $value;
+// 						}
 							
-					}
-					
+// 					}
+					$farm = Farms::find()->where(['management_area'=>3,'state'=>1,'contractnumber'=>$contract])->one();
+					if(empty($farm))
+						$data[] = $contract;
 					
 					// 导入农场基础信息
 					// var_dump($loadxls->getActiveSheet()->getCell('H'.$i)->getValue())."<br>";exit;
@@ -338,8 +340,11 @@ class FarmsController extends Controller {
 				}
 			}
 		}
-		//var_dump($area);
-		// exit;
+		if($data)
+			return $this->render ( 'farmslist', [
+					'data' => $data,
+			] );
+// 		exit;
 // 		echo 'finished';
 		Logs::writeLog ( '农场XLS批量导入' );
 		return $this->render ( 'farmsxls', [ 
@@ -570,7 +575,7 @@ class FarmsController extends Controller {
 // 			$elastic->insert();
 // 		}
 		// 		var_dump(Farmselastic::index());
-		echo 'insert done';
+// 		echo 'insert done';
 // 		set_time_limit ( 0 );
 // 		$farms = Farms::find()->all();
 // 		foreach ($farms as $farm) {
@@ -583,23 +588,16 @@ class FarmsController extends Controller {
 // 			$elastic->insert();
 // 		}
 // 		echo 'done';
-		var_dump(Farmselastic::getDb());
-// 		$sum = 0.0;
-// 		$farms = Farms::find ()->where(['management_area'=>5])->all ();
-// 		foreach ( $farms as $farm ) {
-// 			$sum += Farms::getNowContractnumberArea ($farm['id']);
-// 			if (($farm->measure - Farms::getNowContractnumberArea ( $farm->id )) > Farms::getNowContractnumberArea ( $farm->id ) * 0.1) {
-// 				if (! ($farm ['zongdi'] == ''))
-// 					$data [] = $farm;
-// 			}
-// 			if($farm->notstate) {
-// 				$model = $this->findModel($farm->id);
-// 				$model->measure = $model->measure - $farm->notstate;
-// 				$model->save();
-// 			}
-// 		return $this->render ( 'farmslist', [ 
-// 				'data' => $data 
-// 		] );
+// 		var_dump(Farmselastic::getDb());
+		$sum = 0.0;
+		$farms = Farms::find ()->where(['management_area'=>2,'state'=>1])->all ();
+		foreach ( $farms as $farm ) {
+			if($farm['notclear'])
+				$data[] = $farm;
+		}
+		return $this->render ( 'farmslist', [ 
+				'data' => $data 
+		] );
 	}
 	// 得到所有农场ID
 	public function actionGetfarmid($id) {
@@ -992,6 +990,7 @@ class FarmsController extends Controller {
 			$model->update_at = time ();
 			$model->pinyin = Pinyin::encode ( $model->farmname );
 			$model->farmerpinyin = Pinyin::encode ( $model->farmername );
+			$model->contractarea = Farms::getContractnumberArea($model->contractnumber);
 			$model->save ();
 			$newAttr = $model->attributes;
 			Logs::writeLog ( '创建农场', $model->id, '', $newAttr );
