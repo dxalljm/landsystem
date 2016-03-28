@@ -66,6 +66,7 @@ class SignupForm extends Model
     		$user = User::findIdentity(\Yii::$app->getUser()->id);
     		//var_dump($user);
     		$user->username = $this->username;
+    		$user->realname = $this->realname;
     		//$user->email = $this->email;
     		
     		$user->setPassword($this->password);

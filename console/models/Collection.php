@@ -123,7 +123,7 @@ class Collection extends \yii\db\ActiveRecord {
 			] )->sum ( 'measure' );
 			$amountsSum =  (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [
 							'years' => Theyear::findOne(1)['years'] 
-					] )->one ()['price']/10000);
+					] )->one ()['price']);
 			$amounts_receivable[] = $amountsSum;
 // 			$amounts_receivable [] = [ 
 // 					'color' => $amountsColor[$i],
@@ -144,7 +144,7 @@ class Collection extends \yii\db\ActiveRecord {
 // 					'y' => $collectionSUm,
 // 			];
 // 			if($collectionSUm)
-				$real_income_amount[] = ( float ) sprintf("%.2f",$collectionSUm/10000);
+				$real_income_amount[] = ( float ) sprintf("%.2f",$collectionSUm);
 // 			else 
 // 				$real_income_amount[] = 0;
 			$i ++;
@@ -188,9 +188,9 @@ class Collection extends \yii\db\ActiveRecord {
 					'barBorderWidth'=> 3,
 					'barBorderRadius'=>0,
 					'label' => [
-						'show'=> true,
+						'show'=> false,
 						'position'=> 'top',
-// 						'formatter'=> '{c}',
+// 						'formatter'=> '{c}/10000.toFixed(2)',
 						'textStyle'=>[
 							'color'=> 'tomato'
 						]
@@ -278,7 +278,7 @@ class Collection extends \yii\db\ActiveRecord {
 			
 		//}
 		
-		return sprintf("%.2f",$sum/10000).'万元';
+		return sprintf("%.2f",$sum).'元';
 	}
 	public static function totalAmounts($userid)
 	{
@@ -290,6 +290,6 @@ class Collection extends \yii\db\ActiveRecord {
 		}
 		return (float)sprintf("%.2f",$sum * PlantPrice::find ()->where ( [ 
 							'years' => Theyear::findOne(1)['years'] 
-					] )->one ()['price']/10000).'万元';
+					] )->one ()['price']).'元';
 	}
 }

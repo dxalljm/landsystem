@@ -109,6 +109,10 @@ $this->params['breadcrumbs'][] = $this->title;
 			<td align='left'><?= $model->notclear?>亩</td>
 		</tr>
 		<tr>
+			<td width=15% align='right'>未明确状态地块</td>
+			<td align='left'><?= $model->notstate?>亩</td>
+		</tr>
+		<tr>
 			<td width=15% align='right'>合作社</td>
 			
 				

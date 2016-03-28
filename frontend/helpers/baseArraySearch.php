@@ -220,25 +220,27 @@ class baseArraySearch {
 							if ($value->getAttribute ( $keys [0] ) == $values [0] and $value->getAttribute ( $keys [1] ) == $values [1]) {
 		
 								$yield = Yieldbase::find()->where(['plant_id'=>$value->getAttribute($where),'year'=>User::getYear()])->one()['yield'];
-								$sum += bcmul ( $value->getAttribute ( $field ), $yield );
+								$sum += bcmul ( $value->getAttribute ( $field ), $yield ,4);
 							}
 					}
 				} else {
 					foreach ( $data as $value ) {
 						if ($value->getAttribute ( $keys [0] ) == $areaid) {
 							$yield = Yieldbase::find()->where(['plant_id'=>$value->getAttribute($where),'year'=>User::getYear()])->one()['yield'];
-							$sum += bcmul ( $value->getAttribute ( $field ), $yield );
+							$sum += bcmul ( $value->getAttribute ( $field ), $yield,4 );
 						}
 					}
 				}
 		} else {
 			foreach ( $data as $key => $value ) {
 				$yield = Yieldbase::find()->where(['plant_id'=>$value->getAttribute($where),'year'=>User::getYear()])->one()['yield'];
-// 				var_dump($value->getAttribute ( $field ));exit;
-				$sum += bcmul ( $value->getAttribute ( $field ), $yield );
+// 				var_dump($yield);
+				$sum += bcmul ( $value->getAttribute ( $field ), $yield,4 );
 			}		
 		}
-
+		if($num == 1) {
+			return $sum;
+		}
 		return sprintf ( "%.2f", $sum / $num );
 	}
 	
@@ -455,7 +457,7 @@ class baseArraySearch {
 							$Sum = 0.0;
 							foreach ( $data as $value ) {
 								if ($value->getAttribute ( $keys [0] ) == $areaid and $value->getAttribute ( $keys [1] ) == $values [1]) {
-									$Sum += ( float ) sprintf ( "%.2f", $value->getAttribute ( $field ) / $num );
+									$Sum += ( float ) sprintf ( "%.4f", $value->getAttribute ( $field ) / $num );
 								}
 							}
 							if ($state)
@@ -467,7 +469,7 @@ class baseArraySearch {
 							$Sum = 0.0;
 							foreach ( $data as $value ) {
 								if ($value->getAttribute ( $keys [0] ) == $areaid) {
-									$Sum += ( float ) sprintf ( "%.2f", $value->getAttribute ( $field ) / $num );
+									$Sum += ( float ) sprintf ( "%.4f", $value->getAttribute ( $field ) / $num );
 								}
 							}
 							if ($state)
@@ -481,7 +483,7 @@ class baseArraySearch {
 					$Sum = 0.0;
 					foreach ( $data as $value ) {
 						if ($value->getAttribute ( $keys [0] ) == $values [0] and $value->getAttribute ( $keys [1] ) == $values [1]) {
-							$Sum += ( float ) sprintf ( "%.2f", $value->getAttribute ( $field ) / $num );
+							$Sum += ( float ) sprintf ( "%.4f", $value->getAttribute ( $field ) / $num );
 						}
 					}
 					if ($state)
@@ -494,7 +496,7 @@ class baseArraySearch {
 				$Sum = 0.0;
 				foreach ( $data as $key => $value ) {
 					if (is_numeric ( $value->getAttribute ( $field ) )) {
-						$Sum += ( float ) sprintf ( "%.2f", $value->getAttribute ( $field ) / $num );
+						$Sum += ( float ) sprintf ( "%.4f", $value->getAttribute ( $field ) / $num );
 					}
 				}
 				if ($state)
@@ -768,7 +770,7 @@ class baseArraySearch {
 						'typeid' => $huinong['typeid'],
 						'state' => 1 
 				] )->count();
-				$realSum = ( float ) sprintf ( "%.2f", $yff / 10000 );
+				$realSum = ( float ) sprintf ( "%.4f", $yff );
 				$real_income_amount [] = $realSum;
 				
 				$allmoney = Huinonggrant::find ()->where ( [
@@ -781,7 +783,7 @@ class baseArraySearch {
 						'subsidiestype_id' => $huinong['subsidiestype_id'],
 						'typeid' => $huinong['typeid'],
 				] )->count();
-				$amountsSum = ( float ) sprintf ( "%.2f", $allmoney / 10000 );
+				$amountsSum = ( float ) sprintf ( "%.4f", $allmoney );
 				$amounts_receivable [] = $amountsSum - $realSum;
 				$result['all']['sum'] = $amounts_receivable;
 				$result['real']['sum'] = $real_income_amount;
@@ -816,7 +818,7 @@ class baseArraySearch {
 			] )->sum ( 'measure' );
 			$amountsSum = ( float ) sprintf ( "%.2f", $allmeasure * PlantPrice::find ()->where ( [ 
 					'years' => Theyear::findOne ( 1 )['years'] 
-			] )->one ()['price'] / 10000 );
+			] )->one ()['price'] );
 			$amounts_receivable [] = $amountsSum;
 			
 			$collectionSUm = 0.0;
@@ -826,7 +828,7 @@ class baseArraySearch {
 					'dckpay' => 1 
 			] )->sum ( 'real_income_amount' );
 			
-			$real_income_amount [] = ( float ) sprintf ( "%.2f", $collectionSUm / 10000 );
+			$real_income_amount [] = ( float ) sprintf ( "%.2f", $collectionSUm );
 			$result['all'] = $amounts_receivable;
 			$result['real'] = $real_income_amount;
 		}

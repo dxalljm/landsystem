@@ -252,7 +252,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     			$plantsum = 0.0;
     			$goodseedsum = 0.0;
     			$area = Plantingstructure::find()->where(['management_area'=>$value,'plant_id'=>$val])->sum('area');
-    			$plantArea[] = (float)sprintf("%.2f", $area/10000);
+    			$plantArea[] = (float)sprintf("%.4f", $area);
     		}
     		$result[] = [
     				'name' => str_ireplace('管理区', '', ManagementArea::find()->where(['id'=>$value])->one()['areaname']),
@@ -303,6 +303,6 @@ class Plantingstructure extends \yii\db\ActiveRecord
     			$goodseedsum += $val;
     		}
     	}
-    	return ['plantSum'=>(float)sprintf("%.2f", $plantsum/10000),'goodseedSum'=>(float)sprintf("%.2f", $goodseedsum/10000)];
+    	return ['plantSum'=>(float)sprintf("%.4f", $plantsum),'goodseedSum'=>(float)sprintf("%.4f", $goodseedsum)];
     }
 }

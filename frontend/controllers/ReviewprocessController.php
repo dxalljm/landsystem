@@ -144,7 +144,7 @@ class ReviewprocessController extends Controller
 	    		$model->save();
 	    		$state = Reviewprocess::isNextProcess($model->id);
 	    		if($state) {
-	    			var_dump($model);exit;
+// 	    			var_dump($model);exit;
 	    			$oldfarmsModel = Farms::findOne($model->oldfarms_id);
 	    			$oldfarmsModel->update_at = time();
 	    			$oldfarmsModel->state = 0;
@@ -159,6 +159,7 @@ class ReviewprocessController extends Controller
 	    			$projectModel = Projectapplication::findOne($projectID);
 	    			$projectModel->farms_id = $newfarmModel->id;
 	    			$projectModel->save();
+	    			return $this->redirect(['reviewprocess/reviewprocessindex']);
 	    		}
 	    		 
 	    	}
@@ -218,8 +219,8 @@ class ReviewprocessController extends Controller
     				
     				$loanModel = Loan::findOne($loan->id);
     				$loanModel->state = 1;
-    				$loanModel->save();
-    				return $this->redirect(['reviewprocess/reviewprocessindex']);
+    				if($loanModel->save())
+    					return $this->redirect(['reviewprocess/reviewprocessindex']);
     			}
     		}
     		return $this->render ( 'reviewprocessinspections', [

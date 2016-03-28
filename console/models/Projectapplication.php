@@ -142,7 +142,7 @@ class Projectapplication extends \yii\db\ActiveRecord
     			'data' => $value,
     		];
     	}
-    	var_dump($result);
+//     	var_dump($result);
     	$jsonData = json_encode ($result);
     	 
     	return $jsonData;

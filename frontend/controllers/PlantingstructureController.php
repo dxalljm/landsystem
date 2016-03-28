@@ -199,6 +199,9 @@ class PlantingstructureController extends Controller
     		return $zongdi;
     	}
     }
+    
+    
+    
     //对plantingstructure中获取的面积进程累加处理
     public function zongdiAreaSum($arrayArea) 
     {
@@ -244,7 +247,8 @@ class PlantingstructureController extends Controller
     	$model = new Plantingstructure();
     
     	$farm = Farms::find()->where(['id'=>$farms_id])->one();
-    	$area = Plantingstructure::getNoArea($lease_id, $farms_id);
+    	$noarea = Plantingstructure::getNoArea($lease_id, $farms_id);
+    	$overarea = Plantingstructure::getOverArea($lease_id, $farms_id);
 //     	var_dump($area);exit;
     	$plantinputproductModel = new Plantinputproduct();
     	$plantpesticidesModel = new Plantpesticides();
@@ -311,7 +315,8 @@ class PlantingstructureController extends Controller
     				'plantpesticidesModel' => $plantpesticidesModel,
     				'model' => $model,
     				'farm' => $farm,
-    				'area' => $area,
+    				'noarea' => $noarea,
+    				'overarea' => $overarea,
     		]);
     	}
     }
@@ -326,13 +331,13 @@ class PlantingstructureController extends Controller
         $model = $this->findModel($id);
         $old = $model->attributes;
         $farm = Farms::find()->where(['id'=>$model->farms_id])->one();
-        if($lease_id == 0) {
-        	$zongdi = Lease::getNOZongdi($farms_id);
-        }
-        else {
-        	$zongdi = $this->getListZongdi($lease_id,$farms_id);
-        }
-        //var_dump($zongdi);
+    
+        $area = Lease::getAllLeaseArea($lease_id, $farms_id);
+        $overarea = Plantingstructure::getOverArea($lease_id, $farms_id);
+		if($overarea)
+			$noarea = $area - $overarea;
+		else 
+			$noarea = $area;
         $plantings = Plantingstructure::find()->where(['lease_id'=>$lease_id,'farms_id'=>$farms_id])->all();
         $plantinputproductModel = Plantinputproduct::find()->where(['planting_id' => $id])->all();
         $plantpesticidesModel = Plantpesticides::find()->where(['planting_id'=>$id])->all();
@@ -398,7 +403,8 @@ class PlantingstructureController extends Controller
             	'plantpesticidesModel' => $plantpesticidesModel,
                 'model' => $model,
             	'farm' => $farm,
-            	'zongdi' => $zongdi,
+            	'noarea' => $noarea + $model->area,
+            	'overarea' =>$overarea,
             	//'leases' => $lease,
             ]);
         }

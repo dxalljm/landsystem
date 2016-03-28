@@ -23,7 +23,7 @@ function showShadow(divID,legendata,xdata,seriesdata,dw)
 //	    	        sublink: 'http://e.weibo.com/1341556070/AizJXrAEa'
 //	    	    },
 	    		 grid : {
-		    	    	x:40,
+		    	    	x:70,
 		    	    	y:30,
 		    	    	x2:15,
 		    	    	y2:30,
@@ -107,7 +107,7 @@ function showShadowThermometer(divID,legendata,xdata,data1,data2,dw)
 //	    	        sublink: 'http://e.weibo.com/1341556070/AizJXrAEa'
 //	    	    },
 	    		 grid : {
-		    	    	x:40,
+		    	    	x:50,
 		    	    	y:30,
 		    	    	x2:15,
 		    	    	y2:30,
@@ -194,7 +194,7 @@ function wdjShowEchart(divID,legendata,xdata,alldata,realdata,dw)
 //	    	        sublink: 'http://e.weibo.com/1341556070/AizJXrAEa'
 //	    	    },
 	    		 grid : {
-		    	    	x:40,
+		    	    	x:50,
 		    	    	y:30,
 		    	    	x2:15,
 		    	    	y2:30,
@@ -279,7 +279,7 @@ function wdjShowEchart(divID,legendata,xdata,alldata,realdata,dw)
 	    	                          barBorderWidth: 3,
 	    	                          barBorderRadius:0,
 	    	                          label : {
-	    	                              show: true, 
+	    	                              show: false, 
 	    	                              position: 'top',
 	    	                              formatter: function (params) {
 	    	                                  for (var i = 0, l = option.xAxis[0].data.length; i < l; i++) {
@@ -331,7 +331,7 @@ function wdjHuinong(divID,legendata,xdata,alldata,realdata,dw)
 //	    	        sublink: 'http://e.weibo.com/1341556070/AizJXrAEa'
 //	    	    },
 	    		 grid : {
-		    	    	x:40,
+		    	    	x:50,
 		    	    	y:30,
 		    	    	x2:15,
 		    	    	y2:30,
@@ -416,7 +416,7 @@ function wdjHuinong(divID,legendata,xdata,alldata,realdata,dw)
 	    	                          barBorderWidth: 3,
 	    	                          barBorderRadius:0,
 	    	                          label : {
-	    	                              show: true, 
+	    	                              show: false, 
 	    	                              position: 'top',
 	    	                              formatter: function (params) {
 	    	                                  for (var i = 0, l = option.xAxis[0].data.length; i < l; i++) {
@@ -467,7 +467,7 @@ function showBar(divID,legenddata,xdata,series,dw)
 //	    	        subtext: '纯属虚构'
 	    	    },
 	    	    grid : {
-	    	    	x:30,
+	    	    	x:50,
 	    	    	y:30,
 	    	    	x2:15,
 	    	    	y2:30,
@@ -547,7 +547,7 @@ function showAllShadowProject(divID,legendData,xData,series,dw)
 	    //设置数据
 	   var option = {
 			   grid : {
-	    	    	x:30,
+	    	    	x:50,
 	    	    	y:30,
 	    	    	x2:15,
 	    	    	y2:30,
@@ -624,7 +624,7 @@ function showAllShadow(divID,legendData,xData,series,dw)
 	    //设置数据
 	   var option = {
 			   grid : {
-	    	    	x:30,
+	    	    	x:50,
 	    	    	y:30,
 	    	    	x2:15,
 	    	    	y2:30,

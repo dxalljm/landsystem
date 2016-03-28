@@ -507,7 +507,7 @@ class Yields extends \yii\db\ActiveRecord
     				$area = Plantingstructure::find()->where(['plant_id'=>$val,'management_area'=>$value])->sum('area');
     				$sum += Yieldbase::find()->where(['plant_id'=>$val,'year'=>User::getYear($id)])->one()['yield']*$area;
 //     				var_dump($sum);
-    				$plantArea[] = (float)sprintf("%.2f", $sum/10000);
+    				$plantArea[] = (float)sprintf("%.4f", $sum);
     			}
 //     							var_dump($plantArea);
     			$result[] = [
@@ -525,7 +525,7 @@ class Yields extends \yii\db\ActiveRecord
     				$area = Plantingstructure::find()->where(['id'=>$y['planting_id']])->one()['area'];
     					$sum += $y['single']*$area;
     				}
-    				$plantArea[] = (float)sprintf("%.2f", $sum/10000);
+    				$plantArea[] = (float)sprintf("%.4f", $sum);
     		}
     		    		var_dump($plantArea);
     		$result[] = [

@@ -81,13 +81,14 @@ class Lease extends \yii\db\ActiveRecord
     	return $LeaseArea;
     }
     //得到所有当前农场已经租赁的面积
-    public static function getAllLeaseArea($farms_id)
+    public static function getAllLeaseArea($lease_id,$farms_id)
     {
     	$result = 0.0;
-    	$leases = self::find()->where(['farms_id'=>$farms_id])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
+    	$leases = self::find()->where(['farms_id'=>$farms_id,'id'=>$lease_id])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
     	foreach($leases as $value) {
     			$result += $value['lease_area'];
     	}
+//     	var_dump($result);exit;
     	return $result;
     }
     

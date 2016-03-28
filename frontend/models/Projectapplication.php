@@ -268,7 +268,12 @@ class Projectapplication extends \yii\db\ActiveRecord
     		foreach ($newdata as $value) {
     			$result['id'][] = $value['id'];
     			$result['projecttype'][] = Infrastructuretype::find()->where(['id' => $value['id']])->one()['typename'];
-    			$result['unit'][Infrastructuretype::find()->where(['id' => $value['id']])->one()['typename']] = Projectapplication::find()->where(['projecttype'=>$value['id']])->one()['unit'];
+    			$typename = Infrastructuretype::find()->where(['id' => $value['id']])->one()['typename'];
+    			if($typename)
+    				$unitkey = $typename;
+    			else
+    				$unitkey = 0;
+    			$result['unit'][$unitkey] = Projectapplication::find()->where(['projecttype'=>$value['id']])->one()['unit'];
     		}
     	}
     	//     	    	var_dump($result);

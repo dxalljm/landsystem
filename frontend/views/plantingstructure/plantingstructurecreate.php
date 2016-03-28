@@ -31,8 +31,8 @@ $this->params['breadcrumbs'][] = $this->title;
     				'plantpesticidesModel' => $plantpesticidesModel,
     				'model' => $model,
     				'farm' => $farm,
-    				'area' => $area,
-
+    				'noarea' => $noarea,
+					'overarea' => $overarea,
     ]) ?>
                 </div>
             </div>

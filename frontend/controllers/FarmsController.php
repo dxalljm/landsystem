@@ -590,14 +590,18 @@ class FarmsController extends Controller {
 // 		echo 'done';
 // 		var_dump(Farmselastic::getDb());
 		$sum = 0.0;
-		$farms = Farms::find ()->where(['management_area'=>2,'state'=>1])->all ();
+		$farms = Farms::find ()->all ();
 		foreach ( $farms as $farm ) {
-			if($farm['notclear'])
-				$data[] = $farm;
+			$model = $this->findModel($farm['id']);
+			if($model->zongdi) {
+				$model->measure = Lease::getListArea($model->zongdi);
+				$model->save();
+			}
 		}
-		return $this->render ( 'farmslist', [ 
-				'data' => $data 
-		] );
+		echo 'finished';
+// 		return $this->render ( 'farmslist', [ 
+// 				'data' => $data 
+// 		] );
 	}
 	// 得到所有农场ID
 	public function actionGetfarmid($id) {

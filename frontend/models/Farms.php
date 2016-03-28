@@ -403,6 +403,23 @@ class Farms extends \yii\db\ActiveRecord {
 		$contractnumber = $cn1 . '-' . $cn2 . '-' . $cn3 . '-' . $cn4;
 		return $contractnumber;
 	}
+	
+	public static function getNewContractnumber() {
+		$contractnumber = Contractnumber::findOne ( 1 );
+		$cn1 = str_pad ( $contractnumber->contractnumber, 4, '0', STR_PAD_LEFT );
+	
+		if (date ( 'Y' ) <= $contractnumber->lifeyear)
+			$cn2 = substr ( '2010', 2 );
+		else
+			$cn2 = substr ( $contractnumber->lifeyear, 2 );
+		$cn3 = 0;
+			
+		// $cn3 = substr($cn3,0,strlen($cn3)-1);
+		$cn4 = 1;
+		$contractnumber = $cn1 . '-' . $cn2 . '-' . $cn3 . '-' . $cn4;
+		return $contractnumber;
+	}
+	
 	public static function getNowContractnumberArea($farms_id, $state = null) {
 		$farm = Farms::find ()->where ( [ 
 				'id' => $farms_id 
@@ -767,7 +784,7 @@ class Farms extends \yii\db\ActiveRecord {
 	}
 	public static function showEightPlantmenu() {
 		
-		$cache = 'cache-key-plantmenu10'.\Yii::$app->getUser()->id;
+		$cache = 'cache-key-plantmenu20'.\Yii::$app->getUser()->id;
     	$html = Yii::$app->cache->get($cache);
     	if (!empty($html)) {
     		return $html;
