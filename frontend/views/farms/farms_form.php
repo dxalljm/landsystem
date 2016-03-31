@@ -209,6 +209,17 @@ $("#farms-zongdi").keyup(function (event) {
 				$('#temp_measure').val(value.toFixed(2));
 				$('#temp-zongdi').val($.trim(input)+'、');
 				$("#farms-zongdi").val($.trim(input)+'、');
+				var contractarea = $("#farms-contractarea").val()*1;
+				var measure = $("#farms-measure").val()*1;
+				if(measure < contractarea) {
+					var cha = contractarea - measure;
+					$("#farms-notclear").val(cha.toFixed(2));
+				} else {
+					$("#farms-notclear").val(0);
+					var cha =measure - contractarea;
+					$("#farms-notstate").val(cha.toFixed(2));
+				}
+				
 				toHTH();
 			}
 			else {
@@ -231,11 +242,23 @@ $("#farms-zongdi").keyup(function (event) {
 				if (data.status == 1) {
 					$("#farms-zongdi").val($.trim(data.formatzongdi));	
 					$("#farms-measure").val(data.sum);
+					var contractarea = $("#farms-contractarea").val()*1;
+					var measure = $("#farms-measure").val()*1;
+					if(measure < contractarea) {
+						$("#farms-notstate").val(0);
+						var cha = contractarea - measure;
+						$("#farms-notclear").val(cha.toFixed(2));
+					} else {
+						$("#farms-notclear").val(0);
+						var cha =measure - contractarea;
+						$("#farms-notstate").val(cha.toFixed(2));
+					}
 					toHTH();
 				}	
 			});
 		} else {
 			$("#farms-measure").val(0);
+			$("#farms-notclear").val($("#farms-contractarea").val());
 			toHTH();
 		}
 	}
@@ -249,6 +272,17 @@ $('#farms-zongdi').blur(function(){
 			if (data.status == 1) {
 				$("#farms-zongdi").val($.trim(data.formatzongdi));	
 				$("#farms-measure").val(data.sum);
+				var contractarea = $("#farms-contractarea").val()*1;
+					var measure = $("#farms-measure").val()*1;
+					if(measure < contractarea) {
+						$("#farms-notstate").val(0);
+						var cha = contractarea - measure;
+						$("#farms-notclear").val(cha.toFixed(2));
+					} else {
+						$("#farms-notclear").val(0);
+						var cha =measure - contractarea;
+						$("#farms-notstate").val(cha.toFixed(2));
+					}
 				toHTH();
 			}	
 		});

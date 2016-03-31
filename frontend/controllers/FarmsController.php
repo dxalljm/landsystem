@@ -593,10 +593,11 @@ class FarmsController extends Controller {
 		$farms = Farms::find ()->all ();
 		foreach ( $farms as $farm ) {
 			$model = $this->findModel($farm['id']);
-			if($model->zongdi) {
-				$model->measure = Lease::getListArea($model->zongdi);
+			if($model->notstate === NULL) {
+				$model->notstate = 0;
 				$model->save();
-			}
+			} 
+			
 		}
 		echo 'finished';
 // 		return $this->render ( 'farmslist', [ 

@@ -45,7 +45,7 @@ use yii\helpers\Url;
 //             			return $model->farmername;
 //             	}
             ],
-            'measure',
+            'contractarea',
             //'management_area',
             [
             
