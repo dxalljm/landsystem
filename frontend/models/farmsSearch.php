@@ -214,6 +214,7 @@ class farmsSearch extends Farms
             ->andFilterWhere(['like', 'latitude', $this->latitude])
             ->andFilterWhere(['like', 'longitude', $this->longitude])
             ->andFilterWhere(['like', 'accountnumber', $this->accountnumber])
+            ->andFilterWhere($this->contractareaSearch($this->contractarea))
             ->andFilterWhere($this->betweenSearch());
           	//->andFilterWhere(['between', 'measure', $this->measure,$this->measure]);
 // 		var_dump($dataProvider->query->where);exit;

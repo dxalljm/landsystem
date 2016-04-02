@@ -99,6 +99,12 @@ class Lease extends \yii\db\ActiveRecord
     	return $area;
     }
     
+    public static function getZongdiRows($zongdi)
+    {
+    	$zongdiArr = explode('、', $zongdi);
+    	return count($zongdiArr);
+    }
+    
     //所有getAllLeaseArea返回的宗地面积累加
     public static function AddAllLeaseArea($arrayZongdiArea)
     {
