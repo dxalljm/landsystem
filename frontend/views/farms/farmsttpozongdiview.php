@@ -63,17 +63,27 @@ $this->params['breadcrumbs'][] = $this->title;
 			<td align='left'><?= ManagementArea::findOne($oldFarm->management_area)['areaname'] ?></td>
 		</tr>
 		<tr>
-		  <td width=20% align='right'>面积</td>
-		  <td align='left'><?= $oldFarm->measure ?></td>
-		  </tr>
+			<td width=20% align='right'>合同面积</td>
+			<td align='left'><?= $oldFarm->contractarea?>亩</td>
+		</tr>
 		<tr>
 			<td width=20% align='right'>宗地</td>
 			<td align='left'> <?= $oldFarm->zongdi?> </td>
 		</tr>
 		<tr>
-			<td width=20% align='right'>未明确地块</td>
+		  <td width=20% align='right'>宗地面积</td>
+		  <td align='left'><?= $oldFarm->measure ?></td>
+		  </tr>
+		
+		<tr>
+			<td width=20% align='right'>未明确地块面积</td>
 			<td align='left'><?= $oldFarm->notclear?>亩</td>
 		</tr>
+		<tr>
+			<td width=20% align='right'>未明确状态面积</td>
+			<td align='left'><?= $oldFarm->notstate?>亩</td>
+		</tr>
+		
 		<tr>
 			<td width=20% align='right'>减少宗地</td>
 			<td align='left'> <?= $ttpoModel->ttpozongdi?> </td>
@@ -115,17 +125,24 @@ $this->params['breadcrumbs'][] = $this->title;
             <td align='left'><?= ManagementArea::findOne($newFarm->management_area)['areaname'] ?></td>
           </tr>
           <tr>
-            <td width="15%" align='right'>面积</td>
-            <td align='left'><?= $newFarm->measure ?></td>
+            <td width="15%" align='right'>合同面积</td>
+            <td align='left'><?= $newFarm->contractarea ?></td>
           </tr>
           <tr>
             <td width="15%" align='right'>宗地</td>
             <td align='left'><?= $newFarm->zongdi?></td>
           </tr>
+           <tr>
+            <td width="15%" align='right'>宗地面积</td>
+            <td align='left'><?= $newFarm->measure ?></td>
+          </tr>
           <tr>
-            <td width="15%" align='right'>未明确地块</td>
-            <td align='left'><?= $newFarm->notclear?>
-              亩</td>
+            <td width="15%" align='right'>未明确地块面积</td>
+            <td align='left'><?= $newFarm->notclear?>亩</td>
+          </tr>
+          <tr>
+            <td width="15%" align='right'>未明确状态面积</td>
+            <td align='left'><?= $newFarm->notstate?>亩</td>
           </tr>
           <tr>
 			<td width=20% align='right'>增加宗地</td>
@@ -143,6 +160,7 @@ $this->params['breadcrumbs'][] = $this->title;
       </tr>
     </table>
     <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
+    <?= Html::a('打印', ['reviewprocess/reviewprocessfarmssplit','oldfarmsid'=>$oldFarm->id,'newfarmsid'=>$newFarm->id,'reviewprocessid'=>$_GET['id']], ['class' => 'btn btn-success'])?>
                 </div>
             </div>
         </div>

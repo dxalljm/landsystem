@@ -225,14 +225,13 @@ class ParcelController extends Controller
 	    $zd = $zongdiarr[$count-1];
 	    if(!strstr($zd,'(')) {
 	    //foreach ($zongdiarr as $zd) {
-	    	$area = Parcel::find()->where(['unifiedserialnumber' => $zd])->one()['grossarea'];
+	    	$parcel = Parcel::find()->where(['unifiedserialnumber' => $zd])->one();
+	    	$area = $parcel['grossarea'];
 	    	if($area) {	
-	    		$zongdistate = $this->scanzongdi($zd);
-	    		//var_dump($zongdistate[0]);
-	    		if($zongdistate[0]) {
+	    		if(!empty($parcel['farms_id'])) {
 	    			$status = 0;
 	    			$grossarea = 0;
-	    			$message = '对不起，您输入的地块已经被“'.$zongdistate[1].'”占用';
+	    			$message = '对不起，您输入的地块已经被“'.Farms::find()->where(['id'=>$parcel['farms_id']])->one()['farmname'].'”占用';
 	    		} else {
 		    		$status = 1;
 		    		$grossarea += $area;
@@ -252,6 +251,22 @@ class ParcelController extends Controller
 	    	
     	echo json_encode(['status' => $status, 'area' => $grossarea,'message' => $message]);
 
+    }
+    
+    public function actionParcelsetfarms()
+    {
+    	set_time_limit ( 0 );
+    	$parcels = Parcel::find()->all();
+    	foreach ($parcels as $parcel) {
+    		$farms = Farms::find();
+    		$farm = $farms->andFilterWhere(['like','zongdi',$parcel['unifiedserialnumber']])->one();
+    		$model = $this->findModel($parcel['id']);
+    		if($farm) {
+	    		$model->farms_id = $farm['id'];
+	    		$model->save();
+    		}
+    	}
+    	echo 'finished';
     }
     
 	//面积总和（farmssplit方法用）

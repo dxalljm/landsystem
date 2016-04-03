@@ -61,7 +61,7 @@ use yii\helpers\Url;
       <tr>
       <tr>
 			<td width=15% align='right'>合同号</td><?php if($oldFarm->contractnumber == '') $oldFarm->contractnumber = Farms::getContractnumber($_GET['farms_id']);?>
-			<td colspan="5" align='left'><?= html::textInput('oldcontractnumber',$oldFarm->contractnumber,['id'=>'oldfarms-contractnumber','class'=>'form-control'])?></td>
+			<td colspan="5" align='left'><?= html::textInput('oldcontractnumber',$oldFarm->contractnumber,['id'=>'oldfarms-contractnumber','class'=>'form-control','readonly'=>true])?></td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>承包年限</td>
@@ -98,12 +98,22 @@ use yii\helpers\Url;
       <tr><?= Html::hiddenInput('oldzongdi',$oldFarm->zongdi,['id'=>'oldfarm-zongdi']) ?>
       <?= Html::hiddenInput('ttpozongdi','',['id'=>'ttpozongdi-zongdi']) ?>
       <?= Html::hiddenInput('ttpoarea',0,['id'=>'ttpozongdi-area']) ?>
-        <td align='right' valign="middle">面积</td>
-        <td colspan="5" align='left' valign="middle"><?= html::textInput('oldmeasure',$oldFarm->measure,['readonly' => true,'id'=>'oldfarms-measure','class'=>'form-control']) ?><?= html::hiddenInput('temp_oldmeasure',$oldFarm->measure,['id'=>'tempoldmeasure']) ?></td>
+        <td align='right' valign="middle">宗地面积</td><?= html::textInput('tempoldmeasure',$oldFarm->measure,['id'=>'temp_oldmeasure']) ?>
+        										 <?= html::textInput('tempoldnotclear',$oldFarm->notclear,['id'=>'temp_oldnotclear']) ?>
+        										 <?= html::textInput('tempoldcontractarea',$oldFarm->contractarea,['id'=>'temp_oldcontractarea']) ?>
+        <td colspan="5" align='left' valign="middle"><?= html::textInput('oldmeasure',$oldFarm->measure,['readonly' => true,'id'=>'oldfarms-measure','class'=>'form-control']) ?></td>
+        </tr>
+        <tr>
+        <td align='right' valign="middle">合同面积</td>
+        <td colspan="5" align='left' valign="middle"><?= html::textInput('oldcontractarea',$oldFarm->contractarea,['readonly' => true,'id'=>'oldfarms-contractarea','class'=>'form-control']) ?></td>
         </tr>
       <tr>
-        <td align='right' valign="middle">未明确地块</td>
+        <td align='right' valign="middle">未明确地块面积</td>
         <td colspan="5" align='left' valign="middle"><?= html::textInput('oldnotclear',$oldFarm->notclear,['readonly' => true,'id'=>'oldfarms-notclear','class'=>'form-control']) ?></td>
+        </tr>
+         <tr>
+        <td align='right' valign="middle">未明确状态面积</td>
+        <td colspan="5" align='left' valign="middle"><?= html::textInput('oldnotstate',$oldFarm->notstate,['readonly' => true,'id'=>'oldfarms-notstate','class'=>'form-control']) ?></td>
         </tr>
       <tr>
         <td align='right' valign="middle">法人签字</td>
@@ -139,7 +149,7 @@ use yii\helpers\Url;
         </tr>
        <tr>
 			<td width=30% align='right'>合同号</td>
-			<td colspan="5" align='left'><?= $form->field($newFarm, 'contractnumber')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+			<td colspan="5" align='left'><?= $form->field($newFarm, 'contractnumber')->textInput(['maxlength' => 500,'readonly'=>true])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
 			<td width=30% align='right'>承包年限</td>
@@ -154,17 +164,25 @@ use yii\helpers\Url;
 		  <td colspan="5" align='left'><?= $form->field($newFarm, 'zongdi')->textarea(['readonly' => false])->label(false)->error(false) ?></td>
 		  </tr>
 		<tr>
-        <td align='right'>面积</td>
-								  <?= html::hiddenInput('tempinput',0,['id'=>'temp_input']) ?><?= html::hiddenInput('newmeasure',$newFarm->measure,['id'=>'temp_newmeasure']) ?>
+        <td align='right'>宗地面积</td><?= html::hiddenInput('tempmeasure',$newFarm->measure,['id'=>'temp_measure']) ?>
+								  <?= html::hiddenInput('tempnotclear',$newFarm->notclear,['id'=>'temp_notclear']) ?>
         <td colspan="5" align='left'><?= $form->field($newFarm, 'measure')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
         </tr>
+        <tr>
+        <td align='right'>合同面积</td>
+        <td colspan="5" align='left'><?= $form->field($newFarm, 'contractarea')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
+       </tr>
       <tr>
         <td align='right'>未明确地块面积</td>
         <td colspan="5" align='left'><?= $form->field($newFarm, 'notclear')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
        </tr>
+        <tr>
+        <td align='right'>未明确状态面积</td>
+        <td colspan="5" align='left'><?= $form->field($newFarm, 'notstate')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
+       </tr>
        <tr>
-        <td align='right'>转让未明确地块面积</td>
-        <td colspan="5" align='left'><?= html::textInput('inputnotclear','',['id'=>'input-notclear','class'=>'form-control']) ?></td>
+        <td align='right'>转让未明确地块面积</td><?php if($oldFarm->notclear) $realonly = false; else $realonly = true;?>
+        <td colspan="5" align='left'><?= html::textInput('inputnotclear','',['id'=>'input-notclear','class'=>'form-control','readonly'=>$realonly]) ?></td>
        </tr>
       <tr>
         <td align='right'>法人签字</td>
@@ -192,10 +210,32 @@ use yii\helpers\Url;
 if($('#oldfarms-notclear').val() == 0) {
 	$('#input-notclear').attr("readonly",true); 
 }
+function resetZongdi(zongdi,area)
+{
+	$('#'+zongdi).attr('disabled',false);
+	var oldmeasure = $('#oldfarms-measure').val()*1 + area*1;
+	var oldfarmsmeasure = parseFloat($('#oldfarms-measure').val());
+	if(oldfarmsmeasure == 0) {
+		$('#oldfarms-notclear').val(oldmeasure.toFixed(2));
+	} else
+		$('#oldfarms-measure').val(oldmeasure.toFixed(2));
+	toHTH();
+}
+function getArea(zongdi)
+{
+	re = /-([\s\S]*)\(([0-9.]+?)\)/
+	var area = zongdi.match(re);
+	return area[2];
+	
+}
 function toZongdi(zongdi,area){
 	$('#'+zongdi).attr('disabled',true);
+	var ycontractarea = parseFloat($('#oldfarms-contractarea').val());
 	var value = $('#oldfarms-measure').val()*1-area*1;
+// 	var oldcontractarea = $('#oldfarms-contractarea').val()*1 - area*1;
 	$('#oldfarms-measure').val(value.toFixed(2));
+// 	$('#temp_oldmeasure').val(value.toFixed(2));
+// 	$('#temp_oldcontractarea').val(oldcontractarea.toFixed(2));
 	var newvalue = $('#farms-measure').val()*1 + area*1;
 	$('#farms-measure').val(newvalue.toFixed(2));
 	$('#temp_measure').val(newvalue.toFixed(2));
@@ -203,8 +243,11 @@ function toZongdi(zongdi,area){
 	var first = newzongdi.substr(0,1);
 	if(first == '、') {
 		$('#farms-zongdi').val(newzongdi.substring(1));
-	} else
+		$('#temp-zongdi').val($('#farms-zongdi').val());
+	} else {
 		$('#farms-zongdi').val(newzongdi);
+		$('#temp-zongdi').val($('#farms-zongdi').val());
+	}
 	var oldzongdi = $('#oldfarm-zongdi').val();
 	var strzongdi = zongdi+"("+area+")";
 	$('#oldfarm-zongdi').val(oldzongdi.replace(strzongdi, ""));
@@ -231,6 +274,16 @@ function toZongdi(zongdi,area){
 	ttpoarea = area*1 + ttpoarea*1;
 	$('#ttpozongdi-area').val(ttpoarea);
 	toHTH();
+	var oldcontractarea = parseFloat($('#oldfarms-contractarea').val());
+	
+	if(oldcontractarea < 0 && ycontractarea > 0) {
+		alert('宗地面积已经大于合同面积，多出面积自动加入未明确状态面积');
+	}
+	if(oldcontractarea < 0) {
+		$('#farms-notstate').val(Math.abs(oldcontractarea));
+		toHTH();
+	}
+	
 }
 $('#reset').click(function() {
 	 
@@ -242,157 +295,77 @@ function toHTH()
 	//生成合同号
 	var hth = $('#farms-contractnumber').val();
 	var arrayhth = hth.split('-');
-	arrayhth[2] = cutZero($('#farms-measure').val());
+	var contractarea = $('#farms-measure').val()*1 + $('#farms-notclear').val()*1 - $('#farms-notstate').val()*1;
+	arrayhth[2] = cutZero(contractarea.toFixed(2));
 	$('#farms-contractnumber').val(arrayhth.join('-'));
+	$('#farms-contractarea').val(arrayhth[2]);
 	
 	var hth = $('#oldfarms-contractnumber').val();
 	var arrayhth = hth.split('-');
-	arrayhth[2] = cutZero($('#oldfarms-measure').val());
-	
+	$.each(arrayhth,function(n,value) { 
+		if(value == '')
+			arrayhth.splice(n,1);
+	});
+	var oldcontractarea = $('#oldfarms-measure').val()*1 + $('#oldfarms-notclear').val()*1 - $('#oldfarms-notstate').val()*1;
+	arrayhth[2] = cutZero(oldcontractarea.toFixed(2));
+	$('#oldfarms-contractarea').val(arrayhth[2]);
 	$('#oldfarms-contractnumber').val(arrayhth.join('-'));
 }
 $('#input-notclear').blur(function(){
 	var input = $(this).val();
-	if(input !== '') {
 	if(input*1 > $('#temp_oldnotclear').val()*1) {
 		
 		alert('输入的数值不能大于'+$('#temp_oldnotclear').val());
+		$('#oldfarms-notclear').val($('#temp_oldnotclear').val());
 		$(this).val(0);
-		$(this).focus();
+		$('#farms-notclear').val(0);
+		$(this).focus();		
+		toHTH();
+}});
+$('#input-notclear').keyup(function (event) {
+	var input = $(this).val();
+	if(event.keyCode == 8) {
+		$(this).val('');
+		$('#farms-notclear').val($('#temp_notclear').val());
+		var measure = $('#farms-measure').val();
+		if(measure > 0) {
+			$('#oldfarms-notclear').val($('#temp_oldnotclear').val()*1 - measure*1);	
+		} else
+			$('#oldfarms-notclear').val($('#temp_oldnotclear').val());	
+		
+		$('#temp_oldcontractarea').val($('#oldfarms-contractarea').val());
+		toHTH();
 	} else {
-		var oldmeasure = $('#oldfarms-measure').val();
-		var oldnotclear = $('#oldfarms-notclear').val();
-
-		var newmeasure = $('#farms-measure').val();
-		var newnotclear = $('#farms-notclear').val();
-
-		var tempinput = $('#temp_input').val();
-		if(tempinput == 0) {
-// 			alert(0);
-			var oldmeasureresult = oldmeasure*1 - input*1;
-			$('#oldfarms-measure').val(oldmeasureresult.toFixed(2));
-			var oldnotclearresult = oldnotclear*1 - input*1;
-			$('#oldfarms-notclear').val(oldnotclearresult.toFixed(2));
-			var newmeasureresult = newmeasure*1 + input*1;
-			$('#farms-measure').val(newmeasureresult.toFixed(2));
-			var newnotclearresult = newnotclear*1 + input*1;
-			$('#farms-notclear').val(newnotclearresult.toFixed(2));
-			$('#temp_input').val(input);
+		if(/^[0-9]{0}([0-9]|[.])+$/.test(input)) {
+			if($('#temp_notclear').val() != '') {
+				var result = $('#temp_oldnotclear').val()*1 - input*1;
+				
+				var measure = $('#farms-measure').val();
+				if(measure > 0) {
+					var newresult = result - measure;
+					$('#oldfarms-notclear').val(newresult.toFixed(2));					
+				} else {
+					$('#oldfarms-notclear').val(result.toFixed(2));	
+				}
+				var notclear = $('#temp_notclear').val();
+				var notclearresult = notclear*1 + input*1;
+				$('#farms-notclear').val(notclearresult.toFixed(2));
+				toHTH();
+			} else {
+				var result = $('#temp_oldcontractarea').val()*1 - input*1				
+				$('#oldfarms-notclear').val(result.toFixed(2));	
+				$('#farms-notclear').val(input);
+				toHTH();
+			}
 		} else {
-// 			alert(1);
-			var cha = input*1 - tempinput*1 ;
-			var oldmeasureresult = oldmeasure*1 - cha*1;
-			$('#oldfarms-measure').val(oldmeasureresult.toFixed(2));
-			var oldnotclearresult = oldnotclear*1 - cha*1;
-			$('#oldfarms-notclear').val(oldnotclearresult.toFixed(2));
-			var newmeasureresult = newmeasure*1 + cha*1;
-			$('#farms-measure').val(newmeasureresult.toFixed(2));
-			var newnotclearresult = newnotclear*1 + cha*1;
-			$('#farms-notclear').val(newnotclearresult.toFixed(2));
-			$('#temp_input').val(input);
+			alert('输入的必须为数字');
+			var last = input.substr(input.length-1,1);
+			$('#input-notclear').val(input.substring(0,input.length-1));
+			
 		}
-// 		var oldmeasure = $('#oldfarms-measure').val();
-// 		var newmeasure = $('#farms-measure').val();
-// 		var jian = oldmeasure*1-input*1;
-// 		var jia = newmearue*1+input*1;
-// 		$('#oldfarms-measure').val(jian.toFixed(2));
-// 		$('#farms-measure').val(jia.toFixed(2));
-// 		$('#farms-notclear').val(jia.toFixed(2));
-// 		if(input*1 > $('#temp_notclear').val()*1) {
-// 			alert(1);
-// 			var tempmeasure = $('#temp_measure').val();
-// 			var farmsmeasure = $('#farms-measure').val();
-// 			if(farmsmeasure < tempmeasure) {
-// 				alert(11);
-// 				var result = farmsmeasure*1 + input*1;
-// 				$('#temp_measure').val(result.toFixed(2));
-// 				$('#farms-measure').val(result.toFixed(2));
-// 				$('#farms-notclear').val(result.toFixed(2));
-// 				$('#temp_notclear').val(result.toFixed(2));	
-				
-// 			} else {
-// 				alert(12)
-// 				var cha = $('#temp_notclear').val()*1 - input*1;
-// 				var result = farmsmeasure*1 + cha*1;
-// 				var oldmeasure = $('#oldfarms-measure').val();
-// 				var oldresult = oldmeasure*1 - cha*1;
-// 				$('#oldfarms-measure').val(oldresult.toFixed(2));
-// 				var oldnotclear = $('#oldfarms-notclear').val();
-// 				var notclearresult = oldnotclear*1 - cha*1;
-// 				$('#oldfarms-notclear').val(notclearresult.toFixed(2));
-// // 				$('#temp_measure').val(result.toFixed(2));
-// 				$('#farms-measure').val(result.toFixed(2));
-// 				$('#farms-notclear').val(result.toFixed(2));
-// // 				$('#temp_notclear').val(result.toFixed(2));	
-				
-// 			}
-// 		} 
-// 		if(input*1 < $('#temp_notclear').val()*1) {
-// 			alert(2)
-// 			var tempmeasure = $('#temp_measure').val();
-// 			var farmsmeasure = $('#farms-measure').val();
-// 			if(farmsmeasure < tempmeasure) {
-// 				alert(21)
-// 				var result = farmsmeasure*1 + input*1;
-// 				$('#temp_measure').val(result.toFixed(2));
-// 				$('#farms-measure').val(result.toFixed(2));
-// 				$('#farms-notclear').val(result.toFixed(2));	
-// 				$('#temp_notclear').val(result.toFixed(2));	
-				
-// 			} else {
-// 				alert(22);
-// 				var newtempnotclear = $('#temp_notclear').val();
-// 				var oldtempnotclear = $('#temp_oldnotclear').val();
-// 				var cha = $('#temp_notclear').val()*1 - input*1;
-// 				var result = farmsmeasure*1 + input*1;
-// 				var oldtempmeasure = $('#temp_oldmeasure').val();
-// 				var oldmeasure = oldtempmeasure*1 - input*1;
-				
-// 				var oldnotclear = oldtempnotclear*1 - input*1;
-// 				$('#oldfarms-measure').val(oldmeasure.toFixed(2));
-
-// 				$('#oldfarms-notclear').val(oldnotclear.toFixed(2));
-// 				$('#temp_measure').val(result.toFixed(2));
-// 				$('#farms-measure').val(result.toFixed(2));
-				
-// 				$('#farms-notclear').val(result.toFixed(2));
-// 				$('#temp_notclear').val(result.toFixed(2));	
-// 				$('#temp_oldnotclear').val(oldnotclear.toFixed(2));
-// 				$('#temp_oldmeasure').val(oldmeasure.toFixed(2));
-// 			}
-// 		}
 	}
-	}
-	toHTH();
 });
-// $('#input-notclear').keyup(function (event) {
-// 	var input = $(this).val();
-// 	if(event.keyCode == 8) {
-// 		$(this).val('');
-// 		$('#farms-notclear').val(0);
-// 		var result = $('#farms-measure').val()-$('#temp_notclear').val();
-// 		$('#farms-measure').val(result.toFixed(2));
-// 		$('#oldfarms-measure').val($('#oldfarms-measure').val()*1+$('#temp_notclear').val()*1);
-// 		$('#oldfarms-notclear').val($('#oldfarms-notclear').val()*1+$('#temp_notclear').val()*1);	
-// 		$('#temp_notclear').val('');
-// 		$('#temp_measure').val('');
-// 	} else {
-// 		if(/^\d+(\.\d+)?$/.test(input)) {
-// 			if($('#temp_notclear').val() !== '') {
-// 				var result = $('#farms-measure').val()-$('#temp_notclear').val();
-// 				$('#farms-measure').val(result.toFixed(2));
-// 				$('#oldfarms-measure').val($('#oldfarms-measure').val()*1+$('#temp_notclear').val()*1);
-// 				$('#oldfarms-notclear').val($('#oldfarms-notclear').val()*1+$('#temp_notclear').val()*1);	
-// 				$('#temp_notclear').val('');
-// 				$('#temp_measure').val('');
-// 			}
-// 		} else {
-// 			alert('输入的必须为数字');
-// 			var last = input.substr(input.length-1,1);
-// 			$('#input-notclear').val(input.substring(0,input.length-1));
-// 		}
-// 	}
-// });
+
 $('#searchFarms').click(function(){
 	var input = $('#farms-farmname').val();
 	$.getJSON('index.php?r=farms/getfarminfo', {str: input}, function (data) {
@@ -418,41 +391,156 @@ $('#searchFarmer').click(function(){
 <?php
 
 $script = <<<JS
-
-
 $("#farms-zongdi").keyup(function (event) {
+
     var input = $(this).val();
-	if (event.keyCode == 32) {  
-		input = $.trim(input)+'、';  
-		$("#farms-zongdi").val(input);
+	if (event.keyCode == 32) {
+		
+		input = $.trim(input);
+		$.getJSON('index.php?r=parcel/parcelarea', {zongdi: input}, function (data) {
+			//alert(data.area);
+			if (data.status == 1) {
+				var oldfarmsmeasure = parseFloat($('#oldfarms-measure').val());
+				var notclear = parseFloat($('#farms-notclear').val());
+				var value = $('#farms-measure').val()*1+data.area*1;
+				$('#farms-measure').val(value.toFixed(2));
+				$('#temp_measure').val(value.toFixed(2));
+				
+				$('#temp-zongdi').val($.trim(input)+'、');
+				$("#farms-zongdi").val($.trim(input)+'、');
+				if(oldfarmsmeasure == 0) {
+					var notclear = $('#oldfarms-notclear').val()*1 - data.area*1;
+					$('#oldfarms-notclear').val(notclear.toFixed(2));					
+					toHTH();
+					$('#temp_oldcontractarea').val($('#oldfarms-contractarea').val());
+				} else {
+// 					var notclear
+				}
+				
+				var measure = $("#farms-measure").val()*1;
+				if(measure < contractarea) {
+					var cha = contractarea - measure;
+					$("#farms-notclear").val(cha.toFixed(2));
+				} else {
+					$("#farms-notclear").val(0);
+					$("#farms-contractarea").val(value.toFixed(2));
+				}
+				toHTH();
+			}
+			else {
+				alert(data.message);
+				$("#farms-zongdi").val($('#temp-zongdi').val());
+				toHTH();
+			}
+		});
 	}
-	$.getJSON('index.php?r=parcel/parcelarea', {zongdi: input}, function (data) {
-		if (data.status == 1) {
-			$('#farms-measure').val(data.area);
+	if (event.keyCode == 8) {
+		var zongdi = $('#farms-zongdi').val();
+		var arrayZongdi = zongdi.split('、');
+		var rows = arrayZongdi.length*1 - 1;
+		var delZongdi = arrayZongdi[rows];
+		var zongdiNumber = delZongdi.split('(');
+		resetZongdi(zongdiNumber[0],zongdiNumber[1]);
+		arrayZongdi.splice(rows,1); 
+		$('#farms-zongdi').val(arrayZongdi.join('、'));
+		var input = $(this).val();
+		var oldfarmsmeasure = parseFloat($('#oldfarms-measure').val());
+		if(input) {
+		    input = $.trim(input);
+			$.getJSON('index.php?r=parcel/getformatzongdi', {zongdi: input}, function (data) {
+				if (data.status == 1) {
+					
+					$("#farms-zongdi").val($.trim(data.formatzongdi));	
+					$("#farms-measure").val(data.sum);
+					if(oldfarmsmeasure == 0) {
+						var notclear = $('#temp_oldnotclear').val()*1 - data.sum*1 - $('#input-notclear').val()*1;
+						$('#oldfarms-notclear').val(notclear.toFixed(2));
+						$('#temp_oldcontractarea').val(notclear.toFixed(2));
+						toHTH();
+					}
+					var contractarea = $('#farms-contractarea').val()*1;
+					var measure = $('#farms-measure').val()*1;
+					if(measure > contractarea) {
+						$('#farms-notstate').val(measure - contractarea);
+					}
+				toHTH();
+				}	
+			});
+		} else {
+			$("#farms-measure").val(0);
+			var inputnotclear = $('#input-notclear').val();
+			if(oldfarmsmeasure == 0) {
+				if(inputnotclear > 0) {
+					$('#oldfarms-notclear').val($('#temp_oldnotclear').val()*1 - inputnotclear*1);
+					$('#temp_oldcontractarea').val($('#temp_oldnotclear').val() - inputnotclear*1);
+				} else {
+					$('#oldfarms-notclear').val($('#temp_oldnotclear').val());
+					$('#temp_oldcontractarea').val($('#temp_oldnotclear').val());
+				}
+			} else {
+				var notclear = $('#temp_oldnotclear').val()*1 - $('#farms-notclear').val()*1;
+				$('#oldfarms-notclear').val(notclear.toFixed(2));
+				$('#temp_oldcontractarea').val(notclear.toFixed(2));
+			}
+			
+			
+			toHTH();
 		}
-	});
+	}
  });
 $('#farms-zongdi').blur(function(){
 	var input = $(this).val();
-    input = $.trim(input);
-	$.getJSON('index.php?r=parcel/areasum', {zongdi: input}, function (data) {
-		if (data.status == 1) {
-			var tempmeasure = $("#temp_newmeasure").val();
-			$("#farms-measure").val(data.sum*1 + tempmeasure*1);	
-			var zarea = $("#tempoldmeasure").val();
-			var result = zarea*1-data.sum*1;
-			$('#oldfarms-measure').val(result.toFixed(2));
-			var hth = $('#farms-contractnumber').val();
-			var arrayhth = hth.split('-');
-			arrayhth[2] = $('#farms-measure').val();
-			$('#farms-contractnumber').val(arrayhth.join('-'));
-			
-			var hth = $('#oldfarms-contractnumber').val();
-			var arrayhth = hth.split('-');
-			arrayhth[2] = $('#oldfarms-measure').val();
-			$('#oldfarms-contractnumber').val(arrayhth.join('-'));
-		}	
-	});
+	if(input) {
+	    input = $.trim(input);
+		
+		$.getJSON('index.php?r=parcel/getformatzongdi', {zongdi: input}, function (data) {
+			if (data.status == 1) {
+				
+				$("#farms-zongdi").val($.trim(data.formatzongdi));	
+				$("#farms-measure").val(data.sum);
+				$('#temp_measure').val(data.sum);
+				var oldfarmsmeasure = parseFloat($('#oldfarms-measure').val());
+				toHTH();
+				var measure = $("#farms-measure").val()*1;
+				var input = $('#input-notclear').val()*1;
+				if(oldfarmsmeasure == 0) {
+					toHTH();
+					var result = $('#temp_oldnotclear').val()*1 - data.sum*1;
+					if(input > 0) {
+						var newresult = result - input;
+						$('#oldfarms-notclear').val(newresult.toFixed(2));
+					} else {
+						$('#oldfarms-notclear').val(result.toFixed(2));
+						$('#temp_oldcontractarea').val(result.toFixed(2));
+					}
+					toHTH();
+				} else {
+					
+// 					var tempzongdi = $('#temp-zongdi').val();
+// 					var arrayTempZongdi = tempzongdi.split('、');
+					var zongdi = $('#farms-zongdi').val();
+					var arrayZongdi = zongdi.split('、');
+					var sum = 0.0;
+					$.each(arrayZongdi,function(n,value) { 
+						sum +=  getArea(value)*1;
+					});
+					
+					var result = $('#temp_oldmeasure').val() *1 - sum*1;
+					$('#oldfarms-measure').val(result.toFixed(2));
+					
+					var contractarea = $("#farms-contractarea").val()*1;
+					var tempoldcontractarea = $('#temp_oldcontractarea').val()*1;
+					if(contractarea < tempoldcontractarea) {
+						$('#farms-notstate').val(0);
+					}
+					toHTH();
+				}
+			}	
+		});
+	} else {
+		$("#farms-measure").val(0);
+		toHTH();
+	}
 });
 JS;
 $this->registerJs($script);

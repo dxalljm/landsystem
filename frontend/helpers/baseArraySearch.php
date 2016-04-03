@@ -510,6 +510,7 @@ class baseArraySearch {
 		else
 			return 0.0;
 	}
+	
 	public function count($field=NULL,$state = TRUE) {
 		$newdata = [ ];
 		$olddata = [ ];
@@ -576,7 +577,7 @@ class baseArraySearch {
 						} else
 							return 0;
 					} else
-						return count ( $data );
+						return count ( $olddata );
 				}
 			}
 		}

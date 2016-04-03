@@ -594,10 +594,10 @@ class FarmsController extends Controller {
 		foreach ( $farms as $farm ) {
 			$model = $this->findModel($farm['id']);
 			if($model->notstate === NULL) {
-				$model->notstate = 0;
-				$model->save();
+				$model->notstate = 0;				
 			} 
-			
+			$model->measure = Lease::getListArea($model->zongdi);
+			$model->save();
 		}
 		echo 'finished';
 // 		return $this->render ( 'farmslist', [ 
@@ -771,12 +771,15 @@ class FarmsController extends Controller {
 	// 农场转让——新增
 	public function actionFarmssplit($farms_id) {
 		$oldmodel = $this->findModel ( $farms_id );
-		
+// 		var_dump($oldmodel);exit;
+		$oldzongdi = $oldmodel->zongdi;
+		$oldcontractnumber = $oldmodel->contractnumber;
 		$newmodel = new Farms ();
 		// $ttpoModel = Ttpo::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
 		// $ttpozongdiModel = Ttpozongdi::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
 		// 原农场转让宗地后，重新签订合同后，生成新的农场信息
 		if ($oldmodel->load ( Yii::$app->request->post () )) {
+// 			var_dump($oldmodel);exit;
 			$lockedinfoModel = new Lockedinfo ();
 			$lockedinfoModel->farms_id = $farms_id;
 			$lockedinfoModel->lockedcontent = '部分过户审核中，已被冻结。';
@@ -790,7 +793,12 @@ class FarmsController extends Controller {
 			$oldmodel->zongdi = $this->deleteZongdiDH ( Yii::$app->request->post ( 'oldzongdi' ) );
 			$oldmodel->notclear = Yii::$app->request->post ( 'oldnotclear' );
 			$oldmodel->contractnumber = Yii::$app->request->post ( 'oldcontractnumber' );
+			$oldmodel->contractarea = Yii::$app->request->post ( 'oldcontractarea' );
 			$oldmodel->locked = 1;
+			if($oldmodel->contractarea < 0) {
+				$oldmodel->state = 0;
+				Parcel::parcelState(['farms_id'=>$farms_id,'zongdi'=>$oldmodel->zongdi,'state'=>false]);
+			}
 			$oldmodel->save ();
 			// var_dump($oldmodel);exit;
 			// $newfarm->save();
@@ -817,17 +825,18 @@ class FarmsController extends Controller {
 				$newmodel->state = 0;
 				$newmodel->locked = 0;
 				$newmodel->notclear = $newmodel->notclear;
-				$newmodel->oldfarms_id = $farms_id;
-				
+				$newmodel->oldfarms_id = $farms_id;				
 				$newmodel->save ();
+				Parcel::parcelState(['farms_id'=>$newmodel->id,'zongdi'=>$newmodel->zongdi,'state'=>true]);
 			}
 			$reviewprocessID = Reviewprocess::processRun ( $oldmodel->id, $newmodel->id );
 			$ttpozongdi = new Ttpozongdi ();
 			$ttpozongdi->oldfarms_id = $oldmodel->id;
 			$ttpozongdi->newfarms_id = $newmodel->id;
 			$ttpozongdi->zongdi = $newmodel->zongdi;
-			$ttpozongdi->oldzongdi = $oldmodel->zongdi;
+			$ttpozongdi->oldzongdi = $oldzongdi;
 			$ttpozongdi->reviewprocess_id = $reviewprocessID;
+			$ttpozongdi->oldcontractnumber = $oldcontractnumber;
 			$ttpozongdi->create_at = $oldmodel->update_at;
 			$ttpozongdi->ttpozongdi = Yii::$app->request->post ( 'ttpozongdi' );
 			$ttpozongdi->ttpoarea = Yii::$app->request->post ( 'ttpoarea' );

@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveFormrdiv;
 use app\models\Tables;
 use app\models\Tablefields;
+use app\models\Farms;
 /* @var $this yii\web\View */
 /* @var $model app\models\Reviewprocess */
 
@@ -60,14 +61,14 @@ use app\models\Tablefields;
 			  <tr height="40px">
 			    <td align="center"><?= $oldfarm->farmname?></td>
 			    <td align="center"><?= $oldfarm->farmername?></td>
-			    <td align="center"><?= $oldfarm->measure?></td>
+			    <td align="center"><?= Farms::getContractnumberArea($oldttpozongdi->oldcontractnumber);?></td>
 			    <td align="center"><?= $newfarm->farmname?></td>
 			    <td align="center"><?= $newfarm->farmername?></td>
-			    <td align="center"><?= $newfarm->measure?></td>
+			    <td align="center"><?= $newfarm->contractarea?></td>
 			  </tr>
 			  <tr height="40px">
 			    <td align="center">原合同号</td>
-			    <td colspan="2" align="center"><?= $oldfarm->contractnumber?></td>
+			    <td colspan="2" align="center"><?= $oldttpozongdi->oldcontractnumber?></td>
 			    <td align="center">现合同号</td>
 			    <td colspan="2" align="center"><?= $newfarm->contractnumber?></td>
 			    </tr>
@@ -78,11 +79,11 @@ use app\models\Tablefields;
 			    <td colspan="2" align="center"><?= $newfarm->cardid?></td>
 			    </tr>
 			  <tr height="40px">
-			    <td align="center">原宗地信息</td><?php if(!empty($oldfarm->zongdi)) $zongdiArray = explode('、', $oldfarm->zongdi); else $zongdiArray = [];?>
+			    <td align="center">原宗地信息</td><?php if(!empty($oldttpozongdi->oldzongdi)) $zongdiArray = explode('、', $oldttpozongdi->oldzongdi); if($oldfarm->notclear) $zongdiArray[] = '未明确地块面积('.$oldfarm->notclear.')';if($oldfarm->notstate) $zongdiArray[] = '未明确状态面积('.$oldfarm->notstate.')';?>
 			    
 			    <td colspan="5" align="center"><table width="100%" border="0" align="right"><?php for($i = 0;$i<count($zongdiArray);$i++) {
 // 			    	echo $i%6;
-			    	if($i%5 == 0) {
+			    	if($i%4 == 0) {
 			    		echo '<tr>';
 			    		echo '<td>';
 			    		echo $zongdiArray[$i];
@@ -95,9 +96,9 @@ use app\models\Tablefields;
 			    }?></table></td>
 			    </tr>
 			  <tr height="40px">
-			    <td align="center">现宗地信息</td><?php if(!empty($newfarm->zongdi)) $zongdiArray = explode('、', $newfarm->zongdi); else $zongdiArray = [];?>
+			    <td align="center">现宗地信息</td><?php if(!empty($newttpozongdi->zongdi)) $zongdiArray = explode('、', $newttpozongdi->zongdi); if($newfarm->notclear) $zongdiArray[] = '未明确地块面积('.$newfarm->notclear.')';if($newfarm->notstate) $zongdiArray[] = '未明确状态面积('.$newfarm->notstate.')';?>
 			    <td colspan="5" align="center"><table width="100%" border="0" align="center"><?php for($i = 0;$i<count($zongdiArray);$i++) {
-			    	if($i%5 == 0) {
+			    	if($i%4 == 0) {
 			    		echo '<tr>';
 			    		echo '<td>';
 			    		echo $zongdiArray[$i];

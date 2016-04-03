@@ -231,8 +231,8 @@ use yii\helpers\Url;
         <td colspan="5" align='left'><?= $form->field($newFarm, 'notstate')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
        </tr>
        <tr>
-        <td align='right'>转让未明确地块面积</td>
-        <td colspan="5" align='left'><?= html::textInput('inputnotclear','',['id'=>'input-notclear','class'=>'form-control']) ?></td>
+        <td align='right'>转让未明确地块面积</td><?php if($oldFarm->notclear) $realonly = false; else $realonly = true;?>
+        <td colspan="5" align='left'><?= html::textInput('inputnotclear','',['id'=>'input-notclear','class'=>'form-control','readonly'=>$realonly]) ?></td>
        </tr>
       <tr>
         <td align='right'>法人签字</td>
@@ -273,6 +273,7 @@ function getArea(zongdi)
 }
 function toZongdi(zongdi,area){
 	$('#'+zongdi).attr('disabled',true);
+	var ycontractarea = parseFloat($('#oldfarms-contractarea').val());
 	var value = $('#oldfarms-measure').val()*1-area*1;
 // 	var oldcontractarea = $('#oldfarms-contractarea').val()*1 - area*1;
 	$('#oldfarms-measure').val(value.toFixed(2));
@@ -317,8 +318,11 @@ function toZongdi(zongdi,area){
 	$('#ttpozongdi-area').val(ttpoarea);
 	toHTH();
 	var oldcontractarea = parseFloat($('#oldfarms-contractarea').val());
+	
+	if(oldcontractarea < 0 && ycontractarea > 0) {
+		alert('宗地面积已经大于合同面积，多出面积自动加入未明确状态面积');
+	}
 	if(oldcontractarea < 0) {
-		alert('宗地面积大于合同面积，多出面积自动加入未明确状态面积');
 		$('#farms-notstate').val(Math.abs(oldcontractarea));
 		toHTH();
 	}
@@ -591,6 +595,7 @@ $("#farms-zongdi").keyup(function (event) {
 					if(measure > contractarea) {
 						$('#farms-notstate').val(measure - contractarea);
 					}
+				toHTH();
 				}	
 			});
 		} else {

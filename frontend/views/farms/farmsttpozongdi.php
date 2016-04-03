@@ -56,7 +56,7 @@ use app\models\Loan;
             		return ManagementArea::find()->where(['id'=>$model->management_area])->one()['areaname'];
             	}
             ],
-            'measure',
+            'contractarea',
             //'management_area',
             [
             

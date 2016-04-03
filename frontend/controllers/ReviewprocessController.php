@@ -14,6 +14,7 @@ use app\models\User;
 use app\models\Projectapplication;
 use app\models\Tempauditing;
 use app\models\Loan;
+use app\models\Ttpozongdi;
 /**
  * ReviewprocessController implements the CRUD actions for Reviewprocess model.
  */
@@ -104,12 +105,16 @@ class ReviewprocessController extends Controller
     	$model = new Reviewprocess();
     	$newfarm = Farms::find()->where(['id'=>$newfarmsid])->one();
     	$oldfarm = Farms::find()->where(['id'=>$oldfarmsid])->one();
+    	$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$newfarmsid])->one();
+    	$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$oldfarmsid])->one();
     	$reviewprocess = Reviewprocess::find()->where(['id'=>$reviewprocessid])->one();
     	$process = Auditprocess::find()->where(['actionname'=>$reviewprocess['actionname']])->one()['process'];
     	 
     	return $this->render ( 'reviewprocessfarmssplit', [
     			'oldfarm' => $oldfarm,
     			'newfarm' => $newfarm,
+    			'oldttpozongdi' => $oldttpozongdi,
+    			'newttpozongdi' => $newttpozongdi,
     			'process' => explode('>', $process),
     			'model' => $model,
     	] );
@@ -146,11 +151,13 @@ class ReviewprocessController extends Controller
 	    		if($state) {
 // 	    			var_dump($model);exit;
 	    			$oldfarmsModel = Farms::findOne($model->oldfarms_id);
+	    			$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$model->oldfarms_id])->one();
 	    			$oldfarmsModel->update_at = time();
 	    			$oldfarmsModel->state = 0;
 	    			$oldfarmsModel->locked = 0;
 	    			$oldfarmsModel->save();
 	    			$newfarmModel = Farms::findOne($model->newfarms_id);
+	    			$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$model->newfarms_id])->one();
 	    			$newfarmModel->update_at = $oldfarmsModel->update_at;
 	    			$newfarmModel->state = 1;
 	    			$newfarmModel->locked = 0;
@@ -167,6 +174,8 @@ class ReviewprocessController extends Controller
 	    			'model' => $model,
 	    			'oldfarm' => $oldfarm,
 	    			'newfarm' => $newfarm,
+	    			'oldttpozongdi' => $oldttpozongdi,
+	    			'newttpozongdi' => $newttpozongdi,
 	    			'process' => explode('>', $process),
 	    			'class' => $class,
 	    	] );
