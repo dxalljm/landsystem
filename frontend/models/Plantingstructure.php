@@ -84,14 +84,27 @@ class Plantingstructure extends \yii\db\ActiveRecord
     public static function getNoArea($lease_id,$farms_id)
     {
     	$over = self::getOverArea($lease_id, $farms_id);
+//     	$plantingAllArea = Plantingstructure::getAllArea($lease_id,$farms_id);
+    	$all = Lease::getAllLeaseArea($lease_id,$farms_id);
+//     	$all = $plantingAllArea + $leaseAllArea;
     	
-    	$all = Lease::getAllLeaseArea($farms_id);
-//     	var_dump($all);
     	if($over)
     		$result = bcsub($all,$over,2);
     	else 
     		$result = $all;
-
+		if($result == 0)
+			return $all;
+// 		var_dump($over);var_dump($all);var_dump($result);exit;
+    	return $result;
+    }
+    
+    public static function getAllArea($lease_id,$farms_id)
+    {
+    	$planting = self::find()->where(['farms_id'=>$farms_id,'lease_id'=>$lease_id])->all();
+    	$result = 0.0;
+    	foreach ($planting as $value) {
+    		$result += $value['area'];
+    	}
     	return $result;
     }
     

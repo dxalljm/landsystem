@@ -60,9 +60,9 @@ use frontend\helpers\arraySearch;
 						        <td><strong>'.$leaseer.'个</strong></td>
 						        <td><strong>'.$data->count('plant_id').'种</strong></td>
 						        <td><strong>'.$data->count('goodseed_id').'种</strong></td>
-						        <td><strong>'.$data->sum('area',10000).'万亩</strong></td>
+						        <td><strong>'.$data->sum('area').'亩</strong></td>
    		<td><strong></strong></td>
-		<td><strong>'.$data->mulyieldSum('area', 'plant_id',10000).'万斤</strong></td>
+		<td><strong>'.$data->mulyieldSum('area', 'plant_id').'斤</strong></td>
 						        </tr>',
 			        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','lease_id','plant_id','goodseed_id','area','single','allsingle'],$totalData),
 			    ]); ?>
@@ -73,7 +73,7 @@ use frontend\helpers\arraySearch;
 				<?php $data->getName('Plant', 'cropname', 'plant_id')->typenameList();?>
               </div>
               <script type="text/javascript">
-				showAllShadow('plantingstructuredata',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Plant', 'cropname', 'plant_id')->typenameList())?>,<?= $data->getName('Plant', 'cropname', 'plant_id')->showAllShadow('mulyieldSum',['area', 'plant_id'],10000);?>,'万亩');
+				showAllShadow('plantingstructuredata',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Plant', 'cropname', 'plant_id')->typenameList())?>,<?= $data->getName('Plant', 'cropname', 'plant_id')->showAllShadow('mulyieldSum',['area', 'plant_id']);?>,'亩');
 			</script>
               <!-- /.tab-pane -->
 
@@ -83,7 +83,7 @@ use frontend\helpers\arraySearch;
               <?php //var_dump(Plantingstructure::getGoodseedname($params));?>
             </div>
             <script type="text/javascript">
-				showAllShadow('goodseedinfo',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Goodseed', 'plant_model', 'goodseed_id')->typenameList())?>,<?= $data->getName('Goodseed', 'plant_model', 'goodseed_id')->showAllShadow('mulyieldSum',['area', 'plant_id',],10000);?>,'万亩');
+				showAllShadow('goodseedinfo',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Goodseed', 'plant_model', 'goodseed_id')->typenameList())?>,<?= $data->getName('Goodseed', 'plant_model', 'goodseed_id')->showAllShadow('mulyieldSum',['area', 'plant_id',]);?>,'亩');
 		</script>
             <?php }?>
               <!-- /.tab-pane -->

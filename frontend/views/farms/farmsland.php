@@ -41,10 +41,10 @@ $this->params['breadcrumbs'][] = $this->title;
 						<td><strong>'.$data->count('farmer_id').'个</strong></td>
 						<td></td>
 						<td></td>
-						<td><strong>'.$data->sum('measure',10000).'万亩</strong></td>						
+						<td><strong>'.$data->sum('contractarea').'亩</strong></td>						
 						<td></td>
 					</tr>',
-        'columns' => Search::getColumns(['management_area','farmname','farmername','address','telephone','measure','operation'],$totalData),
+        'columns' => Search::getColumns(['management_area','farmname','farmername','address','telephone','contractarea','operation'],$totalData),
 
     ]); ?>
     

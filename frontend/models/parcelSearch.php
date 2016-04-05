@@ -18,7 +18,7 @@ class parcelSearch extends Parcel
     public function rules()
     {
         return [
-            [['id', 'serialnumber', 'temporarynumber'], 'integer'],
+            [['id', 'serialnumber', 'temporarynumber','farms_id'], 'integer'],
             [['unifiedserialnumber', 'powei', 'poxiang', 'podu', 'agrotype', 'stonecontent', 'figurenumber'], 'safe'],
             [['grossarea', 'piecemealarea', 'netarea'], 'number'],
         ];
@@ -58,6 +58,7 @@ class parcelSearch extends Parcel
 
         $query->andFilterWhere([
             'id' => $this->id,
+        	'farms_id' => $this->farms_id,
             'serialnumber' => $this->serialnumber,
             'temporarynumber' => $this->temporarynumber,
             'grossarea' => $this->grossarea,

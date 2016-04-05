@@ -49,9 +49,9 @@ use frontend\helpers\arraySearch;
 			        <td align="center"><strong>合计</strong></td>
 			        <td><strong>'.$data->count('farms_id').'户</strong></td>
 			        <td><strong>'.$data->count('farmer_id').'个</strong></td>
-			        <td><strong>'.$data->sum('mortgagearea',10000).'万亩</strong></td>			        
+			        <td><strong>'.$data->sum('mortgagearea').'亩</strong></td>			        
 					<td><strong>'.$data->count('mortgagebank').'个</strong></td>
-					<td><strong>'.$data->sum('mortgagemoney',10000).'万元</strong></td>
+					<td><strong>'.$data->sum('mortgagemoney').'元</strong></td>
 			        </tr>',
         'columns' => Search::getColumns(['management_area','farms_id','farmer_id','mortgagearea','mortgagebank','mortgagemoney','begindate','enddate'],$totalData),
     ]); ?>
@@ -61,7 +61,7 @@ use frontend\helpers\arraySearch;
               <?php //var_dump($data->getName('self', 'mortgagebank', 'mortgagebank')->typenameList());?>
                 <div id="loan" style="width: 900px; height: 600px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-				showAllShadow('loan',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('self', 'mortgagebank', 'mortgagebank')->typenameList())?>,<?= $data->getName('self', 'mortgagebank', 'mortgagebank')->showAllShadow('sum','mortgagemoney',10000)?>,'万元');
+				showAllShadow('loan',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('self', 'mortgagebank', 'mortgagebank')->typenameList())?>,<?= $data->getName('self', 'mortgagebank', 'mortgagebank')->showAllShadow('sum','mortgagemoney')?>,'元');
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
 

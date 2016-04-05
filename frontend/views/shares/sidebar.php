@@ -66,8 +66,7 @@ else echo '晚上好';
           
           	 <?php
                 if(yii::$app->user->identity->username != 'admin') {
-                    $menuliststr = MenuToUser::find()->where(['role_id'=>User::getItemname()])->one()['menulist'];
-                    $menulistarr = explode(',', $menuliststr);
+                    $menulistarr = MenuToUser::getUserMenu();
 	                   foreach($menulistarr as $val) {
 	                   $menu = Mainmenu::find()->where(['id'=>$val])->one();
 	                   if($menu['menuurl'] == 'dropdown') {

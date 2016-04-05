@@ -51,11 +51,11 @@ use app\models\Theyear;
 			        <td align="center"><strong>合计</strong></td>
 			        <td><strong>'.$data->count('farms_id').'户</strong></td>
 			        <td><strong>'.$data->count('farmer_id').'个</strong></td>
-			        <td><strong>'.$data->sum('amounts_receivable',10000).'万元</strong></td>			        
-					<td><strong>'.$data->sum('real_income_amount',10000).'万元</strong></td>
-					<td><strong>'.$data->sum('owe',10000).'万元</strong></td>
-					<td><strong>'.$data->sum('ypayarea',10000).'万亩</strong></td>
-    				<td><strong>'.$data->sum('ypaymoney',10000).'万元</strong></td>
+			        <td><strong>'.$data->sum('amounts_receivable').'元</strong></td>			        
+					<td><strong>'.$data->sum('real_income_amount').'元</strong></td>
+					<td><strong>'.$data->sum('owe').'元</strong></td>
+					<td><strong>'.$data->sum('ypayarea').'亩</strong></td>
+    				<td><strong>'.$data->sum('ypaymoney').'元</strong></td>
 			        </tr>',
         'columns' => Search::getColumns(['management_area','farms_id','farmer_id','amounts_receivable','real_income_amount','owe','ypayarea','ypaymoney'],$totalData),
     ]); ?>
@@ -65,7 +65,7 @@ use app\models\Theyear;
               <?php $echartsData = $data->setEchartsName(['实收金额','应收金额'])->collectionShowShadow()?>
                 <div id="collection" style="width: 900px; height: 600px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-				wdjShowEchart('collection',<?= json_encode(['实收金额','应收金额'])?>,<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($echartsData['all'])?>,<?= json_encode($echartsData['real'])?>,'万元');
+				wdjShowEchart('collection',<?= json_encode(['实收金额','应收金额'])?>,<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($echartsData['all'])?>,<?= json_encode($echartsData['real'])?>,'元');
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
 

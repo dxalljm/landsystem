@@ -23,7 +23,7 @@ class farmsSearch extends Farms
     {
         return [
             [['id', 'create_at', 'update_at','state','oldfarms_id','locked'], 'integer'],
-            [['farmname', 'farmername', 'address','measure','notstateinfo', 'management_area','telephone', 'spyear', 'zongdi', 'cooperative_id','notclear','surveydate', 'groundsign', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate','latitude','longitude','accountnumber'], 'safe'],
+            [['farmname', 'farmername', 'address','measure','notstateinfo', 'management_area','telephone', 'spyear', 'zongdi', 'cooperative_id','notclear','surveydate', 'groundsign', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate','latitude','longitude','accountnumber','contractarea'], 'safe'],
             //[['measure'], 'number'],
         ];
     }
@@ -78,7 +78,26 @@ class farmsSearch extends Farms
     	//var_dump($tj);
     	return $tj;
     }
+    public function contractareaSearch($str = NULL)
+    {
+    	$this->measure = $str;
+    	if(!empty($this->measure)) {
+    		preg_match_all('/(.*)([0-9]+?)/iU', $this->measure, $where);
+    		//print_r($where);
     
+    		// 		string(2) ">="
+    		// 		string(3) "300"
+    		if($where[1][0] == '>' or $where[1][0] == '>=')
+    			$tj = ['between', 'measure', (float)$where[2][0],(float)99999.0];
+    		if($where[1][0] == '<' or $where[1][0] == '<=')
+    			$tj = ['between', 'measure', (float)0.0,(float)$where[2][0]];
+    		if($where[1][0] == '')
+    			$tj = ['like', 'measure', $this->measure];
+    	} else
+    		$tj = ['like', 'measure', $this->measure];
+    	//var_dump($tj);
+    	return $tj;
+    }
     public function pinyinSearch($str = NULL)
     {
     	
@@ -195,6 +214,7 @@ class farmsSearch extends Farms
             ->andFilterWhere(['like', 'latitude', $this->latitude])
             ->andFilterWhere(['like', 'longitude', $this->longitude])
             ->andFilterWhere(['like', 'accountnumber', $this->accountnumber])
+            ->andFilterWhere($this->contractareaSearch($this->contractarea))
             ->andFilterWhere($this->betweenSearch());
           	//->andFilterWhere(['between', 'measure', $this->measure,$this->measure]);
 // 		var_dump($dataProvider->query->where);exit;
@@ -210,6 +230,7 @@ class farmsSearch extends Farms
     	$dataProvider = new ActiveDataProvider([
     			'query' => $query,
     	]);    
+    	$query->andFilterWhere(['state' => 1]);
 //     	if(isset($params['farmsSearch']['management_area'])) {
     		if($params['farmsSearch']['management_area'] == 0)
     			$this->management_area = NULL;
@@ -217,8 +238,8 @@ class farmsSearch extends Farms
     			$this->management_area = $params['farmsSearch']['management_area'];
 //     	} 
     	$query->andFilterWhere(['management_area' => $this->management_area]);
-    	if(isset($params['farmsSearch']['state']))
-    		$query->andFilterWhere(['state' => $params['farmsSearch']['state']]);
+//     	if(isset($params['farmsSearch']['state']))
+//     		$query->andFilterWhere(['state' => $params['farmsSearch']['state']]);
     	
     	if(isset($params['farmsSearch']['farmname']))
     		$query->andFilterWhere($this->pinyinSearch($params['farmsSearch']['farmname']));
@@ -235,7 +256,9 @@ class farmsSearch extends Farms
     		$query->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
     	if(isset($params['farmsSearch']['measure']))
     		$query->andFilterWhere($this->measureSearch($params['farmsSearch']['measure']));
-
+    	if(isset($params['farmsSearch']['contractarea']))
+    		$query->andFilterWhere($this->contractareaSearch($params['farmsSearch']['contractarea']));
+		
     	return $dataProvider;
     }
     

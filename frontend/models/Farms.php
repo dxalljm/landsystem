@@ -49,7 +49,8 @@ class Farms extends \yii\db\ActiveRecord {
 						[ 
 								'measure',
 								'notclear',
-								'notstate' 
+								'notstate',
+								'contractarea',
 						],
 						'number' 
 				],
@@ -137,6 +138,7 @@ class Farms extends \yii\db\ActiveRecord {
 				'notstate' => '未明确状态面积',
 				'notstateinfo' => '未明确状态信息',
 				'accountnumber' => '账页号',
+				'contractarea' => '合同面积',
 		];
 	}
 	public static function getFarmsAreaID($farms_id) {
@@ -401,6 +403,23 @@ class Farms extends \yii\db\ActiveRecord {
 		$contractnumber = $cn1 . '-' . $cn2 . '-' . $cn3 . '-' . $cn4;
 		return $contractnumber;
 	}
+	
+	public static function getNewContractnumber() {
+		$contractnumber = Contractnumber::findOne ( 1 );
+		$cn1 = str_pad ( $contractnumber->contractnumber, 4, '0', STR_PAD_LEFT );
+	
+		if (date ( 'Y' ) <= $contractnumber->lifeyear)
+			$cn2 = substr ( '2010', 2 );
+		else
+			$cn2 = substr ( $contractnumber->lifeyear, 2 );
+		$cn3 = 0;
+			
+		// $cn3 = substr($cn3,0,strlen($cn3)-1);
+		$cn4 = 1;
+		$contractnumber = $cn1 . '-' . $cn2 . '-' . $cn3 . '-' . $cn4;
+		return $contractnumber;
+	}
+	
 	public static function getNowContractnumberArea($farms_id, $state = null) {
 		$farm = Farms::find ()->where ( [ 
 				'id' => $farms_id 
@@ -410,6 +429,14 @@ class Farms extends \yii\db\ActiveRecord {
 		// var_dump($farms_id);
 		return $array [2];
 	}
+	
+	public static function getContractnumberArea($contractnumber)
+	{
+		$array = explode ( '-', $contractnumber );
+		// var_dump($farms_id);
+		return $array [2];
+	}
+	
 	public static function getManagementArea($str = NULL) {
 // 		$result = [];
 // var_dump(yii::$app->user->identity->username);exit;
@@ -757,7 +784,7 @@ class Farms extends \yii\db\ActiveRecord {
 	}
 	public static function showEightPlantmenu() {
 		
-		$cache = 'cache-key-plantmenu10'.\Yii::$app->getUser()->id;
+		$cache = 'cache-key-plantmenu20'.\Yii::$app->getUser()->id;
     	$html = Yii::$app->cache->get($cache);
     	if (!empty($html)) {
     		return $html;
@@ -890,8 +917,8 @@ class Farms extends \yii\db\ActiveRecord {
 			return 0;
 	}
 	
-	public static function getMeasure($farmsid) {
+	public static function getContractarea($farmsid) {
 		$model = $this->findOne($farmsid);
-		return $model->measure;
+		return $model->contractarea;
 	}
 }

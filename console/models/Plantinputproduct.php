@@ -92,7 +92,7 @@ class Plantinputproduct extends \yii\db\ActiveRecord
 	    		foreach ($input as $value) {
 	    			$sum += (float)Lease::getArea($value->attributes['zongdi'])*$value->attributes['pconsumption'];
 	    		}
-	    		$data[$name][$typenamekey] = (float)sprintf("%.2f", $sum/10000);
+	    		$data[$name][$typenamekey] = (float)sprintf("%.2f", $sum);
 	    	}
     	}
     	foreach ($data as $key => $value) {
@@ -110,6 +110,8 @@ class Plantinputproduct extends \yii\db\ActiveRecord
     	
     	return $jsonData;
     }
+    
+    
     
     public static function getTypenamelist($userid)
     {

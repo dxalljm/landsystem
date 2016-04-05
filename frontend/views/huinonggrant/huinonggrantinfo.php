@@ -55,8 +55,8 @@ use app\models\Huinong;
 						        <td><strong>'.$data->count('lease_id').'个</strong></td>
 								<td><strong></strong></td>
 								<td><strong>'.$data->count('huinong_id').'个</strong></td>
-						        <td><strong>'.$data->sum('money',10000).'万元</strong></td>
-						        <td><strong>'.$data->sum('area',10000).'万亩</strong></td>
+						        <td><strong>'.$data->sum('money').'元</strong></td>
+						        <td><strong>'.$data->sum('area').'亩</strong></td>
 						        </tr>',
 			        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','lease_id','subsidiestype_id','typeid','money','area'],$totalData),
 			    ]); ?>
@@ -70,7 +70,7 @@ use app\models\Huinong;
 				<?php $echartsData = $data->getName('Subsidiestype', 'typename', 'subsidiestype_id')->huinongShowShadow($key);?>
               </div>
               <script type="text/javascript">
-              wdjShowEchart('<?= $classname?>',<?= json_encode(['应发金额','实发金额'])?>,<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($echartsData['all'])?>,<?= json_encode($echartsData['real'])?>,'万元');
+              wdjShowEchart('<?= $classname?>',<?= json_encode(['应发金额','实发金额'])?>,<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($echartsData['all'])?>,<?= json_encode($echartsData['real'])?>,'元');
 			</script>
               <!-- /.tab-pane -->
             <!-- /.tab-content -->

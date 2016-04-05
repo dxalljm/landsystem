@@ -108,7 +108,7 @@ class LandcacheController extends Controller
 				$landcache = new Cache();
 			$landcache->user_id = $id;
 			$landcache->plantingstructurecache = Plantingstructure::getPlantingstructure($id);
-			$landcache->plantingstructuretitle = '作物面积：'.Plantingstructure::getPlantGoodseedSum($id)['plantSum'].'万亩&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;良种面积：'.Plantingstructure::getPlantGoodseedSum($id)['goodseedSum'].'万亩';
+			$landcache->plantingstructuretitle = '作物面积：'.Plantingstructure::getPlantGoodseedSum($id)['plantSum'].'亩&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;良种面积：'.Plantingstructure::getPlantGoodseedSum($id)['goodseedSum'].'亩';
 			$plant = Plantingstructure::getPlantname($id);
 // 			var_dump($id);
 // 			var_dump($plant);

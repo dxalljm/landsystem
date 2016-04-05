@@ -83,11 +83,17 @@ class Search extends \yii\db\ActiveRecord {
 				                	
 				                    $option = '查看详情';
 					            	$title = '';
-					            	return Html::a($option,$url, [
-					            			'id' => 'moreOperation',
-					            			'title' => $title,
-					            			'class' => 'btn btn-primary btn-xs',
-					            	]);
+// 					            	var_dump(User::getItemname());
+									
+					            	if(User::getItemname() == '主任' or User::getItemname() == '法规科科长' or User::getItemname() == '地产科科长') {
+						            	return Html::a($option,$url, [
+						            			'id' => 'moreOperation',
+						            			'title' => $title,
+						            			'class' => 'btn btn-primary btn-xs',
+						            	]);
+					            	}
+					            	else 
+					            		return '';
 				                }
 				            ];
 						break;

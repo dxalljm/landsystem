@@ -206,10 +206,12 @@ class FarmsController extends Controller {
 		$model = new UploadForm ();
 		$rows = 0;
 		$area = [];
+		$data = [];
 // 		require_once dirname(__FILE__) . '../vendor/phpoffice/phpexcel/Classes/PHPExcel/IOFactory.php';
 		if (Yii::$app->request->isPost) {
 			
 			$model->file = UploadedFile::getInstance ( $model, 'file' );
+// 			var_dump($model);exit;
 			$extension = $model->file->getExtension();
 			if ($model->file == null)
 				throw new \yii\web\UnauthorizedHttpException ( '对不起，请先选择xls文件' );
@@ -222,24 +224,24 @@ class FarmsController extends Controller {
 
 				$loadxls = \PHPExcel_IOFactory::load($path);
 				$rows = $loadxls->getActiveSheet ()->getHighestRow ();
-				$farms = Farms::find()->all();
+// 				$farms = Farms::find()->all();
 // 				$zongdi = [ ];
 // 				$a = [];
-				echo '<br><br><br><br><br><br><br><br>';
-				for($i = 2; $i <= $rows; $i ++) {
-					$contract = $loadxls->getActiveSheet()->getCell('B'.$i)->getValue();
+// 				echo '<br><br><br><br><br><br><br><br>';
+				
+				for($i = 1; $i <= $rows; $i ++) {
+					$contract = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
 // 					var_dump($contract);
 // 					$array = explode('-', $contract);
-					foreach($farms as $value) {
-						if($contract == $value['contractnumber']) {
-							echo $contract."<br>";
-							$farmModel = Farms::findOne($value['id']);
-							$farmModel->accountnumber = $loadxls->getActiveSheet()->getCell('A'.$i)->getValue();
-							$farmModel->save();
-						}
+// 					foreach($farms as $value) {
+// 						if($contract !== $value['contractnumber']) {
+// 							$data[] = $value;
+// 						}
 							
-					}
-					
+// 					}
+					$farm = Farms::find()->where(['management_area'=>3,'state'=>1,'contractnumber'=>$contract])->one();
+					if(empty($farm))
+						$data[] = $contract;
 					
 					// 导入农场基础信息
 					// var_dump($loadxls->getActiveSheet()->getCell('H'.$i)->getValue())."<br>";exit;
@@ -338,8 +340,11 @@ class FarmsController extends Controller {
 				}
 			}
 		}
-		//var_dump($area);
-		// exit;
+		if($data)
+			return $this->render ( 'farmslist', [
+					'data' => $data,
+			] );
+// 		exit;
 // 		echo 'finished';
 		Logs::writeLog ( '农场XLS批量导入' );
 		return $this->render ( 'farmsxls', [ 
@@ -570,7 +575,7 @@ class FarmsController extends Controller {
 // 			$elastic->insert();
 // 		}
 		// 		var_dump(Farmselastic::index());
-		echo 'insert done';
+// 		echo 'insert done';
 // 		set_time_limit ( 0 );
 // 		$farms = Farms::find()->all();
 // 		foreach ($farms as $farm) {
@@ -583,20 +588,18 @@ class FarmsController extends Controller {
 // 			$elastic->insert();
 // 		}
 // 		echo 'done';
-		var_dump(Farmselastic::getDb());
-// 		$sum = 0.0;
-// 		$farms = Farms::find ()->where(['management_area'=>5])->all ();
-// 		foreach ( $farms as $farm ) {
-// 			$sum += Farms::getNowContractnumberArea ($farm['id']);
-// 			if (($farm->measure - Farms::getNowContractnumberArea ( $farm->id )) > Farms::getNowContractnumberArea ( $farm->id ) * 0.1) {
-// 				if (! ($farm ['zongdi'] == ''))
-// 					$data [] = $farm;
-// 			}
-// 			if($farm->notstate) {
-// 				$model = $this->findModel($farm->id);
-// 				$model->measure = $model->measure - $farm->notstate;
-// 				$model->save();
-// 			}
+// 		var_dump(Farmselastic::getDb());
+		$sum = 0.0;
+		$farms = Farms::find ()->all ();
+		foreach ( $farms as $farm ) {
+			$model = $this->findModel($farm['id']);
+			if($model->notstate === NULL) {
+				$model->notstate = 0;				
+			} 
+			$model->measure = Lease::getListArea($model->zongdi);
+			$model->save();
+		}
+		echo 'finished';
 // 		return $this->render ( 'farmslist', [ 
 // 				'data' => $data 
 // 		] );
@@ -768,12 +771,15 @@ class FarmsController extends Controller {
 	// 农场转让——新增
 	public function actionFarmssplit($farms_id) {
 		$oldmodel = $this->findModel ( $farms_id );
-		
+// 		var_dump($oldmodel);exit;
+		$oldzongdi = $oldmodel->zongdi;
+		$oldcontractnumber = $oldmodel->contractnumber;
 		$newmodel = new Farms ();
 		// $ttpoModel = Ttpo::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
 		// $ttpozongdiModel = Ttpozongdi::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
 		// 原农场转让宗地后，重新签订合同后，生成新的农场信息
 		if ($oldmodel->load ( Yii::$app->request->post () )) {
+// 			var_dump($oldmodel);exit;
 			$lockedinfoModel = new Lockedinfo ();
 			$lockedinfoModel->farms_id = $farms_id;
 			$lockedinfoModel->lockedcontent = '部分过户审核中，已被冻结。';
@@ -787,7 +793,12 @@ class FarmsController extends Controller {
 			$oldmodel->zongdi = $this->deleteZongdiDH ( Yii::$app->request->post ( 'oldzongdi' ) );
 			$oldmodel->notclear = Yii::$app->request->post ( 'oldnotclear' );
 			$oldmodel->contractnumber = Yii::$app->request->post ( 'oldcontractnumber' );
+			$oldmodel->contractarea = Yii::$app->request->post ( 'oldcontractarea' );
 			$oldmodel->locked = 1;
+			if($oldmodel->contractarea < 0) {
+				$oldmodel->state = 0;
+				Parcel::parcelState(['farms_id'=>$farms_id,'zongdi'=>$oldmodel->zongdi,'state'=>false]);
+			}
 			$oldmodel->save ();
 			// var_dump($oldmodel);exit;
 			// $newfarm->save();
@@ -814,17 +825,18 @@ class FarmsController extends Controller {
 				$newmodel->state = 0;
 				$newmodel->locked = 0;
 				$newmodel->notclear = $newmodel->notclear;
-				$newmodel->oldfarms_id = $farms_id;
-				
+				$newmodel->oldfarms_id = $farms_id;				
 				$newmodel->save ();
+				Parcel::parcelState(['farms_id'=>$newmodel->id,'zongdi'=>$newmodel->zongdi,'state'=>true]);
 			}
 			$reviewprocessID = Reviewprocess::processRun ( $oldmodel->id, $newmodel->id );
 			$ttpozongdi = new Ttpozongdi ();
 			$ttpozongdi->oldfarms_id = $oldmodel->id;
 			$ttpozongdi->newfarms_id = $newmodel->id;
 			$ttpozongdi->zongdi = $newmodel->zongdi;
-			$ttpozongdi->oldzongdi = $oldmodel->zongdi;
+			$ttpozongdi->oldzongdi = $oldzongdi;
 			$ttpozongdi->reviewprocess_id = $reviewprocessID;
+			$ttpozongdi->oldcontractnumber = $oldcontractnumber;
 			$ttpozongdi->create_at = $oldmodel->update_at;
 			$ttpozongdi->ttpozongdi = Yii::$app->request->post ( 'ttpozongdi' );
 			$ttpozongdi->ttpoarea = Yii::$app->request->post ( 'ttpoarea' );
@@ -992,6 +1004,7 @@ class FarmsController extends Controller {
 			$model->update_at = time ();
 			$model->pinyin = Pinyin::encode ( $model->farmname );
 			$model->farmerpinyin = Pinyin::encode ( $model->farmername );
+			$model->contractarea = Farms::getContractnumberArea($model->contractnumber);
 			$model->save ();
 			$newAttr = $model->attributes;
 			Logs::writeLog ( '创建农场', $model->id, '', $newAttr );

@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </h3>
                 </div>
                 <div class="box-body">
-
+<?= Html::a('添加', ['farmscreate'], ['class' => 'btn btn-success']) ?>
     <table class="table table-bordered table-hover">
 		<tr>
 			<td width=15% align='right'>农场名称</td>
@@ -107,6 +107,10 @@ $this->params['breadcrumbs'][] = $this->title;
 		<tr>
 			<td width=15% align='right'>未明确地块</td>
 			<td align='left'><?= $model->notclear?>亩</td>
+		</tr>
+		<tr>
+			<td width=15% align='right'>未明确状态地块</td>
+			<td align='left'><?= $model->notstate?>亩</td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>合作社</td>

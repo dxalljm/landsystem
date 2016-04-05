@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
 //             	'value' => 'managementarea.areaname',
 //             ],
 			//'management_area',
-            'measure',
+            'contractarea',
             'contractnumber',
             [
             	'attribute'=> 'state',

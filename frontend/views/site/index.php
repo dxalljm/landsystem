@@ -28,7 +28,7 @@ $this->title = '岭南管委会';
   <?php $plate = explode(',', MenuToUser::find()->where(['role_id'=>User::getItemname()])->one()['plate']);?>
 
 <div class="row">
-        <?php if(count($plate) == 2) {?>
+        <?php if(count($plate) <= 2) {?>
         <div class="col-md-6">
         <?php } elseif(count($plate == 3)) {?>
         <div class="col-md-4">
@@ -41,7 +41,7 @@ $this->title = '岭南管委会';
               <div class="user-block">
                 <span class="username"><a href="#">您所辖管理区农场面积统计数据</a></span>
                 <span class="description navbar-left"><?= Cache::getCache(\Yii::$app->getUser()->getId())['farmstitle']?></span>
-                <span class="description navbar-right">单位（万亩）|（户）</span>
+                <span class="description navbar-right">单位（亩）|（户）</span>
               </div>
               <!-- /.user-block -->
               <div class="box-tools">
@@ -53,10 +53,10 @@ $this->title = '岭南管委会';
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-				<div id="statis-area" style="width: 100%; height: 300px; margin: -50 auto"; ></div>
+				<div id="statis-area" style="width: 100%; height: 300px; margin: 50 auto"; ></div>
 				<?php //var_dump(Cache::getCache(\Yii::$app->getUser()->getId())['farmscache']);?>
 				<script type="text/javascript">
-   			showBar('statis-area',['面积','数量'],<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['farmscache']?>,<?= json_encode(['面积'=>'万亩','数量'=>'户'])?>);
+   			showBar('statis-area',['面积','数量'],<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['farmscache']?>,<?= json_encode(['面积'=>'亩','数量'=>'户'])?>);
 		</script>
 
             </div>
@@ -66,7 +66,7 @@ $this->title = '岭南管委会';
         </div>
         <!-- /.col -->
     <?php if(in_array(24, $plate)) {?>  
-        <?php if(count($plate) == 2) {?>
+        <?php if(count($plate) <= 2) {?>
         <div class="col-md-6">
         <?php } elseif(count($plate == 3)) {?>
         <div class="col-md-4">
@@ -77,7 +77,7 @@ $this->title = '岭南管委会';
               <div class="user-block">
                 <span class="username"><a href="#">您所辖管理区缴费情况统计数据</a></span>
                 <span class="description navbar-left"><?= Cache::getCache(\Yii::$app->getUser()->getId())['collectiontitle'];?></span>
-                <span class="description navbar-right">单位（万元）</span>
+                <span class="description navbar-right">单位（元）</span>
               </div>
               <!-- /.user-block -->
               <div class="box-tools">
@@ -92,7 +92,7 @@ $this->title = '岭南管委会';
               <?php //var_dump(Collection::getCollection());?>
 
               <div id="collection" style="width:100%;height:300px"></div>
-<script type="text/javascript">showShadow('collection',['应收金额','实收金额'],<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?php echo Cache::getCache(\Yii::$app->getUser()->getId())['collectioncache']?>,'万元')</script>
+<script type="text/javascript">showShadow('collection',['应收金额','实收金额'],<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?php echo Cache::getCache(\Yii::$app->getUser()->getId())['collectioncache']?>,'元')</script>
 
 
             </div>
@@ -104,7 +104,7 @@ $this->title = '岭南管委会';
         <?php }
         if(in_array(21, $plate)) {
         ?>
-        <?php if(count($plate) == 2) {?>
+        <?php if(count($plate) <= 2) {?>
         <div class="col-md-6">
         <?php } elseif(count($plate == 3)) {?>
         <div class="col-md-4">
@@ -115,7 +115,7 @@ $this->title = '岭南管委会';
               <div class="user-block">
                 <span class="username"><a href="#">您所辖管理区作物统计数据</a></span>
                 <span class="description navbar-left"><?= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructuretitle']?></span>
-                <span class="description navbar-right">单位（万亩）</span>
+                <span class="description navbar-right">单位（亩）</span>
               </div>
               <!-- /.user-block -->
               <div class="box-tools">
@@ -134,7 +134,7 @@ $this->title = '岭南管委会';
 				<div id="plantingstructure" style="width: 100%; height: 300px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
 //				showStacked('plantingstructure','',<?//= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecategories']?>//,'',<?//= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecache']?>//,'万亩');
-				showAllShadow('plantingstructure',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecategories']?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecache']?>,'万亩');
+				showAllShadow('plantingstructure',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecategories']?>,<?= Cache::getCache(\Yii::$app->getUser()->getId())['plantingstructurecache']?>,'亩');
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
             </div>
@@ -147,7 +147,7 @@ $this->title = '岭南管委会';
 <!--       </div> -->
 <!-- <div class="row"> -->
 <?php if(in_array(21, $plate)) {?>
-        <?php if(count($plate) == 2) {?>
+        <?php if(count($plate) <= 2) {?>
         <div class="col-md-6">
         <?php } elseif(count($plate == 3)) {?>
         <div class="col-md-4">
@@ -158,7 +158,7 @@ $this->title = '岭南管委会';
               <div class="user-block">
                 <span class="username"><a href="#">您所辖管理区农产品产量情况统计数据</a></span>
                 <span class="description navbar-left"><?= Cache::getCache(\Yii::$app->getUser()->getId())['plantinputproducttitle']?></span>
-                <span class="description navbar-right">单位（万斤）</span>
+                <span class="description navbar-right">单位（斤）</span>
               </div>
               <!-- /.user-block -->
               <div class="box-tools">
@@ -182,7 +182,7 @@ $this->title = '岭南管委会';
         </div>
         <!-- /.col -->
 <?php }?>  <?php if(in_array(23, $plate)) {?>
-        <?php if(count($plate) == 2) {?>
+        <?php if(count($plate) <= 2) {?>
         <div class="col-md-6">
         <?php } elseif(count($plate == 3)) {?>
         <div class="col-md-4">
@@ -192,7 +192,7 @@ $this->title = '岭南管委会';
             <div class="box-header with-border">
               <div class="user-block">
                 <span class="username"><a href="#">您所辖管理区惠农政策完成情况统计数据</a></span>
-                <span class="description navbar-right">单位（万元）</span>
+                <span class="description navbar-right">单位（元）</span>
               </div>
               <!-- /.user-block -->
               <div class="box-tools">
@@ -216,7 +216,7 @@ $this->title = '岭南管委会';
         </div>
         <!-- /.col -->
         <?php }?><?php if(in_array(27, $plate)) {?>
-        <?php if(count($plate) == 2) {?>
+        <?php if(count($plate) <= 2) {?>
         <div class="col-md-6">
         <?php } elseif(count($plate == 3)) {?>
         <div class="col-md-4">

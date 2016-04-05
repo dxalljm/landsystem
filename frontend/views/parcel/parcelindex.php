@@ -4,13 +4,17 @@ use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\Url;
-
+use app\models\Farms;
+use frontend\helpers\arraySearch;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\parcelSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'parcel';
 $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctablename'];
+$totalData = clone $dataProvider;
+$totalData->pagination = ['pagesize'=>0];
+$data = arraySearch::find($totalData)->search();
 ?>
 <section class="content-header">
   <h1>
@@ -48,12 +52,29 @@ $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctable
                         GridView::widget([
                             'dataProvider' => $dataProvider,
                             'filterModel' => $searchModel,
+                            'total' => '<tr>
+						        <td></td>
+						        <td align="center"><strong>合计</strong></td>
+						        <td><strong></strong></td>
+						        <td><strong></strong></td>
+								<td><strong></strong></td>
+						        <td><strong>'.$data->count('farms_id',false).'块</strong></td>
+						        </tr>',
                             'columns' => [
                                 ['class' => 'yii\grid\SerialColumn'],
                                 'unifiedserialnumber',
                                 'agrotype',
                                 'stonecontent',
                                 'grossarea',
+                                [
+                                	'attribute' => 'farms_id',
+                                	'value' => function ($model) {
+                                	if($model->farms_id)
+                                		return Farms::find()->where(['id'=>$model->farms_id])->one()['farmname'];
+                                	else 
+                                		return null;
+                                }
+                                ],
                                 ['class' => 'yii\grid\ActionColumn'],
                             ],
                         ]);

@@ -37,13 +37,12 @@ use app\models\Plantingstructure;
 <td align='right'>承租人</td>
 <td align='right'><?= Lease::find()->where(['id'=>$_GET['lease_id']])->one()['lessee'] ?></td>
 <?php }?>
-<td align='right'>农场面积：<?= $farm->measure.' 亩'?></td>
-<td align='left'>租赁面积：<?= $area?>亩</td>
+<td align='right'>农场面积：<?= $farm->contractarea.' 亩'?></td>
+<td align='left'>租赁面积：<?= $overarea?>亩</td>
 </tr>
 <tr>
-  <td align='right'>种植面积</td>
-  <?php if(isset($_GET['zongdi'])) $value = Parcel::find()->where(['id'=>$_GET['zongdi']->one()['grossarea']]); else $value = 0;?>
-  <td colspan="6" align='left'><?php if($model->area !== 0.0) $value = $area - Plantingstructure::getNoArea($model->lease_id, $model->farms_id);?><?= $form->field($model, 'area')->textInput(['value'=>$value])->label(false)->error(false) ?></td>
+  <td align='right'>种植面积</td><?php if(!empty($model->area)) $value = $model->area; else $value = $noarea;?>
+  <td colspan="6" align='left'><?= $form->field($model, 'area')->textInput(['value'=>$value])->label(false)->error(false) ?></td>
   </tr>
 <tr>
   <td align='right'>种植作物</td><?php $fatherid = Plant::find()->where(['id'=>$model->plant_id])->one()['father_id'];?>
@@ -178,7 +177,7 @@ use app\models\Plantingstructure;
     	</tr>
     	<tr>
     		<td align='left'><?php 
-			$zongdiarr = $area;
+			$zongdiarr = $noarea;
 			//var_dump($zongdiarr);
 			if(is_array($zongdiarr)) {
 				echo html::hiddenInput('tempAllZongdi',implode('、', $zongdiarr),['id'=>'temp-allzongdi']);
@@ -367,9 +366,9 @@ $('#plantingstructure-zongdi').change(function(){
 });
 $('#plantingstructure-area').blur(function(){
 	var input = $(this).val();
-	var mease = <?= $area - Plantingstructure::getNoArea($model->lease_id,$model->farms_id)?>;
+	var mease = <?= $noarea?>;
 	if(input > mease) {
-		alert('对不起，输入的面各不能大于'+mease+'亩');
+		alert('对不起，输入的面积不能大于'+mease+'亩');
 		$('#plantingstructure-area').focus();
 	}
 })

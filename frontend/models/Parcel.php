@@ -40,7 +40,7 @@ class Parcel extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-           
+           	[['farms_id'],'integer'],
             [['unifiedserialnumber', 'temporarynumber', 'powei', 'poxiang', 'podu', 'agrotype',  'figurenumber'], 'string', 'max' => 500]
         ];
     }
@@ -66,6 +66,7 @@ class Parcel extends \yii\db\ActiveRecord
             'figurenumber' => '图幅号',
         	'create_at' => '创建日期',
         	'update_at' => '更新日期',
+        	'farms_id' => '农场',
         ];
     }
     
@@ -91,4 +92,24 @@ class Parcel extends \yii\db\ActiveRecord
     	return $all;
     }
 
+    public static function parcelState($array)
+    {
+//     	var_dump($array);exit;
+    	if($array['state']) {
+    		$arrayZongdi = explode('、', $array['zongdi']);
+    		foreach ($arrayZongdi as $zongdi) {
+    			$parcel = Parcel::find()->where(['unifiedserialnumber'=>Lease::getZongdi($zongdi)])->one();
+	    		$model = Parcel::findOne($parcel['id']);
+	    		$model->farms_id = $array['farms_id'];
+	    		$model->save();
+    		}    		
+    	} else {
+	    	$parcels = Parcel::find()->where(['farms_id'=>$array['farms_id']])->all();
+	    	foreach ($parcels as $parcel) {
+	    		$model = Parcel::findOne($parcel['id']);
+	    		$model->farms_id = NULL;
+	    		$model->save();
+	    	}
+    	}
+    }
 }

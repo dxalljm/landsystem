@@ -84,7 +84,7 @@ class Huinonggrant extends \yii\db\ActiveRecord
     			}
     			$allSum[$val['subsidiestype_id']]['name'] = $name;
     			$allSum[$val['subsidiestype_id']]['key'] = $val['subsidiestype_id'];
-    			$allSum[$val['subsidiestype_id']]['data'][$key] = (float)sprintf("%.2f", $val['subsidiesmoney'] * $farms->sum('measure')/10000);
+    			$allSum[$val['subsidiestype_id']]['data'][$key] = (float)sprintf("%.2f", $val['subsidiesmoney'] * $farms->sum('contractarea'));
     			$allSum[$val['subsidiestype_id']]['stack'] = $val['subsidiestype_id']; 
     			foreach ($farms->all() as $v) {
     				$huinonggrant = Huinonggrant::find()->where(['farms_id'=>$v['id'],'huinong_id'=>$val['id'],'state'=>1])->one();
@@ -92,7 +92,7 @@ class Huinonggrant extends \yii\db\ActiveRecord
     			}
     			$sum[$val['subsidiestype_id']]['name'] = $name;
     			$sum[$val['subsidiestype_id']]['key'] = $val['subsidiestype_id'];
-    			$sum[$val['subsidiestype_id']]['data'][$key] = (float)sprintf("%.2f", $huinonggrantSum/10000);
+    			$sum[$val['subsidiestype_id']]['data'][$key] = (float)sprintf("%.2f", $huinonggrantSum);
     			$sum[$val['subsidiestype_id']]['stack'] = $val['subsidiestype_id'];
     		}	
     	}
@@ -136,7 +136,7 @@ class Huinonggrant extends \yii\db\ActiveRecord
 								'barBorderWidth'=> 3,
 								'barBorderRadius'=>0,
 								'label' => [
-									'show'=> true,
+									'show'=> false,
 									'position'=> 'top',
 			// 						'formatter'=> '{c}',
 									'textStyle'=>[

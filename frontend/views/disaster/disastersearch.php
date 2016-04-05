@@ -56,7 +56,7 @@ use frontend\helpers\arraySearch;
 			        <td><strong>'.$data->count('farms_id').'户</strong></td>
 			        <td><strong>'.$data->count('farmer_id').'个</strong></td>
 			        <td><strong>'.$data->count('disastertype_id').'种</strong></td>			        
-					<td><strong>'.$data->sum('disasterarea',10000).'万亩</strong></td>
+					<td><strong>'.$data->sum('disasterarea').'亩</strong></td>
 					<td><strong>'.$data->count('disasterplant').'种</strong></td>
 					<td></td>
         			<td><strong>'.$yieldreduction.'%</strong></td>
@@ -69,7 +69,7 @@ use frontend\helpers\arraySearch;
               <?php //var_dump($data->getName('self', 'mortgagebank', 'mortgagebank')->typenameList());?>
                 <div id="loan" style="width: 900px; height: 600px; margin: 0 auto"; ></div>
 				<script type="text/javascript">
-				showAllShadow('loan',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Disastertype', 'typename', 'disastertype_id')->typenameList())?>,<?= $data->getName('Disastertype', 'typename', 'disastertype_id')->showAllShadow('sum','disasterarea',10000)?>,'万元');
+				showAllShadow('loan',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Disastertype', 'typename', 'disastertype_id')->typenameList())?>,<?= $data->getName('Disastertype', 'typename', 'disastertype_id')->showAllShadow('sum','disasterarea')?>,'元');
 				//showStacked('collection','应收：<?php //echo Collection::totalAmounts()?> 实收：<?php //echo Collection::totalReal()?>',<?php //echo json_encode(Farms::getManagementArea('small')['areaname'])?>,'',<?php //echo Collection::getCollection()?>,'万元');
 		</script>
 

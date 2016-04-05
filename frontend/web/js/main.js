@@ -169,6 +169,7 @@ function jumpurl(action)
 function cutZero(old){  
     //拷贝一份 返回去掉零的新串  
     newstr=old;  
+//    alert(old);
     //循环变量 小数部分长度  
     var leng = old.length-old.indexOf(".")-1  
     //判断是否有效数  

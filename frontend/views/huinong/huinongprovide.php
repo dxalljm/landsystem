@@ -1,5 +1,6 @@
 <?php
 namespace backend\controllers;
+use yii;
 use app\models\tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
@@ -27,6 +28,20 @@ $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctable
 $this->params['breadcrumbs'][] = $this->title;
 $total = arraySearch::find($data)->search();
 $alltotal = arraySearch::find($allData)->search();
+$result = [];
+// $cacheKey = 'cache-key-huinongprovide1'.\Yii::$app->getUser()->id;
+// $resultcache = Yii::$app->cache->get($cacheKey);
+// if (!empty($resultcache)) {
+// 	$result = $resultcache;
+// } else {
+	$result['all'] = $alltotal->count();
+	$result['state1'] = $alltotal->where(['state'=>1])->count();
+	$result['state0'] = $alltotal->where(['state'=>0])->count();
+	$result['yfmoney'] = MoneyFormat::num_format($alltotal->sum('money'));
+	$result['realmoney'] = MoneyFormat::num_format($alltotal->where(['state'=>1])->sum('money'));
+	$result['cha'] = MoneyFormat::num_format($alltotal->where(['state'=>0])->sum('money'));
+// 	Yii::$app->cache->set ( $cacheKey, $result, 999999 );
+// }
 ?>
 <style type="text/css">
 #textSubmit { display:none }
@@ -43,39 +58,37 @@ $alltotal = arraySearch::find($allData)->search();
                 </div>
                 <div class="box-body">
                 <?php $huinongGrant = Huinonggrant::find();
-                $all = $alltotal->count();
-                $state1 = $alltotal->where(['state'=>1])->count();
-                $state0 = $alltotal->where(['state'=>0])->count();
+                
                 ?>
                 <table class="table table-bordered table-hover">
                 	<tr>
                 		<td align="right"><strong>享受补贴人数：</strong></td>
                 		<td align="left"><strong>
-               		    <?= $all?>
+               		    <?= $result['all']?>
                		    人</strong></td>
                 		<td align="right"><strong>已发放补贴人数：</strong></td>
                 		<td align="left"><strong>
-               		    <?= $state1?>
+               		    <?= $result['state1']?>
                		    人</strong></td>
                 		<td align="right"><strong>未发放补贴人数：</strong></td>
                 		<td align="left"><strong>
-               		    <?= $state0?>
+               		    <?= $result['state0']?>
                		    人</strong></td>
                 		<td align="right"><strong>应发放金额：</strong></td>
                 		<td align="left"><strong>
-               		    <?= MoneyFormat::num_format($alltotal->sum('money'))?>
+               		    <?= $result['yfmoney']?>
                		    元</strong></td>
                 		<td align="right"><strong>已发放金额：</strong></td>
                 		<td align="left"><strong>
-               		    <?= MoneyFormat::num_format($alltotal->where(['state'=>1])->sum('money'))?>
+               		    <?= $result['realmoney']?>
                		    元</strong></td>
                 		<td align="right"><strong>差额：</strong></td>
                 		<td align="left"><strong>
-               		    <?= MoneyFormat::num_format($alltotal->where(['state'=>0])->sum('money'))?>
+               		    <?= $result['cha']?>
                		    元</strong></td>
                 		<td align="right"><strong>完成度：</strong></td>
                 		
-                		<td align="left"><strong><?php if($state1) $wcd = $state1/$all;else $wcd = 0;echo sprintf ( "%.2f", $wcd ).'%'; ?></strong></td>
+                		<td align="left"><strong><?php if($result['state1']) $wcd = $result['state1']/$result['all'];else $wcd = 0;echo sprintf ( "%.2f", $wcd ).'%'; ?></strong></td>
                 	</tr>
                 </table>
                

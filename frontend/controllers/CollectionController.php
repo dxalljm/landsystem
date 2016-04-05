@@ -275,7 +275,7 @@ class CollectionController extends Controller
         	$model->real_income_amount = $model->real_income_amount + $old_real_income_amount;
         	$model->ypayarea = $model->getYpayarea($year, $model->real_income_amount);
         	$model->ypaymoney = $model->getYpaymoney($year, $model->real_income_amount);
-        	$model->measure = Farms::getMeasure($farms_id);
+        	$model->measure = Farms::getContractarea($farms_id);
         	//$owe = $model->getOwe($farmerid, $farmsid,$year);
         	if($owe)
         		$model->owe = $owe+$model->amounts_receivable-$model->real_income_amount;

@@ -30,7 +30,8 @@ $this->params['breadcrumbs'][] = '更新';
     		'plantpesticidesModel' => $plantpesticidesModel,
 	        'model' => $model,
 	        'farm' => $farm,
-	        'zongdi' => $zongdi,
+	        'noarea' => $noarea,
+    		'overarea' => $overarea,
     ]) ?>
                 </div>
             </div>

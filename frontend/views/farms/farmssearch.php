@@ -26,6 +26,7 @@ use frontend\helpers\arraySearch;
 	$totalData->pagination = ['pagesize'=>0];
 // 	var_dump($totalData->getModels());exit;
 	$data = arraySearch::find($totalData)->search();
+
 ?>
  <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -37,10 +38,10 @@ use frontend\helpers\arraySearch;
 						<td><strong>'.$data->count('farmer_id').'个</strong></td>
 						<td></td>
 						<td></td>
-						<td><strong>'.$data->sum('measure',10000).'万亩</strong></td>						
+						<td><strong>'.$data->sum('contractarea').'亩</strong></td>						
 						<td></td>
 					</tr>',
-        'columns' => Search::getColumns(['management_area','farmname','farmername','address','telephone','measure','operation'],$totalData),
+        'columns' => Search::getColumns(['management_area','farmname','farmername','address','telephone','contractarea','operation'],$totalData),
 
     ]); ?>
                 </div>

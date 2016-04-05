@@ -241,7 +241,7 @@ class Farms extends \yii\db\ActiveRecord
     	if($state == 'new')
     		$cn3 = 0;
     	else
-    		$cn3 = $farm->measure;
+    		$cn3 = $farm->contractarea;
     	
 //     		$cn3 = substr($cn3,0,strlen($cn3)-1); 
     	$cn4 = $farm->management_area;
@@ -387,14 +387,15 @@ class Farms extends \yii\db\ActiveRecord
     	$rowpercent = [];
     	$i=0;
     	$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
-    	$all = Farms::find ()->sum ('measure');
+    	$all = Farms::find ()->sum ('contractarea');
     	foreach (self::getUserManagementArea($id) as $value) {
 
 			$area = ( float ) Farms::find ()->where ( [
-    		  		'management_area' => $value
-    		 ] )->sum ( 'measure' );
+    		  		'management_area' => $value,
+					'state'=>1,
+    		 ] )->sum ( 'contractarea' );
 			
-    		$areas[] = (float)sprintf("%.2f", $area/10000);
+    		$areas[] = (float)sprintf("%.2f", $area);
     		$percent[] = sprintf("%.2f", $area/$all*100);
     		$i++;
     	}
@@ -402,7 +403,8 @@ class Farms extends \yii\db\ActiveRecord
     	$all = Farms::find ()->count ();
     	foreach (self::getUserManagementArea($id) as $value) {
     		$row = ( float ) Farms::find ()->where ( [
-    				'management_area' => $value
+    				'management_area' => $value,
+    				'state' => 1,
     		] )->count ();
     	
     		$rows[] = $row;
@@ -437,7 +439,7 @@ class Farms extends \yii\db\ActiveRecord
     			'itemStyle'=> [
     					'normal'=> [
 			    			'label' => [
-			    					'show'=> true,
+			    					'show'=> false,
 			    					'position'=> 'top',
 // 			    					'formatter'=> '{c}户',
 			    				]
@@ -463,12 +465,12 @@ class Farms extends \yii\db\ActiveRecord
     	$measue = 0.0;
     	$notclear = 0.0;
     	foreach ($farms as $farm) {
-    		$measue += $farm['measure'];
-    		if($farm['measure'] < self::getNowContractnumberArea($farm['id']))
+    		$measue += $farm['contractarea'];
+    		if($farm['contractarea'] < self::getNowContractnumberArea($farm['id']))
     			$notclear += $farm['notclear'];
     	}
     	$area = $measue + $notclear;
-    	return sprintf("%.2f",$area/10000).'万亩';
+    	return sprintf("%.2f",$area).'亩';
     }
     
     public static function unique_arr($array2D, $stkeep = false, $ndformat = true) {
