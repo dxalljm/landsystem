@@ -300,6 +300,10 @@ function toHTH()
 	//生成合同号
 	var hth = $('#farms-contractnumber').val();
 	var arrayhth = hth.split('-');
+	$.each(arrayhth,function(n,value) { 
+		if(value == '')
+			arrayhth.splice(n,1);
+	});
 	var contractarea = $('#farms-measure').val()*1 + $('#farms-notclear').val()*1 - $('#farms-notstate').val()*1;
 	arrayhth[2] = cutZero(contractarea.toFixed(2));
 	$('#farms-contractnumber').val(arrayhth.join('-'));
@@ -512,12 +516,13 @@ $('#newzongdi').blur(function(){
 				$("#newzongdi").val($.trim(data.formatzongdi));	
 				$("#farms-measure").val(data.sum);
 				$('#temp_measure').val(data.sum);
-				var oldfarmsmeasure = parseFloat($('#oldfarms-measure').val());
+				var oldfarmsmeasure = parseFloat($('#temp_oldmeasure').val());
 				toHTH();
 				var measure = $("#farms-measure").val()*1;
 				var input = $('#input-notclear').val()*1;
 				if(oldfarmsmeasure == 0) {
 					toHTH();
+					
 					var result = $('#temp_oldnotclear').val()*1 - data.sum*1;
 					if(input > 0) {
 						var newresult = result - input;
@@ -539,8 +544,13 @@ $('#newzongdi').blur(function(){
 					});
 					
 					var result = $('#temp_oldmeasure').val() *1 - sum*1;
+					var ymeasure = $('#ymeasure').val()*1;
+					if(ymeasure > 0) {
+						var lresult = ymeasure + sum*1;
+						$('#farms-measure').val(lresult.toFixed(2));
+					}
+						
 					$('#oldfarms-measure').val(result.toFixed(2));
-					
 					var contractarea = $("#farms-contractarea").val()*1;
 					var tempoldcontractarea = $('#temp_oldcontractarea').val()*1;
 					if(contractarea < tempoldcontractarea) {
