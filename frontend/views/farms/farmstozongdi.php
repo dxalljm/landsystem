@@ -160,12 +160,17 @@ use yii\helpers\Url;
 			<td align='center'>止</td>
 		</tr>
 		<tr>
-		  <td align='right'>宗地</td>
-		  <td colspan="5" align='left'><?= $form->field($newFarm, 'zongdi')->textarea(['readonly' => false])->label(false)->error(false) ?></td>
+		  <td align='right'>原宗地</td>
+		  <td colspan="5" align='left'><?= $newFarm->zongdi?></td>
 		  </tr>
 		<tr>
-        <td align='right'>宗地面积</td><?= html::hiddenInput('tempmeasure',$newFarm->measure,['id'=>'temp_measure']) ?>
-								  <?= html::hiddenInput('tempnotclear',$newFarm->notclear,['id'=>'temp_notclear']) ?>
+		  <td align='right'>新宗地</td>
+		  <td colspan="5" align='left'><?= html::textarea('newFarm-newzongdi','',['class'=>'form-control','id'=>'newzongdi'])?></td>
+		  </tr>
+		<tr>
+        <td align='right'>宗地面积</td><?= html::textInput('tempmeasure',$newFarm->measure,['id'=>'temp_measure']) ?>
+        							<?= html::textInput('measure',$newFarm->measure,['id'=>'ymeasure']) ?>
+								  <?= html::textInput('tempnotclear',$newFarm->notclear,['id'=>'temp_notclear']) ?>
         <td colspan="5" align='left'><?= $form->field($newFarm, 'measure')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
         </tr>
         <tr>
@@ -239,14 +244,14 @@ function toZongdi(zongdi,area){
 	var newvalue = $('#farms-measure').val()*1 + area*1;
 	$('#farms-measure').val(newvalue.toFixed(2));
 	$('#temp_measure').val(newvalue.toFixed(2));
-	var newzongdi = $('#farms-zongdi').val()+'、'+zongdi+'('+area+')';
+	var newzongdi = $('#newzongdi').val()+'、'+zongdi+'('+area+')';
 	var first = newzongdi.substr(0,1);
 	if(first == '、') {
-		$('#farms-zongdi').val(newzongdi.substring(1));
-		$('#temp-zongdi').val($('#farms-zongdi').val());
+		$('#newzongdi').val(newzongdi.substring(1));
+		$('#temp-zongdi').val($('#newzongdi').val());
 	} else {
-		$('#farms-zongdi').val(newzongdi);
-		$('#temp-zongdi').val($('#farms-zongdi').val());
+		$('#newzongdi').val(newzongdi);
+		$('#temp-zongdi').val($('#newzongdi').val());
 	}
 	var oldzongdi = $('#oldfarm-zongdi').val();
 	var strzongdi = zongdi+"("+area+")";
@@ -327,13 +332,9 @@ $('#input-notclear').keyup(function (event) {
 	if(event.keyCode == 8) {
 		$(this).val('');
 		$('#farms-notclear').val($('#temp_notclear').val());
-		var measure = $('#farms-measure').val();
-		if(measure > 0) {
-			$('#oldfarms-notclear').val($('#temp_oldnotclear').val()*1 - measure*1);	
-		} else
-			$('#oldfarms-notclear').val($('#temp_oldnotclear').val());	
+		var oldmeasure = $('#oldfarms-measure').val();
+		$('#oldfarms-notclear').val($('#temp_oldnotclear').val());	
 		
-		$('#temp_oldcontractarea').val($('#oldfarms-contractarea').val());
 		toHTH();
 	} else {
 		if(/^[0-9]{0}([0-9]|[.])+$/.test(input)) {
@@ -343,9 +344,14 @@ $('#input-notclear').keyup(function (event) {
 				var measure = $('#farms-measure').val();
 				if(measure > 0) {
 					var newresult = result - measure;
-					$('#oldfarms-notclear').val(newresult.toFixed(2));					
+					
+					$('#oldfarms-notclear').val(result.toFixed(2));					
 				} else {
 					$('#oldfarms-notclear').val(result.toFixed(2));	
+				}
+				var ymeasure = $('#ymeasure').val()*1;
+				if(ymeasure > 0) {
+					
 				}
 				var notclear = $('#temp_notclear').val();
 				var notclearresult = notclear*1 + input*1;
@@ -391,7 +397,7 @@ $('#searchFarmer').click(function(){
 <?php
 
 $script = <<<JS
-$("#farms-zongdi").keyup(function (event) {
+$("#newzongdi").keyup(function (event) {
 
     var input = $(this).val();
 	if (event.keyCode == 32) {
@@ -407,7 +413,7 @@ $("#farms-zongdi").keyup(function (event) {
 				$('#temp_measure').val(value.toFixed(2));
 				
 				$('#temp-zongdi').val($.trim(input)+'、');
-				$("#farms-zongdi").val($.trim(input)+'、');
+				$("#newzongdi").val($.trim(input)+'、');
 				if(oldfarmsmeasure == 0) {
 					var notclear = $('#oldfarms-notclear').val()*1 - data.area*1;
 					$('#oldfarms-notclear').val(notclear.toFixed(2));					
@@ -429,36 +435,40 @@ $("#farms-zongdi").keyup(function (event) {
 			}
 			else {
 				alert(data.message);
-				$("#farms-zongdi").val($('#temp-zongdi').val());
+				$("#newzongdi").val($('#temp-zongdi').val());
 				toHTH();
 			}
 		});
 	}
 	if (event.keyCode == 8) {
-		var zongdi = $('#farms-zongdi').val();
+		var zongdi = $('#newzongdi').val();
 		var arrayZongdi = zongdi.split('、');
 		var rows = arrayZongdi.length*1 - 1;
 		var delZongdi = arrayZongdi[rows];
 		var zongdiNumber = delZongdi.split('(');
 		resetZongdi(zongdiNumber[0],zongdiNumber[1]);
 		arrayZongdi.splice(rows,1); 
-		$('#farms-zongdi').val(arrayZongdi.join('、'));
+		$('#newzongdi').val(arrayZongdi.join('、'));
 		var input = $(this).val();
-		var oldfarmsmeasure = parseFloat($('#oldfarms-measure').val());
+		var oldfarmsmeasure = parseFloat($('#temp_oldmeasure').val());
 		if(input) {
 		    input = $.trim(input);
 			$.getJSON('index.php?r=parcel/getformatzongdi', {zongdi: input}, function (data) {
 				if (data.status == 1) {
 					
-					$("#farms-zongdi").val($.trim(data.formatzongdi));	
-					$("#farms-measure").val(data.sum);
+					$("#newzongdi").val($.trim(data.formatzongdi));	
+					
 					if(oldfarmsmeasure == 0) {
 						var notclear = $('#temp_oldnotclear').val()*1 - data.sum*1 - $('#input-notclear').val()*1;
 						$('#oldfarms-notclear').val(notclear.toFixed(2));
 						$('#temp_oldcontractarea').val(notclear.toFixed(2));
 						toHTH();
+					} else {
+						
 					}
-					var contractarea = $('#farms-contractarea').val()*1;
+					var ymeasure = $('#ymeasure').val()*1;
+					$('#farms-measure').val(ymeasure + data.sum*1);
+					var contractarea = $('#farms-contra ctarea').val()*1;
 					var measure = $('#farms-measure').val()*1;
 					if(measure > contractarea) {
 						$('#farms-notstate').val(measure - contractarea);
@@ -478,9 +488,12 @@ $("#farms-zongdi").keyup(function (event) {
 					$('#temp_oldcontractarea').val($('#temp_oldnotclear').val());
 				}
 			} else {
-				var notclear = $('#temp_oldnotclear').val()*1 - $('#farms-notclear').val()*1;
-				$('#oldfarms-notclear').val(notclear.toFixed(2));
-				$('#temp_oldcontractarea').val(notclear.toFixed(2));
+// 				var notclear = $('temp_oldcontractarea').val()*1 - $('#farms-notclear').val()*1;
+				$('#oldfarms-measure').val($('#temp_oldmeasure').val());
+				var tempmeasure = $('#temp_measure').val();
+					if(tempmeasure > 0) {
+						$('#farms-measure').val($('#ymeasure').val());
+					}
 			}
 			
 			
@@ -488,7 +501,7 @@ $("#farms-zongdi").keyup(function (event) {
 		}
 	}
  });
-$('#farms-zongdi').blur(function(){
+$('#newzongdi').blur(function(){
 	var input = $(this).val();
 	if(input) {
 	    input = $.trim(input);
@@ -496,7 +509,7 @@ $('#farms-zongdi').blur(function(){
 		$.getJSON('index.php?r=parcel/getformatzongdi', {zongdi: input}, function (data) {
 			if (data.status == 1) {
 				
-				$("#farms-zongdi").val($.trim(data.formatzongdi));	
+				$("#newzongdi").val($.trim(data.formatzongdi));	
 				$("#farms-measure").val(data.sum);
 				$('#temp_measure').val(data.sum);
 				var oldfarmsmeasure = parseFloat($('#oldfarms-measure').val());
@@ -518,7 +531,7 @@ $('#farms-zongdi').blur(function(){
 					
 // 					var tempzongdi = $('#temp-zongdi').val();
 // 					var arrayTempZongdi = tempzongdi.split('、');
-					var zongdi = $('#farms-zongdi').val();
+					var zongdi = $('#newzongdi').val();
 					var arrayZongdi = zongdi.split('、');
 					var sum = 0.0;
 					$.each(arrayZongdi,function(n,value) { 
@@ -538,7 +551,13 @@ $('#farms-zongdi').blur(function(){
 			}	
 		});
 	} else {
-		$("#farms-measure").val(0);
+		var ymeasure = $('#ymeasure').val()*1;
+		if(ymeasure > 0) {
+			$("#farms-measure").val(ymeasure);
+		} else {
+			$("#farms-measure").val(0);
+		}
+		
 		toHTH();
 	}
 });
