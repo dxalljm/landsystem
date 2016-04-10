@@ -21,7 +21,7 @@ class Controller extends \yii\base\Controller
 {
     /**
      * @var boolean whether to enable CSRF validation for the actions in this controller.
-     * CSRF validation is enabled only when both this property and [[Request::enableCsrfValidation]] are true.
+     * CSRF validation is enabled only when both this property and [[\yii\web\Request::enableCsrfValidation]] are true.
      */
     public $enableCsrfValidation = true;
     /**
@@ -42,7 +42,6 @@ class Controller extends \yii\base\Controller
      * @param array $params the parameters (name-value pairs) that should be made available in the view.
      * @return string the rendering result.
      */
-    
     public function renderAjax($view, $params = [])
     {
         return $this->getView()->renderAjax($view, $params, $this);
@@ -57,7 +56,7 @@ class Controller extends \yii\base\Controller
      * @param \yii\base\Action $action the action to be bound with parameters
      * @param array $params the parameters to be bound to the action
      * @return array the valid parameters that the action can run with.
-     * @throws HttpException if there are missing or invalid parameters.
+     * @throws BadRequestHttpException if there are missing or invalid parameters.
      */
     public function bindActionParams($action, $params)
     {
@@ -74,7 +73,7 @@ class Controller extends \yii\base\Controller
             $name = $param->getName();
             if (array_key_exists($name, $params)) {
                 if ($param->isArray()) {
-                    $args[] = $actionParams[$name] = is_array($params[$name]) ? $params[$name] : [$params[$name]];
+                    $args[] = $actionParams[$name] = (array) $params[$name];
                 } elseif (!is_array($params[$name])) {
                     $args[] = $actionParams[$name] = $params[$name];
                 } else {
@@ -111,9 +110,9 @@ class Controller extends \yii\base\Controller
                 throw new BadRequestHttpException(Yii::t('yii', 'Unable to verify your data submission.'));
             }
             return true;
-        } else {
-            return false;
         }
+        
+        return false;
     }
 
     /**

@@ -7,13 +7,11 @@
 /* @var $generator yii\gii\generators\model\Generator */
 /* @var $tableName string full table name */
 /* @var $className string class name */
+/* @var $queryClassName string query class name */
 /* @var $tableSchema yii\db\TableSchema */
 /* @var $labels string[] list of attribute labels (name => label) */
 /* @var $rules string[] list of validation rules */
 /* @var $relations array list of relations (name => relation declaration) */
-namespace backend\controllers;
-use app\models\tablefields;
-use app\models\tables;
 
 echo "<?php\n";
 ?>
@@ -60,7 +58,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
      */
     public function rules()
     {
-        return [<?= "\n            " . implode(",\n            ", $rules) . "\n        " ?>];
+        return [<?= "\n            " . implode(",\n            ", $rules) . ",\n        " ?>];
     }
 
     /**
@@ -69,20 +67,9 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     public function attributeLabels()
     {
         return [
-<?php 
-	$table = Tables::find()->where(['tablename'=>$tableName])->one();
-	//$tablefields = Tablefields::find()->where(['tables_id'=>$table->id])->all();
-?>
-<?php foreach ($labels as $name => $label): 
-	$field = Tablefields::find()->where(['fields'=>$name])->one();
-	if($field) :
-?>
-            <?= "'$name' => " . $generator->generateString($field['cfields']) . ",\n" ?>
-<?php else:?>
-			<?= "'$name' => " . $generator->generateString($label) . ",\n" ?>
-<?php 
-endif;
-endforeach; ?>
+<?php foreach ($labels as $name => $label): ?>
+            <?= "'$name' => " . $generator->generateString($label) . ",\n" ?>
+<?php endforeach; ?>
         ];
     }
 <?php foreach ($relations as $name => $relation): ?>
@@ -95,4 +82,18 @@ endforeach; ?>
         <?= $relation[0] . "\n" ?>
     }
 <?php endforeach; ?>
+<?php if ($queryClassName): ?>
+<?php
+    $queryClassFullName = ($generator->ns === $generator->queryNs) ? $queryClassName : '\\' . $generator->queryNs . '\\' . $queryClassName;
+    echo "\n";
+?>
+    /**
+     * @inheritdoc
+     * @return <?= $queryClassFullName ?> the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new <?= $queryClassFullName ?>(get_called_class());
+    }
+<?php endif; ?>
 }

@@ -28,6 +28,10 @@ use yii\console\Exception;
  *
  *     yii cache/flush-all
  *
+ * Note that the command uses cache components defined in your console application configuration file. If components
+ * configured are different from web application, web application cache won't be cleared. In order to fix it please
+ * duplicate web application cache components in console config. You can use any component names.
+ *
  * @author Alexander Makarov <sam@rmcreative.ru>
  * @author Mark Jebri <mark.github@yandex.ru>
  * @since 2.0
@@ -52,18 +56,18 @@ class CacheController extends Controller
      * Flushes given cache components.
      * For example,
      *
-     * ~~~
+     * ```
      * # flushes caches specified by their id: "first", "second", "third"
      * yii cache/flush first second third
-     * ~~~
-     * 
+     * ```
+     *
      */
     public function actionFlush()
     {
         $cachesInput = func_get_args();
         
         if (empty($cachesInput)) {
-            throw new Exception("You should specify cache components names");
+            throw new Exception('You should specify cache components names');
         }
 
         $caches = $this->findCaches($cachesInput);
@@ -121,6 +125,45 @@ class CacheController extends Controller
     }
 
     /**
+     * Clears DB schema cache for a given connection component.
+     *
+     * ```
+     * # clears cache schema specified by component id: "db"
+     * yii cache/flush-schema db
+     * ```
+     *
+     * @param string $db id connection component
+     * @return integer exit code
+     * @throws Exception
+     * @throws \yii\base\InvalidConfigException
+     *
+     * @since 2.0.1
+     */
+    public function actionFlushSchema($db = 'db')
+    {
+        $connection = Yii::$app->get($db, false);
+        if ($connection === null) {
+            $this->stdout("Unknown component \"$db\".\n", Console::FG_RED);
+            return self::EXIT_CODE_ERROR;
+        }
+
+        if (!$connection instanceof \yii\db\Connection) {
+            $this->stdout("\"$db\" component doesn't inherit \\yii\\db\\Connection.\n", Console::FG_RED);
+            return self::EXIT_CODE_ERROR;
+        } elseif (!$this->confirm("Flush cache schema for \"$db\" connection?")) {
+            return static::EXIT_CODE_NORMAL;
+        }
+
+        try {
+            $schema = $connection->getSchema();
+            $schema->refresh();
+            $this->stdout("Schema cache for component \"$db\", was flushed.\n\n", Console::FG_GREEN);
+        } catch (\Exception $e) {
+            $this->stdout($e->getMessage() . "\n\n", Console::FG_RED);
+        }
+    }
+
+    /**
      * Notifies user that given caches are found and can be flushed.
      * @param array $caches array of cache component classes
      */
@@ -152,14 +195,14 @@ class CacheController extends Controller
         $this->stdout("The following cache components were NOT found:\n\n", Console::FG_RED);
 
         foreach ($cachesNames as $name) {
-            $this->stdout("\t * $name \n", Console::FG_GREEN);
+            $this->stdout("\t* $name \n", Console::FG_GREEN);
         }
 
         $this->stdout("\n");
     }
 
     /**
-     * 
+     *
      * @param array $caches
      */
     private function notifyFlushed($caches)
@@ -167,7 +210,7 @@ class CacheController extends Controller
         $this->stdout("The following cache components were processed:\n\n", Console::FG_YELLOW);
 
         foreach ($caches as $cache) {
-            $this->stdout("\t* " . $cache['name'] ." (" . $cache['class'] . ")", Console::FG_GREEN);
+            $this->stdout("\t* " . $cache['name'] .' (' . $cache['class'] . ')', Console::FG_GREEN);
 
             if (!$cache['is_flushed']) {
                 $this->stdout(" - not flushed\n", Console::FG_RED);
@@ -189,7 +232,7 @@ class CacheController extends Controller
         $this->stdout("The following cache components will be flushed:\n\n", Console::FG_YELLOW);
 
         foreach ($cachesNames as $name) {
-            $this->stdout("\t * $name \n", Console::FG_GREEN);
+            $this->stdout("\t* $name \n", Console::FG_GREEN);
         }
 
         return $this->confirm("\nFlush above cache components?");
@@ -204,7 +247,7 @@ class CacheController extends Controller
     {
         $caches = [];
         $components = Yii::$app->getComponents();
-        $findAll = ($cachesNames == []);
+        $findAll = ($cachesNames === []);
 
         foreach ($components as $name => $component) {
             if (!$findAll && !in_array($name, $cachesNames)) {
@@ -232,5 +275,4 @@ class CacheController extends Controller
     {
         return is_subclass_of($className, Cache::className());
     }
-
 }

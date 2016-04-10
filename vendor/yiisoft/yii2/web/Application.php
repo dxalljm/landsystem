@@ -34,13 +34,13 @@ class Application extends \yii\base\Application
      * The rest of the array elements (key-value pairs) specify the parameters to be bound
      * to the action. For example,
      *
-     * ~~~
+     * ```php
      * [
      *     'offline/notice',
      *     'param1' => 'value1',
      *     'param2' => 'value2',
      * ]
-     * ~~~
+     * ```
      *
      * Defaults to null, meaning catch-all is not used.
      */
@@ -75,7 +75,8 @@ class Application extends \yii\base\Application
             list ($route, $params) = $request->resolve();
         } else {
             $route = $this->catchAll[0];
-            $params = array_splice($this->catchAll, 1);
+            $params = $this->catchAll;
+            unset($params[0]);
         }
         try {
             Yii::trace("Route requested: '$route'", __METHOD__);
@@ -92,7 +93,7 @@ class Application extends \yii\base\Application
                 return $response;
             }
         } catch (InvalidRouteException $e) {
-            throw new NotFoundHttpException($e->getMessage(), $e->getCode(), $e);
+            throw new NotFoundHttpException(Yii::t('yii', 'Page not found.'), $e->getCode(), $e);
         }
     }
 

@@ -11,7 +11,7 @@
 /**
  * Sends Messages over SMTP.
  *
- * @author     Chris Corbyn
+ * @author Chris Corbyn
  */
 abstract class Swift_Transport_AbstractSmtpTransport implements Swift_Transport
 {
@@ -87,7 +87,7 @@ abstract class Swift_Transport_AbstractSmtpTransport implements Swift_Transport
     }
 
     /**
-     * Returns the IP used to connect to the destination
+     * Returns the IP used to connect to the destination.
      *
      * @return string
      */
@@ -159,9 +159,10 @@ abstract class Swift_Transport_AbstractSmtpTransport implements Swift_Transport
         }
 
         if (!$reversePath = $this->_getReversePath($message)) {
-            throw new Swift_TransportException(
+            $this->_throwException(new Swift_TransportException(
                 'Cannot send message without a sender address'
-                );
+                )
+            );
         }
 
         $to = (array) $message->getTo();
@@ -300,7 +301,7 @@ abstract class Swift_Transport_AbstractSmtpTransport implements Swift_Transport
     protected function _doMailFromCommand($address)
     {
         $this->executeCommand(
-            sprintf("MAIL FROM: <%s>\r\n", $address), array(250)
+            sprintf("MAIL FROM:<%s>\r\n", $address), array(250)
             );
     }
 
@@ -308,7 +309,7 @@ abstract class Swift_Transport_AbstractSmtpTransport implements Swift_Transport
     protected function _doRcptToCommand($address)
     {
         $this->executeCommand(
-            sprintf("RCPT TO: <%s>\r\n", $address), array(250, 251, 252)
+            sprintf("RCPT TO:<%s>\r\n", $address), array(250, 251, 252)
             );
     }
 
@@ -416,7 +417,7 @@ abstract class Swift_Transport_AbstractSmtpTransport implements Swift_Transport
         foreach ($recipients as $forwardPath) {
             try {
                 $this->_doRcptToCommand($forwardPath);
-                $sent++;
+                ++$sent;
             } catch (Swift_TransportException $e) {
                 $failedRecipients[] = $forwardPath;
             }
@@ -474,9 +475,9 @@ abstract class Swift_Transport_AbstractSmtpTransport implements Swift_Transport
         // We could do a really thorough check, but there's really no point
         if (false !== $dotPos = strpos($hostname, '.')) {
             return ($dotPos > 0) && ($dotPos != strlen($hostname) - 1);
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**

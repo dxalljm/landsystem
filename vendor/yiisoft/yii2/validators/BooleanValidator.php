@@ -53,29 +53,30 @@ class BooleanValidator extends Validator
     protected function validateValue($value)
     {
         $valid = !$this->strict && ($value == $this->trueValue || $value == $this->falseValue)
-            || $this->strict && ($value === $this->trueValue || $value === $this->falseValue);
+                 || $this->strict && ($value === $this->trueValue || $value === $this->falseValue);
+
         if (!$valid) {
             return [$this->message, [
-                'true' => $this->trueValue,
-                'false' => $this->falseValue,
+                'true' => $this->trueValue === true ? 'true' : $this->trueValue,
+                'false' => $this->falseValue === false ? 'false' : $this->falseValue,
             ]];
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
      * @inheritdoc
      */
-    public function clientValidateAttribute($object, $attribute, $view)
+    public function clientValidateAttribute($model, $attribute, $view)
     {
         $options = [
             'trueValue' => $this->trueValue,
             'falseValue' => $this->falseValue,
             'message' => Yii::$app->getI18n()->format($this->message, [
-                'attribute' => $object->getAttributeLabel($attribute),
-                'true' => $this->trueValue,
-                'false' => $this->falseValue,
+                'attribute' => $model->getAttributeLabel($attribute),
+                'true' => $this->trueValue === true ? 'true' : $this->trueValue,
+                'false' => $this->falseValue === false ? 'false' : $this->falseValue,
             ], Yii::$app->language),
         ];
         if ($this->skipOnEmpty) {
@@ -87,6 +88,6 @@ class BooleanValidator extends Validator
 
         ValidationAsset::register($view);
 
-        return 'yii.validation.boolean(value, messages, ' . json_encode($options) . ');';
+        return 'yii.validation.boolean(value, messages, ' . json_encode($options, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ');';
     }
 }

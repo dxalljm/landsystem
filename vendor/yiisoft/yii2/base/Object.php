@@ -15,7 +15,7 @@ use Yii;
  * A property is defined by a getter method (e.g. `getLabel`), and/or a setter method (e.g. `setLabel`). For example,
  * the following getter and setter methods define a property named `label`:
  *
- * ~~~
+ * ```php
  * private $_label;
  *
  * public function getLabel()
@@ -27,19 +27,19 @@ use Yii;
  * {
  *     $this->_label = $value;
  * }
- * ~~~
+ * ```
  *
  * Property names are *case-insensitive*.
  *
  * A property can be accessed like a member variable of an object. Reading or writing a property will cause the invocation
  * of the corresponding getter or setter method. For example,
  *
- * ~~~
+ * ```php
  * // equivalent to $label = $object->getLabel();
  * $label = $object->label;
  * // equivalent to $object->setLabel('abc');
  * $object->label = 'abc';
- * ~~~
+ * ```
  *
  * If a property has only a getter method and has no setter method, it is considered as *read-only*. In this case, trying
  * to modify the property value will cause an exception.
@@ -60,13 +60,13 @@ use Yii;
  * In order to ensure the above life cycles, if a child class of Object needs to override the constructor,
  * it should be done like the following:
  *
- * ~~~
+ * ```php
  * public function __construct($param1, $param2, ..., $config = [])
  * {
  *     ...
  *     parent::__construct($config);
  * }
- * ~~~
+ * ```
  *
  * That is, a `$config` parameter (defaults to `[]`) should be declared as the last parameter
  * of the constructor, and the parent implementation should be called at the end of the constructor.
@@ -74,7 +74,7 @@ use Yii;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class Object
+class Object implements Configurable
 {
     /**
      * Returns the fully qualified name of this class.
@@ -85,20 +85,6 @@ class Object
         return get_called_class();
     }
 
-    public static function actionName()
-    {
-    	$actionArray = get_class_methods(self::className());
-    	$result = [];
-    	foreach ($actionArray as $value) {
-    		if(strstr($value,'action')) {
-    			$result[] = $value;
-    		}
-    	}
-    	unset($result[count($result)-1]);
-    	unset($result[count($result)-1]);
-    	return $result;
-    }
-    
     /**
      * Constructor.
      * The default implementation does two things:
@@ -177,7 +163,7 @@ class Object
     }
 
     /**
-     * Checks if the named property is set (not null).
+     * Checks if a property is set, i.e. defined and not null.
      *
      * Do not call this method directly as it is a PHP magic method that
      * will be implicitly called when executing `isset($object->property)`.
@@ -185,6 +171,7 @@ class Object
      * Note that if the property is not defined, false will be returned.
      * @param string $name the property name or the event name
      * @return boolean whether the named property is set (not null).
+     * @see http://php.net/manual/en/function.isset.php
      */
     public function __isset($name)
     {
@@ -206,6 +193,7 @@ class Object
      * If the property is read-only, it will throw an exception.
      * @param string $name the property name
      * @throws InvalidCallException if the property is read only.
+     * @see http://php.net/manual/en/function.unset.php
      */
     public function __unset($name)
     {
@@ -292,8 +280,8 @@ class Object
      *
      * The default implementation is a call to php function `method_exists()`.
      * You may override this method when you implemented the php magic method `__call()`.
-     * @param string $name the property name
-     * @return boolean whether the property is defined
+     * @param string $name the method name
+     * @return boolean whether the method is defined
      */
     public function hasMethod($name)
     {

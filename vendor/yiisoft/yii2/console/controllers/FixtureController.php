@@ -17,7 +17,7 @@ use yii\test\FixtureTrait;
 /**
  * Manages fixture data loading and unloading.
  *
- * ~~~
+ * ```
  * #load fixtures from UsersFixture class with default namespace "tests\unit\fixtures"
  * yii fixture/load User
  *
@@ -30,12 +30,9 @@ use yii\test\FixtureTrait;
  * #load all fixtures except User
  * yii fixture "*" -User
  *
- * #append fixtures to already loaded
- * yii fixture User --append
- *
  * #load fixtures with different namespace.
  * yii fixture/load User --namespace=alias\my\custom\namespace\goes\here
- * ~~~
+ * ```
  *
  * The `unload` sub-command can be used similarly to unload fixtures.
  *
@@ -55,11 +52,6 @@ class FixtureController extends Controller
      */
     public $namespace = 'tests\unit\fixtures';
     /**
-     * @var bool whether to append new fixture data to the existing ones.
-     * Defaults to false, meaning if there is any existing fixture data, it will be removed.
-     */
-    public $append = false;
-    /**
      * @var array global fixtures that should be applied when loading and unloading. By default it is set to `InitDbFixture`
      * that disables and enables integrity check, so your data can be safely loaded.
      */
@@ -74,7 +66,18 @@ class FixtureController extends Controller
     public function options($actionID)
     {
         return array_merge(parent::options($actionID), [
-            'namespace', 'globalFixtures', 'append'
+            'namespace', 'globalFixtures'
+        ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function optionAliases()
+    {
+        return array_merge(parent::optionAliases(), [
+            'g' => 'globalFixtures',
+            'n' => 'namespace'
         ]);
     }
 
@@ -82,27 +85,32 @@ class FixtureController extends Controller
      * Loads the specified fixture data.
      * For example,
      *
-     * ~~~
+     * ```
      * # load the fixture data specified by User and UserProfile.
      * # any existing fixture data will be removed first
      * yii fixture/load User UserProfile
-     *
-     * # load the fixture data specified by User and UserProfile.
-     * # the new fixture data will be appended to the existing one
-     * yii fixture/load --append User UserProfile
      *
      * # load all available fixtures found under 'tests\unit\fixtures'
      * yii fixture/load "*"
      *
      * # load all fixtures except User and UserProfile
      * yii fixture/load "*" -User -UserProfile
-     * ~~~
+     * ```
      *
      * @throws Exception if the specified fixture does not exist.
      */
     public function actionLoad()
-    {        
+    {
         $fixturesInput = func_get_args();
+        if ($fixturesInput === []) {
+            $this->stdout($this->getHelpSummary() . "\n");
+
+            $helpCommand = Console::ansiFormat('yii help fixture', [Console::FG_CYAN]);
+            $this->stdout("Use $helpCommand to get usage info.\n");
+
+            return self::EXIT_CODE_NORMAL;
+        }
+
         $filtered = $this->filterFixtures($fixturesInput);
         $except = $filtered['except'];
 
@@ -147,19 +155,18 @@ class FixtureController extends Controller
 
         $fixturesObjects = $this->createFixtures($fixtures);
 
-        if (!$this->append) {
-            $this->unloadFixtures($fixturesObjects);
-        }
-
+        $this->unloadFixtures($fixturesObjects);
         $this->loadFixtures($fixturesObjects);
         $this->notifyLoaded($fixtures);
+
+        return static::EXIT_CODE_NORMAL;
     }
 
     /**
      * Unloads the specified fixtures.
      * For example,
      *
-     * ~~~
+     * ```
      * # unload the fixture data specified by User and UserProfile.
      * yii fixture/unload User UserProfile
      *
@@ -168,7 +175,7 @@ class FixtureController extends Controller
      *
      * # unload all fixtures except User and UserProfile
      * yii fixture/unload "*" -User -UserProfile
-     * ~~~
+     * ```
      *
      * @throws Exception if the specified fixture does not exist.
      */
@@ -234,6 +241,8 @@ class FixtureController extends Controller
 
     /**
      * Notifies user that there are no fixtures to load according input conditions
+     * @param array $foundFixtures array of found fixtures
+     * @param array $except array of names of fixtures that should not be loaded
      */
     public function notifyNothingToLoad($foundFixtures, $except)
     {
@@ -254,6 +263,8 @@ class FixtureController extends Controller
 
     /**
      * Notifies user that there are no fixtures to unload according input conditions
+     * @param array $foundFixtures array of found fixtures
+     * @param array $except array of names of fixtures that should not be loaded
      */
     public function notifyNothingToUnload($foundFixtures, $except)
     {
@@ -368,15 +379,15 @@ class FixtureController extends Controller
     /**
      * Checks if needed to apply all fixtures.
      * @param string $fixture
-     * @return bool
+     * @return boolean
      */
     public function needToApplyAll($fixture)
     {
-        return $fixture == '*';
+        return $fixture === '*';
     }
 
     /**
-     * Finds fixtures to be loaded, for example "User", if no fixtures were specified then all of them 
+     * Finds fixtures to be loaded, for example "User", if no fixtures were specified then all of them
      * will be searching by suffix "Fixture.php".
      * @param array $fixtures fixtures to be loaded
      * @return array Array of found fixtures. These may differ from input parameter as not all fixtures may exists.
@@ -386,7 +397,7 @@ class FixtureController extends Controller
         $fixturesPath = $this->getFixturePath();
 
         $filesToSearch = ['*Fixture.php'];
-        $findAll = ($fixtures == []);
+        $findAll = ($fixtures === []);
 
         if (!$findAll) {
 
@@ -432,20 +443,20 @@ class FixtureController extends Controller
     /**
      * Filters fixtures by splitting them in two categories: one that should be applied and not.
      * If fixture is prefixed with "-", for example "-User", that means that fixture should not be loaded,
-     * if it is not prefixed it is considered as one to be loaded. Returs array:
-     * 
-     * ~~~
+     * if it is not prefixed it is considered as one to be loaded. Returns array:
+     *
+     * ```php
      * [
      *     'apply' => [
-     *         User,
+     *         'User',
      *         ...
      *     ],
      *     'except' => [
-     *         Custom,
+     *         'Custom',
      *         ...
      *     ],
      * ]
-     * ~~~
+     * ```
      * @param array $fixtures
      * @return array fixtures array with 'apply' and 'except' elements.
      */
@@ -460,7 +471,7 @@ class FixtureController extends Controller
             if (mb_strpos($fixture, '-') !== false) {
                 $filtered['except'][] = str_replace('-', '', $fixture);
             } else {
-                $filtered['apply'][] = $fixture;                
+                $filtered['apply'][] = $fixture;
             }
         }
 

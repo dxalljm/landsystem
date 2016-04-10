@@ -22,14 +22,14 @@ use yii\base\InvalidParamException;
  *
  * Session can be used like an array to set and get session data. For example,
  *
- * ~~~
+ * ```php
  * $session = new Session;
  * $session->open();
  * $value1 = $session['name1'];  // get session variable 'name1'
  * $value2 = $session['name2'];  // get session variable 'name2'
  * foreach ($session as $name => $value) // traverse all session variables
  * $session['name3'] = $value3;  // set session variable 'name3'
- * ~~~
+ * ```
  *
  * Session can be extended to support customized session storage.
  * To do so, override [[useCustomStorage]] so that it returns true, and
@@ -97,6 +97,9 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
     {
         parent::init();
         register_shutdown_function([$this, 'close']);
+        if ($this->getIsActive()) {
+            Yii::warning("Session is already started", __METHOD__);
+        }
     }
 
     /**
@@ -179,7 +182,9 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
     {
         if ($this->getIsActive()) {
             @session_unset();
+            $sessionId = session_id();
             @session_destroy();
+            @session_id($sessionId);
         }
     }
 
@@ -205,10 +210,10 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
         if ($this->_hasSessionId === null) {
             $name = $this->getName();
             $request = Yii::$app->getRequest();
-            if (ini_get('session.use_cookies') && !empty($_COOKIE[$name])) {
+            if (!empty($_COOKIE[$name]) && ini_get('session.use_cookies')) {
                 $this->_hasSessionId = true;
             } elseif (!ini_get('session.use_only_cookies') && ini_get('session.use_trans_sid')) {
-                $this->_hasSessionId = $request->get($name) !== null;
+                $this->_hasSessionId = $request->get($name) != '';
             } else {
                 $this->_hasSessionId = false;
             }
@@ -229,6 +234,8 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
     }
 
     /**
+     * Gets the session ID.
+     * This is a wrapper for [PHP session_id()](http://php.net/manual/en/function.session-id.php).
      * @return string the current session ID
      */
     public function getId()
@@ -237,6 +244,8 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
     }
 
     /**
+     * Sets the session ID.
+     * This is a wrapper for [PHP session_id()](http://php.net/manual/en/function.session-id.php).
      * @param string $value the session ID for the current session
      */
     public function setId($value)
@@ -257,6 +266,8 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
     }
 
     /**
+     * Gets the name of the current session.
+     * This is a wrapper for [PHP session_name()](http://php.net/manual/en/function.session-name.php).
      * @return string the current session name
      */
     public function getName()
@@ -265,6 +276,8 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
     }
 
     /**
+     * Sets the name for the current session.
+     * This is a wrapper for [PHP session_name()](http://php.net/manual/en/function.session-name.php).
      * @param string $value the session name for the current session, must be an alphanumeric string.
      * It defaults to "PHPSESSID".
      */
@@ -274,6 +287,8 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
     }
 
     /**
+     * Gets the current session save path.
+     * This is a wrapper for [PHP session_save_path()](http://php.net/manual/en/function.session-save-path.php).
      * @return string the current session save path, defaults to '/tmp'.
      */
     public function getSavePath()
@@ -282,6 +297,8 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
     }
 
     /**
+     * Sets the current session save path.
+     * This is a wrapper for [PHP session_save_path()](http://php.net/manual/en/function.session-save-path.php).
      * @param string $value the current session save path. This can be either a directory name or a path alias.
      * @throws InvalidParamException if the path is not a valid directory
      */
@@ -297,7 +314,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
 
     /**
      * @return array the session cookie parameters.
-     * @see http://us2.php.net/manual/en/function.session-get-cookie-params.php
+     * @see http://php.net/manual/en/function.session-get-cookie-params.php
      */
     public function getCookieParams()
     {
@@ -505,7 +522,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
 
     /**
      * Returns an iterator for traversing the session variables.
-     * This method is required by the interface IteratorAggregate.
+     * This method is required by the interface [[\IteratorAggregate]].
      * @return SessionIterator an iterator for traversing the session variables.
      */
     public function getIterator()
@@ -526,7 +543,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
 
     /**
      * Returns the number of items in the session.
-     * This method is required by Countable interface.
+     * This method is required by [[\Countable]] interface.
      * @return integer number of items in the session.
      */
     public function count()
@@ -659,14 +676,14 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      *
      * ```php
      * <?php
-     * foreach(Yii::$app->session->getAllFlashes() as $key => $message) {
+     * foreach (Yii::$app->session->getAllFlashes() as $key => $message) {
      *     echo '<div class="alert alert-' . $key . '">' . $message . '</div>';
      * } ?>
      * ```
      *
      * With the above code you can use the [bootstrap alert][] classes such as `success`, `info`, `danger`
      * as the flash message key to influence the color of the div.
-     * 
+     *
      * Note that if you use [[addFlash()]], `$message` will be an array, and you will have to adjust the above code.
      *
      * [bootstrap alert]: http://getbootstrap.com/components/#alerts
@@ -808,7 +825,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
     }
 
     /**
-     * This method is required by the interface ArrayAccess.
+     * This method is required by the interface [[\ArrayAccess]].
      * @param mixed $offset the offset to check on
      * @return boolean
      */
@@ -820,7 +837,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
     }
 
     /**
-     * This method is required by the interface ArrayAccess.
+     * This method is required by the interface [[\ArrayAccess]].
      * @param integer $offset the offset to retrieve element.
      * @return mixed the element at the offset, null if no element is found at the offset
      */
@@ -832,7 +849,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
     }
 
     /**
-     * This method is required by the interface ArrayAccess.
+     * This method is required by the interface [[\ArrayAccess]].
      * @param integer $offset the offset to set element
      * @param mixed $item the element value
      */
@@ -843,7 +860,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
     }
 
     /**
-     * This method is required by the interface ArrayAccess.
+     * This method is required by the interface [[\ArrayAccess]].
      * @param mixed $offset the offset to unset element
      */
     public function offsetUnset($offset)

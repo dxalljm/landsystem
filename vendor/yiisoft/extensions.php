@@ -6,53 +6,34 @@ return array (
   'yiisoft/yii2-swiftmailer' => 
   array (
     'name' => 'yiisoft/yii2-swiftmailer',
-    'version' => '2.0.0.0',
+    'version' => '9999999-dev',
     'alias' => 
     array (
       '@yii/swiftmailer' => $vendorDir . '/yiisoft/yii2-swiftmailer',
     ),
   ),
-  'yiisoft/yii2-bootstrap' => 
-  array (
-    'name' => 'yiisoft/yii2-bootstrap',
-    'version' => '2.0.0.0',
-    'alias' => 
-    array (
-      '@yii/bootstrap' => $vendorDir . '/yiisoft/yii2-bootstrap',
-    ),
-  ),
-  '2amigos/yii2-date-time-picker-widget' => 
-  array (
-    'name' => '2amigos/yii2-date-time-picker-widget',
-    'version' => '0.1.1.0',
-    'alias' => 
-    array (
-      '@dosamigos/datetimepicker' => $vendorDir . '/2amigos/yii2-date-time-picker-widget',
-    ),
-  ),
-  'mdmsoft/yii2-upload-file' => 
-  array (
-    'name' => 'mdmsoft/yii2-upload-file',
-    'version' => '1.3.0.0',
-    'alias' => 
-    array (
-      '@mdm/upload' => $vendorDir . '/mdmsoft/yii2-upload-file',
-    ),
-    'bootstrap' => 'mdm\\upload\\Bootstrap',
-  ),
   'yiisoft/yii2-codeception' => 
   array (
     'name' => 'yiisoft/yii2-codeception',
-    'version' => '2.0.0.0',
+    'version' => '9999999-dev',
     'alias' => 
     array (
       '@yii/codeception' => $vendorDir . '/yiisoft/yii2-codeception',
     ),
   ),
+  'yiisoft/yii2-bootstrap' => 
+  array (
+    'name' => 'yiisoft/yii2-bootstrap',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@yii/bootstrap' => $vendorDir . '/yiisoft/yii2-bootstrap',
+    ),
+  ),
   'yiisoft/yii2-debug' => 
   array (
     'name' => 'yiisoft/yii2-debug',
-    'version' => '2.0.0.0',
+    'version' => '9999999-dev',
     'alias' => 
     array (
       '@yii/debug' => $vendorDir . '/yiisoft/yii2-debug',
@@ -61,7 +42,7 @@ return array (
   'yiisoft/yii2-gii' => 
   array (
     'name' => 'yiisoft/yii2-gii',
-    'version' => '2.0.0.0',
+    'version' => '9999999-dev',
     'alias' => 
     array (
       '@yii/gii' => $vendorDir . '/yiisoft/yii2-gii',
@@ -70,19 +51,10 @@ return array (
   'yiisoft/yii2-faker' => 
   array (
     'name' => 'yiisoft/yii2-faker',
-    'version' => '2.0.0.0',
+    'version' => '9999999-dev',
     'alias' => 
     array (
       '@yii/faker' => $vendorDir . '/yiisoft/yii2-faker',
-    ),
-  ),
-  'yiisoft/yii2-elasticsearch' => 
-  array (
-    'name' => 'yiisoft/yii2-elasticsearch',
-    'version' => '2.0.3.0',
-    'alias' => 
-    array (
-      '@yii/elasticsearch' => $vendorDir . '/yiisoft/yii2-elasticsearch',
     ),
   ),
 );

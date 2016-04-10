@@ -15,6 +15,7 @@ use yii\gii\CodeFile;
 use yii\helpers\Inflector;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
+
 /**
  * Generates CRUD
  *
@@ -33,10 +34,14 @@ class Generator extends \yii\gii\Generator
     public $modelClass;
     public $controllerClass;
     public $viewPath;
-	public $tablename;
     public $baseControllerClass = 'yii\web\Controller';
     public $indexWidgetType = 'grid';
     public $searchModelClass = '';
+    /**
+     * @var boolean whether to wrap the `GridView` or `ListView` widget with the `yii\widgets\Pjax` widget
+     * @since 2.0.5
+     */
+    public $enablePjax = false;
 
 
     /**
@@ -44,7 +49,7 @@ class Generator extends \yii\gii\Generator
      */
     public function getName()
     {
-        return 'CRUD 控制器';
+        return 'CRUD Generator';
     }
 
     /**
@@ -52,7 +57,8 @@ class Generator extends \yii\gii\Generator
      */
     public function getDescription()
     {
-        return '本控制器生成实现crud（创建，读取，更新，删除）操作数据模型和视图。';
+        return 'This generator generates a controller and views that implement CRUD (Create, Read, Update, Delete)
+            operations for the specified data model.';
     }
 
     /**
@@ -72,7 +78,7 @@ class Generator extends \yii\gii\Generator
             [['controllerClass', 'searchModelClass'], 'validateNewClass'],
             [['indexWidgetType'], 'in', 'range' => ['grid', 'list']],
             [['modelClass'], 'validateModelClass'],
-            [['enableI18N'], 'boolean'],
+            [['enableI18N', 'enablePjax'], 'boolean'],
             [['messageCategory'], 'validateMessageCategory', 'skipOnEmpty' => false],
             ['viewPath', 'safe'],
         ]);
@@ -90,6 +96,7 @@ class Generator extends \yii\gii\Generator
             'baseControllerClass' => 'Base Controller Class',
             'indexWidgetType' => 'Widget Used in Index Page',
             'searchModelClass' => 'Search Model Class',
+            'enablePjax' => 'Enable Pjax',
         ]);
     }
 
@@ -114,6 +121,9 @@ class Generator extends \yii\gii\Generator
                 You may choose either <code>GridView</code> or <code>ListView</code>',
             'searchModelClass' => 'This is the name of the search model class to be generated. You should provide a fully
                 qualified namespaced class name, e.g., <code>app\models\PostSearch</code>.',
+            'enablePjax' => 'This indicates whether the generator should wrap the <code>GridView</code> or <code>ListView</code>
+                widget on the index page with <code>yii\widgets\Pjax</code> widget. Set this to <code>true</code> if you want to get
+                sorting, filtering and pagination without page refreshing.',
         ]);
     }
 
@@ -146,18 +156,11 @@ class Generator extends \yii\gii\Generator
         }
     }
 
-	public function getTablename()
-	{
-		$data = explode('\\',$this->modelClass);
-		$this->tablename = strtolower($data[2]);
-	}
-	
     /**
      * @inheritdoc
      */
     public function generate()
     {
-		$this->getTablename();
         $controllerFile = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->controllerClass, '\\')) . '.php');
 
         $files = [
@@ -176,9 +179,10 @@ class Generator extends \yii\gii\Generator
                 continue;
             }
             if (is_file($templatePath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
-                $files[] = new CodeFile("$viewPath/$this->tablename$file", $this->render("views/$file"));
+                $files[] = new CodeFile("$viewPath/$file", $this->render("views/$file"));
             }
         }
+
         return $files;
     }
 
@@ -255,7 +259,7 @@ class Generator extends \yii\gii\Generator
             } elseif ($column->phpType !== 'string' || $column->size === null) {
                 return "\$form->field(\$model, '$attribute')->$input()";
             } else {
-                return "\$form->field(\$model, '$attribute')->$input(['maxlength' => $column->size])";
+                return "\$form->field(\$model, '$attribute')->$input(['maxlength' => true])";
             }
         }
     }

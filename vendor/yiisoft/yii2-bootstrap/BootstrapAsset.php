@@ -21,5 +21,4 @@ class BootstrapAsset extends AssetBundle
     public $css = [
         'css/bootstrap.css',
     ];
-   
 }

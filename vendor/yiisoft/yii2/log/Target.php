@@ -99,7 +99,7 @@ abstract class Target extends Component
      */
     public function collect($messages, $final)
     {
-        $this->messages = array_merge($this->messages, $this->filterMessages($messages, $this->getLevels(), $this->categories, $this->except));
+        $this->messages = array_merge($this->messages, static::filterMessages($messages, $this->getLevels(), $this->categories, $this->except));
         $count = count($this->messages);
         if ($count > 0 && ($final || $this->exportInterval > 0 && $count >= $this->exportInterval)) {
             if (($context = $this->getContextMessage()) !== '') {
@@ -152,11 +152,11 @@ abstract class Target extends Component
      *
      * For example,
      *
-     * ~~~
+     * ```php
      * ['error', 'warning']
      * // which is equivalent to:
      * Logger::LEVEL_ERROR | Logger::LEVEL_WARNING
-     * ~~~
+     * ```
      *
      * @param array|integer $levels message levels that this target is interested in.
      * @throws InvalidConfigException if an unknown level name is given
@@ -213,7 +213,7 @@ abstract class Target extends Component
             if ($matched) {
                 foreach ($except as $category) {
                     $prefix = rtrim($category, '*');
-                    if (strpos($message[2], $prefix) === 0 && ($message[2] === $category || $prefix !== $category)) {
+                    if (($message[2] === $category || $prefix !== $category) && strpos($message[2], $prefix) === 0) {
                         $matched = false;
                         break;
                     }
@@ -238,11 +238,16 @@ abstract class Target extends Component
         list($text, $level, $category, $timestamp) = $message;
         $level = Logger::getLevelName($level);
         if (!is_string($text)) {
-            $text = VarDumper::export($text);
+            // exceptions may not be serializable if in the call stack somewhere is a Closure
+            if ($text instanceof \Exception) {
+                $text = (string) $text;
+            } else {
+                $text = VarDumper::export($text);
+            }
         }
         $traces = [];
         if (isset($message[4])) {
-            foreach($message[4] as $trace) {
+            foreach ($message[4] as $trace) {
                 $traces[] = "in {$trace['file']}:{$trace['line']}";
             }
         }
@@ -266,12 +271,20 @@ abstract class Target extends Component
             return call_user_func($this->prefix, $message);
         }
 
+        if (Yii::$app === null) {
+            return '';
+        }
+
         $request = Yii::$app->getRequest();
         $ip = $request instanceof Request ? $request->getUserIP() : '-';
 
         /* @var $user \yii\web\User */
         $user = Yii::$app->has('user', true) ? Yii::$app->get('user') : null;
-        $userID = $user ? $user->getId(false) : '-';
+        if ($user && ($identity = $user->getIdentity(false))) {
+            $userID = $identity->getId();
+        } else {
+            $userID = '-';
+        }
 
         /* @var $session \yii\web\Session */
         $session = Yii::$app->has('session', true) ? Yii::$app->get('session') : null;

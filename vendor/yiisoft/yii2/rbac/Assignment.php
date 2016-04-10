@@ -8,7 +8,6 @@
 namespace yii\rbac;
 
 use Yii;
-use yii\base\Model;
 use yii\base\Object;
 
 /**
@@ -25,7 +24,7 @@ class Assignment extends Object
      */
     public $userId;
     /**
-     * @return string the role name
+     * @var string the role name
      */
     public $roleName;
     /**

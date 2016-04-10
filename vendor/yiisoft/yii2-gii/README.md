@@ -1,12 +1,17 @@
 Gii Extension for Yii 2
 ========================
 
-This extension provides a Web-based code generator, called Gii, for Yii 2 applications.
+This extension provides a Web-based code generator, called Gii, for [Yii framework 2.0](http://www.yiiframework.com) applications.
 You can use Gii to quickly generate models, forms, modules, CRUD, etc.
 
-This repository is a git submodule of <https://github.com/yiisoft/yii2>.
-Please submit issue reports and pull requests to the main repository.
 For license information check the [LICENSE](LICENSE.md)-file.
+
+Documentation is at [docs/guide/README.md](docs/guide/README.md).
+
+[![Latest Stable Version](https://poser.pugx.org/yiisoft/yii2-gii/v/stable.png)](https://packagist.org/packages/yiisoft/yii2-gii)
+[![Total Downloads](https://poser.pugx.org/yiisoft/yii2-gii/downloads.png)](https://packagist.org/packages/yiisoft/yii2-gii)
+[![Build Status](https://travis-ci.org/yiisoft/yii2-gii.svg?branch=master)](https://travis-ci.org/yiisoft/yii2-gii)
+
 
 Installation
 ------------
@@ -37,7 +42,9 @@ Once the extension is installed, simply modify your application configuration as
 return [
     'bootstrap' => ['gii'],
     'modules' => [
-        'gii' => 'yii\gii\Module',
+        'gii' => [
+            'class' => 'yii\gii\Module',
+        ],
         // ...
     ],
     // ...

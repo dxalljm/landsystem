@@ -11,7 +11,6 @@ use Yii;
 use Closure;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use app\models\Reviewprocess;
 
 /**
  * ActionColumn is a column for the [[GridView]] widget that displays buttons for viewing and manipulating the items.
@@ -22,7 +21,7 @@ use app\models\Reviewprocess;
  * 'columns' => [
  *     // ...
  *     [
- *         'class' => 'yii\grid\ActionColumn',
+ *         'class' => ActionColumn::className(),
  *         // you may configure additional properties here
  *     ],
  * ]
@@ -33,8 +32,10 @@ use app\models\Reviewprocess;
  */
 class ActionColumn extends Column
 {
-	public $farms_id = null;
-	public $id = NULL;
+    /**
+     * @inheritdoc
+     */
+    public $headerOptions = ['class' => 'action-column'];
     /**
      * @var string the ID of the controller that should handle the actions specified here.
      * If not set, it will use the currently active controller. This property is mainly used by
@@ -48,6 +49,13 @@ class ActionColumn extends Column
      * in the context of action column). They will be replaced by the corresponding button rendering callbacks
      * specified in [[buttons]]. For example, the token `{view}` will be replaced by the result of
      * the callback `buttons['view']`. If a callback cannot be found, the token will be replaced with an empty string.
+     *
+     * As an example, to only have the view, and update button you can add the ActionColumn to your GridView columns as follows:
+     *
+     * ```php
+     * ['class' => 'yii\grid\ActionColumn', 'template' => '{view} {update}'],
+     * ```
+     *
      * @see buttons
      */
     public $template = '{view} {update} {delete}';
@@ -71,18 +79,44 @@ class ActionColumn extends Column
      * ```php
      * [
      *     'update' => function ($url, $model, $key) {
-     *         return $model->status == 'editable' ? Html::a('Update', $url) : '';
-     *     };
+     *         return $model->status === 'editable' ? Html::a('Update', $url) : '';
+     *     },
      * ],
      * ```
      */
     public $buttons = [];
+    /** @var array visibility conditions for each button. The array keys are the button names (without curly brackets),
+     * and the values are the boolean true/false or the anonymous function. When the button name is not specified in
+     * this array it will be shown by default.
+     * The callbacks must use the following signature:
+     *
+     * ```php
+     * function ($model, $key, $index) {
+     *     return $model->status === 'editable';
+     * }
+     * ```
+     *
+     * Or you can pass a boolean value:
+     *
+     * ```php
+     * [
+     *     'update' => \Yii::$app->user->can('update'),
+     * ],
+     * ```
+     * @since 2.0.7
+     */
+    public $visibleButtons = [];
     /**
      * @var callable a callback that creates a button URL using the specified model information.
      * The signature of the callback should be the same as that of [[createUrl()]].
      * If this property is not set, button URLs will be created using [[createUrl()]].
      */
     public $urlCreator;
+    /**
+     * @var array html options to be applied to the [[initDefaultButtons()|default buttons]].
+     * @since 2.0.4
+     */
+    public $buttonOptions = [];
 
 
     /**
@@ -91,72 +125,46 @@ class ActionColumn extends Column
     public function init()
     {
         parent::init();
-        if(isset($_GET['farms_id']))
-        	$this->farms_id = $_GET['farms_id'];
-        $this->controller = Yii::$app->controller->id;
         $this->initDefaultButtons();
     }
 
     /**
-     * Initializes the default button rendering callbacks
+     * Initializes the default button rendering callbacks.
      */
     protected function initDefaultButtons()
     {
-//     	$this->$id;
-    	
-    	$action = $this->controller.'view';
-    	if(\Yii::$app->user->can($action)){
-	        if (!isset($this->buttons['view'])) {
-	            $this->buttons['view'] = function ($url, $model) {
-	            	if(!empty($this->farms_id))
-	            		$url.='&farms_id='.$this->farms_id;
-		            return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
-		                'title' => Yii::t('yii', '查看'),
-		                'data-pjax' => '0',
-		        	]);
-	            };
-	        }
-    	}
-    	$action = $this->controller.'update';
-    	if(\Yii::$app->user->can($action)){
-	        if (!isset($this->buttons['update'])) {
-	            $this->buttons['update'] = function ($url, $model) {
-	            	if(!empty($this->farms_id))
-	            		$url.='&farms_id='.$this->farms_id;
-	            	$state = 1;
-	            	if($this->controller == 'projectapplication') {
-	            		$state = Reviewprocess::find()->where(['id'=>$model->reviewprocess_id])->one()['state'];
-	            	}
-	            	if($state !== 7) {
-		                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
-		                    'title' => Yii::t('yii', '更新'),
-		                    'data-pjax' => '0',
-		                ]);
-	            	}
-	            };
-	        }
-    	}
-    	$action = $this->controller.'delete';
-    	if(\Yii::$app->user->can($action)){
-	        if (!isset($this->buttons['delete'])) {
-	            $this->buttons['delete'] = function ($url, $model) {
-	            	if(!empty($this->farms_id))
-	            		$url.='&farms_id='.$this->farms_id;
-	            	$state = 1;
-	            	if($this->controller == 'projectapplication') {
-	            		$state = Reviewprocess::find()->where(['id'=>$model->reviewprocess_id])->one()['state'];
-	            	}
-	            	if($state !== 7) {
-		                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
-		                    'title' => Yii::t('yii', '删除'),
-		                    'data-confirm' => Yii::t('yii', '确定要删除此项吗?'),
-		                    'data-method' => 'post',
-		                    'data-pjax' => '0',
-		                ]);
-	            	}
-	            };
-	        }
-    	}
+        if (!isset($this->buttons['view'])) {
+            $this->buttons['view'] = function ($url, $model, $key) {
+                $options = array_merge([
+                    'title' => Yii::t('yii', 'View'),
+                    'aria-label' => Yii::t('yii', 'View'),
+                    'data-pjax' => '0',
+                ], $this->buttonOptions);
+                return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, $options);
+            };
+        }
+        if (!isset($this->buttons['update'])) {
+            $this->buttons['update'] = function ($url, $model, $key) {
+                $options = array_merge([
+                    'title' => Yii::t('yii', 'Update'),
+                    'aria-label' => Yii::t('yii', 'Update'),
+                    'data-pjax' => '0',
+                ], $this->buttonOptions);
+                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, $options);
+            };
+        }
+        if (!isset($this->buttons['delete'])) {
+            $this->buttons['delete'] = function ($url, $model, $key) {
+                $options = array_merge([
+                    'title' => Yii::t('yii', 'Delete'),
+                    'aria-label' => Yii::t('yii', 'Delete'),
+                    'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+                    'data-method' => 'post',
+                    'data-pjax' => '0',
+                ], $this->buttonOptions);
+                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, $options);
+            };
+        }
     }
 
     /**
@@ -170,12 +178,12 @@ class ActionColumn extends Column
      */
     public function createUrl($action, $model, $key, $index)
     {
-       	$action = Yii::$app->controller->id.$action;
-        if ($this->urlCreator instanceof Closure) {
+        if (is_callable($this->urlCreator)) {
             return call_user_func($this->urlCreator, $action, $model, $key, $index);
         } else {
             $params = is_array($key) ? $key : ['id' => (string) $key];
             $params[0] = $this->controller ? $this->controller . '/' . $action : $action;
+
             return Url::toRoute($params);
         }
     }
@@ -187,9 +195,17 @@ class ActionColumn extends Column
     {
         return preg_replace_callback('/\\{([\w\-\/]+)\\}/', function ($matches) use ($model, $key, $index) {
             $name = $matches[1];
-            if (isset($this->buttons[$name])) {
-                $url = $this->createUrl($name, $model, $key, $index);
 
+            if (isset($this->visibleButtons[$name])) {
+                $isVisible = $this->visibleButtons[$name] instanceof \Closure
+                    ? call_user_func($this->visibleButtons[$name], $model, $key, $index)
+                    : $this->visibleButtons[$name];
+            } else {
+                $isVisible = true;
+            }
+
+            if ($isVisible && isset($this->buttons[$name])) {
+                $url = $this->createUrl($name, $model, $key, $index);
                 return call_user_func($this->buttons[$name], $url, $model, $key);
             } else {
                 return '';

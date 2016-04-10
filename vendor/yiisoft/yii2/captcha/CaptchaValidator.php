@@ -91,7 +91,7 @@ class CaptchaValidator extends Validator
         $hash = $captcha->generateValidationHash($this->caseSensitive ? $code : strtolower($code));
         $options = [
             'hash' => $hash,
-            'hashKey' => 'yiiCaptcha/' . $this->captchaAction,
+            'hashKey' => 'yiiCaptcha/' . $captcha->getUniqueId(),
             'caseSensitive' => $this->caseSensitive,
             'message' => Yii::$app->getI18n()->format($this->message, [
                 'attribute' => $object->getAttributeLabel($attribute),
@@ -103,6 +103,6 @@ class CaptchaValidator extends Validator
 
         ValidationAsset::register($view);
 
-        return 'yii.validation.captcha(value, messages, ' . json_encode($options) . ');';
+        return 'yii.validation.captcha(value, messages, ' . json_encode($options, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ');';
     }
 }
