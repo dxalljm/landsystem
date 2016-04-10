@@ -56,7 +56,8 @@ class Farms extends \yii\db\ActiveRecord {
 				],
 				[ 
 						[ 
-								'zongdi' 
+								'zongdi', 
+								'remarks',
 						],
 						'string' 
 				],
@@ -119,7 +120,7 @@ class Farms extends \yii\db\ActiveRecord {
 				'measure' => '面积',
 				'zongdi' => '宗地',
 				'cooperative_id' => '合作社',
-				'surveydate' => '合同更换日期',
+				'surveydate' => '合同领取日期',
 				'groundsign' => '地产科签字',
 				'farmersign' => '农场法人签字',
 				'create_at' => '创建日期',
@@ -139,8 +140,19 @@ class Farms extends \yii\db\ActiveRecord {
 				'notstateinfo' => '未明确状态信息',
 				'accountnumber' => '账页号',
 				'contractarea' => '合同面积',
+				'remarks' => '备注',
 		];
 	}
+	
+	public static function notstateInfo($id = NULL)
+	{
+		$array = ['未明确状态','买断地','测量误差','政府征用地','树苗地'];
+		if($id)
+			return $array[$id];
+		else 
+			return $array;
+	}
+	
 	public static function getFarmsAreaID($farms_id) {
 		return Farms::find ()->where ( [ 
 				'id' => $farms_id 
@@ -200,7 +212,8 @@ class Farms extends \yii\db\ActiveRecord {
 		if(self::getReviewprocessState($farms_id) and self::getLoanState($farms_id)) {
 			$lockid = Lockedinfo::find()->where(['farms_id'=>$farms_id])->one()['id'];
 			$lockedModel = Lockedinfo::findOne($lockid);
-			$lockedModel->delete();
+			if($lockedModel)
+				$lockedModel->delete();
 			$model->locked = 0;
 		}
 		$model->save();

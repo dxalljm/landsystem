@@ -5,7 +5,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\ManagementArea;
 use app\models\Farms;
-
+use app\models\Lease;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\farmsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('添加', ['farmscreate'], ['class' => 'btn btn-success']) ?>
-        <?php //echo Html::a('XLS导入', ['farmsxls'], ['class' => 'btn btn-success']) ?>
+        <?php echo Html::a('XLS导入', ['farmsxls'], ['class' => 'btn btn-success']) ?>
         <?php //echo Html::a('生成XLS表', ['farmstoxls'], ['class' => 'btn btn-success']) ?>
     </p>
 </section>
@@ -74,6 +74,57 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
 
             ['class' => 'yii\grid\ActionColumn'],
+            [
+            
+            'format'=>'raw',
+            //'class' => 'btn btn-primary btn-lg',
+            'value' => function($model,$key){
+            	$url = '';
+            	$html = '';
+            	if($model->zongdi) {
+            		$zongdioption = '<i class="fa fa-map text-red"></i>';
+            		$zongdititle = Lease::getZongdiRows($model->zongdi).'块宗地';
+            		$html .= Html::a($zongdioption,$url, [
+            				'title' => $zongdititle,
+            
+            		]);
+            		$html .= '&nbsp;';
+            		if($model->notclear) {
+            			$notclearoption = '<i class="fa fa-exclamation-circle text-red"></i>';
+            			$notcleartitle = '未明确地块面积'.$model->notclear.'亩';
+            			$html .= Html::a($notclearoption,$url, [
+            					'title' => $notcleartitle,
+            
+            			]);
+            			$html .= '&nbsp;';
+            		}
+            		if($model->notstate) {
+            			$notstateoption = '<i class="fa fa-tag text-red"></i>';
+            			$notstatetitle = '未明确状态面积'.$model->notstate.'亩';
+            			$html .= Html::a($notstateoption,$url, [
+            					'title' => $notstatetitle,
+            
+            			]);
+            			$html .= '&nbsp;';
+            		}
+            	}
+            	
+            	if($model->locked == 1) {
+            		$lockoption = '<i class="fa fa-lock text-red"></i>';
+            		$locktitle = '已冻结';
+            		$html .= Html::a($lockoption,$url, [
+            				'id' => 'farmermenu',
+            				'title' => $locktitle,
+            		]);
+            		$html .= '&nbsp;';
+            	}
+            	//             	if($model->notstate) {
+            	//             		$option.='<i class="fa fa-lock text-red"></i>';
+            	//             		$title = '未明确状态面积';
+            	//             	}
+            	return $html;
+            }
+            ],
 //             [
 //             'label'=>'状态',
 //             'format'=>'raw',

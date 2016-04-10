@@ -43,6 +43,16 @@ use yii\helpers\Url;
 		self.close();
 	}
 	</script>
+	<?php 
+		$plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id'],'lease_id'=>0])->all();
+		$sum = 0.00;
+		foreach ($plantings as $planting) {
+			$sum += (float)$planting['area'];
+		}
+
+		if($sum == 0 and $areas == 0) {
+			
+	?>
 	<?php if($areas) {?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -153,7 +163,9 @@ use yii\helpers\Url;
        	 	],
         ],
     ]); ?>
-<?php }?>
+<?php }} else {
+	echo '本农场由法人种植、未租赁。';
+}?>
 
 	                </div>
             </div>

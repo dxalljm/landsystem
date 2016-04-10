@@ -81,10 +81,14 @@ class Lease extends \yii\db\ActiveRecord
     	return $LeaseArea;
     }
     //得到所有当前农场已经租赁的面积
-    public static function getAllLeaseArea($lease_id,$farms_id)
+    public static function getAllLeaseArea($farms_id,$lease_id = null)
     {
     	$result = 0.0;
-    	$leases = self::find()->where(['farms_id'=>$farms_id,'id'=>$lease_id])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
+    	$leaseQuery = self::find();
+    	if($lease_id)
+    		$leases = $leaseQuery->where(['farms_id'=>$farms_id,'id'=>$lease_id])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
+    	else
+    		$leases = $leaseQuery->where(['farms_id'=>$farms_id])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
     	foreach($leases as $value) {
     			$result += $value['lease_area'];
     	}
@@ -189,8 +193,9 @@ class Lease extends \yii\db\ActiveRecord
     public static function getNoArea($farms_id)
     {
     	$farms = Farms::find()->where(['id'=>$farms_id])->one();
-    	$allarea = $farms->measure + $farms->notclear;
-    	return bcsub($farms->measure, self::getAllLeaseArea($farms_id),2);
+    	$allarea = $farms->contractarea + $farms->notclear;
+//     	var_dump(bcsub($farms->contractarea, self::getAllLeaseArea($farms_id),2));exit;
+    	return bcsub($farms->contractarea, self::getAllLeaseArea($farms_id),2);
     }
 
     //将数组中1-100(10),1-200(123)的面积进行累加
@@ -205,7 +210,7 @@ class Lease extends \yii\db\ActiveRecord
     		//var_dump($value);
     		$result += self::getArea($value);
     	}
-//     	var_dump($result);
+//     	var_dump($Area);exit;
     	return $result;
     }
 

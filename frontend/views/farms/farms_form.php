@@ -51,7 +51,7 @@ use app\models\Farms;
         	'minView' => 4,
             'format' => 'yyyy'
         ]]);  ?></td>
-			<td align='right'>合同更换日期</td>
+			<td align='right'>合同领取日期</td><?php $model->surveydate = date('Y-m-d',$model->surveydate);?>
 			<td align='left'><?= $form->field($model, 'surveydate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
@@ -111,7 +111,7 @@ use app\models\Farms;
 		  <td align='left'><?= $form->field($model, 'measure')->textInput(['readonly'=>true])->label(false)->error(false) ?></td>
 		  <td align='right'>未明确地块面积</td>
 		  <td align='left'><?= $form->field($model, 'notclear')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
-		  <td align='right'>未明确状态面积</td>
+		  <td align='right'><?= $form->field($model, 'notstateinfo')->dropDownList(Farms::notstateInfo())->label(false)->error(false)?></td>
 		  <td align='left'><?= $form->field($model, 'notstate')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
     </tr>
 		<tr>
@@ -121,6 +121,11 @@ use app\models\Farms;
 			<td align='left'><?= $form->field($model, 'farmersign')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 			<td align='right'>状态</td><?php if(!$model->state) $model->state = 1;?>
 			<td colspan="3" align='left'><?= $form->field($model, 'state')->radioList(['销户','正常'])->label(false)->error(false) ?></td>
+		</tr>
+	<tr>
+			<td width=15% align='right'>备注</td>
+			<td colspan="7" align='left'><?= $form->field($model, 'remarks')->textarea(['rows' => 5])->label(false)->error(false) ?></td>
+			<?php if(!$model->state) $model->state = 1;?>
 		</tr>
 	</table>
 	<div class="form-group">

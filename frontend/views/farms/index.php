@@ -3,50 +3,45 @@
 
 $this->title = 'My Yii Application';
 ?>
-<div class="site-index">
-
-    <div class="jumbotron">
-        <h1>Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
-
-    <div class="body-content">
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
-        </div>
-
-    </div>
-</div>
+<tr>
+			<td width=15% align='right'>合作社</td>
+			
+				
+			<td align='left' >
+			
+			<?php if($cooperativeoffarm) {?>
+			
+			<div >
+			    <div class="panel-heading">
+			      <h4 class="panel-title">
+			        <a data-toggle="collapse" data-parent="#accordion" 
+			          href="#collapseOne">
+			           <?php foreach($cooperativeoffarm as $cooper) {
+						echo Cooperative::findOne($cooper['cooperative_id'])['cooperativename'].'&nbsp;&nbsp;&nbsp;&nbsp;';}?>
+			          
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="collapseOne" class="panel-collapse collapse">
+			      <div class="panel-body">
+			     
+			        <table class="table table-striped table-bordered table-hover table-condensed">
+				<tr>
+					<td align='center'>合作社名称</td>
+					<td align='center'>合作社类型</td>
+					<td align='center'>理事长姓名</td>
+					<td align='center'>入社人数</td>
+				</tr>
+				 <?php foreach($cooperativeoffarm as $cooper) {
+					$cooperative = Cooperative::findOne($cooper['cooperative_id']);?>
+				<tr>
+					<td align='center'><?php if($cooperative !== NULL) echo $cooperative->cooperativename ?></td>
+					<td align='center'><?php if($cooperative !== NULL) echo Cooperativetype::findOne($cooperative->cooperativetype)['typename'] ?></td>
+					<td align='center'><?php if($cooperative !== NULL) echo $cooperative->directorname ?></td>
+					<td align='center'><?php if($cooperative !== NULL) echo $cooperative->peoples ?></td>
+				</tr><?php }?>
+			</table>
+			      </div>
+			    </div>
+			  </div><?php }?></td>
+		</tr>

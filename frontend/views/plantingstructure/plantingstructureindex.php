@@ -41,8 +41,7 @@ use app\models\Theyear;
 			$arrayArea = array_merge($arrayArea,explode('、',$value['lease_area']));
 			$leaseSumArea += Lease::getListArea($value['lease_area']);
 		}
-		$allarea = $farms['measure'];
-		
+		$allarea = $farms['contractarea'];
 		$isView = bcsub($allarea , $leaseSumArea,2);
 		if($isView) {
 			$arrayZongdi = Lease::getNOZongdi($_GET['farms_id']);
@@ -68,7 +67,6 @@ use app\models\Theyear;
     	  foreach($plantings as $value) {
     	  	$sumArea += (float)$value['area'];
     	  }
-    	  
     	  //echo $val['lease_area'];
     ?>
     <td align="center"><?= $isView?>亩</td>
@@ -140,6 +138,7 @@ if($leases) {
     	  foreach($plantings as $value) {
     	  	$sumArea += $value['area'];
     	  }
+//     	  var_dump($val['id']);
     	  $leaseSumArea = Lease::getListArea($val['lease_area']);
 //     	  var_dump(bcsub($sumArea, $leaseSumArea));var_dump($leaseSumArea);
     ?>
