@@ -2,7 +2,7 @@
 
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Farms;
 use app\models\Plantingstructure;
 use app\models\Plant;
@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
 use app\models\ManagementArea;
 use dosamigos\datetimepicker\DateTimePicker;
 use yii\helpers\Url;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use app\models\Search;
 use app\models\Breedinfo;
 use app\models\Projectapplication;

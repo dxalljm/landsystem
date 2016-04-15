@@ -2,7 +2,7 @@
 namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Farms;
 use app\models\Disastertype;
 use app\models\Plant;
@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'yieldreduction',
             // 'socmoney',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'frontend\helpers\eActionColumn'],
         ],
     ]); ?>
                 </div>

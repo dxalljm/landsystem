@@ -1,11 +1,11 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use yii\helpers\ArrayHelper;
 use app\models\Machineoffarm;
 use app\models\Machinetype;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use dosamigos\datetimepicker\DateTimePicker;
 /* @var $this yii\web\View */
 /* @var $model app\models\Machineoffarm */

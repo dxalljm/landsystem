@@ -1,8 +1,8 @@
 <?php
-namespace backend\controllers;
+namespace frontend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\ManagementArea;
 use app\models\Farms;
 use yii\helpers\Url;

@@ -2,7 +2,7 @@
 namespace frontend\controllers;
 use Yii;
 use yii\helpers\Html;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use dosamigos\datetimepicker\DateTimePicker;
 use frontend\helpers\MoneyFormat;
 use yii\web\View;

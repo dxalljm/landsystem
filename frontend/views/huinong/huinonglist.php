@@ -2,13 +2,13 @@
 namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Plant;
 use app\models\Subsidiestype;
 use yii\helpers\Url;
 use app\models\Huinonggrant;
 use dosamigos\datetimepicker\DateTimePicker;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\HuinongSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */

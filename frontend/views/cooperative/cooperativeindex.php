@@ -2,7 +2,7 @@
 namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Cooperativetype;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\cooperativeSearch */
@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'peoples',
             // 'finance',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'frontend\helpers\eActionColumn'],
         ],
     ]); ?>
                 </div>

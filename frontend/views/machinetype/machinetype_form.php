@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use app\models\Machinetype;
 use frontend\widgets\CategorySelect;
 /* @var $this yii\web\View */

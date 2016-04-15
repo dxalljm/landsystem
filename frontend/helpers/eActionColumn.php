@@ -1,4 +1,9 @@
 <?php
+/**
+ * @link http://www.yiiframework.com/
+ * @copyright Copyright (c) 2008 Yii Software LLC
+ * @license http://www.yiiframework.com/license/
+ */
 
 namespace frontend\helpers;
 
@@ -6,10 +11,37 @@ use Yii;
 use Closure;
 use yii\helpers\Html;
 use yii\helpers\Url;
-
-class eActionColumn extends \yii\grid\ActionColumn
+use app\models\Reviewprocess;
+use yii\grid\Column;
+/**
+ * ActionColumn is a column for the [[GridView]] widget that displays buttons for viewing and manipulating the items.
+ *
+ * To add an ActionColumn to the gridview, add it to the [[GridView::columns|columns]] configuration as follows:
+ *
+ * ```php
+ * 'columns' => [
+ *     // ...
+ *     [
+ *         'class' => 'yii\grid\ActionColumn',
+ *         // you may configure additional properties here
+ *     ],
+ * ]
+ * ```
+ *
+ * @author Qiang Xue <qiang.xue@gmail.com>
+ * @since 2.0
+ */
+class eActionColumn extends Column
 {
-	public $controller;
+	public $farms_id = null;
+	public $id = NULL;
+    /**
+     * @var string the ID of the controller that should handle the actions specified here.
+     * If not set, it will use the currently active controller. This property is mainly used by
+     * [[urlCreator]] to create URLs for different actions. The value of this property will be prefixed
+     * to each action name to form the route of the action.
+     */
+    public $controller;
     /**
      * @var string the template used for composing each cell in the action column.
      * Tokens enclosed within curly brackets are treated as controller action IDs (also called *button names*
@@ -59,56 +91,72 @@ class eActionColumn extends \yii\grid\ActionColumn
     public function init()
     {
         parent::init();
-        $this->initDefaultButtons($gets);
+        if(isset($_GET['farms_id']))
+        	$this->farms_id = $_GET['farms_id'];
+        $this->controller = Yii::$app->controller->id;
+        $this->initDefaultButtons();
     }
 
     /**
      * Initializes the default button rendering callbacks
      */
-    protected function initDefaultButtons($gets)
+    protected function initDefaultButtons()
     {
-    	$controller = Yii::$app->controller->id;
-    	$action = $controller.'view';
+//     	$this->$id;
     	
-    	//landsystem/frontend/web/index.php?r=farms%2Ffarmsupdate&id=1'
-    		
-    	if(\Yii::$app->user->can($action)){    	
-	        if (!isset($this->buttons['view'])) {
-	        	
-	            $this->buttons['view'] = function ($url, $model) {
-	            	$url = Url::to('index.php?r='.$controller.'/'.$action.'&'.$gets);
-	                return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
-	                    'title' => Yii::t('yii', '查看'),
-	                    'data-pjax' => '0',
-	                ]);
-	            };
-        	}
-    	}
-    	$action = $controller.'update';
+    	$action = $this->controller.'view';
     	if(\Yii::$app->user->can($action)){
-	        if (!isset($this->buttons['update'])) {;
-	            $this->buttons['update'] = function ($url, $model) {
-	            	
-	                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
-	                    'title' => Yii::t('yii', '更新'),
-	                    'data-pjax' => '0',
-	                ]);
+	        if (!isset($this->buttons['view'])) {
+	            $this->buttons['view'] = function ($url, $model) {
+	            	if(!empty($this->farms_id))
+	            		$url.='&farms_id='.$this->farms_id;
+		            return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
+		                'title' => Yii::t('yii', '查看'),
+		                'data-pjax' => '0',
+		        	]);
 	            };
 	        }
     	}
-        $action = $controller.'delete';
-        if(\Yii::$app->user->can($action)){
+    	$action = $this->controller.'update';
+    	if(\Yii::$app->user->can($action)){
+	        if (!isset($this->buttons['update'])) {
+	            $this->buttons['update'] = function ($url, $model) {
+	            	if(!empty($this->farms_id))
+	            		$url.='&farms_id='.$this->farms_id;
+	            	$state = 1;
+	            	if($this->controller == 'projectapplication') {
+	            		$state = Reviewprocess::find()->where(['id'=>$model->reviewprocess_id])->one()['state'];
+	            	}
+	            	if($state !== 7) {
+		                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
+		                    'title' => Yii::t('yii', '更新'),
+		                    'data-pjax' => '0',
+		                ]);
+	            	}
+	            };
+	        }
+    	}
+    	$action = $this->controller.'delete';
+    	if(\Yii::$app->user->can($action)){
 	        if (!isset($this->buttons['delete'])) {
 	            $this->buttons['delete'] = function ($url, $model) {
-	                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
-	                    'title' => Yii::t('yii', '删除'),
-	                    'data-confirm' => Yii::t('yii', '确定要删除此项吗?'),
-	                    'data-method' => 'post',
-	                    'data-pjax' => '0',
-	                ]);
+	            	if(!empty($this->farms_id))
+	            		$url.='&farms_id='.$this->farms_id;
+	            	$state = 1;
+	            	if($this->controller == 'projectapplication') {
+	            		$state = Reviewprocess::find()->where(['id'=>$model->reviewprocess_id])->one()['state'];
+	            	}
+	            	if($state !== 7) {
+		                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
+		                    'title' => Yii::t('yii', '删除'),
+		                    'data-confirm' => Yii::t('yii', '确定要删除此项吗?'),
+		                    'data-method' => 'post',
+		                    'data-pjax' => '0',
+		                ]);
+	            	}
 	            };
 	        }
-        }
+    	}
     }
 
     /**

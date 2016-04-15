@@ -3,7 +3,7 @@ namespace backend\controllers;
 use Yii;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Lease;
 use app\models\Parcel;
 use app\models\Plant;

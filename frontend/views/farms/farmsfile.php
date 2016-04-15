@@ -3,7 +3,7 @@ namespace frontend\controllers;
 use Yii;
 use yii\helpers\Html;
 use app\models\Machine;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use app\models\Tables;
 use app\models\Tablefields;
 use app\models\Reviewprocess;

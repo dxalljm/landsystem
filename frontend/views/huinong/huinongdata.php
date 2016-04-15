@@ -2,7 +2,7 @@
 namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Plant;
 use app\models\Subsidiestype;
 use yii\helpers\Url;
@@ -12,7 +12,7 @@ use frontend\helpers\MoneyFormat;
 use app\models\Dispute;
 use app\models\Collection;
 use app\models\Goodseed;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use app\models\Huinong;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\HuinongSearch */

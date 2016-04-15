@@ -1,6 +1,6 @@
 <?php
 use yii\helpers\ArrayHelper;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use app\models\tables;
 use app\models\Nation;
 use yii\helpers\Html;

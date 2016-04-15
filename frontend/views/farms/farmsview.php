@@ -5,7 +5,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\ManagementArea;
 use app\models\Cooperative;
-use yii\grid\GridView; 
+use frontend\helpers\grid\GridView; 
 use yii\web\View;
 use app\models\Cooperativetype;
 use app\models\Parcel;

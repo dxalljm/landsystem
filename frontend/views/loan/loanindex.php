@@ -2,7 +2,7 @@
 namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Farms;
 use app\models\Reviewprocess;
 use yii\helpers\Url;
@@ -70,7 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
             		return $result;
             		
             } ],
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'frontend\helpers\eActionColumn'],
             [
 //             		'label'=>'操作',
             		'format'=>'raw',

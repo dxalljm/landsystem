@@ -4,7 +4,7 @@ use Yii;
 use yii\helpers\Url;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\ManagementArea;
 use dosamigos\datetimepicker\DateTimePicker;
 use app\models\Theyear;

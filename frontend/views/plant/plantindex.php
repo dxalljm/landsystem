@@ -2,7 +2,7 @@
 namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Plant;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\plantSearch */
@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
             		return Plant::find()->where(['id'=>$model->father_id])->one()['cropname'];
             	},
 			],
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'frontend\helpers\eActionColumn'],
         ],
     ]); ?>
                 </div>

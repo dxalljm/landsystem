@@ -2,7 +2,7 @@
 namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use yii\helpers\Url;
 use app\models\Farms;
 use frontend\helpers\arraySearch;
@@ -75,7 +75,7 @@ $data = arraySearch::find($totalData)->search();
                                 		return null;
                                 }
                                 ],
-                                ['class' => 'yii\grid\ActionColumn'],
+                                ['class' => 'frontend\helpers\eActionColumn'],
                             ],
                         ]);
                     ?>
