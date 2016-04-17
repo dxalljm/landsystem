@@ -30,7 +30,7 @@ class Dispute extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['farms_id', 'disputetype_id'], 'integer'],
+            [['farms_id', 'disputetype_id','state'], 'integer'],
             [['content'], 'string'],
            
         ];
@@ -48,6 +48,7 @@ class Dispute extends \yii\db\ActiveRecord
             'create_at' => '创建日期',
             'update_at' => '更新日期',
             'disputetype_id' => '纠纷类型',
+        	'state' => '状态',
         ];
     }
 }

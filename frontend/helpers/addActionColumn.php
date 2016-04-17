@@ -31,7 +31,7 @@ use yii\grid\Column;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class eActionColumn extends Column
+class addActionColumn extends Column
 {
 	public $farms_id = null;
 	public $id = NULL;
@@ -51,7 +51,7 @@ class eActionColumn extends Column
      * the callback `buttons['view']`. If a callback cannot be found, the token will be replaced with an empty string.
      * @see buttons
      */
-    public $template = '{view} {update} {delete}';
+    public $template = '';
     /**
      * @var array button rendering callbacks. The array keys are the button names (without curly brackets),
      * and the values are the corresponding button rendering callbacks. The callbacks should use the following
@@ -101,80 +101,9 @@ class eActionColumn extends Column
     /**
      * Initializes the default button rendering callbacks
      */
-    protected function addButtons($action,$buttonName,$newurl = NULL,$option = NULL)
-    {
-    	if(\Yii::$app->user->can($action)){
-	        if (!isset($this->buttons[$buttonName])) {
-	            $this->buttons[$buttonName] = function ($url, $model) {
-	            	if(!empty($this->farms_id))
-	            		$url.='&farms_id='.$this->farms_id;
-	            	if($url)
-	            		$url = $newurl;
-		            return Html::a($option['option'], $url, [
-		                'title' => Yii::t('yii', $option['title']),
-		                'data-pjax' => '0',
-		        	]);
-	            };
-	        }
-    	}
-    }
     protected function initDefaultButtons()
     {
-//     	$this->$id;
     	
-    	$action = $this->controller.'view';
-    	if(\Yii::$app->user->can($action)){
-	        if (!isset($this->buttons['view'])) {
-	            $this->buttons['view'] = function ($url, $model) {
-	            	if(!empty($this->farms_id))
-	            		$url.='&farms_id='.$this->farms_id;
-		            return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
-		                'title' => Yii::t('yii', '查看'),
-		                'data-pjax' => '0',
-		        	]);
-	            };
-	        }
-    	}
-    	$action = $this->controller.'update';
-    	if(\Yii::$app->user->can($action)){
-	        if (!isset($this->buttons['update'])) {
-	            $this->buttons['update'] = function ($url, $model) {
-	            	if(!empty($this->farms_id))
-	            		$url.='&farms_id='.$this->farms_id;
-	            	$state = 1;
-	            	if($this->controller == 'projectapplication') {
-	            		$state = Reviewprocess::find()->where(['id'=>$model->reviewprocess_id])->one()['state'];
-	            	}
-	            	if($state !== 7) {
-		                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
-		                    'title' => Yii::t('yii', '更新'),
-		                    'data-pjax' => '0',
-		                ]);
-	            	}
-	            };
-	        }
-    	}
-    	$action = $this->controller.'delete';
-    	if(\Yii::$app->user->can($action)){
-	        if (!isset($this->buttons['delete'])) {
-	            $this->buttons['delete'] = function ($url, $model) {
-	            	if(!empty($this->farms_id))
-	            		$url.='&farms_id='.$this->farms_id;
-	            	$state = 1;
-	            	if($this->controller == 'projectapplication') {
-	            		$state = Reviewprocess::find()->where(['id'=>$model->reviewprocess_id])->one()['state'];
-	            	}
-	            	if($state !== 7) {
-		                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
-		                    'title' => Yii::t('yii', '删除'),
-		                    'data-confirm' => Yii::t('yii', '确定要删除此项吗?'),
-		                    'data-method' => 'post',
-		                    'data-pjax' => '0',
-		                ]);
-	            	}
-	            };
-	        }
-    	}
     }
 
     /**

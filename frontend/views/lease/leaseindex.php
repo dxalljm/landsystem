@@ -7,7 +7,7 @@ use app\models\Farms;
 use app\models\Lease;
 use app\models\Plantingstructure;
 use yii\helpers\Url;
-
+use app\models\Theyear;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\leaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -44,12 +44,14 @@ use yii\helpers\Url;
 	}
 	</script>
 	<?php 
-		$plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id'],'lease_id'=>0])->all();
+		$plantings = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id'],'lease_id'=>0])->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->all();
 		$sum = 0.00;
-		foreach ($plantings as $planting) {
-			$sum += (float)$planting['area'];
-		}
-
+		if($plantings) {			
+			foreach ($plantings as $planting) {
+				$sum += (float)$planting['area'];
+			}
+		} else 
+			$areas = 0;
 		if($sum == 0 and $areas == 0) {
 			
 	?>

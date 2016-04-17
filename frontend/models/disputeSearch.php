@@ -19,7 +19,7 @@ class disputeSearch extends Dispute
     public function rules()
     {
         return [
-            [['id', 'farms_id'], 'integer'],
+            [['id', 'farms_id','state'], 'integer'],
             [['content', 'create_at', 'update_at'], 'safe'],
         ];
     }
@@ -73,6 +73,7 @@ class disputeSearch extends Dispute
         $query->andFilterWhere([
             'id' => $this->id,
             'farms_id' => $this->farms_id,
+           	'state' => $this->state,
         ]);
 
         $query->andFilterWhere(['like', 'content', $this->content])

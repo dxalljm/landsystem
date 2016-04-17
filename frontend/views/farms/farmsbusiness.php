@@ -8,7 +8,11 @@ use app\models\Farmer;
 use app\models\Dispute;
 use yii\helpers\Url;
 use app\models\Lease;
-
+use app\models\Machine;
+use app\models\Machineoffarm;
+use app\models\Projectapplication;
+use app\models\Collection;
+use app\models\Theyear;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\farmsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -54,7 +58,7 @@ use app\models\Lease;
             //'class' => 'btn btn-primary btn-lg',
             'value' => function($model,$key){
             	$url = ['/farms/farmsmenu','farms_id'=>$model->id];
-            	$disputerows = Dispute::find()->where(['farms_id'=>$model->id])->count();
+            	$disputerows = Dispute::find()->where(['farms_id'=>$model->id,'state'=>0])->count();
             	$option = '进入业务办理';
             	$title = '农场相关业务办理';
             	$html = '';
@@ -95,12 +99,42 @@ use app\models\Lease;
             	if($disputerows) {
             		$disputeoption = '<i class="fa fa-commenting text-red"></i>';
             		$disputetitle = $disputerows.'条纠纷';
+            		$url = Url::to(['dispute/disputeindex','farms_id'=>$model->id]);
             		$html .= Html::a($disputeoption,$url, [
             				'title' => $disputetitle,            		
             		]);
             		$html .= '&nbsp;';
             	}
-            	
+            	$machine = Machineoffarm::find()->where(['farms_id'=>$model->id])->count();
+            	if($machine) {
+            		$machineoption = '<i class="fa fa-truck text-red"></i>';
+            		$machinetitle = $machine.'台农机';
+            		$url = Url::to(['machineoffarm/machineoffarmindex','farms_id'=>$model->id]);
+            		$html .= Html::a($machineoption,$url, [
+            				'title' => $machinetitle,
+            		]);
+            		$html .= '&nbsp;';
+            	}
+            	$project = Projectapplication::find()->where(['farms_id'=>$model->id])->count();
+            	if($project) {
+            		$projectoption = '<i class="fa fa-sticky-note-o text-red"></i>';
+            		$projecttitle = $project.'个项目';
+            		$url = Url::to(['projectapplication/projectapplicationindex','farms_id'=>$model->id]);
+            		$html .= Html::a($projectoption,$url, [
+            				'title' => $projecttitle,
+            		]);
+            		$html .= '&nbsp;';
+            	}
+            	$collection = Collection::find()->where(['farms_id'=>$model->id])->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count();
+            	if($collection) {
+            		$collecitonoption = '<i class="fa fa-cny text-red"></i>';
+            		$collectiontitle = '已交费';
+            		$url = '#';
+            		$html .= Html::a($collecitonoption,$url, [
+            				'title' => $collectiontitle,
+            		]);
+            		$html .= '&nbsp;';
+            	}
 //             	if($model->zongdi) {
 //             		$option .= '<i class="fa fa-check text-red"></i>';
 //             	}

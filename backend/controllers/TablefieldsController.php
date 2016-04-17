@@ -12,11 +12,14 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Migration;
 use yii\filters\AccessControl;
+use app\models\Loan;
 /**
  * TablefieldsController implements the CRUD actions for tablefields model.
  */
 class TablefieldsController extends Controller
 {
+	private $db;
+	
     public function behaviors()
     {
          return [
@@ -86,11 +89,14 @@ class TablefieldsController extends Controller
     {
     	$this->layout='@app/views/layouts/nomain.php';
         $model = new tablefields();
+        
         $mir = new Migration();
+        $this->db = $mir->db;
         $sch = new \yii\db\mysql\Schema;
         if ($model->load(Yii::$app->request->post())) {
         	$tablename = tables::find()->where(['id'=>$model->tables_id])->one()['tablename'];
-        	$columns = $mir->getColumns($tablename);
+        	$columns = $this->getColumns($tablename);
+//         	var_dump($this->getTableColumns());exit;
 			if($this->isIn($model->fields, $columns)) {
 				return $this->render('tablefieldserror', [
                 	'message' => '该表项已经存在，不能被创建！',
@@ -122,6 +128,17 @@ class TablefieldsController extends Controller
     	return false;
     }
     
+	public function getColumns($table)
+    {
+    	//echo "    > get Column $table ...";
+    	//$time = microtime(true);
+    	$sql = "select COLUMN_NAME from information_schema.COLUMNS where table_name = '".$this->db->tablePrefix.$table."'";
+    	$command = $this->db->createCommand($sql);
+    	$result = $command->queryAll();
+    	return $result;
+    	//$this->db->createCommand()->dropIndex($name, $table)->execute();
+    	//echo " done (time: " . sprintf('%.3f', microtime(true) - $time) . "s)\n";
+    }
     /**
      * Updates an existing tablefields model.
      * If update is successful, the browser will be redirected to the 'view' page.

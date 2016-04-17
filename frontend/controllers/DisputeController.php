@@ -78,6 +78,7 @@ class DisputeController extends Controller
         if ($model->load(Yii::$app->request->post())) {
         	$model->create_at = time();
         	$model->update_at = time();
+        	$model->state = 1;
         	$model->save();
         	$newAttr = $model->attributes;
         	Logs::writeLog('创建纠纷',$model->id,'',$newAttr);
@@ -119,16 +120,25 @@ class DisputeController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDisputedelete($id)
+    public function actionDisputedelete($id,$farms_id)
     {
     	$model = $this->findModel($id);
     	$oldAttr = $model->attributes;
     	Logs::writeLog('删除纠纷',$id,$oldAttr);
         $model->delete();
 
-        return $this->redirect(['disputeindex']);
+        return $this->redirect(['disputeindex','farms_id'=>$farms_id]);
     }
 
+    public function actionDisputestate($id,$farms_id)
+    {
+    	$model = $this->findModel($id);
+    	$oldAttr = $model->attributes;
+    	Logs::writeLog('解决纠纷',$id,$oldAttr);
+    	$model->state = 1;
+    	$model->save();
+    	return $this->redirect(['disputeindex','farms_id'=>$farms_id]);
+    }
     /**
      * Finds the Dispute model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

@@ -118,8 +118,8 @@ $this->params['breadcrumbs'][] = $this->title;
 		</tr>
 		
 		<tr>
-			<td width=15% align='right'>调查日期</td>
-			<td align='left'><?= $model->surveydate ?></td>
+			<td width=15% align='right'>合同领取日期</td>
+			<td align='left'><?= date('Y-m-d',$model->surveydate) ?></td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>地产科签字</td>
