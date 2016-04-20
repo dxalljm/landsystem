@@ -24,7 +24,7 @@ class farmsSearch extends Farms
         return [
             [['id', 'create_at', 'update_at','state','oldfarms_id','locked'], 'integer'],
             [['farmname', 'farmername', 'address','measure','notstateinfo', 'management_area','telephone', 'spyear', 'zongdi', 'cooperative_id','notclear','surveydate', 'groundsign', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate','latitude','longitude','accountnumber','contractarea'], 'safe'],
-            //[['measure'], 'number'],
+            [['notstate'], 'number'],
         ];
     }
 
@@ -193,7 +193,21 @@ class farmsSearch extends Farms
         	'management_area' => $this->management_area,
 //         	'notstate' => $this->notstate,
         ]);
-       
+       	if($this->zongdi == 'icon')	{
+       		$query->andWhere('zongdi <> ""');
+       	} else {
+       		$query->andFilterWhere(['like', 'zongdi', $this->zongdi]);
+       	}
+       	if($this->notclear == 'icon')	{
+       		$query->andWhere('notclear <> ""');
+       	} else {
+       		$query->andFilterWhere(['like', 'notclear', $this->notclear]);
+       	}
+       	if($this->notstate == 'icon')	{
+       		$query->andWhere('notstate <> ""');
+       	} else {
+       		$query->andFilterWhere(['like', 'notstate', $this->notstate]);
+       	}
 
           $query->andFilterWhere(['like', 'cardid', $this->cardid])
             ->andFilterWhere(['like', 'telephone', $this->telephone])
@@ -202,8 +216,8 @@ class farmsSearch extends Farms
             ->andFilterWhere(['like', 'oldfarms_id', $this->oldfarms_id])
 //             ->andWhere(['management_area' => $managementarea])
             ->andFilterWhere(['like', 'spyear', $this->spyear])
-            ->andFilterWhere(['like', 'zongdi', $this->zongdi])
-            ->andFilterWhere(['like', 'notclear', $this->notclear])
+//             ->andFilterWhere(['like', 'zongdi', $this->zongdi])
+//             ->andFilterWhere(['like', 'notclear', $this->notclear])
             ->andFilterWhere(['like', 'cooperative_id', $this->cooperative_id])
             ->andFilterWhere(['like', 'surveydate', $this->surveydate])
             ->andFilterWhere(['like', 'groundsign', $this->groundsign])

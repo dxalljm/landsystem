@@ -1,6 +1,8 @@
 <?php
 
 namespace console\controllers;
+use yii;
+use yii\web\Application;
 use console\models\elasticsearchtest;
 use yii\console\Controller;
 use console\models\Farms;
@@ -21,6 +23,17 @@ class LandcacheController extends Controller
 	{
 		elasticsearchtest::showdb();
 		
+	}
+	
+	public function actionUpdateall($user_id)
+	{
+// 		var_dump(\Yii::$app->getUser());exit;
+		$this->farmscache($user_id);
+		$this->collectioncache($user_id);
+		$this->huinongcache($user_id);
+		$this->plantingstructurecache($user_id);
+		$this->projectapplicationcache($user_id);
+		$this->yieldscache($user_id);
 	}
 	
 	public function eInsert()
@@ -59,28 +72,6 @@ class LandcacheController extends Controller
 			$landcache->farmscategories = json_encode(Farms::getUserManagementAreaname($id));
 			$landcache->save();
 		}
-	}
-// 	public function actionFarmscache()
-// 	{
-// // 		var_dump(Farmselastic::getDb());exit;
-// 		set_time_limit ( 0 );
-// 		$farms = Farms::find ()->all ();
-// 		$attributes = Farmselastic::getAtt();
-// 		foreach ( $farms as $farm ) {
-// 			$elastic = new Farmselastic();
-// 			foreach ( $attributes as $value ) {
-// 				if ($value !== 'index' and $value !== 'type')
-//     				$elastic->$value = $farm[$value];
-//     		}
-//     		$elastic->insert();
-//     	}
-// // 		var_dump(Farmselastic::index());
-//     	echo 'insert done';
-// 	}
-	
-	public function actionFarmsecharts()
-	{
-		
 	}
 	
 	public function actionCollectioncache()
@@ -166,7 +157,7 @@ class LandcacheController extends Controller
 			$landcache->save();
 		}
 	}
-	
+	//
 	public function actionProjectapplicationcache()
 	{
 		$allid = $this->getAllUser();
@@ -182,5 +173,103 @@ class LandcacheController extends Controller
 			$landcache->save();
 		}
 	}
+	//以下为单个用户
+	public function farmscache($user_id)
+	{
+		
+		if($cache = Cache::find()->where(['user_id'=>$user_id])->one())
+			$landcache = Cache::findOne($cache->id);
+		else
+			$landcache = new Cache();
+		$landcache->user_id = $user_id;
+		$landcache->farmscache = Farms::getFarmarea($user_id);
+		$landcache->farmstitle = '面积：'.Farms::totalArea($user_id).' 农场户数：'.Farms::totalNum($user_id);
+		$landcache->farmscategories = json_encode(Farms::getUserManagementAreaname($user_id));
+		$landcache->save();
+		echo 'farmscache finished|';
+	}
 	
+	public function collectioncache($user_id)
+	{
+		if($cache = Cache::find()->where(['user_id'=>$user_id])->one())
+			$landcache = Cache::findOne($cache->id);
+		else
+			$landcache = new Cache();
+		$landcache->user_id = $user_id;
+		$landcache->collectioncache = Collection::getCollection($user_id);
+		$landcache->collectiontitle = '应收：'. Collection::totalAmounts($user_id).' 实收：'.Collection::totalReal($user_id);
+		$landcache->collectioncategories = json_encode(Farms::getUserManagementAreaname($user_id));
+		$landcache->save();
+		echo 'collectioncache finished|';
+	}
+	public function plantingstructurecache($user_id)
+	{
+		if($cache = Cache::find()->where(['user_id'=>$user_id])->one())
+			$landcache = Cache::findOne($cache->id);
+		else
+			$landcache = new Cache();
+		$landcache->user_id = $user_id;
+		$landcache->plantingstructurecache = Plantingstructure::getPlantingstructure($user_id);
+		$landcache->plantingstructuretitle = '作物面积：'.Plantingstructure::getPlantGoodseedSum($user_id)['plantSum'].'亩&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;良种面积：'.Plantingstructure::getPlantGoodseedSum($user_id)['goodseedSum'].'亩';
+		$plant = Plantingstructure::getPlantname($user_id);
+		$landcache->plantingstructurecategories = json_encode($plant['plantname']);
+		$landcache->save();
+		echo 'plantingstructurecache finished|';
+	}
+	
+	public function huinongcache($user_id)
+	{
+		if($cache = Cache::find()->where(['user_id'=>$user_id])->one())
+			$landcache = Cache::findOne($cache->id);
+		else
+			$landcache = new Cache();
+		$landcache->user_id = $user_id;
+		$landcache->huinongcache = Huinonggrant::getHuinonggrantinfo($user_id);
+		$landcache->huinongtitle = '惠农政策补贴发放情况';
+		$landcache->huinongcategories = json_encode(Farms::getUserManagementAreaname($user_id));
+		$landcache->save();
+		echo 'huinongcache finished|';
+	}
+	
+	public function plantinputproductcache($user_id)
+	{
+		if($cache = Cache::find()->where(['user_id'=>$user_id])->one())
+			$landcache = Cache::findOne($cache->id);
+		else
+			$landcache = new Cache();
+		$landcache->user_id = $user_id;
+		$landcache->plantinputproductcache = Plantinputproduct::getInputproduct($user_id);
+		$landcache->plantinputproducttitle = '投入品使用情况';
+		$landcache->plantinputproductcategories = json_encode(Plantinputproduct::getTypenamelist($user_id)['typename']);
+		$landcache->save();
+		echo 'plantinputproductcache finished|';
+	}
+	
+	public function yieldscache($user_id)
+	{
+		if($cache = Cache::find()->where(['user_id'=>$user_id])->one())
+			$landcache = Cache::findOne($cache->id);
+		else
+			$landcache = new Cache();
+		$landcache->user_id = $user_id;
+		$landcache->plantinputproductcache = Yields::getUserYields($user_id);
+		$landcache->plantinputproducttitle = '农产品产量情况';
+		$landcache->plantinputproductcategories = json_encode(Yields::getUserTypenamelist($user_id)['typename']);
+		$landcache->save();
+		echo 'yieldscache finished|';
+	}
+	
+	public function projectapplicationcache($user_id)
+	{
+		if($cache = Cache::find()->where(['user_id'=>$user_id])->one())
+			$landcache = Cache::findOne($cache->id);
+		else
+			$landcache = new Cache();
+		$landcache->user_id = $user_id;
+		$landcache->projectapplicationcache = Projectapplication::getProjectapplicationcache($user_id);
+		$landcache->projectapplicationtitle = '项目情况';
+		$landcache->projectapplicationcategories = json_encode(Projectapplication::getTypenamelist($user_id)['projecttype']);
+		$landcache->save();
+		echo 'projectapplicationcache finished|';
+	}
 }

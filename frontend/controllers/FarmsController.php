@@ -535,6 +535,46 @@ class FarmsController extends Controller {
 			$params ['farmsSearch'] ['management_area'] = $whereArray;
 		}
 		$params ['farmsSearch'] ['state'] = 1;
+		if(isset($_GET['locked']))
+			$params['farmsSearch']['locked'] = $_GET['locked'];
+		if(isset($_GET['zongdi']))
+			$params['farmsSearch']['zongdi'] = $_GET['zongdi'];
+		if(isset($_GET['notclear']))
+			$params['farmsSearch']['notclear'] = $_GET['notclear'];
+		if(isset($_GET['notstate']))
+			$params['farmsSearch']['notstate'] = $_GET['notstate'];
+		if(isset($_GET['dispute'])) {
+			$disputes = Dispute::find()->where(['state'=>0])->all();
+			$farms_ids = [];
+			foreach ($disputes as $dispute) {
+				$farms_ids[] = $dispute['farms_id'];
+			}
+			$params['farmsSearch']['id'] = $farms_ids;
+		}
+		if(isset($_GET['machine'])) {
+			$machines = Machineoffarm::find()->all();
+			$farms_ids = [];
+			foreach ($machines as $machine) {
+				$farms_ids[] = $machine['farms_id'];
+			}
+			$params['farmsSearch']['id'] = $farms_ids;
+		}
+		if(isset($_GET['project'])) {
+			$projects = Projectapplication::find()->where(['state'=>1])->all();
+			$farms_ids = [];
+			foreach ($projects as $project) {
+				$farms_ids[] = $project['farms_id'];
+			}
+			$params['farmsSearch']['id'] = $farms_ids;
+		}
+		if(isset($_GET['collection'])) {
+			$collections = Collection::find()->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->all();
+			$farms_ids = [];
+			foreach ($collections as $collection) {
+				$farms_ids[] = $collection['farms_id'];
+			}
+			$params['farmsSearch']['id'] = $farms_ids;
+		}
 		// $params ['farmsSearch'] ['update_at'] = date('Y');
 		$dataProvider = $searchModel->search ( $params );
 		Logs::writeLog ( '业务办理' );

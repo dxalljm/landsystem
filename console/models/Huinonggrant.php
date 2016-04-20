@@ -96,7 +96,7 @@ class Huinonggrant extends \yii\db\ActiveRecord
     			$sum[$val['subsidiestype_id']]['stack'] = $val['subsidiestype_id'];
     		}	
     	}
-    	var_dump($sum);
+//     	var_dump($sum);
     	foreach($sum as $value) {
     		//     		var_dump($value['key']);exit;
     		$result[] =

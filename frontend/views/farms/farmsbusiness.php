@@ -13,6 +13,7 @@ use app\models\Machineoffarm;
 use app\models\Projectapplication;
 use app\models\Collection;
 use app\models\Theyear;
+use app\models\Farms;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\farmsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -25,7 +26,7 @@ use app\models\Theyear;
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">
-                        业务办理&nbsp;&nbsp;<?= html::a('导出XLS',Url::to(['farms/farmstoxls']),['class'=>'btn btn-primary'])?>
+                        业务办理&nbsp;&nbsp;<?php //echo html::a('导出XLS',Url::to(['farms/farmstoxls']),['class'=>'btn btn-primary'])?>
                     </h3>
                 </div>
                 <div class="box-body">
@@ -76,26 +77,27 @@ use app\models\Theyear;
             				
             		]);
             		$html .= '&nbsp;';
-            		if($model->notclear) {
-            			$notclearoption = '<i class="fa fa-exclamation-circle text-red"></i>';
-            			$notcleartitle = '未明确地块面积'.$model->notclear.'亩';
-            			$html .= Html::a($notclearoption,$url, [
-            					'title' => $notcleartitle,
             		
-            			]);
-            			$html .= '&nbsp;';
-            		}
-            		if($model->notstate) {
-            			$notstateoption = '<i class="fa fa-tag text-red"></i>';
-            			$notstatetitle = '未明确状态面积'.$model->notstate.'亩';
-            			$html .= Html::a($notstateoption,$url, [
-            					'title' => $notstatetitle,
             		
-            			]);
-            			$html .= '&nbsp;';
-            		}
             	}
+            	if($model->notclear) {
+            		$notclearoption = '<i class="fa fa-exclamation-circle text-red"></i>';
+            		$notcleartitle = '未明确地块面积'.$model->notclear.'亩';
+            		$html .= Html::a($notclearoption,$url, [
+            				'title' => $notcleartitle,
             	
+            		]);
+            		$html .= '&nbsp;';
+            	}
+            	if($model->notstate) {
+            		$notstateoption = '<i class="fa fa-tag text-red"></i>';
+            		$notstatetitle = '未明确状态面积'.$model->notstate.'亩';
+            		$html .= Html::a($notstateoption,$url, [
+            				'title' => $notstatetitle,
+            	
+            		]);
+            		$html .= '&nbsp;';
+            	}
             	if($disputerows) {
             		$disputeoption = '<i class="fa fa-commenting text-red"></i>';
             		$disputetitle = $disputerows.'条纠纷';
@@ -115,7 +117,7 @@ use app\models\Theyear;
             		]);
             		$html .= '&nbsp;';
             	}
-            	$project = Projectapplication::find()->where(['farms_id'=>$model->id])->count();
+            	$project = Projectapplication::find()->where(['farms_id'=>$model->id,'state'=>1])->count();
             	if($project) {
             		$projectoption = '<i class="fa fa-sticky-note-o text-red"></i>';
             		$projecttitle = $project.'个项目';
@@ -152,7 +154,8 @@ use app\models\Theyear;
 //             		$title = '未明确状态面积';
 //             	}
             	return $html;
-            }
+            },
+            'filter' => Farms::businessIcon(),
             ],
 //             [
             

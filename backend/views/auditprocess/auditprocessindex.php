@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'process',
             'actionname',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'frontend\helpers\eActionColumn'],
         ],
     ]); ?>
                 </div>

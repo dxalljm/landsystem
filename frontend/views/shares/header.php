@@ -92,6 +92,11 @@ use app\models\Huinong;
                 }
                 ?>
             </ul>
+            <ul class="nav navbar-nav">
+                    <li>
+                        <a href="<?= Url::to(['updatecache/updateall'])?>">更新首页图表数据</a>
+                    </li>
+                </ul>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <li>

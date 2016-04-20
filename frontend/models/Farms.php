@@ -144,6 +144,75 @@ class Farms extends \yii\db\ActiveRecord {
 		];
 	}
 	
+	public static function businessIcon()
+	{
+		$html = '';
+		$alloption = '<i class="fa fa-reply-all text-red"></i>';
+		$url = Url::to(['farms/farmsbusiness']);
+		$alltitle = '全部';
+		$html .= Html::a($alloption,$url, [
+				'id' => 'farmermenu',
+				'title' => $alltitle,
+		]);
+		$html .= '&nbsp;';
+		$zongdioption = '<i class="fa fa-map text-red"></i>';
+		$url = Url::to(['farms/farmsbusiness','zongdi'=>'icon']);
+		$html .= Html::a($zongdioption,$url, [
+				'title' => '宗地',
+		
+		]);
+		$html .= '&nbsp;';
+		$notclearoption = '<i class="fa fa-exclamation-circle text-red"></i>';
+		$url = Url::to(['farms/farmsbusiness','notclear'=>'icon']);
+		$html .= Html::a($notclearoption,$url, [
+				'title' => '未明确地块面积',
+		
+		]);
+		$html .= '&nbsp;';
+		$notstateoption = '<i class="fa fa-tag text-red"></i>';
+		$url = Url::to(['farms/farmsbusiness','notstate'=>'icon']);
+		$html .= Html::a($notstateoption,$url, [
+				'title' => '未明确状态面积',
+		
+		]);
+		$html .= '&nbsp;';
+		$disputeoption = '<i class="fa fa-commenting text-red"></i>';
+		$url = Url::to(['farms/farmsbusiness','dispute'=>'icon']);
+		$html .= Html::a($disputeoption,$url, [
+				'title' => '纠纷',
+		]);
+		$html .= '&nbsp;';
+		$machineoption = '<i class="fa fa-truck text-red"></i>';
+		$url = Url::to(['farms/farmsbusiness','machine'=>'icon']);
+		$html .= Html::a($machineoption,$url, [
+				'title' => '农机器具',
+		]);
+		$html .= '&nbsp;';
+		$projectoption = '<i class="fa fa-sticky-note-o text-red"></i>';
+		$url = Url::to(['farms/farmsbusiness','project'=>'icon']);
+		$html .= Html::a($projectoption,$url, [
+				'title' => '项目',
+		]);
+		$html .= '&nbsp;';
+		$collecitonoption = '<i class="fa fa-cny text-red"></i>';
+		$collectiontitle = '承包费';
+		$url = Url::to(['farms/farmsbusiness','collection'=>'icon']);
+		$html .= Html::a($collecitonoption,$url, [
+				'title' => $collectiontitle,
+		]);
+		$html .= '&nbsp;';
+		$lockoption = '<i class="fa fa-lock text-red"></i>';
+		$url = Url::to(['farms/farmsbusiness','locked'=>1]);
+		$locktitle = '冻结';
+		$html .= Html::a($lockoption,$url, [
+				'id' => 'farmermenu',
+				'title' => $locktitle,
+		]);
+		$html .= '&nbsp;';
+		
+		return $html;
+	}
+	
 	public static function notstateInfo($id = NULL)
 	{
 		$array = ['未明确状态','买断地','测量误差','政府征用地','树苗地'];

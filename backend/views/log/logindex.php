@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'object_old_attr:ntext',
             // 'object_new_attr:ntext',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'frontend\helpers\eActionColumn'],
         ],
     ]); ?>
 
