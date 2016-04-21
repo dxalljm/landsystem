@@ -252,9 +252,53 @@ class HuinongController extends Controller
 		   	]);
 	   
    }
+   
+   public function actionHuinongprovideone($id,$farms_id)
+   {
+	   	$model = $this->findModel($id);
+	   	$management_area = Farms::getManagementArea()['id'];
+	   	$farm = Farms::find()->where(['id'=>$farms_id])->one();
+	   	$allData = Huinonggrant::find()->where(['huinong_id'=>$id,'management_area'=>$management_area])->all();
+	   	$post = Yii::$app->request->post();
+	   	$typename = Subsidiestype::find()->where(['id'=>$model->subsidiestype_id])->one()['urladdress'];
+	   	switch ($typename) {
+	   		case 'Plant':
+	   			$classname = 'plantingstructure';
+	   			break;
+	   		case 'Goodseed':
+	   			$classname = 'plantingstructure';
+	   			break;
+   		}
+//    		var_dump($post);exit;
+   		if($post) {
+   			var_dump($post);exit;
+   			if(isset($post['isSubmit'])) {
+   				$huinonggrantModel = Huinonggrant::findOne($post['isSubmit'][0]);
+   				$huinonggrantModel->state = 1;
+   				$huinonggrantModel->save();
+   			}
+   		}
+   		$data = Huinonggrant::find()->all();
+   		$huinonggrant = Huinonggrant::find()->where(['farms_id'=>$farms_id])->one();
+   		return $this->render('huinongprovideone', [
+   				'huinonggrant' => $huinonggrant,
+   				'data' => $data,
+   				'allData' => $allData,
+   				'classname' => $classname,
+   				'model' => $model,
+   				'farm' => $farm,
+   		]);
+   }
+   
    public function actionHuinongsend()
    {
   	 	return $this->render('collectionsend');
+   }
+   
+   public function actionHuinongsearch()
+   {
+   		$model = new HuinonggrantSearch();
+   		return $this->render('huinongsearch',['model' => $model]);
    }
    
     /**

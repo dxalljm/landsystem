@@ -50,7 +50,8 @@ class Collection extends \yii\db\ActiveRecord {
 								'amounts_receivable',
 								'real_income_amount',
 								'ypaymoney',
-								'owe' 
+								'owe', 
+								'measure',
 						],
 						'number' 
 				],
@@ -71,7 +72,7 @@ class Collection extends \yii\db\ActiveRecord {
 		$plantprice = PlantPrice::find ()->where ( [ 
 				'years' => $year 
 		] )->one ();
-		$result = $farm ['measure'] * $plantprice ['price'];
+		$result = $farm ['contractarea'] * $plantprice ['price'];
 		return ( float ) $result;
 	}
 	public function getYpayarea($year, $real_income_amount) // 应追缴面积
@@ -127,7 +128,7 @@ class Collection extends \yii\db\ActiveRecord {
 			
 			$allmeasure = Farms::find ()->where ( [ 
 					'management_area' => $value 
-			] )->sum ( 'measure' );
+			] )->sum ( 'contractarea' );
 			$amounts_receivable [] = [ 
 					'color' => $amountsColor[$i],
 					'borderColor' => $color [$i],
@@ -203,6 +204,7 @@ class Collection extends \yii\db\ActiveRecord {
 				'ypayyear' => '应缴费年度',
 				'ypayarea' => '应追缴费面积',
 				'ypaymoney' => '应追缴费金额',
+				'measure' => '缴费面积',
 				'owe' => '剩余欠缴金额',
 				'isupdate' => '是否可更新',
 				'create_at' => '创建日期',
@@ -229,7 +231,7 @@ class Collection extends \yii\db\ActiveRecord {
 		$whereArray = Farms::getManagementArea();
 		$allmeasure = Farms::find ()->where ( [
 				'management_area' => $whereArray['id']
-		] )->sum ( 'measure' );
+		] )->sum ( 'contractarea' );
 		return (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [ 
 							'years' => Theyear::findOne(1)['years'] 
 					] )->one ()['price']/10000);

@@ -43,7 +43,7 @@ use app\models\User;
   </tr>
   <tr>
     <td align="right">面积</td>
-    <td><?= $farm->measure ?>亩</td>
+    <td><?= $farm->contractarea ?>亩</td>
     <td align="right">合同号</td>
     <td><?= $farm->contractnumber?></td>
     <td>管理区</td>
@@ -71,9 +71,9 @@ use app\models\User;
   <tr>
     <td align="right">缴费金额</td><?php if(bcsub($model->getAR($year),$model->real_income_amount,2) == 0.0) $realoption = ['value'=>$model->getYpaymoney($year, $model->real_income_amount),'disabled'=>'disabled']; else $realoption = ['value'=>$model->getYpaymoney($year, $model->real_income_amount)]?>
     <td colspan="2"><?= $form->field($model, 'real_income_amount')->textInput($realoption)->label(false)->error(false) ?></td>
-    <?php if(bcsub($model->getAR($year),$model->real_income_amount,2) == 0.0) $areaoption = ['id'=>'collection_realarea','class'=>'form-control','disabled'=>'disabled']; else $areaoption = ['id'=>'collection_realarea','class'=>'form-control']?>
+    <?php if(bcsub($model->getAR($year),$model->real_income_amount,2) == 0.0) $areaoption = ['class'=>'form-control','disabled'=>'disabled']; else $areaoption = ['class'=>'form-control']?>
     <td align="right">缴费面积</td>
-    <td colspan="2"><?= html::textInput('real_area',$model->getYpayarea($year, $model->real_income_amount),$areaoption)?></td>
+    <td colspan="2"><?= $form->field($model, 'measure')->textInput(['value'=>$model->getYpayarea($year, $model->real_income_amount),$areaoption])->label(false)->error(false) ?></td>
     </tr>
   <tr>
   	<td align="right">历年陈欠金额</td>
@@ -161,7 +161,7 @@ jQuery('#collection-payyear').change(function(){
 });
 
 	
-	$('#collection_realarea').keyup(function(event){
+	$('#collection-measure').keyup(function(event){
 		var input = $(this).val();
 		$.getJSON('index.php?r=collection/getplantprice', {formyear: $('#collection-payyear').val()}, function (data) {
 			$('#collection-real_income_amount').val(input*data);
@@ -172,7 +172,7 @@ jQuery('#collection-payyear').change(function(){
 		input = $(this).val();
 		$.getJSON('index.php?r=collection/getplantprice', {formyear: $('#collection-payyear').val()}, function (data) {
 			var result = input/data;
-			$('#collection_realarea').val(result.toFixed(2));
+			$('#collection-measure').val(result.toFixed(2));
 		});
 		
 	});
@@ -195,7 +195,7 @@ jQuery('#collection-payyear').change(function(){
   });
 
 //应收面积判断
-  $('#collection_realarea').blur(function() {
+  $('#collection-measure').blur(function() {
 
     // 实收面积
     var realPrice = parseFloat($(this).val());

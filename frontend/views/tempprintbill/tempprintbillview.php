@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <table width="100%" border="1">
   <tr>
     <td width="14%" height="31" align="center">&nbsp;收款单位（缴款人）      </td>
-    <td height="31" colspan="5">&nbsp;&nbsp;<?= $model->farmername?></td>
+    <td height="31" colspan="5">&nbsp;&nbsp;<?= $farm['farmname'].'('.$model->farmername.')&nbsp;&nbsp;&nbsp;&nbsp;合同号：'.$farm['contractnumber']?></td>
     </tr>
   <tr>
     <td height="31" colspan="2" align="center">收费项目</td>

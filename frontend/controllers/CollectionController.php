@@ -142,8 +142,10 @@ class CollectionController extends Controller
 			$model->update_at = time();
 			$model->dckpay = 0;
 			$model->management_area = Farms::find()->where(['id'=>$farms_id])->one()['management_area'];
+			$model->measure = (float)$model->measure;
 // 			var_dump($model->real_income_amount);
 // 			exit;
+// var_dump($model);exit;
         	$model->save();
         	//var_dump($model->getErrors());
         	$newAttr = $model->attributes;

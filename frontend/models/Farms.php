@@ -294,21 +294,24 @@ class Farms extends \yii\db\ActiveRecord {
 	 */
 	public static function searchAll() {
 
-		$cacheKey = 'farms-search-all3'.\Yii::$app->getUser()->id;
+		$cacheKey = 'farms-search-all16'.\Yii::$app->getUser()->id;
 		
 		$result = Yii::$app->cache->get($cacheKey);
 		if (!empty($result)) {
 		return $result;
 		}
-		$departmentid = User::find()->where(['id'=>Yii::$app->getUser()->id])->one()['department_id'];
-		$keshi = Department::find()->where(['id'=>$departmentid])->one();
-		switch ($keshi['departmentname'])
+		$item = User::getItemname();
+		
+		switch ($item)
 		{
-		case '财务科';
-		$url = 'index.php?r=collection/collectionindex&farms_id=';
-		break;
-		default:
-		$url = 'index.php?r=farms/farmsmenu&farms_id=';
+			case '服务大厅补贴发放':
+				$url = 'index.php?r=huinong/huinongprovideone&id='.$_GET['id'].'&farms_id=';
+				break;
+			case '财务科科长':
+				$url = 'index.php?r=collection/collectionindex&farms_id=';
+				break;
+			default:
+			$url = 'index.php?r=farms/farmsmenu&farms_id=';
 		}
 		
 		// 所有农场
