@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\models\Farms;
+use app\models\Huinong;
 /* @var $this yii\web\View */
 /* @var $model frontend\models\HuinongSearch */
 /* @var $form yii\widgets\ActiveForm */
@@ -10,10 +11,7 @@ use app\models\Farms;
 
 <div class="huinong-search">
 
-    <?php $form = ActiveForm::begin([
-        'action' => ['huinongindex'],
-        'method' => 'get',
-    ]); ?>
+    <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'farms_id')->label(false)->error(false) ?>
 
@@ -27,7 +25,7 @@ use app\models\Farms;
 
 </div>
 <script type="text/javascript" charset="utf-8">
-  var json = <?= Farms::searchAll() ?>;
+  var json = <?= Huinong::getFarminfo($_GET['huinong_id']) ?>;
   $('#huinonggrantsearch-farms_id').autocomplete({
       lookup: json,
       formatResult: function (json) {

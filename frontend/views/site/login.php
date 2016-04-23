@@ -39,11 +39,6 @@ use yii\bootstrap\ActiveForm;
             <td>&nbsp;</td>
           </tr>
           <tr>
-            <td height="36"></td>
-            <td><?= $form->field($model, 'rememberMe')->checkbox(['class'=>"rememberme"])->label('记住此用户') ?></td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
             <td height="38">&nbsp;</td>
             <td align="center"><?= Html::submitButton('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;登&nbsp;&nbsp;录&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?></td>
             <td>&nbsp;</td>

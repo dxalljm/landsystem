@@ -294,7 +294,7 @@ class Farms extends \yii\db\ActiveRecord {
 	 */
 	public static function searchAll() {
 
-		$cacheKey = 'farms-search-all16'.\Yii::$app->getUser()->id;
+		$cacheKey = 'farms-search-all17'.\Yii::$app->getUser()->id;
 		
 		$result = Yii::$app->cache->get($cacheKey);
 		if (!empty($result)) {
@@ -305,7 +305,10 @@ class Farms extends \yii\db\ActiveRecord {
 		switch ($item)
 		{
 			case '服务大厅补贴发放':
-				$url = 'index.php?r=huinong/huinongprovideone&id='.$_GET['id'].'&farms_id=';
+				if(isset($_GET['id']))
+					$url = 'index.php?r=huinong/huinongprovideone&huinong_id='.$_GET['huinong_id'].'&farms_id=';
+				else 
+					$url = 'index.php?r=huinong/huinongprovideone&farms_id=';
 				break;
 			case '财务科科长':
 				$url = 'index.php?r=collection/collectionindex&farms_id=';

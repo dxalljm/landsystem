@@ -29,9 +29,9 @@ else echo '晚上好';
             </div>
           </div>
           <!-- search form -->
-          <form action="" method="get" class="sidebar-form">
+          <form action="" class="sidebar-form">
             <div class="input-group">
-              <input type="text" name="q" id="sidebarSearch" class="form-control" placeholder="搜索">
+              <input type="text" id="sidebarSearch" class="form-control" placeholder="搜索">
             </div>
           </form>
           <!-- /.search form -->

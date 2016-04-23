@@ -5,6 +5,8 @@ namespace app\models;
 use Yii;
 use app\models\Plant;
 use app\models\Goodseed;
+use yii\helpers\Url;
+use yii\helpers\Json;
 /**
  * This is the model class for table "{{%huinong}}".
  *
@@ -83,5 +85,39 @@ public function rules()
     		return '<small class="label pull-right bg-red">'.$rows.'</small>';
     	else
     		return false;
+    }
+    
+    public static function getFarminfo($huinong_id)
+    {
+    	$cacheKey = 'huinongsearch-5'.$huinong_id;
+    	
+    	$result = Yii::$app->cache->get($cacheKey);
+    	if (!empty($result)) {
+    		return $result;
+    	}
+    	$huinongs = Huinonggrant::find()->where(['huinong_id'=>$huinong_id])->all();
+    	$farmids = [];
+    	foreach ($huinongs as $huinong) {
+    		$farmids[] = $huinong['farms_id'];
+    	}
+    	$farms = Farms::find()->where(['id'=>$farmids])->all();
+    	foreach ($farms as $farm) {
+    		$data[] = [
+    				'value' => $farm['pinyin'], // 拼音
+    				'data' => $farm['farmname'], // 下拉框显示的名称
+    				'url' => Url::to(['huinong/huinongprovideone','huinong_id'=>$huinong_id,'farms_id'=>$farm['id']]),
+    		];
+    		$data[] = [
+    				'value' => $farm['farmerpinyin'],
+    				'data' => $farm['farmername'],
+    				'url' => Url::to(['huinong/huinongprovideone','huinong_id'=>$huinong_id,'farms_id'=>$farm['id']]),
+    		
+    		];
+    	}
+//     	var_dump($data);
+    	$jsonData = Json::encode($data);
+    	Yii::$app->cache->set($cacheKey, $jsonData, 3600);
+    	
+    	return $jsonData;
     }
 }

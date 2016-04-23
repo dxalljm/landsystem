@@ -75,7 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
             			</td>
             		<td align="center"><?php 
             		if(count($marea)) 
-            			echo html::a('补贴发放',Url::to('index.php?r=huinong/huinongsearch&id='.$value['id']),['class'=>'btn btn-success']);
+            			echo html::a('补贴发放',Url::to('index.php?r=huinong/huinongsearch&huinong_id='.$value['id']),['class'=>'btn btn-success']);
             		else 
             			echo '等待地产科确认提交'?></td>
     				</tr>

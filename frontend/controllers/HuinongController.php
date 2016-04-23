@@ -18,6 +18,7 @@ use app\models\Lease;
 use app\models\Subsidiestype;
 use app\models\Goodseed;
 use app\models\Tempprogress;
+use app\models\Farmer;
 
 /**
  * HuinongController implements the CRUD actions for Huinong model.
@@ -253,14 +254,25 @@ class HuinongController extends Controller
 	   
    }
    
-   public function actionHuinongprovideone($id,$farms_id)
+   public function actionHuinongprovideone($farms_id,$huinong_id=NULL)
    {
-	   	$model = $this->findModel($id);
+   		if($huinong_id)
+   			$model = $this->findModel($huinong_id);
+   		else 
+   			$model = null;
 	   	$management_area = Farms::getManagementArea()['id'];
 	   	$farm = Farms::find()->where(['id'=>$farms_id])->one();
-	   	$allData = Huinonggrant::find()->where(['huinong_id'=>$id,'management_area'=>$management_area])->all();
-	   	$post = Yii::$app->request->post();
-	   	$typename = Subsidiestype::find()->where(['id'=>$model->subsidiestype_id])->one()['urladdress'];
+	   	$farmer = Farmer::find()->where(['farms_id'=>$farms_id])->one();
+	   	if(empty($huinong_id))
+	   		$allData = Huinonggrant::find()->where(['management_area'=>$management_area])->all();
+	   	else
+	   		$allData = Huinonggrant::find()->where(['huinong_id'=>$huinong_id,'management_area'=>$management_area])->all();
+	   	
+	   	
+		if($model)
+	   		$typename = Subsidiestype::find()->where(['id'=>$model->subsidiestype_id])->one()['urladdress'];
+		else 
+			$typename = null;
 	   	switch ($typename) {
 	   		case 'Plant':
 	   			$classname = 'plantingstructure';
@@ -268,26 +280,35 @@ class HuinongController extends Controller
 	   		case 'Goodseed':
 	   			$classname = 'plantingstructure';
 	   			break;
+	   		default:
+	   			$classname = null;
    		}
-//    		var_dump($post);exit;
-   		if($post) {
-   			var_dump($post);exit;
-   			if(isset($post['isSubmit'])) {
-   				$huinonggrantModel = Huinonggrant::findOne($post['isSubmit'][0]);
+   		$issubmit = Yii::$app->request->post('isSubmit');
+//    		echo '<br><br><br><br><br><br>br><br><br><br>jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj=';print_r($issubmit);
+   		if(empty($huinong_id)) {
+   			//    			echo '33333';exit;
+   			$huinonggrant = Huinonggrant::find()->where(['farms_id'=>$farms_id])->all();
+   		}
+   		else {
+   			$huinonggrant = Huinonggrant::find()->where(['huinong_id'=>$huinong_id,'farms_id'=>$farms_id])->one();
+   		}
+   		if($issubmit) {
+//    			exit;
+//    			if(isset($post['isSubmit'])) {
+   				$huinonggrantModel = Huinonggrant::findOne($issubmit[0]);
    				$huinonggrantModel->state = 1;
    				$huinonggrantModel->save();
-   			}
-   		}
-   		$data = Huinonggrant::find()->all();
-   		$huinonggrant = Huinonggrant::find()->where(['farms_id'=>$farms_id])->one();
-   		return $this->render('huinongprovideone', [
-   				'huinonggrant' => $huinonggrant,
-   				'data' => $data,
-   				'allData' => $allData,
-   				'classname' => $classname,
-   				'model' => $model,
-   				'farm' => $farm,
-   		]);
+   				return $this->redirect(['huinongprovideone','farms_id'=>$farms_id,'huinong_id'=>$huinong_id]);
+//    			}
+   		} else 
+	   		return $this->render('huinongprovideone', [
+	   				'huinonggrant' => $huinonggrant,
+	   				'allData' => $allData,
+	   				'classname' => $classname,
+	   				'model' => $model,
+	   				'farm' => $farm,
+	   				'farmer' => $farmer,
+	   		]);
    }
    
    public function actionHuinongsend()

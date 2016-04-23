@@ -26,24 +26,19 @@ use frontend\helpers\arraySearch;
 $this->title = 'huinong';
 $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctablename'];
 $this->params['breadcrumbs'][] = $this->title;
-$total = arraySearch::find($data)->search();
+// $total = arraySearch::find($data)->search();
 $alltotal = arraySearch::find($allData)->search();
 $result = [];
-// $cacheKey = 'cache-key-huinongprovide1'.\Yii::$app->getUser()->id;
-// $resultcache = Yii::$app->cache->get($cacheKey);
-// if (!empty($resultcache)) {
-// 	$result = $resultcache;
-// } else {
 	$result['all'] = $alltotal->count();
 	$result['state1'] = $alltotal->where(['state'=>1])->count();
 	$result['state0'] = $alltotal->where(['state'=>0])->count();
 	$result['yfmoney'] = MoneyFormat::num_format($alltotal->sum('money'));
 	$result['realmoney'] = MoneyFormat::num_format($alltotal->where(['state'=>1])->sum('money'));
 	$result['cha'] = MoneyFormat::num_format($alltotal->where(['state'=>0])->sum('money'));
-// 	Yii::$app->cache->set ( $cacheKey, $result, 999999 );
-// }
+
 ?>
 <style type="text/css">
+#accordion { display:none }
 #textSubmit { display:none }
 </style>
 <div class="huinong-index">
@@ -57,9 +52,7 @@ $result = [];
                         <?= $this->title ?>                    </h3>
                 </div>
                 <div class="box-body">
-                <?php $huinongGrant = Huinonggrant::find();
-                
-                ?>
+                <?php if(isset($_GET['huinong_id'])) {?>
                 <table class="table table-bordered table-hover">
                 	<tr>
                 		<td align="right"><strong>享受补贴人数：</strong></td>
@@ -91,44 +84,55 @@ $result = [];
                 		<td align="left"><strong><?php if($result['state1']) $wcd = $result['state1']/$result['all'];else $wcd = 0;echo sprintf ( "%.2f", $wcd ).'%'; ?></strong></td>
                 	</tr>
                 </table>
-               
+               <?php }?>
                 <?php $form = ActiveFormrdiv::begin(); ?>
     			<br>
     			<table class="table table-bordered table-hover">
-    			<?php if($classname == 'plantingstructure') {?>
-    				
+    			<?php
+//     			var_dump($classname);
+//     				if($classname == 'plantingstructure') {
+    				if($huinonggrant) {
+    					if(!is_array($huinonggrant)) {
+    						$sub = Subsidiestype::find()->where(['id'=>$model->subsidiestype_id])->one();
+//     						var_dump($sub['urladdress']);
+    					?>
     				<tr>
-    					<td width="51" align="center"><b>管理区</b></td>
-    					<td width="51" align="center"><b>农场名称</b></td>
-    					<td width="28" align="center"><b>法人</b></td>
-    					<td width="40" align="center"><b>租赁者</b></td>
-    					<?php if($model->subsidiestype_id == 'plant') {?>
-    						<td width="28" align="center"><b>作物</b></td>
+    					<td width="8%" align="center"><b>管理区</b></td>
+    					<td width="8%" align="center"><b>农场名称</b></td>
+    					<td width="8%" align="center"><b>法人</b></td>
+    					<td width="8%" align="center"><b>租赁者</b></td>
+    					<?php if($sub['urladdress'] == 'Plant') {?>
+    						<td width="8%" align="center"><b>作物</b></td>
     					<?php }?>
-    					<?php if($model->subsidiestype_id == 'goodseed') {?>
-	    					<td width="28" align="center"><b>作物</b></td>
-	    					<td width="28" align="center"><b>良种</b></td>
+    					<?php if($sub['urladdress'] == 'Goodseed') {?>
+	    					<td width="8%" align="center"><b>作物</b></td>
+	    					<td width="8%" align="center"><b>良种</b></td>
     					<?php }?>
-    					<td width="28" align="center"><b>纠纷</b></td>
-    					<td width="56" align="center"><b>缴费情况</b></td>
+    					<td width="8%" align="center"><b>纠纷</b></td>
+    					<td width="8%" align="center"><b>缴费情况</b></td>
     					<td align="center"><b>面积</b></td>
     					<td align="center"><b>补贴金额</b></td>
     					<td colspan="2" align="center"><b>状态</b></td>
     				</tr>
-    				
     				<?php 
-    				$i=1;$areaSum=0.0;$moneySum=0.0;
+    				$i=1;$areaSum=0.0;$moneySum=0.0;	
+//     				var_dump($huinonggrant);exit;
     				?>
-    				<tr><?php $farm = Farms::find()->where(['id'=>$huinonggrant['farms_id']])->one();?>
-    					<td align="center"><?= ManagementArea::find()->where(['id'=>$farm->management_area])->one()['areaname'] ?></td>
-    					<td align="center"><?= $farm->farmname ?></td>
-    					<td align="center"><?= $farm->farmername ?></td>
+    				<tr>
+    					<td align="center"><?= ManagementArea::find()->where(['id'=>$farm['management_area']])->one()['areaname'] ?></td>
+    					<td align="center"><?= $farm['farmname'] ?></td>
+    					<td align="center">
+    					<a data-toggle="collapse" data-parent="#accordion" 
+					          href="#collapseOne">
+					          <?= $farm['farmername']?>
+					        </a>
+    					</td>
     					<td align="center"><?= Lease::find()->where(['id'=>$huinonggrant['lease_id']])->one()['lessee']?></td>
     					
-    					<?php if($model->subsidiestype_id == 'plant') {?>
+    					<?php if($sub['urladdress'] == 'Plant') {?>
     						<td align="center"><?= Plant::find()->where(['id'=>$model->typeid])->one()['cropname']?></td>
     					<?php }?>
-    					<?php if($model->subsidiestype_id == 'goodseed') {
+    					<?php if($sub['urladdress'] == 'Goodseed') {
     						$goodseed = Goodseed::find()->where(['id'=>$model->typeid])->one();
     					?>
     						<td align="center"><?= Plant::find()->where(['id'=>$goodseed['plant_id']])->one()['cropname']?></td>
@@ -140,29 +144,84 @@ $result = [];
     					<td align="center"><?= $huinonggrant['money'].' 元'?></td>
     					<td colspan="2" align="center"><?php if($huinonggrant['state']) echo '已发放'; else echo  html::checkboxList('isSubmit[]',$huinonggrant['state'],[$huinonggrant['id']=>'是否发放']);?></td>
     				</tr><?php $areaSum += $huinonggrant['area'];$moneySum += $huinonggrant['money'];?>
-    				<?php }?>
-    				<tr>
-    					<td align="center"><b>合计</b></td>
-    					<td align="center"><b></b></td>
-    					<td align="center"><b></b></td>
-    					<td align="center"><b></b></td>
-    					<?php if($model->subsidiestype_id == 'plant') {?>
-    						<td align="center"><b></b></td>
-    					<?php }?>
-    					<?php if($model->subsidiestype_id == 'goodseed') {?>
-    						<td align="center"><b></b></td>
-    						<td align="center"><b></b></td>
-    					<?php }?>
-    					<td align="center"><b></b></td>
-    					<td align="center"><b></b></td>
-    					<td align="center" width="100"><b></b></td>
-    					<td align="center" width="100"><b><?php //echo MoneyFormat::num_format($areaSum).'亩';?></b></td>
-    					<td align="right" width="53"><b><?php //echo MoneyFormat::num_format($moneySum).'元';?></b></td><?php $yfmoney = Huinonggrant::find()->where(['huinong_id'=>$model->id,'state'=>1])->sum('money')?>
-    					<td align="center" width="120"><b>已发：<?php echo html::textInput('moneySum',MoneyFormat::num_format($yfmoney),['readonly'=>'readonly','id'=>'money','width'=>14]);?></b></td>
+    				<?php 
+    			} else {
+    				?>
+    						<tr>
+    					<td width="10%" align="center"><b>补贴类型</b></td>
+    					<td width="8%" align="center"><b>管理区</b></td>
+    					<td width="8%" align="center"><b>农场名称</b></td>
+    					<td width="8%" align="center"><b>法人</b></td>
+    					<td width="8%" align="center"><b>租赁者</b></td>
+    					
+	    					<td width="8%" align="center"><b>作物</b></td>
+	    					<td width="8%" align="center"><b>良种</b></td>
+    					
+    					<td width="8%" align="center"><b>纠纷</b></td>
+    					<td width="8%" align="center"><b>缴费情况</b></td>
+    					<td align="center"><b>面积</b></td>
+    					<td align="center"><b>补贴金额</b></td>
+    					<td colspan="2" align="center"><b>状态</b></td>
     				</tr>
+    				<?php 
+    				$i=1;$areaSum=0.0;$moneySum=0.0;	
+    				foreach ($huinonggrant as $value) {
+    					$huinong = Huinong::find()->where(['id'=>$value['huinong_id']])->one();
+    				?>
+    				<tr>
+    					<td align="center"><?= Plant::find()->where(['id'=>$huinong['typeid']])->one()['cropname'].Subsidiestype::find()->where(['id'=>$huinong['subsidiestype_id']])->one()['typename'] ?></td>
+    					<td align="center"><?= ManagementArea::find()->where(['id'=>$farm['management_area']])->one()['areaname'] ?></td>
+    					<td align="center">
+    					<?= $farm['farmname']?>
+    					</td>
+    					<td align="center"><a data-toggle="collapse" data-parent="#accordion" 
+					          href="#collapseOne" class="showFamer">
+					          <?= $farm['farmername']?>
+					        </a></td>
+    					<td align="center"><?= Lease::find()->where(['id'=>$value['lease_id']])->one()['lessee']?></td>
+    					<?php 
+    						$goodseed = Goodseed::find()->where(['id'=>$value['typeid']])->one();
+    					?>
+    						<td align="center"><?= Plant::find()->where(['id'=>$value['typeid']])->one()['cropname']?></td>
+    						<td align="center"><?= $goodseed['plant_model']?></td>
+    					
+    					<td align="center"><?= Dispute::find()->where(['farms_id'=>$value['farms_id']])->count().'条'?></td>
+    					<td align="center"><?= Collection::getCollecitonInfo($value['farms_id'])?></td>
+    					<td align="center"><?= $value['area'].' 亩'?></td>
+    					<td align="center"><?= $value['money'].' 元'?></td>
+    					<td colspan="2" align="center"><?php if($value['state']) echo '已发放'; else echo  html::checkboxList('isSubmit[]',$value['state'],[$value['id']=>'是否发放']);?></td>
+    				</tr><?php $areaSum += $value['area'];$moneySum += $value['money'];?>
+    				<?php 
+    				}}} else {
+				    		echo '此用户不在补贴范围内或地产科还未提交此用户。';
+    				}?>
     			</table>
+    			<div class="panel-group" id="accordion">
+				  <div class="panel panel-default">
+				    <div id="collapseOne" class="panel-collapse collapse">
+				      <div class="panel-body">
+				        <table class="table table-bordered table-hover">
+		            					<tr>
+		            						<td align="right">身份证号：</td>
+		            						<td><?= $farm['cardid']?></td>
+		            						<td align="right">性别:</td>
+		            						<td><?= $farmer['gender']?></td>
+		            						<td align="right">电话：</td>
+		            						<td><?= $farm['telephone']?></td>
+		            						
+		            					</tr>
+		            					<tr>
+		            						<td align="right" valign="middle">法人照片</td>
+		            						<td colspan="3" align="center"><?= Html::img($farmer['photo'],['height'=>"320"])?></td>
+		            						<td align="right" valign="middle">身份证复印件</td>
+		            						<td colspan="3" align="center"><?= Html::img($farmer['cardpic'])?></td>
+		            					</tr>
+		            				</table>
+				      </div>
+				    </div>
+				  </div>
 <input type="submit" id="textSubmit">
-    <?php ActiveFormrdiv::end(); ?>
+    
                 </div>
                 
             </div>
@@ -170,7 +229,15 @@ $result = [];
     </div>
 </section>
 </div>
+
 <script>
+$(".showFamer").click(function(){
+	if($("#accordion").css("display")=="none"){
+	$("#accordion").show();
+	}else{
+	$("#accordion").hide();
+	}
+	});
 $('input:checkbox[name="isSubmit[]"]').click(function(){
 	var input = $(this).is(":checked");
 	var areaSum = $('#area').val();
@@ -184,7 +251,8 @@ $('input:checkbox[name="isSubmit[]"]').click(function(){
 			$('#area').val(areaResult.toFixed(2));
 			var moneyResult = moneySum*1 + valArr[2]*1;
 			$('#money').val(moneyResult.toFixed(2));
-			$("form").submit();
+			//alert($('#w0').size());
+			$("#w0").submit();
 		} else {
 			 $(this).prop('checked', false);
 		}
@@ -218,3 +286,4 @@ $('#managementarea').change(function(){
 	
 // }
 </script>
+<?php ActiveFormrdiv::end(); ?>
