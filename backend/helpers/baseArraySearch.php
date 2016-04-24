@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\helpers;
+namespace backend\helpers;
 
 use app\models\Farms;
 use app\models\ManagementArea;
@@ -792,7 +792,7 @@ class baseArraySearch {
 				$result['real']['count'] = $realcount;
 			}
 // 		}
-			var_dump($result);
+			
 		return $result;
 	}
 	public function collectionShowShadow() {

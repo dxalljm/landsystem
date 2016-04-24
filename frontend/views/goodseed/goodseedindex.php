@@ -42,10 +42,10 @@ $this->params['breadcrumbs'][] = $this->title;
             [
             	'attribute'=>'plant_id',
             	'value' => function ($model) {
-            		return Plant::find()->where(['id'=>$model->plant_id])->one()['cropname'];
+            		return Plant::find()->where(['id'=>$model->plant_id])->one()['typename'];
             	}
             ],
-            'plant_model',
+            'typename',
 
             ['class' => 'frontend\helpers\eActionColumn'],
         ],

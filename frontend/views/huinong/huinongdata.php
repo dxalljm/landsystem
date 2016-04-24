@@ -66,11 +66,11 @@ $this->params['breadcrumbs'][] = $this->title;
     					<td align="center"><?= $farm->farmername ?></td>
     					<td align="center"><?= Lease::find()->where(['id'=>$value['lease_id']])->one()['lessee']?></td>
     					<?php if($classname == 'Plant') {?>
-    					<td align="center"><?= Plant::find()->where(['id'=>$value['typeid']])->one()['cropname']?></td>
+    					<td align="center"><?= Plant::find()->where(['id'=>$value['typeid']])->one()['typename']?></td>
     					<?php }
     					if($classname == 'Goodseed') {
     					?>
-    					<td align="center"><?= Goodseed::find()->where(['id'=>$value['typeid']])->one()['plant_model']?></td>
+    					<td align="center"><?= Goodseed::find()->where(['id'=>$value['typeid']])->one()['typename']?></td>
     					<?php }?>
     					<td align="center"><?= '有'.Dispute::find()->where(['farms_id'=>$value['farms_id']])->count().'条纠纷'?></td>
     					<td align="center"><?= Collection::getCollecitonInfo($value['farms_id'])?></td>

@@ -69,9 +69,9 @@ public function rules()
 		    	$sub = Subsidiestype::find()->where(['id'=>$value['subsidiestype_id']])->one();
 // 		    	$modelname = 'app\\model\\'.$sub['urladdress'];
 		    	if($sub['urladdress'] == 'Plant')
-		    		$result[$value['id']] = Plant::find()->where(['id'=>$value['typeid']])->one()['cropname'].$sub['typename'];
+		    		$result[$value['id']] = Plant::find()->where(['id'=>$value['typeid']])->one()['typename'].$sub['typename'];
 		    	if($sub['urladdress'] == 'Goodseed')
-		    		$result[$value['id']] = Goodseed::find()->where(['id'=>$value['typeid']])->one()['plant_model'].$sub['typename'];
+		    		$result[$value['id']] = Goodseed::find()->where(['id'=>$value['typeid']])->one()['typename'].$sub['typename'];
 	    	}
     	} 
 //     	var_dump($result);

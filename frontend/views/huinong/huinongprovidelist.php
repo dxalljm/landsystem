@@ -48,10 +48,10 @@ $this->params['breadcrumbs'][] = $this->title;
 				            		$data = $classFile::find()->where(['id'=>$value['typeid']])->one();
 // 				            		var_dump($data);
 				            		if($type['urladdress'] == 'Plant')
-				            			echo $data['cropname'];
+				            			echo $data['typename'];
 				            		if($type['urladdress'] == 'Goodseed') {
 				            			$plant = Plant::find()->where(['id'=>$data['plant_id']])->one();
-				            			echo $plant['cropname'].'/'.$data['plant_model'];
+				            			echo $plant['typename'].'/'.$data['typename'];
 				            		} ?>
             		</td>
             		<td align="center"><?php

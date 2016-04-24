@@ -57,10 +57,10 @@ $this->params['breadcrumbs'][] = $this->title;
     					<td align="center"><?php $classFile = 'app\\models\\'. $type['urladdress'];
 				            		$data = $classFile::find()->where(['id'=>$value['typeid']])->one();
 				    				if($type['urladdress'] == 'Plant')
-				            			echo $data['cropname'];
+				            			echo $data['typename'];
 				            		if($type['urladdress'] == 'Goodseed') {
 				            			$plant = Plant::find()->where(['id'=>$data['plant_id']])->one();
-								        echo $plant['cropname'].'/'.$data['plant_model'];
+								        echo $plant['typename'].'/'.$data['typename'];
 				            		}
 				            		 ?>
             		</td>

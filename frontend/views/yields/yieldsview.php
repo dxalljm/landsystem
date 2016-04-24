@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
             	'label' => '种植作物',
             	'attribute' => 'planting_id',
-            	'value' => Plant::find()->where(['id'=>Plantingstructure::find()->where(['id'=>$model->planting_id])->one()['plant_id']])->one()['cropname'],
+            	'value' => Plant::find()->where(['id'=>Plantingstructure::find()->where(['id'=>$model->planting_id])->one()['plant_id']])->one()['typename'],
             ],
             [
             	'label' => '法人',

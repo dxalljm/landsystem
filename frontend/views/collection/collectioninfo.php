@@ -55,7 +55,7 @@ use app\models\Theyear;
 					<td><strong>'.$data->sum('ypayarea').'亩</strong></td>
     				<td><strong>'.$data->sum('ypaymoney').'元</strong></td>
 			        </tr>',
-        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','amounts_receivable','real_income_amount','owe','ypayarea','ypaymoney'],$totalData),
+        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','amounts_receivable','real_income_amount','owe','ypayarea','ypaymoney','operation'],$totalData),
     ]); ?>
               </div>
               <!-- /.tab-pane -->

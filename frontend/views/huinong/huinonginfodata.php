@@ -109,13 +109,13 @@ $this->params['breadcrumbs'][] = $this->title;
     					<td align="center"><?= Lease::find()->where(['id'=>$value['lease_id']])->one()['lessee']?></td>
     					
     					<?php if($model->subsidiestype_id == 'plant') {?>
-    						<td align="center"><?= Plant::find()->where(['id'=>$model->typeid])->one()['cropname']?></td>
+    						<td align="center"><?= Plant::find()->where(['id'=>$model->typeid])->one()['typename']?></td>
     					<?php }?>
     					<?php if($model->subsidiestype_id == 'goodseed') {
     						$goodseed = Goodseed::find()->where(['id'=>$model->typeid])->one();
     					?>
-    						<td align="center"><?= Plant::find()->where(['id'=>$goodseed['plant_id']])->one()['cropname']?></td>
-    						<td align="center"><?= $goodseed['plant_model']?></td>
+    						<td align="center"><?= Plant::find()->where(['id'=>$goodseed['plant_id']])->one()['typename']?></td>
+    						<td align="center"><?= $goodseed['typename']?></td>
     					<?php }?>
     					<td align="center"><?= '有'.Dispute::find()->where(['farms_id'=>$value['farms_id']])->count().'条纠纷'?></td>
     					<td align="center"><?= Collection::getCollecitonInfo($value['farms_id'])?></td>

@@ -17,7 +17,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'cropname') ?>
+    <?= $form->field($model, 'typename') ?>
 
     <?= $form->field($model, 'father_id') ?>
 

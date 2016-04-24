@@ -199,7 +199,7 @@ class SearchController extends Controller
 //     		foreach ($value as $val) {
 //     			foreach($val as $v) {
 // //     			var_dump($val[0]);exit;
-// 	    			$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname'];
+// 	    			$plantname = Plant::find()->where(['id'=>$v['plant_id']])->one()['typename'];
 // 		    		$result[$plantname]['area'][] = $v['area'];
 // 		    		$result[$plantname]['goodseed_id'][] = $v['goodseed_id'];
 //     			}

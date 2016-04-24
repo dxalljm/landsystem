@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'plant_id') ?>
 
-    <?= $form->field($model, 'plant_model') ?>
+    <?= $form->field($model, 'typename') ?>
 
     <div class="form-group">
         <?= Html::submitButton('搜索', ['class' => 'btn btn-primary']) ?>

@@ -55,10 +55,10 @@ $this->params['breadcrumbs'][] = $this->title;
             		$classFile = 'app\\models\\'. $sub;
             		$data = $classFile::find()->where(['id'=>$model->typeid])->one();
             		if($sub == 'Plant')
-            			return $data['cropname'];
+            			return $data['typename'];
             		if($sub == 'Goodseed') {
             			$plant = Plant::find()->where(['id'=>$data['plant_id']])->one();
-				        return $plant['cropname'].'/'.$data['plant_model'];
+				        return $plant['typename'].'/'.$data['typename'];
             		}
             	}
             ],

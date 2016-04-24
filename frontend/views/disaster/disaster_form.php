@@ -38,13 +38,13 @@ use app\models\Theyear;
 			$plant = Plant::find()->where(['id'=>$value['plant_id']])->one();
 			$plantValue[$plant['id']] = [
 				'id' => $plant->id,
-				'cropname' => $plant->cropname,
+				'typename' => $plant->typename,
 			];
 			
 		}
 	if(is_array($plantValue))
 		sort($plantValue);
-	$disasterplant = ArrayHelper::map($plantValue, 'id', 'cropname');
+	$disasterplant = ArrayHelper::map($plantValue, 'id', 'typename');
 	} else 
 		$disasterplant = $plantValue;
 ?>

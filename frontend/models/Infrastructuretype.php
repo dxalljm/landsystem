@@ -104,7 +104,7 @@ class Infrastructuretype extends \yii\db\ActiveRecord
     		foreach($newdata as $value) {
     			$allid[] = $value['id'];
     			//     		var_dump($value);exit;
-    			// 	    		$result[$value['id']] = Plant::find()->where(['id'=>$value['id']])->one()['cropname'];
+    			// 	    		$result[$value['id']] = Plant::find()->where(['id'=>$value['id']])->one()['typename'];
     		}
     		$type = Infrastructuretype::find()->where(['id'=>$allid])->all();
     		foreach ($type as $value) {

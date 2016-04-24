@@ -62,7 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	            'label' => '作物',
 	            'value' => function ($model) {
 	            	$huinong = Huinong::find()->where(['id'=>$model->huinong_id])->one();
-	            	return Plant::find()->where(['id'=>$huinong['typeid']])->one()['cropname'];
+	            	return Plant::find()->where(['id'=>$huinong['typeid']])->one()['typename'];
 	            }
             ];
                 if($huinongModel->subsidiestype_id == 'goodseed')
@@ -71,7 +71,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	            'value' => function ($model) {
 	            	$huinong = Huinong::find()->where(['id'=>$model->huinong_id])->one();
 	            	$goodseed = Goodseed::find()->where(['id'=>$huinong['typeid']])->one();
-	            	return Plant::find()->where(['id'=>$goodseed['plant_id']])->one()['cropname'].'/'.$goodseed['plant_model'];
+	            	return Plant::find()->where(['id'=>$goodseed['plant_id']])->one()['typename'].'/'.$goodseed['typename'];
 	            }
             ];
                 $columns[] = [

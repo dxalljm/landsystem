@@ -123,20 +123,20 @@ $result = [];
     					<td align="center"><?= $farm['farmname'] ?></td>
     					<td align="center">
     					<a data-toggle="collapse" data-parent="#accordion" 
-					          href="#collapseOne">
+					          href="#collapseOne" class="showFamer">
 					          <?= $farm['farmername']?>
 					        </a>
     					</td>
     					<td align="center"><?= Lease::find()->where(['id'=>$huinonggrant['lease_id']])->one()['lessee']?></td>
     					
     					<?php if($sub['urladdress'] == 'Plant') {?>
-    						<td align="center"><?= Plant::find()->where(['id'=>$model->typeid])->one()['cropname']?></td>
+    						<td align="center"><?= Plant::find()->where(['id'=>$model->typeid])->one()['typename']?></td>
     					<?php }?>
     					<?php if($sub['urladdress'] == 'Goodseed') {
     						$goodseed = Goodseed::find()->where(['id'=>$model->typeid])->one();
     					?>
-    						<td align="center"><?= Plant::find()->where(['id'=>$goodseed['plant_id']])->one()['cropname']?></td>
-    						<td align="center"><?= $goodseed['plant_model']?></td>
+    						<td align="center"><?= Plant::find()->where(['id'=>$goodseed['plant_id']])->one()['typename']?></td>
+    						<td align="center"><?= $goodseed['typename']?></td>
     					<?php }?>
     					<td align="center"><?= Dispute::find()->where(['farms_id'=>$huinonggrant['farms_id']])->count().'条'?></td>
     					<td align="center"><?= Collection::getCollecitonInfo($huinonggrant['farms_id'])?></td>
@@ -169,7 +169,7 @@ $result = [];
     					$huinong = Huinong::find()->where(['id'=>$value['huinong_id']])->one();
     				?>
     				<tr>
-    					<td align="center"><?= Plant::find()->where(['id'=>$huinong['typeid']])->one()['cropname'].Subsidiestype::find()->where(['id'=>$huinong['subsidiestype_id']])->one()['typename'] ?></td>
+    					<td align="center"><?= Plant::find()->where(['id'=>$huinong['typeid']])->one()['typename'].Subsidiestype::find()->where(['id'=>$huinong['subsidiestype_id']])->one()['typename'] ?></td>
     					<td align="center"><?= ManagementArea::find()->where(['id'=>$farm['management_area']])->one()['areaname'] ?></td>
     					<td align="center">
     					<?= $farm['farmname']?>
@@ -182,8 +182,8 @@ $result = [];
     					<?php 
     						$goodseed = Goodseed::find()->where(['id'=>$value['typeid']])->one();
     					?>
-    						<td align="center"><?= Plant::find()->where(['id'=>$value['typeid']])->one()['cropname']?></td>
-    						<td align="center"><?= $goodseed['plant_model']?></td>
+    						<td align="center"><?= Plant::find()->where(['id'=>$value['typeid']])->one()['typename']?></td>
+    						<td align="center"><?= $goodseed['typename']?></td>
     					
     					<td align="center"><?= Dispute::find()->where(['farms_id'=>$value['farms_id']])->count().'条'?></td>
     					<td align="center"><?= Collection::getCollecitonInfo($value['farms_id'])?></td>
@@ -235,7 +235,10 @@ $(".showFamer").click(function(){
 	if($("#accordion").css("display")=="none"){
 	$("#accordion").show();
 	}else{
-	$("#accordion").hide();
+		setTimeout(function () {
+			$("#accordion").hide();
+	    }, 300);
+	
 	}
 	});
 $('input:checkbox[name="isSubmit[]"]').click(function(){

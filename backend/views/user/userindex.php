@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'groups',
 
             [
-            	'class' => 'yii\grid\ActionColumn','header' => '操作',
+            	'class' => 'backend\helpers\eActionColumn','header' => '操作',
             	
             ],
             [

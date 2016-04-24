@@ -39,10 +39,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'cfields',
 
              [
-            'class' => 'yii\grid\ActionColumn',
+            'class' => 'backend\helpers\eActionColumn',
             'template' => '{view} {update} {delete}',
             'buttons' => [
-                // 下面代码来自于 yii\grid\ActionColumn 简单修改了下
+                // 下面代码来自于 backend\helpers\eActionColumn 简单修改了下
                 'view' => function ($url, $model, $key) {
                     $options = [
                         'title' => Yii::t('yii', 'View'),

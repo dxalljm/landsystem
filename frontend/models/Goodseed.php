@@ -9,7 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property integer $plant_id
- * @property string $plant_model
+ * @property string $typename
  */
 class Goodseed extends \yii\db\ActiveRecord
 {
@@ -28,7 +28,7 @@ class Goodseed extends \yii\db\ActiveRecord
     {
         return [
             [['plant_id'], 'integer'],
-            [['plant_model'], 'string', 'max' => 500]
+            [['typename'], 'string', 'max' => 500]
         ];
     }
 
@@ -40,7 +40,7 @@ class Goodseed extends \yii\db\ActiveRecord
         return [
 			'id' => 'ID',
             'plant_id' => '种植结构',
-            'plant_model' => '农作物型号',
+            'typename' => '农作物型号',
         ];
     }
 }

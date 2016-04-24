@@ -29,14 +29,14 @@ switch ($typename) {
 		$fatherid = Plant::find()->where(['id'=>$model->typeid])->one()['father_id'];
 		$sonid = '';
 		$goodseeds = [];
-		$son = ArrayHelper::map(Plant::find()->where(['father_id'=>$fatherid])->all(),'id','cropname');
+		$son = ArrayHelper::map(Plant::find()->where(['father_id'=>$fatherid])->all(),'id','typename');
 		break;
 	case 'Goodseed':
 		$plantid = Goodseed::find()->where(['id'=>$model->typeid])->one()['plant_id'];
 		$fatherid = Plant::find()->where(['id'=>$plantid])->one()['father_id'];
 		$sonid = Plant::find()->where(['id'=>$plantid])->one()['id'];
-		$son = ArrayHelper::map(Plant::find()->where(['father_id'=>$fatherid])->all(),'id','cropname');
-		$goodseeds = ArrayHelper::map(Goodseed::find()->where(['plant_id'=>$sonid])->all(),'id','plant_model');
+		$son = ArrayHelper::map(Plant::find()->where(['father_id'=>$fatherid])->all(),'id','typename');
+		$goodseeds = ArrayHelper::map(Goodseed::find()->where(['plant_id'=>$sonid])->all(),'id','typename');
 		break;
 	default:
 		$fatherid = '';
@@ -53,14 +53,14 @@ switch ($typename) {
 		</tr>
 		<tr class="goodseed">
 			<td align='right'>良种型号</td>
-  			<td align='left'><?= html::dropDownList('plant-father',$fatherid,ArrayHelper::map(Plant::find()->where(['father_id'=>1])->all(), 'id', 'cropname'),['prompt'=>'请选择...','class'=>'form-control','id'=>'goodseedplantfather']) ?></td>
+  			<td align='left'><?= html::dropDownList('plant-father',$fatherid,ArrayHelper::map(Plant::find()->where(['father_id'=>1])->all(), 'id', 'typename'),['prompt'=>'请选择...','class'=>'form-control','id'=>'goodseedplantfather']) ?></td>
 			<td colspan="2" align='right'><?= html::dropDownList('plant',$sonid,$son,['prompt'=>'请选择...','class'=>'form-control','id'=>'goodseedplantson'])?></td>
 			<td align="right"><?= html::dropDownList('goodseed',$model->typeid,$goodseeds,['prompt'=>'请选择...','class'=>'form-control','id'=>'goodseedgoodseed']) ?></td>
 			<td >&nbsp;</td>
 		</tr>
 		<tr class="plant">
 			<td width=15% align='right'>作物</td>
-			<td align='left'><?= html::dropDownList('plant-father',$fatherid,ArrayHelper::map(Plant::find()->where(['father_id'=>1])->all(), 'id', 'cropname'),['prompt'=>'请选择...','class'=>'form-control','id'=>'plantfather']) ?></td>
+			<td align='left'><?= html::dropDownList('plant-father',$fatherid,ArrayHelper::map(Plant::find()->where(['father_id'=>1])->all(), 'id', 'typename'),['prompt'=>'请选择...','class'=>'form-control','id'=>'plantfather']) ?></td>
 			<td colspan="2" align='right'><?= html::dropDownList('plant',$model->typeid,$son,['prompt'=>'请选择...','class'=>'form-control','id'=>'plantson'])?></td>
 			<td align='left'>&nbsp;</td>
 			<td align='left'>&nbsp;</td>
@@ -130,7 +130,7 @@ $('#plantfather').change(function(){
 			$('#plantson').html(null);
 			$('#plantson').append('<option value="prompt">请选择...</option>');
 			for(i=0;i<data.son.length;i++) {
-				$('#plantson').append('<option value="'+data.son[i]['id']+'">'+data.son[i]['cropname']+'</option>');
+				$('#plantson').append('<option value="'+data.son[i]['id']+'">'+data.son[i]['typename']+'</option>');
 			}
 		}
 		else {
@@ -149,7 +149,7 @@ $('#plantson').change(function(){
 			$('#goodseed').html(null);
 			$('#goodseed').append('<option value="prompt">请选择...</option>');
 			for(i=0;i<data.goodseed.length;i++) {
-				$('#goodseed').append('<option value="'+data.goodseed[i]['id']+'">'+data.goodseed[i]['plant_model']+'</option>');
+				$('#goodseed').append('<option value="'+data.goodseed[i]['id']+'">'+data.goodseed[i]['typename']+'</option>');
 			}
 		}
 		else {
@@ -166,7 +166,7 @@ $('#goodseedplantfather').change(function(){
 			$('#goodseedplantson').html(null);
 			$('#goodseedplantson').append('<option value="prompt">请选择...</option>');
 			for(i=0;i<data.son.length;i++) {
-				$('#goodseedplantson').append('<option value="'+data.son[i]['id']+'">'+data.son[i]['cropname']+'</option>');
+				$('#goodseedplantson').append('<option value="'+data.son[i]['id']+'">'+data.son[i]['typename']+'</option>');
 			}
 		}
 		else {
@@ -185,7 +185,7 @@ $('#goodseedplantson').change(function(){
 			$('#goodseedgoodseed').html(null);
 			$('#goodseedgoodseed').append('<option value="prompt">请选择...</option>');
 			for(i=0;i<data.goodseed.length;i++) {
-				$('#goodseedgoodseed').append('<option value="'+data.goodseed[i]['id']+'">'+data.goodseed[i]['plant_model']+'</option>');
+				$('#goodseedgoodseed').append('<option value="'+data.goodseed[i]['id']+'">'+data.goodseed[i]['typename']+'</option>');
 			}
 		}
 		else {

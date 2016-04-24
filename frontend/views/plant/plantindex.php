@@ -37,11 +37,11 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
-            'cropname',
+            'typename',
             [
             	'attribute'=>'father_id',
             	'value' => function($model){
-            		return Plant::find()->where(['id'=>$model->father_id])->one()['cropname'];
+            		return Plant::find()->where(['id'=>$model->father_id])->one()['typename'];
             	},
 			],
             ['class' => 'frontend\helpers\eActionColumn'],

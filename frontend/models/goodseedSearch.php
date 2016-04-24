@@ -19,7 +19,7 @@ class goodseedSearch extends Goodseed
     {
         return [
             [['id', 'plant_id'], 'integer'],
-            [['plant_model'], 'safe'],
+            [['typename'], 'safe'],
         ];
     }
 
@@ -60,7 +60,7 @@ class goodseedSearch extends Goodseed
             'plant_id' => $this->plant_id,
         ]);
 
-        $query->andFilterWhere(['like', 'plant_model', $this->plant_model]);
+        $query->andFilterWhere(['like', 'typename', $this->typename]);
 //         ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;

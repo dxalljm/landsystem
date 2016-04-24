@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
             'attribute' => 'disasterplant',
             'value' => function ($model) {
-            	return Plant::find()->where(['id'=>$model->disasterplant])->one()['cropname'];
+            	return Plant::find()->where(['id'=>$model->disasterplant])->one()['typename'];
             }
             ],
 //             'disasterplant',

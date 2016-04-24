@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'plant_id',
-            'plant_model',
+            'typename',
         ],
     ]) ?>
                 </div>
