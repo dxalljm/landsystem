@@ -24,7 +24,6 @@ class GenerateAction extends \yii\base\Action
      */
     public $controller;
 
-
     /**
      * @inheritdoc
      */

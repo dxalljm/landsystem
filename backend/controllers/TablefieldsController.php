@@ -87,20 +87,21 @@ class TablefieldsController extends Controller
     	$this->layout='@app/views/layouts/nomain.php';
         $model = new tablefields();
         $mir = new Migration();
+//         var_dump($mir->get)
         $sch = new \yii\db\mysql\Schema;
         if ($model->load(Yii::$app->request->post())) {
         	$tablename = tables::find()->where(['id'=>$model->tables_id])->one()['tablename'];
-        	$columns = $mir->getColumns($tablename);
-			if($this->isIn($model->fields, $columns)) {
-				return $this->render('tablefieldserror', [
-                	'message' => '该表项已经存在，不能被创建！',
-            	]);
-			} else {
+//         	$columns = $mir->getColumns($tablename);
+// 			if($this->isIn($model->fields, $columns)) {
+// 				return $this->render('tablefieldserror', [
+//                 	'message' => '该表项已经存在，不能被创建！',
+//             	]);
+// 			} else {
 				$table = Tables::find()->where(['id'=>$model->tables_id])->one(); 
 				$mir->addColumn($mir->db->tablePrefix.$table->tablename, $model->fields, $model->type);    
 			    $model->save(); 
             	return $this->redirect(['tablefieldsview', 'id' => $model->id]);
-			}
+// 			}
         } else {
             return $this->render('tablefieldscreate', [
                 'model' => $model,

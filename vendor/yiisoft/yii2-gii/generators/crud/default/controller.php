@@ -45,16 +45,13 @@ use yii\filters\VerbFilter;
  */
 class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
 {
-    /**
-     * @inheritdoc
-     */
     public function behaviors()
     {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'delete' => ['post'],
                 ],
             ],
         ];
@@ -64,13 +61,13 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      * Lists all <?= $modelClass ?> models.
      * @return mixed
      */
-    public function actionIndex()
+    public function action<?= ucfirst(strtolower($modelClass)) ?>index()
     {
 <?php if (!empty($generator->searchModelClass)): ?>
         $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
+        return $this->render('<?= strtolower($modelClass) ?>index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -79,20 +76,20 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
             'query' => <?= $modelClass ?>::find(),
         ]);
 
-        return $this->render('index', [
+        return $this->render('<?= strtolower($modelClass) ?>index', [
             'dataProvider' => $dataProvider,
         ]);
 <?php endif; ?>
     }
 
     /**
-     * Displays a single <?= $modelClass ?> model.
+     * Displays a single <?= ucfirst(strtolower($modelClass)) ?> model.
      * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
      * @return mixed
      */
-    public function actionView(<?= $actionParams ?>)
+    public function action<?= ucfirst(strtolower($modelClass)) ?>view(<?= $actionParams ?>)
     {
-        return $this->render('view', [
+        return $this->render('<?= strtolower($modelClass) ?>view', [
             'model' => $this->findModel(<?= $actionParams ?>),
         ]);
     }
@@ -102,49 +99,49 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function action<?= ucfirst(strtolower($modelClass)) ?>create()
     {
         $model = new <?= $modelClass ?>();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', <?= $urlParams ?>]);
+            return $this->redirect(['<?= strtolower($modelClass) ?>view', <?= $urlParams ?>]);
         } else {
-            return $this->render('create', [
+            return $this->render('<?= strtolower($modelClass) ?>create', [
                 'model' => $model,
             ]);
         }
     }
 
     /**
-     * Updates an existing <?= $modelClass ?> model.
+     * Updates an existing <?= ucfirst(strtolower($modelClass)) ?> model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
      * @return mixed
      */
-    public function actionUpdate(<?= $actionParams ?>)
+    public function action<?= ucfirst(strtolower($modelClass)) ?>update(<?= $actionParams ?>)
     {
         $model = $this->findModel(<?= $actionParams ?>);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', <?= $urlParams ?>]);
+            return $this->redirect(['<?= strtolower($modelClass) ?>view', <?= $urlParams ?>]);
         } else {
-            return $this->render('update', [
+            return $this->render('<?= strtolower($modelClass) ?>update', [
                 'model' => $model,
             ]);
         }
     }
 
     /**
-     * Deletes an existing <?= $modelClass ?> model.
+     * Deletes an existing <?= ucfirst(strtolower($modelClass)) ?> model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
      * @return mixed
      */
-    public function actionDelete(<?= $actionParams ?>)
+    public function action<?= ucfirst(strtolower($modelClass)) ?>delete(<?= $actionParams ?>)
     {
         $this->findModel(<?= $actionParams ?>)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['<?= strtolower($modelClass) ?>index']);
     }
 
     /**

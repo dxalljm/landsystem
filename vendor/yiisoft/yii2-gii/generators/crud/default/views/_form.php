@@ -17,7 +17,7 @@ echo "<?php\n";
 ?>
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\widgets\ActiveFormrdiv;
 
 /* @var $this yii\web\View */
 /* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
@@ -26,17 +26,21 @@ use yii\widgets\ActiveForm;
 
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-form">
 
-    <?= "<?php " ?>$form = ActiveForm::begin(); ?>
-
-<?php foreach ($generator->getColumnNames() as $attribute) {
-    if (in_array($attribute, $safeAttributes)) {
-        echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
-    }
-} ?>
+    <?= "<?php " ?>$form = ActiveFormrdiv::begin(); ?>
+<table class="table table-bordered table-hover">
+		<?php foreach ($generator->getColumnNames() as $attribute) {
+		    if (in_array($attribute, $safeAttributes)) {
+		    	echo "<tr>\n";
+		    		echo "<td width=15% align='right'>".$generator->generateSearchLabels()[$attribute]."</td>\n";
+		        	echo "<td align='left'><?= " . $generator->generateActiveField($attribute)."->label(false)->error(false)" . " ?></td>\n";
+		        echo "</tr>\n";
+		    }
+		} ?>
+</table>
     <div class="form-group">
-        <?= "<?= " ?>Html::submitButton($model->isNewRecord ? <?= $generator->generateString('Create') ?> : <?= $generator->generateString('Update') ?>, ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= "<?= " ?>Html::submitButton($model->isNewRecord ? <?= $generator->generateString('添加') ?> : <?= $generator->generateString('更新') ?>, ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
-    <?= "<?php " ?>ActiveForm::end(); ?>
+    <?= "<?php " ?>ActiveFormrdiv::end(); ?>
 
 </div>

@@ -153,7 +153,7 @@ abstract class Generator extends Model
      */
     public function successMessage()
     {
-        return 'The code has been generated successfully.';
+        return '代码已成功生成。';
     }
 
     /**
@@ -218,6 +218,7 @@ abstract class Generator extends Model
     {
         $stickyAttributes = $this->stickyAttributes();
         $path = $this->getStickyDataFile();
+		
         if (is_file($path)) {
             $result = json_decode(file_get_contents($path), true);
             if (is_array($result)) {
@@ -270,7 +271,7 @@ abstract class Generator extends Model
         $hasError = false;
         foreach ($files as $file) {
             $relativePath = $file->getRelativePath();
-            if (isset($answers[$file->id]) && !empty($answers[$file->id]) && $file->operation !== CodeFile::OP_SKIP) {
+            if (isset($answers[$file->id]) && $file->operation !== CodeFile::OP_SKIP) {
                 $error = $file->save();
                 if (is_string($error)) {
                     $hasError = true;
@@ -517,5 +518,33 @@ abstract class Generator extends Model
             }
         }
         return $str;
+    }
+	
+	public function classString($string = '', $placeholders = [])
+    {
+        $string = addslashes($string);
+        if ($this->enableI18N) {
+            // If there are placeholders, use them
+            if (!empty($placeholders)) {
+                $ph = ',' . VarDumper::export($placeholders);
+            } else {
+                $ph = '';
+            }
+            $str = "Yii::t('" . $this->messageCategory . "', '" . $string. "'" . $ph . ")";
+        } else {
+            // No I18N, replace placeholders by real words, if any
+            if (!empty($placeholders)) {
+                $phKeys = array_map(function($word) {
+                    return '{' .$word. '}';
+                }, array_keys($placeholders));
+                $phValues = array_values($placeholders);
+                $str = str_replace($phKeys, $phValues, $string);
+                //echo $str;
+            } else {
+                // No placeholders, just the given string
+                $str = $string;
+            }
+        }
+        return strtolower(trim($str));
     }
 }

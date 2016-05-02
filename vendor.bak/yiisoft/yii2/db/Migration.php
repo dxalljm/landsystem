@@ -341,7 +341,26 @@ class Migration extends Component implements MigrationInterface
         $this->db->createCommand()->alterColumn($table, $column, $type)->execute();
         echo " done (time: " . sprintf('%.3f', microtime(true) - $time) . "s)\n";
     }
-
+    /**
+     * Builds and executes a SQL statement for changing the definition of a column.
+     * @param string $table the table whose column is to be changed. The table name will be properly quoted by the method.
+     * @param string $column the name of the column to be changed. The name will be properly quoted by the method.
+     * @param string $type the new column type. The [[QueryBuilder::getColumnType()]] method will be invoked to convert abstract column type (if any)
+     * into the physical one. Anything that is not recognized as abstract type will be kept in the generated SQL.
+     * For example, 'string' will be turned into 'varchar(255)', while 'string not null' will become 'varchar(255) not null'.
+     */
+    public function getColumns($table)
+    {
+    	//echo "    > get Column $table ...";
+    	//$time = microtime(true);
+    	$sql = "select COLUMN_NAME from information_schema.COLUMNS where table_name = '".$this->db->tablePrefix.$table."'";
+    	$command = $this->db->createCommand($sql);
+    	$result = $command->queryAll();
+    	return $result;
+    	//$this->db->createCommand()->dropIndex($name, $table)->execute();
+    	//echo " done (time: " . sprintf('%.3f', microtime(true) - $time) . "s)\n";
+    }
+    
     /**
      * Builds and executes a SQL statement for creating a primary key.
      * The method will properly quote the table and column names.
@@ -418,6 +437,7 @@ class Migration extends Component implements MigrationInterface
         echo " done (time: " . sprintf('%.3f', microtime(true) - $time) . "s)\n";
     }
 
+   
     /**
      * Builds and executes a SQL statement for dropping an index.
      * @param string $name the name of the index to be dropped. The name will be properly quoted by the method.
@@ -431,15 +451,5 @@ class Migration extends Component implements MigrationInterface
         echo " done (time: " . sprintf('%.3f', microtime(true) - $time) . "s)\n";
     }
     
-    public function getColumns($table)
-    {
-    	//echo "    > get Column $table ...";
-    	//$time = microtime(true);
-    	$sql = "select COLUMN_NAME from information_schema.COLUMNS where table_name = '".$this->db->tablePrefix.$table."'";
-    	$command = $this->db->createCommand($sql);
-    	$result = $command->queryAll();
-    	return $result;
-    	//$this->db->createCommand()->dropIndex($name, $table)->execute();
-    	//echo " done (time: " . sprintf('%.3f', microtime(true) - $time) . "s)\n";
-    }
+
 }
