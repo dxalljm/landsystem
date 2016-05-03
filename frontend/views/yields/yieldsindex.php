@@ -2,7 +2,7 @@
 namespace frontend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Lease;
 use app\models\Farms;
 use app\models\Plant;
@@ -48,8 +48,8 @@ $this->params['breadcrumbs'][] = $this->title;
 	    <tr><?php $dc = Yieldbase::find()->where(['plant_id'=>$planting->plant_id,'year'=>User::getYear()])->one()['yield'];?>
 	    	<td align="center"><?php if($name == '') echo Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmername']; else echo $name;?></td>
 	    	<td align="center"><?= $planting->area;?>亩</td>
-	    	<td align="center"><?= Plant::find()->where(['id'=>$planting->plant_id])->one()['cropname']?></td>
-	    	<td align="center"><?= Goodseed::find()->where(['id'=>$planting->goodseed_id])->one()['plant_model']?></td>
+	    	<td align="center"><?= Plant::find()->where(['id'=>$planting->plant_id])->one()['typename']?></td>
+	    	<td align="center"><?= Goodseed::find()->where(['id'=>$planting->goodseed_id])->one()['typename']?></td>
 	    	<td align="center"><?= MoneyFormat::num_format($dc)?>斤</td>
 	    	<td align="center"><?= MoneyFormat::num_format($dc*$planting->area)?>斤</td>
 	    </tr>

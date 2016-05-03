@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use app\models\Farmer;
 use yii\helpers\ArrayHelper;
 use app\models\Farms;
@@ -53,10 +53,10 @@ use app\models\Goodseed;
   </tr>
 <tr>
   <td align='right'>种植作物</td><?php $fatherid = Plant::find()->where(['id'=>$model->plant_id])->one()['father_id'];?>
-  <td align='center'><?= Plant::find()->where(['id'=>$fatherid])->one()['cropname']?></td>
-  <td colspan="2" align='center'><?= Plant::find()->where(['id'=>$model->plant_id])->one()['cropname'] ?></td>
+  <td align='center'><?= Plant::find()->where(['id'=>$fatherid])->one()['typename']?></td>
+  <td colspan="2" align='center'><?= Plant::find()->where(['id'=>$model->plant_id])->one()['typename'] ?></td>
   <td colspan="2" align="right">良种型号</td>
-  <td colspan="2"><?= Goodseed::find()->where(['id'=>$model->goodseed_id])->one()['plant_model']?></td>
+  <td colspan="2"><?= Goodseed::find()->where(['id'=>$model->goodseed_id])->one()['typename']?></td>
 </tr>
 
 </table>

@@ -3,7 +3,7 @@ namespace backend\controllers;
 use yii;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Lease;
 use app\models\Plant;
 use app\models\Goodseed;
@@ -48,8 +48,8 @@ $this->params['breadcrumbs'][] = $this->title;
 	    	<td align="center"><?= Lease::find()->where(['id'=>$planting->lease_id])->one()['lessee']?></td>
 	    	<td align="center"><?= $planting->zongdi;?></td>
 	    	<td align="center"><?= $planting->area;?></td>
-	    	<td align="center"><?= Plant::find()->where(['id'=>$planting->plant_id])->one()['cropname']?></td>
-	    	<td align="center"><?= Goodseed::find()->where(['id'=>$planting->goodseed_id])->one()['plant_model']?></td>
+	    	<td align="center"><?= Plant::find()->where(['id'=>$planting->plant_id])->one()['typename']?></td>
+	    	<td align="center"><?= Goodseed::find()->where(['id'=>$planting->goodseed_id])->one()['typename']?></td>
 	    	<td align="center"><?= Html::a('添加', ['plantpesticidescreate','planting_id'=>$planting->id,'lease_id'=>$planting->lease_id,'plant_id'=>$planting->plant_id,'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?></td>
 	    </tr>
 

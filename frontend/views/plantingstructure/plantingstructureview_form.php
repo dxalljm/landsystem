@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use app\models\Farmer;
 use yii\helpers\ArrayHelper;
 use app\models\Farms;
@@ -45,7 +45,7 @@ use app\models\Lease;
   </tr>
 <tr>
   <td align='right'>种植作物</td>
-  <td align='left'><?= html::dropDownList('plant-father','',ArrayHelper::map(Plant::find()->where(['father_id'=>1])->all(), 'id', 'cropname'),['prompt'=>'请选择...','class'=>'form-control','id'=>'plantfather']) ?></td>
+  <td align='left'><?= html::dropDownList('plant-father','',ArrayHelper::map(Plant::find()->where(['father_id'=>1])->all(), 'id', 'typename'),['prompt'=>'请选择...','class'=>'form-control','id'=>'plantfather']) ?></td>
   <td colspan="2" align='right'><?= $form->field($model, 'plant_id')->dropDownList(['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
   <td colspan="2" align="right">良种型号</td>
   <td colspan="2"><?= $form->field($model, 'goodseed_id')->dropDownList(['prompt'=>'请选择...'])->label(false)->error(false) ?></td>
@@ -200,7 +200,7 @@ $('#plantfather').change(function(){
 			$('#plantingstructure-plant_id').html(null);
 			$('#plantingstructure-plant_id').append('<option value="prompt">请选择...</option>');
 			for(i=0;i<data.son.length;i++) {
-				$('#plantingstructure-plant_id').append('<option value="'+data.son[i]['id']+'">'+data.son[i]['cropname']+'</option>');
+				$('#plantingstructure-plant_id').append('<option value="'+data.son[i]['id']+'">'+data.son[i]['typename']+'</option>');
 			}
 		}
 		else {
@@ -219,7 +219,7 @@ $('#plantingstructure-plant_id').change(function(){
 			$('#plantingstructure-goodseed_id').html(null);
 			$('#plantingstructure-goodseed_id').append('<option value="prompt">请选择...</option>');
 			for(i=0;i<data.goodseed.length;i++) {
-				$('#plantingstructure-goodseed_id').append('<option value="'+data.goodseed[i]['id']+'">'+data.goodseed[i]['plant_model']+'</option>');
+				$('#plantingstructure-goodseed_id').append('<option value="'+data.goodseed[i]['id']+'">'+data.goodseed[i]['typename']+'</option>');
 			}
 		}
 		else {

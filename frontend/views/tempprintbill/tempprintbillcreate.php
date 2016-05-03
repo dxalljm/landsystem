@@ -29,6 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $this->render('tempprintbill_form', [
         'model' => $model,
     	'nonumber' => $nonumber,
+    	'farm' => $farm,
     ]) ?>
                 </div>
             </div>

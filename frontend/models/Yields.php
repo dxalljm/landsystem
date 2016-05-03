@@ -63,7 +63,7 @@ class Yields extends \yii\db\ActiveRecord
     		$newdata = Farms::unique_arr($data);
     		foreach($newdata as $value) {
     			//     		var_dump($value);exit;
-    			$result[$value['id']] = Plant::find()->where(['id'=>$value['id']])->one()['cropname'];
+    			$result[$value['id']] = Plant::find()->where(['id'=>$value['id']])->one()['typename'];
     		}
     	}
     	return $result;
@@ -209,7 +209,7 @@ class Yields extends \yii\db\ActiveRecord
     	foreach($yields->all() as $value) {
     		$planting = Plantingstructure::find()->where(['id'=>$value['planting_id']])->one();
     		if($planting)
-    			$data[] = ['plant_id'=>Plant::find()->where(['id'=>$planting['plant_id']])->one()['cropname']];
+    			$data[] = ['plant_id'=>Plant::find()->where(['id'=>$planting['plant_id']])->one()['typename']];
     	}
     	if($data) {
     		$newdata = Farms::unique_arr($data);
@@ -376,7 +376,7 @@ class Yields extends \yii\db\ActiveRecord
     		$newdata = Farms::unique_arr($data);
     		foreach ($newdata as $value) {
     			$result['id'][] = $value['id'];
-    			$result['typename'][] = Plant::find()->where(['id' => $value['id']])->one()['cropname'];
+    			$result['typename'][] = Plant::find()->where(['id' => $value['id']])->one()['typename'];
     		}
     	}
     	return  $result;
@@ -475,7 +475,7 @@ class Yields extends \yii\db\ActiveRecord
     		$newdata = Farms::unique_arr($data);
     		foreach ($newdata as $value) {
     			$result['id'][] = $value['id'];
-    			$result['typename'][] = Plant::find()->where(['id' => $value['id']])->one()['cropname'];
+    			$result['typename'][] = Plant::find()->where(['id' => $value['id']])->one()['typename'];
     		}
     	}
     	return  $result;

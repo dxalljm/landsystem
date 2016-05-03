@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'farmname',
             'address',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'frontend\helpers\eActionColumn'],
         ],
     ]); ?>
 

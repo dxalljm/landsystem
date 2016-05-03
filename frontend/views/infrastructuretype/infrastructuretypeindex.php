@@ -2,7 +2,7 @@
 namespace frontend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Theyear;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\infrastructuretypeSearch */
@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'father_id',
             'typename',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'frontend\helpers\eActionColumn'],
         ],
     ]); ?>
                 </div>

@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use dosamigos\datetimepicker\DateTimePicker;
 use yii\helpers\ArrayHelper;
 use app\models\User;

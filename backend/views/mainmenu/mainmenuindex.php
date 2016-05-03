@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					return $typenamearr[$model->typename];
 				}
 			],
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'frontend\helpers\eActionColumn'],
         ],
     ]); ?>
 

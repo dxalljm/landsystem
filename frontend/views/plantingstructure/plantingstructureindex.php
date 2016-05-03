@@ -2,7 +2,7 @@
 
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Farms;
 use app\models\Plantingstructure;
 use app\models\Plant;
@@ -84,7 +84,7 @@ use app\models\Theyear;
     <td width="20%" align="center">|_</td>
     
     <td align="center">种植面积：<?= $v['area']?>亩</td>
-    <td width="12%" align="center">作物：<?= Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname']?></td>
+    <td width="12%" align="center">作物：<?= Plant::find()->where(['id'=>$v['plant_id']])->one()['typename']?></td>
     <td><?php 
     			$controller = Yii::$app->controller->id;
     			$action = $controller.'view';
@@ -155,7 +155,7 @@ if($leases) {
   <tr>
     <td colspan="2" align="center">|_</td>
     <td align="center">种植面积：<?= $v['area']?>亩</td>
-    <td align="center">作物：<?= Plant::find()->where(['id'=>$v['plant_id']])->one()['cropname']?></td>
+    <td align="center">作物：<?= Plant::find()->where(['id'=>$v['plant_id']])->one()['typename']?></td>
     <td align="center">
     			<?php 
     			$controller = Yii::$app->controller->id;

@@ -19,7 +19,7 @@ class plantSearch extends Plant
     {
         return [
             [['id', 'father_id'], 'integer'],
-            [['cropname'], 'safe'],
+            [['typename'], 'safe'],
         ];
     }
 
@@ -64,7 +64,7 @@ class plantSearch extends Plant
             'father_id' => $this->father_id,
         ]);
 
-        $query->andFilterWhere(['like', 'cropname', $this->cropname]);
+        $query->andFilterWhere(['like', 'typename', $this->typename]);
 
         return $dataProvider;
     }

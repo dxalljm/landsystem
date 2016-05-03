@@ -15,9 +15,9 @@ use yii\helpers\ArrayHelper;
 
     <?php $listdata = Plant::find()->where(['father_id'=>0]);?>
     <?php $plant = Plant::findAll(['father_id'=>1]);?>
-    <?= $form->field($model, 'father_id')->dropDownList(ArrayHelper::map($plant, 'id', 'cropname')) ?>
+    <?= $form->field($model, 'father_id')->dropDownList(ArrayHelper::map($plant, 'id', 'typename')) ?>
     
-    <?= $form->field($model, 'cropname')->textInput(['maxlength' => 500]) ?>
+    <?= $form->field($model, 'typename')->textInput(['maxlength' => 500]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -77,15 +77,23 @@ class TempprintbillController extends Controller
      */
     public function actionTempprintbillview($id)
     {
-        return $this->render('tempprintbillview', [
-            'model' => $this->findModel($id),
-        ]);
+    	$model = $this->findModel($id);
+    	$farm = Farms::find()->where(['id'=>$model->farms_id])->one();
+    	//     	var_dump($farm);exit;
+    	return $this->render('tempprintbillview', [
+    			'model' => $model,
+    			'farm' => $farm,
+    	]);
     }
     
     public function actionTempprintbillsview($id)
     {
+    	$model = $this->findModel($id);
+    	$farm = Farms::find()->where(['id'=>$model->farms_id])->one();
+//     	var_dump($farm);exit;
     	return $this->render('tempprintbillsview', [
-    			'model' => $this->findModel($id),
+    			'model' => $model,
+    			'farm' => $farm,
     	]);
     }
 
@@ -110,11 +118,12 @@ class TempprintbillController extends Controller
 		
 		$farm =  Farms::find()->where(['id'=>$collectionModel->farms_id])->one();
 		$model->farmername = $farm->farmername;
-		$model->number = $farm->measure;
+		$model->number = $collectionModel->measure;
 		$model->standard = PlantPrice::find()->where(['years'=>$collectionModel->ypayyear])->one()['price'];
 		$model->amountofmoney = MoneyFormat::num_format($collectionModel->real_income_amount);
 		$model->bigamountofmoney = MoneyFormat::cny($collectionModel->real_income_amount);
 		$model->amountofmoneys = $collectionModel->real_income_amount;
+		$model->farms_id = $collectionModel->farms_id;
 		//exit;
         if ($model->load(Yii::$app->request->post())) {
         	$model->create_at = strtotime($model->create_at.' '.date("H:m:s"));
@@ -129,6 +138,7 @@ class TempprintbillController extends Controller
                 'model' => $model,
             	'nonumber' => ++$nonumber,
             	'collectionModel' => $collectionModel,
+            	'farm' => $farm,
             ]);
         }
     }

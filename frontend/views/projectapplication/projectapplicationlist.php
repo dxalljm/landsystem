@@ -2,7 +2,7 @@
 namespace frontend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Infrastructuretype;
 use yii\helpers\Url;
 use app\models\Reviewprocess;

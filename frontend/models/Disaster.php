@@ -139,7 +139,7 @@ class Disaster extends \yii\db\ActiveRecord
     	$result = Disaster::find ()->where ($where)->all ();
     	$data = [];
     	foreach($result as $value) {
-    		$data[] = ['id'=>Plant::find()->where(['id'=>$value['disasterplant']])->one()['cropname']];
+    		$data[] = ['id'=>Plant::find()->where(['id'=>$value['disasterplant']])->one()['typename']];
     	}
     	if($data) {
     		$newdata = Farms::unique_arr($data);

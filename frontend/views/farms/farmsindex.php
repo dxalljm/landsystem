@@ -2,10 +2,12 @@
 namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\ManagementArea;
 use app\models\Farms;
 use app\models\Lease;
+use app\models\Dispute;
+use app\models\Machineoffarm;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\farmsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -73,7 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
             }
             ],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'frontend\helpers\eActionColumn'],
             [
             
             'format'=>'raw',
@@ -81,6 +83,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'value' => function($model,$key){
             	$url = '';
             	$html = '';
+            	
             	if($model->zongdi) {
             		$zongdioption = '<i class="fa fa-map text-red"></i>';
             		$zongdititle = Lease::getZongdiRows($model->zongdi).'块宗地';
@@ -89,24 +92,24 @@ $this->params['breadcrumbs'][] = $this->title;
             
             		]);
             		$html .= '&nbsp;';
-            		if($model->notclear) {
-            			$notclearoption = '<i class="fa fa-exclamation-circle text-red"></i>';
-            			$notcleartitle = '未明确地块面积'.$model->notclear.'亩';
-            			$html .= Html::a($notclearoption,$url, [
-            					'title' => $notcleartitle,
-            
-            			]);
-            			$html .= '&nbsp;';
-            		}
-            		if($model->notstate) {
-            			$notstateoption = '<i class="fa fa-tag text-red"></i>';
-            			$notstatetitle = '未明确状态面积'.$model->notstate.'亩';
-            			$html .= Html::a($notstateoption,$url, [
-            					'title' => $notstatetitle,
-            
-            			]);
-            			$html .= '&nbsp;';
-            		}
+	            	if($model->notclear) {
+	            		$notclearoption = '<i class="fa fa-exclamation-circle text-red"></i>';
+	            		$notcleartitle = '未明确地块面积'.$model->notclear.'亩';
+	            		$html .= Html::a($notclearoption,$url, [
+	            				'title' => $notcleartitle,
+	            
+	            		]);
+	            		$html .= '&nbsp;';
+	            	}
+	            	if($model->notstate) {
+	            		$notstateoption = '<i class="fa fa-tag text-red"></i>';
+	            		$notstatetitle = '未明确状态面积'.$model->notstate.'亩';
+	            		$html .= Html::a($notstateoption,$url, [
+	            				'title' => $notstatetitle,
+	            
+	            		]);
+	            		$html .= '&nbsp;';
+	            	}
             	}
             	
             	if($model->locked == 1) {
@@ -118,6 +121,7 @@ $this->params['breadcrumbs'][] = $this->title;
             		]);
             		$html .= '&nbsp;';
             	}
+            	
             	//             	if($model->notstate) {
             	//             		$option.='<i class="fa fa-lock text-red"></i>';
             	//             		$title = '未明确状态面积';

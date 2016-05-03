@@ -1,7 +1,7 @@
 <?php
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Farms;
 use app\models\Plantingstructure;
 use app\models\Plant;
@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
 use app\models\ManagementArea;
 use dosamigos\datetimepicker\DateTimePicker;
 use yii\helpers\Url;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use app\models\Search;
 use frontend\helpers\arraySearch;
 use app\models\PlantPrice;
@@ -55,7 +55,7 @@ use app\models\Theyear;
 					<td><strong>'.$data->sum('ypayarea').'亩</strong></td>
     				<td><strong>'.$data->sum('ypaymoney').'元</strong></td>
 			        </tr>',
-        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','amounts_receivable','real_income_amount','owe','ypayarea','ypaymoney'],$totalData),
+        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','amounts_receivable','real_income_amount','owe','ypayarea','ypaymoney','operation'],$totalData),
     ]); ?>
               </div>
               <!-- /.tab-pane -->

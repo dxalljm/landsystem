@@ -2,7 +2,7 @@
 namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Plant;
 use app\models\Subsidiestype;
 use yii\helpers\Url;
@@ -44,10 +44,10 @@ $this->params['breadcrumbs'][] = $this->title;
     					<td align="center"><?php $classFile = 'app\\models\\'. $value['subsidiestype_id'];
 				            		$data = $classFile::find()->where(['id'=>$value['typeid']])->one();
 				            		if($value['subsidiestype_id'] == 'plant')
-				            			echo $data['cropname'];
+				            			echo $data['typename'];
 				            		if($value['subsidiestype_id'] == 'goodseed') {
-				            			$plantcropname = Plant::find()->where(['id'=>$data['plant_id']])->one()['cropname'];
-				            			echo $plantcropname.'/'.$data['plant_model'];
+				            			$planttypename = Plant::find()->where(['id'=>$data['plant_id']])->one()['typename'];
+				            			echo $planttypename.'/'.$data['typename'];
 				            		} ?>
             		</td>
             		<?php $huinonggrant = Huinonggrant::find();

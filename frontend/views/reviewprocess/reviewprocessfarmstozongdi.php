@@ -1,7 +1,7 @@
 <?php
 namespace frontend\controllers;
 use yii\helpers\Html;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use app\models\Tables;
 use app\models\Tablefields;
 /* @var $this yii\web\View */

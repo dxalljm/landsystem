@@ -2,7 +2,7 @@
 namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Plant;
 use app\models\Subsidiestype;
 use yii\helpers\Url;
@@ -12,7 +12,7 @@ use frontend\helpers\MoneyFormat;
 use app\models\Dispute;
 use app\models\Collection;
 use app\models\Goodseed;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use app\models\Huinong;
 use app\models\Huinonggrant;
 /* @var $this yii\web\View */
@@ -62,7 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	            'label' => '作物',
 	            'value' => function ($model) {
 	            	$huinong = Huinong::find()->where(['id'=>$model->huinong_id])->one();
-	            	return Plant::find()->where(['id'=>$huinong['typeid']])->one()['cropname'];
+	            	return Plant::find()->where(['id'=>$huinong['typeid']])->one()['typename'];
 	            }
             ];
                 if($huinongModel->subsidiestype_id == 'goodseed')
@@ -71,7 +71,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	            'value' => function ($model) {
 	            	$huinong = Huinong::find()->where(['id'=>$model->huinong_id])->one();
 	            	$goodseed = Goodseed::find()->where(['id'=>$huinong['typeid']])->one();
-	            	return Plant::find()->where(['id'=>$goodseed['plant_id']])->one()['cropname'].'/'.$goodseed['plant_model'];
+	            	return Plant::find()->where(['id'=>$goodseed['plant_id']])->one()['typename'].'/'.$goodseed['typename'];
 	            }
             ];
                 $columns[] = [

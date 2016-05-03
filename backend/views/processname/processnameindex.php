@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'rolename',
             'sparerole',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'frontend\helpers\eActionColumn'],
         ],
     ]); ?>
                 </div>

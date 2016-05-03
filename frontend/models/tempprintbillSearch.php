@@ -18,7 +18,7 @@ class tempprintbillSearch extends Tempprintbill
     public function rules()
     {
         return [
-            [['id','state'], 'integer'],
+            [['id','state','farms_id'], 'integer'],
             [['farmername','remarks', 'nonumber','bigamountofmoney','standard', 'number', 'amountofmoney','create_at','update_at'], 'safe'],
             
         ];
@@ -59,6 +59,7 @@ class tempprintbillSearch extends Tempprintbill
 
         $query->andFilterWhere([
             'id' => $this->id,
+        	'farms' => $this->farms_id,
             'standard' => $this->standard,
         	'state' => $this->state,
         ]);

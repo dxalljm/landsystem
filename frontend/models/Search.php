@@ -11,6 +11,7 @@ use yii\helpers\Html;
 use app\models\Subsidiestype;
 use yii\helpers\Url;
 use frontend\helpers\arraySearch;
+use  yii\web\Session;
 /**
  * This is the model class for table "{{%session}}".
  *
@@ -22,6 +23,7 @@ class Search extends \yii\db\ActiveRecord {
 	public static $totalData;
 	public static $subsidiestypename;
 	public static $list;
+	public static $saveTemp;
 	public static function getParameter($tab) {
 		$array = [ 
 				'farms' => [ 
@@ -47,16 +49,17 @@ class Search extends \yii\db\ActiveRecord {
 // 			self::$subsidiestypename = Subsidiestype::find()->where(['id'=>$_GET['huinonggrant']['subsidiestype_id']])->one()['urladdress'];
 // 			self::$list = [];
 // 			if(self::$subsidiestypename == 'Plant') {
-// 				self::$list = self::$totalData->getName(self::$subsidiestypename, 'cropname', 'typeid')->getOne($model->typeid);
+// 				self::$list = self::$totalData->getName(self::$subsidiestypename, 'typename', 'typeid')->getOne($model->typeid);
 // 			}
 // 			if(self::$subsidiestypename == 'Goodseed') {
-// 				self::$list = self::$totalData->getName(self::$subsidiestypename, 'plant_model', 'typeid')->getOne($model->typeid);
+// 				self::$list = self::$totalData->getName(self::$subsidiestypename, 'typename', 'typeid')->getOne($model->typeid);
 				
 // 			}
 // 		}
 		$columns [] = [ 
 				'class' => 'yii\grid\SerialColumn' 
 		];
+		$typelist = [1];
 		// var_dump(yii::$app->controller->id);
 // 		if (yii::$app->controller->id !== 'farms') {
 
@@ -64,11 +67,14 @@ class Search extends \yii\db\ActiveRecord {
 				
 				switch ($value) {
 					case 'operation' :
+						
 						$columns[] = [
 				                'label'=>'更多操作',
 				                'format'=>'raw',
 				            	//'class' => 'btn btn-primary btn-lg',
 				                'value' => function($model,$key){
+					                $option = '查看详情';
+					                $title = '';
 				                	switch (Yii::$app->controller->id)
 				                	{
 				                		case 'farms':
@@ -77,20 +83,30 @@ class Search extends \yii\db\ActiveRecord {
 				                		case 'plantingstructure':
 				                			$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'view','id'=>$model->id,'farms_id'=>$model->farms_id,'lease_id'=>$model->lease_id];
 				                			break;
+				                		case 'collection':
+				                			$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'send','farms_id'=>$model->farms_id];
+				                			$collection = Collection::find()->where(['farms_id'=>$model->farms_id,'dckpay'=>1])->count();
+				                			if($collection) {
+				                				$option = '已缴费';
+// 				                				$disabled = true;
+				                			} else {
+				                				$option = '缴费';
+				                			}
+				                			break;
 				                		default:
 				                			$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'view','id'=>$model->id,'farms_id'=>$model->farms_id];
 				                	}
 				                	
-				                    $option = '查看详情';
-					            	$title = '';
-// 					            	var_dump(User::getItemname());
-									
-					            	if(User::getItemname() == '主任' or User::getItemname() == '法规科科长' or User::getItemname() == '地产科科长') {
-						            	return Html::a($option,$url, [
+				                    $html = Html::a($option,$url, [
 						            			'id' => 'moreOperation',
 						            			'title' => $title,
 						            			'class' => 'btn btn-primary btn-xs',
+// 				                    			'disabled' => $disabled,
 						            	]);
+// 					            	var_dump(User::getItemname());
+									
+					            	if(User::getItemname() == '主任' or User::getItemname() == '法规科科长' or User::getItemname() == '地产科科长') {
+						            	return $html;
 					            	}
 					            	else 
 					            		return '';
@@ -159,10 +175,10 @@ class Search extends \yii\db\ActiveRecord {
 								'attribute' => $value,
 								'value'=> function($model,$params) {
 // 								return $model->goodseed_id;
-// 				            	var_dump( arraySearch::find(self::$totalData)->getName('Goodseed', 'plant_model', 'goodseed_id')->getList());exit;
-				            		return self::$totalData->getName('Goodseed', 'plant_model', 'goodseed_id')->getOne($model->goodseed_id);
+// 				            	var_dump( arraySearch::find(self::$totalData)->getName('Goodseed', 'typename', 'goodseed_id')->getList());exit;
+				            		return self::$totalData->getName('Goodseed', 'typename', 'goodseed_id')->getOne($model->goodseed_id);
 				           	 	},
-				            	'filter' => self::$totalData->getName('Goodseed', 'plant_model', 'goodseed_id')->getList(),
+				            	'filter' => self::$totalData->getName('Goodseed', 'typename', 'goodseed_id')->getList(),
 							
 						];
 						break;
@@ -448,9 +464,9 @@ class Search extends \yii\db\ActiveRecord {
 						$columns [] = [ 
 								'attribute' => $value,
 								'value' => function ($model) {
-									return self::$totalData->getName('Plant', 'cropname', 'disasterplant')->getOne($model->disasterplant);
+									return self::$totalData->getName('Plant', 'typename', 'disasterplant')->getOne($model->disasterplant);
 								},
-								'filter' => self::$totalData->getName('Plant', 'cropname', 'disasterplant')->getList()
+								'filter' => self::$totalData->getName('Plant', 'typename', 'disasterplant')->getList()
 						];
 						break;
 					case 'isinsurance' :
@@ -476,9 +492,9 @@ class Search extends \yii\db\ActiveRecord {
 								'attribute' => $value,
 								'value' => function($model) {
 								
-									return self::$totalData->getName('Plant', 'cropname', 'plant_id')->getOne($model->plant_id);
+									return self::$totalData->getName('Plant', 'typename', 'plant_id')->getOne($model->plant_id);
 								},
-								'filter' => self::$totalData->getName('Plant', 'cropname', 'plant_id')->getList(),
+								'filter' => self::$totalData->getName('Plant', 'typename', 'plant_id')->getList(),
 								];
 						break;
 					case 'isepidemic' :
@@ -537,26 +553,31 @@ class Search extends \yii\db\ActiveRecord {
 								'filter' => self::$totalData->getName('Subsidiestype', 'typename', ['Huinong','huinong_id','subsidiestype_id'])->getList()
 								
 						];
+// 						var_dump(self::$totalData->getName('Subsidiestype', 'typename', ['Huinong','huinong_id','subsidiestype_id'])->getList());
 						break;
 						case 'typeid' :
+							
 							$columns [] = [
 							'label' => '作物',
-// 							'attribute' => $value,
+							'attribute' => $value,
 							'value' => function ($model) {
+							
 								self::$subsidiestypename = Subsidiestype::find()->where(['id'=>$model->subsidiestype_id])->one()['urladdress'];
 									if(self::$subsidiestypename == 'Plant') {
-										$result = self::$totalData->getName(self::$subsidiestypename, 'cropname', 'typeid')->getOne($model->typeid);
-// 										self::$totalData->saveTemp[$model->typeid] = $result;
+										$result = self::$totalData->getName(self::$subsidiestypename, 'typename', 'typeid')->getOne($model->typeid);										
+										$_SESSION['typenamelist'] = self::$totalData->getName(self::$subsidiestypename, 'typename', 'typeid')->getList();
 										return $result;
 									}
 									if(self::$subsidiestypename == 'Goodseed') {
-										$result = self::$totalData->getName(self::$subsidiestypename, 'plant_model', 'typeid')->getOne($model->typeid);
-// 										self::$totalData->saveTemp[$model->typeid] = $result;
+										$result = self::$totalData->getName(self::$subsidiestypename, 'typename', 'typeid')->getOne($model->typeid);
+										$_SESSION['typenamelist'] = [$model->typeid => self::$totalData->getName(self::$subsidiestypename, 'typename', 'typeid')->typenameList()];
 										return $result;
 									}
+									
 								},
-// 								'filter' => self::$totalData->saveTemp,
+								'filter' => $_SESSION['typenamelist'],
 							];
+// 							var_dump($_SESSION['typenamelist']);
 							break;
 						case 'projectdata':
 							$columns [] = [

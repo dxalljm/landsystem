@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use dosamigos\datetimepicker\DateTimePicker;
 use yii\helpers\ArrayHelper;
 use app\models\Farms;
@@ -28,7 +28,7 @@ use yii\helpers\Url;
     <td align="right">法人名称</td>
     <td><?= Farmer::find()->where(['farms_id'=>$farms->id])->one()['farmername']?></td>
     <td>面积</td>
-    <td><?= $farms->measure ?>亩</td>
+    <td><?= $farms->contractarea ?>亩</td>
   </tr>
   <tr>
     <td align="right">缴费年度</td><?php if(isset($_GET['year'])) $model->payyear = $_GET['year']; else $model->payyear = date('Y');?>
@@ -61,8 +61,8 @@ use yii\helpers\Url;
   <tr>
     <td align="right">缴费金额</td><?php if(!($model->getAR($year)-$model->real_income_amount)) $realoption = ['value'=>$model->getYpaymoney($year, $model->real_income_amount),'disabled'=>'disabled']; else $realoption = ['value'=>$model->getYpaymoney($year, $model->real_income_amount)]?>
     <td><?= $form->field($model, 'real_income_amount')->textInput($realoption)->label(false)->error(false) ?></td>
-    <td align="right">缴费面积</td><?php if(!($model->getAR($year)-$model->real_income_amount)) $areaoption = ['id'=>'collection_realarea','class'=>'form-control','disabled'=>'disabled']; else $areaoption = ['id'=>'collection_realarea','class'=>'form-control']?>
-    <td><?= html::textInput('real_area',$model->getYpayarea($year, $model->real_income_amount),$areaoption)?></td>
+    <td align="right">缴费面积</td><?php if(!($model->getAR($year)-$model->real_income_amount)) $areaoption = ['class'=>'form-control','disabled'=>'disabled']; else $areaoption = ['class'=>'form-control']?>
+    <td><?= $form->field($model, 'measure')->textInput(['value'=>$model->getYpayarea($year, $model->real_income_amount),$areaoption])->label(false)->error(false) ?><?//= html::textInput('real_area',$model->getYpayarea($year, $model->real_income_amount),$areaoption)?></td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>

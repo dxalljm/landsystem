@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use app\models\Plant;
 
 /* @var $this yii\web\View */
@@ -19,7 +19,7 @@ use app\models\Plant;
 <tr>
 <?php }?>
 <td align='right'>作物</td>
-<td align='left'><?= Plant::find()->where(['id'=>$plants[$i]])->one()['cropname']?></td>
+<td align='left'><?= Plant::find()->where(['id'=>$plants[$i]])->one()['typename']?></td>
 <td align='right'>平均亩产/斤</td>
 <td align='left'><?php echo Html::textInput('yields[]', '', ['class' => 'form-control']); ?></td>
 <?php if(($i % 4) == 3) {?>

@@ -2,7 +2,7 @@
 namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\ManagementArea;
 use app\models\Farms;
 use yii\helpers\Url;
@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'contractnumber',
             'accountnumber',
 
-//             ['class' => 'yii\grid\ActionColumn'],
+//             ['class' => 'frontend\helpers\eActionColumn'],
             [
             'label'=>'操作',
             'format'=>'raw',

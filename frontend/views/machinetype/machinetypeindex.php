@@ -2,7 +2,7 @@
 namespace frontend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\MachineSearch */
@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'is_delete',
             'sort',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'frontend\helpers\eActionColumn'],
         ],
     ]); ?>
                 </div>

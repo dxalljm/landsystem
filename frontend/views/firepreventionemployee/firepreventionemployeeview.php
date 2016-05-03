@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use app\models\Firepreventionemployee;
 /* @var $this yii\web\View */
 /* @var $model app\models\Fireprevention */

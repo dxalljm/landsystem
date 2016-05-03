@@ -5,7 +5,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\ManagementArea;
 use app\models\Cooperative;
-use yii\grid\GridView; 
+use frontend\helpers\grid\GridView; 
 use yii\web\View;
 use app\models\Cooperativetype;
 use app\models\Parcel;
@@ -118,8 +118,8 @@ $this->params['breadcrumbs'][] = $this->title;
 		</tr>
 		
 		<tr>
-			<td width=15% align='right'>调查日期</td>
-			<td align='left'><?= $model->surveydate ?></td>
+			<td width=15% align='right'>合同领取日期</td>
+			<td align='left'><?= date('Y-m-d',$model->surveydate) ?></td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>地产科签字</td>

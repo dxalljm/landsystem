@@ -1,7 +1,7 @@
 <?php
 namespace backend\controllers;
 
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 
 
 /* @var $this yii\web\View */

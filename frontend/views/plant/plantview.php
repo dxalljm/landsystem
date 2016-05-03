@@ -41,10 +41,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'cropname',
+            'typename',
              [
             	'attribute'=>'father_id',
-            	'value' => Plant::find()->where(['id'=>$model->father_id])->one()['cropname'],
+            	'value' => Plant::find()->where(['id'=>$model->father_id])->one()['typename'],
 			],
         ],
     ]) ?>

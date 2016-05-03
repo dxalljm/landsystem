@@ -2,7 +2,7 @@
 namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\firepreventionSearch */
@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'peoplepic',
             // 'facilitiespic',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'frontend\helpers\eActionColumn'],
         ],
     ]); ?>
 

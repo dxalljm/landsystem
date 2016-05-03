@@ -2,13 +2,13 @@
 namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Plant;
 use app\models\Subsidiestype;
 use yii\helpers\Url;
 use app\models\Huinonggrant;
 use dosamigos\datetimepicker\DateTimePicker;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\HuinongSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -57,10 +57,10 @@ $this->params['breadcrumbs'][] = $this->title;
     					<td align="center"><?php $classFile = 'app\\models\\'. $type['urladdress'];
 				            		$data = $classFile::find()->where(['id'=>$value['typeid']])->one();
 				    				if($type['urladdress'] == 'Plant')
-				            			echo $data['cropname'];
+				            			echo $data['typename'];
 				            		if($type['urladdress'] == 'Goodseed') {
 				            			$plant = Plant::find()->where(['id'=>$data['plant_id']])->one();
-								        echo $plant['cropname'].'/'.$data['plant_model'];
+								        echo $plant['typename'].'/'.$data['typename'];
 				            		}
 				            		 ?>
             		</td>

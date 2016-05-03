@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use app\models\Farms;
 use app\models\Lease;
 use yii\helpers\ArrayHelper;
@@ -26,7 +26,7 @@ use app\models\Plant;
 </tr>
 <tr>
 <td width=15% align='right'>作物名称</td>
-<td align='left'><?= $form->field($model, 'plant_id')->hiddenInput(['value'=>$_GET['plant_id']])->label(false)->error(false) ?><?= Plant::find()->where(['id'=>$_GET['plant_id']])->one()['cropname'] ?></td>
+<td align='left'><?= $form->field($model, 'plant_id')->hiddenInput(['value'=>$_GET['plant_id']])->label(false)->error(false) ?><?= Plant::find()->where(['id'=>$_GET['plant_id']])->one()['typename'] ?></td>
 </tr>
 <tr>
 <td width=15% align='right'>农药使用情况</td>

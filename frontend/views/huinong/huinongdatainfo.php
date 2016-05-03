@@ -2,7 +2,7 @@
 namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Plant;
 use app\models\Subsidiestype;
 use yii\helpers\Url;
@@ -12,7 +12,7 @@ use frontend\helpers\MoneyFormat;
 use app\models\Dispute;
 use app\models\Collection;
 use app\models\Goodseed;
-use yii\widgets\ActiveFormrdiv;
+use frontend\helpers\ActiveFormrdiv;
 use app\models\Huinong;
 use app\models\Huinonggrant;
 /* @var $this yii\web\View */
@@ -101,13 +101,13 @@ $this->params['breadcrumbs'][] = $this->title;
     					<td align="center"><?= Lease::find()->where(['id'=>$value['lease_id']])->one()['lessee']?></td>
     					
     					<?php if($model->subsidiestype_id == 'plant') {?>
-    						<td align="center"><?= Plant::find()->where(['id'=>$model->typeid])->one()['cropname']?></td>
+    						<td align="center"><?= Plant::find()->where(['id'=>$model->typeid])->one()['typename']?></td>
     					<?php }?>
     					<?php if($model->subsidiestype_id == 'goodseed') {
     						$goodseed = Goodseed::find()->where(['id'=>$model->typeid])->one();
     					?>
-    						<td align="center"><?= Plant::find()->where(['id'=>$goodseed['plant_id']])->one()['cropname']?></td>
-    						<td align="center"><?= $goodseed['plant_model']?></td>
+    						<td align="center"><?= Plant::find()->where(['id'=>$goodseed['plant_id']])->one()['typename']?></td>
+    						<td align="center"><?= $goodseed['typename']?></td>
     					<?php }?>
     					<td align="center"><?= '有'.Dispute::find()->where(['farms_id'=>$value['farms_id']])->count().'条纠纷'?></td>
     					<td align="center"><?= Collection::getCollecitonInfo($value['farms_id'])?></td>

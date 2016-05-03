@@ -266,7 +266,7 @@ function wdjShowEchart(divID,legendata,xdata,alldata,realdata,dw)
 	    	                          }
 	    	                      }
 	    	                  },
-	    	                  data:realdata,
+	    	                  data:realdata['count'],
 	    	              },
 	    	              {
 	    	                  name:legendata[1],
@@ -295,7 +295,7 @@ function wdjShowEchart(divID,legendata,xdata,alldata,realdata,dw)
 	    	                          }
 	    	                      }
 	    	                  },
-	    	                  data:alldata
+	    	                  data:alldata['count']
 	    	              }
 	    	          ]
 	    	};

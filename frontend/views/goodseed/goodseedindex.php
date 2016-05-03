@@ -2,7 +2,7 @@
 namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Plant;
 use yii\data\DataProviderInterface;
 
@@ -42,12 +42,12 @@ $this->params['breadcrumbs'][] = $this->title;
             [
             	'attribute'=>'plant_id',
             	'value' => function ($model) {
-            		return Plant::find()->where(['id'=>$model->plant_id])->one()['cropname'];
+            		return Plant::find()->where(['id'=>$model->plant_id])->one()['typename'];
             	}
             ],
-            'plant_model',
+            'typename',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'frontend\helpers\eActionColumn'],
         ],
     ]); ?>
                 </div>

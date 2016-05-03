@@ -76,7 +76,7 @@ class User extends \yii\db\ActiveRecord
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
         	'department_id' => '科室ID',
-        	'autoyear' => '自动获取',
+        	'year' => '自动获取',
         ];
     }
 	
@@ -249,7 +249,11 @@ class User extends \yii\db\ActiveRecord
     
     public static function getYear($user_id)
     {
+//     	var_dump($user_id);exit;
     	$model = User::findOne($user_id);
-    	return $model->year;
+    	if($model)
+    		return $model->year;
+    	else 
+    		return false;
     }
 }

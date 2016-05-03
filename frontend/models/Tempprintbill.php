@@ -31,7 +31,7 @@ class Tempprintbill extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-        	[['state'],'integer'],
+        	[['state','farms_id'],'integer'],
         	[['amountofmoneys'], 'number'],
             [['standard', 'number', 'nonumber','amountofmoney','farmername', 'bigamountofmoney','remarks'], 'string', 'max' => 500]
         ];
@@ -44,6 +44,7 @@ class Tempprintbill extends \yii\db\ActiveRecord
     {
         return [
 			'id' => 'ID',
+        	'farms_id' => '农场',
             'farmername' => '法人姓名',
         	'remarks' => '备注',
             'standard' => '标准',

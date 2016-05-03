@@ -24,9 +24,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     </h3>
                 </div>
                 <div class="box-body">
-     <p>
-        <?= Html::a('缴费', ['tempprintbillcreate'], ['class' => 'btn btn-success']) ?>
-    </p>
     开票时间：<?= date('Y年m月d日 H时s分i秒',$model->create_at) ?>
  <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
@@ -41,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <table width="100%" border="1">
   <tr>
     <td width="14%" height="31" align="center">&nbsp;收款单位（缴款人）      </td>
-    <td height="31" colspan="5">&nbsp;&nbsp;<?= $model->farmername?></td>
+    <td height="31" colspan="5">&nbsp;&nbsp;<?= $farm['farmname'].'('.$model->farmername.')&nbsp;&nbsp;&nbsp;&nbsp;合同号：'.$farm['contractnumber']?></td>
     </tr>
   <tr>
     <td height="31" colspan="2" align="center">收费项目</td>

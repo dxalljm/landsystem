@@ -142,8 +142,10 @@ class CollectionController extends Controller
 			$model->update_at = time();
 			$model->dckpay = 0;
 			$model->management_area = Farms::find()->where(['id'=>$farms_id])->one()['management_area'];
+			$model->measure = (float)$model->measure;
 // 			var_dump($model->real_income_amount);
 // 			exit;
+// var_dump($model);exit;
         	$model->save();
         	//var_dump($model->getErrors());
         	$newAttr = $model->attributes;
@@ -470,7 +472,7 @@ class CollectionController extends Controller
 			$params ['collectionSearch'] ['management_area'] = $whereArray;
 		}
 
-		$params['collectionSearch']['dckpay'] = 1;
+// 		$params['collectionSearch']['dckpay'] = 1;
 		$dataProvider = $searchModel->search ( $params );
     	if (is_array($searchModel->management_area)) {
 			$searchModel->management_area = null;

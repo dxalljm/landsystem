@@ -55,8 +55,13 @@ class Generator extends \yii\gii\Generator
     public function rules()
     {
         return array_merge(parent::rules(), [
+<<<<<<< HEAD
             [['db', 'ns', 'tableName', 'modelClass', 'baseClass'], 'filter', 'filter' => 'trim'],
             [['ns'], 'filter', 'filter' => function($value) { return trim($value, '\\'); }],
+=======
+            [['db', 'ns', 'tableName', 'modelClass', 'baseClass', 'queryNs', 'queryClass', 'queryBaseClass'], 'filter', 'filter' => 'trim'],
+            [['ns', 'queryNs'], 'filter', 'filter' => function ($value) { return trim($value, '\\'); }],
+>>>>>>> cf16ead055468d3c8eecdc12168d08580aeca0b1
 
             [['db', 'ns', 'tableName', 'baseClass'], 'required'],
             [['db', 'modelClass'], 'match', 'pattern' => '/^\w+$/', 'message' => 'Only word characters are allowed.'],
@@ -151,7 +156,28 @@ class Generator extends \yii\gii\Generator
      */
     public function stickyAttributes()
     {
+<<<<<<< HEAD
         return array_merge(parent::stickyAttributes(), ['ns', 'db', 'baseClass', 'generateRelations', 'generateLabelsFromComments']);
+=======
+        return array_merge(parent::stickyAttributes(), ['ns', 'db', 'baseClass', 'generateRelations', 'generateLabelsFromComments', 'queryNs', 'queryBaseClass']);
+    }
+
+    /**
+     * Returns the `tablePrefix` property of the DB connection as specified
+     *
+     * @return string
+     * @since 2.0.5
+     * @see getDbConnection
+     */
+    public function getTablePrefix()
+    {
+        $db = $this->getDbConnection();
+        if ($db !== null) {
+            return $db->tablePrefix;
+        } else {
+            return '';
+        }
+>>>>>>> cf16ead055468d3c8eecdc12168d08580aeca0b1
     }
 
     /**
@@ -430,6 +456,11 @@ class Generator extends \yii\gii\Generator
      */
     protected function generateRelationName($relations, $className, $table, $key, $multiple)
     {
+        static $baseModel;
+        if ($baseModel === null) {
+            $baseClass = $this->baseClass;
+            $baseModel = new $baseClass();
+        }
         if (!empty($key) && substr_compare($key, 'id', -2, 2, true) === 0 && strcasecmp($key, 'id')) {
             $key = rtrim(substr($key, 0, -2), '_');
         }
@@ -438,6 +469,9 @@ class Generator extends \yii\gii\Generator
         }
         $name = $rawName = Inflector::id2camel($key, '_');
         $i = 0;
+        while ($baseModel->hasProperty(lcfirst($name))) {
+            $name = $rawName . ($i++);
+        }
         while (isset($table->columns[lcfirst($name)])) {
             $name = $rawName . ($i++);
         }

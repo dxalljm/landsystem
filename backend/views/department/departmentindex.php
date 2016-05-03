@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'leader',
 			'sectionchief',
 			'chippackage',
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'frontend\helpers\eActionColumn'],
         ],
     ]); ?>
 

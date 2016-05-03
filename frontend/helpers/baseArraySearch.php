@@ -20,7 +20,7 @@ class baseArraySearch {
 	private $echartsWhere = [ ];
 	private $field;
 	private $echartsName;
-	public $saveTemp;
+// 	public $saveTemp;
 	public $tempData = [];
 	public function __construct($data) {
 		if (is_array ( $data ))
@@ -792,7 +792,7 @@ class baseArraySearch {
 				$result['real']['count'] = $realcount;
 			}
 // 		}
-			
+			var_dump($result);
 		return $result;
 	}
 	public function collectionShowShadow() {

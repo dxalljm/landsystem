@@ -2,7 +2,7 @@
 namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Plant;
 use app\models\Subsidiestype;
 use yii\helpers\Url;
@@ -48,10 +48,10 @@ $this->params['breadcrumbs'][] = $this->title;
 				            		$data = $classFile::find()->where(['id'=>$value['typeid']])->one();
 // 				            		var_dump($data);
 				            		if($type['urladdress'] == 'Plant')
-				            			echo $data['cropname'];
+				            			echo $data['typename'];
 				            		if($type['urladdress'] == 'Goodseed') {
 				            			$plant = Plant::find()->where(['id'=>$data['plant_id']])->one();
-				            			echo $plant['cropname'].'/'.$data['plant_model'];
+				            			echo $plant['typename'].'/'.$data['typename'];
 				            		} ?>
             		</td>
             		<td align="center"><?php
@@ -75,7 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
             			</td>
             		<td align="center"><?php 
             		if(count($marea)) 
-            			echo html::a('补贴发放',Url::to('index.php?r=huinong/huinongprovide&id='.$value['id']),['class'=>'btn btn-success']);
+            			echo html::a('补贴发放',Url::to('index.php?r=huinong/huinongsearch&huinong_id='.$value['id']),['class'=>'btn btn-success']);
             		else 
             			echo '等待地产科确认提交'?></td>
     				</tr>

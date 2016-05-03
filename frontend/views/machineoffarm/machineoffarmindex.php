@@ -2,7 +2,7 @@
 namespace backend\controllers;
 use app\models\tables;
 use yii\helpers\Html;
-use yii\grid\GridView;
+use frontend\helpers\grid\GridView;
 use app\models\Machinetype;
 use app\models\Machine;
 
@@ -72,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
 //             'machinetype_id',
 //             'machine_id',
 			'machinename',
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'frontend\helpers\eActionColumn'],
         ],
     ]); ?>
                 </div>

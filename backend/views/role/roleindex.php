@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
 			],
 
-            ['class' => 'yii\grid\ActionColumn','header' => '操作',],
+            ['class' => 'backend\helpers\eActionColumn','header' => '操作',],
             [
                 'label'=>'更多操作',
                 'format'=>'raw',
