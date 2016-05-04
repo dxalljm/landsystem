@@ -37,13 +37,14 @@ class AppAsset extends AssetBundle
     public $js = [
         'js/date.js',
         'js/selected.js',
+    	'js/jquery.imgbox.pack.js',
         'vendor/bower/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
         'vendor/bower/blueimp-file-upload/js/jquery.fileupload.js',
         'vendor/bower/AdminLTE/bootstrap/js/bootstrap.min.js',
         'vendor/bower/AdminLTE/dist/js/app.min.js',
         'vendor/bower/devbridge-autocomplete/dist/jquery.autocomplete.min.js',
     	'js/vendor/bower/lodop/LodopFuncs.js',
-
+		
         'vendor/bower/nprogress/nprogress.js',
         'vendor/bower/echarts/build/dist/echarts.js',
     	'vendor/bower/echarts/build/dist/echarts.min.js',

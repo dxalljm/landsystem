@@ -9,9 +9,6 @@ use yii\web\UploadedFile;
 use yii\helpers\Url;
 ?>
 <link rel="stylesheet" href="css/imageShow/lrtk.css" />
-<script type="text/javascript" src="js/jquery.min.js"></script>
-<script type="text/javascript" src="js/jquery.imgbox.pack.js"></script>
-
 <div class="photograph-form">
 
     <section class="content">
