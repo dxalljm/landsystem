@@ -20,7 +20,7 @@ class farmerSearch extends farmer
     {
        return [
             [['id', 'farms_id', 'isupdate', 'years', 'state'], 'integer'],
-            [['farmerbeforename', 'nickname', 'gender', 'nation', 'political_outlook', 'cultural_degree', 'domicile', 'nowlive', 'living_room', 'photo', 'cardpic', 'create_at', 'update_at'], 'safe'],
+            [['farmerbeforename', 'nickname', 'gender', 'nation', 'political_outlook', 'cultural_degree', 'domicile', 'nowlive', 'living_room', 'photo', 'cardpic','cardpicback', 'create_at', 'update_at'], 'safe'],
         ];
     }
 

@@ -78,7 +78,10 @@ class Search extends \yii\db\ActiveRecord {
 				                	switch (Yii::$app->controller->id)
 				                	{
 				                		case 'farms':
-				                			$url = Url::to(['farms/farmsfile','farms_id'=>$model->id]);
+				                			if(User::getItemname() == '法规科科长' or User::getItemname() == '大厅主任')
+				                				$url = Url::to(['farms/farmslandview','id'=>$model->id]);
+				                			else
+				                				$url = Url::to(['farms/farmsfile','farms_id'=>$model->id]);
 				                			break;
 				                		case 'plantingstructure':
 				                			$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'view','id'=>$model->id,'farms_id'=>$model->farms_id,'lease_id'=>$model->lease_id];
@@ -103,7 +106,13 @@ class Search extends \yii\db\ActiveRecord {
 						            			'class' => 'btn btn-primary btn-xs',
 // 				                    			'disabled' => $disabled,
 						            	]);
-// 					            	var_dump(User::getItemname());
+									if(User::getItemname() == '法规科科长') {
+										$farmer = Farmer::find()->where(['farms_id'=>$model->id])->one();
+										if($farmer['photo'] == '' or $farmer['cardpic'] == '' or $farmer['cardpicback'] == '') {
+											$html.= '&nbsp;';
+											$html.= Html::a('电子信息采集',Url::to(['photograph/photographindex','farms_id'=>$model->id]),['class' => 'btn btn-primary btn-xs',]);
+										}
+									}
 									
 					            	if(User::getItemname() == '主任' or User::getItemname() == '法规科科长' or User::getItemname() == '地产科科长') {
 						            	return $html;

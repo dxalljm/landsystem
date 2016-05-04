@@ -74,7 +74,11 @@ class FarmerController extends Controller
 //             ]);
         
 //     }
-    
+    public function actionGetinfo($farms_id)
+    {
+    	$farmer = Farmer::find()->where(['farms_id'=>$farms_id])->one();
+    	echo json_encode(['info' => $farmer]);
+    }
     
     
     public function actionFarmerxls()

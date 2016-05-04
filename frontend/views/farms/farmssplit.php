@@ -137,8 +137,8 @@ use yii\helpers\Url;
         <td colspan="5" align='left' valign="middle"><?= html::textInput('oldnotstate',$oldFarm->notstate,['readonly' => true,'id'=>'oldfarms-notstate','class'=>'form-control']) ?></td>
         </tr>
       <tr>
-        <td align='right' valign="middle">法人签字</td>
-        <td colspan="5" align='left' valign="middle"><?= html::textInput('oldfarmersign', $oldFarm->farmersign ,['class'=>'form-control'])?></td>
+        <td align='right' valign="middle">备注</td>
+        <td colspan="5" align='left' valign="middle"><?= $oldFarm->remarks?></td>
         </tr>
     </table></td>
     <td width="4%" align="center"><font size="5"><i class="fa fa-arrow-right"></i></font></td>
@@ -174,7 +174,7 @@ use yii\helpers\Url;
         </tr>
        <tr>
 			<td width=30% align='right'>合同号</td><?php $newFarm->contractnumber = Farms::getContractnumber($_GET['farms_id'],'new');?>
-			<td colspan="5" align='left'><?= $form->field($newFarm, 'contractnumber')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+			<td colspan="5" align='left'><?= $form->field($newFarm, 'contractnumber')->textInput(['maxlength' => 500,'readonly'=>'readonly'])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
 			<td width=30% align='right'>承包年限</td>
@@ -235,8 +235,8 @@ use yii\helpers\Url;
         <td colspan="5" align='left'><?= html::textInput('inputnotclear','',['id'=>'input-notclear','class'=>'form-control','readonly'=>$realonly]) ?></td>
        </tr>
       <tr>
-        <td align='right'>法人签字</td>
-        <td colspan="5" align='left'><?= $form->field($newFarm, 'farmersign')->textInput()->label(false)->error(false) ?></td>
+        <td align='right'>备注</td>
+        <td colspan="5" align='left'><?= $form->field($newFarm, 'remarks')->textarea(['rows'=>2])->label(false)->error(false) ?></td>
         </tr>
     </table></td>
   </tr>

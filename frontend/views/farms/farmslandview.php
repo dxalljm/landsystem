@@ -30,7 +30,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     </h3>
                 </div>
                 <div class="box-body">
-<?= Html::a('添加', ['farmscreate'], ['class' => 'btn btn-success']) ?>
 <table
 		class="table table-bordered table-hover">
   <tr>

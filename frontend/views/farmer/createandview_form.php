@@ -26,11 +26,11 @@ use app\models\Farmermembers;
       <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false);?>
     <table width="662"  class="table table-bordered table-hover">
       <tr>
-        <td width="12%" height="25" align="right" valign="middle">承包人姓名</td>
-        <td colspan="2" valign="middle"><?= $farm->farmername?></td>
-        <td width="9%" height="25" align="right" valign="middle">曾用名</td>
+        <td width="10%" height="25" align="right" valign="middle">承包人姓名</td>
+        <td width="7%" valign="middle"><?= $farm->farmername?></td>
+        <td width="11%" height="25" align="right" valign="middle">曾用名</td>
         <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'farmerbeforename')->textInput(['maxlength' => 8])->label(false)->error(false); else echo '&nbsp;'.$model->farmerbeforename; ?></td>
-        <td width="19%" rowspan="6" align="center" valign="middle">
+        <td width="36%" rowspan="6" align="center" valign="middle">
         <span class="btn btn-success fileinput-button">
 		    <i class="glyphicon glyphicon-plus"></i>
 		    <span>请选择...</span>
@@ -43,29 +43,29 @@ use app\models\Farmermembers;
      </tr>
       <tr>
         <td align="right" valign="middle">身份证号</td>
-        <td colspan="2" valign="middle"><?= $farm->cardid?></td>
+        <td valign="middle"><?= $farm->cardid?></td>
         <td align="right" valign="middle">性别</td>
         <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'gender')->dropDownList(['男'=>'男','女'=>'女'])->label(false)->error(false); else echo '&nbsp;'.$model->gender; ?></td>
       </tr>
       <tr>
         <td align="right" valign="middle">民族</td>
-        <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'nation')->dropDownList(ArrayHelper::map(Nation::find()->all(),'id','nationname'))->label(false)->error(false); else echo '&nbsp;'.Nation::find()->where(['id'=>$model->nation])->one()['nationname']; ?></td>
+        <td valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'nation')->dropDownList(ArrayHelper::map(Nation::find()->all(),'id','nationname'))->label(false)->error(false); else echo '&nbsp;'.Nation::find()->where(['id'=>$model->nation])->one()['nationname']; ?></td>
         <td align="right" valign="middle">政治面貌</td>
         <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'political_outlook')->dropDownList(['群众'=>'群众','团员'=>'团员','党员'=>'党员','民主党派'=>'民主党派','其他'=>'其他'])->label(false)->error(false); else echo '&nbsp;'.$model->political_outlook; ?></td>
       </tr>
       <tr>
         <td align="right" valign="middle">文化程度</td>
-        <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'cultural_degree')->dropDownList(['文盲'=>'文盲','小学'=>'小学','初中'=>'初中','高中'=>'高中','中专'=>'中专','大专'=>'大专','本科'=>'本科','研究生'=>'研究生'])->label(false)->error(false); else echo '&nbsp;'.$model->cultural_degree; ?></td>
+        <td valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'cultural_degree')->dropDownList(['文盲'=>'文盲','小学'=>'小学','初中'=>'初中','高中'=>'高中','中专'=>'中专','大专'=>'大专','本科'=>'本科','研究生'=>'研究生'])->label(false)->error(false); else echo '&nbsp;'.$model->cultural_degree; ?></td>
         <td align="right" valign="middle">电话</td>
         <td colspan="2" valign="middle"><?= $farm->telephone?></td>
       </tr>
       <tr><?php if($model->domicile == '') $model->domicile = '黑龙江省大兴安岭地区加格达奇区';?><?php if($model->nowlive == '') $model->nowlive = '黑龙江省大兴安岭地区加格达奇区';?>
         <td align="right" valign="middle">户籍所在地</td>
-        <td colspan="5" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'domicile')->textInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.$model->domicile; ?></td>
+        <td colspan="4" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'domicile')->textInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.$model->domicile; ?></td>
       </tr>
       <tr>
         <td align="right" valign="middle">现住地</td>
-        <td colspan="5" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'nowlive')->textInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.$model->nowlive; ?></td>
+        <td colspan="4" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'nowlive')->textInput(['maxlength' => 200])->label(false)->error(false); else echo '&nbsp;'.$model->nowlive; ?></td>
       </tr>
 	  
       
@@ -75,10 +75,10 @@ use app\models\Farmermembers;
 		    <span>请选择...</span>
 		    <input id="fileuploadcardpic" type="file" name="upload_file" multiple="">
 		</span></td>
-        <td colspan="6" valign="middle">
-       <?php echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px','id'=>'cardpic']); ?>
-       <?php echo $form->field($model,'cardpic')->hiddenInput(['id'=>'cardpicresult'])->label(false)?>
-       </td>
+        <td valign="middle">
+          <?php echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px','id'=>'cardpic']); ?>
+        <?php echo $form->field($model,'cardpic')->hiddenInput(['id'=>'cardpicresult'])->label(false)?></td>
+        <td colspan="4" valign="middle"><?php echo '&nbsp;'.Html::img($model->cardpicback,['width'=>'400px','height'=>'220px','id'=>'cardpicback']); ?> <?php echo $form->field($model,'cardpicback')->hiddenInput(['id'=>'cardpicbackresult'])->label(false)?></td>
       </tr>
   </table>
 <h3>家庭主要成员</h3>

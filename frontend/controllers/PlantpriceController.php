@@ -9,6 +9,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Logs;
+use app\models\Collection;
+use app\models\Farms;
+use app\models\Theyear;
 
 /**
  * PlantpriceController implements the CRUD actions for PlantPrice model.
@@ -74,6 +77,31 @@ class PlantpriceController extends Controller
         $model = new PlantPrice();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	$farms = Farms::find()->where(['state'=>0])->all();
+        	foreach ($farms as $farm) {
+        		$collection = Collection::find()->where(['farms_id'=>$farm['id'],'payyear'=>$model->years])->one();
+        		$oldCollection = Collection::find()->where(['farms_id'=>$farm['id'],'payyear'=>$model->years-1])->one();
+        		if($collection) {
+        			$collectionModel = Collection::findOne($collection['id']);
+        			$collectionModel->update_at = time();
+        		} else {
+        			$collectionModel = new Collection();
+        			$collectionModel->create_at = time();
+        			$collectionModel->update_at = $collectionModel->create_at;
+        		}
+        		$collectionModel->payyear = $model->years;
+        		$collectionModel->farms_id = $farm['id'];
+        		$collectionModel->amounts_receivable = $collectionModel->getAR($model->years);
+        		$collectionModel->ypayarea = $farm['contractarea'];
+        		$collectionModel->ypaymoney = $collectionModel->amounts_receivable;
+        		$collectionModel->dckpay = 0;
+        		$collectionModel->state = 0;
+        		$collectionModel->management_area = $farm['management_area'];
+        		if($oldCollection) {
+        			$collectionModel->owe = $oldCollection->owe;
+        		}
+        		$collectionModel->save();
+           	}
         	$new = $model->attributes;
         	Logs::writeLog('添加缴费基数',$model->id,'',$new);
             return $this->redirect(['plantpriceview', 'id' => $model->id]);
@@ -95,9 +123,10 @@ class PlantpriceController extends Controller
         $model = $this->findModel($id);
 		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        	
         	$new = $model->attributes;
         	Logs::writeLog('更新缴费基数',$id,$old,$new);
-            return $this->redirect(['plantpriceview', 'id' => $model->id]);
+//             return $this->redirect(['plantpriceview', 'id' => $model->id]);
         } else {
             return $this->render('plantpriceupdate', [
                 'model' => $model,
@@ -105,6 +134,12 @@ class PlantpriceController extends Controller
         }
     }
 
+    public function actionPlantpricemodel($id)
+    {
+    	$model = $this->findModel($id);
+    	return $this->renderAjax('plantpricemodel',['model'=>$model]);
+    }
+    
     /**
      * Deletes an existing Plantprice model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

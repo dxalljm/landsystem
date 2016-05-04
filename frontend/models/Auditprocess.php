@@ -45,9 +45,10 @@ class Auditprocess extends \yii\db\ActiveRecord
         ];
     }
     
-    public static function isShowProcess()
+    public static function isShowProcess($projectname)
     {
     	$role = User::getItemname();
+//     	var_dump($role);
     	$processname = Processname::find()->where(['rolename'=>$role])->all();
     	$rolenames = [];
     	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
@@ -55,15 +56,16 @@ class Auditprocess extends \yii\db\ActiveRecord
     		$rolenames[] = $process['Identification'];
     	}
     	
-    	$auditprocess = self::find()->all();
+    	$auditprocess = self::find()->where(['projectname'=>$projectname])->one();
     	$audits = [];
-    	foreach($auditprocess as $value) {
+//     	var_dump($rolenames);
+//     	foreach($auditprocess as $value) {
     		foreach ($rolenames as $rolename) {
-    			if(in_array($rolename, explode('>',$value['process'])))
+    			if(in_array($rolename, explode('>',$auditprocess['process'])))
     				return true;
     		}
     		
-    	}
+//     	}
     	if($temp)
     		return true;
     	else

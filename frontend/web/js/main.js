@@ -4,7 +4,20 @@ if ($.fn.modal !== undefined) {
     $.fn.modal.Constructor.DEFAULTS.backdrop = 'static';
 }
 
-
+function createModel(url,id) {
+	$.get(
+	    'index.php',         
+	    {
+	    	r: url,
+	        id: id,
+	         
+	    },
+	    function (data) {
+	        $('.modal-body').html(data);
+	        
+	    }  
+	);
+}
 
 
 function farmercontract(key) {

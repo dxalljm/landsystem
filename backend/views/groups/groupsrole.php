@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveFormrdiv;
+use backend\helpers\ActiveFormrdiv;
 use yii\helpers\ArrayHelper;
 use app\models\ManagementArea;
 /* @var $this yii\web\View */

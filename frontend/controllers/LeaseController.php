@@ -52,7 +52,7 @@ class LeaseController extends Controller
          $params = Yii::$app->request->queryParams;
          $params['leaseSearch']['farms_id'] = $farms_id;
          $dataProvider = $searchModel->search($params);
-         $measure = Farms::find()->where(['id'=>$farms_id])->one()['measure'];
+         $measure = Farms::find()->where(['id'=>$farms_id])->one()['contractarea'];
          $plantingArea = Plantingstructure::getArea($farms_id);
 // 		var_dump($measure);var_dump($plantingArea);exit;
 		Logs::writeLog('租赁');

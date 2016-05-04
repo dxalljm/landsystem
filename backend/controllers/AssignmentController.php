@@ -47,7 +47,7 @@ class AssignmentController extends Controller
     	if ($model->load(Yii::$app->request->post())) {
     		$auth =  yii::$app->authManager;
     		if($_POST['assignment-button'] == 'create') {
-    			if($auth->isRole($model->item_name, $id)) {
+    			if($auth->getAssignment($model->item_name, $id)) {
     				return $this->render('error', [
     						'message' => '该角色已存在，不能重复提交！',
     				]);
@@ -58,7 +58,7 @@ class AssignmentController extends Controller
     			}	
     		}
     		if($_POST['assignment-button'] == 'delete') {
-    			if($auth->isRole($model->item_name, $id)) {
+    			if($auth->getAssignment($model->item_name, $id)) {
 	    			$role = $auth->getRole($model->item_name);
 	    			$auth->revoke($role, $id);
     			}

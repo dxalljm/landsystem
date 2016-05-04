@@ -663,6 +663,7 @@ class FarmsController extends Controller {
 	 */
 	public function actionFarmsview($id) {
 		$model = $this->findModel ( $id );
+		$farmer = Farmer::find()->where(['farms_id'=>$id])->one();
 		$cooperativeoffarm = CooperativeOfFarm::find ()->where ( [ 
 				'farms_id' => $id 
 		] )->all ();
@@ -676,7 +677,29 @@ class FarmsController extends Controller {
 		return $this->render ( 'farmsview', [ 
 				'model' => $model,
 				'dataProvider' => $dataProvider,
-				'cooperativeoffarm' => $cooperativeoffarm 
+				'cooperativeoffarm' => $cooperativeoffarm,
+				'farmer' => $farmer,
+		] );
+	}
+	
+	public function actionFarmslandview($id) {
+		$model = $this->findModel ( $id );
+		$farmer = Farmer::find()->where(['farms_id'=>$id])->one();
+		$cooperativeoffarm = CooperativeOfFarm::find ()->where ( [
+				'farms_id' => $id
+		] )->all ();
+		$zongdiarr = explode ( ' ', $model->zongdi );
+		foreach ( $zongdiarr as $zongdi ) {
+			$dataProvider [] = Parcel::find ()->where ( [
+					'unifiedserialnumber' => $zongdi
+			] )->one ();
+		}
+		Logs::writeLog ( '查看农场信息', $id );
+		return $this->render ( 'farmslandview', [
+				'model' => $model,
+				'dataProvider' => $dataProvider,
+				'cooperativeoffarm' => $cooperativeoffarm,
+				'farmer' => $farmer,
 		] );
 	}
 	// 转让主页面

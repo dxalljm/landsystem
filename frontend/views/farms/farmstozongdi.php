@@ -98,9 +98,9 @@ use yii\helpers\Url;
       <tr><?= Html::hiddenInput('oldzongdi',$oldFarm->zongdi,['id'=>'oldfarm-zongdi']) ?>
       <?= Html::hiddenInput('ttpozongdi','',['id'=>'ttpozongdi-zongdi']) ?>
       <?= Html::hiddenInput('ttpoarea',0,['id'=>'ttpozongdi-area']) ?>
-        <td align='right' valign="middle">宗地面积</td><?= html::textInput('tempoldmeasure',$oldFarm->measure,['id'=>'temp_oldmeasure']) ?>
-        										 <?= html::textInput('tempoldnotclear',$oldFarm->notclear,['id'=>'temp_oldnotclear']) ?>
-        										 <?= html::textInput('tempoldcontractarea',$oldFarm->contractarea,['id'=>'temp_oldcontractarea']) ?>
+        <td align='right' valign="middle">宗地面积</td><?= html::hiddenInput('tempoldmeasure',$oldFarm->measure,['id'=>'temp_oldmeasure']) ?>
+        										 <?= html::hiddenInput('tempoldnotclear',$oldFarm->notclear,['id'=>'temp_oldnotclear']) ?>
+        										 <?= html::hiddenInput('tempoldcontractarea',$oldFarm->contractarea,['id'=>'temp_oldcontractarea']) ?>
         <td colspan="5" align='left' valign="middle"><?= html::textInput('oldmeasure',$oldFarm->measure,['readonly' => true,'id'=>'oldfarms-measure','class'=>'form-control']) ?></td>
         </tr>
         <tr>
@@ -116,8 +116,8 @@ use yii\helpers\Url;
         <td colspan="5" align='left' valign="middle"><?= html::textInput('oldnotstate',$oldFarm->notstate,['readonly' => true,'id'=>'oldfarms-notstate','class'=>'form-control']) ?></td>
         </tr>
       <tr>
-        <td align='right' valign="middle">法人签字</td>
-        <td colspan="5" align='left' valign="middle"><?= html::textInput('oldfarmersign', $oldFarm->farmersign ,['class'=>'form-control'])?></td>
+        <td align='right' valign="middle">备注</td>
+        <td colspan="5" align='left' valign="middle"><?= $oldFarm->remarks?></td>
         </tr>
     </table></td>
     <td width="4%" align="center"><font size="5"><i class="fa fa-arrow-right"></i></font></td>
@@ -168,9 +168,9 @@ use yii\helpers\Url;
 		  <td colspan="5" align='left'><?= html::textarea('newFarm-newzongdi','',['class'=>'form-control','id'=>'newzongdi'])?></td>
 		  </tr>
 		<tr>
-        <td align='right'>宗地面积</td><?= html::textInput('tempmeasure',$newFarm->measure,['id'=>'temp_measure']) ?>
-        							<?= html::textInput('measure',$newFarm->measure,['id'=>'ymeasure']) ?>
-								  <?= html::textInput('tempnotclear',$newFarm->notclear,['id'=>'temp_notclear']) ?>
+        <td align='right'>宗地面积</td><?= html::hiddenInput('tempmeasure',$newFarm->measure,['id'=>'temp_measure']) ?>
+        							<?= html::hiddenInput('measure',$newFarm->measure,['id'=>'ymeasure']) ?>
+								  <?= html::hiddenInput('tempnotclear',$newFarm->notclear,['id'=>'temp_notclear']) ?>
         <td colspan="5" align='left'><?= $form->field($newFarm, 'measure')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
         </tr>
         <tr>
@@ -190,8 +190,8 @@ use yii\helpers\Url;
         <td colspan="5" align='left'><?= html::textInput('inputnotclear','',['id'=>'input-notclear','class'=>'form-control','readonly'=>$realonly]) ?></td>
        </tr>
       <tr>
-        <td align='right'>法人签字</td>
-        <td colspan="5" align='left'><?= $form->field($newFarm, 'farmersign')->textInput()->label(false)->error(false) ?></td>
+        <td align='right'>备注</td>
+        <td colspan="5" align='left'><?= $form->field($newFarm, 'remarks')->textarea(['rows'=>'2'])->label(false)->error(false) ?></td>
         </tr>
     </table></td>
   </tr>

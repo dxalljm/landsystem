@@ -40,7 +40,8 @@ $this->params ['breadcrumbs'] [] = $this->title;
 					</div>
 					<div class="box-body">
     <?php 
-    if(Auditprocess::isShowProcess()) {
+//     var_dump(Auditprocess::isShowProcess('承包经营权转让'));
+    if(Auditprocess::isShowProcess('承包经营权转让')) {
     if($farmstransfer) {?>
     <h3>宜农林地承包经营权转让审批</h3>
 						<table class="table table-bordered table-hover">
@@ -119,7 +120,8 @@ $temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'s
 if($temp) {
 	$useritem = User::getUserItemname($temp['user_id']);
 }
-if(Auditprocess::isShowProcess()) {
+
+if(Auditprocess::isShowProcess('项目审核')) {
 if($projectapplication) {?>
 <h3>项目审批</h3>
 						<table class="table table-bordered table-hover">
@@ -184,7 +186,7 @@ $temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'s
 if($temp) {
 	$useritem = User::getUserItemname($temp['user_id']);
 }
-if(Auditprocess::isShowProcess()) {
+if(Auditprocess::isShowProcess('贷款冻结审批')) {
 if($loan) {?>
 <h3>贷款冻结审批</h3>
 						<table class="table table-bordered table-hover">

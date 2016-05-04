@@ -41,6 +41,7 @@ class Collection extends \yii\db\ActiveRecord {
 								'dckpay',
 								'payyear',
 								'management_area', 
+								'state',
 						],
 						'integer' 
 				],
@@ -64,9 +65,14 @@ class Collection extends \yii\db\ActiveRecord {
 				] 
 		];
 	}
-	public function getAR($year) // 当年应收金额
-{
-		$farm = Farms::find ()->where ( [ 
+	public function getAR($year,$farms_id=NULL) // 当年应收金额
+	{
+		if($farms_id) {
+			$farm = Farms::find ()->where ( [
+					'id' => $farms_id
+			] )->one ();
+		} else 
+			$farm = Farms::find ()->where ( [ 
 				'id' => $_GET ['farms_id'] 
 		] )->one ();
 		$plantprice = PlantPrice::find ()->where ( [ 
@@ -213,6 +219,7 @@ class Collection extends \yii\db\ActiveRecord {
 				'management_area' => '管理区',
 				'nonumber' => '发票号',
 				'year' => '年度',
+				'state' => '状态',
 		];
 	}
 	public function getfarms() {

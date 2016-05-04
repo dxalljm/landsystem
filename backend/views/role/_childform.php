@@ -28,7 +28,7 @@ use app\models\ItemChild;
 		<td>按角色分配</td>
 	</tr>
 	<tr>
-		<td><?= html::checkboxListId('childPost[child][]',$model->child,ArrayHelper::map(Item::find()->where(['type'=>1])->all(), 'name', 'name'),['class'=>'itemChild-child'])?></td>
+		<td><?= html::checkboxList('childPost[child][]',$model->child,ArrayHelper::map(Item::find()->where(['type'=>1])->all(), 'name', 'name'),['class'=>'itemChild-child'])?></td>
 	</tr>
 	<?php 
 		$i=0;
@@ -44,7 +44,7 @@ use app\models\ItemChild;
 			<td><input name="" type="checkbox" value="" id=<?= $value['classname']?>  onclick='allClick("<?= $value['classname']?>")' /><?= $title?></td>
 		</tr>
 		<tr>
-			<td><?= html::checkboxListId('childPost[child][]',$model->child,$items,['class'=>'itemChild-child'])?></td>
+			<td><?= html::checkboxList('childPost[child][]',$model->child,$items,['class'=>'itemChild-child'])?></td>
 		</tr>
 	<?php $i++;}}?>
 	</table>
