@@ -54,7 +54,7 @@ class UploadedFile extends Object
      */
     public $error;
 
-    private static $_files;
+    public static $_files;
 
 
     /**
@@ -156,6 +156,7 @@ class UploadedFile extends Object
      */
     public function saveAs($file, $deleteTempFile = true)
     {
+//     	var_dump($this->tempName);exit;
         if ($this->error == UPLOAD_ERR_OK) {
             if ($deleteTempFile) {
                 return move_uploaded_file($this->tempName, $file);
@@ -166,6 +167,12 @@ class UploadedFile extends Object
         return false;
     }
 
+    public function saveAs2($file)
+    {
+//     	var_dump($file);exit;
+		return copy($this->tempName, $file);
+    }
+    
     /**
      * @return string original file base name
      */
@@ -196,8 +203,14 @@ class UploadedFile extends Object
      * Creates UploadedFile instances from $_FILE.
      * @return array the UploadedFile instances
      */
-    private static function loadFiles()
+    public static function loadFiles($imageinfo = NULL)
     {
+    	if($imageinfo) {
+//     		isset($imageinfo[$name]) ? $imageinfo[$name] : null;
+    		self::loadFilesRecursive(0, $imageinfo['file'], $imageinfo['file'], $imageinfo['type'], $imageinfo['size'], 'UPLOAD_ERR_OK');
+//     		var_dump(self::$_files);exit;
+    		return self::$_files[0];
+    	}
         if (self::$_files === null) {
             self::$_files = [];
             if (isset($_FILES) && is_array($_FILES)) {

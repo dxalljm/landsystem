@@ -12,24 +12,24 @@ use yii\gii\CodeFile;
 ?>
 <div class="default-view-files">
     <div id="action-toggle" class="btn-group btn-group-xs pull-right">
-        <label class="btn btn-success active" title="Filter files that are created">
-            <input type="checkbox" value="<?= CodeFile::OP_CREATE ?>" checked> Create
+        <label class="btn btn-success active" title="所创建的过滤器文件">
+            <input type="checkbox" value="<?= CodeFile::OP_CREATE ?>" checked> 创建
         </label>
-        <label class="btn btn-default active" title="Filter files that are unchanged.">
-            <input type="checkbox" value="<?= CodeFile::OP_SKIP ?>" checked> Unchanged
+        <label class="btn btn-default active" title="这是没有变化的文件">
+            <input type="checkbox" value="<?= CodeFile::OP_SKIP ?>" checked> 无变化
         </label>
-        <label class="btn btn-warning active" title="Filter files that are overwritten">
-            <input type="checkbox" value="<?= CodeFile::OP_OVERWRITE ?>" checked> Overwrite
+        <label class="btn btn-warning active" title="过滤文件被覆盖">
+            <input type="checkbox" value="<?= CodeFile::OP_OVERWRITE ?>" checked> 覆盖
         </label>
     </div>
 
-    <p>Click on the above <code>Generate</code> button to generate the files selected below:</p>
+    <p>点击上面的按钮来生成，生成选定的文件如下：</p>
 
     <table class="table table-bordered table-striped table-condensed">
         <thead>
             <tr>
-                <th class="file">Code File</th>
-                <th class="action">Action</th>
+                <th class="file">代码文件</th>
+                <th class="action">动作</th>
                 <?php
                 $fileChangeExists = false;
                 foreach ($files as $file) {
@@ -55,6 +55,7 @@ use yii\gii\CodeFile;
             } else {
                 $trClass = '';
             }
+           
             ?>
             <tr class="<?= "$file->operation $trClass" ?>">
                 <td class="file">
@@ -66,7 +67,7 @@ use yii\gii\CodeFile;
                 <td class="action">
                     <?php
                     if ($file->operation === CodeFile::OP_SKIP) {
-                        echo 'unchanged';
+                        echo '无变化';
                     } else {
                         echo $file->operation;
                     }
@@ -101,8 +102,6 @@ use yii\gii\CodeFile;
                         &nbsp;
                     </div>
                     <strong class="modal-title pull-left">Modal title</strong>
-                    <span class="modal-copy-hint pull-right"><kbd>CTRL</kbd>+<kbd>C</kbd> to copy</span>
-                    <div id="clipboard-container"><textarea id="clipboard"></textarea></div>
                     <div class="clearfix"></div>
                 </div>
                 <div class="modal-body">

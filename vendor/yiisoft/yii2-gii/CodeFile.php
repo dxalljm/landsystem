@@ -27,15 +27,15 @@ class CodeFile extends Object
     /**
      * The code file is new.
      */
-    const OP_CREATE = 'create';
+    const OP_CREATE = '创建';
     /**
      * The code file already exists, and the new one may need to overwrite it.
      */
-    const OP_OVERWRITE = 'overwrite';
+    const OP_OVERWRITE = '覆盖';
     /**
      * The new code file and the existing one are identical.
      */
-    const OP_SKIP = 'skip';
+    const OP_SKIP = '路过';
 
     /**
      * @var string an ID that uniquely identifies this code file.

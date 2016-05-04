@@ -149,7 +149,7 @@ class Generator extends \yii\gii\Generator
 	public function getTablename()
 	{
 		$data = explode('\\',$this->modelClass);
-		$this->tablename = strtolower($data[2]);
+		$this->tablename = $data[2];
 	}
 	
     /**

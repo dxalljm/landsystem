@@ -39,21 +39,16 @@ class DefaultController extends Controller
     {
         $generator = $this->loadGenerator($id);
         $params = ['generator' => $generator, 'id' => $id];
-
-        $preview = Yii::$app->request->post('preview');
-        $generate = Yii::$app->request->post('generate');
-        $answers = Yii::$app->request->post('answers');
-
-        if ($preview !== null || $generate !== null) {
+        if (isset($_POST['preview']) || isset($_POST['generate'])) {
             if ($generator->validate()) {
                 $generator->saveStickyAttributes();
                 $files = $generator->generate();
-                if ($generate !== null && !empty($answers)) {
-                    $params['hasError'] = !$generator->save($files, (array) $answers, $results);
+                if (isset($_POST['generate']) && !empty($_POST['answers'])) {
+                    $params['hasError'] = !$generator->save($files, (array) $_POST['answers'], $results);
                     $params['results'] = $results;
                 } else {
                     $params['files'] = $files;
-                    $params['answers'] = $answers;
+                    $params['answers'] = isset($_POST['answers']) ? $_POST['answers'] : null;
                 }
             }
         }
@@ -125,7 +120,7 @@ class DefaultController extends Controller
         if (isset($this->module->generators[$id])) {
             $this->generator = $this->module->generators[$id];
             $this->generator->loadStickyAttributes();
-            $this->generator->load(Yii::$app->request->post());
+            $this->generator->load($_POST);
 
             return $this->generator;
         } else {
