@@ -50,6 +50,7 @@ class GridView extends BaseListView
     const FILTER_POS_FOOTER = 'footer';
     const FILTER_POS_BODY = 'body';
 
+    public $total;
     /**
      * @var string the default data column class if the class name is not explicitly specified when configuring a data column.
      * Defaults to 'yii\grid\DataColumn'.
@@ -461,6 +462,9 @@ class GridView extends BaseListView
         $models = array_values($this->dataProvider->getModels());
         $keys = $this->dataProvider->getKeys();
         $rows = [];
+        if($this->total)
+        	$rows[] = $this->total;
+        
         foreach ($models as $index => $model) {
             $key = $keys[$index];
             if ($this->beforeRow !== null) {

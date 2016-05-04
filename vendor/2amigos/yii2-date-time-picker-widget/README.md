@@ -1,11 +1,16 @@
 Bootstrap DateTimePicker Widget for Yii2
 ========================================
+<<<<<<< HEAD
+
+[![Latest Stable Version](https://poser.pugx.org/2amigos/yii2-date-time-picker-widget/v/stable.svg)](https://packagist.org/packages/2amigos/yii2-date-time-picker-widget) [![Total Downloads](https://poser.pugx.org/2amigos/yii2-date-time-picker-widget/downloads.svg)](https://packagist.org/packages/2amigos/yii2-date-time-picker-widget) [![Latest Unstable Version](https://poser.pugx.org/2amigos/yii2-date-time-picker-widget/v/unstable.svg)](https://packagist.org/packages/2amigos/yii2-date-time-picker-widget) [![License](https://poser.pugx.org/2amigos/yii2-date-time-picker-widget/license.svg)](https://packagist.org/packages/2amigos/yii2-date-time-picker-widget)
+=======
 [![Latest Version](https://img.shields.io/github/tag/2amigos/yii2-date-time-picker-widget.svg?style=flat-square&label=release)](https://github.com/2amigos/yii2-date-time-picker-widget/tags)
 [![Software License](https://img.shields.io/badge/license-BSD-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Build Status](https://img.shields.io/travis/2amigos/yii2-date-time-picker-widget/master.svg?style=flat-square)](https://travis-ci.org/2amigos/yii2-date-time-picker-widget)
 [![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/2amigos/yii2-date-time-picker-widget.svg?style=flat-square)](https://scrutinizer-ci.com/g/2amigos/yii2-date-time-picker-widget/code-structure)
 [![Quality Score](https://img.shields.io/scrutinizer/g/2amigos/yii2-date-time-picker-widget.svg?style=flat-square)](https://scrutinizer-ci.com/g/2amigos/yii2-date-time-picker-widget)
 [![Total Downloads](https://img.shields.io/packagist/dt/2amigos/yii2-date-time-picker-widget.svg?style=flat-square)](https://packagist.org/packages/2amigos/yii2-date-time-picker-widget)
+>>>>>>> cf16ead055468d3c8eecdc12168d08580aeca0b1
 
 Renders a [Bootstrap DateTimePicker plugin](http://www.malot.fr/bootstrap-datetimepicker/).
 
@@ -15,13 +20,22 @@ The preferred way to install this extension is through [composer](http://getcomp
 
 Either run
 
+<<<<<<< HEAD
+```
+php composer.phar require "2amigos/yii2-date-time-picker-widget" "*"
+=======
 ```bash
 composer require 2amigos/yii2-date-time-picker-widget:~1.0
+>>>>>>> cf16ead055468d3c8eecdc12168d08580aeca0b1
 ```
 or add
 
 ```json
+<<<<<<< HEAD
+"2amigos/yii2-date-time-picker-widget" : "*"
+=======
 "2amigos/yii2-date-time-picker-widget" : "~1.0"
+>>>>>>> cf16ead055468d3c8eecdc12168d08580aeca0b1
 ```
 
 to the require section of your application's `composer.json` file.
@@ -35,7 +49,11 @@ It also allows you to restrict the views so you can use this widget as a DatePic
 
 There are two ways of using it, with an `ActiveForm` instance or as a widget setting up its `model` and `attribute`.
 
+<<<<<<< HEAD
+```
+=======
 ```php
+>>>>>>> cf16ead055468d3c8eecdc12168d08580aeca0b1
 <?php
 use dosamigos\datetimepicker\DateTimePicker;
 
@@ -43,6 +61,17 @@ use dosamigos\datetimepicker\DateTimePicker;
 ?>
 
 <?= DateTimePicker::widget([
+<<<<<<< HEAD
+	'model' => $model,
+	'attribute' => 'created_at',
+	'language' => 'es',
+	'size' => 'ms',
+	'clientOptions' => [
+		'autoclose' => true,
+		'format' => 'dd MM yyyy - HH:ii P',
+		'todayBtn' => true
+	]
+=======
     'model' => $model,
     'attribute' => 'created_at',
     'language' => 'es',
@@ -52,6 +81,7 @@ use dosamigos\datetimepicker\DateTimePicker;
         'format' => 'dd MM yyyy - HH:ii P',
         'todayBtn' => true
     ]
+>>>>>>> cf16ead055468d3c8eecdc12168d08580aeca0b1
 ]);?>
 
 <?php 
@@ -60,6 +90,28 @@ use dosamigos\datetimepicker\DateTimePicker;
 use dosamigos\datetimepicker\DateTimePicker;
 ?>
 <?= $form->field($tour, 'date_from')->widget(DateTimePicker::className(), [
+<<<<<<< HEAD
+	'language' => 'es',
+	'size' => 'ms',
+	'template' => '{input}',
+	'pickButtonIcon' => 'glyphicon glyphicon-time',
+	'inline' => true,
+	'clientOptions' => [
+		'startView' => 1,
+		'minView' => 0,
+		'maxView' => 1,
+		'autoclose' => true,
+		'linkFormat' => 'HH:ii P', // if inline = true
+		// 'format' => 'HH:ii P', // if inline = false
+		'todayBtn' => true
+	]
+]);?>
+```
+
+Further Information
+-------------------
+Please, check the [Bootstrap DateTimePicker site](http://www.malot.fr/bootstrap-datetimepicker/) documentation for further information about its configuration options. 
+=======
     'language' => 'es',
     'size' => 'ms',
     'template' => '{input}',
@@ -111,6 +163,7 @@ License
 -------
 
 The BSD License (BSD). Please see [License File](LICENSE.md) for more information.
+>>>>>>> cf16ead055468d3c8eecdc12168d08580aeca0b1
 
 
 > [![2amigOS!](http://www.gravatar.com/avatar/55363394d72945ff7ed312556ec041e0.png)](http://www.2amigos.us)  
