@@ -31,25 +31,33 @@ class AppAsset extends AssetBundle
         'vendor/bower/AdminLTE/dist/css/skins/_all-skins.min.css',
     	'vendor/bower/nprogress/nprogress.css',
         'css/site.css',
+    	'vendor/bower/jquery-ui-1.11.4/jquery-ui.css',
     ];
 
     // 注册JS
     public $js = [
+    		
         'js/date.js',
         'js/selected.js',
     	'js/jquery.imgbox.pack.js',
         'vendor/bower/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
         'vendor/bower/blueimp-file-upload/js/jquery.fileupload.js',
+    		
         'vendor/bower/AdminLTE/bootstrap/js/bootstrap.min.js',
+    		'vendor/bower/jquery-ui-1.11.4/jquery-ui.js',
         'vendor/bower/AdminLTE/dist/js/app.min.js',
         'vendor/bower/devbridge-autocomplete/dist/jquery.autocomplete.min.js',
+    		
     	'js/vendor/bower/lodop/LodopFuncs.js',
-		
+    		
         'vendor/bower/nprogress/nprogress.js',
         'vendor/bower/echarts/build/dist/echarts.js',
     	'vendor/bower/echarts/build/dist/echarts.min.js',
+    		
         'js/main.js',
     	'js/showEcharts.js',
+//     	'vendor/bower/jquery-ui-1.11.4/external/jquery/jquery.js',
+    	
     ];
 
     // 依赖

@@ -8,7 +8,8 @@ use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
 use yii\helpers\Url;
 ?>
-<link rel="stylesheet" href="css/imageShow/lrtk.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- <script src="vendor/bower/jquery-ui/external/requirejs/require.js"></script> -->
 <div class="photograph-form">
 
     <section class="content">
@@ -21,6 +22,8 @@ use yii\helpers\Url;
                     </h3>
                 </div>
                 <div class="box-body">
+</head>
+<body>
 
 <table>
   <tr>
@@ -63,13 +66,12 @@ use yii\helpers\Url;
 	      <input type="radio" value="3" name="mode" id="autoMode" onClick="selectAutoMode(this)"/>
 	      <label for="autoMode">自动</label>
 	      <input type="radio" value="1" name="mode" id="customMode" onClick="selectSfzMode(this)"/><label for="autoMode">自定义</label>
-	      <?= Html::textInput('checkboxValue',0,['id'=>'electronic-id'])?>
+	      <?= Html::hiddenInput('checkboxValue',0,['id'=>'electronic-id'])?>
 	      </form>
 	    <br>
-<div id="content">
 	    <?php 
 // 	    var_dump($ea);
-	    echo '<table id="imageTable" border="1">';
+	    echo '<table id="imageTable" border="0">';
 	    
 // 	    var_dump($select);
 	    	if($select == 'electronicarchives-archivesimage') {
@@ -82,11 +84,11 @@ use yii\helpers\Url;
 		    			for($j=0;$j<count($ea[$i]);$j++) {
 		    				$imageInfo = imageClass::getImageInfo( iconv("UTF-8","gbk//TRANSLIT", $ea[$i][$j]['archivesimage']));
 		    				$width = floor($imageInfo['width']/15);
+		    				
 		    				$height = floor($imageInfo['height']/15);
 	// 	    				var_dump($imageInfo);
 		    				echo '<td>';
-		    				echo '<a class="zoom" title="" href="'.$ea[$i][$j]['archivesimage'].'" onclick="Zoom("image'.$ea[$i][$j]['pagenumber'].'")"><img alt="" src="'.$ea[$i][$j]['archivesimage'].'" width="'.$width.'"/></a>';
-// 		    				echo '<div><p>&nbsp;</p></div>';
+		    				echo '<a href="#" class="dialog-link" class="ui-state-default ui-corner-all" onclick=Zoom("'.$ea[$i][$j]['archivesimage'].'",'.$ea[$i][$j]['pagenumber'].','.$imageInfo['width'].','.$imageInfo['height'].')><img alt="" src="'.$ea[$i][$j]['archivesimage'].'" width="'.$width.'"/></a>';
 		    				echo '</td>';
 		    			}
 		    			echo '</tr>';
@@ -111,14 +113,16 @@ use yii\helpers\Url;
 	    	echo '</table>';
 	    ?></td>
 	  <td>&nbsp;</td>
-	  <td><div style="text-align:center;" >
+	  <td valign="top"><div style="text-align:center;" >
 	    <object classid="clsid:454C18E2-8B7D-43C6-8C17-B1825B49D7DE" id="captrue"  width="480" height="360" >
 	      </object>
 	  </div></td>
 	  </tr>
 	</table>
-		
-		<div id="credit"></div>
+<div id="dialog" title="图片放大">
+<?php echo Html::img('',['id'=>'showImage']);?>
+</div>
+
 </div>
 <!-- 代码 结束 -->
 <br>
@@ -200,7 +204,7 @@ jQuery('#selectID').change(function(){
 // 						alert('fff');
 						$('#imageTr'+tr1).each(function(){
 // 							alert(data.url);
-							var html = '<td id="td-'+tr1+'-'+data.id+'">&nbsp;<img src="'+data.url+'" width='+width+' height='+height+' id="img'+data.id+'"></td>';
+							var html = '<td id="td-'+tr1+'-'+data.id+'"><a href="#" class="dialog-link" class="ui-state-default ui-corner-all" onclick=Zoom("'+data.url+'",'+data.page+')><img src="'+data.url+'" width='+width+' height='+height+' id="img'+data.id+'"></a></td>';
 							$(this).append(html);
 						});
 						$('#imageTr'+tr2).each(function(){
@@ -208,11 +212,11 @@ jQuery('#selectID').change(function(){
 							var html2 = '<td align="center" id="td-'+tr2+'-'+data.id+'"><a href="#" onclick="deleteImg('+data.id+','+tr1+','+tr2+')" id="delete'+data.id+'"><i class="fa fa-close text-red" id="cha'+data.id+'"></i></a>&nbsp;&nbsp;<label><input type="radio" name="radiogroup" id="imgCheckbox'+data.id+'" onclick="checkBoxclick('+data.id+')"/>重新上传</label></td>';
 							$(this).append(html2);
 						});	
-						alert(data.id);
+// 						alert(data.id);
 						var deleteid = data.id - 1;						
 						$('#cha'+deleteid).attr('class','');
 					} else {
-						alert(data.id);
+// 						alert(data.id);
 						$('#img'+data.id).attr('src',data.url);
 						$('#img'+data.id).attr('width',width);
 			        	$('#img'+data.id).attr('height',height);	
@@ -222,8 +226,8 @@ jQuery('#selectID').change(function(){
 					
 					
 				} else {
-					var width = Math.floor(data.info['width']/10);
-					var height = Math.floor(data.info['height']/10);
+					var width = Math.floor(data.info['width']/15);
+					var height = Math.floor(data.info['height']/15);
 		        	$('#photoShow').attr('src', data.url);
 		        	$('#photoShow').attr('width',width);
 		        	$('#photoShow').attr('height',height);
@@ -360,10 +364,35 @@ jQuery('#selectID').change(function(){
 		captrue.vSetExposure(el.value);
 	}
 </script>
-<script type="text/javascript">
-// 		function Zoom() {
-// 			$(document).ready(function() {
-				$(".zoom").imgbox();
-// 			});
-// 		}
-	</script>
+<script>
+function Zoom(src,page,width,height)
+{
+	var bodyheight = document.body.offsetHeight - window.screenTop - 50;
+	var bei = bodyheight/height;
+	var newwidth = Math.floor(width*bei) + 35;
+	$('#showImage').attr('src',src);
+	$('#showImage').attr('height',bodyheight);
+	$( "#dialog" ).attr('title','第'+page+'页');
+	$( "#dialog" ).dialog({
+		autoOpen: false,
+	 	width: newwidth,
+		
+	});
+	$( "#dialog" ).dialog( "open" );
+	event.preventDefault();
+	
+}
+
+$( "#dialog" ).dialog({
+	autoOpen: false,
+	
+});
+// Link to open the dialog
+$( ".dialog-link" ).click(function( event ) {
+	$( "#dialog" ).dialog( "open" );
+	event.preventDefault();
+});
+
+
+
+</script>

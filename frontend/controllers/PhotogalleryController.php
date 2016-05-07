@@ -16,6 +16,7 @@ use app\models\Farms;
 use app\models\ManagementArea;
 use app\models\Farmer;
 use app\models\Electronicarchives;
+use frontend\helpers\WaterMask;
 /**
  * PhotogalleryController implements the CRUD actions for Photogallery model.
  */
@@ -128,8 +129,9 @@ class PhotogalleryController extends Controller
     }
     public function actionPhotograph($farms_id,$select,$eid = NULL)
     {
-//     	$post = Yii::$app->request->get();
-//     	var_dump($select);exit;
+    	$waterMask = new WaterMask('D:\\JPG.jpg');
+    	$waterMask->output();
+    	
 		$imageInfo = $this->getImageInfo('D:\\JPG.jpg');
     	$file = UploadedFile::loadFiles($imageInfo);
     	$extphoto = strtolower(pathinfo("D:\\JPG.JPG", PATHINFO_EXTENSION));

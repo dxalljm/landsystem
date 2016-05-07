@@ -29,6 +29,11 @@ use yii\helpers\Url;
                     </h3>
                 </div>
                 <div class="box-body">
+<div id="dialog" title="宗地信息">
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+</div>
+<h2 class="demoHeaders">Dialog</h2>
+<p><a href="#" class="dialog-link" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-newwin"></span>Open Dialog</a></p>
   <table width="100%" border="0">
     <tr>
     <td width="46%" valign="top"><table width="104%" height="458px"
@@ -108,7 +113,7 @@ use yii\helpers\Url;
         $i=0;
         foreach($arrayZongdi as $value) {
         	if($value !== '') {
-	        	echo html::button($value,['onclick'=>'toZongdi("'.Lease::getZongdi($value).'","'.Lease::getArea($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default"]).'&nbsp;&nbsp;&nbsp;';
+	        	echo html::button($value,['onclick'=>'toZongdi("'.Lease::getZongdi($value).'","'.Lease::getArea($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default",'class'=>"dialog-link"]).'&nbsp;&nbsp;&nbsp;';
 	        	$i++;
 	        	if($i%5 == 0)
 	        		echo '<br><br>';
@@ -255,8 +260,49 @@ use yii\helpers\Url;
         </div>
     </div>
 </section>
+<div id="dialog-form" title="宗地信息">
+	<p class="validateTips">All form fields are required.</p>
+
+	<form>
+		<fieldset>
+			<label for="name">Name</label>
+			<input type="text" name="name" id="name" value="Jane Smith" class="text ui-widget-content ui-corner-all">
+			<label for="email">Email</label>
+			<input type="text" name="email" id="email" value="jane@smith.com" class="text ui-widget-content ui-corner-all">
+			<label for="password">Password</label>
+			<input type="password" name="password" id="password" value="xxxxxxx" class="text ui-widget-content ui-corner-all">
+
+			<!-- Allow form submission with keyboard without duplicating the dialog button -->
+			<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+		</fieldset>
+	</form>
+</div>
 </div>
 <script>
+$( "#dialog" ).dialog({
+	autoOpen: false,
+	width: 400,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+// Link to open the dialog
+$( ".dialog-link" ).click(function( event ) {
+	$( "#dialog" ).dialog( "open" );
+	event.preventDefault();
+});
 function resetZongdi(zongdi,area)
 {
 	$('#'+zongdi).attr('disabled',false);
@@ -271,7 +317,10 @@ function getArea(zongdi)
 	return area[2];
 	
 }
+
 function toZongdi(zongdi,area){
+	$( "#dialog" ).dialog( "open" );
+	event.preventDefault();
 	$('#'+zongdi).attr('disabled',true);
 	var ycontractarea = parseFloat($('#oldfarms-contractarea').val());
 	var value = $('#oldfarms-measure').val()*1-area*1;
