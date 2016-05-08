@@ -15,7 +15,9 @@ use yii\helpers\Url;
 /* @var $model app\models\Farms */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
+<style>
+.remove{cursor:pointer}
+</style>
 <div class="farms-form">
 
     <?php $form = ActiveFormrdiv::begin(); ?>
@@ -29,11 +31,7 @@ use yii\helpers\Url;
                     </h3>
                 </div>
                 <div class="box-body">
-<div id="dialog" title="宗地信息">
-	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-</div>
-<h2 class="demoHeaders">Dialog</h2>
-<p><a href="#" class="dialog-link" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-newwin"></span>Open Dialog</a></p>
+
   <table width="100%" border="0">
     <tr>
     <td width="46%" valign="top"><table width="104%" height="458px"
@@ -115,7 +113,7 @@ use yii\helpers\Url;
         	if($value !== '') {
 	        	echo html::button($value,['onclick'=>'toZongdi("'.Lease::getZongdi($value).'","'.Lease::getArea($value).'")','value'=>$value,'id'=>Lease::getZongdi($value),'class'=>"btn btn-default",'class'=>"dialog-link"]).'&nbsp;&nbsp;&nbsp;';
 	        	$i++;
-	        	if($i%5 == 0)
+	        	if($i%3 == 0)
 	        		echo '<br><br>';
         	}
         }
@@ -215,8 +213,20 @@ use yii\helpers\Url;
 		</tr>
 		<tr>
 		  <td align='right'>宗地</td><?= html::hiddenInput('tempzongdi','',['id'=>'temp-zongdi'])?>
-		  <td colspan="5" align='left'><?= $form->field($newFarm, 'zongdi')->textarea(['readonly' => false])->label(false)->error(false) ?></td>
+		  <td colspan="5" align='left'><span class="select2-container select2-container--default select2-container--below" dir="ltr" style="width: 100%; color: #000;">
+	<span class="selection">
+		<span class="select2-selection select2-selection--multiple" role="combobox" aria-autocomplete="list" aria-haspopup="true" aria-expanded="false" tabindex="0">
+			<ul class="select2-selection__rendered">
+				<li class="select2-search select2-search--inline"><input class="select2-search__field" type="search" tabindex="-1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="textbox" placeholder="" style="width: 0.75em;"></li>
+			</ul>
+		</span>
+	</span>
+	<span class="dropdown-wrapper" aria-hidden="true"></span>
+</span>
+
+		  </td>
 		  </tr>
+		  <script>$(".js-programmatic-multi-set-val").on("click", function () { $exampleMulti.val(["CA", "AL"]).trigger("change"); });</script>
 		<?php $newFarm->notclear = 0;$newFarm->measure = 0;?>
 		<tr>
         <td align='right'>宗地面积</td><?= html::hiddenInput('tempmeasure',$newFarm->measure,['id'=>'temp_measure']) ?>
@@ -260,37 +270,65 @@ use yii\helpers\Url;
         </div>
     </div>
 </section>
-<div id="dialog-form" title="宗地信息">
-	<p class="validateTips">All form fields are required.</p>
-
-	<form>
-		<fieldset>
-			<label for="name">Name</label>
-			<input type="text" name="name" id="name" value="Jane Smith" class="text ui-widget-content ui-corner-all">
-			<label for="email">Email</label>
-			<input type="text" name="email" id="email" value="jane@smith.com" class="text ui-widget-content ui-corner-all">
-			<label for="password">Password</label>
-			<input type="password" name="password" id="password" value="xxxxxxx" class="text ui-widget-content ui-corner-all">
-
-			<!-- Allow form submission with keyboard without duplicating the dialog button -->
-			<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-		</fieldset>
-	</form>
 </div>
+<div id="dialog" title="宗地信息">
+	<table width=100%>
+		<tr>
+			<td align="right">宗地号：</td>
+			<td><?= html::textInput('zongdinumber','',['id'=>'zongdi','readonly'=>true])?></td>
+		</tr>
+		<tr>
+			<td align="right">面积：</td>
+			<td><?= html::textInput('zongdimeasure','',['id'=>'measure'])?></td>
+		</tr>
+	</table>
 </div>
+
+
 <script>
+function zongdiRemove(zongdi,measure)
+{
+	$('#'+zongdi).remove();
+// 	alert
+	$('#'+zongdi).attr('disabled',false);
+	//宗地面积计算开始
+	var value = $('#oldfarms-measure').val()*1+measure*1;
+	alert(measure);
+	$('#oldfarms-measure').val(value.toFixed(2));
+	var newvalue = $('#farms-measure').val()*1 - measure*1;
+	$('#farms-measure').val(newvalue.toFixed(2));
+	$('#temp_measure').val(newvalue.toFixed(2));
+	//宗地面积计算结束
+	toHTH();
+}
+</script>
+          <script>
+
 $( "#dialog" ).dialog({
 	autoOpen: false,
 	width: 400,
 	buttons: [
 		{
-			text: "Ok",
+			text: "确定",
 			click: function() {
 				$( this ).dialog( "close" );
+				var zongdi = $('#zongdi').val();
+				var measure = $('#measure').val();
+			 	var newzongdi = zongdi+'('+measure+')';
+			 	var newzongdihtml = '<li class="select2-selection__choice" id="new-'+zongdi+'" title="'+newzongdi+'"><span class="remove" role="presentation" onclick=zongdiRemove("new-'+zongdi+','+measure+'")>×</span>'+newzongdi+'</li>';
+// 			 	$('#farms-zongdi').val(newzongdihtml);
+				$('.select2-selection__rendered').append(newzongdihtml);
+				$('#'+zongdi).attr('disabled',true);
+				var value = $('#oldfarms-measure').val()*1-measure*1;
+				$('#oldfarms-measure').val(value.toFixed(2));
+				var newvalue = $('#farms-measure').val()*1 + measure*1;
+				$('#farms-measure').val(newvalue.toFixed(2));
+				$('#temp_measure').val(newvalue.toFixed(2));
+				toHTH();
 			}
 		},
 		{
-			text: "Cancel",
+			text: "取消",
 			click: function() {
 				$( this ).dialog( "close" );
 			}
@@ -321,60 +359,47 @@ function getArea(zongdi)
 function toZongdi(zongdi,area){
 	$( "#dialog" ).dialog( "open" );
 	event.preventDefault();
-	$('#'+zongdi).attr('disabled',true);
-	var ycontractarea = parseFloat($('#oldfarms-contractarea').val());
-	var value = $('#oldfarms-measure').val()*1-area*1;
-// 	var oldcontractarea = $('#oldfarms-contractarea').val()*1 - area*1;
-	$('#oldfarms-measure').val(value.toFixed(2));
-// 	$('#temp_oldmeasure').val(value.toFixed(2));
-// 	$('#temp_oldcontractarea').val(oldcontractarea.toFixed(2));
-	var newvalue = $('#farms-measure').val()*1 + area*1;
-	$('#farms-measure').val(newvalue.toFixed(2));
-	$('#temp_measure').val(newvalue.toFixed(2));
-	var newzongdi = $('#farms-zongdi').val()+'、'+zongdi+'('+area+')';
-	var first = newzongdi.substr(0,1);
-	if(first == '、') {
-		$('#farms-zongdi').val(newzongdi.substring(1));
-		$('#temp-zongdi').val($('#farms-zongdi').val());
-	} else {
-		$('#farms-zongdi').val(newzongdi);
-		$('#temp-zongdi').val($('#farms-zongdi').val());
-	}
-	var oldzongdi = $('#oldfarm-zongdi').val();
-	var strzongdi = zongdi+"("+area+")";
-	$('#oldfarm-zongdi').val(oldzongdi.replace(strzongdi, ""));
-	oldzongdistr = $('#oldfarm-zongdi').val();
-	var first = oldzongdistr.substr(0,1);
-	var last = oldzongdistr.substr(oldzongdistr.length-1,1);
-	if(first == '、') {
-		$('#oldfarm-zongdi').val(oldzongdistr.substring(1));
-	}
-	if(last == '、') {
-		$('#oldfarm-zongdi').val(oldzongdistr.substring(0,oldzongdistr.length-1));
-	}
-	//alert($('#oldfarm-zongdi').val());
-	var ttpozongdi = $('#ttpozongdi-zongdi').val();
-	ttpozongdi = ttpozongdi + '、' + zongdi;
-	var first = ttpozongdi.substr(0,1);
-	if(first == '、') {
-		$('#ttpozongdi-zongdi').val(ttpozongdi.substring(1));
-	}
-	else
-		$('#ttpozongdi-zongdi').val(ttpozongdi);
+	$('#zongdi').val(zongdi);
+	$('#measure').val(area);
 	
-	var ttpoarea = $('#ttpozongdi-area').val();
-	ttpoarea = area*1 + ttpoarea*1;
-	$('#ttpozongdi-area').val(ttpoarea);
-	toHTH();
-	var oldcontractarea = parseFloat($('#oldfarms-contractarea').val());
+
 	
-	if(oldcontractarea < 0 && ycontractarea > 0) {
-		alert('宗地面积已经大于合同面积，多出面积自动加入未明确状态面积');
-	}
-	if(oldcontractarea < 0) {
-		$('#farms-notstate').val(Math.abs(oldcontractarea));
-		toHTH();
-	}
+// 	$('#farms-zongdi').val(newzongdihtml);
+// 	var oldzongdi = $('#oldfarm-zongdi').val();
+// 	var strzongdi = zongdi+"("+area+")";
+// 	$('#oldfarm-zongdi').val(oldzongdi.replace(strzongdi, ""));
+// 	oldzongdistr = $('#oldfarm-zongdi').val();
+// 	var first = oldzongdistr.substr(0,1);
+// 	var last = oldzongdistr.substr(oldzongdistr.length-1,1);
+// 	if(first == '、') {
+// 		$('#oldfarm-zongdi').val(oldzongdistr.substring(1));
+// 	}
+// 	if(last == '、') {
+// 		$('#oldfarm-zongdi').val(oldzongdistr.substring(0,oldzongdistr.length-1));
+// 	}
+// 	//alert($('#oldfarm-zongdi').val());
+// 	var ttpozongdi = $('#ttpozongdi-zongdi').val();
+// 	ttpozongdi = ttpozongdi + '、' + zongdi;
+// 	var first = ttpozongdi.substr(0,1);
+// 	if(first == '、') {
+// 		$('#ttpozongdi-zongdi').val(ttpozongdi.substring(1));
+// 	}
+// 	else
+// 		$('#ttpozongdi-zongdi').val(ttpozongdi);
+	
+// 	var ttpoarea = $('#ttpozongdi-area').val();
+// 	ttpoarea = area*1 + ttpoarea*1;
+// 	$('#ttpozongdi-area').val(ttpoarea);
+// 	toHTH();
+// 	var oldcontractarea = parseFloat($('#oldfarms-contractarea').val());
+	
+// 	if(oldcontractarea < 0 && ycontractarea > 0) {
+// 		alert('宗地面积已经大于合同面积，多出面积自动加入未明确状态面积');
+// 	}
+// 	if(oldcontractarea < 0) {
+// 		$('#farms-notstate').val(Math.abs(oldcontractarea));
+// 		toHTH();
+// 	}
 	
 }
 $('#reset').click(function() {
@@ -707,6 +732,7 @@ $('#farms-zongdi').blur(function(){
 		toHTH();
 	}
 });
+
 JS;
 $this->registerJs($script);
 ?>

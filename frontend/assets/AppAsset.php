@@ -27,6 +27,7 @@ class AppAsset extends AssetBundle
         'vendor/bower/blueimp-file-upload/css/jquery.fileupload-ui.css',
         'vendor/bower/font-awesome/css/font-awesome.min.css',
         'vendor/bower/font-awesome/css/font-awesome.min.css',
+    	'vendor/bower/AdminLTE/plugins/select2/select2.min.css',
         'vendor/bower/AdminLTE/dist/css/AdminLTE.min.css',
         'vendor/bower/AdminLTE/dist/css/skins/_all-skins.min.css',
     	'vendor/bower/nprogress/nprogress.css',
@@ -46,7 +47,8 @@ class AppAsset extends AssetBundle
         'vendor/bower/AdminLTE/bootstrap/js/bootstrap.min.js',
     		'vendor/bower/jquery-ui-1.11.4/jquery-ui.js',
         'vendor/bower/AdminLTE/dist/js/app.min.js',
-        'vendor/bower/devbridge-autocomplete/dist/jquery.autocomplete.min.js',
+        'vendor/bower/AdminLTE/plugins/select2/select2.full.min.js',
+    	'vendor/bower/devbridge-autocomplete/dist/jquery.autocomplete.min.js',
     		
     	'js/vendor/bower/lodop/LodopFuncs.js',
     		
