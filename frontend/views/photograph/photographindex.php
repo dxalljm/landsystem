@@ -22,8 +22,6 @@ use yii\helpers\Url;
                     </h3>
                 </div>
                 <div class="box-body">
-</head>
-<body>
 
 <table>
   <tr>
@@ -104,11 +102,13 @@ use yii\helpers\Url;
 		    		}
 		    	}	    		
 	    	} else { 
-	    		echo '<tr>';
-	    		echo '<td>';
-	    		echo '&nbsp;'.Html::img($photo,['width'=>$photoInfo['width'],'height'=>$photoInfo['height'],'id'=>'photoShow']); 
-	    		echo '</td>';
-	    		echo '</tr>';
+	    		if(isset($_GET['select'])) {
+		    		echo '<tr>';
+		    		echo '<td>';
+		    		echo '&nbsp;'.Html::img($photo,['width'=>"400px",'id'=>'photoShow']); 
+		    		echo '</td>';
+		    		echo '</tr>';
+	    		}
 	    	}	    	
 	    	echo '</table>';
 	    ?></td>
@@ -138,10 +138,14 @@ use yii\helpers\Url;
 <script>
 jQuery('#selectID').change(function(){
     var input = $(this).val();
-    $.get("/landsystem/frontend/web/index.php?r=photograph/photographindex",{farms_id:<?= $_GET['farms_id']?>,select:input},function (data) {
+    Stop_onclick();
+//     Start1_onclick();
+    $.get("<?= Url::to(["photograph/photographindex"])?>",{farms_id:<?= $_GET['farms_id']?>,select:input},function (data) {
 		$('body').html(data);
 	});
 });
+var savePath = "D:\\capture\\";
+var isStart = false;
   function Start1_onclick()
   {
         var str=captrue.bStopPlay();  	
@@ -166,15 +170,31 @@ jQuery('#selectID').change(function(){
 	{
 		$("#electronic-id").val(eid);
 	}
+
+	function upload() {
+		var fileName = 'JPG.jpg';
+        captrue.bSaveJPG(savePath, fileName);
+        var port;
+        if (location.port != "") {
+            port = location.port;
+        } else {
+            port = 80;
+        }
+        captrue.bUpLoadImage(savePath + fileName + ".jpg", location.hostname, port, "/front/web/uploadimage/upload.php");
+    }
 	
 	function UpLoadJPG_onclick()
 	{
-		var save = captrue.bSaveJPG("d:\\","JPG");
-		if(save) {
+		captrue.bSaveJPG("d:\\","JPG");
+		var upload = captrue.bUpLoadImage("D:\\JPG.JPG", "192.168.1.10", 8001, "/front/uploadimage/upload.php");
+// 		alert(save);
+		if(upload) {
+			
 			eid = $('#electronic-id').val();
-	        $.getJSON('index.php?r=photogallery/photograph', {farms_id: <?= $_GET['farms_id']?>,select:$('#selectID').val(),eid:eid}, function (data) {
+	        $.getJSON("<?= Url::to(['photogallery/photograph'])?>", {farms_id: <?= $_GET['farms_id']?>,select:$('#selectID').val(),eid:eid}, function (data) {
 // 	           	alert(data.url);
 				var select = $('#selectID').val();
+// 				alert(select);
 				if(select == 'electronicarchives-archivesimage') {
 					var width = Math.floor(data.info['width']/15);
 					var height = Math.floor(data.info['height']/15);
@@ -216,7 +236,7 @@ jQuery('#selectID').change(function(){
 						var deleteid = data.id - 1;						
 						$('#cha'+deleteid).attr('class','');
 					} else {
-// 						alert(data.id);
+						
 						$('#img'+data.id).attr('src',data.url);
 						$('#img'+data.id).attr('width',width);
 			        	$('#img'+data.id).attr('height',height);	
@@ -226,15 +246,17 @@ jQuery('#selectID').change(function(){
 					
 					
 				} else {
-					var width = Math.floor(data.info['width']/15);
-					var height = Math.floor(data.info['height']/15);
+// 					if(data.message <> '')
+// 						alert(data.message);
+					var width = "400px"
 		        	$('#photoShow').attr('src', data.url);
 		        	$('#photoShow').attr('width',width);
 		        	$('#photoShow').attr('height',height);
 				}
 				captrue.bDeleteFile("d:\\JPG.jpg");       			
 	        });
-		}
+		} else 
+			alert('图片上传失败，请与开发人员联系。');
 	}
 
 	function deleteImg(id,tr1,tr2)
@@ -369,7 +391,10 @@ function Zoom(src,page,width,height)
 {
 	var bodyheight = document.body.offsetHeight - window.screenTop - 50;
 	var bei = bodyheight/height;
+// 	alert(bei);
+	
 	var newwidth = Math.floor(width*bei) + 35;
+// 	alert(newwidth);
 	$('#showImage').attr('src',src);
 	$('#showImage').attr('height',bodyheight);
 	$( "#dialog" ).attr('title','第'+page+'页');

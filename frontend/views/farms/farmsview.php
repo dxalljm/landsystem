@@ -75,7 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
           </strong></td>
           <td align='right'>合同领取日期</td>
           <td align='left'><strong>
-            <?php $model->surveydate = date('Y-m-d',$model->surveydate);?>
+            <?php if($model->surveydate) echo date('Y-m-d',$model->surveydate);?>
           </strong></td>
         </tr>
         <tr>

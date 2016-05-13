@@ -40,20 +40,21 @@ class AppAsset extends AssetBundle
     		
         'js/date.js',
         'js/selected.js',
-    	'js/jquery.imgbox.pack.js',
-        'vendor/bower/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
-        'vendor/bower/blueimp-file-upload/js/jquery.fileupload.js',
+//     	'js/jquery.imgbox.pack.js',
+//         'vendor/bower/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
+        
     		
         'vendor/bower/AdminLTE/bootstrap/js/bootstrap.min.js',
-    		'vendor/bower/jquery-ui-1.11.4/jquery-ui.js',
+    	'vendor/bower/jquery-ui-1.11.4/jquery-ui.js',
+    	'vendor/bower/blueimp-file-upload/js/jquery.fileupload.js',
         'vendor/bower/AdminLTE/dist/js/app.min.js',
         'vendor/bower/AdminLTE/plugins/select2/select2.full.min.js',
     	'vendor/bower/devbridge-autocomplete/dist/jquery.autocomplete.min.js',
     		
     	'js/vendor/bower/lodop/LodopFuncs.js',
     		
-        'vendor/bower/nprogress/nprogress.js',
-        'vendor/bower/echarts/build/dist/echarts.js',
+//         'vendor/bower/nprogress/nprogress.js',
+//         'vendor/bower/echarts/build/dist/echarts.js',
     	'vendor/bower/echarts/build/dist/echarts.min.js',
     		
         'js/main.js',

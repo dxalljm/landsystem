@@ -21,7 +21,7 @@ class WaterMask{
      public $angle = 45;								//旋转
  
     public  $waterStr           = '岭南管委会';  //水印文字
-    public  $fontSize           = 100;               //文字字体大小
+    public  $fontSize           = 200;               //文字字体大小
     public  $fontColor          = array(238,238,238); //水印文字颜色（RGB）
     public  $fontFile           = 'font/simhei.ttf';    //字体文件
  
@@ -146,8 +146,8 @@ class WaterMask{
 //         imagefill($this->water_im,0,0,$white_alpha);
     	$this->water_im = imagecreatetruecolor($this->srcImg_info[0],$this->srcImg_info[1]);
         $color = imagecolorallocate($this->water_im,$this->fontColor[0],$this->fontColor[1],$this->fontColor[2]);
-    	for($i=100;$i<=$this->srcImg_info[1];$i+=800) {
-    		for($j=100;$j<=$this->srcImg_info[1];$j+=800) {
+    	for($i=100;$i<=$this->srcImg_info[1];$i+=1500) {
+    		for($j=1000;$j<=$this->srcImg_info[1];$j+=1500) {
         		imagettftext($this->water_im,$this->fontSize,$this->angle,$i,$j,$color,$this->fontFile,$this->waterStr);
     		}
     	}

@@ -13,6 +13,7 @@ use yii\helpers\Url;
 use frontend\helpers\fileUtil;
 use app\models\Tablefields;
 use app\models\Farmermembers;
+use frontend\helpers\photographDialog;
 /* @var $this yii\web\View */
 /* @var $model app\models\farmer */
 
@@ -36,6 +37,7 @@ use app\models\Farmermembers;
 		    <span>请选择...</span>
 		    <input id="fileuploadphoto" type="file" name="upload_file" multiple="">
 		</span>
+		<?php photographDialog::showDialog('拍照','photo-dialog');?>
         <p>
           <?php echo Html::img($model->photo,['width'=>'180px','height'=>'200px','id'=>'photo']); ?>
           <?php echo $form->field($model,'photo')->hiddenInput(['id'=>'photoresult'])->label(false)?>
@@ -73,8 +75,11 @@ use app\models\Farmermembers;
         <td align="right" valign="middle">身份证扫描件<br><span class="btn btn-success fileinput-button">
 		    <i class="glyphicon glyphicon-plus"></i>
 		    <span>请选择...</span>
-		    <input id="fileuploadcardpic" type="file" name="upload_file" multiple="">
-		</span></td>
+		    <input id="fileuploadcardpic" type="file" name="upload_file" multiple="">		    
+		</span>
+		<?php photographDialog::showDialog('身份证正面拍照','cardpic-dialog');?>
+		<?php photographDialog::showDialog('身份证反面拍照','cardpicback-dialog');?>
+		</td>
         <td valign="middle">
           <?php echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px','id'=>'cardpic']); ?>
         <?php echo $form->field($model,'cardpic')->hiddenInput(['id'=>'cardpicresult'])->label(false)?></td>
@@ -172,6 +177,217 @@ use app\models\Farmermembers;
     <?php ActiveFormrdiv::end(); ?>
     <?php $this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
 <script type="text/javascript">
+$( "#cardpic-dialog" ).dialog({
+	autoOpen: false,
+	width: 600,
+});
+$( "#cardpicback-dialog" ).dialog({
+	autoOpen: false,
+	width: 600,
+});
+$( "#photo-dialog" ).dialog({
+	autoOpen: false,
+	width: 600,
+});
+// Link to open the dialog
+$( "#cardpicback-dialog-link" ).click(function( event ) {
+	$( "#cardpicback-dialog" ).dialog( "open" );
+	event.preventDefault();
+	Start1_onclick('photo-cardpicback');
+	
+});
+$( "#cardpic-dialog-link" ).click(function( event ) {
+	$( "#cardpic-dialog" ).dialog( "open" );
+	event.preventDefault();
+	Start1_onclick('photo-cardpic');
+	
+});
+$( "#photo-dialog-link" ).click(function( event ) {
+	$( "#photo-dialog" ).dialog( "open" );
+	event.preventDefault();
+	Start1_onclick('photo-photo');
+	
+});
+function Start1_onclick()
+{
+      var str=captrue.bStopPlay();  	
+      var str = captrue.bStartPlay();
+}
+function Start2_onclick()
+{
+	  var str=captrue.bStopPlay();
+	  var str = captrue.bStartPlay2(0);
+}
+function Stop_onclick()
+{
+	var str=captrue.bStopPlay();
+}
+
+	function SaveJPG_onclick()
+	{
+      var str=captrue.bSaveJPG("d:\\123\\","JPG");
+	}
+
+	function checkBoxclick(eid)
+	{
+		$("#electronic-id").val(eid);
+	}
+
+	function upload() {
+		var fileName = 'JPG.jpg';
+      captrue.bSaveJPG(savePath, fileName);
+      var port;
+      if (location.port != "") {
+          port = location.port;
+      } else {
+          port = 80;
+      }
+      captrue.bUpLoadImage(savePath + fileName + ".jpg", location.hostname, port, "/front/web/uploadimage/upload.php");
+  }
+	
+	function UpLoadJPG_onclick(id)
+	{
+		$field = id.split('-');
+		captrue.bSaveJPG("d:\\","JPG");
+		var upload = captrue.bUpLoadImage("D:\\JPG.JPG", "192.168.1.10", 8001, "/front/uploadimage/upload.php");
+//		alert(save);
+		if(upload) {
+			
+	        $.getJSON("<?= Url::to(['photogallery/photographdialog'])?>", {farms_id: <?= $_GET['farms_id']?>,id:id}, function (data) {
+				var width = "400px"
+			    $('#'+field[1]).attr('src', data.url);
+			    $('#'+field[1]).attr('width',width);
+				captrue.bDeleteFile("d:\\JPG.jpg");    
+	    	});
+		}   			
+	}
+
+	function deleteImg(id,tr1,tr2)
+	{
+		 $.getJSON('index.php?r=electronicarchives/electronicarchivesdelete', {id: id}, function (data) {
+			$('#img'+data.id).remove();
+			$('#td-'+tr1+'-'+data.id).remove();
+			$('#td-'+tr2+'-'+data.id).remove();
+			var addid = id - 1;
+			$('#cha'+addid).attr('class','fa fa-close text-red');
+		});
+	}
+	
+	function DeleteJPG_onclick()
+	{
+	 
+        var str=captrue.bDeleteFile("D:\\JPG.jpg");
+	}
+		
+	function SaveGray_onclick()
+	{
+		captrue.vSetRotate(90);
+		var str=captrue.bSaveGray("D:\\","gray");
+	
+	}
+	function SaveTifJPG_onclick()
+	{
+		captrue.vSetRotate(180);
+		var str=captrue.bSaveTifJPG("D:\\","tifJPG");
+	}
+	function SaveTIF_onclick()
+	{
+		captrue.vSetRotate(270);
+		captrue.vSetDPI(200,200);
+
+		var str=captrue.bSaveTIF24Bit("D:\\","TIF", 0);
+	}
+	
+	function SaveMulTIF_onclick()
+	{
+		captrue.vSetDPI(200,200);
+		var str=captrue.bSaveTIF24Bit("D:\\","MulTIF", 1);
+	}
+	function ParaSet_onclick()
+	{
+		var str=captrue.displayVideoPara();
+	}
+	function ParaSetPIN_onclick()
+	{
+		var str=captrue.vSetCapturePin();
+		captrue.bStartPlay();
+	}
+	function CutHB_onclick()
+	{
+		var str=captrue.vSetDelHBFlag(1);
+	}
+	function Skew_onclick()
+	{
+		var str=captrue.vSetSkewFlag(1);
+	}
+	function StartPDF_onclick()
+	{
+		var pdffileName = document.getElementById("pdffileName").value;
+		if(pdffileName == "")
+		{
+			pdffileName =  "pdffile";
+		}
+		var str=captrue.bSavePDFStart("D:\\", pdffileName);
+	}
+	function ColorPDF_onclick()
+	{
+		var str=captrue.bSavePDFColorPage();
+	}
+	function BWPDF_onclick()
+	{
+		var str=captrue.bSavePDFBWPage();
+	}
+	
+	function EndPDF_onclick()
+	{
+		var str=captrue.bSavePDFEnd();
+	}	 
+	
+	function SetBrightness_onclick(){
+		var BrightnessValue = document.getElementById("BrightnessValue").value;
+		captrue.vSetBrightness(BrightnessValue);
+	}
+	
+	function SetContrast_onclick(){
+		var ContrastValue = document.getElementById("ContrastValue").value;
+		captrue.vSetContrast(ContrastValue);
+	}
+	
+	function rotateMain(){
+		  var str=captrue.bStopPlay();  	
+      var str = captrue.bStartPlayRotate(270);
+		
+	}
+	
+	function getDeviceId()
+	{
+		var deviceId = captrue.sGetDevicesId();
+		alert(deviceId);
+	}
+	
+	function selectAutoMode(el)
+	{
+		captrue.bSetMode(el.value);
+	}
+	
+	function selectDefaultMode(el)
+	{
+		captrue.bSetMode(el.value);
+	}
+    
+	function selectSfzMode(el)
+	{
+		captrue.bSetMode(el.value);
+		if(el.value == 1)
+		{
+			captrue.bSetImageArea(1000,1000,8000,8000);
+		}
+	}	
+	
+	function SelectExposure(el)
+	{
+		captrue.vSetExposure(el.value);
+	}
 function submittype(v) {
 	$('#farmer-isupdate').val(v);
 }

@@ -129,70 +129,105 @@ class PhotogalleryController extends Controller
     }
     public function actionPhotograph($farms_id,$select,$eid = NULL)
     {
-    	$waterMask = new WaterMask('D:\\JPG.jpg');
+    	$waterMask = new WaterMask('D:\\wamp\\www\landsystem\\frontend\\web\\uploadimage\\imgTemp\\JPG.jpg');
     	$waterMask->output();
     	
-		$imageInfo = $this->getImageInfo('D:\\JPG.jpg');
+		$imageInfo = $this->getImageInfo('D:\\wamp\\www\landsystem\\frontend\\web\\uploadimage\\imgTemp\\JPG.jpg');
     	$file = UploadedFile::loadFiles($imageInfo);
-    	$extphoto = strtolower(pathinfo("D:\\JPG.JPG", PATHINFO_EXTENSION));
+    	$extphoto = strtolower(pathinfo('D:\\wamp\\www\landsystem\\frontend\\web\\uploadimage\\imgTemp\\JPG.jpg', PATHINFO_EXTENSION));
 //     	var_dump($extphoto);exit;
     	$selectArray = explode('-', $select);
 //     	var_dump($selectArray);exit;
     	$farm = Farms::findOne($farms_id);
-    	//$strc = iconv("UTF-8","gbk//TRANSLIT", Tables::getCtablename($selectArray[0]));
-    	$strc = iconv("UTF-8","gbk//TRANSLIT", $farm->farmname.'-'.$farm->farmername);
-    	$stra = iconv("UTF-8","gbk//TRANSLIT", Tablefields::getCfields($selectArray[0],$selectArray[1]));
-		$management_area_id = Farms::getFarmsAreaID($farms_id);
-    	$management_area = iconv("UTF-8","gbk//TRANSLIT", ManagementArea::getAreanameOne($management_area_id));
-    
-    	$filename = time();
-    	$path = 'photo_gallery/'.$management_area.'/'.$strc.'/'.$stra;
-    	fileUtil::createDir($path);
-    	$filepath = $path.'/'.$filename.'.'.$extphoto;
-    	
-    	if($file->saveAs2($filepath)) {
-    		if($selectArray[0] == 'electronicarchives') {
-    			$ea = Electronicarchives::find()->where(['farms_id'=>$farms_id])->orderBy('pagenumber DESC')->one()['pagenumber'];
-    			
-    			if($ea)
-    				$pn = ++$ea;
-    			else 
-    				$pn = 1;
-//     			var_dump($pn);exit;
-    			if($eid) {
-    				$model = Electronicarchives::findOne($eid);
-    				$model->update_at = time();
+    	$cardidFarms = Farms::find()->where(['cardid'=>$farm['cardid']])->all();
+    	foreach ($cardidFarms as $value) {
+    		$strc = iconv("UTF-8","gbk//TRANSLIT", $value['farmname'].'-'.$value['farmername']);
+    		$stra = iconv("UTF-8","gbk//TRANSLIT", Tablefields::getCfields($selectArray[0],$selectArray[1]));
+    		$management_area_id = Farms::getFarmsAreaID($value['id']);
+    		$management_area = iconv("UTF-8","gbk//TRANSLIT", ManagementArea::getAreanameOne($management_area_id));
+    		
+    		$filename = time();
+    		$path = 'photo_gallery/'.$management_area.'/'.$strc.'/'.$stra;
+    		fileUtil::createDir($path);
+    		$filepath = $path.'/'.$filename.'.'.$extphoto;
+    		 
+    		if($file->saveAs2($filepath)) {
+    				
+    			if($selectArray[0] == 'electronicarchives') {
+    				//     			echo '000';
+    				$ea = Electronicarchives::find()->where(['farms_id'=>$value['id']])->orderBy('pagenumber DESC')->one()['pagenumber'];
+    				 
+    				if($ea)
+    					$pn = ++$ea;
+    				else
+    					$pn = 1;
+    				//     			var_dump($pn);exit;
+    				if($eid) {
+    					$model = Electronicarchives::findOne($eid);
+    					$model->update_at = time();
+    				}
+    				else {
+    					$model = new Electronicarchives();
+    					$model->farms_id = $value['id'];
+    					$model->archivesimage = iconv("GBK", "UTF-8", $filepath);
+    					$model->create_at = (string)time();
+    					$model->update_at = $model->create_at;
+    					$model->pagenumber = $pn;
+    				}
+    				$model->save();
+    				//     			var_dump($model);
+    			} else {
+    				$class = 'app\\models\\'.ucfirst($selectArray[0]);
+    				$model = $class::findOne($value['id']);
+    				if($od=opendir($this->getPath($path))) //$d是目录名
+    				{
+    					if(file_exists(iconv("UTF-8","gbk//TRANSLIT", $model->$selectArray[1]))){
+    						unlink(iconv("UTF-8","gbk//TRANSLIT", $model->$selectArray[1]));
+    					}
+    				}
+    				$model->$selectArray[1] = iconv("GBK", "UTF-8", $filepath);
+    				$model->save();
+    				 
     			}
-    			else {
-    				$model = new Electronicarchives();
-    				$model->farms_id = $farms_id;
-    				$model->archivesimage = iconv("GBK", "UTF-8", $filepath);
-    				$model->create_at = (string)time();
-    				$model->update_at = $model->create_at;
-    				$model->pagenumber = $pn;
-    			}
-    			$model->save();
-    		} else {
-	    		$class = 'app\\models\\'.ucfirst($selectArray[0]);
-	    		$data = $class::find()->where(['farms_id'=>$farms_id])->one();
-	    		$model = $class::findOne($data['id']);
-	//     		var_dump($model);exit;
-			    if($od=opendir($this->getPath($path))) //$d是目录名
-				{
-					if(file_exists(iconv("UTF-8","gbk//TRANSLIT", $model->$selectArray[1]))){
-						unlink(iconv("UTF-8","gbk//TRANSLIT", $model->$selectArray[1]));
-					}
-				}
-	    		$model->$selectArray[1] = iconv("GBK", "UTF-8", $filepath);
-	//     		var_dump($model);exit;
-	    		$model->save();
     		}
-//     		var_dump($model->getErrors());exit;
-    	}
+    	}   	
     	
     	echo json_encode(['url' => iconv("GBK", "UTF-8", $filepath),'info'=>$imageInfo,'page'=>$pn,'id'=>$model->id]);
     }
     
+    public function actionPhotographdialog($farms_id,$field)
+    {
+   	 	$fieldArray = explode('-', $field);
+    	$imageInfo = $this->getImageInfo('D:\\wamp\\www\landsystem\\frontend\\web\\uploadimage\\imgTemp\\JPG.jpg');
+    	$file = UploadedFile::loadFiles($imageInfo);
+    	$extphoto = strtolower(pathinfo('D:\\wamp\\www\landsystem\\frontend\\web\\uploadimage\\imgTemp\\JPG.jpg', PATHINFO_EXTENSION));
+
+    	$farm = Farms::findOne($farms_id);
+    	
+    		$strc = iconv("UTF-8","gbk//TRANSLIT", $farm->farmname.'-'.$farm->farmername);
+    		$stra = iconv("UTF-8","gbk//TRANSLIT", Tablefields::getCfields($selectArray[0],$selectArray[1]));
+    		$management_area_id = Farms::getFarmsAreaID($farms_id);
+    		$management_area = iconv("UTF-8","gbk//TRANSLIT", ManagementArea::getAreanameOne($management_area_id));
+    
+    		$filename = time();
+    		$path = 'photo_gallery/'.$management_area.'/'.$strc.'/'.$stra;
+    		fileUtil::createDir($path);
+    		$filepath = $path.'/'.$filename.'.'.$extphoto;
+    		 
+    		if($file->saveAs2($filepath)) {
+    				$model = Farmer::findOne($farms_id);
+    				if($od=opendir($this->getPath($path))) //$d是目录名
+    				{
+    					if(file_exists(iconv("UTF-8","gbk//TRANSLIT", $model->$fieldArray[1]))){
+    						unlink(iconv("UTF-8","gbk//TRANSLIT", $model->$fieldArray[1]));
+    					}
+    				}
+    				$model->$selectArray[1] = iconv("GBK", "UTF-8", $filepath);
+    				$model->save();
+    	}
+    	 
+    	echo json_encode(['url' => iconv("GBK", "UTF-8", $filepath),'id'=>$model->id]);
+    }
     
     /**
      * Creates a new Photogallery model.
