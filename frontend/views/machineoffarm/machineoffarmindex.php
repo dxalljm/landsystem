@@ -58,16 +58,20 @@ $this->params['breadcrumbs'][] = $this->title;
 				}
 			],
 			[
-			'label' => '型号',
-			'value' => function ($model) {
-				return Machine::find()->where(['id'=>$model->machine_id])->one()['implementmodel'];
-			}
+				'label' => '型号',
+				'value' => function ($model) {
+					return Machine::find()->where(['id'=>$model->machine_id])->one()['implementmodel'];
+				}
 			],
 			[
-			'label' => '生产厂商',
-			'value' => function ($model) {
-				return Machine::find()->where(['id'=>$model->machine_id])->one()['enterprisename'];
-			}
+				'label' => '生产厂商',
+				'value' => function ($model) {
+					return Machine::find()->where(['id'=>$model->machine_id])->one()['enterprisename'];
+				}
+			],
+			[
+				'label' => '购置年份',
+				'attribute' => 'acquisitiontime',
 			],
 //             'machinetype_id',
 //             'machine_id',

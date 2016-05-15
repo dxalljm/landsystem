@@ -1,6 +1,6 @@
 <?php
 $data=file_get_contents("../web/images/plant.jpg");
-$mth = new mht
+// $mth = new mht
 $im = base64_encode($data);
 if ($im !== false) {
 // 	header('Content-Type: image/jpeg'); //对应jpeg的类型

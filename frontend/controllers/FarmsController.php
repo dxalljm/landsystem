@@ -124,7 +124,7 @@ class FarmsController extends Controller {
 				
 		] );
 	}
-	
+	//合同打印
 	public function actionFarmscontractprint($farms_id)
 	{
 		$model = $this->findModel($farms_id);
@@ -335,7 +335,7 @@ class FarmsController extends Controller {
 // 				'area' => $area
 		] );
 	}
-	
+	//八大块，宜林农林
 	public function actionFarmsland()
 	{
 		$whereArray = Farms::getManagementArea()['id'];
@@ -395,6 +395,7 @@ class FarmsController extends Controller {
 	// $result = $l . $du . '°' . $fen . "'" . $miao . '"';
 	// return $result;
 	// }
+	//统一修改经纬度
 	public function actionFarmsmodfiylonglat() {
 		$farms = Farms::find ()->all ();
 		foreach ( $farms as $farm ) {
@@ -614,14 +615,12 @@ class FarmsController extends Controller {
 		$sum = 0.0;
 		$farms = Farms::find ()->all ();
 		foreach ( $farms as $farm ) {
-			if($farm['notstate']) {
-				$otherfarmsModel = new Otherfarms();
-				$otherfarmsModel->farms_id = $farm['id'];
-				$otherfarmsModel->measure = $farm['notstate'];
-				$otherfarmsModel->describe = $farm['notstateinfo'];
+			$farmer = Farmer::find()->where(['farms_id'=>$farm['id']])->count();
+			if(empty($farmer)) {
+				$model = new Farmer();
+				$model->farms_id = $farm['id'];
+				$model->save();
 			}
-			
-			$model->save();
 		}
 		echo 'finished';
 // 		return $this->render ( 'farmslist', [ 
@@ -681,7 +680,7 @@ class FarmsController extends Controller {
 				'farmer' => $farmer,
 		] );
 	}
-	
+	//八大块，宜农林地查看详情
 	public function actionFarmslandview($id) {
 		$model = $this->findModel ( $id );
 		$farmer = Farmer::find()->where(['farms_id'=>$id])->one();
@@ -1052,7 +1051,11 @@ class FarmsController extends Controller {
 			$model->pinyin = Pinyin::encode ( $model->farmname );
 			$model->farmerpinyin = Pinyin::encode ( $model->farmername );
 			$model->contractarea = Farms::getContractnumberArea($model->contractnumber);
-			$model->save ();
+			if($model->save ()) {
+				$farmerModel = new Farmer();
+				$farmerModel->farms_id = $model->id;
+				$farmerModel->save();
+			}
 			$newAttr = $model->attributes;
 			Logs::writeLog ( '创建农场', $model->id, '', $newAttr );
 			
@@ -1174,6 +1177,7 @@ class FarmsController extends Controller {
 			$model->update_at = time ();
 			$model->pinyin = Pinyin::encode ( $model->farmname );
 			$model->farmerpinyin = Pinyin::encode ( $model->farmername );
+			$model->surveydate = (string)strtotime($model->surveydate);
 			$model->save ();
 			$newAttr = $model->attributes;
 			Logs::writeLog ( '更新农场信息', $id, $oldAttr, $newAttr );

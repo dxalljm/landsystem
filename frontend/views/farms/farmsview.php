@@ -30,7 +30,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     </h3>
                 </div>
                 <div class="box-body">
-<?= Html::a('添加', ['farmscreate'], ['class' => 'btn btn-success']) ?>
+<?php echo Html::a('更新', ['farmsupdate','id'=>$_GET['id']], ['class' => 'btn btn-success']) ?> 
+<?php echo Html::a('返回', ['farmsindex'], ['class' => 'btn btn-success']) ?>
 <table
 		class="table table-bordered table-hover">
   <tr>

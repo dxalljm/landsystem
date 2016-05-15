@@ -7,15 +7,15 @@ class photographDialog
 	
 	public static function showDialog($buttonName,$dialogID = 'dialog')
 	{
-// 		echo Html::jsFile('js/photographDialog.js');
-		self::dialogHtml($dialogID);
+		
+// 		self::dialogHtml($dialogID);
 		echo Html::button($buttonName,['class'=>'btn btn-success fileinput-button','id'=>$dialogID.'-link']);
 	}	
 	
-	private static function dialogHtml($dialogID)
+	public static function dialogHtml()
 	{
-		
-		echo '<div id='.$dialogID.'>';
+// 		echo Html::jsFile('js/photographDialog.js');
+		echo '<div id="dialog">';
 		echo '<form method="POST" action="--WEBBOT-SELF--" name="form1">';
 	    echo '<input type="button" value="启动主" name="StartBtn" onClick="Start1_onclick()">';
 	    echo '<input type="button" value="启动副" name="StopBtn" onClick="Start2_onclick()">';
@@ -45,8 +45,12 @@ class photographDialog
 	    echo '<input type="radio" value="3" name="mode" id="autoMode" onClick="selectAutoMode(this)"/>';
 	    echo '<label for="autoMode">自动</label>';
 	    echo '<input type="radio" value="1" name="mode" id="customMode" onClick="selectSfzMode(this)"/><label for="autoMode">自定义</label>';
-	    echo '<object classid="clsid:454C18E2-8B7D-43C6-8C17-B1825B49D7DE" id="captrue"  width="480" height="360" ></object>';
+	    
 	    echo '</form>';
+	    echo '<div style="text-align:center;" class="dialog_content">';
+	    echo '<object classid="clsid:454C18E2-8B7D-43C6-8C17-B1825B49D7DE" id="captrue" width="600" height="450"></object>';
+    	echo '</div>';
 		echo '</div>';
+		echo html::hiddenInput('temp','',['id'=>'tempField']);
 	}
 }

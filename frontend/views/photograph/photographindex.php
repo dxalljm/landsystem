@@ -22,6 +22,8 @@ use yii\helpers\Url;
                     </h3>
                 </div>
                 <div class="box-body">
+</head>
+<body>
 
 <table>
   <tr>
@@ -138,14 +140,12 @@ use yii\helpers\Url;
 <script>
 jQuery('#selectID').change(function(){
     var input = $(this).val();
-    Stop_onclick();
-//     Start1_onclick();
     $.get("<?= Url::to(["photograph/photographindex"])?>",{farms_id:<?= $_GET['farms_id']?>,select:input},function (data) {
 		$('body').html(data);
 	});
+	
 });
-var savePath = "D:\\capture\\";
-var isStart = false;
+
   function Start1_onclick()
   {
         var str=captrue.bStopPlay();  	

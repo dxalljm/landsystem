@@ -14,21 +14,25 @@ use frontend\helpers\fileUtil;
 use app\models\Tablefields;
 use app\models\Farmermembers;
 use frontend\helpers\photographDialog;
+use app\models\Photogallery;
 /* @var $this yii\web\View */
 /* @var $model app\models\farmer */
 
 ?>
+<script src="js/photographDialog.js"></script>
 <div class="farmer-form">
-<h3><?= $farm->farmname.'('.Theyear::findOne(1)['years'].'年度)' ?></h3>
+<h3><?= $farmModel->farmname.'('.Theyear::findOne(1)['years'].'年度)' ?></h3>
 <?php //echo Html::a('XLS导入', ['farmerxls'], ['class' => 'btn btn-success']) ?>
 <?php Farms::showRow($_GET['farms_id']);?>
+<?php photographDialog::dialogHtml();?>
 <?php $form = ActiveFormrdiv::begin(['id' => "farmer-form",'enableAjaxValidation' => false,'options' => ['enctype' => 'multipart/form-data'],]); ?>
       <?= $form->field($model, 'isupdate')->hiddenInput()->label(false);?>
       <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false);?>
+      
     <table width="662"  class="table table-bordered table-hover">
       <tr>
         <td width="10%" height="25" align="right" valign="middle">承包人姓名</td>
-        <td width="7%" valign="middle"><?= $farm->farmername?></td>
+        <td width="7%" valign="middle"><?= $farmModel->farmername?></td>
         <td width="11%" height="25" align="right" valign="middle">曾用名</td>
         <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'farmerbeforename')->textInput(['maxlength' => 8])->label(false)->error(false); else echo '&nbsp;'.$model->farmerbeforename; ?></td>
         <td width="36%" rowspan="6" align="center" valign="middle">
@@ -39,13 +43,13 @@ use frontend\helpers\photographDialog;
 		</span>
 		<?php photographDialog::showDialog('拍照','photo-dialog');?>
         <p>
-          <?php echo Html::img($model->photo,['width'=>'180px','height'=>'200px','id'=>'photo']); ?>
+          <?php echo Html::img($model->photo,['width'=>'180px','id'=>'photo']); ?>
           <?php echo $form->field($model,'photo')->hiddenInput(['id'=>'photoresult'])->label(false)?>
         </p></td>
      </tr>
       <tr>
         <td align="right" valign="middle">身份证号</td>
-        <td valign="middle"><?= $farm->cardid?></td>
+        <td valign="middle"><?php if($farmModel->cardid)echo $farmModel->cardid;else echo Html::textInput('farms-cardid',$farmModel->cardid,['class'=>'form-control']);?></td>
         <td align="right" valign="middle">性别</td>
         <td colspan="2" valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'gender')->dropDownList(['男'=>'男','女'=>'女'])->label(false)->error(false); else echo '&nbsp;'.$model->gender; ?></td>
       </tr>
@@ -59,7 +63,7 @@ use frontend\helpers\photographDialog;
         <td align="right" valign="middle">文化程度</td>
         <td valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'cultural_degree')->dropDownList(['文盲'=>'文盲','小学'=>'小学','初中'=>'初中','高中'=>'高中','中专'=>'中专','大专'=>'大专','本科'=>'本科','研究生'=>'研究生'])->label(false)->error(false); else echo '&nbsp;'.$model->cultural_degree; ?></td>
         <td align="right" valign="middle">电话</td>
-        <td colspan="2" valign="middle"><?= $farm->telephone?></td>
+        <td colspan="2" valign="middle"><?= Html::textInput('farms-telephone',$farmModel->telephone,['class'=>'form-control'])?></td>
       </tr>
       <tr><?php if($model->domicile == '') $model->domicile = '黑龙江省大兴安岭地区加格达奇区';?><?php if($model->nowlive == '') $model->nowlive = '黑龙江省大兴安岭地区加格达奇区';?>
         <td align="right" valign="middle">户籍所在地</td>
@@ -86,6 +90,8 @@ use frontend\helpers\photographDialog;
         <td colspan="4" valign="middle"><?php echo '&nbsp;'.Html::img($model->cardpicback,['width'=>'400px','height'=>'220px','id'=>'cardpicback']); ?> <?php echo $form->field($model,'cardpicback')->hiddenInput(['id'=>'cardpicbackresult'])->label(false)?></td>
       </tr>
   </table>
+
+ 
 <h3>家庭主要成员</h3>
 
 <?php if(!$model->isupdate) {?>
@@ -168,48 +174,96 @@ use frontend\helpers\photographDialog;
 <?php if(!$model->isupdate) {?>
 <div class="form-group">
 
-  		<?= Html::submitButton('提交', ['class' => 'btn btn-danger','title'=>'注意：点提交后不可更改','method' => 'post','onclick'=>'submittype(1)']) ?>
+  		<?= Html::submitButton('提交', ['class' => 'btn btn-danger','title'=>'注意：点提交后不可更改','method' => 'post','onclick'=>'submittype(0)']) ?>
 
         <?= Html::submitButton('保存', ['class' => 'btn btn-success','title'=>'注意：在不确定数据正确可点击保存','method' => 'post','onclick'=>'submittype(0)']) ?>
 
 <?php }?>
  </div>
     <?php ActiveFormrdiv::end(); ?>
-    <?php $this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
+
 <script type="text/javascript">
-$( "#cardpic-dialog" ).dialog({
-	autoOpen: false,
-	width: 600,
-});
-$( "#cardpicback-dialog" ).dialog({
-	autoOpen: false,
-	width: 600,
-});
-$( "#photo-dialog" ).dialog({
-	autoOpen: false,
-	width: 600,
-});
-// Link to open the dialog
-$( "#cardpicback-dialog-link" ).click(function( event ) {
-	$( "#cardpicback-dialog" ).dialog( "open" );
-	event.preventDefault();
-	Start1_onclick('photo-cardpicback');
-	
-});
-$( "#cardpic-dialog-link" ).click(function( event ) {
-	$( "#cardpic-dialog" ).dialog( "open" );
-	event.preventDefault();
-	Start1_onclick('photo-cardpic');
-	
-});
-$( "#photo-dialog-link" ).click(function( event ) {
-	$( "#photo-dialog" ).dialog( "open" );
-	event.preventDefault();
-	Start1_onclick('photo-photo');
-	
-});
+
+	$( "#dialog" ).dialog({
+		autoOpen: false,
+		width: 1000,
+		height: 600,
+	});
+	// Link to open the dialog
+	$( "#cardpicback-dialog-link" ).click(function( event ) {
+		
+		$( "#dialog" ).dialog( "open" );
+		
+		event.preventDefault();
+		Start1_onclick();
+		$('#tempField').val('cardpicback');
+		
+	});
+	$( "#cardpic-dialog-link" ).click(function( event ) {
+
+		$( "#dialog" ).dialog( "open" );
+		event.preventDefault();
+		Start1_onclick();
+		$('#tempField').val('cardpic');
+	});
+	$( "#photo-dialog-link" ).click(function( event ) {
+
+		$( "#dialog" ).dialog( "open" );
+		event.preventDefault();
+		Start1_onclick();
+		$('#tempField').val('photo');
+	});
+function submittype(v) {
+	$('#farmer-isupdate').val(v);
+}
+
+    // 添加家庭成员
+    $('#add-member-family').click(function () {
+        var template = $('#member-family-template').html();
+        $('#member-family > tbody').append(template);
+    });
+
+    // 删除
+    $(document).on("click", ".delete-member-family", function () {
+        $(this).parent().parent().remove();
+    });
+
+    // 关系
+    $(document).on("blur", "input[name='Parmembers[relationship][]']", function () {
+        if ($(this).val() == '') {
+            return alert('关系不能为空');
+        }
+    });
+
+    // 姓名
+	$(document).on("blur", "input[name='Parmembers[membername][]']", function () {
+        if ($(this).val() == '') {
+            return alert('姓名不能为空');
+        }
+    });
+
+    // 身份证
+	$(document).on("blur", "input[name='Parmembers[cardid][]']", function () {
+        var val = $(this).val();
+		if (val == '') {
+			return alert('身份证不能为空');
+		}
+
+        if(/^[0-9X]/i.test(val) == false) {
+            return alert('请填写正确的身份证号码');
+        }
+	});
+	$('#rowjump').keyup(function(event){
+		input = $(this).val();
+		$.getJSON('index.php?r=farms/getfarmid', {id: input}, function (data) {
+			$('#setFarmsid').val(data.farmsid);
+		});
+	});
+</script>
+<script language="javascript" type="text/javascript">
 function Start1_onclick()
 {
+// 	console.log(captrue);
       var str=captrue.bStopPlay();  	
       var str = captrue.bStartPlay();
 }
@@ -232,45 +286,25 @@ function Stop_onclick()
 	{
 		$("#electronic-id").val(eid);
 	}
-
-	function upload() {
-		var fileName = 'JPG.jpg';
-      captrue.bSaveJPG(savePath, fileName);
-      var port;
-      if (location.port != "") {
-          port = location.port;
-      } else {
-          port = 80;
-      }
-      captrue.bUpLoadImage(savePath + fileName + ".jpg", location.hostname, port, "/front/web/uploadimage/upload.php");
-  }
 	
-	function UpLoadJPG_onclick(id)
+	function UpLoadJPG_onclick()
 	{
-		$field = id.split('-');
+		var field = $('#tempField').val();
+// 		alert(field);
 		captrue.bSaveJPG("d:\\","JPG");
 		var upload = captrue.bUpLoadImage("D:\\JPG.JPG", "192.168.1.10", 8001, "/front/uploadimage/upload.php");
 //		alert(save);
-		if(upload) {
-			
-	        $.getJSON("<?= Url::to(['photogallery/photographdialog'])?>", {farms_id: <?= $_GET['farms_id']?>,id:id}, function (data) {
-				var width = "400px"
-			    $('#'+field[1]).attr('src', data.url);
-			    $('#'+field[1]).attr('width',width);
-				captrue.bDeleteFile("d:\\JPG.jpg");    
+		if(upload) {			
+	        $.getJSON("<?= Url::to(['photogallery/photographdialog'])?>", {farms_id: <?= $_GET['farms_id']?>,field:field}, function (data) {
+// 				var width = "400px"
+			    $('#'+field).attr('src', data.url);
+// 			    $('#'+field).attr('width',width);
+				captrue.bDeleteFile("d:\\JPG.jpg");   
+				var str=captrue.bStopPlay(); 
+				$( "#dialog" ).dialog( "close" );
 	    	});
-		}   			
-	}
-
-	function deleteImg(id,tr1,tr2)
-	{
-		 $.getJSON('index.php?r=electronicarchives/electronicarchivesdelete', {id: id}, function (data) {
-			$('#img'+data.id).remove();
-			$('#td-'+tr1+'-'+data.id).remove();
-			$('#td-'+tr2+'-'+data.id).remove();
-			var addid = id - 1;
-			$('#cha'+addid).attr('class','fa fa-close text-red');
-		});
+		}  
+		;	
 	}
 	
 	function DeleteJPG_onclick()
@@ -388,56 +422,6 @@ function Stop_onclick()
 	{
 		captrue.vSetExposure(el.value);
 	}
-function submittype(v) {
-	$('#farmer-isupdate').val(v);
-}
-
-    // 添加家庭成员
-    $('#add-member-family').click(function () {
-        var template = $('#member-family-template').html();
-        $('#member-family > tbody').append(template);
-    });
-
-    // 删除
-    $(document).on("click", ".delete-member-family", function () {
-        $(this).parent().parent().remove();
-    });
-
-    // 关系
-    $(document).on("blur", "input[name='Parmembers[relationship][]']", function () {
-        if ($(this).val() == '') {
-            return alert('关系不能为空');
-        }
-    });
-
-    // 姓名
-	$(document).on("blur", "input[name='Parmembers[membername][]']", function () {
-        if ($(this).val() == '') {
-            return alert('姓名不能为空');
-        }
-    });
-
-    // 身份证
-	$(document).on("blur", "input[name='Parmembers[cardid][]']", function () {
-        var val = $(this).val();
-		if (val == '') {
-			return alert('身份证不能为空');
-		}
-
-        if(/^[0-9X]/i.test(val) == false) {
-            return alert('请填写正确的身份证号码');
-        }
-	});
-	$('#rowjump').keyup(function(event){
-		input = $(this).val();
-		$.getJSON('index.php?r=farms/getfarmid', {id: input}, function (data) {
-			$('#setFarmsid').val(data.farmsid);
-		});
-	});
-</script>
-</div>
-<script language="javascript" type="text/javascript">
-
 	$(function () {
 		var url = "<?= Url::to(['photogallery/fileupload','controller'=>yii::$app->controller->id,'field'=>'cardpic','farms_id'=>$_GET['farms_id']]);?>";
         $('#fileuploadcardpic').fileupload({

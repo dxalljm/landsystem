@@ -15,7 +15,6 @@ use dosamigos\datetimepicker\DateTimePicker;
 <div class="machineoffarm-form">
 
     <?php $form = ActiveFormrdiv::begin(); ?>
-
 <table class="table table-bordered table-hover">
 	<tr>
 		<td width=15% align='right'>机具大类</td>
@@ -26,6 +25,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 		<td align='left'><?= html::dropDownList('lastclass',$lastclass,ArrayHelper::map(Machinetype::find()->where(['father_id'=>$smallclass])->all(),'id', 'typename'),['class'=>'form-control','id'=>'lastClass'])?></td>
 	</tr>
 	<?= $form->field($model, 'machinetype_id')->hiddenInput()->label(false)->error(false)?>
+	<?= $form->field($model, 'machine_id')->hiddenInput()->label(false)->error(false)?>
 	<tr>
 		<td align='right'>机具名称</td>
 		<td align='left'><?= $form->field($model, 'machinename')->textInput()->label(false)->error(false)?></td>
@@ -39,14 +39,15 @@ use dosamigos\datetimepicker\DateTimePicker;
         'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
         'clientOptions' => [
             'autoclose' => true,
-        	'minView' => 3,
-        	'maxView' => 3,
-            'format' => 'yyyy-mm-dd'
-        ]]) ?></td>
-		<td><?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary','id'=>'createbutton']) ?></td>
+        	'minView' => 4,
+        	'startView' => 4,
+            'format' => 'yyyy'
+        ]]) ?></td><?= Html::hiddenInput('tempState','list',['id'=>'state'])?>
+		<td><?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary','id'=>'createbutton','onclick'=>$model->isNewRecord ? 'setState("create")': 'setState("update")']) ?></td>
 		
 	</tr>
 </table>
+
 <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -66,12 +67,11 @@ use dosamigos\datetimepicker\DateTimePicker;
             'format'=>'raw',
             
             'value' => function($model,$key){
-            	$url = ['/machineoffarm/machineoffarmcreate','farms_id'=>$_GET['farms_id'],'machine_id'=>$model->id];    	
-            	$option = '添加此机具';
-            	return Html::a($option,$url, [
-            			//'id' => 'machineoffarm',
-            			'class' => 'btn btn-primary btn-xs machineoffarm',
-            	]);
+            	return Html::submitButton('添加此机具', ['class' => 'btn btn-primary btn-xs','id'=>'createbutton','onclick'=>'setMachineid('.$model->id.')']);
+//             	return Html::submitButton($option,$url, [
+// //             			'id' => 'AddMachineoffarmButton',
+//             			'class' => 'btn btn-primary btn-xs machineoffarm',
+//             	]);
             }
             ],
         ],
@@ -82,6 +82,13 @@ use dosamigos\datetimepicker\DateTimePicker;
 
 </div>
 <script>
+function setState(state){
+	$('#state').val(state);
+}
+function setMachineid(id){
+	$('#state').val('create');
+	$('#machineoffarm-machine_id').val(id);
+}
 $('#bigClass').change(function(){
 	var input = $(this).val();
 	$.getJSON('index.php?r=machinetype/getsmallclass', {father_id: input}, function (data) {
