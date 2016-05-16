@@ -71,18 +71,17 @@ use app\models\Loan;
 			    <td colspan="2" align="center"><?= $newfarm->cardid?></td>
 			    </tr>
 			  <tr height="40px">
-			    <td align="center">原宗地信息</td><?php if(!empty($oldttpozongdi->zongdi)) $zongdiArray = explode('、', $oldttpozongdi->zongdi); else $zongdiArray = [];?>
+			    <td align="center">原宗地信息</td><?php if(!empty($oldttpozongdi['oldzongdi'])) $zongdiArray = explode('、', $oldttpozongdi['oldzongdi']); else $zongdiArray = [];?>
 			    <td colspan="5" align="center"><table width="100%" border="0" align="right"><?php for($i = 0;$i<count($zongdiArray);$i++) {
-			    	
-			    	if($i == 0 or $i%6 == 0) {
-			    		echo '<tr>';
-			    	} else {
-			    		echo '<td>';
+			    	if($i%6 == 0) {
+			    		echo '<tr height="10">';
+			    		echo '<td align="left">';
 			    		echo $zongdiArray[$i];
 			    		echo '</td>';
-			    	}
-			    	if($i == 0 or $i%6 == 0) {
-			    		echo '</tr>';
+			    	} else {
+			    		echo '<td align="left">';
+			    		echo $zongdiArray[$i];
+			    		echo '</td>';
 			    	}
 			    	
 			    }?></table></td>
@@ -92,18 +91,18 @@ use app\models\Loan;
 			    <td colspan="5" align="center">&nbsp;</td>
 		       </tr>
 			  <tr height="40px">
-			    <td align="center">现宗地信息</td><?php if(!empty($newttpozongdi->zongdi)) $zongdiArray = explode('、', $newttpozongdi->zongdi); else $zongdiArray = [];?>
-			    <td colspan="5" align="center"><table width="100%" border="0" align="center"><?php for($i = 0;$i<count($zongdiArray);$i++) {
-			    	
-			    	if($i == 0 or $i%6 == 0) {
-			    		echo '<tr>';
-			    	} else {
-			    		echo '<td>';
+			    <td align="center">现宗地信息</td><?php if(!empty($newttpozongdi['zongdi'])) $zongdiArray = explode('、', $newttpozongdi['zongdi']); else $zongdiArray = [];?>
+			    <td colspan="5" align="center"><table width="100%" border="0" align="center">
+			    <?php for($i = 0;$i<count($zongdiArray);$i++) {
+			    	if($i%6 == 0) {
+			    		echo '<tr height="10">';
+			    		echo '<td align="left">';
 			    		echo $zongdiArray[$i];
 			    		echo '</td>';
-			    	}
-			    	if($i == 0 or $i%6 == 0) {
-			    		echo '</tr>';
+			    	} else {
+			    		echo '<td align="left">';
+			    		echo $zongdiArray[$i];
+			    		echo '</td>';
 			    	}
 			    	
 			    }?>

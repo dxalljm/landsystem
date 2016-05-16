@@ -70,12 +70,16 @@ class ReviewprocessController extends Controller
     	$model = new Reviewprocess();
     	$newfarm = Farms::find()->where(['id'=>$newfarmsid])->one();
     	$oldfarm = Farms::find()->where(['id'=>$oldfarmsid])->one();
+    	$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$newfarmsid])->one();
+    	$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$oldfarmsid])->one();
     	$reviewprocess = Reviewprocess::find()->where(['id'=>$reviewprocessid])->one();
     	$process = Auditprocess::find()->where(['actionname'=>$reviewprocess['actionname']])->one()['process'];
 //     	var_dump($process);exit;
     	return $this->render ( 'reviewprocessfarmstransfer', [
     			'oldfarm' => $oldfarm,
     			'newfarm' => $newfarm,
+    			'oldttpozongdi' => $oldttpozongdi,
+    			'newttpozongdi' => $newttpozongdi,
     			'process' => explode('>', $process),
     			'model' => $model,
     			'reviewprocessid' => $reviewprocessid
@@ -88,12 +92,16 @@ class ReviewprocessController extends Controller
     	$model = new Reviewprocess();
     	$newfarm = Farms::find()->where(['id'=>$newfarmsid])->one();
     	$oldfarm = Farms::find()->where(['id'=>$oldfarmsid])->one();
+    	$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$newfarmsid])->one();
+    	$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$oldfarmsid])->one();
     	$reviewprocess = Reviewprocess::find()->where(['id'=>$reviewprocessid])->one();
     	$process = Auditprocess::find()->where(['actionname'=>$reviewprocess['actionname']])->one()['process'];
     	//     	var_dump($process);exit;
     	return $this->render ( 'reviewprocessfarmstransfer', [
     			'oldfarm' => $oldfarm,
     			'newfarm' => $newfarm,
+    			'oldttpozongdi' => $oldttpozongdi,
+    			'newttpozongdi' => $newttpozongdi,
     			'process' => explode('>', $process),
     			'model' => $model,
     			'reviewprocessid' => $reviewprocessid
@@ -125,12 +133,16 @@ class ReviewprocessController extends Controller
     	$model = new Reviewprocess();
     	$newfarm = Farms::find()->where(['id'=>$newfarmsid])->one();
     	$oldfarm = Farms::find()->where(['id'=>$oldfarmsid])->one();
+    	$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$newfarmsid])->one();
+    	$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$oldfarmsid])->one();
     	$reviewprocess = Reviewprocess::find()->where(['id'=>$reviewprocessid])->one();
     	$process = Auditprocess::find()->where(['actionname'=>$reviewprocess['actionname']])->one()['process'];
 //     	var_dump($newfarm);
     	return $this->render ( 'reviewprocessfarmstozongdi', [
     			'oldfarm' => $oldfarm,
     			'newfarm' => $newfarm,
+    			'oldttpozongdi' => $oldttpozongdi,
+    			'newttpozongdi' => $newttpozongdi,
     			'process' => explode('>', $process),
     			'model' => $model,
     	] );
@@ -141,7 +153,8 @@ class ReviewprocessController extends Controller
     	$model = $this->findModel($id);
     	
     	$process = Auditprocess::find()->where(['actionname'=>$model->actionname])->one()['process'];
-    	
+    	$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$model->oldfarms_id])->one();
+    	$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$model->newfarms_id])->one();
     	if($class == 'farmstransfer') {
 	    	$oldfarm = Farms::find()->where(['id'=>$model->oldfarms_id])->one();
 	    	$newfarm = Farms::find()->where(['id'=>$model->newfarms_id])->one();
@@ -151,13 +164,13 @@ class ReviewprocessController extends Controller
 	    		if($state) {
 // 	    			var_dump($model);exit;
 	    			$oldfarmsModel = Farms::findOne($model->oldfarms_id);
-	    			$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$model->oldfarms_id])->one();
+	    			
 	    			$oldfarmsModel->update_at = time();
 	    			$oldfarmsModel->state = 0;
 	    			$oldfarmsModel->locked = 0;
 	    			$oldfarmsModel->save();
 	    			$newfarmModel = Farms::findOne($model->newfarms_id);
-	    			$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$model->newfarms_id])->one();
+	    			
 	    			$newfarmModel->update_at = $oldfarmsModel->update_at;
 	    			$newfarmModel->state = 1;
 	    			$newfarmModel->locked = 0;

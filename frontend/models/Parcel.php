@@ -99,6 +99,7 @@ class Parcel extends \yii\db\ActiveRecord
     		$arrayZongdi = explode('、', $array['zongdi']);
     		foreach ($arrayZongdi as $zongdi) {
     			$parcel = Parcel::find()->where(['unifiedserialnumber'=>Lease::getZongdi($zongdi)])->one();
+//     			var_dump(Lease::getZongdi($zongdi));exit;
 	    		$model = Parcel::findOne($parcel['id']);
 	    		$model->farms_id = $array['farms_id'];
 	    		$model->save();

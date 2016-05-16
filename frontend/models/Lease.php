@@ -64,11 +64,12 @@ class Lease extends \yii\db\ActiveRecord
     }
     //得到1-100（123）中的宗地号1-100
     public static function getZongdi($Leasearea) {
+//     	var_dump($Leasearea);
     	if(preg_match('/^(([0-9]+.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*.[0-9]+)|([0-9]*[1-9][0-9]*))$/',$Leasearea)) {
     		$zongdi = $Leasearea;
     	} else {
 	   		$zongdi = preg_replace('/\(  [^\)]+?  \)/x', '', $Leasearea);
-	    	
+// 	    	var_dump($zongdi);
     	}
     	return $zongdi;
     }

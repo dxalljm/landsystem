@@ -218,7 +218,7 @@ class ParcelController extends Controller
     //得到宗的面积（累加值）$zongdi='1-100、2-100'
     public  function  actionParcelarea($zongdi)
     {
-    	$grossarea = 0;
+    	$netarea = 0;
 	    $zongdiarr = explode('、',$zongdi);
 	    $count = count($zongdiarr);
 	    
@@ -226,15 +226,15 @@ class ParcelController extends Controller
 	    if(!strstr($zd,'(')) {
 	    //foreach ($zongdiarr as $zd) {
 	    	$parcel = Parcel::find()->where(['unifiedserialnumber' => $zd])->one();
-	    	$area = $parcel['grossarea'];
+	    	$area = $parcel['netarea'];
 	    	if($area) {	
 	    		if(!empty($parcel['farms_id'])) {
 	    			$status = 0;
-	    			$grossarea = 0;
+	    			$netarea = 0;
 	    			$message = '对不起，您输入的地块已经被“'.Farms::find()->where(['id'=>$parcel['farms_id']])->one()['farmname'].'”占用';
 	    		} else {
 		    		$status = 1;
-		    		$grossarea += $area;
+		    		$netarea += $area;
 		    		$message = true;
 	    		}
 	    	}
@@ -243,13 +243,13 @@ class ParcelController extends Controller
 	    		$message = '对不起，您输入的地块不存在！';
 	    	}
 	    } else {
-	    	$area = Parcel::find()->where(['unifiedserialnumber' => $zd])->one()['grossarea'];
+	    	$area = Parcel::find()->where(['unifiedserialnumber' => $zd])->one()['netarea'];
 	    	$status = 1;
-	    	$grossarea = $area;
+	    	$netarea = $area;
 	    	$message = '';
 	    }
 	    	
-    	echo json_encode(['status' => $status, 'area' => $grossarea,'message' => $message]);
+    	echo json_encode(['status' => $status, 'area' => $netarea,'message' => $message]);
 
     }
     
@@ -291,7 +291,7 @@ class ParcelController extends Controller
     			unset($key);
     		else {
     			if(!strstr($value,'(')) {
-		    		$area = Parcel::find()->where(['unifiedserialnumber' => $value])->one()['grossarea'];
+		    		$area = Parcel::find()->where(['unifiedserialnumber' => $value])->one()['netarea'];
 		    		$format[] = $value.'('.$area.')';
 		    		$areaSum += $area;
     			}	

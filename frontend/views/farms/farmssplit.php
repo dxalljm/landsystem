@@ -130,6 +130,7 @@ use yii\helpers\Url;
         </tr>
       <tr><?= Html::hiddenInput('oldzongdi',$oldFarm->zongdi,['id'=>'oldfarm-zongdi']) ?>
       <?= Html::hiddenInput('ttpozongdi','',['id'=>'ttpozongdi-zongdi']) ?>
+      <?= Html::hiddenInput('newzongdi','',['id'=>'new-zongdi']) ?>
       <?= Html::hiddenInput('ttpoarea',0,['id'=>'ttpozongdi-area']) ?>
         <td align='right' valign="middle">宗地面积</td><?= html::hiddenInput('tempoldmeasure',$oldFarm->measure,['id'=>'temp_oldmeasure']) ?>
         										 <?= html::hiddenInput('tempoldnotclear',$oldFarm->notclear,['id'=>'temp_oldnotclear']) ?>
@@ -221,7 +222,7 @@ use yii\helpers\Url;
 			<td align='center'>止</td>
 		</tr>
 		<tr>
-		  <td align='right'>宗地</td><?= html::hiddenInput('tempzongdi','',['id'=>'temp-zongdi'])?>
+		  <td align='right'>宗地</td><?= html::hiddenInput('tempzongdi','',['id'=>'temp-zongdi'])?><?= $form->field($newFarm, 'zongdi')->hiddenInput()->label(false)->error(false) ?>
 		  <td colspan="5" align='left'><span id="inputZongdi" class="select2-container select2-container--default select2-container--below" dir="ltr" style="width: 100%; color: #000;">
 	<span class="selection">
 		<span class="select2-selection select2-selection--multiple" role="combobox" aria-autocomplete="list" aria-haspopup="true" aria-expanded="false" tabindex="0">
@@ -310,6 +311,7 @@ use yii\helpers\Url;
 <script>
 function zongdiRemove(zongdi,measure,dialogID)
 {
+	removeZongdiForm(zongdi,measure);
 	$('#new'+zongdi).remove();
 // 	var zongdiarr = zongdi.split('_');
 	$('#'+zongdi).attr('disabled',false);
@@ -350,16 +352,49 @@ function zongdiRemove(zongdi,measure,dialogID)
 	//宗地面积计算结束
 	toHTH();
 }
+function removeZongdiForm(zongdi,measure)
+{
+	var findzongdi = zongdi + "("+measure+")";
+	var zongdi = $('#farms-zongdi').val();
+	var arr1 = zongdi.split('、');
+	$.each(arr1, function(i,val){  
+	      if(val === findzongdi)
+	    	  arr1.splice(i,1);	      
+	  });   
+	var newnewzongdi = arr1.join('、');
+// 	alert(newnewzongdi);
+	$('#farms-zongdi').val(newnewzongdi);
+// 	return result;
+}
 function nowZongdiFind(zongdi)
 {
 	var result = false;
 	var newzongdi = $('#new-zongdi').val();
-	var arr1 = newzongdi.split('|');
-	$.each(arr1, function(i,val){  
-	      if(val === zongdi)
-	    	  result = true;	      
-	  });   
+	if(newzongdi != '') {
+		var arr1 = newzongdi.split('|');
+		$.each(arr1, function(i,val){  
+		      if(val === zongdi)
+		    	  result = true;	      
+		  });   
+	}
 	return result;
+}
+function zongdiForm(zongdi,measure)
+{
+	var newfarmszongdi = $('#farms-zongdi').val();
+	var zongdistr = zongdi+"("+measure+")";
+	$('#farms-zongdi').val(newfarmszongdi +'、'+ zongdistr);
+// 	alert(zongdistr);
+	var farmszongdi = $('#farms-zongdi').val();
+	var first = farmszongdi.substr(0,1);
+	var last = farmszongdi.substr(farmszongdi.length-1,1);
+	if(first == '、') {
+		$('#farms-zongdi').val(farmszongdi.substring(1));
+	}
+	if(last == '、') {
+		$('#farms-zongdi').val(farmszongdi.substring(0,farmszongdi.length-1));
+	}
+	
 }
 $('#dialog2').dialog({
 	autoOpen: false,
@@ -385,7 +420,7 @@ $('#dialog2').dialog({
 	  							alert("对不起，您输入的面积不能大于原农场未明确地块面积。");
 		  					} else {
 		  						$( this ).dialog( "close" );
-		  						
+		  						zongdiForm(zongdi,measure);		  						
 		  					 	var newzongdi = zongdi+'('+measure+')';
 		  					 	var newzongdihtml = '<li class="select2-selection__choice" id="new'+zongdi+'" title="'+newzongdi+'"><span class="remove text-red" role="presentation" onclick=zongdiRemove("'+zongdi+'","'+measure+'","dialog2")>×</span>'+newzongdi+'</li>';
 		  						
@@ -449,7 +484,7 @@ $( "#dialog" ).dialog({
 						$('#measure').val(ymeasure);
 					} else {
 						$( this ).dialog( "close" );
-							
+						zongdiForm(zongdi,measure);		
 					 	var newzongdi = zongdi+'('+measure+')';
 					 	var newzongdihtml = '<li class="select2-selection__choice" id="new'+zongdi+'" title="'+newzongdi+'"><span class="remove text-red" role="presentation" onclick=zongdiRemove("'+zongdi+'","'+measure+'","dialog")>×</span>'+newzongdi+'</li>';
 						var oldmeasure = $('#ymeasure').val() - measure;

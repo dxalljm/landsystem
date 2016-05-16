@@ -169,9 +169,13 @@ class MachineoffarmController extends Controller {
 	 */
 	public function actionMachineoffarmupdate($id) {
 		$model = $this->findModel ( $id );
-		$lastclass = Machine::find ()->where ( [ 
-				'id' => $model->machine_id 
-		] )->one ()['machinetype_id'];
+		if($model->machine_id) {
+			$lastclass = Machine::find ()->where ( [ 
+					'id' => $model->machine_id 
+			] )->one ()['machinetype_id'];
+		} else {
+			$lastclass = $model->machinetype_id;
+		}
 		// var_dump($lastclass);exit;
 		$smallclass = Machinetype::find ()->where ( [ 
 				'id' => $lastclass 

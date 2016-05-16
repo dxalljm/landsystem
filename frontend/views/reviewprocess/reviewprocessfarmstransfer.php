@@ -79,7 +79,7 @@ use app\models\Reviewprocess;
 			    <td colspan="2" align="center"><?= $newfarm->cardid?></td>
 			    </tr>
 			  <tr height="40px">
-			    <td align="center">原宗地信息</td><?php if(!empty($oldfarm->zongdi)) $zongdiArray = explode('、', $oldfarm->zongdi); else $zongdiArray = [];?>
+			    <td align="center">原宗地信息</td><?php if(!empty($oldttpozongdi->oldzongdi)) $zongdiArray = explode('、', $oldttpozongdi->oldzongdi); else $zongdiArray = [];?>
 			    <td colspan="5" align="center"><table width="100%" border="0" align="right"><?php for($i = 0;$i<count($zongdiArray);$i++) {
 			    	
 			    	if($i%5 == 0) {
@@ -96,7 +96,7 @@ use app\models\Reviewprocess;
 			    }?></table></td>
 			    </tr>
 			  <tr height="40px">
-			    <td align="center">现宗地信息</td><?php if(!empty($newfarm->zongdi)) $zongdiArray = explode('、', $newfarm->zongdi); else $zongdiArray = [];?>
+			    <td align="center">现宗地信息</td><?php if(!empty($newttpozongdi->zongdi)) $zongdiArray = explode('、', $newttpozongdi->zongdi); else $zongdiArray = [];?>
 			    <td colspan="5" align="center"><table width="100%" border="0" align="center"><?php for($i = 0;$i<count($zongdiArray);$i++) {
 			    	
 			    	if($i%5 == 0) {

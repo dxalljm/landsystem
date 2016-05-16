@@ -140,7 +140,10 @@ class PhotogalleryController extends Controller
 //     	var_dump($selectArray);exit;
     	$farm = Farms::findOne($farms_id);
     	$cardidFarms = Farms::find()->where(['cardid'=>$farm['cardid']])->all();
+//     	var_dump($cardidFarms);exit;
+		$pn = 0;
     	foreach ($cardidFarms as $value) {
+//     		var_dump($value['farmername']);exit;
     		$strc = iconv("UTF-8","gbk//TRANSLIT", $value['farmname'].'-'.$value['farmername']);
     		$stra = iconv("UTF-8","gbk//TRANSLIT", Tablefields::getCfields($selectArray[0],$selectArray[1]));
     		$management_area_id = Farms::getFarmsAreaID($value['id']);
@@ -152,7 +155,7 @@ class PhotogalleryController extends Controller
     		$filepath = $path.'/'.$filename.'.'.$extphoto;
     		 
     		if($file->saveAs2($filepath)) {
-    				
+//     				echo '111111';exit;
     			if($selectArray[0] == 'electronicarchives') {
     				//     			echo '000';
     				$ea = Electronicarchives::find()->where(['farms_id'=>$value['id']])->orderBy('pagenumber DESC')->one()['pagenumber'];
@@ -177,8 +180,11 @@ class PhotogalleryController extends Controller
     				$model->save();
     				//     			var_dump($model);
     			} else {
+//     				echo '2222';exit;
     				$class = 'app\\models\\'.ucfirst($selectArray[0]);
-    				$model = $class::findOne($value['id']);
+    				$temp = $class::find()->where(['farms_id'=>$value['id']])->one()['id'];
+    				$model = $class::findOne($temp);
+//     				var_dump($model);exit;
     				if($od=opendir($this->getPath($path))) //$d是目录名
     				{
     					if(file_exists(iconv("UTF-8","gbk//TRANSLIT", $model->$selectArray[1]))){
@@ -187,26 +193,28 @@ class PhotogalleryController extends Controller
     				}
     				$model->$selectArray[1] = iconv("GBK", "UTF-8", $filepath);
     				$model->save();
-    				 
+//     				var_dump($model);exit;
     			}
     		}
     	}   	
-    	
+//     	var_dump($imageInfo);var_dump($pn);exit;
     	echo json_encode(['url' => iconv("GBK", "UTF-8", $filepath),'info'=>$imageInfo,'page'=>$pn,'id'=>$model->id]);
     }
     
     public function actionPhotographdialog($farms_id,$field)
     {
-   	 	$fieldArray = explode('-', $field);
+   	 	
     	$imageInfo = $this->getImageInfo('D:\\wamp\\www\landsystem\\frontend\\web\\uploadimage\\imgTemp\\JPG.jpg');
     	$file = UploadedFile::loadFiles($imageInfo);
     	$extphoto = strtolower(pathinfo('D:\\wamp\\www\landsystem\\frontend\\web\\uploadimage\\imgTemp\\JPG.jpg', PATHINFO_EXTENSION));
 
     	$farm = Farms::findOne($farms_id);
-    	
-    		$strc = iconv("UTF-8","gbk//TRANSLIT", $farm->farmname.'-'.$farm->farmername);
-    		$stra = iconv("UTF-8","gbk//TRANSLIT", Tablefields::getCfields($selectArray[0],$selectArray[1]));
-    		$management_area_id = Farms::getFarmsAreaID($farms_id);
+    	$cardidFarms = Farms::find()->where(['cardid'=>$farm['cardid']])->all();
+    	foreach ($cardidFarms as $value) {
+    		$strc = iconv("UTF-8","gbk//TRANSLIT", $value['farmname'].'-'.$value['farmername']);
+    		$stra = iconv("UTF-8","gbk//TRANSLIT", Tablefields::getCfields('farmer',$field));
+//     		var_dump($stra);exit;
+    		$management_area_id = Farms::getFarmsAreaID($value['id']);
     		$management_area = iconv("UTF-8","gbk//TRANSLIT", ManagementArea::getAreanameOne($management_area_id));
     
     		$filename = time();
@@ -215,17 +223,21 @@ class PhotogalleryController extends Controller
     		$filepath = $path.'/'.$filename.'.'.$extphoto;
     		 
     		if($file->saveAs2($filepath)) {
-    				$model = Farmer::findOne($farms_id);
+    			$farmer_id = Farmer::find()->where(['farms_id'=>$value['id']])->one()['id'];
+    				$model = Farmer::findOne($farmer_id);
     				if($od=opendir($this->getPath($path))) //$d是目录名
     				{
-    					if(file_exists(iconv("UTF-8","gbk//TRANSLIT", $model->$fieldArray[1]))){
-    						unlink(iconv("UTF-8","gbk//TRANSLIT", $model->$fieldArray[1]));
+//     					var_dump($model);
+//     					var_dump(file_exists(iconv("UTF-8","gbk//TRANSLIT", $model->$field)));exit;
+    					if(file_exists(iconv("UTF-8","gbk//TRANSLIT", $model->$field))){
+    						unlink(iconv("UTF-8","gbk//TRANSLIT", $model->$field));
     					}
     				}
-    				$model->$selectArray[1] = iconv("GBK", "UTF-8", $filepath);
+    				$model->$field = iconv("GBK", "UTF-8", $filepath);
     				$model->save();
+//     				var_dump($model->getErrors());exit;
+    		}
     	}
-    	 
     	echo json_encode(['url' => iconv("GBK", "UTF-8", $filepath),'id'=>$model->id]);
     }
     

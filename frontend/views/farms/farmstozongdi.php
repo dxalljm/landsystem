@@ -167,7 +167,7 @@ use yii\helpers\Url;
 		  <td colspan="5" align='left'><?= $newFarm->zongdi?></td>
 		  </tr>
 		<tr>
-		  <td align='right'>新宗地</td><?= html::hiddenInput('tempzongdi','',['id'=>'temp-zongdi'])?>
+		  <td align='right'>新宗地</td><?= html::hiddenInput('tempzongdi','',['id'=>'temp-zongdi'])?><?= $form->field($newFarm, 'zongdi')->hiddenInput()->label(false)->error(false) ?>
 		  <td colspan="5" align='left'><span id="inputZongdi" class="select2-container select2-container--default select2-container--below" dir="ltr" style="width: 100%; color: #000;">
 	<span class="selection">
 		<span class="select2-selection select2-selection--multiple" role="combobox" aria-autocomplete="list" aria-haspopup="true" aria-expanded="false" tabindex="0">
@@ -252,6 +252,7 @@ use yii\helpers\Url;
 <script>
 function zongdiRemove(zongdi,measure,dialogID)
 {
+	removeZongdiForm(zongdi,measure);
 	$('#new'+zongdi).remove();
 // 	var zongdiarr = zongdi.split('_');
 	$('#'+zongdi).attr('disabled',false);
@@ -297,6 +298,7 @@ function zongdiRemove(zongdi,measure,dialogID)
 //在输入过宗地列表中删除输入过的宗地
 function removeTempZongdi(zongdi)
 {
+	
 	var result = false;
 	var newzongdi = $('#new-zongdi').val();
 	var arr1 = newzongdi.split('|');
@@ -319,6 +321,37 @@ function nowZongdiFind(zongdi)
 	  });   
 	return result;
 }
+function removeZongdiForm(zongdi,measure)
+{
+	var findzongdi = zongdi + "("+measure+")";
+	var zongdi = $('#farms-zongdi').val();
+	var arr1 = zongdi.split('、');
+	$.each(arr1, function(i,val){  
+	      if(val === findzongdi)
+	    	  arr1.splice(i,1);	      
+	  });   
+	var newnewzongdi = arr1.join('、');
+// 	alert(newnewzongdi);
+	$('#farms-zongdi').val(newnewzongdi);
+// 	return result;
+}
+function zongdiForm(zongdi,measure)
+{
+	var newfarmszongdi = $('#farms-zongdi').val();
+	var zongdistr = zongdi+"("+measure+")";
+	$('#farms-zongdi').val(newfarmszongdi +'、'+ zongdistr);
+// 	alert(zongdistr);
+	var farmszongdi = $('#farms-zongdi').val();
+	var first = farmszongdi.substr(0,1);
+	var last = farmszongdi.substr(farmszongdi.length-1,1);
+	if(first == '、') {
+		$('#farms-zongdi').val(farmszongdi.substring(1));
+	}
+	if(last == '、') {
+		$('#farms-zongdi').val(farmszongdi.substring(0,farmszongdi.length-1));
+	}
+	
+}
 $('#dialog2').dialog({
 	autoOpen: false,
 	width:400,
@@ -331,6 +364,7 @@ $('#dialog2').dialog({
 // 	  				alert(zongdi);
 	  				var measure = Number($('#findMeasure').val());
 	  				var ymeasure = Number($('#ymeasure').val());
+	  				
 	  				if(measure == '' || zongdi == '') {
 	  					alert("对不起，宗地或面积不能为空。");
 	  					$('#findMeasure').val();
@@ -343,7 +377,7 @@ $('#dialog2').dialog({
 	  							alert("对不起，您输入的面积不能大于原农场未明确地块面积。");
 		  					} else {
 		  						$( this ).dialog( "close" );
-		  						
+		  						zongdiForm(zongdi,measure);	
 		  					 	var newzongdi = zongdi+'('+measure+')';
 		  					 	var newzongdihtml = '<li class="select2-selection__choice" id="new'+zongdi+'" title="'+newzongdi+'"><span class="remove text-red" role="presentation" onclick=zongdiRemove("'+zongdi+'","'+measure+'","dialog2")>×</span>'+newzongdi+'</li>';
 		  						
@@ -360,11 +394,12 @@ $('#dialog2').dialog({
 		  						
 		  						if(oldcontractarea < 0 && ycontractarea > 0) {
 		  							alert('宗地面积已经大于合同面积，多出面积自动加入未明确状态面积');
-		  						}
-		  						if(oldcontractarea < 0) {
-		  							$('#farms-notstate').val(Math.abs(oldcontractarea));
+		  							
 		  							toHTH();
 		  						}
+// 		  						if(oldcontractarea < 0) {
+			  						
+// 		  						}
 		  						var newtempzongdi = $('#new-zongdi').val();
 		  						$("#new-zongdi").val(zongdi+'|'+newtempzongdi);
 		  						$('#findZongdi').val('');
@@ -397,6 +432,7 @@ $( "#dialog" ).dialog({
 				var zongdi = $('#zongdi').val();
 				var measure = Number($('#measure').val());
 				var ymeasure = Number($('#ymeasure').val());
+				var tempnotstate = Number($('#temp_notstate').val());
 				if(measure == '') {
 					alert("对不起，您面积不能为空。");
 					$('#measure').val(ymeasure);
@@ -407,7 +443,7 @@ $( "#dialog" ).dialog({
 						$('#measure').val(ymeasure);
 					} else {
 						$( this ).dialog( "close" );
-							
+						zongdiForm(zongdi,measure);	
 					 	var newzongdi = zongdi+'('+measure+')';
 					 	var newzongdihtml = '<li class="select2-selection__choice" id="new'+zongdi+'" title="'+newzongdi+'"><span class="remove text-red" role="presentation" onclick=zongdiRemove("'+zongdi+'","'+measure+'","dialog")>×</span>'+newzongdi+'</li>';
 						var oldmeasure = $('#ymeasure').val() - measure;
@@ -428,10 +464,12 @@ $( "#dialog" ).dialog({
 						
 						if(oldcontractarea < 0 && ycontractarea > 0) {
 							alert('宗地面积已经大于合同面积，多出面积自动加入未明确状态面积');
+							
 						}
 						if(oldcontractarea < 0) {
-							$('#farms-notstate').val(Math.abs(oldcontractarea));
-							toHTH();
+							var newnotstate = tempnotstate*1 + Math.abs(oldcontractarea);
+  							alert(newnotstate);
+  							$('#farms-notstate').val(newnotstate.toFixed(2));
 						}
 						$('#ymeasure').val(0);	
 					}
