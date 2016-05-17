@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('添加', ['insurancecreate'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('种植业保险申请', ['insurancecreate','farms_id'=>$farms_id], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -35,25 +35,26 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'management_area',
-            'year',
-            'farms_id',
+//             'id',
+//             'management_area',
+            
+//             'farms_id',
             'policyholder',
-            // 'cardid',
-            // 'telephone',
+           
+            'cardid',
+            'telephone',
             // 'wheat',
             // 'soybean',
             // 'insuredarea',
             // 'insuredwheat',
             // 'insuredsoybean',
-            // 'company_id',
+            'company_id',
             // 'create_at',
             // 'update_at',
             // 'policyholdertime',
             // 'managemanttime',
             // 'halltime',
-
+            'year',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

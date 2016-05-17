@@ -30,17 +30,34 @@ class InsuranceController extends Controller
      * Lists all Insurance models.
      * @return mixed
      */
-    public function actionInsuranceindex()
+    public function actionInsuranceindex($farms_id)
     {
         $searchModel = new insuranceSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $params = Yii::$app->request->queryParams;
+        $params['insuranceSearch']['farms_id'] = $farms_id;
+        $dataProvider = $searchModel->search($params);
 
         return $this->render('insuranceindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+        	'farms_id' => $farms_id,
         ]);
     }
-
+	//农业保险审核
+    public function actionInsurancereview($farms_id)
+    {
+    	$searchModel = new insuranceSearch();
+    	$params = Yii::$app->request->queryParams;
+    	$params['insuranceSearch']['farms_id'] = $farms_id;
+    	$dataProvider = $searchModel->search($params);
+    
+    	return $this->render('insuranceindex', [
+    			'searchModel' => $searchModel,
+    			'dataProvider' => $dataProvider,
+    			'farms_id' => $farms_id,
+    	]);
+    }
+    
     /**
      * Displays a single Insurance model.
      * @param integer $id
@@ -58,7 +75,7 @@ class InsuranceController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionInsurancecreate()
+    public function actionInsurancecreate($farms_id)
     {
         $model = new Insurance();
 
@@ -67,6 +84,7 @@ class InsuranceController extends Controller
         } else {
             return $this->render('insurancecreate', [
                 'model' => $model,
+            	'farms_id' => $farms_id,
             ]);
         }
     }

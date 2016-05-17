@@ -71,7 +71,7 @@ class MainmenuController extends Controller
     public function actionMainmenucreate()
     {
         $model = new mainmenu();
-
+		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['mainmenuview', 'id' => $model->id]);
         } else {

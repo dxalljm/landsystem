@@ -43,7 +43,7 @@ class Insurance extends \yii\db\ActiveRecord
     {
         return [
             [['management_area', 'farms_id'], 'integer'],
-            [['wheat', 'soybean', 'insuredarea', 'insuredwheat', 'insuredsoybean'], 'number'],
+            [['wheat', 'soybean', 'insuredarea', 'insuredwheat', 'insuredsoybean','other'], 'number'],
             [['year', 'policyholder', 'cardid', 'telephone', 'company_id', 'create_at', 'update_at', 'policyholdertime', 'managemanttime', 'halltime'], 'string', 'max' => 500]
         ];
     }
@@ -72,6 +72,7 @@ class Insurance extends \yii\db\ActiveRecord
             'policyholdertime' => '投保人签字日期',
             'managemanttime' => '管理区提交日期',
             'halltime' => '保险负责人提交日期',
+        	'other' => '其他',
         ];
     }
 }

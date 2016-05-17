@@ -51,6 +51,7 @@ use app\models\Machineoffarm;
 use app\models\elasticsearchtest;
 use app\models\Farmselastic;
 use app\models\Otherfarms;
+use app\models\Insurance;
 // use PHPExcel_IOFactory;
 
 /**
@@ -1444,14 +1445,17 @@ class FarmsController extends Controller {
 				$value ['description'] = '农机器具';
 				break;
 			case 'insurance' :
-				$value ['icon'] = 'fa fa-truck';
+				$value ['icon'] = 'fa fa-file-text-o';
 				$value ['title'] = $menuUrl ['menuname'];
 				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
-				$machine = Machineoffarm::find ()->where ( [
+				$insurance = Insurance::find ()->where ( [
 						'farms_id' => $_GET ['farms_id']
-				] )->count ();
-				$value ['info'] = '有'.$machine.'台农机器具';
-				$value ['description'] = '农机器具';
+				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count ();
+				if($insurance)
+					$value ['info'] = '已参加保险';
+				else 
+					$value ['info'] = '未参加保险';
+				$value ['description'] = '种植业保险';
 				break;
 			default :
 				$value = false;

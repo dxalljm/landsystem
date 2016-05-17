@@ -20,7 +20,7 @@ class insuranceSearch extends Insurance
         return [
             [['id', 'management_area', 'farms_id'], 'integer'],
             [['year', 'policyholder', 'cardid', 'telephone', 'company_id', 'create_at', 'update_at', 'policyholdertime', 'managemanttime', 'halltime'], 'safe'],
-            [['wheat', 'soybean', 'insuredarea', 'insuredwheat', 'insuredsoybean'], 'number'],
+            [['wheat', 'soybean', 'insuredarea', 'insuredwheat', 'insuredsoybean','other'], 'number'],
         ];
     }
 
@@ -65,6 +65,7 @@ class insuranceSearch extends Insurance
             'insuredarea' => $this->insuredarea,
             'insuredwheat' => $this->insuredwheat,
             'insuredsoybean' => $this->insuredsoybean,
+        	'other' => $this->other,
         ]);
 
         $query->andFilterWhere(['like', 'year', $this->year])

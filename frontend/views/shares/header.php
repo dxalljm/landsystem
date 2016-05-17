@@ -61,6 +61,8 @@ use app\models\Huinong;
                         <li><a href="<?= Url::to('index.php?r=disastertype/disastertypeindex')?>">灾害类型</a></li>
                         <li class="divider"></li>
                         <li><a href="<?= Url::to('index.php?r=machinetype/machinetypeindex')?>">机具类型</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<?= Url::to('index.php?r=insurancecompany/insurancecompanyindex')?>">保险公司管理</a></li>
                     </ul>
                         <?php } else {
                         echo "<li ><a href=" . Url::to('index.php?r='.$menu['menuurl']) . ">". $menu['menuname'];

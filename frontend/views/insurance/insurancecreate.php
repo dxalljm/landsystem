@@ -20,13 +20,13 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">
-                          <?= $this->title ?>                    </h3>
+                    <h3 class="box-title">申请表单</h3>
                 </div>
                 <div class="box-body">
 
     <?= $this->render('insurance_form', [
         'model' => $model,
+    	'farms_id' => $farms_id,
     ]) ?>
 
 </div>
