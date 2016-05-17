@@ -26,6 +26,8 @@ class Item extends Object
      * @var string the name of the item. This must be globally unique.
      */
     public $name;
+    public $cname;
+    public $classdescription;
     /**
      * @var string the item description
      */

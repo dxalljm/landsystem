@@ -1443,6 +1443,16 @@ class FarmsController extends Controller {
 				$value ['info'] = '有'.$machine.'台农机器具';
 				$value ['description'] = '农机器具';
 				break;
+			case 'insurance' :
+				$value ['icon'] = 'fa fa-truck';
+				$value ['title'] = $menuUrl ['menuname'];
+				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
+				$machine = Machineoffarm::find ()->where ( [
+						'farms_id' => $_GET ['farms_id']
+				] )->count ();
+				$value ['info'] = '有'.$machine.'台农机器具';
+				$value ['description'] = '农机器具';
+				break;
 			default :
 				$value = false;
 		}

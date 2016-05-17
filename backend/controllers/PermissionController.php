@@ -70,6 +70,7 @@ class PermissionController extends Controller
 			$actions = [];
 		if ($model->load(Yii::$app->request->post()))
 		{
+// 			var_dump($model->cname);exit;
 			$itemPost = Yii::$app->request->post('itemPost');
 			for($i=0;$i<count($itemPost['actionName']);$i++) {
 				$permission = new Permission();
@@ -114,36 +115,54 @@ class PermissionController extends Controller
 	
 	public function setActionInfo($action,$classname)
 	{
+// 		var_dump($action);exit;
 		$tablename = str_replace('Controller','',$classname);
 		$tabledesc = Tables::find()->where(['tablename'=>$tablename])->one()['Ctablename'];
 		$actions = $this->getActionName($action); 
 		foreach ($actions as $value) {
 			$str = str_replace(strtolower($tablename),'',$value);
-			//var_dump($str);
+// 			var_dump($str);
 			switch ($str)
 			{
 				case 'index';
 					$description = 	$tabledesc.'列表';
+					$result[] = [
+							'action'=>$value,
+							'description' => $description,
+					];
 					break;
 				case 'create';
 					$description = 	'新增'.$tabledesc;
+					$result[] = [
+							'action'=>$value,
+							'description' => $description,
+					];
 					break;
 				case 'view';
 					$description = 	'查看'.$tabledesc;
+					$result[] = [
+							'action'=>$value,
+							'description' => $description,
+					];
 					break;
 				case 'update';
 					$description = 	'更新'.$tabledesc;
+					$result[] = [
+							'action'=>$value,
+							'description' => $description,
+					];
 					break;
 				case 'delete';
 					$description = 	'删除'.$tabledesc;
+					$result[] = [
+							'action'=>$value,
+							'description' => $description,
+					];
 					break;
-				default:
-					$description = 'JSON'; 
+// 				default:
+// 					$description = 'JSON'; 
 			}
-			$result[] = [
-					'action'=>$value,
-					'description' => $description,
-			];		
+					
 		}
 		return $result;
 	}
@@ -152,8 +171,8 @@ class PermissionController extends Controller
 	{
 		$allClassInfo = PermissionForm::allClass();
 		$c = $allClassInfo[$classname]['path'].$allClassInfo[$classname]['classname'];
-		//var_dump($classname);
-		$actions = $c::actionName();
+		
+		$actions = get_class_methods($c);
 		
 		return $actions;
 	}
