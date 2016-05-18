@@ -44,7 +44,7 @@ use app\models\Photogallery;
 		<?php photographDialog::showDialog('拍照','photo-dialog');?>
         <p>
           <?php echo Html::img($model->photo,['width'=>'180px','id'=>'photo']); ?>
-          <?php echo $form->field($model,'photo')->hiddenInput(['id'=>'photoresult'])->label(false)?>
+          <?php echo $form->field($model,'photo')->hiddenInput()->label(false)?>
         </p></td>
      </tr>
       <tr>
@@ -64,6 +64,13 @@ use app\models\Photogallery;
         <td valign="middle"><?php if(!$model->isupdate) echo $form->field($model, 'cultural_degree')->dropDownList(['文盲'=>'文盲','小学'=>'小学','初中'=>'初中','高中'=>'高中','中专'=>'中专','大专'=>'大专','本科'=>'本科','研究生'=>'研究生'])->label(false)->error(false); else echo '&nbsp;'.$model->cultural_degree; ?></td>
         <td align="right" valign="middle">电话</td>
         <td colspan="2" valign="middle"><?= Html::textInput('farms-telephone',$farmModel->telephone,['class'=>'form-control'])?></td>
+      </tr>
+      <tr>
+        <td align="right" valign="middle">农场位置</td>
+        <td valign="middle"><?php echo Html::textInput('farms-address',$farmModel->address,['class'=>'form-control']);?></td>
+        <td align="right" valign="middle">坐标</td>
+        <td valign="middle"><?php echo Html::textInput('farms-longitude',$farmModel->longitude,['class'=>'form-control']);?></td>
+        <td valign="middle"><?php echo Html::textInput('farms-latitude',$farmModel->latitude,['class'=>'form-control']);?></td>
       </tr>
       <tr><?php if($model->domicile == '') $model->domicile = '黑龙江省大兴安岭地区加格达奇区';?><?php if($model->nowlive == '') $model->nowlive = '黑龙江省大兴安岭地区加格达奇区';?>
         <td align="right" valign="middle">户籍所在地</td>
@@ -86,7 +93,9 @@ use app\models\Photogallery;
 		</td>
         <td valign="middle">
           <?php echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px','id'=>'cardpic']); ?>
-        <?php echo $form->field($model,'cardpic')->hiddenInput(['id'=>'cardpicresult'])->label(false)?></td>
+        <?php echo $form->field($model,'cardpic')->hiddenInput()->label(false)?>
+        <?php echo $form->field($model,'cardpicback')->hiddenInput()->label(false)?>
+        </td>
         <td colspan="4" valign="middle"><?php echo '&nbsp;'.Html::img($model->cardpicback,['width'=>'400px','height'=>'220px','id'=>'cardpicback']); ?> <?php echo $form->field($model,'cardpicback')->hiddenInput(['id'=>'cardpicbackresult'])->label(false)?></td>
       </tr>
   </table>
@@ -192,22 +201,19 @@ use app\models\Photogallery;
 	// Link to open the dialog
 	$( "#cardpicback-dialog-link" ).click(function( event ) {
 		
-		$( "#dialog" ).dialog( "open" );
-		
+		$( "#dialog" ).dialog( "open" );		
 		event.preventDefault();
 		Start1_onclick();
 		$('#tempField').val('cardpicback');
 		
 	});
 	$( "#cardpic-dialog-link" ).click(function( event ) {
-
 		$( "#dialog" ).dialog( "open" );
 		event.preventDefault();
 		Start1_onclick();
 		$('#tempField').val('cardpic');
 	});
 	$( "#photo-dialog-link" ).click(function( event ) {
-
 		$( "#dialog" ).dialog( "open" );
 		event.preventDefault();
 		Start1_onclick();
@@ -263,14 +269,15 @@ function submittype(v) {
 <script language="javascript" type="text/javascript">
 function Start1_onclick()
 {
-// 	console.log(captrue);
       var str=captrue.bStopPlay();  	
       var str = captrue.bStartPlay();
+      DefaultBrightness();
 }
 function Start2_onclick()
 {
 	  var str=captrue.bStopPlay();
 	  var str = captrue.bStartPlay2(0);
+	  DefaultBrightness();
 }
 function Stop_onclick()
 {
@@ -301,6 +308,7 @@ function Stop_onclick()
 // 			    $('#'+field).attr('width',width);
 				captrue.bDeleteFile("d:\\JPG.jpg");   
 				var str=captrue.bStopPlay(); 
+				$('#farmer-'+field).val(data.url);
 				$( "#dialog" ).dialog( "close" );
 	    	});
 		}  
@@ -381,12 +389,20 @@ function Stop_onclick()
 		var BrightnessValue = document.getElementById("BrightnessValue").value;
 		captrue.vSetBrightness(BrightnessValue);
 	}
+//默认亮度0
+	function DefaultBrightness(){
+		captrue.vSetBrightness(0);
+		$('#BrightnessValue').val(0);
+	}
 	
 	function SetContrast_onclick(){
 		var ContrastValue = document.getElementById("ContrastValue").value;
 		captrue.vSetContrast(ContrastValue);
 	}
 	
+	function SetBrightness(el){
+		captrue.vSetBrightness(el.value);
+	}
 	function rotateMain(){
 		  var str=captrue.bStopPlay();  	
       var str = captrue.bStartPlayRotate(270);
@@ -417,7 +433,7 @@ function Stop_onclick()
 			captrue.bSetImageArea(1000,1000,8000,8000);
 		}
 	}	
-	
+
 	function SelectExposure(el)
 	{
 		captrue.vSetExposure(el.value);
@@ -430,7 +446,7 @@ function Stop_onclick()
 			done: function (e, data) {
 				var url2 = data.result.url;
 				$('#cardpic').attr('src', url2);
-				$('#cardpicresult').attr('value', url2);
+				$('#farmer-cardpic').attr('value', url2);
             }
         });
 	});

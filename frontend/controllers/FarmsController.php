@@ -773,6 +773,7 @@ class FarmsController extends Controller {
 			$nowModel->management_area = $model->management_area;
 			$nowModel->spyear = $model->spyear;
 			$nowModel->measure = $nowModel->measure;
+			$nowModel->contractarea =  $model->contractarea;
 			$nowModel->zongdi = $nowModel->zongdi;
 			$nowModel->cooperative_id = $model->cooperative_id;
 			$nowModel->surveydate = $model->surveydate;
@@ -796,12 +797,13 @@ class FarmsController extends Controller {
 			$ttpoModel->oldfarms_id = $model->id;
 			$ttpoModel->newfarms_id = $nowModel->id;
 			$ttpoModel->create_at = time ();
-			$ttpozongdi->zongdi = $nowModel->zongdi;
-			$ttpozongdi->oldzongdi = $model->zongdi;
-			$ttpozongdi->reviewprocess_id = $reviewprocessID;
-			$ttpozongdi->oldcontractnumber = $model->contractnumber;
-			$ttpozongdi->ttpozongdi = $nowModel->zongdi;
-			$ttpozongdi->ttpoarea = $nowModel->measure;
+			$ttpoModel->zongdi = $nowModel->zongdi;
+			$ttpoModel->oldzongdi = $model->zongdi;
+			$ttpoModel->reviewprocess_id = $reviewprocessID;
+			$ttpoModel->oldcontractnumber = $model->contractnumber;
+			$ttpoModel->ttpozongdi = $nowModel->zongdi;
+			$ttpoModel->ttpoarea = $nowModel->measure;
+			$ttpoModel->state = 0;
 			$ttpoModel->save ();
 			$newAttr = $nowModel->attributes;
 			Logs::writeLog ( '农场转让信息', $nowModel->id, $oldAttr, $newAttr );
@@ -820,6 +822,73 @@ class FarmsController extends Controller {
 			] );
 		}
 	}
+	
+	public function actionFarmsttpoupdate($id,$farms_id) {
+		$nowModel = $this->findModel ( $farms_id );
+		$oldAttr = $nowModel->attributes;
+		// $model->state = 0;
+	
+// 		$reviewprocess = new Reviewprocess ();
+	
+// 		$nowModel = new Farms ();
+	
+		if ($nowModel->load ( Yii::$app->request->post () )) {
+			
+// 			$nowModel->address = $model->address;
+// 			$nowModel->management_area = $model->management_area;
+// 			$nowModel->spyear = $model->spyear;
+			$nowModel->measure = $nowModel->measure;
+// 			$nowModel->contractarea =  $model->contractarea;
+			$nowModel->zongdi = $nowModel->zongdi;
+			$nowModel->cooperative_id = $model->cooperative_id;
+// 			$nowModel->surveydate = $model->surveydate;
+// 			$nowModel->groundsign = $model->groundsign;
+// 			$nowModel->investigator = $model->investigator;
+			$nowModel->notclear = $nowModel->notclear;
+			$nowModel->notstate = $nowModel->notstate;
+// 			$nowModel->create_at = time ();
+			$nowModel->update_at = time ();
+// 			$nowModel->pinyin = Pinyin::encode ( $nowModel->farmname );
+// 			$nowModel->farmerpinyin = Pinyin::encode ( $nowModel->farmername );
+// 			$nowModel->state = 0;
+// 			$nowModel->locked = 1;
+			$nowModel->save ();
+// 			$oldModel = $this->findModel ( $farms_id );
+// 			$oldModel->locked = 1;
+// 			$oldModel->save ();
+			// 			var_dump($oldModel->getErrors());exit;
+			$reviewprocessID = Reviewprocess::processRun ( $model->id, $nowModel->id );
+			$ttpoModel = Ttpozongdi::findOne($id);
+			$ttpoModel->oldfarms_id = $model->id;
+			$ttpoModel->newfarms_id = $nowModel->id;
+			$ttpoModel->create_at = time ();
+			$ttpoModel->zongdi = $nowModel->zongdi;
+			$ttpoModel->oldzongdi = $model->zongdi;
+			$ttpoModel->reviewprocess_id = $reviewprocessID;
+			$ttpoModel->oldcontractnumber = $model->contractnumber;
+			$ttpoModel->ttpozongdi = $nowModel->zongdi;
+			$ttpoModel->ttpoarea = $nowModel->measure;
+			$ttpoModel->state = 0;
+			$ttpoModel->save ();
+			$newAttr = $nowModel->attributes;
+			Logs::writeLog ( '农场转让信息', $nowModel->id, $oldAttr, $newAttr );
+				
+			return $this->redirect ( [
+					Reviewprocess::getReturnAction (),
+					'newfarmsid' => $nowModel->id,
+					'oldfarmsid' => $model->id,
+					'reviewprocessid' => $reviewprocessID
+			] );
+		} else {
+			return $this->render ( 'farmstransfer', [
+					'model' => $model,
+					'nowModel' => $nowModel,
+					'farms_id' => $farms_id
+			] );
+		}
+	}
+	
+	
 	
 	// 农场转让——新增
 	public function actionFarmssplit($farms_id) {

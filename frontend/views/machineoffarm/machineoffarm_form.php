@@ -47,7 +47,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 		
 	</tr>
 </table>
-
+<?php ActiveFormrdiv::end(); ?>
 <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -64,10 +64,9 @@ use dosamigos\datetimepicker\DateTimePicker;
 
             [
             
-            'format'=>'raw',
-            
+            'format'=>'raw',            
             'value' => function($model,$key){
-            	return Html::submitButton('添加此机具', ['class' => 'btn btn-primary btn-xs','id'=>'createbutton','onclick'=>'setMachineid('.$model->id.')']);
+            	return Html::button('添加此机具', ['class' => 'btn btn-primary btn-xs','id'=>'createbutton','onclick'=>'setMachineid('.$model->id.')']);
 //             	return Html::submitButton($option,$url, [
 // //             			'id' => 'AddMachineoffarmButton',
 //             			'class' => 'btn btn-primary btn-xs machineoffarm',
@@ -78,7 +77,7 @@ use dosamigos\datetimepicker\DateTimePicker;
     ]); ?>
 
 
-    <?php ActiveFormrdiv::end(); ?>
+    
 
 </div>
 <script>
@@ -86,8 +85,34 @@ function setState(state){
 	$('#state').val(state);
 }
 function setMachineid(id){
+
+// 	console.dir($("#bigClass option[value=25]").prop("selected", "selected")); 
+// 	console.dir($('#bigClass').val(25).prop("selected", "selected"));
+	
+// 	alert($("#bigClass").val());
 	$('#state').val('create');
 	$('#machineoffarm-machine_id').val(id);
+	$.getJSON('index.php?r=machine/getmachineinfo', {id: id}, function (data) {
+// 		alert(data.data.big.id);
+		if (data.status == 1) {
+// 			alert(data.data.big.id);
+			$('#bigClass').val(data.data.big.id).prop("selected","selected");
+			$('#smallClass').html(null);
+			$('#smallClass').append('<option value="prompt">请选择...</option>');
+// 			alert(data.data.small.id);
+			for(i=0;i<data.data.small.data.length;i++) {
+				$('#smallClass').append('<option value="'+data.data.small.data[i]['id']+'">'+data.data.small.data[i]['typename']+'</option>');
+			}
+			$('#smallClass').val(data.data.small.id).prop("selected","selected");
+			$('#lastClass').html(null);
+			$('#lastClass').append('<option value="prompt">请选择...</option>');
+			for(i=0;i<data.data.last.data.length;i++) {
+				$('#lastClass').append('<option value="'+data.data.last.data[i]['id']+'">'+data.data.last.data[i]['typename']+'</option>');
+			}
+			$('#lastClass').val(data.data.last.id).prop("selected","selected");
+			$('#machineoffarm-machinename').val(data.data.machinename);
+		}	
+	});
 }
 $('#bigClass').change(function(){
 	var input = $(this).val();

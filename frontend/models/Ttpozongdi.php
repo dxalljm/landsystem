@@ -29,7 +29,7 @@ class Ttpozongdi extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['oldfarms_id', 'newfarms_id','create_at','reviewprocess_id'], 'integer'],
+            [['oldfarms_id', 'newfarms_id','create_at','reviewprocess_id','state'], 'integer'],
             [['zongdi','oldzongdi','ttpozongdi','oldcontractnumber'], 'string'],
             [['ttpoarea'], 'number']
         ];
@@ -51,6 +51,7 @@ class Ttpozongdi extends \yii\db\ActiveRecord
         	'ttpoarea' => '转让的面积',
         	'reviewpeocess_id' => '审核过程ID',
         	'oldcontractnumber' => '旧合同号',
+        	'state' => '状态',
         ];
     }
 }

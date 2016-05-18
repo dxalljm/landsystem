@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use app\models\UploadForm;
 use yii\web\UploadedFile;
 use app\models\Machinetype;
+use yii\helpers\ArrayHelper;
 /**
  * MachineController implements the CRUD actions for Machine model.
  */
@@ -105,6 +106,37 @@ class MachineController extends Controller
         return $this->redirect(['machineindex']);
     }
 
+    public function actionGetmachineinfo($id)
+    {
+    	$result = [];
+    	$machine = Machine::find()->where(['id'=>$id])->one();
+
+    	$result['machinename'] = $machine['productname'];
+    	
+    	$father_id = Machinetype::find()->where(['id'=>$machine['machinetype_id']])->one()['father_id'];
+    	$last = Machinetype::find()->where(['id'=>$father_id])->one();
+    	
+    	$result['last']['id'] = $machine['machinetype_id'];
+    	$lastdata = ArrayHelper::map(Machinetype::find()->where(['father_id'=>$last['id']])->all(), 'id', 'typename');
+    	foreach ($lastdata as $key=>$value) {
+    		$result['last']['data'][] = ['id'=>$key,'typename'=>$value];
+    	}
+
+//     	var_dump(Machinetype::find()->where(['father_id'=>$last['father_id']])->all());
+    	$result['small']['id'][] = $last['id'];
+    	$smalldata = ArrayHelper::map(Machinetype::find()->where(['father_id'=>$last['father_id']])->all(), 'id', 'typename');
+    	foreach ($smalldata as $key=>$value) {
+    		$result['small']['data'][] = ['id'=>$key,'typename'=>$value];
+    	}
+    	
+//     	$big = Machinetype::find()->where(['id'=>$small['father_id']])->one();
+    	$result['big']['id'] = $last['father_id'];
+//     	$result['big']['text'] = $big['typename'];
+//     	$result['big'] = ['data'=>ArrayHelper::map(Machinetype::find()->where(['father_id'=>$big])->all(), 'id', 'typename')];
+// 		var_dump($result);
+    	echo json_encode(['status'=>1,'data'=>$result]);
+    }
+    
     public function actionMachinexls()
     {
     	set_time_limit(0);
