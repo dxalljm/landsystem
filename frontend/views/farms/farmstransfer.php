@@ -16,7 +16,9 @@ use yii\helpers\Url;
 /* @var $model app\models\Farms */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
+<style>
+.remove{cursor:pointer}
+</style>
 <div class="farms-form">
 <section class="content">
     <div class="row">
@@ -181,15 +183,15 @@ use yii\helpers\Url;
 		  </tr>
 		<tr>
 		  <td align='right' valign="middle">宗地面积</td>
-		  <td colspan="5" align='left' valign="middle"><?= $model->measure ?></td>
+		  <td colspan="5" align='left' valign="middle"><?= $form->field($nowModel, 'measure')->textInput(['readonly'=>true])->label(false)->error(false); ?></td>
 		  </tr>
 		<tr>
-		  <td align='right' valign="middle">未明确地块面积</td>
-		  <td colspan="5" align='left' valign="middle"><?= $model->notclear?></td>
+		  <td align='right' valign="middle">未明确地块面积</td><?php $nowModel->notclear = $model->notclear;?>
+		  <td colspan="5" align='left' valign="middle"><?= $form->field($nowModel, 'notclear')->textInput(['readonly'=>true])->label(false)->error(false);?></td>
 		  </tr>
 		<tr>
 		  <td align='right' valign="middle">未明确状态地块面积</td>
-		  <td colspan="5" align='left' valign="middle"><?= $model->notstate?></td>
+		  <td colspan="5" align='left' valign="middle"><?= $form->field($nowModel, 'notstate')->textInput(['readonly'=>true])->label(false)->error(false);?></td>
 		  </tr>
       <tr>
         <td align='right'>备注</td>
@@ -227,9 +229,11 @@ use yii\helpers\Url;
 </div>
 
 <script>
+
 function zongdiRemove(zongdi,measure,dialogID)
 {
 	removeZongdiForm(zongdi,measure);
+	removeNowZongdi(zongdi);
 	$('#new'+zongdi).remove();
 // 	var zongdiarr = zongdi.split('_');
 	$('#'+zongdi).attr('disabled',false);
@@ -252,20 +256,10 @@ function zongdiRemove(zongdi,measure,dialogID)
 		$('#'+zongdi).text($('#'+zongdi).val());
 	}
 	if(dialogID == 'dialog2') {
-		var value = $('#oldfarms-notclear').val()*1+measure*1;
-		$('#oldfarms-notclear').val(value.toFixed(2));
-		//如果存在未明确状态面积，那么先减未明确状态面积
-		var notstate = $('#farms-notstate').val();
-		if(notstate > 0) {
-			if(notstate >= measure) {
-				$('#farms-notstate').val(notstate - measure);
-			} else {
-				$('#farms-notstate').val(0);
-			}
-		}
+		
 		var newvalue = $('#farms-measure').val()*1 - measure*1;
-		$('#farms-measure').val(newvalue.toFixed(2));
-		$('#temp_measure').val(newvalue.toFixed(2));
+		$('#farms-measure').val(newvalue);
+		jisuan();
 	}
 	//宗地面积计算结束
 	toHTH();
@@ -282,6 +276,19 @@ function removeZongdiForm(zongdi,measure)
 	var newnewzongdi = arr1.join('、');
 // 	alert(newnewzongdi);
 	$('#farms-zongdi').val(newnewzongdi);
+// 	return result;
+}
+function removeNowZongdi(zongdi)
+{
+	var nowzongdi = $('#new-zongdi').val();
+	var arr1 = nowzongdi.split('|');
+	$.each(arr1, function(i,val){  
+	      if(val === zongdi)
+	    	  arr1.splice(i,1);	      
+	  });   
+	var newnewzongdi = arr1.join('|');
+// 	alert(newnewzongdi);
+	$('#new-zongdi').val(newnewzongdi);
 // 	return result;
 }
 function nowZongdiFind(zongdi)
@@ -341,25 +348,12 @@ $('#dialog2').dialog({
 		  						zongdiForm(zongdi,measure);		  						
 		  					 	var newzongdi = zongdi+'('+measure+')';
 		  					 	var newzongdihtml = '<li class="select2-selection__choice" id="new'+zongdi+'" title="'+newzongdi+'"><span class="remove text-red" role="presentation" onclick=zongdiRemove("'+zongdi+'","'+measure+'","dialog2")>×</span>'+newzongdi+'</li>';
-		  						
-		  						$('.select2-selection__rendered').append(newzongdihtml);
-		  						$('#'+zongdi).attr('disabled',true);
-		  						var value = $('#oldfarms-notclear').val()*1-measure*1;
-		  						$('#oldfarms-notclear').val(value.toFixed(2));
-		  						var newvalue = $('#farms-measure').val()*1 + measure*1;
+		  					 	var newvalue = $('#farms-measure').val()*1 + measure*1;
 		  						$('#farms-measure').val(newvalue.toFixed(2));
 		  						$('#temp_measure').val(newvalue.toFixed(2));
-		  						toHTH();
-		  						var ycontractarea = parseFloat($('#farms-contractarea').val());
-		  						var oldcontractarea = parseFloat($('#oldfarms-contractarea').val());
+		  						$('.select2-selection__rendered').append(newzongdihtml);
+		  						jisuan();
 		  						
-		  						if(oldcontractarea < 0 && ycontractarea > 0) {
-		  							alert('宗地面积已经大于合同面积，多出面积自动加入未明确状态面积');
-		  						}
-		  						if(oldcontractarea < 0) {
-		  							$('#farms-notstate').val(Math.abs(oldcontractarea));
-		  							toHTH();
-		  						}
 		  						var newtempzongdi = $('#new-zongdi').val();
 		  						$("#new-zongdi").val(zongdi+'|'+newtempzongdi);
 		  						$('#findZongdi').val('');
@@ -441,12 +435,34 @@ $( "#dialog" ).dialog({
 		}
 	]
 });
+function jisuan()
+{
+	var notclaer = $('#farms-notclear').val();
+	var notstate = $('#farms-notstate').val();
+	var contractarea = <?= $model->contractarea?>;
+	var measure = $('#farms-measure').val();
+
+	var result = contractarea - measure;
+	if(result > 0) {
+		$('#farms-notclear').val(result.toFixed(2));
+		$('#farms-notstate').val(0);
+	}
+	if(result == 0) {
+		$('#farms-notclear').val(0);
+		$('#farms-notstate').val(0);
+	}
+	if(result < 0) {
+		$('#farms-notclear').val(0);
+		$('#farms-notstate').val(Math.abs(result.toFixed(2)));
+	}
+}
 //点击宗地输入框弹出宗地信息查找框
 $('#inputZongdi').dblclick(function(){
 	var notclear = <?= $model->notclear?>;
 	if(Number(notclear) > 0) {
 		$("#dialogSelect").val('dialog2');
 		$( "#dialog2" ).dialog( "open" );
+		$('#findZongdi').focus();
 	}
 });
 $('#findZongdi').keyup(function (event) {
@@ -475,19 +491,25 @@ $('#findZongdi').keyup(function (event) {
 });
 $('#findZongdi').blur(function (event) {
 	var input = $(this).val();
-	$.getJSON("<?= Url::to(['parcel/parcelarea'])?>", {zongdi: input}, function (data) {
-		if (data.status == 1) {
-			$('#findMeasure').val(data.area);
-			$('#ymeasure').val(data.area);
-		}
-		else {
-			if(input != '') {
-				alert(data.message);
-				$("#findZongdi").val('');
-				$("#findZongdi").focus();
+	if(nowZongdiFind(input)){
+		alert('您已经输入过此宗地号，请不要重复输入');
+		$('#findZongdi').val('');
+			$('#findMeasure').val('');
+	} else {
+		$.getJSON("<?= Url::to(['parcel/parcelarea'])?>", {zongdi: input}, function (data) {
+			if (data.status == 1) {
+				$('#findMeasure').val(data.area);
+				$('#ymeasure').val(data.area);
 			}
-		}
-	});
+			else {
+				if(input != '') {
+					alert(data.message);
+					$("#findZongdi").val('');
+					$("#findZongdi").focus();
+				}
+			}
+		});
+	}
 });
 // Link to open the dialog
 $( ".dialog-link" ).click(function( event ) {

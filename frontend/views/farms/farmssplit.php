@@ -312,6 +312,7 @@ use yii\helpers\Url;
 function zongdiRemove(zongdi,measure,dialogID)
 {
 	removeZongdiForm(zongdi,measure);
+	removeNowZongdi(zongdi);
 	$('#new'+zongdi).remove();
 // 	var zongdiarr = zongdi.split('_');
 	$('#'+zongdi).attr('disabled',false);
@@ -364,6 +365,19 @@ function removeZongdiForm(zongdi,measure)
 	var newnewzongdi = arr1.join('、');
 // 	alert(newnewzongdi);
 	$('#farms-zongdi').val(newnewzongdi);
+// 	return result;
+}
+function removeNowZongdi(zongdi)
+{
+	var nowzongdi = $('#new-zongdi').val();
+	var arr1 = zongdi.split('|');
+	$.each(arr1, function(i,val){  
+	      if(val === zongdi)
+	    	  arr1.splice(i,1);	      
+	  });   
+	var newnewzongdi = arr1.join('|');
+// 	alert(newnewzongdi);
+	$('#new-zongdi').val(newnewzongdi);
 // 	return result;
 }
 function nowZongdiFind(zongdi)

@@ -61,7 +61,7 @@ use app\models\Reviewprocess;
 			  <tr height="40px">
 			    <td align="center"><?= $oldfarm->farmname?></td>
 			    <td align="center"><?= $oldfarm->farmername?></td>
-			    <td align="center"><?= $oldfarm->measure?></td>
+			    <td align="center"><?= $oldfarm->contractarea?></td>
 			    <td align="center"><?= $newfarm->farmname?></td>
 			    <td align="center"><?= $newfarm->farmername?></td>
 			    <td align="center"><?= $newfarm->measure?></td>
