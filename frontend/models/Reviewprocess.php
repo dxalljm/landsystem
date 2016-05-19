@@ -211,16 +211,17 @@ class Reviewprocess extends \yii\db\ActiveRecord
     {
     	if(empty($actionname)) {
     		$processID = Logicalpoint::find()->where(['actionname'=>yii::$app->controller->action->id])->one()['processname'];
+//     		var_dump(Auditprocess::find()->where(['id'=>$processID])->one());exit;
    			return Auditprocess::find()->where(['id'=>$processID])->one();
     	}
     	else 
     		return Auditprocess::find()->where(['actionname'=>$actionname])->one();
     }
     //返回访问地址
-    public static function getReturnAction() 
+    public static function getReturnAction($id) 
     {
-    	
-    	return 'reviewprocess/reviewprocess'.yii::$app->controller->action->id;
+//     	var_dump($id);
+    	return 'reviewprocess/reviewprocess'.Auditprocess::findOne($id)['actionname'];
     }
     //返回定位方法名称
     public static function getAction($key = NULL)
@@ -231,10 +232,10 @@ class Reviewprocess extends \yii\db\ActiveRecord
     		return self::getReviewprocessOne($key)['actionname'];
     }
     //返回审核流程
-    public static function getProcess($actionname = NULL)
+    public static function getProcess($id)
     {
     	
-    	return explode('>', self::getAuditprocess($actionname)['process']);
+    	return explode('>', Auditprocess::findOne($id)['process']);
     }
     //判断当前角色是否审核流程
     public static function isShowProess($actionname) {
@@ -256,9 +257,9 @@ class Reviewprocess extends \yii\db\ActiveRecord
    
     
     //保存流程
-    public static function processRun($oldfarms_id=NULL,$newfarms_id=null,$operation_id=NULL)
+    public static function processRun($auditprocess_id,$oldfarms_id=NULL,$newfarms_id=null,$operation_id=NULL)
     { 	
-    	$processs = self::getProcess();
+    	$processs = self::getProcess($auditprocess_id);
 //     	var_dump($processs);exit;
     	$reviewprocessModel = new Reviewprocess();
     	$reviewprocessModel->oldfarms_id = $oldfarms_id;

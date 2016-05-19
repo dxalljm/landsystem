@@ -802,6 +802,7 @@ class FarmsController extends Controller {
 			$ttpoModel->zongdi = $nowModel->zongdi;
 			$ttpoModel->oldzongdi = $model->zongdi;
 // 			$ttpoModel->reviewprocess_id = $reviewprocessID;
+			$ttpoModel->auditprocess_id = 1;
 			$ttpoModel->oldcontractnumber = $model->contractnumber;
 			$ttpoModel->ttpozongdi = $nowModel->zongdi;
 			$ttpoModel->ttpoarea = $nowModel->measure;
@@ -835,7 +836,9 @@ class FarmsController extends Controller {
 	}
 	
 	public function actionFarmsttpoupdate($id,$farms_id) {
-		$nowModel = $this->findModel ( $farms_id );
+		$model = $this->findModel ( $farms_id );
+		$ttpoModel = Ttpozongdi::findOne($id);
+		$nowModel = $this->findModel($ttpoModel->newfarms_id);
 		$oldAttr = $nowModel->attributes;
 		// $model->state = 0;
 	
@@ -868,14 +871,15 @@ class FarmsController extends Controller {
 // 			$oldModel->locked = 1;
 // 			$oldModel->save ();
 			// 			var_dump($oldModel->getErrors());exit;
-			$reviewprocessID = Reviewprocess::processRun ( $model->id, $nowModel->id );
-			$ttpoModel = Ttpozongdi::findOne($id);
+// 			$reviewprocessID = Reviewprocess::processRun ( $model->id, $nowModel->id );
+			
 			$ttpoModel->oldfarms_id = $model->id;
 			$ttpoModel->newfarms_id = $nowModel->id;
 			$ttpoModel->create_at = time ();
 			$ttpoModel->zongdi = $nowModel->zongdi;
 			$ttpoModel->oldzongdi = $model->zongdi;
-			$ttpoModel->reviewprocess_id = $reviewprocessID;
+// 			$ttpoModel->reviewprocess_id = 1;
+			$ttpoModel->auditprocess_id = 1;
 			$ttpoModel->oldcontractnumber = $model->contractnumber;
 			$ttpoModel->ttpozongdi = $nowModel->zongdi;
 			$ttpoModel->ttpoarea = $nowModel->measure;
@@ -883,15 +887,18 @@ class FarmsController extends Controller {
 			$ttpoModel->save ();
 			$newAttr = $nowModel->attributes;
 			Logs::writeLog ( '农场转让信息', $nowModel->id, $oldAttr, $newAttr );
-				
-			return $this->redirect ( [
-					Reviewprocess::getReturnAction (),
-					'newfarmsid' => $nowModel->id,
-					'oldfarmsid' => $model->id,
-					'reviewprocessid' => $reviewprocessID
-			] );
+			$oldFarm = Farms::find()->where(['id'=>$ttpoModel->oldfarms_id])->one();
+			$newFarm = Farms::find()->where(['id'=>$ttpoModel->newfarms_id])->one();
+			return $this->redirect ([
+					'farmsttpozongdiview',
+					'id'=> $ttpoModel->id,
+					'farms_id'=>$ttpoModel->oldfarms_id,
+					'ttpoModel' => $ttpoModel,
+					'oldFarm' => $oldFarm,
+					'newFarm' => $newFarm,
+			]);
 		} else {
-			return $this->render ( 'farmstransfer', [
+			return $this->render ( 'farmsttpoupdate', [
 					'model' => $model,
 					'nowModel' => $nowModel,
 					'farms_id' => $farms_id
@@ -962,13 +969,15 @@ class FarmsController extends Controller {
 				$newmodel->save ();
 				Parcel::parcelState(['farms_id'=>$newmodel->id,'zongdi'=>$newmodel->zongdi,'state'=>true]);
 			}
-			$reviewprocessID = Reviewprocess::processRun ( $oldmodel->id, $newmodel->id );
+// 			$reviewprocessID = Reviewprocess::processRun ( $oldmodel->id, $newmodel->id );
 			$ttpozongdi = new Ttpozongdi ();
 			$ttpozongdi->oldfarms_id = $oldmodel->id;
 			$ttpozongdi->newfarms_id = $newmodel->id;
 			$ttpozongdi->zongdi = $newmodel->zongdi;
 			$ttpozongdi->oldzongdi = $oldzongdi;
-			$ttpozongdi->reviewprocess_id = $reviewprocessID;
+// 			$ttpozongdi->reviewprocess_id = $reviewprocessID;
+			$ttpozongdi->auditprocess_id = 1;
+			$ttpozongdi->state = 0;
 			$ttpozongdi->oldcontractnumber = $oldcontractnumber;
 			$ttpozongdi->create_at = $oldmodel->update_at;
 			$ttpozongdi->ttpozongdi = Yii::$app->request->post ( 'ttpozongdi' );

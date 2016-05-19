@@ -9,11 +9,12 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Logs;
-
+use app\models\Reviewprocess;
+use app\models\Ttpozongdi;
 /**
  * TheyearController implements the CRUD actions for Theyear model.
  */
-class Ttpozongdi extends Controller
+class TtpozongdiController extends Controller
 {
     public function behaviors()
     {
@@ -27,15 +28,15 @@ class Ttpozongdi extends Controller
         ];
     }
 
-    public function beforeAction($action)
-    {
-    	$action = Yii::$app->controller->action->id;
-    	if(\Yii::$app->user->can($action)){
-    		return true;
-    	}else{
-    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
-    	}
-    }
+//     public function beforeAction($action)
+//     {
+//     	$action = Yii::$app->controller->action->id;
+//     	if(\Yii::$app->user->can($action)){
+//     		return true;
+//     	}else{
+//     		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+//     	}
+//     }
 
     /**
      * Updates an existing Theyear model.
@@ -47,14 +48,24 @@ class Ttpozongdi extends Controller
     {
         $model = $this->findModel($id);
 		
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-
-            return $this->redirect(['farms/farmsttpozongdiview', 'id' => $model->id,'farms_id'=>$model->oldfarms_id]);
-        } else {
-            return $this->render('ttpozongdiupdate', [
-                'model' => $model,
-            ]);
-        }
+        $model->load(Yii::$app->request->post());
+        $reviewprocessID = Reviewprocess::processRun ($id, $model->oldfarms_id, $model->newfarms_id );
+        var_dump($reviewprocessID);exit;
+        $model->reviewprocess_id = $reviewprocessID;
+        $model->state = 1;
+        $model->save();
+//         	var_dump(Reviewprocess::getReturnAction ($model->auditprocess_id));exit;
+       return $this->redirect ( [ 
+				Reviewprocess::getReturnAction ($model->auditprocess_id),
+				'newfarmsid' => $model->newfarms_id,
+				'oldfarmsid' => $model->oldfarms_id,
+				'reviewprocessid' => $reviewprocessID 
+       	] );
+//         } else {
+//             return $this->render('ttpozongdiupdate', [
+//                 'model' => $model,
+//             ]);
+//         }
     }
 
     public function actionTtpozongdicreate($id)
@@ -90,7 +101,7 @@ class Ttpozongdi extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Theyear::findOne($id)) !== null) {
+        if (($model = Ttpozongdi::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

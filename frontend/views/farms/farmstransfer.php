@@ -201,7 +201,7 @@ use yii\helpers\Url;
   </tr>
 </table>
 <div class="form-group">
-      <?= Html::submitButton('提交申请', ['class' => 'btn btn-success']) ?>
+      <?= Html::submitButton('提交', ['class' => 'btn btn-success']) ?>
       <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
 </div>
 

@@ -159,7 +159,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </table></td>
       </tr>
     </table>
-    <?= Html::a('提交申请', ['ttpozongdi/ttpozongdiupdate','id'=>$ttpoModel->id], ['class' => 'btn btn-success'])?>
+    <?= Html::a('提交申请', ['ttpozongdi/ttpozongdiupdate','id'=>$ttpoModel->id], ['class' => 'btn btn-success','data' => ['confirm' => '您确定要提交申请吗？', 'method' => 'post']])?>
     <?= Html::a('修改', ['farms/farmsttpoupdate','id'=>$ttpoModel->id,'farms_id'=>$farms_id], ['class' => 'btn btn-success'])?>
     <?= Html::a('撤消申请', ['ttpozongdi/ttpozongdidelete','id'=>$ttpoModel->id], ['class' => 'btn btn-success'])?>
     <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$farms_id], ['class' => 'btn btn-success'])?>
