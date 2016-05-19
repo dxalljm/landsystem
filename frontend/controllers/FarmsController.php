@@ -748,12 +748,14 @@ class FarmsController extends Controller {
 		return $this->render ( 'farmsttpozongdiview', [ 
 				'ttpoModel' => $ttpoModel,
 				'oldFarm' => $oldFarm,
-				'newFarm' => $newFarm 
+				'newFarm' => $newFarm,
+				'farms_id' => $ttpoModel->oldfarms_id,
 		] );
 	}
 	// 农场过户，state状态：0为已经失效，1为当前正用
 	public function actionFarmstransfer($farms_id) {
 		$model = $this->findModel ( $farms_id );
+		
 		$oldAttr = $model->attributes;
 		// $model->state = 0;
 		
@@ -792,14 +794,14 @@ class FarmsController extends Controller {
 			$oldModel->locked = 1;
 			$oldModel->save ();
 // 			var_dump($oldModel->getErrors());exit;
-			$reviewprocessID = Reviewprocess::processRun ( $model->id, $nowModel->id );
+// 			$reviewprocessID = Reviewprocess::processRun ( $model->id, $nowModel->id );
 			$ttpoModel = new Ttpozongdi ();
 			$ttpoModel->oldfarms_id = $model->id;
 			$ttpoModel->newfarms_id = $nowModel->id;
 			$ttpoModel->create_at = time ();
 			$ttpoModel->zongdi = $nowModel->zongdi;
 			$ttpoModel->oldzongdi = $model->zongdi;
-			$ttpoModel->reviewprocess_id = $reviewprocessID;
+// 			$ttpoModel->reviewprocess_id = $reviewprocessID;
 			$ttpoModel->oldcontractnumber = $model->contractnumber;
 			$ttpoModel->ttpozongdi = $nowModel->zongdi;
 			$ttpoModel->ttpoarea = $nowModel->measure;
@@ -807,13 +809,22 @@ class FarmsController extends Controller {
 			$ttpoModel->save ();
 			$newAttr = $nowModel->attributes;
 			Logs::writeLog ( '农场转让信息', $nowModel->id, $oldAttr, $newAttr );
-			
-			return $this->redirect ( [ 
-					Reviewprocess::getReturnAction (),
-					'newfarmsid' => $nowModel->id,
-					'oldfarmsid' => $model->id,
-					'reviewprocessid' => $reviewprocessID 
-			] );
+			$oldFarm = Farms::find()->where(['id'=>$ttpoModel->oldfarms_id])->one();
+			$newFarm = Farms::find()->where(['id'=>$ttpoModel->newfarms_id])->one();
+			return $this->redirect ([
+					'farmsttpozongdiview',
+					'id'=> $ttpoModel->id,
+					'farms_id'=>$ttpoModel->oldfarms_id,
+					'ttpoModel' => $ttpoModel,
+					'oldFarm' => $oldFarm,
+					'newFarm' => $newFarm,
+			]);
+// 			return $this->redirect ( [ 
+// 					Reviewprocess::getReturnAction (),
+// 					'newfarmsid' => $nowModel->id,
+// 					'oldfarmsid' => $model->id,
+// 					'reviewprocessid' => $reviewprocessID 
+// 			] );
 		} else {
 			return $this->render ( 'farmstransfer', [ 
 					'model' => $model,

@@ -182,7 +182,7 @@ use yii\helpers\Url;
 		  <td colspan="5" align='left' valign="middle"><?= $model->contractarea ?></td>
 		  </tr>
 		<tr>
-		  <td align='right' valign="middle">宗地面积</td>
+		  <td align='right' valign="middle">宗地面积</td><?php $nowModel->measure = $model->measure;?>
 		  <td colspan="5" align='left' valign="middle"><?= $form->field($nowModel, 'measure')->textInput(['readonly'=>true])->label(false)->error(false); ?></td>
 		  </tr>
 		<tr>
@@ -190,7 +190,7 @@ use yii\helpers\Url;
 		  <td colspan="5" align='left' valign="middle"><?= $form->field($nowModel, 'notclear')->textInput(['readonly'=>true])->label(false)->error(false);?></td>
 		  </tr>
 		<tr>
-		  <td align='right' valign="middle">未明确状态地块面积</td>
+		  <td align='right' valign="middle">未明确状态地块面积</td><?php $nowModel->notstate = $model->notstate;?>
 		  <td colspan="5" align='left' valign="middle"><?= $form->field($nowModel, 'notstate')->textInput(['readonly'=>true])->label(false)->error(false);?></td>
 		  </tr>
       <tr>
