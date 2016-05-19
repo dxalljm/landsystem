@@ -52,6 +52,7 @@ use app\models\elasticsearchtest;
 use app\models\Farmselastic;
 use app\models\Otherfarms;
 use app\models\Insurance;
+use app\models\Estate;
 // use PHPExcel_IOFactory;
 
 /**
@@ -739,6 +740,7 @@ class FarmsController extends Controller {
 	// 查看转让信息
 	public function actionFarmsttpozongdiview($id) {
 		$ttpoModel = Ttpozongdi::findOne ( $id );
+		$state = Estate::find()->where(['reviewprocess_id'=>$ttpoModel->reviewprocess_id])->count();
 		$oldFarm = Farms::find ()->where ( [ 
 				'id' => $ttpoModel->oldfarms_id 
 		] )->one ();
@@ -750,6 +752,7 @@ class FarmsController extends Controller {
 				'oldFarm' => $oldFarm,
 				'newFarm' => $newFarm,
 				'farms_id' => $ttpoModel->oldfarms_id,
+				'state' => $state,
 		] );
 	}
 	// 农场过户，state状态：0为已经失效，1为当前正用
@@ -765,7 +768,7 @@ class FarmsController extends Controller {
 		
 		if ($nowModel->load ( Yii::$app->request->post () )) {
 			// 保存审核信息，成功返回reviewprocessID，失败返回flase
-			
+// 			var_dump($nowModel);exit;
 			// var_dump($reviewprocessModel->getErrors());exit;
 			$lockedinfoModel = new Lockedinfo ();
 			$lockedinfoModel->farms_id = $farms_id;
@@ -986,12 +989,14 @@ class FarmsController extends Controller {
 			$ttpozongdi->save ();
 			Contractnumber::contractnumberAdd ();
 			// var_dump($ttpozongdi->getErrors());exit;
-			return $this->redirect ( [ 
-					Reviewprocess::getReturnAction (),
-					'newfarmsid' => $newmodel->id,
-					'oldfarmsid' => $oldmodel->id,
-					'reviewprocessid' => $reviewprocessID 
-			] );
+			return $this->redirect ([
+					'farmsttpozongdiview',
+					'id'=> $ttpozongdi->id,
+					'farms_id'=>$ttpozongdi->oldfarms_id,
+					'ttpoModel' => $ttpozongdi,
+					'oldFarm' => $oldmodel,
+					'newFarm' => $newmodel,
+			]);
 		} else {
 			
 			return $this->render ( 'farmssplit', [ 

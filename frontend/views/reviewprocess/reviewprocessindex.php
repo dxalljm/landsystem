@@ -62,7 +62,7 @@ $this->params ['breadcrumbs'] [] = $this->title;
 							$newfarm = Farms::find()->where(['id'=>$value['newfarms_id']])->one();
 							$oldfarm = Farms::find()->where(['id'=>$value['oldfarms_id']])->one();
 // 							var_dump($newfarm);exit;
-							if(Reviewprocess::isShowProess($value['actionname'])) {
+							if(Reviewprocess::isShowProess($value['operation_id'])) {
 								$field = Reviewprocess::getProcessIdentification();
 								?>
 							<tr height="40px">
@@ -88,7 +88,11 @@ $this->params ['breadcrumbs'] [] = $this->title;
 								    	  <?= Reviewprocess::state($value['state']); ?> <span class="caret"></span>
 								   </div>
 								   <ul class="dropdown-menu" role="menu">
-								   <?php foreach (Reviewprocess::getProcess($value['actionname']) as $val) {?>
+								   <?php 
+// 								   var_dump(Reviewprocess::getProcess($value['operation_id']));exit;
+								   foreach (Reviewprocess::getProcess($value['operation_id']) as $val) {
+// 								   var_dump($value[$val]);exit;
+								   	?>
 								      <li><a href="#"><?= Processname::find()->where(['Identification'=>$val])->one()['processdepartment'].':'.Reviewprocess::state($value[$val])?></a></li>
 								   <?php }?>
 								   </ul>
@@ -107,7 +111,7 @@ $this->params ['breadcrumbs'] [] = $this->title;
 								if($s) 
 									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id'],'class'=>'farmstransfer'],['class'=>'btn btn-success']); 
 								else {
-									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id']],['class'=>'btn btn-success','disabled'=>'disabled']);
+									echo  html::a('审核','#',['class'=>'btn btn-success','disabled'=>'disabled']);
 								}?></td>
 							</tr>
 							
@@ -173,7 +177,7 @@ if($projectapplication) {?>
 								if($s) 
 									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id'],'class'=>'projectapplication'],['class'=>'btn btn-success']); 
 								else {
-									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id']],['class'=>'btn btn-success','disabled'=>'disabled']);
+									echo  html::a('审核','#',['class'=>'btn btn-success','disabled'=>'disabled']);
 								}?></td>
 							</tr>
 							

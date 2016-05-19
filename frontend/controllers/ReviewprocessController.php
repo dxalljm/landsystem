@@ -15,6 +15,7 @@ use app\models\Projectapplication;
 use app\models\Tempauditing;
 use app\models\Loan;
 use app\models\Ttpozongdi;
+use app\models\Estate;
 /**
  * ReviewprocessController implements the CRUD actions for Reviewprocess model.
  */
@@ -73,7 +74,7 @@ class ReviewprocessController extends Controller
     	$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$newfarmsid])->one();
     	$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$oldfarmsid])->one();
     	$reviewprocess = Reviewprocess::find()->where(['id'=>$reviewprocessid])->one();
-    	$process = Auditprocess::find()->where(['actionname'=>$reviewprocess['actionname']])->one()['process'];
+    	$process = Auditprocess::find()->where(['id'=>$reviewprocess['operation_id']])->one()['process'];
 //     	var_dump($process);exit;
     	return $this->render ( 'reviewprocessfarmstransfer', [
     			'oldfarm' => $oldfarm,
@@ -95,7 +96,7 @@ class ReviewprocessController extends Controller
     	$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$newfarmsid])->one();
     	$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$oldfarmsid])->one();
     	$reviewprocess = Reviewprocess::find()->where(['id'=>$reviewprocessid])->one();
-    	$process = Auditprocess::find()->where(['actionname'=>$reviewprocess['actionname']])->one()['process'];
+    	$process = Auditprocess::find()->where(['id'=>$reviewprocess['operation_id']])->one()['process'];
     	//     	var_dump($process);exit;
     	return $this->render ( 'reviewprocessfarmstransfer', [
     			'oldfarm' => $oldfarm,
@@ -116,8 +117,8 @@ class ReviewprocessController extends Controller
     	$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$newfarmsid])->one();
     	$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$oldfarmsid])->one();
     	$reviewprocess = Reviewprocess::find()->where(['id'=>$reviewprocessid])->one();
-    	$process = Auditprocess::find()->where(['actionname'=>$reviewprocess['actionname']])->one()['process'];
-    	 
+    	$process = Auditprocess::find()->where(['id'=>$reviewprocess['operation_id']])->one()['process'];
+//     	 var_dump($reviewprocessid);exit;
     	return $this->render ( 'reviewprocessfarmssplit', [
     			'oldfarm' => $oldfarm,
     			'newfarm' => $newfarm,
@@ -136,7 +137,7 @@ class ReviewprocessController extends Controller
     	$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$newfarmsid])->one();
     	$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$oldfarmsid])->one();
     	$reviewprocess = Reviewprocess::find()->where(['id'=>$reviewprocessid])->one();
-    	$process = Auditprocess::find()->where(['actionname'=>$reviewprocess['actionname']])->one()['process'];
+    	$process = Auditprocess::find()->where(['id'=>$reviewprocess['operation_id']])->one()['process'];
 //     	var_dump($newfarm);
     	return $this->render ( 'reviewprocessfarmstozongdi', [
     			'oldfarm' => $oldfarm,
@@ -160,9 +161,19 @@ class ReviewprocessController extends Controller
 	    	$newfarm = Farms::find()->where(['id'=>$model->newfarms_id])->one();
 	    	if($model->load(Yii::$app->request->post())) {
 	    		$model->save();
+// 	    		var_dump($_POST);exit;
 	    		$state = Reviewprocess::isNextProcess($model->id);
+	    		$estateID= Estate::find()->where(['reviewprocess_id'=>$id])->one()['id'];
+	    		$estateModel = Estate::findOne($estateID);
+	    		foreach (Estate::attributesList() as $key => $value) {
+	    			$estateModel->$key = Yii::$app->request->post($key);
+	    			$contentName = $key.'content';
+	    			$estateModel->$contentName = Yii::$app->request->post($contentName);
+	    		}
+	    		$estateModel->save();
+// 	    		var_dump($estateModel);exit;
 	    		if($state) {
-// 	    			var_dump($model);exit;
+	    			
 	    			$oldfarmsModel = Farms::findOne($model->oldfarms_id);
 	    			
 	    			$oldfarmsModel->update_at = time();
@@ -179,9 +190,9 @@ class ReviewprocessController extends Controller
 	    			$projectModel = Projectapplication::findOne($projectID);
 	    			$projectModel->farms_id = $newfarmModel->id;
 	    			$projectModel->save();
-	    			return $this->redirect(['reviewprocess/reviewprocessindex']);
+	    			
 	    		}
-	    		 
+	    		return $this->redirect(['reviewprocess/reviewprocessindex']);
 	    	}
 	    	return $this->render ( 'reviewprocessinspections', [
 	    			'model' => $model,

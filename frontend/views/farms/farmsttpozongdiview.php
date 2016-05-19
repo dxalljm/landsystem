@@ -63,6 +63,10 @@ $this->params['breadcrumbs'][] = $this->title;
 			<td align='left'><?= ManagementArea::findOne($oldFarm->management_area)['areaname'] ?></td>
 		</tr>
 		<tr>
+			<td width=20% align='right'>合同号</td>
+			<td align='left'><?= $oldFarm->contractnumber ?></td>
+		</tr>
+		<tr>
 			<td width=20% align='right'>合同面积</td>
 			<td align='left'><?= $oldFarm->contractarea?>亩</td>
 		</tr>
@@ -125,6 +129,10 @@ $this->params['breadcrumbs'][] = $this->title;
             <td align='left'><?= ManagementArea::findOne($newFarm->management_area)['areaname'] ?></td>
           </tr>
           <tr>
+            <td width="15%" align='right'>合同号</td>
+            <td align='left'><?= $newFarm->contractnumber ?></td>
+          </tr>
+          <tr>
             <td width="15%" align='right'>合同面积</td>
             <td align='left'><?= $newFarm->contractarea ?></td>
           </tr>
@@ -159,11 +167,14 @@ $this->params['breadcrumbs'][] = $this->title;
         </table></td>
       </tr>
     </table>
+    <?php if($state == 0) {?>
     <?= Html::a('提交申请', ['ttpozongdi/ttpozongdiupdate','id'=>$ttpoModel->id], ['class' => 'btn btn-success','data' => ['confirm' => '您确定要提交申请吗？', 'method' => 'post']])?>
     <?= Html::a('修改', ['farms/farmsttpoupdate','id'=>$ttpoModel->id,'farms_id'=>$farms_id], ['class' => 'btn btn-success'])?>
     <?= Html::a('撤消申请', ['ttpozongdi/ttpozongdidelete','id'=>$ttpoModel->id], ['class' => 'btn btn-success'])?>
     <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$farms_id], ['class' => 'btn btn-success'])?>
-    <?php //echo Html::a('打印', ['reviewprocess/reviewprocessfarmssplit','oldfarmsid'=>$oldFarm->id,'newfarmsid'=>$newFarm->id,'reviewprocessid'=>$_GET['id']], ['class' => 'btn btn-success'])?>
+    <?php } else {?>
+    <?php echo Html::a('打印', ['reviewprocess/reviewprocessfarmssplit','oldfarmsid'=>$oldFarm->id,'newfarmsid'=>$newFarm->id,'reviewprocessid'=>$ttpoModel['reviewprocess_id']], ['class' => 'btn btn-success'])?>
+    <?php }?>
                 </div>
             </div>
         </div>

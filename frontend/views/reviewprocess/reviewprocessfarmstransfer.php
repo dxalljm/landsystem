@@ -19,7 +19,6 @@ use app\models\Lease;
 
     <?php $form = ActiveFormrdiv::begin(); ?>
     
-    
     <section class="content">
     <div class="row">
         <div class="col-xs-12">
@@ -86,11 +85,11 @@ use app\models\Lease;
 			    	if($i%5 == 0) {
 			    		echo '<tr>';
 			    		echo '<td>';
-			    		echo Lease::getZongdi($zongdiArray[$i]);
+			    		echo '<font size="2">'.Lease::getZongdi($zongdiArray[$i]).'</font>';
 			    		echo '</td>';
 			    	} else {
 			    		echo '<td>';
-			    		echo Lease::getZongdi($zongdiArray[$i]);
+			    		echo '<font size="2">'.Lease::getZongdi($zongdiArray[$i]).'</font>';
 			    		echo '</td>';
 			    	}
 			    	
@@ -103,18 +102,20 @@ use app\models\Lease;
 			    	if($i%5 == 0) {
 			    		echo '<tr>';
 			    		echo '<td>';
-			    		echo Lease::getZongdi($zongdiArray[$i]);
+			    		echo '<font size="2">'.Lease::getZongdi($zongdiArray[$i]).'</font>';
 			    		echo '</td>';
 			    	} else {
 			    		echo '<td>';
-			    		echo Lease::getZongdi($zongdiArray[$i]);
+			    		echo '<font size="2">'.Lease::getZongdi($zongdiArray[$i]).'</font>';
 			    		echo '</td>';
 			    	}
 			    	
 			    }?></table></td>
 			    </tr>
 			  <tr>
-			  <?php foreach ($process as $value) { ?>
+			  <?php 
+			  foreach ($process as $value) { 
+			  	?>
 			    <td align="center"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?></td>
 			    <td colspan="5" align="left"><br>&nbsp;&nbsp;&nbsp;&nbsp;<?= Reviewprocess::state(Reviewprocess::find()->where(['id'=>$reviewprocessid])->one()[$value]);?>
 			    <br>

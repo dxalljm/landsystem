@@ -51,7 +51,7 @@ use app\models\Farms;
             <div class="box-body">
              <table width="100%" border="1" cellpadding="0" cellspacing="0" class="ttpoprint">
 			  <tr height="40px">
-			    <td align="center">原农场名称</td>
+			    <td width="22%" align="center">原农场名称</td>
 			    <td width="13%" align="center">原法人</td>
 			    <td width="17%" align="center">原面积</td>
 			    <td width="22%" align="center">现农场名称</td>
@@ -61,14 +61,14 @@ use app\models\Farms;
 			  <tr height="40px">
 			    <td align="center"><?= $oldfarm->farmname?></td>
 			    <td align="center"><?= $oldfarm->farmername?></td>
-			    <td align="center"><?= Farms::getContractnumberArea($oldttpozongdi->oldcontractnumber);?></td>
+			    <td align="center"><?= $oldfarm->contractarea?></td>
 			    <td align="center"><?= $newfarm->farmname?></td>
 			    <td align="center"><?= $newfarm->farmername?></td>
 			    <td align="center"><?= $newfarm->contractarea?></td>
 			  </tr>
 			  <tr height="40px">
 			    <td align="center">原合同号</td>
-			    <td colspan="2" align="center"><?= $oldttpozongdi->oldcontractnumber?></td>
+			    <td colspan="2" align="center"><?= $oldfarm->contractnumber?></td>
 			    <td align="center">现合同号</td>
 			    <td colspan="2" align="center"><?= $newfarm->contractnumber?></td>
 			    </tr>
@@ -84,13 +84,13 @@ use app\models\Farms;
 			    <td colspan="5" align="center"><table width="100%" border="0" align="right"><?php for($i = 0;$i<count($zongdiArray);$i++) {
 // 			    	echo $i%6;
 			    	if($i%4 == 0) {
-			    		echo '<tr>';
+			    		echo '<tr height="2">';
 			    		echo '<td>';
-			    		echo $zongdiArray[$i];
+			    		echo '<font size="2">'.$zongdiArray[$i].'</font>';
 			    		echo '</td>';
 			    	} else {
 			    		echo '<td>';
-			    		echo $zongdiArray[$i];
+			    		echo '<font size="2">'.$zongdiArray[$i].'</font>';
 			    		echo '</td>';
 			    	} 	
 			    }?></table></td>
@@ -99,20 +99,22 @@ use app\models\Farms;
 			    <td align="center">现宗地信息</td><?php if(!empty($newttpozongdi->zongdi)) $zongdiArray = explode('、', $newttpozongdi->zongdi); if($newfarm->notclear) $zongdiArray[] = '未明确地块面积('.$newfarm->notclear.')';if($newfarm->notstate) $zongdiArray[] = '未明确状态面积('.$newfarm->notstate.')';?>
 			    <td colspan="5" align="center"><table width="100%" border="0" align="center"><?php for($i = 0;$i<count($zongdiArray);$i++) {
 			    	if($i%4 == 0) {
-			    		echo '<tr>';
+			    		echo '<tr height="2">';
 			    		echo '<td>';
-			    		echo $zongdiArray[$i];
+			    		echo '<font size="2">'.$zongdiArray[$i].'</font>';
 			    		echo '</td>';
 			    	} else {
 			    		echo '<td>';
-			    		echo $zongdiArray[$i];
+			    		echo '<font size="2">'.$zongdiArray[$i].'</font>';
 			    		echo '</td>';
 			    	}
 			    	
 			    }?></table></td>
 			    </tr>
 			  <tr>
-			  <?php foreach ($process as $value) { ?>
+			  <?php 
+// 			  var_dump($process);
+			  foreach ($process as $value) { ?>
 			  
 			    <td align="center"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?></td>
 			    <td colspan="5" align="right"><?php echo '<br><br><br><br>';?>

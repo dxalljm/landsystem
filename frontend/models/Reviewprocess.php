@@ -106,7 +106,9 @@ class Reviewprocess extends \yii\db\ActiveRecord
     
     public static function getProcessRole($Identification)
     {
+//     	var_dump($Identification);
     	$processname = Processname::find()->where(['Identification'=>$Identification])->one();
+//     	var_dump($processname);exit;
    		$result['rolename'] = $processname['rolename'];
    		$result['sparerole'] = $processname['sparerole'];
     	$result['isFinished'] = Reviewprocess::find()->where([$Identification=>2])->count();
@@ -134,7 +136,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
     public static function isNextProcess($id)
     {
     	$model = self::findOne($id);
-    	$processs = self::getProcess($model->actionname);
+    	$processs = self::getProcess($model->operation_id);
     	$rows = count($processs);
     	$i = 0;
     	$no = true;
@@ -239,11 +241,12 @@ class Reviewprocess extends \yii\db\ActiveRecord
     }
     //判断当前角色是否审核流程
     public static function isShowProess($actionname) {
+//     	var_dump($actionname);exit;
     	$process = Reviewprocess::getProcess($actionname);
     	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+//     	var_dump($process);exit;
     	foreach ($process as $p) {
 //     		if(self::getProcessRole($p)['rolename'] == User::getItemname() or self::getProcessRole($p)['sparerole'] == User::getItemname())
-			
 			if($temp) {
 				if(self::getProcessRole($p)['rolename'] == User::getUserItemname($temp['user_id']))
 					return true;
@@ -259,19 +262,25 @@ class Reviewprocess extends \yii\db\ActiveRecord
     //保存流程
     public static function processRun($auditprocess_id,$oldfarms_id=NULL,$newfarms_id=null,$operation_id=NULL)
     { 	
-    	$processs = self::getProcess($auditprocess_id);
-//     	var_dump($processs);exit;
+    	$auditprocess = Auditprocess::find()->where(['id'=>$auditprocess_id])->one();
+//     	var_dump($auditprocess_id);exit;
+    	$processs = explode('>',$auditprocess->process);
+//     	var_dump();exit;
     	$reviewprocessModel = new Reviewprocess();
     	$reviewprocessModel->oldfarms_id = $oldfarms_id;
     	$reviewprocessModel->newfarms_id = $newfarms_id;
     	$reviewprocessModel->operation_id = $operation_id;
     	$reviewprocessModel->management_area = Farms::find()->where(['id'=>$oldfarms_id])->one()['management_area'];
-    	$reviewprocessModel->actionname = self::getAction();
+    	$reviewprocessModel->actionname = $auditprocess->actionname;
     	$reviewprocessModel->create_at = time();
     	$reviewprocessModel->update_at = $reviewprocessModel->create_at;
-    	//var_dump($processs);exit;
+    	$reviewprocessModel->operation_id = $auditprocess_id;
+//     	var_dump($processs);exit;
     	for($i=0;$i<count($processs);$i++) {
-    		$reviewprocessModel->$processs[$i] = 2;
+    		if($processs[$i] == 'estate')
+    			$reviewprocessModel->$processs[$i] = 2;
+    		else
+    			$reviewprocessModel->$processs[$i] = 3;
     		if($processs[$i] == 'leader')
     			if($i == 0)
     				$reviewprocessModel->$processs[$i] = 2;

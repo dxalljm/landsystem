@@ -520,6 +520,7 @@ class Farms extends \yii\db\ActiveRecord {
 	
 	public static function getContractnumberArea($contractnumber)
 	{
+// 		var_dump($contractnumber);exit;
 		$array = explode ( '-', $contractnumber );
 		// var_dump($farms_id);
 		return $array [2];

@@ -11,6 +11,8 @@ use yii\filters\VerbFilter;
 use app\models\Logs;
 use app\models\Reviewprocess;
 use app\models\Ttpozongdi;
+use app\models\Auditprocess;
+use app\models\Estate;
 /**
  * TheyearController implements the CRUD actions for Theyear model.
  */
@@ -49,17 +51,21 @@ class TtpozongdiController extends Controller
         $model = $this->findModel($id);
 		
         $model->load(Yii::$app->request->post());
-        $reviewprocessID = Reviewprocess::processRun ($id, $model->oldfarms_id, $model->newfarms_id );
-        var_dump($reviewprocessID);exit;
+        $reviewprocessID = Reviewprocess::processRun ($model->auditprocess_id, $model->oldfarms_id, $model->newfarms_id );
+//         var_dump($reviewprocessID);exit;
         $model->reviewprocess_id = $reviewprocessID;
         $model->state = 1;
         $model->save();
+        $estateModel = new Estate();
+        $estateModel->reviewprocess_id = $reviewprocessID;
+        $estateModel->save();
 //         	var_dump(Reviewprocess::getReturnAction ($model->auditprocess_id));exit;
        return $this->redirect ( [ 
 				Reviewprocess::getReturnAction ($model->auditprocess_id),
 				'newfarmsid' => $model->newfarms_id,
 				'oldfarmsid' => $model->oldfarms_id,
-				'reviewprocessid' => $reviewprocessID 
+				'reviewprocessid' => $reviewprocessID,
+       			'process' => Auditprocess::find()->where(['id'=>$model->auditprocess_id])->one()['actionname']
        	] );
 //         } else {
 //             return $this->render('ttpozongdiupdate', [
