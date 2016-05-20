@@ -15,6 +15,7 @@ use app\models\Projecttype;
 use app\models\Infrastructuretype;
 use app\models\Tempauditing;
 use app\models\Loan;
+
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\ReviewprocessSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -68,10 +69,10 @@ $this->params ['breadcrumbs'] [] = $this->title;
 							<tr height="40px">
 								<td align="center"><?= $oldfarm->farmname?></td>
 								<td align="center"><?= $oldfarm->farmername?></td>
-								<td align="center"><?= $oldfarm->measure?>亩</td>
+								<td align="center"><?= $oldfarm->contractarea?>亩</td>
 								<td align="center"><?= $newfarm->farmname?></td>
 								<td align="center"><?= $newfarm->farmername?></td>
-								<td align="center"><?= $newfarm->measure?>亩</td>
+								<td align="center"><?= $newfarm->contractarea?>亩</td>
 								
 								<td align="center">
 								<?php 
@@ -111,7 +112,7 @@ $this->params ['breadcrumbs'] [] = $this->title;
 								if($s) 
 									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id'],'class'=>'farmstransfer'],['class'=>'btn btn-success']); 
 								else {
-									echo  html::a('审核','#',['class'=>'btn btn-success','disabled'=>'disabled']);
+									echo  html::a('查看',['reviewprocess/reviewprocessview','id'=>$value['id'],'class'=>'farmstransfer'],['class'=>'btn btn-success']);
 								}?></td>
 							</tr>
 							

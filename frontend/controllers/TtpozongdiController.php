@@ -13,6 +13,8 @@ use app\models\Reviewprocess;
 use app\models\Ttpozongdi;
 use app\models\Auditprocess;
 use app\models\Estate;
+use app\models\Farms;
+use app\models\Lockedinfo;
 /**
  * TheyearController implements the CRUD actions for Theyear model.
  */
@@ -90,12 +92,20 @@ class TtpozongdiController extends Controller
      */
     public function actionTtpozongdidelete($id)
     {
-        $model = $this->findModel(1);
+        $model = $this->findModel($id);
     	$old = $model->attributes;
-    	Logs::writeLog('删除年度',1,$old);
-        $model->delete();
-
-        return $this->redirect(['theyearindex']);
+    	Logs::writeLog('删除转让信息',$id,$old);
+       
+		$oldfarms = Farms::findOne($model->oldfarms_id);
+		$oldfarms->locked = 0;
+		$oldfarms->save();
+		$newfarms = Farms::findOne($model->newfarms_id);
+		$newfarms->delete();
+		$lockedinfo = Lockedinfo::find()->where(['farms_id'=>$model->oldfarms_id])->one();
+		$lockedinfoModel = Lockedinfo::findOne($lockedinfo['id']);
+		$lockedinfoModel->delete();
+		$model->delete();
+        return $this->redirect(['farms/farmsmenu', 'farms_id'=>$model->oldfarms_id]);
     }
 
     /**

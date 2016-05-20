@@ -183,7 +183,7 @@ class FarmerController extends Controller
     		 	return $this->render('farmercreate', [
 		                'model' => $model,
     		 			'membermodel' => $membermodel,
-		            	'farm' => $farm,
+		            	'farmModel' => $farm,
 		            ]);
     		 }
     	} else {

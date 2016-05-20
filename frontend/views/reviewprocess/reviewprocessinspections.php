@@ -152,7 +152,7 @@ use app\models\Estate;
 			      		echo '&nbsp;&nbsp;'.$list;
 			      		echo '</td>';
 			      		echo '<td>';
-			      		echo Html::textarea($key.'content','',['class'=>'econtent','rows'=>1,'cols'=>100,'id'=>$key.'content']);
+			      		echo '&nbsp;&nbsp;'.Html::textarea($key.'content','',['class'=>'econtent','rows'=>1,'cols'=>80,'id'=>$key.'content']);
 			      		echo "</td>";
 			      		echo '</tr>';
 			      	}
@@ -315,9 +315,10 @@ function showContent(key)
 // 	alert($('input:radio[name="'+key+'"]:checked').val());
 	if($('input:radio[name="'+key+'"]:checked').val() == 1) {
 		$('#'+key+'content').css('display','none');
-	} else
+	} else {
 		$('#'+key+'content').css('display','inline');
-	
+		$('#'+key+'content').attr('disabled','disabled');
+	}
 }
 			    
 if($('input:radio[name="Reviewprocess[estate]"]:checked').val() == 0){

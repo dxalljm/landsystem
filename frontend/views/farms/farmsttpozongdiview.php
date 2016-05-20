@@ -170,7 +170,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php if($state == 0) {?>
     <?= Html::a('提交申请', ['ttpozongdi/ttpozongdiupdate','id'=>$ttpoModel->id], ['class' => 'btn btn-success','data' => ['confirm' => '您确定要提交申请吗？', 'method' => 'post']])?>
     <?= Html::a('修改', ['farms/farmsttpoupdate','id'=>$ttpoModel->id,'farms_id'=>$farms_id], ['class' => 'btn btn-success'])?>
-    <?= Html::a('撤消申请', ['ttpozongdi/ttpozongdidelete','id'=>$ttpoModel->id], ['class' => 'btn btn-success'])?>
+    <?= Html::a('撤消申请', ['ttpozongdi/ttpozongdidelete','id'=>$ttpoModel->id], ['class' => 'btn btn-success','data' => ['confirm' => '您确定要撤消申请吗？', 'method' => 'post']])?>
     <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$farms_id], ['class' => 'btn btn-success'])?>
     <?php } else {?>
     <?php echo Html::a('打印', ['reviewprocess/reviewprocessfarmssplit','oldfarmsid'=>$oldFarm->id,'newfarmsid'=>$newFarm->id,'reviewprocessid'=>$ttpoModel['reviewprocess_id']], ['class' => 'btn btn-success'])?>

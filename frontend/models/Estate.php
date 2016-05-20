@@ -66,11 +66,11 @@ class Estate extends \yii\db\ActiveRecord
     {
     	return [
 //     			'id' => 'ID',
-    			'tjsqjbzs' => '双方提交申请及保证书',
-    			'tjsffyj' => '提交双方当事人身份证复印件',
-    			'sfyzy' => '宜农林地争议',
-    			'sfmqzongdi' => '明确宗地块',
-    			'sfydcbg' => '调查报告',
+    			'tjsqjbzs' => '承包人（出让方）是否在辖区管理',
+    			'tjsffyj' => '承包人拟转让承包合同面积与缴费面积是否一致',
+    			'sfyzy' => '拟转让的承包经营权限有无争议',
+    			'sfmqzongdi' => '双方当事人提供的拟转让地块图与实际是否一致',
+    			'sfydcbg' => '是否撰写调查报告',
 //     			'reviewprocess_id' => '审核过程ID',
     	];
     }
