@@ -5,6 +5,8 @@ use frontend\helpers\ActiveFormrdiv;
 use app\models\Tables;
 use app\models\Tablefields;
 use app\models\Farms;
+use app\models\Estate;
+use app\models\User;
 /* @var $this yii\web\View */
 /* @var $model app\models\Reviewprocess */
 
@@ -111,22 +113,67 @@ use app\models\Farms;
 			    	
 			    }?></table></td>
 			    </tr>
-			  <tr>
-			  <?php 
-// 			  var_dump($process);
-			  foreach ($process as $value) { ?>
 			  
-			    <td align="center"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?></td>
-			    <td colspan="5" align="right"><?php echo '<br><br><br><br>';?>
-			    
-		        <p>签字：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日 </p></td>
-			    </tr>
+			  <?php 
+			  
+			  foreach ($process as $value) { ?>
+			  	<tr>
+			  	<td align="center"><strong><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?></strong></td>	
+			  	<td colspan="5" align="left">		  				      
+			  				      <?php 
+			  				      if($value == 'leader')
+			  				      	echo "<br><br><br><br>";
+			  					  $classname = 'app\\models\\'.ucfirst($value);
+			  				      	$lists = $classname::attributesList();
+			  				      	$result = Estate::find()->where(['reviewprocess_id'=>$_GET['reviewprocessid']])->one();
+// 			  				      	$lists[] = 'leader';
+// 			  				      	var_dump($result);
+// 			  				      	if($lists) {
+// 			  				      	if($result) {
+			  				      		
+			  				      		echo '<table>';
+			  					      	foreach ($lists as $key=>$list) {
+			  					      		echo '<tr>';
+			  					      		echo '<td>';
+			  					      		if($value == 'estate') {
+				  					      		if($result[$key]) {
+				  					      			echo '<font size="2"><strong>是</strong>&nbsp;</font>';
+				  					      		} else { 
+				  					      			echo '<font size="2"><strong>否</strong></font>';
+				  					      		}
+			  					      		} else {
+				  					      		echo '<font size="2"><strong>是<i class="fa fa-square-o"></i></strong>&nbsp;</font>';
+				  					      		echo '<font size="2"><strong>否<i class="fa fa-square-o"></i></strong></font>';
+			  					      		}
+			  					      		
+			  					      		echo "<br><br>";
+			  					      		echo '</td>';
+			  					      		echo '<td>';
+			  					      		
+			  					      		echo '<font size="2">&nbsp;'.$list."</font>";
+			  					      		echo '</td>';
+			  					      		echo '<td>';
+			  					      		if($value == 'estate') {
+			  					      			if($result[$key."content"])
+			  					      				echo '&nbsp;<font size="2"><font ><strong>情况说明：'.$result[$key."content"].'</strong></font>';
+			  					      		} 
+			  					      		echo "</td>";
+			  					      		echo '</tr>';
+			  					      	}
+			  					      	echo '</table>';
+			  					      	
+// 			  				      	}
+// 			  				      	}
+			  				      ?>
+			  				      <p><font size="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;签字：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日 </font></p>
+			  				      </td>
+			  			       </tr>
 			  <?php }?>
 			  <tr>
 			    <td align="center">备&nbsp;&nbsp;&nbsp;&nbsp;注</td>
 			    <td colspan="5" align="center"><br><br><br><br>
 			 </tr>
-			</table>
+			</table> 
 			<br>
 			
             </div>

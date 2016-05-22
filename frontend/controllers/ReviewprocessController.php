@@ -189,19 +189,35 @@ class ReviewprocessController extends Controller
 // 	    			var_dump($model->oldfarms_id);exit;
 	    			$oldfarmsModel = Farms::findOne($model->oldfarms_id);	    			
 	    			$oldfarmsModel->update_at = time();
+	    			$oldfarmsModel->zongdi = $model->oldchangezongdi;
+	    			$oldfarmsModel->measure = $model->oldchangemeasure;
+	    			$oldfarmsModel->notclear = $model->oldchangenotclear;
+	    			$oldfarmsModel->notstate = $model->oldchangenotstate;
+	    			$oldfarmsModel->contractarea = Farms::getContractnumberArea($model->oldchangecontractnumber);
+	    			$oldfarmsModel->contractnumber = $model->oldchangecontractnumber;
 	    			$oldfarmsModel->state = 0;
 	    			$oldfarmsModel->locked = 0;
 	    			$oldfarmsModel->save();
 	    			
 	    			$newfarmModel = Farms::findOne($model->newfarms_id);	    			
 	    			$newfarmModel->update_at = time();
+	    			$newfarmModel->zongdi = $model->newchangezongdi;
+	    			$newfarmModel->measure = $model->newchangemeasure;
+	    			$newfarmModel->notclear = $model->newchangenotclear;
+	    			$newfarmModel->notstate = $model->newchangenotstate;
+	    			$newfarmModel->contractarea = Farms::getContractnumberArea($model->newchangecontractnumber);
+	    			$newfarmModel->contractnumber = $model->newchangecontractnumber;
 	    			$newfarmModel->state = 1;
 	    			$newfarmModel->locked = 0;
 	    			$newfarmModel->save();
 	    			
 	    			
 	    		}
-	    		return $this->redirect(['reviewprocess/reviewprocessindex']);
+	    		return $this->redirect(['reviewprocess/reviewprocessfarmssplit',
+	    				'oldfarmsid' => $model->oldfarms_id,
+	    				'newfarmsid' => $model->newfarms_id,
+	    				'reviewprocessid' => $model->id,
+	    		]);
 	    	}
 	    	return $this->render ( 'reviewprocessinspections', [
 	    			'model' => $model,

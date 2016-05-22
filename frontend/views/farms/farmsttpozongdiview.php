@@ -89,12 +89,12 @@ $this->params['breadcrumbs'][] = $this->title;
 		</tr>
 		
 		<tr>
-			<td width=20% align='right'>减少宗地</td>
-			<td align='left'> <?= $ttpoModel->ttpozongdi?> </td>
+			<td width=20% align='right'><font color="red">减少宗地</font></td>
+			<td align='left'> <font color="red"><?= $ttpoModel->ttpozongdi?></font> </td>
 		</tr>
 		<tr>
-			<td width=20% align='right'>减少面积</td>
-			<td align='left'> <?= $ttpoModel->ttpoarea?> </td>
+			<td width=20% align='right'><font color="red">减少面积</font></td>
+			<td align='left'> <font color="red"><?= $ttpoModel->ttpoarea?></font> </td>
 		</tr>
 		<tr>
 			<td width=20% align='right'>转让日期</td>
@@ -153,12 +153,12 @@ $this->params['breadcrumbs'][] = $this->title;
             <td align='left'><?= $newFarm->notstate?>亩</td>
           </tr>
           <tr>
-			<td width=20% align='right'>增加宗地</td>
-			<td align='left'> <?= $ttpoModel->ttpozongdi?> </td>
+			<td width=20% align='right'><font color="red">增加宗地</font></td>
+			<td align='left'> <font color="red"><?= $ttpoModel->ttpozongdi?> </font></td>
 		</tr>
 		<tr>
-			<td width=20% align='right'>增加面积</td>
-			<td align='left'> <?= $ttpoModel->ttpoarea?> </td>
+			<td width=20% align='right'><font color="red">增加面积</font></td>
+			<td align='left'> <font color="red"><?= $ttpoModel->ttpoarea?> </font></td>
 		</tr>
 		<tr>
 			<td width=20% align='right'>转让日期</td>

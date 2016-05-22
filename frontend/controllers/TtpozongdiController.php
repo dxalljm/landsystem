@@ -116,11 +116,12 @@ class TtpozongdiController extends Controller
 		if($model->actionname == 'farmstozongdi') {
 			$newfarms->state = 1;
 			$newfarms->locked = 0;
-			$newfarms->zongdi = $model->ynewzongdi;	
+			$newfarms->zongdi = $model->newzongdi;	
 			$newfarms->contractnumber = $model->newcontractnumber;
-			$newfarms->measure = $new['measure'];
-			$newfarms->notclear = $new['notclear'];
-			$newfarms->notstate = $new['notstate'];
+			$newfarms->measure = $model->newmeasure;
+			$newfarms->notclear = $model->newnotclear;
+			$newfarms->notstate = $model->newnotstate;
+			$newfarms->contractarea = Farms::getContractnumberArea($model->newcontractnumber);
 			$newfarms->oldfarms_id = '';
 			$newfarms->save();		
 		}
@@ -128,7 +129,7 @@ class TtpozongdiController extends Controller
 // 			Zongdioffarm::zongdiDelete($model->newfarms_id, $model->ttpozongdi);
 // 			Zongdioffarm::zongdiUpdate($model->oldfarms_id, $model->oldzongdi);
 // 		} else {
-			Zongdioffarm::zongdiUpdate($model->newfarms_id, $model->ynewzongdi);
+			Zongdioffarm::zongdiUpdate($model->newfarms_id, $model->newzongdi);
 			Zongdioffarm::zongdiUpdate($model->oldfarms_id, $model->oldzongdi);
 // 		}
 		

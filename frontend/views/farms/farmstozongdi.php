@@ -97,14 +97,14 @@ use yii\helpers\Url;
         </table>
         </td>
         </tr>
-      <tr><?= Html::hiddenInput('oldzongdi',$oldFarm->zongdi,['id'=>'oldfarm-zongdi','class'=>'form-control']) ?>
-      <?= Html::hiddenInput('oldzongdichange',$oldFarm->zongdi,['id'=>'oldzongdiChange','class'=>'form-control']) ?>
-      <?= Html::hiddenInput('ttpozongdi','',['id'=>'ttpozongdi-zongdi']) ?>
-      <?= Html::hiddenInput('newzongdi','',['id'=>'new-zongdi']) ?>
-      <?= Html::hiddenInput('ttpoarea',0,['id'=>'ttpozongdi-area']) ?>
-        <td align='right' valign="middle">宗地面积</td><?= html::hiddenInput('tempoldmeasure',$oldFarm->measure,['id'=>'temp_oldmeasure']) ?>
-        										 <?= html::hiddenInput('tempoldnotclear',$oldFarm->notclear,['id'=>'temp_oldnotclear']) ?>
-        										 <?= html::hiddenInput('tempoldcontractarea',$oldFarm->contractarea,['id'=>'temp_oldcontractarea']) ?>
+      <tr><?= Html::textInput('oldzongdi',$oldFarm->zongdi,['id'=>'oldfarm-zongdi','class'=>'form-control']) ?>
+      <?= Html::textInput('oldzongdichange',$oldFarm->zongdi,['id'=>'oldzongdiChange','class'=>'form-control']) ?>
+      <?= Html::textInput('ttpozongdi','',['id'=>'ttpozongdi-zongdi']) ?>
+      <?= Html::textInput('newzongdi','',['id'=>'new-zongdi']) ?>
+      <?= Html::textInput('ttpoarea',0,['id'=>'ttpozongdi-area']) ?>
+        <td align='right' valign="middle">宗地面积</td><?= html::textInput('tempoldmeasure',$oldFarm->measure,['id'=>'temp_oldmeasure']) ?>
+        										 <?= html::textInput('tempoldnotclear',$oldFarm->notclear,['id'=>'temp_oldnotclear']) ?>
+        										 <?= html::textInput('tempoldcontractarea',$oldFarm->contractarea,['id'=>'temp_oldcontractarea']) ?>
         <td colspan="5" align='left' valign="middle"><?= html::textInput('oldmeasure',$oldFarm->measure,['readonly' => true,'id'=>'oldfarms-measure','class'=>'form-control']) ?></td>
         </tr>
         <tr>
@@ -168,7 +168,7 @@ use yii\helpers\Url;
 		  <td colspan="5" align='left'><?= $newFarm->zongdi?></td>
 		  </tr>
 		<tr>
-		  <td align='right'>新宗地</td><?= html::hiddenInput('tempzongdi','',['id'=>'temp-zongdi'])?><?= $form->field($newFarm, 'zongdi')->hiddenInput()->label(false)->error(false) ?>
+		  <td align='right'>新宗地</td><?= html::textInput('tempzongdi','',['id'=>'temp-zongdi'])?><?= $form->field($newFarm, 'zongdi')->textInput()->label(false)->error(false) ?>
 		  <td colspan="5" align='left'><span id="inputZongdi" class="select2-container select2-container--default select2-container--below" dir="ltr" style="width: 100%; color: #000;">
 	<span class="selection">
 		<span class="select2-selection select2-selection--multiple" role="combobox" aria-autocomplete="list" aria-haspopup="true" aria-expanded="false" tabindex="0">
@@ -182,10 +182,10 @@ use yii\helpers\Url;
 		  </td>
 		  </tr>
 		<tr>
-        <td align='right'>宗地面积</td><?= html::hiddenInput('tempmeasure',$newFarm->measure,['id'=>'temp_measure']) ?>
-        							<?= html::hiddenInput('measure',$newFarm->measure,['id'=>'ymeasure']) ?>
-								  <?= html::hiddenInput('tempnotclear',$newFarm->notclear,['id'=>'temp_notclear']) ?>
-								  <?= html::hiddenInput('tempnotstate',$newFarm->notstate,['id'=>'temp_notstate']) ?>
+        <td align='right'>宗地面积</td><?= html::textInput('tempmeasure',$newFarm->measure,['id'=>'temp_measure']) ?>
+        							<?= html::textInput('measure',$newFarm->measure,['id'=>'ymeasure']) ?>
+								  <?= html::textInput('tempnotclear',$newFarm->notclear,['id'=>'temp_notclear']) ?>
+								  <?= html::textInput('tempnotstate',$newFarm->notstate,['id'=>'temp_notstate']) ?>
         <td colspan="5" align='left'><?= $form->field($newFarm, 'measure')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
         </tr>
         <tr>
@@ -214,7 +214,6 @@ use yii\helpers\Url;
 <div class="form-group">
       <?= Html::submitButton('提交', ['class' =>  'btn btn-success']) ?>
       <?= Html::button('重置', ['class' => 'btn btn-primary','id'=>'reset']) ?>
-      <?= Html::submitButton('继续转让', ['class' =>  'btn btn-success']) ?>
       <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
 </div>
 

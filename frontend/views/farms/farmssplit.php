@@ -272,7 +272,6 @@ use yii\helpers\Url;
 <div class="form-group">
       <?= Html::submitButton('提交', ['class' =>  'btn btn-success']) ?>
       <?= Html::button('重置', ['class' => 'btn btn-primary','id'=>'reset']) ?>
-      <?= Html::submitButton('继续转让', ['class' =>  'btn btn-success']) ?>
       <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
 </div>
 
