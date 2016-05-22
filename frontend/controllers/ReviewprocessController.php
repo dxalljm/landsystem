@@ -17,6 +17,8 @@ use app\models\Loan;
 use app\models\Ttpozongdi;
 use app\models\Estate;
 use app\models\Processname;
+use app\models\Lockedinfo;
+use app\models\Zongdioffarm;
 /**
  * ReviewprocessController implements the CRUD actions for Reviewprocess model.
  */
@@ -164,6 +166,7 @@ class ReviewprocessController extends Controller
 	    		$model->save();
 // 	    		var_dump($_POST);exit;
 	    		$state = Reviewprocess::isNextProcess($model->id);
+// 	    		exit;
 	    		$modelname = Reviewprocess::getProcessIdentification();
 	    		foreach ($modelname as $name) {
 		    		$classname = 'app\\models\\'.ucfirst($name);
@@ -181,25 +184,21 @@ class ReviewprocessController extends Controller
 		    		$estateModel->reviewprocess_id = $id;
 		    		$estateModel->save();
 	    		}
-// 	    		var_dump($estateModel);exit;
+// 	    		var_dump($id);
 	    		if($state) {
-	    			
-	    			$oldfarmsModel = Farms::findOne($model->oldfarms_id);
-	    			
+// 	    			var_dump($model->oldfarms_id);exit;
+	    			$oldfarmsModel = Farms::findOne($model->oldfarms_id);	    			
 	    			$oldfarmsModel->update_at = time();
 	    			$oldfarmsModel->state = 0;
 	    			$oldfarmsModel->locked = 0;
 	    			$oldfarmsModel->save();
-	    			$newfarmModel = Farms::findOne($model->newfarms_id);
 	    			
-	    			$newfarmModel->update_at = $oldfarmsModel->update_at;
+	    			$newfarmModel = Farms::findOne($model->newfarms_id);	    			
+	    			$newfarmModel->update_at = time();
 	    			$newfarmModel->state = 1;
 	    			$newfarmModel->locked = 0;
 	    			$newfarmModel->save();
-	    			$projectID = Projectapplication::find()->where(['farms_id'=>$oldfarmsModel->id,'reviewprocess_id'=>$id])->one()['id'];
-	    			$projectModel = Projectapplication::findOne($projectID);
-	    			$projectModel->farms_id = $newfarmModel->id;
-	    			$projectModel->save();
+	    			
 	    			
 	    		}
 	    		return $this->redirect(['reviewprocess/reviewprocessindex']);

@@ -30,8 +30,8 @@ class Ttpozongdi extends \yii\db\ActiveRecord
     {
         return [
             [['oldfarms_id', 'newfarms_id','create_at','reviewprocess_id','state','auditprocess_id'], 'integer'],
-            [['zongdi','oldzongdi','ttpozongdi','oldcontractnumber'], 'string'],
-            [['ttpoarea'], 'number']
+            [['zongdi','oldzongdi','ttpozongdi','oldcontractnumber','actionname','ynewzongdi','newcontractnumber'], 'string'],
+            [['ttpoarea','oldmeasure','oldnotclear','oldnotstate','newmeasure','newnotclear','newnotstate'], 'number']
         ];
     }
 
@@ -53,6 +53,15 @@ class Ttpozongdi extends \yii\db\ActiveRecord
         	'oldcontractnumber' => '旧合同号',
         	'state' => '状态',
         	'auditprocess_id' => '流程ID',
+        	'actionname' => '方法名称',
+        	'oldmeasure' => '原宗地面积',
+        	'oldnotclear' => '原未明确地块面积',
+        	'oldnotstate' => '原未明确状态面积',
+        	'ynewzongdi' => '原新宗地',
+        	'newcontractnumber' => '被转让方原合同号',
+        	'newmeasure' => '被转让方原宗地面积',
+        	'newnotclear' => '被转让方原未明确地块面积',
+        	'newnotstate' => '被转让方原未明确状态面积',
         ];
     }
 }

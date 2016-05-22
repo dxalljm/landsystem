@@ -294,7 +294,7 @@ class Farms extends \yii\db\ActiveRecord {
 	 */
 	public static function searchAll() {
 
-		$cacheKey = 'farms-search-all17'.\Yii::$app->getUser()->id;
+		$cacheKey = 'farms-search-all18'.\Yii::$app->getUser()->id;
 		
 		$result = Yii::$app->cache->get($cacheKey);
 		if (!empty($result)) {
@@ -320,7 +320,7 @@ class Farms extends \yii\db\ActiveRecord {
 		// 所有农场
 		$data = [];
 		$where = self::getManagementArea()['id'];
-		$result = Farms::find()->where(['management_area'=>$where])->all();
+		$result = Farms::find()->where(['management_area'=>$where,'state'=>1])->all();
 		foreach ($result as $farm) {
 		$data[] = [
 		'value' => $farm['pinyin'], // 拼音

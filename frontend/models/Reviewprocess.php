@@ -137,6 +137,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
     {
     	$model = self::findOne($id);
     	$processs = self::getProcess($model->operation_id);
+    	$processname = Processname::find()->where(['Identification'=>'leader'])->one();
     	$rows = count($processs);
     	$i = 0;
     	$no = true;
@@ -145,6 +146,8 @@ class Reviewprocess extends \yii\db\ActiveRecord
     		if($model->$value == 0 or $model->$value == 2)
     			$no = false;
     	}
+//     	var_dump($no);exit;
+    	
     	foreach ($processs as $value) {
     		if(($model->$value == 3) and $no) {
     			$result = $model->$value-1;
@@ -152,9 +155,18 @@ class Reviewprocess extends \yii\db\ActiveRecord
     		}
     		if($model->$value == 1)
     			$i++;
-    		
     	}
-    	if($i == $rows) {
+    	$l = $rows - 1;
+    	if($i < $l) {
+    		$model->leader = 3;
+    	} else
+    		$model->leader = 2;
+    	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+		if(User::getItemname() == $processname['rolename'] or $temp) {
+			$model->leader = 1;
+			$i++;
+		}
+    	if($i >= $rows) {
     		$model->state = 7;
     		$state = true;
     	}
@@ -162,6 +174,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
 			$model->state = 4;
 			$state = false;
 		}	
+// 		var_dump(self::isShowProess($model->operation_id));exit;
 		$model->save();
     	return $state;
     }
@@ -240,9 +253,9 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	return explode('>', Auditprocess::findOne($id)['process']);
     }
     //判断当前角色是否审核流程
-    public static function isShowProess($actionname) {
+    public static function isShowProess($auditprocess_id) {
 //     	var_dump($actionname);exit;
-    	$process = Reviewprocess::getProcess($actionname);
+    	$process = Reviewprocess::getProcess($auditprocess_id);
     	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
 //     	var_dump($process);exit;
     	foreach ($process as $p) {

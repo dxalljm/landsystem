@@ -73,12 +73,13 @@ class Search extends \yii\db\ActiveRecord {
 				                'format'=>'raw',
 				            	//'class' => 'btn btn-primary btn-lg',
 				                'value' => function($model,$key){
+// 				                var_dump(User::getItemname());
 					                $option = '查看详情';
 					                $title = '';
 				                	switch (Yii::$app->controller->id)
 				                	{
 				                		case 'farms':
-				                			if(User::getItemname() == '法规科科长' or User::getItemname() == '大厅主任')
+				                			if(User::getItemname() == '法规科科长' or User::getItemname() == '大厅主任' or User::getItemname() == '副主任' or User::getItemname() == '主任')
 				                				$url = Url::to(['farms/farmslandview','id'=>$model->id]);
 				                			else
 				                				$url = Url::to(['farms/farmsfile','farms_id'=>$model->id]);

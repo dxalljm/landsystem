@@ -109,11 +109,14 @@ $this->params ['breadcrumbs'] [] = $this->title;
 									if($value[$v] == 2 or $value[$v] == 0)
 										$s = true;
 								}
-								if($s) 
+								if($s) {
 									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id'],'class'=>'farmstransfer'],['class'=>'btn btn-success']); 
+								}
 								else {
 									echo  html::a('查看',['reviewprocess/reviewprocessview','id'=>$value['id'],'class'=>'farmstransfer'],['class'=>'btn btn-success']);
-								}?></td>
+								}
+								
+								?></td>
 							</tr>
 							
 							<?php }}?>

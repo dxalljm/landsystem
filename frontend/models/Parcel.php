@@ -91,7 +91,7 @@ class Parcel extends \yii\db\ActiveRecord
     	}
     	return $all;
     }
-
+	
     public static function parcelState($array)
     {
 //     	var_dump($array);exit;

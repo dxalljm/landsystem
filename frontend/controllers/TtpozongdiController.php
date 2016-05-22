@@ -15,6 +15,7 @@ use app\models\Auditprocess;
 use app\models\Estate;
 use app\models\Farms;
 use app\models\Lockedinfo;
+use app\models\Zongdioffarm;
 /**
  * TheyearController implements the CRUD actions for Theyear model.
  */
@@ -97,10 +98,40 @@ class TtpozongdiController extends Controller
     	Logs::writeLog('删除转让信息',$id,$old);
        
 		$oldfarms = Farms::findOne($model->oldfarms_id);
+		$oldfarms->zongdi = $model->oldzongdi;
+		$oldfarms->measure = $model->oldmeasure;
+		$oldfarms->notclear = $model->oldnotclear;
+		$oldfarms->notstate = $model->oldnotstate;		
+		$oldfarms->contractnumber = $model->oldcontractnumber;
+		$oldfarms->contractarea = Farms::getContractnumberArea($model->oldcontractnumber);
+		$oldfarms->state = 1;
 		$oldfarms->locked = 0;
+// 		var_dump($model);exit;
 		$oldfarms->save();
 		$newfarms = Farms::findOne($model->newfarms_id);
-		$newfarms->delete();
+		$new = $newfarms;
+		if($model->actionname == 'farmssplit' or $model->actionname == 'farmstransfer') {			
+			$newfarms->delete();
+		}
+		if($model->actionname == 'farmstozongdi') {
+			$newfarms->state = 1;
+			$newfarms->locked = 0;
+			$newfarms->zongdi = $model->ynewzongdi;	
+			$newfarms->contractnumber = $model->newcontractnumber;
+			$newfarms->measure = $new['measure'];
+			$newfarms->notclear = $new['notclear'];
+			$newfarms->notstate = $new['notstate'];
+			$newfarms->oldfarms_id = '';
+			$newfarms->save();		
+		}
+// 		if($model->actionname == 'farmstozongdi') {
+// 			Zongdioffarm::zongdiDelete($model->newfarms_id, $model->ttpozongdi);
+// 			Zongdioffarm::zongdiUpdate($model->oldfarms_id, $model->oldzongdi);
+// 		} else {
+			Zongdioffarm::zongdiUpdate($model->newfarms_id, $model->ynewzongdi);
+			Zongdioffarm::zongdiUpdate($model->oldfarms_id, $model->oldzongdi);
+// 		}
+		
 		$lockedinfo = Lockedinfo::find()->where(['farms_id'=>$model->oldfarms_id])->one();
 		$lockedinfoModel = Lockedinfo::findOne($lockedinfo['id']);
 		$lockedinfoModel->delete();

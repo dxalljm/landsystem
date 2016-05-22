@@ -242,10 +242,10 @@ function zongdiRemove(zongdi,measure,dialogID)
 		var value = $('#oldfarms-measure').val()*1+measure*1;
 		$('#oldfarms-measure').val(value.toFixed(2));
 		//如果存在未明确状态面积，那么先减未明确状态面积
-		var notstate = $('#farms-notstate').val();
+		var notstate = Number($('#farms-notstate').val());
 		if(notstate > 0) {
-			if(notstate >= measure) {
-				$('#farms-notstate').val(notstate - measure);
+			if(notstate >= Number(measure)) {
+				$('#farms-notstate').val(notstate - Number(measure));
 			} else {
 				$('#farms-notstate').val(0);
 			}

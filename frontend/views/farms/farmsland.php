@@ -107,7 +107,7 @@ $this->params['breadcrumbs'][] = $this->title;
 // 										}
 									}
 // 									var_dump($html);exit;
-					            	if(User::getItemname() == '主任' or User::getItemname() == '法规科科长' or User::getItemname() == '地产科科长') {
+					            	if(User::getItemname() == '主任' or User::getItemname() == '副主任' or User::getItemname() == '法规科科长' or User::getItemname() == '地产科科长') {
 						            	return $html;
 					            	}
 					            	else 

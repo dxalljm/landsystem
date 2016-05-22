@@ -163,7 +163,7 @@ use yii\helpers\Url;
 		  $nowModel->zongdi = $model->zongdi;
 		  echo html::hiddenInput('tempzongdi','',['id'=>'temp-zongdi']);
 		  echo $form->field($nowModel, 'zongdi')->hiddenInput()->label(false)->error(false);
-		  if($model->notclear) {  ?>
+		  ?>
 		  <span id="inputZongdi" class="select2-container select2-container--default select2-container--below" dir="ltr" style="width: 100%; color: #000;">
 	<span class="selection">
 		<span class="select2-selection select2-selection--multiple" role="combobox" aria-autocomplete="list" aria-haspopup="true" aria-expanded="false" tabindex="0">
@@ -174,7 +174,7 @@ use yii\helpers\Url;
 	</span>
 	<span class="dropdown-wrapper" aria-hidden="true"></span>
 </span>
-<?php } else echo $model->zongdi;?>
+
 </td>
 		  </tr>
 		<tr>

@@ -97,9 +97,10 @@ use yii\helpers\Url;
         </table>
         </td>
         </tr>
-      <tr><?= Html::hiddenInput('oldzongdi',$oldFarm->zongdi,['id'=>'oldfarm-zongdi']) ?>
-      <?= Html::hiddenInput('newzongdi','',['id'=>'new-zongdi']) ?>
+      <tr><?= Html::hiddenInput('oldzongdi',$oldFarm->zongdi,['id'=>'oldfarm-zongdi','class'=>'form-control']) ?>
+      <?= Html::hiddenInput('oldzongdichange',$oldFarm->zongdi,['id'=>'oldzongdiChange','class'=>'form-control']) ?>
       <?= Html::hiddenInput('ttpozongdi','',['id'=>'ttpozongdi-zongdi']) ?>
+      <?= Html::hiddenInput('newzongdi','',['id'=>'new-zongdi']) ?>
       <?= Html::hiddenInput('ttpoarea',0,['id'=>'ttpozongdi-area']) ?>
         <td align='right' valign="middle">宗地面积</td><?= html::hiddenInput('tempoldmeasure',$oldFarm->measure,['id'=>'temp_oldmeasure']) ?>
         										 <?= html::hiddenInput('tempoldnotclear',$oldFarm->notclear,['id'=>'temp_oldnotclear']) ?>
@@ -253,6 +254,10 @@ use yii\helpers\Url;
 function zongdiRemove(zongdi,measure,dialogID)
 {
 	removeZongdiForm(zongdi,measure);
+	removeNowZongdi(zongdi);
+	oldZongdiChange(zongdi,measure,'back');
+	var ttpoarea = $('#ttpozongdi-area').val();
+	$('#ttpozongdi-area').val(ttpoarea - measure);
 	$('#new'+zongdi).remove();
 // 	var zongdiarr = zongdi.split('_');
 	$('#'+zongdi).attr('disabled',false);
@@ -262,12 +267,12 @@ function zongdiRemove(zongdi,measure,dialogID)
 		$('#oldfarms-measure').val(value.toFixed(2));
 		//如果存在未明确状态面积，那么先减未明确状态面积
 		var notstate = Number($('#farms-notstate').val());
-		var tempnotstate = Number($('#temp_notstate').val());
-		if(notstate > tempnotstate) {
-			if(measure <= tempnotstate) {
-				$('#farms-notstate').val(notstate - measure);
+		
+		if(notstate > 0) {
+			if(notstate >= Number(measure)) {
+				$('#farms-notstate').val(notstate - Number(measure));
 			} else {
-				$('#farms-notstate').val(tempnotstate);
+				$('#farms-notstate').val(0);
 			}
 		}
 		var newvalue = $('#farms-measure').val()*1 - measure*1;
@@ -291,50 +296,67 @@ function zongdiRemove(zongdi,measure,dialogID)
 		$('#farms-measure').val(newvalue.toFixed(2));
 		$('#temp_measure').val(newvalue.toFixed(2));
 	}
-	removeTempZongdi(zongdi);
 	//宗地面积计算结束
 	toHTH();
-}
-//在输入过宗地列表中删除输入过的宗地
-function removeTempZongdi(zongdi)
-{
-	
-	var result = false;
-	var newzongdi = $('#new-zongdi').val();
-	var arr1 = newzongdi.split('|');
-	$.each(arr1, function(i,val){  
-	      if(val === zongdi)
-	    	  arr1.splice(i,1);	      
-	  });   
-	var newnewzongdi = arr1.join('|');
-	$('#new-zongdi').val(newnewzongdi);
-}
-//判断是否是已经输入过的宗地
-function nowZongdiFind(zongdi)
-{
-	var result = false;
-	var newzongdi = $('#new-zongdi').val();
-	var arr1 = newzongdi.split('|');
-	$.each(arr1, function(i,val){  
-	      if(val === zongdi)
-	    	  result = true;	      
-	  });   
-	return result;
 }
 function removeZongdiForm(zongdi,measure)
 {
 	var findzongdi = zongdi + "("+measure+")";
 	var zongdi = $('#farms-zongdi').val();
+	
 	var arr1 = zongdi.split('、');
 	$.each(arr1, function(i,val){  
 	      if(val === findzongdi)
 	    	  arr1.splice(i,1);	      
 	  });   
 	var newnewzongdi = arr1.join('、');
-// 	alert(newnewzongdi);
 	$('#farms-zongdi').val(newnewzongdi);
+
+	var ttpozongdi = $('#ttpozongdi-zongdi').val();
+	var arr2 = ttpozongdi.split('、');
+	$.each(arr2, function(i,val){  
+	      if(val === findzongdi)
+	    	  arr2.splice(i,1);	      
+	  });   
+	var newttpozongdi = arr2.join('、');
+	
+	$('#ttpozongdi-zongdi').val(newttpozongdi);
+}
+function removeNowZongdi(zongdi)
+{
+	var nowzongdi = $('#new-zongdi').val();
+	var arr1 = zongdi.split('|');
+	$.each(arr1, function(i,val){  
+	      if(val === zongdi)
+	    	  arr1.splice(i,1);	      
+	  });   
+	var newnewzongdi = arr1.join('|');
+// 	alert(newnewzongdi);
+	$('#new-zongdi').val(newnewzongdi);
 // 	return result;
 }
+function oldZongdiChange(zongdi,measure,state)
+{
+	var yzongdi = $('#oldzongdiChange').val();
+// 	alert(yzongdi);
+	$.getJSON("<?= Url::to(['farms/oldzongdichange'])?>", {yzongdi: yzongdi, zongdi:zongdi,measure:measure,state:state}, function (data) {
+		$('#oldzongdiChange').val(data.zongdi);
+	});
+}
+function nowZongdiFind(zongdi)
+{
+	var result = false;
+	var newzongdi = $('#new-zongdi').val();
+	if(newzongdi != '') {
+		var arr1 = newzongdi.split('|');
+		$.each(arr1, function(i,val){  
+		      if(val === zongdi)
+		    	  result = true;	      
+		  });   
+	}
+	return result;
+}
+
 function zongdiForm(zongdi,measure)
 {
 	var newfarmszongdi = $('#farms-zongdi').val();
@@ -364,7 +386,6 @@ $('#dialog2').dialog({
 // 	  				alert(zongdi);
 	  				var measure = Number($('#findMeasure').val());
 	  				var ymeasure = Number($('#ymeasure').val());
-	  				
 	  				if(measure == '' || zongdi == '') {
 	  					alert("对不起，宗地或面积不能为空。");
 	  					$('#findMeasure').val();
@@ -377,7 +398,8 @@ $('#dialog2').dialog({
 	  							alert("对不起，您输入的面积不能大于原农场未明确地块面积。");
 		  					} else {
 		  						$( this ).dialog( "close" );
-		  						zongdiForm(zongdi,measure);	
+		  						zongdiForm(zongdi,measure);
+		  						oldZongdiChange(zongdi,measure,'change');					
 		  					 	var newzongdi = zongdi+'('+measure+')';
 		  					 	var newzongdihtml = '<li class="select2-selection__choice" id="new'+zongdi+'" title="'+newzongdi+'"><span class="remove text-red" role="presentation" onclick=zongdiRemove("'+zongdi+'","'+measure+'","dialog2")>×</span>'+newzongdi+'</li>';
 		  						
@@ -394,17 +416,28 @@ $('#dialog2').dialog({
 		  						
 		  						if(oldcontractarea < 0 && ycontractarea > 0) {
 		  							alert('宗地面积已经大于合同面积，多出面积自动加入未明确状态面积');
-		  							
+		  						}
+		  						if(oldcontractarea < 0) {
+		  							$('#farms-notstate').val(Math.abs(oldcontractarea));
 		  							toHTH();
 		  						}
-// 		  						if(oldcontractarea < 0) {
-			  						
-// 		  						}
-		  						var newtempzongdi = $('#new-zongdi').val();
-		  						$("#new-zongdi").val(zongdi+'|'+newtempzongdi);
 		  						$('#findZongdi').val('');
 					  			$('#findMeasure').val('');
+		  						var ttpozongdi = $('#ttpozongdi-zongdi').val();
+								var zongdistr = zongdi+"("+measure+")";
+								$('#ttpozongdi-zongdi').val(zongdistr+'、'+ttpozongdi);
+								var ttpozongdi = $('#ttpozongdi-zongdi').val();
+								var last = ttpozongdi.substr(ttpozongdi.length-1,1);
+								if(last == '、') {
+									$('#ttpozongdi-zongdi').val(ttpozongdi.substring(0,ttpozongdi.length-1));
+								}
+								var newtempzongdi = $('#new-zongdi').val();
+		  						$("#new-zongdi").val(zongdi+'|'+newtempzongdi);
+		  						
 					  			$('#ymeasure').val(0);	
+					  			var ttpoarea = $('#ttpozongdi-area').val();
+								
+					  			$('#ttpozongdi-area').val(ttpoarea*1 + measure*1);
 		  					}
 	  						
 		  				}
@@ -432,7 +465,6 @@ $( "#dialog" ).dialog({
 				var zongdi = $('#zongdi').val();
 				var measure = Number($('#measure').val());
 				var ymeasure = Number($('#ymeasure').val());
-				var tempnotstate = Number($('#temp_notstate').val());
 				if(measure == '') {
 					alert("对不起，您面积不能为空。");
 					$('#measure').val(ymeasure);
@@ -444,6 +476,7 @@ $( "#dialog" ).dialog({
 					} else {
 						$( this ).dialog( "close" );
 						zongdiForm(zongdi,measure);	
+						oldZongdiChange(zongdi,measure,'change');	
 					 	var newzongdi = zongdi+'('+measure+')';
 					 	var newzongdihtml = '<li class="select2-selection__choice" id="new'+zongdi+'" title="'+newzongdi+'"><span class="remove text-red" role="presentation" onclick=zongdiRemove("'+zongdi+'","'+measure+'","dialog")>×</span>'+newzongdi+'</li>';
 						var oldmeasure = $('#ymeasure').val() - measure;
@@ -464,14 +497,27 @@ $( "#dialog" ).dialog({
 						
 						if(oldcontractarea < 0 && ycontractarea > 0) {
 							alert('宗地面积已经大于合同面积，多出面积自动加入未明确状态面积');
-							
 						}
 						if(oldcontractarea < 0) {
-							var newnotstate = tempnotstate*1 + Math.abs(oldcontractarea);
-  							alert(newnotstate);
-  							$('#farms-notstate').val(newnotstate.toFixed(2));
+							$('#farms-notstate').val(Math.abs(oldcontractarea));
+							toHTH();
 						}
-						$('#ymeasure').val(0);	
+						var ttpozongdi = $('#ttpozongdi-zongdi').val();
+						var zongdistr = zongdi+"("+measure+")";
+						$('#ttpozongdi-zongdi').val(zongdistr+'、'+ttpozongdi);
+						var ttpozongdi = $('#ttpozongdi-zongdi').val();
+						var last = ttpozongdi.substr(ttpozongdi.length-1,1);
+						if(last == '、') {
+							$('#ttpozongdi-zongdi').val(ttpozongdi.substring(0,ttpozongdi.length-1));
+						}
+						var newtempzongdi = $('#new-zongdi').val();
+  						$("#new-zongdi").val(zongdi+'|'+newtempzongdi);
+  						$('#findZongdi').val('');
+			  			$('#findMeasure').val('');
+			  			$('#ymeasure').val(0);	
+			  			var ttpoarea = $('#ttpozongdi-area').val();
+						
+			  			$('#ttpozongdi-area').val(ttpoarea*1 + measure*1);
 					}
 				}
 			}
@@ -494,33 +540,59 @@ $('#inputZongdi').dblclick(function(){
 $('#findZongdi').keyup(function (event) {
 	var input = $(this).val();
 	if(event.keyCode == 13) {
-		if(input == '') {
-			alert('宗地不能为空');
+		if(nowZongdiFind(input)){
+			alert('您已经输入过此宗地号，请不要重复输入');
+			$('#findZongdi').val('');
+  			$('#findMeasure').val('');
 		} else {
-			if(nowZongdiFind(input)){
-				alert('您已经输入过此宗地号，请不要重复输入');
-				$('#findZongdi').val('');
-	  			$('#findMeasure').val('');
-			} else {
-				$.getJSON("<?= Url::to(['parcel/parcelarea'])?>", {zongdi: input}, function (data) {
-					if (data.status == 1) {
-						$('#findMeasure').val(data.area);
-						$('#ymeasure').val(data.area);
-					}
-					else {
-						if(input != '') {
+			$.getJSON("<?= Url::to(['parcel/parcelarea'])?>", {zongdi: input}, function (data) {
+				if (data.status == 1) {
+					
+					$('#findMeasure').val(data.area);
+					$('#ymeasure').val(data.area);
+				}
+				else {
+					if(input != '') {
+						if(data.showmsg)
 							alert(data.message);
-							$("#findZongdi").val('');
-							$("#findZongdi").focus();
-						}
+						$("#findZongdi").val('');
+						$("#findZongdi").focus();
 					}
-				});
-			}
+				}
+			});
+		}
+	}
+});
+$('#findZongdi').blur(function (event) {
+	var input = $(this).val();
+	if(input != '') {
+		if(nowZongdiFind(input)){
+			alert('您已经输入过此宗地号，请不要重复输入');
+			$('#findZongdi').val('');
+				$('#findMeasure').val('');
+		} else {
+			$.getJSON("<?= Url::to(['parcel/parcelarea'])?>", {zongdi: input}, function (data) {
+				if (data.status == 1) {
+					if(data.showmsg)
+						alert(data.message);
+					$('#findMeasure').val(data.area);
+					$('#ymeasure').val(data.area);
+				}
+				else {
+					if(input != '') {
+						if(data.showmsg)
+							alert(data.message);
+						$("#findZongdi").val('');
+						$("#findZongdi").focus();
+					}
+				}
+			});
 		}
 	}
 });
 // Link to open the dialog
 $( ".dialog-link" ).click(function( event ) {
+	$("#dialogSelect").val('dialog1');
 	$( "#dialog" ).dialog( "open" );
 
 	event.preventDefault();
@@ -545,7 +617,36 @@ function toZongdi(zongdi,area){
 	event.preventDefault();
 	$('#zongdi').val(zongdi);
 	$('#measure').val(area);
-	$('#ymeasure').val(area);	
+	$('#ymeasure').val(area);
+// 	alert($('#ymeasure').val());
+// 	var oldzongdi = $('#oldfarm-zongdi').val();
+// 	var strzongdi = zongdi+"("+area+")";
+// 	$('#oldfarm-zongdi').val(oldzongdi.replace(strzongdi, ""));
+// 	oldzongdistr = $('#oldfarm-zongdi').val();
+// 	var first = oldzongdistr.substr(0,1);
+// 	var last = oldzongdistr.substr(oldzongdistr.length-1,1);
+// 	if(first == '、') {
+// 		$('#oldfarm-zongdi').val(oldzongdistr.substring(1));
+// 	}
+// 	if(last == '、') {
+// 		$('#oldfarm-zongdi').val(oldzongdistr.substring(0,oldzongdistr.length-1));
+// 	}
+// 	//alert($('#oldfarm-zongdi').val());
+// 	var ttpozongdi = $('#ttpozongdi-zongdi').val();
+// 	ttpozongdi = ttpozongdi + '、' + zongdi;
+// 	var first = ttpozongdi.substr(0,1);
+// 	if(first == '、') {
+// 		$('#ttpozongdi-zongdi').val(ttpozongdi.substring(1));
+// 	}
+// 	else
+// 		$('#ttpozongdi-zongdi').val(ttpozongdi);
+	
+// 	var ttpoarea = $('#ttpozongdi-area').val();
+// 	ttpoarea = area*1 + ttpoarea*1;
+// 	$('#ttpozongdi-area').val(ttpoarea);
+// 	toHTH();
+	
+	
 }
 $('#reset').click(function() {
 	 
@@ -583,8 +684,90 @@ $('#input-notclear').blur(function(){
 		$('#farms-notclear').val(0);
 		$(this).focus();		
 		toHTH();
-}});
-
+	}});
+		
+// 		if(input > $('#temp_notclear').val()) {
+// 			alert('>>>>');
+// 				var tempmeasure = $('#temp_measure').val();
+// 				var farmsmeasure = $('#farms-measure').val();
+// 				$('#farms-contractarea').val(tempmeasure*1 + $('#temp_notclear').val()*1);
+// 				if(farmsmeasure < tempmeasure) {
+// 					var result = farmsmeasure*1 + input*1;
+					
+// 					$('#farms-notclear').val(input);
+// 					$('#temp_notclear').val(input);	
+// 				} else {
+// 					var oldmeasure = parseFloat($('#oldfarms-measure').val());
+// 					var oldcontractarea = parseFloat($('#temp_oldcontractarea').val());
+					
+// 						var cha = input*1 - $('#temp_notclear').val()*1;
+// 						var result = farmsmeasure*1 + cha*1;
+						
+// 						var oldresult = oldmeasure*1 - cha*1;
+// 					if(oldcontractarea != 0) {
+// 						var notclearresult = oldcontractarea*1 - cha*1;
+// 						$('#oldfarms-notclear').val(notclearresult.toFixed(2));
+// 						$('#farms-notclear').val(input);
+// 						$('#temp_notclear').val(input);
+// 					} else {
+// 						if(oldmeasure != 0) {
+							
+// 							var oldnotclear = $('#oldfarms-notclear').val();
+// 							var notclearresult = oldnotclear*1 - cha*1;
+// 							$('#oldfarms-notclear').val(notclearresult.toFixed(2));
+							
+// 							$('#farms-notclear').val(input);
+// 							$('#temp_notclear').val(input);	
+// 						} else {
+// 							$('#farms-contractarea').val(input);
+// 							$('#farms-notclear').val(input);
+							
+// 							var oldnotclear = $('#temp_oldnotclear').val();
+	
+// 							var notclearresult = oldnotclear*1 - input*1;
+							
+// 							$('#oldfarms-notclear').val(notclearresult.toFixed(2));
+							
+// 						}
+// 					}					
+// 				}
+			
+// 		} 
+// 		if(input < $('#temp_notclear').val()) {
+// 			alert('<<<<')
+// 			if($('#farms-measure').val() !== 0 ) {
+// 				var tempmeasure = $('#temp_measure').val();
+// 				var farmsmeasure = $('#farms-measure').val();
+// 				if(farmsmeasure < tempmeasure) {
+// 					var result = farmsmeasure*1 + input*1;
+// 					$('#temp_measure').val(result.toFixed(2));
+// 					$('#farms-measure').val(result.toFixed(2));
+// 					$('#farms-notclear').val(input);	
+// 					$('#temp_notclear').val(input);	
+					
+// 				} else {
+// 					var oldmeasure = $('#oldfarms-measure').val();
+// // 					alert(oldmeasure);
+// 					if(oldmeasure != 0) {
+// 						var cha = $('#temp_notclear').val()*1 - input*1;
+// 						var result = farmsmeasure*1 - cha*1;
+						
+// 						var oldresult = oldmeasure*1 + cha*1;
+// 						$('#oldfarms-measure').val(oldresult.toFixed(2));
+// 						var oldnotclear = $('#oldfarms-notclear').val();
+// 						var notclearresult = oldnotclear*1 + cha*1;
+// 						$('#oldfarms-notclear').val(notclearresult.toFixed(2));
+// 						$('#temp_measure').val(result.toFixed(2));
+// 						$('#farms-measure').val(result.toFixed(2));
+// 						$('#farms-notclear').val(input);
+// 						$('#temp_notclear').val(input);	
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// 	toHTH();
+// });
 $('#input-notclear').keyup(function (event) {
 	var input = $(this).val();
 	if(event.keyCode == 8) {

@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "{{%mortgage}}".
+ * This is the model class for table "{{%regulations}}".
  *
  * @property integer $id
- * @property integer $isdydk
- * @property string $isdydkcontent
  * @property integer $reviewprocess_id
+ * @property integer $sfdj
+ * @property string $sfdjcontent
  */
 class Regulations extends \yii\db\ActiveRecord
 {
@@ -19,7 +19,7 @@ class Regulations extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%mortgage}}';
+        return '{{%regulations}}';
     }
 
     /**
@@ -28,7 +28,8 @@ class Regulations extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-          
+            [['reviewprocess_id', 'sfdj'], 'integer'],
+            [['sfdjcontent'], 'string']
         ];
     }
 
@@ -37,11 +38,18 @@ class Regulations extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return [];
+        return [
+			'id' => 'ID',
+            'reviewprocess_id' => '审核过程ID',
+            'sfdj' => '是否有司法机关、行政机关查封、冻结行为',
+            'sfdjcontent' => '情况说明',
+        ];
     }
     
     public static function attributesList()
     {
-    	return [];
+    	return [
+    			'sfdj' => '是否有司法机关、行政机关查封、冻结行为',
+    	];
     }
 }

@@ -43,9 +43,9 @@ use app\models\Estate;
  <?php if($class == 'farmstransfer') {?>
              <table class="table table-bordered table-hover">
 			  <tr height="40px">
-			    <td align="center"><strong>原农场名称</strong></td>
-			    <td width="13%" align="center"><strong>原法人</strong></td>
-			    <td width="17%" align="center"><strong>原面积</strong></td>
+			    <td align="center"><strong>出让方农场名称</strong></td>
+			    <td width="13%" align="center"><strong>出让方法人</strong></td>
+			    <td width="17%" align="center"><strong>出让方面积</strong></td>
 			    <td width="22%" align="center"><strong>现农场名称</strong></td>
 			    <td width="14%" align="center"><strong>现法人</strong></td>
 			    <td width="14%" align="center"><strong>现面积</strong></td>
@@ -137,29 +137,33 @@ use app\models\Estate;
 			    <td rowspan="2"><strong>
 			      <?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?>
 			    </strong></td>
-			      <td colspan="5" align="left">
-			      <table>
+			     
 			      
 			      <?php 
 				  $classname = 'app\\models\\'.ucfirst($value);
 			      	$lists = $classname::attributesList();
-			      	foreach ($lists as $key=>$list) {
-			      		echo '<tr>';
-			      		echo '<td>';
-			      		echo Html::radioList($key,'0',['否','是'],['onclick'=>'showContent("'.$key.'")']);
+			      	if($lists) {
+			      		echo '<td colspan="5" align="left">';
+			      		echo '<table>';
+				      	foreach ($lists as $key=>$list) {
+				      		echo '<tr>';
+				      		echo '<td>';
+				      		echo Html::radioList($key,'0',['否','是'],['onclick'=>'showContent("'.$key.'")']);
+				      		echo '</td>';
+				      		echo '<td>';
+				      		echo '&nbsp;&nbsp;'.$list;
+				      		echo '</td>';
+				      		echo '<td>';
+				      		echo '&nbsp;&nbsp;'.Html::textarea($key.'content','',['class'=>'econtent','rows'=>1,'cols'=>80,'id'=>$key.'content']);
+				      		echo "</td>";
+				      		echo '</tr>';
+			      		}
+			      		echo '</table>';
 			      		echo '</td>';
-			      		echo '<td>';
-			      		echo '&nbsp;&nbsp;'.$list;
-			      		echo '</td>';
-			      		echo '<td>';
-			      		echo '&nbsp;&nbsp;'.Html::textarea($key.'content','',['class'=>'econtent','rows'=>1,'cols'=>80,'id'=>$key.'content']);
-			      		echo "</td>";
-			      		echo '</tr>';
 			      	}
 			      ?>
 			      
-			      </table>
-			      </td>
+			      
 		       </tr>
 			   
 		       
@@ -180,7 +184,66 @@ use app\models\Estate;
 			    	}
 			    }?></td>
                </tr>
-			  <?php }}?>
+			  <?php } else {?>
+			  	<tr>
+			  	<td rowspan="2"><strong>
+			  				      <?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?>
+			  				    </strong></td>			  				      
+			  				      <?php 
+			  					  $classname = 'app\\models\\'.ucfirst($value);
+			  				      	$lists = $classname::attributesList();
+			  				      	$result = $classname::find()->where(['reviewprocess_id'=>$model->id])->one();
+			  				      	if($lists) {
+			  				      	if($result) {
+			  				      		echo '<td colspan="5" align="left">';
+			  				      		echo '<table>';
+			  					      	foreach ($lists as $key=>$list) {
+			  					      		echo '<tr>';
+			  					      		echo '<td>';
+			  					      		if($result[$key]) {
+			  					      			echo '<strong>是<i class="fa fa-check-square-o"></i></strong>&nbsp;&nbsp;';
+			  					      			echo '<strong>否<i class="fa fa-square-o"></i></strong>';
+			  					      		} else { 
+			  					      			echo '<strong>是<i class="fa fa-square-o"></i></string>&nbsp;&nbsp;';
+			  					      			echo '<strong>否<i class="fa fa-check-square-o"></i></strong>';
+			  					      		}
+			  					      		echo '</td>';
+			  					      		echo '<td>';
+			  					      		echo '&nbsp;&nbsp;'.$list;
+			  					      		echo '</td>';
+			  					      		echo '<td>';
+			  					      		if($result[$key.'content'])
+			  					      			echo '&nbsp;&nbsp;<font color="red"><strong>情况说明：'.$result[$key.'content'].'</strong></font>';
+			  					      		echo "</td>";
+			  					      		echo '</tr>';
+			  					      	}
+			  					      	echo '</table>';
+			  					      	echo '</td>';
+			  				      	}
+			  				      	}
+			  				      ?>
+			  			       </tr>
+			  				   
+			  			       
+			  	               <tr>
+			  		              <td colspan="5" align="left" class='content'><?php 
+			  	// 			    if($model->$value == 2 or $model->$value == 0) {
+			  	// 			    	if($model->$value == 2)
+			  	// 			    		$model->$value = 1; 
+			  	// 			    	echo $form->field($model,$value)->radioList([1=>'同意',0=>'不同意'],['onclick'=>'CheckState("'.$value.'")'])->label(false)->error(false); 
+			  	// 			    	echo $form->field($model,$value.'content')->textInput()->label(false)->error(false);
+			  	// 			    	echo $form->field($model,$value.'time')->hiddenInput(['value'=>time()])->label(false)->error(false);
+			  	// 			    } else {
+			  				    	echo Reviewprocess::state($model->$value);
+			  				    	echo "<br>";
+			  				    	if(!$model->$value) {
+			  				    		$modelStr = $value.'content';
+			  				    		echo "原由：".$model->$modelStr;
+			  				    	}
+			  				    ?></td>
+			  	               </tr>
+			  				  <?php }?>
+			  <?php }?>
 			  <tr>
 			    <td align="center"><strong>备&nbsp;&nbsp;&nbsp;&nbsp;注</strong></td>
 			    <td colspan="5" align="center"><br><br><br><br>
@@ -310,14 +373,34 @@ use app\models\Estate;
 </div>
 
 <script language="javascript" type="text/javascript">
+$('#isdydkcontent').css('display','none');
+$('#isdydkcontent').attr('disabled',true);
+$('#sfdjcontent').css('display','none');
+$('#sfdjcontent').attr('disabled',true);
+$('#isqcbfcontent').css('display','none');
+$('#isqcbfcontent').attr('disabled',true);
+$('#othercontent').css('display','none');
+$('#othercontent').attr('disabled',true);
+$('#sfyzycontent').css('display','none');
+$('#sfyzycontent').attr('disabled',true);
 function showContent(key)
 {
-// 	alert($('input:radio[name="'+key+'"]:checked').val());
-	if($('input:radio[name="'+key+'"]:checked').val() == 1) {
-		$('#'+key+'content').css('display','none');
-	} else {
-		$('#'+key+'content').css('display','inline');
-		$('#'+key+'content').attr('disabled','disabled');
+	if(key == 'isdydk' || key == 'sfdj' || key == 'isqcbf' || key == 'other' || key == 'sfyzy') {
+		if($('input:radio[name="'+key+'"]:checked').val() == 1) {
+			$('#'+key+'content').css('display','inline');
+			$('#'+key+'content').attr('disabled',false);			
+		} else {
+			$('#'+key+'content').css('display','none');
+			$('#'+key+'content').attr('disabled',true);
+		}
+	} else {	
+		if($('input:radio[name="'+key+'"]:checked').val() == 1) {
+			$('#'+key+'content').css('display','none');
+			$('#'+key+'content').attr('disabled',true);
+		} else {
+			$('#'+key+'content').css('display','inline');
+			$('#'+key+'content').attr('disabled',false);
+		}
 	}
 }
 			    

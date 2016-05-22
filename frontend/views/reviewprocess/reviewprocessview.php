@@ -126,37 +126,42 @@ use app\models\Estate;
 			    <tr>
 			    <td rowspan="2"><strong>
 			      <?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?>
-			    </strong></td>
-			      <td colspan="5" align="left">
-			      <table>
+			    </strong></td>	      
 			      
 			      <?php 
 				  $classname = 'app\\models\\'.ucfirst($value);
 			      	$lists = $classname::attributesList();
+			      	
 			      	$result = $classname::find()->where(['reviewprocess_id'=>$model->id])->one();
-			      	if($result) {
-				      	foreach ($lists as $key=>$list) {
-				      		echo '<tr>';
-				      		echo '<td>';
-				      		if($result[$key]) {
-				      			echo '<i class="fa fa-check-square-o"></i>';
-				      		} else 
-				      			echo '<i class="fa fa-square-o"></i>';
-				      		echo '</td>';
-				      		echo '<td>';
-				      		echo '&nbsp;&nbsp;'.$list;
-				      		echo '</td>';
-				      		echo '<td>';
-				      		if(!$result[$key])
-				      			echo '&nbsp;&nbsp;<font color="red"><strong>情况说明：'.$result[$key.'content'].'</strong></font>';
-				      		echo "</td>";
-				      		echo '</tr>';
-				      	}
+			      	if($lists) {
+			      		echo '<td colspan="5" align="left">';
+			      		echo '<table>';
+				      	if($result) {
+					      	foreach ($lists as $key=>$list) {
+					      		echo '<tr>';
+					      		echo '<td>';
+					      		if($result[$key]) {
+					      			echo '<strong>是<i class="fa fa-check-square-o"></i></strong>&nbsp;&nbsp;';
+					      			echo '<strong>否<i class="fa fa-square-o"></i></strong>';
+					      		} else { 
+					      			echo '<strong>是<i class="fa fa-square-o"></i></string>&nbsp;&nbsp;';
+					      			echo '<strong>否<i class="fa fa-check-square-o"></i></strong>';
+					      		}
+					      		echo '</td>';
+					      		echo '<td>';
+					      		echo '&nbsp;&nbsp;'.$list;
+					      		echo '</td>';
+					      		echo '<td>';
+					      		if($result[$key.'content'])
+					      			echo '&nbsp;&nbsp;<font color="red"><strong>情况说明：'.$result[$key.'content'].'</strong></font>';
+					      		echo "</td>";
+					      		echo '</tr>';
+					      	}
+			      	}
+			      	echo '</table>';
+			      	echo '</td>';
 			      	}
 			      ?>
-			      
-			      </table>
-			      </td>
 		       </tr>
 			   
 		       
