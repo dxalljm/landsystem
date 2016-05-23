@@ -375,7 +375,7 @@ function zongdiRemove(zongdi,measure,dialogID)
 // 	var zongdiarr = zongdi.split('_');
 	$('#'+zongdi).attr('disabled',false);
 	var oldzongdi = $('#oldfarms-measure').val();
-	if(typeof(oldzongdi)!="undefined") {
+	if(typeof(oldzongdi)!="undefined" && oldzongdi > 0 ) {
 		var getzongdivalue = $('#'+zongdi).val();	
 		var zongdiarea = getArea(getzongdivalue);	
 		var zongdivalue = zongdiarea*1 + measure*1;
@@ -423,7 +423,7 @@ function zongdiRemove(zongdi,measure,dialogID)
 		$('#temp_measure').val(newvalue.toFixed(2));
 	}
 	//宗地面积计算结束
-	jisuan();
+// 	jisuan();
 	toHTH();
 }
 function removeZongdiForm(zongdi,measure)
