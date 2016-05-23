@@ -155,7 +155,8 @@ class ReviewprocessController extends Controller
     public function actionReviewprocessinspections($id,$class)
     {
     	$model = $this->findModel($id);
-    	
+    	$ttpo = Ttpozongdi::find()->where(['reviewprocess_id'=>$id])->one();
+    	$ttpoModel = Ttpozongdi::findOne($ttpo['id']);
     	$process = Auditprocess::find()->where(['actionname'=>$model->actionname])->one()['process'];
     	$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$model->oldfarms_id])->one();
     	$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$model->newfarms_id])->one();
@@ -187,37 +188,45 @@ class ReviewprocessController extends Controller
 // 	    		var_dump($id);
 	    		if($state) {
 // 	    			var_dump($model->oldfarms_id);exit;
-	    			$oldfarmsModel = Farms::findOne($model->oldfarms_id);	    			
+	    			$oldfarmsModel = Farms::findOne($ttpoModel->oldfarms_id);	    			
 	    			$oldfarmsModel->update_at = time();
-	    			$oldfarmsModel->zongdi = $model->oldchangezongdi;
-	    			$oldfarmsModel->measure = $model->oldchangemeasure;
-	    			$oldfarmsModel->notclear = $model->oldchangenotclear;
-	    			$oldfarmsModel->notstate = $model->oldchangenotstate;
-	    			$oldfarmsModel->contractarea = Farms::getContractnumberArea($model->oldchangecontractnumber);
-	    			$oldfarmsModel->contractnumber = $model->oldchangecontractnumber;
-	    			$oldfarmsModel->state = 0;
+	    			$oldfarmsModel->zongdi = $ttpoModel->oldchangezongdi;
+	    			$oldfarmsModel->measure = $ttpoModel->oldchangemeasure;
+	    			$oldfarmsModel->notclear = $ttpoModel->oldchangenotclear;
+	    			$oldfarmsModel->notstate = $ttpoModel->oldchangenotstate;
+	    			$oldfarmsModel->contractarea = Farms::getContractnumberArea($ttpoModel->oldchangecontractnumber);
+	    			$oldfarmsModel->contractnumber = $ttpoModel->oldchangecontractnumber;
+	    			if($ttpoModel->actionname == 'farmstransfer') {
+	    				$oldfarmsModel->state = 0;
+	    			} else 
+	    				$oldfarmsModel->state = 1;
+	    			
 	    			$oldfarmsModel->locked = 0;
 	    			$oldfarmsModel->save();
 	    			
-	    			$newfarmModel = Farms::findOne($model->newfarms_id);	    			
+	    			$newfarmModel = Farms::findOne($ttpoModel->newfarms_id);	    			
 	    			$newfarmModel->update_at = time();
-	    			$newfarmModel->zongdi = $model->newchangezongdi;
-	    			$newfarmModel->measure = $model->newchangemeasure;
-	    			$newfarmModel->notclear = $model->newchangenotclear;
-	    			$newfarmModel->notstate = $model->newchangenotstate;
-	    			$newfarmModel->contractarea = Farms::getContractnumberArea($model->newchangecontractnumber);
-	    			$newfarmModel->contractnumber = $model->newchangecontractnumber;
+	    			$newfarmModel->zongdi = $ttpoModel->newchangezongdi;
+	    			$newfarmModel->measure = $ttpoModel->newchangemeasure;
+	    			$newfarmModel->notclear = $ttpoModel->newchangenotclear;
+	    			$newfarmModel->notstate = $ttpoModel->newchangenotstate;
+	    			$newfarmModel->contractarea = Farms::getContractnumberArea($ttpoModel->newchangecontractnumber);
+	    			$newfarmModel->contractnumber = $ttpoModel->newchangecontractnumber;
 	    			$newfarmModel->state = 1;
 	    			$newfarmModel->locked = 0;
 	    			$newfarmModel->save();
 	    			
 	    			
 	    		}
-	    		return $this->redirect(['reviewprocess/reviewprocessfarmssplit',
-	    				'oldfarmsid' => $model->oldfarms_id,
-	    				'newfarmsid' => $model->newfarms_id,
-	    				'reviewprocessid' => $model->id,
-	    		]);
+	    		if(user::getItemname() == '地产科科长') {
+		    		return $this->redirect(['reviewprocess/reviewprocessfarmssplit',
+		    				'oldfarmsid' => $ttpoModel->oldfarms_id,
+		    				'newfarmsid' => $ttpoModel->newfarms_id,
+		    				'reviewprocessid' => $model->id,
+		    		]);
+	    		} else {
+	    			return $this->redirect(['reviewprocess/reviewprocessindex']);
+	    		}
 	    	}
 	    	return $this->render ( 'reviewprocessinspections', [
 	    			'model' => $model,

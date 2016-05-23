@@ -16,6 +16,7 @@ use app\models\Estate;
 use app\models\Farms;
 use app\models\Lockedinfo;
 use app\models\Zongdioffarm;
+use app\models\Contractnumber;
 /**
  * TheyearController implements the CRUD actions for Theyear model.
  */
@@ -63,13 +64,14 @@ class TtpozongdiController extends Controller
         $estateModel->reviewprocess_id = $reviewprocessID;
         $estateModel->save();
 //         	var_dump(Reviewprocess::getReturnAction ($model->auditprocess_id));exit;
-       return $this->redirect ( [ 
-				Reviewprocess::getReturnAction ($model->auditprocess_id),
-				'newfarmsid' => $model->newfarms_id,
-				'oldfarmsid' => $model->oldfarms_id,
-				'reviewprocessid' => $reviewprocessID,
-       			'process' => Auditprocess::find()->where(['id'=>$model->auditprocess_id])->one()['actionname']
-       	] );
+//        return $this->redirect ( [ 
+// 				Reviewprocess::getReturnAction ($model->auditprocess_id),
+// 				'newfarmsid' => $model->newfarms_id,
+// 				'oldfarmsid' => $model->oldfarms_id,
+// 				'reviewprocessid' => $reviewprocessID,
+//        			'process' => Auditprocess::find()->where(['id'=>$model->auditprocess_id])->one()['actionname']
+//        	] );
+		return $this->redirect(['farms/farmsttpozongdiview','id'=>$id]);
 //         } else {
 //             return $this->render('ttpozongdiupdate', [
 //                 'model' => $model,
@@ -94,35 +96,22 @@ class TtpozongdiController extends Controller
     public function actionTtpozongdidelete($id)
     {
         $model = $this->findModel($id);
+//         var_dump($model);exit;
     	$old = $model->attributes;
     	Logs::writeLog('删除转让信息',$id,$old);
        
 		$oldfarms = Farms::findOne($model->oldfarms_id);
-		$oldfarms->zongdi = $model->oldzongdi;
-		$oldfarms->measure = $model->oldmeasure;
-		$oldfarms->notclear = $model->oldnotclear;
-		$oldfarms->notstate = $model->oldnotstate;		
-		$oldfarms->contractnumber = $model->oldcontractnumber;
-		$oldfarms->contractarea = Farms::getContractnumberArea($model->oldcontractnumber);
-		$oldfarms->state = 1;
 		$oldfarms->locked = 0;
-// 		var_dump($model);exit;
 		$oldfarms->save();
+		
 		$newfarms = Farms::findOne($model->newfarms_id);
-		$new = $newfarms;
+		$new = $newfarms->attributes;
 		if($model->actionname == 'farmssplit' or $model->actionname == 'farmstransfer') {			
 			$newfarms->delete();
 		}
 		if($model->actionname == 'farmstozongdi') {
 			$newfarms->state = 1;
 			$newfarms->locked = 0;
-			$newfarms->zongdi = $model->newzongdi;	
-			$newfarms->contractnumber = $model->newcontractnumber;
-			$newfarms->measure = $model->newmeasure;
-			$newfarms->notclear = $model->newnotclear;
-			$newfarms->notstate = $model->newnotstate;
-			$newfarms->contractarea = Farms::getContractnumberArea($model->newcontractnumber);
-			$newfarms->oldfarms_id = '';
 			$newfarms->save();		
 		}
 // 		if($model->actionname == 'farmstozongdi') {
@@ -136,7 +125,13 @@ class TtpozongdiController extends Controller
 		$lockedinfo = Lockedinfo::find()->where(['farms_id'=>$model->oldfarms_id])->one();
 		$lockedinfoModel = Lockedinfo::findOne($lockedinfo['id']);
 		$lockedinfoModel->delete();
+		$lockedinfo = Lockedinfo::find()->where(['farms_id'=>$model->newfarms_id])->one();
+		if($lockedinfo) {
+			$lockedinfoModel = Lockedinfo::findOne($lockedinfo['id']);
+			$lockedinfoModel->delete();
+		}
 		$model->delete();
+		Contractnumber::contractnumberSub();
         return $this->redirect(['farms/farmsmenu', 'farms_id'=>$model->oldfarms_id]);
     }
 

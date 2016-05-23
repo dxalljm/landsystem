@@ -489,12 +489,12 @@ $('#dialog2').dialog({
 								}
 								var newtempzongdi = $('#new-zongdi').val();
 		  						$("#new-zongdi").val(zongdi+'|'+newtempzongdi);
-		  						$('#findZongdi').val('');
-					  			$('#findMeasure').val('');
-					  			$('#ymeasure').val(0);	
+		  						$('#ymeasure').val(0);	
 					  			var ttpoarea = $('#ttpozongdi-area').val();
 								
 					  			$('#ttpozongdi-area').val(ttpoarea*1 + measure*1);
+					  			$('#findZongdi').val('');
+					  			$('#findMeasure').val('');
 		  					}
 	  						
 		  				}
@@ -592,6 +592,8 @@ $('#inputZongdi').dblclick(function(){
 	if($('#oldfarms-notclear').val() > 0) {
 		$("#dialogSelect").val('dialog2');
 		$( "#dialog2" ).dialog( "open" );
+		$('#findZongdi').val('');
+			$('#findMeasure').val('');
 	}
 });
 $('#findZongdi').keyup(function (event) {
@@ -622,27 +624,29 @@ $('#findZongdi').keyup(function (event) {
 });
 $('#findZongdi').blur(function (event) {
 	var input = $(this).val();
-	if(nowZongdiFind(input)){
-		alert('您已经输入过此宗地号，请不要重复输入');
-		$('#findZongdi').val('');
-			$('#findMeasure').val('');
-	} else {
-		$.getJSON("<?= Url::to(['parcel/parcelarea'])?>", {zongdi: input}, function (data) {
-			if (data.status == 1) {
-				if(data.showmsg)
-					alert(data.message);
-				$('#findMeasure').val(data.area);
-				$('#ymeasure').val(data.area);
-			}
-			else {
-				if(input != '') {
+	if(input != '') {
+		if(nowZongdiFind(input)){
+			alert('您已经输入过此宗地号，请不要重复输入');
+			$('#findZongdi').val('');
+				$('#findMeasure').val('');
+		} else {
+			$.getJSON("<?= Url::to(['parcel/parcelarea'])?>", {zongdi: input}, function (data) {
+				if (data.status == 1) {
 					if(data.showmsg)
 						alert(data.message);
-					$("#findZongdi").val('');
-					$("#findZongdi").focus();
+					$('#findMeasure').val(data.area);
+					$('#ymeasure').val(data.area);
 				}
-			}
-		});
+				else {
+					if(input != '') {
+						if(data.showmsg)
+							alert(data.message);
+						$("#findZongdi").val('');
+						$("#findZongdi").focus();
+					}
+				}
+			});
+		}
 	}
 });
 // Link to open the dialog

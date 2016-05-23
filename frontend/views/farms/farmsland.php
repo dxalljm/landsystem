@@ -11,6 +11,7 @@ use app\models\Machineoffarm;
 use app\models\User;
 use app\models\Farmer;
 use yii\helpers\Url;
+use frontend\helpers\arraySearch;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\farmsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -20,10 +21,10 @@ $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctable
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php 
-// 	$totalData = clone $dataProvider;
-// 	$totalData->pagination = ['pagesize'=>0];
-// // 	var_dump($totalData->getModels());exit;
-// 	$data = arraySearch::find($totalData)->search();
+	$totalData = clone $dataProvider;
+	$totalData->pagination = ['pagesize'=>0];
+// 	var_dump($totalData->getModels());exit;
+	$data = arraySearch::find($totalData)->search();
 ?>
 <div class="farms-index">
 
@@ -42,16 +43,16 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-//         'total' => '<tr>
-// 						<td></td>
-// 						<td align="center"><strong>合计</strong></td>
-// 						<td><strong>'.$data->count('id').'户</strong></td>
-// 						<td><strong>'.$data->count('farmer_id').'个</strong></td>
-// 						<td></td>
-// 						<td></td>
-// 						<td><strong>'.$data->sum('contractarea').'亩</strong></td>
-// 						<td></td>
-// 					</tr>',
+        'total' => '<tr>
+						<td></td>
+						<td align="center"><strong>合计</strong></td>
+						<td><strong>'.$data->count('id').'户</strong></td>
+						<td><strong>'.$data->count('farmer_id').'个</strong></td>
+						<td></td>
+						<td></td>
+						<td><strong>'.$data->sum('contractarea').'亩</strong></td>
+						<td></td>
+					</tr>',
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 

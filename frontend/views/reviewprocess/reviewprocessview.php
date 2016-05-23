@@ -43,79 +43,84 @@ use app\models\Estate;
  <?php if($class == 'farmstransfer') {?>
              <table class="table table-bordered table-hover">
 			  <tr height="40px">
-			    <td align="center"><strong>原农场名称</strong></td>
-			    <td width="13%" align="center"><strong>原法人</strong></td>
-			    <td width="17%" align="center"><strong>原面积</strong></td>
-			    <td width="22%" align="center"><strong>现农场名称</strong></td>
-			    <td width="14%" align="center"><strong>现法人</strong></td>
-			    <td width="14%" align="center"><strong>现面积</strong></td>
+			    <td align="center" bgcolor="#D0F5FF"><strong>原农场名称</strong></td>
+			    <td width="13%" align="center" bgcolor="#D0F5FF"><strong>原法人</strong></td>
+			    <td width="17%" align="center" bgcolor="#D0F5FF"><strong>原面积</strong></td>
+			    <td width="22%" align="center" bgcolor="#FFFFD5"><strong>现农场名称</strong></td>
+			    <td width="14%" align="center" bgcolor="#FFFFD5"><strong>现法人</strong></td>
+			    <td width="14%" align="center" bgcolor="#FFFFD5"><strong>现面积</strong></td>
 			  </tr>
 			  <tr height="40px">
-			    <td align="center"><span class="italic"><?= $oldfarm->farmname?></span></td>
-			    <td align="center"><span class="italic"><?= $oldfarm->farmername?></span></td>
-			    <td align="center"><span class="italic"><?= $oldfarm->contractarea?>亩</span></td>
-			    <td align="center"><span class="italic"><?= $newfarm->farmname?></span></td>
-			    <td align="center"><span class="italic"><?= $newfarm->farmername?></span></td>
-			    <td align="center"><span class="italic"><?= $newfarm->contractarea?>亩</span></td>
+			    <td align="center" bgcolor="#D0F5FF"><span class="italic"><?= $oldfarm->farmname?></span></td>
+			    <td align="center" bgcolor="#D0F5FF"><span class="italic"><?= $oldfarm->farmername?></span></td>
+			    <td align="center" bgcolor="#D0F5FF"><span class="italic"><?= $oldfarm->contractarea?>亩</span></td>
+			    <td align="center" bgcolor="#FFFFD5"><span class="italic"><?= $newfarm->farmname?></span></td>
+			    <td align="center" bgcolor="#FFFFD5"><span class="italic"><?= $newfarm->farmername?></span></td>
+			    <td align="center" bgcolor="#FFFFD5"><span class="italic"><?= $newfarm->contractarea?>亩</span></td>
 			  </tr>
 			  <tr height="40px">
-			    <td align="center"><strong>原合同号</strong></td>
-			    <td colspan="2" align="center"><span class="italic"><?= $oldfarm->contractnumber?></span></td>
-			    <td align="center"><strong>现合同号</strong></td>
-			    <td colspan="2" align="center"><span class="italic"><?= $newfarm->contractnumber?></span></td>
+			    <td align="center" bgcolor="#D0F5FF"><strong>原合同号</strong></td>
+			    <td colspan="2" align="center" bgcolor="#D0F5FF"><span class="italic"><?= $oldttpozongdi->oldcontractnumber?></span></td>
+			    <td align="center" bgcolor="#FFFFD5"><strong>现合同号</strong></td>
+			    <td colspan="2" align="center" bgcolor="#FFFFD5"><span class="italic"><?= $newttpozongdi->newchangecontractnumber?></span></td>
 		       </tr>
 			  <tr height="40px">
-			    <td align="center"><strong>原法人身份证</strong>号</td>
-			    <td colspan="2" align="center"><span class="italic"><?= $oldfarm->cardid?></span></td>
-			    <td align="center"><strong>现法人身份证号</strong></td>
-			    <td colspan="2" align="center"><span class="italic"><?= $newfarm->cardid?></span></td>
+			    <td align="center" bgcolor="#D0F5FF"><strong>原法人身份证</strong>号</td>
+			    <td colspan="2" align="center" bgcolor="#D0F5FF"><span class="italic"><?= $oldfarm->cardid?></span></td>
+			    <td align="center" bgcolor="#FFFFD5"><strong>现法人身份证号</strong></td>
+			    <td colspan="2" align="center" bgcolor="#FFFFD5"><span class="italic"><?= $newfarm->cardid?></span></td>
 		       </tr>
 			  <tr height="40px">
-			    <td align="center"><strong>原宗地信息</strong></td><?php if(!empty($oldttpozongdi['oldzongdi'])) $zongdiArray = explode('、', $oldttpozongdi['oldzongdi']); else $zongdiArray = [];?>
-			    <td colspan="5" align="center"><table width="100%" border="0" align="right"><?php for($i = 0;$i<count($zongdiArray);$i++) {
+			    <td align="center" bgcolor="#D0F5FF"><strong>原宗地信息</strong></td><?php if(!empty($oldttpozongdi['oldzongdi'])) $zongdiArray = explode('、', $oldttpozongdi['oldzongdi']); else $zongdiArray = [];?>
+			    <td colspan="2" align="center" bgcolor="#D0F5FF"><table width="100%" border="0" align="right"><?php for($i = 0;$i<count($zongdiArray);$i++) {
 			    	if($i%6 == 0) {
 			    		echo '<tr height="10">';
-			    		echo '<td align="left">';
+			    		echo '<td align="center">';
 			    		echo '<span class="italic">'.$zongdiArray[$i].'</span>';
 			    		echo '</td>';
 			    	} else {
-			    		echo '<td align="left">';
+			    		echo '<td align="center">';
 			    		echo '<span class="italic">'.$zongdiArray[$i].'</span>';
 			    		echo '</td>';
 			    	}
 			    	
 			    }?></table></span></td>
-		       </tr>
-			  <tr height="40px">
-			    <td align="center"><strong>原未明确地块</strong></td>
-			    <td colspan="2" align="center"><span class="italic"><?= $oldfarm->notclear;?></span></td>
-			    <td align="center"><strong>原未明确状态地块</strong></td>
-			    <td colspan="2" align="center"><span class="italic"><?= $oldfarm->notstate;?></span></td>
-		       </tr>
-			  <tr height="40px">
-			    <td align="center"><strong>现宗地信息</strong></td><?php if(!empty($newttpozongdi['zongdi'])) $zongdiArray = explode('、', $newttpozongdi['zongdi']); else $zongdiArray = [];?>
-			    <td colspan="5" align="center"><table width="100%" border="0" align="center">
-			    <?php for($i = 0;$i<count($zongdiArray);$i++) {
+			    <td align="center" bgcolor="#FFFFD5"><strong>现宗地信息</strong></td>
+			    <td colspan="2" align="center" bgcolor="#FFFFD5"><table width="100%" border="0" align="center">
+			      <?php for($i = 0;$i<count($zongdiArray);$i++) {
 			    	if($i%6 == 0) {
 			    		echo '<tr height="10">';
-			    		echo '<td align="left">';
+			    		echo '<td align="center">';
 			    		echo '<span class="italic">'.$zongdiArray[$i].'</span>';
 			    		echo '</td>';
 			    	} else {
-			    		echo '<td align="left">';
+			    		echo '<td align="center">';
 			    		echo '<span class="italic">'.$zongdiArray[$i].'</span>';
 			    		echo '</td>';
 			    	}
 			    	
 			    }?>
-			    
-			    </table></td>
+			      
+			      </table></td>
 		       </tr>
-			    <tr>
-			      <td align="center"><strong>现未明确地块</strong></td>
-			      <td colspan="2" align="left" class='content'><span class="italic"><?= $newfarm->notclear;?></span></td>
-			      <td align="center" class='content'><strong>现未明确状态地块</strong></td>
-			      <td colspan="2" align="left" class='content'><span class="italic"><?= $newfarm->notstate;?></span></td>
+			  <tr height="40px">
+			    <td align="center" bgcolor="#D0F5FF"><strong>原未明确地块</strong></td>
+			    <td colspan="2" align="center" bgcolor="#D0F5FF"><span class="italic"><?= $oldttpozongdi->oldnotclear;?></span></td>
+			    <td align="center" bgcolor="#FFFFD5"><strong>现未明确地块</strong></td>
+			    <td colspan="2" align="center" bgcolor="#FFFFD5"><span class="italic">
+			      <?= $newttpozongdi->newchangenotclear;?>
+			    </span></td>
+		       </tr>
+			  <tr height="40px">
+			    <td align="center" bgcolor="#D0F5FF"><strong>原未明确状态地块</strong></td><?php if(!empty($newttpozongdi['newchangezongdi'])) $zongdiArray = explode('、', $newttpozongdi['newchangezongdi']); else $zongdiArray = [];?>
+			    <td colspan="2" align="center" bgcolor="#D0F5FF">
+			      <span class="italic">
+		          <?= $oldttpozongdi->oldnotstate;?>
+	            </span></td>
+			    <td align="center" bgcolor="#FFFFD5"><strong>现未明确状态地块</strong></td>
+			    <td colspan="2" align="center" bgcolor="#FFFFD5"><span class="italic">
+			      <?= $newttpozongdi->newchangenotstate;?>
+			    </span></td>
 		       </tr>
                 <?php 
 //                 var_dump($process);exit;
@@ -166,7 +171,7 @@ use app\models\Estate;
 			   
 		       
                <tr>
-	              <td colspan="5" align="left" class='content'><?php 
+	              <td colspan="5" align="left" ><?php 
 // 			    if($model->$value == 2 or $model->$value == 0) {
 // 			    	if($model->$value == 2)
 // 			    		$model->$value = 1; 
@@ -217,7 +222,7 @@ use app\models\Estate;
     </tr>
   <tr>
     <td align="right"><span class="italic"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?>：</td>
-			    <td colspan="5" align="left" class='content'>
+			    <td colspan="5" align="left" >
 			    <?php 
 			    if($model->$value == 2 or $model->$value == 0) {
 			    	if($model->$value == 3)
@@ -274,7 +279,7 @@ use app\models\Estate;
 
   <tr>
     <td align="right"><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?>：</td>
-			    <td colspan="5" align="left" class='content'>
+			    <td colspan="5" align="left" >
 			    <?php 
 			    if($model->$value == 2 or $model->$value == 0) {
 			    	
@@ -300,6 +305,8 @@ use app\models\Estate;
     
 
     <?php ActiveFormrdiv::end(); ?>
+    <?php echo Html::a('打印', ['reviewprocess/reviewprocessfarmssplit','oldfarmsid'=>$oldttpozongdi->oldfarms_id,'newfarmsid'=>$newttpozongdi->newfarms_id,'reviewprocessid'=>$oldttpozongdi['reviewprocess_id']], ['class' => 'btn btn-success']);?>
+    <?= Html::a('返回', ['reviewprocess/reviewprocessindex'], ['class' => 'btn btn-success'])?>
               </div>
             </div>
         </div>

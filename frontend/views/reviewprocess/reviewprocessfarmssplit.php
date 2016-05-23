@@ -98,7 +98,7 @@ use app\models\User;
 			    }?></table></td>
 			    </tr>
 			  <tr height="40px">
-			    <td align="center">现宗地信息</td><?php if(!empty($newttpozongdi->zongdi)) $zongdiArray = explode('、', $newttpozongdi->zongdi); if($newfarm->notclear) $zongdiArray[] = '未明确地块面积('.$newfarm->notclear.')';if($newfarm->notstate) $zongdiArray[] = '未明确状态面积('.$newfarm->notstate.')';?>
+			    <td align="center">现宗地信息</td><?php if(!empty($newttpozongdi->newchangezongdi)) $zongdiArray = explode('、', $newttpozongdi->newchangezongdi); if($newttpozongdi->newchangenotclear) $zongdiArray[] = '未明确地块面积('.$newttpozongdi->newchangenotclear.')';if($newttpozongdi->newchangenotstate) $zongdiArray[] = '未明确状态面积('.$newttpozongdi->newchangenotstate.')';?>
 			    <td colspan="5" align="center"><table width="100%" border="0" align="center"><?php for($i = 0;$i<count($zongdiArray);$i++) {
 			    	if($i%4 == 0) {
 			    		echo '<tr height="2">';
@@ -146,7 +146,6 @@ use app\models\User;
 				  					      		echo '<font size="2"><strong>否<i class="fa fa-square-o"></i></strong></font>';
 			  					      		}
 			  					      		
-			  					      		echo "<br><br>";
 			  					      		echo '</td>';
 			  					      		echo '<td>';
 			  					      		
@@ -165,6 +164,7 @@ use app\models\User;
 // 			  				      	}
 // 			  				      	}
 			  				      ?>
+			  				      <br><br>
 			  				      <p><font size="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;签字：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日 </font></p>
 			  				      </td>
 			  			       </tr>

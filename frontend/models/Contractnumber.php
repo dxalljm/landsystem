@@ -49,4 +49,9 @@ class Contractnumber extends \yii\db\ActiveRecord
     	$model->contractnumber++;
     	$model->save();
     }
+    public static function contractnumberSub(){
+    	$model = Contractnumber::findOne(1);
+    	$model->contractnumber--;
+    	$model->save();
+    }
 }
