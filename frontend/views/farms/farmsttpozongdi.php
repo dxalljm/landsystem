@@ -63,7 +63,7 @@ use app\models\Loan;
             'format'=>'raw',
             //'class' => 'btn btn-primary btn-lg',
             'value' => function($model,$key){
-            	$url = ['farms/farmstozongdi','farms_id'=>$model->id,'oldfarms_id'=>$_GET['farms_id']];
+            	$url = ['farms/farmstozongdi','farms_id'=>$_GET['farms_id'],'newfarms_id'=>$model->id];
             	$disputerows = Dispute::find()->where(['farms_id'=>$model->id])->count();
             	if($disputerows) {
             		$option = '确认<i class="fa fa-commenting"></i>';

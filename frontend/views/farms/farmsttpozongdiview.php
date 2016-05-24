@@ -130,7 +130,7 @@ $this->params['breadcrumbs'][] = $this->title;
           </tr>
           <tr>
             <td width="15%" align='right'>合同号</td>
-            <td align='left'><?= $newFarm->contractnumber ?></td>
+            <td align='left'><?= $ttpoModel->newchangecontractnumber ?></td>
           </tr>
           <tr>
             <td width="15%" align='right'>合同面积</td>
@@ -169,7 +169,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </table>
     <?php if($state == 0) {?>
     <?= Html::a('提交申请', ['ttpozongdi/ttpozongdiupdate','id'=>$ttpoModel->id], ['class' => 'btn btn-success','data' => ['confirm' => '您确定要提交申请吗？', 'method' => 'post']])?>
-    <?= Html::a('修改', ['farms/farmsttpoupdate','id'=>$ttpoModel->id], ['class' => 'btn btn-success'])?>
+    <?= Html::a('修改', ['farms/farmsttpoupdate'.$ttpoModel->actionname,'id'=>$ttpoModel->id], ['class' => 'btn btn-success'])?>
     <?= Html::a('撤消申请', ['ttpozongdi/ttpozongdidelete','id'=>$ttpoModel->id], ['class' => 'btn btn-success','data' => ['confirm' => '您确定要撤消申请吗？', 'method' => 'post']])?>
     
     <?php } else 

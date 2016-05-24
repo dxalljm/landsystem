@@ -78,20 +78,22 @@ class Zongdioffarm extends \yii\db\ActiveRecord
     }
     
     
-    public static function zongdiUpdate($farms_id,$zongdi)
+    public static function zongdiUpdate($farms_id,$newfarms_id,$zongdi)
     {
-    	$arrayID = self::getZongdiOfFarmID($farms_id);
-    	if($arrayID) {
-	    	foreach ($arrayID as $id) {
-	    		$model = self::findOne($id);
-	    		$model->delete();
+    	if($farms_id) {
+	    	$arrayID = self::getZongdiOfFarmID($farms_id);
+	    	if($arrayID) {
+		    	foreach ($arrayID as $id) {
+		    		$model = self::findOne($id);
+		    		$model->delete();
+		    	}
 	    	}
     	}
     	if($zongdi) {
 	    	$newzongdi = self::getZongdiArray($zongdi);
 	    	foreach ($newzongdi as $zongdi) {
 	    		$model = new Zongdioffarm();
-	    		$model->farms_id = $farms_id;
+	    		$model->farms_id = $newfarms_id;
 	    		$model->zongdinumber = $zongdi['number'];
 	    		$model->measure = $zongdi['measure'];
 	    		$model->save();

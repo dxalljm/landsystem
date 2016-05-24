@@ -29,7 +29,7 @@ class Ttpozongdi extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['oldfarms_id', 'newfarms_id', 'reviewprocess_id', 'state', 'auditprocess_id'], 'integer'],
+            [['oldfarms_id','oldnewfarms_id','newfarms_id', 'newnewfarms_id','reviewprocess_id', 'state', 'auditprocess_id'], 'integer'],
             [['newchangezongdi', 'oldzongdi', 'ttpozongdi', 'oldchangecontractnumber','oldchangezongdi','newzongdi'], 'string'],
             [['ttpoarea', 'oldmeasure', 'oldnotclear', 'oldnotstate', 'newmeasure', 'newnotclear', 'newnotstate', 'oldchangemeasure', 'oldchangenotclear', 'oldchangenotstate', 'newchangemeasure', 'newchangenotclear', 'newchangenotstate'], 'number'],
             [['create_at', 'oldcontractnumber', 'actionname', 'newcontractnumber', 'newchangecontractnumber'], 'string', 'max' => 500]
@@ -45,6 +45,8 @@ class Ttpozongdi extends \yii\db\ActiveRecord
             'id' => 'ID',
             'oldfarms_id' => '原农场ID',
             'newfarms_id' => '现农场ID',
+      		'oldnewfarms_id' => '原农场新ID',
+      		'newnewfarms_id' => '现农场新ID',
             'newchangezongdi' => '转让宗地',
             'create_at' => '创建日期',
             'oldzongdi' => '原宗地',

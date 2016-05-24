@@ -118,8 +118,8 @@ class TtpozongdiController extends Controller
 // 			Zongdioffarm::zongdiDelete($model->newfarms_id, $model->ttpozongdi);
 // 			Zongdioffarm::zongdiUpdate($model->oldfarms_id, $model->oldzongdi);
 // 		} else {
-			Zongdioffarm::zongdiUpdate($model->newfarms_id, $model->newzongdi);
-			Zongdioffarm::zongdiUpdate($model->oldfarms_id, $model->oldzongdi);
+			Zongdioffarm::zongdiUpdate($model->newfarms_id,$model->newnewfarms_id ,$model->newzongdi);
+			Zongdioffarm::zongdiUpdate($model->oldfarms_id,$model->oldnewfarms_id, $model->oldzongdi);
 // 		}
 		
 		$lockedinfo = Lockedinfo::find()->where(['farms_id'=>$model->oldfarms_id])->one();
