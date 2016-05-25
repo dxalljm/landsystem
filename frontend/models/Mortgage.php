@@ -52,4 +52,11 @@ class Mortgage extends \yii\db\ActiveRecord
     			'isdydk' => '是否存在抵押贷款',
     	];
     }
+    
+    public static function attributesKey()
+    {
+    	return [
+    			'isdydk',
+    	];
+    }
 }

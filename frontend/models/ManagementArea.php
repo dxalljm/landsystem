@@ -42,19 +42,23 @@ class ManagementArea extends \yii\db\ActiveRecord
         ];
     }
     
-    public static function getAreaname()
+    public static function getAreaname($id = NULL)
     {
 //     	$cache = 'cache-key-areaname'.\Yii::$app->getUser()->id;
 //     	$data = Yii::$app->cache->get($cache);
 //     	if (!empty($data)) {
 //     		return $data;
 //     	}
-    	$whereArray = Farms::getManagementArea();
-    	$area = ManagementArea::find()->where(['id'=>$whereArray['id']])->all();
-
-        foreach ($area as $key => $val) {
-            $data[$val->id] = $val->areaname;
-        }
+		if(empty($id)) {
+	    	$whereArray = Farms::getManagementArea();
+	    	$area = ManagementArea::find()->where(['id'=>$whereArray['id']])->all();
+	
+	        foreach ($area as $key => $val) {
+	            $data[$val->id] = $val->areaname;
+	        }
+		} else {
+			$data = ManagementArea::find()->where(['id'=>$id])->one()['areaname'];
+		}
 //         if(count($data) > 1)
 //         	array_splice($data,0,0,[0=>'全部']);
 		

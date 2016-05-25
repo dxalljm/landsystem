@@ -68,6 +68,10 @@ use yii\helpers\Url;
         <td width="20%" align='right' valign="middle">农场位置</td>
         <td colspan="5" align='left' valign="middle"><?= $model->address?></td>
         </tr>
+       <tr>
+        <td width="20%" align='right' valign="middle">地理坐标</td>
+        <td colspan="5" align='left' valign="middle"><?= $model->longitude.'  '.$model->latitude?></td>
+        </tr>
       <tr>
         <td width="20%" align='right' valign="middle">宗地</td>
         <td colspan="5" align='left' valign="middle"><?= $model->zongdi?></td>
@@ -117,11 +121,11 @@ use yii\helpers\Url;
         <td align='left'><?= html::a('查询','#',['id'=>'searchTelephone','class'=>'btn btn-success'])?></td>
         </tr>
         <tr>
-			<td width=25% align='right'>合同号</td><?php $nowModel->contractnumber = $model->contractnumber;?>
+			<td width=30% align='right'>合同号</td><?php $nowModel->contractnumber = $model->contractnumber;?>
 			<td colspan="5" align='left'><?= $form->field($nowModel, 'contractnumber')->textInput(['maxlength' => 500,'readonly'=>'readonly'])->label(false)->error(false) ?></td>
 		</tr>
 		<tr>
-			<td width=25% align='right'>承包年限</td>
+			<td width=30% align='right'>承包年限</td>
 			<td align='center'>自</td><?php $nowModel->begindate = '2010-09-13';$nowModel->enddate='2025-09-13';?>
 			<td align='center'><?= $form->field($nowModel, 'begindate')->textInput(['maxlength' => 500])->label(false)->error(false)->widget(
     DateTimePicker::className(), [
@@ -156,6 +160,15 @@ use yii\helpers\Url;
 		  <td align='right' valign="middle">农场位置</td> <?= Html::hiddenInput('newzongdi','',['id'=>'new-zongdi']) ?>
 		  <td colspan="5" align='left' valign="middle"><?php if(empty($model->address)) echo $form->field($model, 'address')->textInput()->label(false)->error(false);  else echo $model->address;?></td>
 		</tr>
+		<tr>
+        <td width="30%" align='right' valign="middle">地理坐标</td>
+        <?php if($model->longitude) {?>
+        	<td colspan="5" align='left' valign="middle"><?= $model->longitude.'  '.$model->latitude?></td>
+        <?php } else {?>
+        	<td colspan="2" align='left' valign="middle"><?= $form->field($model,'longitude')->textInput()->lable(false)->error(false)?></td>
+        	<td colspan="3" align='left' valign="middle"><?= $form->field($model,'latitude')->textInput()->lable(false)->error(false)?></td>
+        <?php }?>
+        </tr>
 		<?php if($model->zongdi !== '') {?>
 		<tr>
 		  <td align='right'>原宗地</td><?= html::hiddenInput('tempzongdi','',['id'=>'temp-zongdi'])?>
@@ -540,6 +553,7 @@ $('#findZongdi').keyup(function (event) {
 					if(input != '') {
 						alert(data.message);
 						$("#findZongdi").val('');
+						$('#findMeasure').val('');
 						$("#findZongdi").focus();
 					}
 				}
@@ -564,6 +578,7 @@ $('#findZongdi').blur(function (event) {
 					if(input != '') {
 						alert(data.message);
 						$("#findZongdi").val('');
+						$('#findMeasure').val('');
 						$("#findZongdi").focus();
 					}
 				}

@@ -15,6 +15,7 @@ use app\models\Projecttype;
 use app\models\Infrastructuretype;
 use app\models\Tempauditing;
 use app\models\Loan;
+use app\models\ManagementArea;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\ReviewprocessSearch */
@@ -47,6 +48,7 @@ $this->params ['breadcrumbs'] [] = $this->title;
     <h3>宜农林地承包经营权转让审批</h3>
 						<table class="table table-bordered table-hover">
 							<tr height="40px">
+								<td align="center"><strong>管理区</strong></td>
 								<td align="center"><strong>原农场名称</strong></td>
 								<td align="center"><strong>原法人</strong></td>
 								<td align="center"><strong>原面积</strong></td>
@@ -59,14 +61,15 @@ $this->params ['breadcrumbs'] [] = $this->title;
 							<?php 
 // 							var_dump($farmstransfer);exit;
 							foreach ($farmstransfer as $value) {
-// 								var_dump($value);exit;
-							$newfarm = Farms::find()->where(['id'=>$value['newfarms_id']])->one();
-							$oldfarm = Farms::find()->where(['id'=>$value['oldfarms_id']])->one();
+								
+								$newfarm = Farms::find()->where(['id'=>$value['newfarms_id']])->one();
+								$oldfarm = Farms::find()->where(['id'=>$value['oldfarms_id']])->one();
 // 							var_dump($newfarm);exit;
 							if(Reviewprocess::isShowProess($value['operation_id'])) {
 								$field = Reviewprocess::getProcessIdentification();
 								?>
 							<tr height="40px">
+								<td align="center"><?= ManagementArea::getAreaname($oldfarm->management_area)?></td>
 								<td align="center"><?= $oldfarm->farmname?></td>
 								<td align="center"><?= $oldfarm->farmername?></td>
 								<td align="center"><?= $oldfarm->contractarea?>亩</td>

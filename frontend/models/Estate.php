@@ -74,4 +74,17 @@ class Estate extends \yii\db\ActiveRecord
 //     			'reviewprocess_id' => '审核过程ID',
     	];
     }
+    
+    public static function attributesKey()
+    {
+    	return [
+    	//     			'id' => 'ID',
+    			'tjsqjbzs',
+    			'tjsffyj',
+    			'sfyzy',
+    			'sfmqzongdi',
+    			'sfydcbg',
+    			//     			'reviewprocess_id' => '审核过程ID',
+    	];
+    }
 }

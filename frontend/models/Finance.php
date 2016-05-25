@@ -56,4 +56,12 @@ class Finance extends \yii\db\ActiveRecord
             'other' => '是否存在其他款项',
     	];
     }
+    
+    public static function attributesKey()
+    {
+    	return [
+    			'isqcbf',
+    			'other',
+    	];
+    }
 }

@@ -44,4 +44,9 @@ class Leader extends \yii\db\ActiveRecord
     {
     	return [];
     }
+    
+    public static function attributesKey()
+    {
+    	return [];
+    }
 }

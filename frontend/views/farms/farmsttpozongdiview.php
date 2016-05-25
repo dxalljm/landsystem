@@ -72,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		</tr>
 		<tr>
 			<td width=20% align='right'>宗地</td>
-			<td align='left'> <?= $oldFarm->zongdi?> </td>
+			<td align='left'> <?= $ttpoModel->oldchangezongdi?> </td>
 		</tr>
 		<tr>
 		  <td width=20% align='right'>宗地面积</td>
@@ -172,9 +172,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= Html::a('修改', ['farms/farmsttpoupdate'.$ttpoModel->actionname,'id'=>$ttpoModel->id], ['class' => 'btn btn-success'])?>
     <?= Html::a('撤消申请', ['ttpozongdi/ttpozongdidelete','id'=>$ttpoModel->id], ['class' => 'btn btn-success','data' => ['confirm' => '您确定要撤消申请吗？', 'method' => 'post']])?>
     
-    <?php } else 
-    	echo Html::a('打印', ['reviewprocess/reviewprocessfarmssplit','oldfarmsid'=>$oldFarm->id,'newfarmsid'=>$newFarm->id,'reviewprocessid'=>$ttpoModel['reviewprocess_id']], ['class' => 'btn btn-success']);
-    ?>
+    <?php }?>
 
     <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$farms_id], ['class' => 'btn btn-success'])?>
                 </div>

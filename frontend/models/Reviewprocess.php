@@ -53,7 +53,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
 	public function rules() 
     { 
         return [
-            [['newfarms_id', 'operation_id', 'create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime', 'regulations', 'regulationstime', 'oldfarms_id', 'management_area', 'state', 'project', 'projecttime'], 'integer'],
+            [['newfarms_id','ttpozongdi_id', 'operation_id', 'create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime', 'regulations', 'regulationstime', 'oldfarms_id', 'management_area', 'state', 'project', 'projecttime'], 'integer'],
             [['projectcontent'], 'string'],
             [['estatecontent', 'financecontent', 'filereviewcontent', 'publicsecuritycontent', 'leadercontent', 'mortgagecontent', 'steeringgroupcontent', 'regulationscontent', 'actionname'], 'string', 'max' => 500]
         ]; 
@@ -101,6 +101,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
             'project' => '项目科状态',
             'projectcontent' => '项目科内容',
             'projecttime' => '项目科审核时间',
+        	'ttpozongdi_id' => '转让信息ID',
         ]; 
     } 
     
@@ -273,7 +274,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
    
     
     //保存流程
-    public static function processRun($auditprocess_id,$oldfarms_id=NULL,$newfarms_id=null,$operation_id=NULL)
+    public static function processRun($auditprocess_id,$oldfarms_id=NULL,$newfarms_id=null,$ttpozongdi_id = NULL)
     { 	
     	$auditprocess = Auditprocess::find()->where(['id'=>$auditprocess_id])->one();
 //     	var_dump($auditprocess_id);exit;
@@ -282,7 +283,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$reviewprocessModel = new Reviewprocess();
     	$reviewprocessModel->oldfarms_id = $oldfarms_id;
     	$reviewprocessModel->newfarms_id = $newfarms_id;
-    	$reviewprocessModel->operation_id = $operation_id;
+    	$reviewprocessModel->ttpozongdi_id = $ttpozongdi_id;
     	$reviewprocessModel->management_area = Farms::find()->where(['id'=>$oldfarms_id])->one()['management_area'];
     	$reviewprocessModel->actionname = $auditprocess->actionname;
     	$reviewprocessModel->create_at = time();

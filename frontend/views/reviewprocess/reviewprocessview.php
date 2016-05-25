@@ -12,6 +12,7 @@ use app\models\Infrastructuretype;
 use app\models\Tempauditing;
 use app\models\Loan;
 use app\models\Estate;
+use app\models\Farms;
 /* @var $this yii\web\View */
 /* @var $model app\models\Reviewprocess */
 
@@ -41,159 +42,270 @@ use app\models\Estate;
     <?php $form = ActiveFormrdiv::begin(); ?>
     
  <?php if($class == 'farmstransfer') {?>
-             <table class="table table-bordered table-hover">
-			  <tr height="40px">
-			    <td align="center" bgcolor="#D0F5FF"><strong>原农场名称</strong></td>
-			    <td width="13%" align="center" bgcolor="#D0F5FF"><strong>原法人</strong></td>
-			    <td width="17%" align="center" bgcolor="#D0F5FF"><strong>原面积</strong></td>
-			    <td width="22%" align="center" bgcolor="#FFFFD5"><strong>现农场名称</strong></td>
-			    <td width="14%" align="center" bgcolor="#FFFFD5"><strong>现法人</strong></td>
-			    <td width="14%" align="center" bgcolor="#FFFFD5"><strong>现面积</strong></td>
-			  </tr>
-			  <tr height="40px">
-			    <td align="center" bgcolor="#D0F5FF"><span class="italic"><?= $oldfarm->farmname?></span></td>
-			    <td align="center" bgcolor="#D0F5FF"><span class="italic"><?= $oldfarm->farmername?></span></td>
-			    <td align="center" bgcolor="#D0F5FF"><span class="italic"><?= $oldfarm->contractarea?>亩</span></td>
-			    <td align="center" bgcolor="#FFFFD5"><span class="italic"><?= $newfarm->farmname?></span></td>
-			    <td align="center" bgcolor="#FFFFD5"><span class="italic"><?= $newfarm->farmername?></span></td>
-			    <td align="center" bgcolor="#FFFFD5"><span class="italic"><?= $newfarm->contractarea?>亩</span></td>
-			  </tr>
-			  <tr height="40px">
-			    <td align="center" bgcolor="#D0F5FF"><strong>原合同号</strong></td>
-			    <td colspan="2" align="center" bgcolor="#D0F5FF"><span class="italic"><?= $oldttpozongdi->oldcontractnumber?></span></td>
-			    <td align="center" bgcolor="#FFFFD5"><strong>现合同号</strong></td>
-			    <td colspan="2" align="center" bgcolor="#FFFFD5"><span class="italic"><?= $newttpozongdi->newchangecontractnumber?></span></td>
-		       </tr>
-			  <tr height="40px">
-			    <td align="center" bgcolor="#D0F5FF"><strong>原法人身份证</strong>号</td>
-			    <td colspan="2" align="center" bgcolor="#D0F5FF"><span class="italic"><?= $oldfarm->cardid?></span></td>
-			    <td align="center" bgcolor="#FFFFD5"><strong>现法人身份证号</strong></td>
-			    <td colspan="2" align="center" bgcolor="#FFFFD5"><span class="italic"><?= $newfarm->cardid?></span></td>
-		       </tr>
-			  <tr height="40px">
-			    <td align="center" bgcolor="#D0F5FF"><strong>原宗地信息</strong></td><?php if(!empty($oldttpozongdi['oldzongdi'])) $zongdiArray = explode('、', $oldttpozongdi['oldzongdi']); else $zongdiArray = [];?>
-			    <td colspan="2" align="center" bgcolor="#D0F5FF"><table width="100%" border="0" align="right"><?php for($i = 0;$i<count($zongdiArray);$i++) {
-			    	if($i%6 == 0) {
+ <table class="table table-bordered table-hover">
+   <tr>
+     <td width="11%" align="right" bgcolor="#D0F5FF"><strong>原农场名称</strong></td>
+     <td width="17%" align="center" bgcolor="#D0F5FF"><strong>原法人</strong></td>
+     <td width="20%" align="center" bgcolor="#D0F5FF"><strong>原面积</strong></td>
+     <td align="center" bgcolor="#FFFFD5"><strong>现农场名称</strong></td>
+     <td width="20%" align="center" bgcolor="#FFFFD5"><strong>现法人</strong></td>
+     <td width="21%" align="center" bgcolor="#FFFFD5"><strong>现面积</strong></td>
+   </tr>
+   <tr>
+     <td align="right" bgcolor="#D0F5FF"><span class="italic">
+       <?= $oldfarm->farmname?>
+     </span></td>
+     <td align="center" bgcolor="#D0F5FF"><span class="italic">
+       <?= $oldfarm->farmername?>
+     </span></td>
+     <td align="center" bgcolor="#D0F5FF"><span class="italic">
+       <?= $oldfarm->contractarea?>
+       亩</span></td>
+     <td align="center" bgcolor="#FFFFD5"><span class="italic">
+       <?= $newfarm->farmname?>
+     </span></td>
+     <td align="center" bgcolor="#FFFFD5"><span class="italic">
+       <?= $newfarm->farmername?>
+     </span></td>
+     <td align="center" bgcolor="#FFFFD5"><span class="italic">
+       <?=  Farms::getContractnumberArea($newttpozongdi['newchangecontractnumber'])?>
+       亩</span></td>
+   </tr>
+   <tr>
+     <td align="right" bgcolor="#D0F5FF"><strong>农场位置</strong></td>
+     <td colspan="2" align="left" bgcolor="#D0F5FF"><?= $oldfarm->address?></td>
+     <td align="center" bgcolor="#FFFFD5"><strong>农场位置</strong></td>
+     <td colspan="2" align="left" bgcolor="#FFFFD5"><?= $newfarm->address?></td>
+   </tr>
+   <tr height="40px">
+     <td align="right" bgcolor="#D0F5FF"><strong>地理坐标</strong></td>
+     <td align="left" bgcolor="#D0F5FF"><?= $oldfarm->longitude?></td>
+     <td align="left" bgcolor="#D0F5FF"><?= $oldfarm->latitude?></td>
+     <td align="center" bgcolor="#FFFFD5"><strong>地理坐标</strong></td>
+     <td align="left" bgcolor="#FFFFD5"><?= $newfarm->longitude?></td>
+     <td align="left" bgcolor="#FFFFD5"><?= $newfarm->latitude?></td>
+   </tr>
+   <tr height="40px">
+     <td align="right" bgcolor="#D0F5FF"><strong>原合同号</strong></td>
+     <td colspan="2" align="left" bgcolor="#D0F5FF"><span class="italic">
+       <?= $oldfarm->contractnumber?>
+     </span></td>
+     <td align="center" bgcolor="#FFFFD5"><strong>现合同号</strong></td>
+     <td colspan="2" align="left" bgcolor="#FFFFD5"><span class="italic">
+       <?= $newttpozongdi->newchangecontractnumber?>
+     </span></td>
+   </tr>
+   <tr height="40px">
+     <td align="right" bgcolor="#D0F5FF"><strong>原法人身份证号</strong></td>
+     <td colspan="2" align="left" bgcolor="#D0F5FF"><span class="italic">
+       <?= $oldfarm->cardid?>
+     </span></td>
+     <td align="center" bgcolor="#FFFFD5"><strong>现法人身份证号</strong></td>
+     <td colspan="2" align="left" bgcolor="#FFFFD5"><span class="italic">
+       <?= $newfarm->cardid?>
+     </span></td>
+   </tr>
+   <tr height="40px">
+     <td align="right" bgcolor="#D0F5FF"><strong>原合同面积</strong></td>
+     <td colspan="2" align="left" bgcolor="#D0F5FF"><?= $oldfarm->contractarea?></td>
+     <td align="center" bgcolor="#FFFFD5"><strong>现合同面积</strong></td>
+     <td colspan="2" align="left" bgcolor="#FFFFD5">&nbsp;</td>
+   </tr>
+   <tr height="40px">
+     <td align="right" bgcolor="#D0F5FF"><strong>原宗地面积</strong></td>
+     <td colspan="2" align="left" bgcolor="#D0F5FF"><?= $oldfarm->measure?></td>
+     <td align="center" bgcolor="#FFFFD5"><strong>现宗地面积</strong></td>
+     <td colspan="2" align="left" bgcolor="#FFFFD5">&nbsp;</td>
+   </tr>
+   <tr height="40px">
+     <td align="right" bgcolor="#D0F5FF"><strong>原宗地信息</strong></td>
+     <?php if(!empty($oldttpozongdi['oldzongdi'])) $zongdiArray = explode('、', $oldttpozongdi['oldzongdi']); else $zongdiArray = [];?>
+     <td colspan="2" align="left" bgcolor="#D0F5FF"><table width="100%" border="0" align="right">
+       <?php for($i = 0;$i<count($zongdiArray);$i++) {
+			    	if($i%5 == 0) {
 			    		echo '<tr height="10">';
-			    		echo '<td align="center">';
+			    		echo '<td align="left">';
 			    		echo '<span class="italic">'.$zongdiArray[$i].'</span>';
 			    		echo '</td>';
 			    	} else {
-			    		echo '<td align="center">';
-			    		echo '<span class="italic">'.$zongdiArray[$i].'</span>';
-			    		echo '</td>';
-			    	}
-			    	
-			    }?></table></span></td>
-			    <td align="center" bgcolor="#FFFFD5"><strong>现宗地信息</strong></td>
-			    <td colspan="2" align="center" bgcolor="#FFFFD5"><table width="100%" border="0" align="center">
-			      <?php for($i = 0;$i<count($zongdiArray);$i++) {
-			    	if($i%6 == 0) {
-			    		echo '<tr height="10">';
-			    		echo '<td align="center">';
-			    		echo '<span class="italic">'.$zongdiArray[$i].'</span>';
-			    		echo '</td>';
-			    	} else {
-			    		echo '<td align="center">';
+			    		echo '<td align="left">';
 			    		echo '<span class="italic">'.$zongdiArray[$i].'</span>';
 			    		echo '</td>';
 			    	}
 			    	
 			    }?>
-			      
-			      </table></td>
-		       </tr>
-			  <tr height="40px">
-			    <td align="center" bgcolor="#D0F5FF"><strong>原未明确地块</strong></td>
-			    <td colspan="2" align="center" bgcolor="#D0F5FF"><span class="italic"><?= $oldttpozongdi->oldnotclear;?></span></td>
-			    <td align="center" bgcolor="#FFFFD5"><strong>现未明确地块</strong></td>
-			    <td colspan="2" align="center" bgcolor="#FFFFD5"><span class="italic">
-			      <?= $newttpozongdi->newchangenotclear;?>
-			    </span></td>
-		       </tr>
-			  <tr height="40px">
-			    <td align="center" bgcolor="#D0F5FF"><strong>原未明确状态地块</strong></td><?php if(!empty($newttpozongdi['newchangezongdi'])) $zongdiArray = explode('、', $newttpozongdi['newchangezongdi']); else $zongdiArray = [];?>
-			    <td colspan="2" align="center" bgcolor="#D0F5FF">
-			      <span class="italic">
-		          <?= $oldttpozongdi->oldnotstate;?>
-	            </span></td>
-			    <td align="center" bgcolor="#FFFFD5"><strong>现未明确状态地块</strong></td>
-			    <td colspan="2" align="center" bgcolor="#FFFFD5"><span class="italic">
-			      <?= $newttpozongdi->newchangenotstate;?>
-			    </span></td>
-		       </tr>
-                <?php 
-//                 var_dump($process);exit;
-                foreach ($process as $value) { 
-
-// 			  		var_dump($itemname);
-			  ?>
-			    <tr>
-			    <td rowspan="2"><strong>
-			      <?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?>
-			    </strong></td>	      
-			      
-			      <?php 
-				  $classname = 'app\\models\\'.ucfirst($value);
-			      	$lists = $classname::attributesList();
-			      	
-			      	$result = $classname::find()->where(['reviewprocess_id'=>$model->id])->one();
-			      	if($lists) {
-			      		echo '<td colspan="5" align="left">';
-			      		echo '<table>';
-				      	if($result) {
-					      	foreach ($lists as $key=>$list) {
-					      		echo '<tr>';
-					      		echo '<td>';
-					      		if($result[$key]) {
-					      			echo '<strong>是<i class="fa fa-check-square-o"></i></strong>&nbsp;&nbsp;';
-					      			echo '<strong>否<i class="fa fa-square-o"></i></strong>';
-					      		} else { 
-					      			echo '<strong>是<i class="fa fa-square-o"></i></string>&nbsp;&nbsp;';
-					      			echo '<strong>否<i class="fa fa-check-square-o"></i></strong>';
-					      		}
-					      		echo '</td>';
-					      		echo '<td>';
-					      		echo '&nbsp;&nbsp;'.$list;
-					      		echo '</td>';
-					      		echo '<td>';
-					      		if($result[$key.'content'])
-					      			echo '&nbsp;&nbsp;<font color="red"><strong>情况说明：'.$result[$key.'content'].'</strong></font>';
-					      		echo "</td>";
-					      		echo '</tr>';
-					      	}
-			      	}
-			      	echo '</table>';
-			      	echo '</td>';
-			      	}
-			      ?>
-		       </tr>
-			   
-		       
-               <tr>
-	              <td colspan="5" align="left" ><?php 
-// 			    if($model->$value == 2 or $model->$value == 0) {
-// 			    	if($model->$value == 2)
-// 			    		$model->$value = 1; 
-// 			    	echo $form->field($model,$value)->radioList([1=>'同意',0=>'不同意'],['onclick'=>'CheckState("'.$value.'")'])->label(false)->error(false); 
-// 			    	echo $form->field($model,$value.'content')->textInput()->label(false)->error(false);
-// 			    	echo $form->field($model,$value.'time')->hiddenInput(['value'=>time()])->label(false)->error(false);
-// 			    } else {
-			    	echo Reviewprocess::state($model->$value);
-			    	echo "<br>";
-			    	if(!$model->$value) {
-			    		$modelStr = $value.'content';
-			    		echo "原由：".$model->$modelStr;
+     </table>
+       </span></td>
+     <td align="center" bgcolor="#FFFFD5"><strong>现宗地信息</strong></td>
+     <td colspan="2" align="left" bgcolor="#FFFFD5"><table width="100%" border="0" align="center">
+       <?php if(!empty($newttpozongdi['newchangezongdi'])) $zongdiArray = explode('、', $newttpozongdi['newchangezongdi']); else $zongdiArray = [];?>
+       <?php 
+			    for($i = 0;$i<count($zongdiArray);$i++) {
+			    	if($i%5 == 0) {
+			    		echo '<tr height="10">';
+			    		echo '<td align="left">';
+			    		echo '<span class="italic">'.$zongdiArray[$i].'</span>';
+			    		echo '</td>';
+			    	} else {
+			    		echo '<td align="left">';
+			    		echo '<span class="italic">'.$zongdiArray[$i].'</span>';
+			    		echo '</td>';
 			    	}
-			    ?></td>
-               </tr>
-			  <?php }?>
-			  <tr>
-			    <td align="center"><strong>备&nbsp;&nbsp;&nbsp;&nbsp;注</strong></td>
-			    <td colspan="5" align="center"><br><br><br><br>
-			 </tr>
-			</table>
-<?php }?>
+			    	
+			    }?>
+     </table></td>
+   </tr>
+   <tr height="40px">
+     <td align="right" bgcolor="#D0F5FF"><strong>原未明确地块</strong></td>
+     <td colspan="2" align="left" bgcolor="#D0F5FF"><span class="italic">
+       <?= $oldfarm->notclear;?>
+     </span></td>
+     <td align="center" bgcolor="#FFFFD5"><strong>现未明确地块</strong></td>
+     <td colspan="2" align="left" bgcolor="#FFFFD5"><span class="italic">
+       <?= $newfarm->notclear;?>
+     </span></td>
+   </tr>
+   <tr height="40px">
+     <td align="right" bgcolor="#D0F5FF"><strong>原未明确状态地块</strong></td>
+     <td colspan="2" align="left" bgcolor="#D0F5FF"><span class="italic">
+       <?= $oldfarm->notstate;?>
+     </span></td>
+     <td align="center" bgcolor="#FFFFD5"><strong>现未明确状态地块</strong></td>
+     <td colspan="2" align="left" bgcolor="#FFFFD5"><span class="italic">
+       <?= $newfarm->notstate;?>
+     </span></td>
+   </tr>
+   <tr height="40px">
+     <td width="11%" align='right' bgcolor="#D0F5FF"><font color="red">减少宗地</font></td>
+     <td colspan="2" align="left" bgcolor="#D0F5FF"><table width="100%" border="0" align="center">
+       <?php if(!empty($newttpozongdi['ttpozongdi'])) $zongdiArray = explode('、', $newttpozongdi['ttpozongdi']); else $zongdiArray = [];?>
+       <?php 
+			    for($i = 0;$i<count($zongdiArray);$i++) {
+			    	if($i%5 == 0) {
+			    		echo '<tr height="10">';
+			    		echo '<td align="left">';
+			    		echo '<font color="red"><span class="italic">'.$zongdiArray[$i].'</span></font>';
+			    		echo '</td>';
+			    	} else {
+			    		echo '<td align="left">';
+			    		echo '<font color="red"><span class="italic">'.$zongdiArray[$i].'</span></font>';
+			    		echo '</td>';
+			    	}
+			    	
+			    }?>
+     </table></td>
+     <td width="11%" align='center' bgcolor="#FFFFD5"><font color="red">增加宗地</font></td>
+     <td colspan="2" align="left" bgcolor="#FFFFD5"><table width="100%" border="0" align="center">
+       <?php if(!empty($newttpozongdi['ttpozongdi'])) $zongdiArray = explode('、', $newttpozongdi['ttpozongdi']); else $zongdiArray = [];?>
+       <?php 
+			    for($i = 0;$i<count($zongdiArray);$i++) {
+			    	if($i%5 == 0) {
+			    		echo '<tr height="10">';
+			    		echo '<td align="left">';
+			    		echo '<font color="red"><span class="italic">'.$zongdiArray[$i].'</span></font>';
+			    		echo '</td>';
+			    	} else {
+			    		echo '<td align="left">';
+			    		echo '<font color="red"><span class="italic">'.$zongdiArray[$i].'</span></font>';
+			    		echo '</td>';
+			    	}
+			    	
+			    }?>
+     </table></td>
+   </tr>
+   <tr height="40px">
+     <td align='right' bgcolor="#D0F5FF"><font color="red">减少面积</font></td>
+     <?php if(!empty($newttpozongdi['newchangezongdi'])) $zongdiArray = explode('、', $newttpozongdi['newchangezongdi']); else $zongdiArray = [];?>
+     <td colspan="2" align="left" bgcolor="#D0F5FF"><font color="red">
+       <?= $newttpozongdi['ttpoarea']?>
+     </font></td>
+     <td align='center' bgcolor="#FFFFD5"><font color="red">增加面积</font></td>
+     <td colspan="2" align="left" bgcolor="#FFFFD5"><font color="red">
+       <?= $newttpozongdi['ttpoarea']?>
+     </font></td>
+   </tr>
+   <tr height="40px">
+     <td align='right' bgcolor="#D0F5FF"><font color="red">剩余面积</font></td>
+     <td colspan="2" align="left" bgcolor="#D0F5FF"><font color="red">
+       <?= Farms::getContractnumberArea($newttpozongdi['oldchangecontractnumber'])?>
+     </font></td>
+     <td align='center' bgcolor="#FFFFD5"><font color="red">原面积</font></td>
+     <td colspan="2" align="left" bgcolor="#FFFFD5"><font color="red">
+       <?= Farms::getContractnumberArea($newttpozongdi['newcontractnumber'])?>
+     </font></td>
+   </tr>
+   <?php foreach ($process as $value) { 
+
+			  ?>
+   
+   <tr>
+     <td rowspan="2"><strong>
+       <?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?>
+     </strong></td>
+     <?php 
+			  					  $classname = 'app\\models\\'.ucfirst($value);
+			  				      	$lists = $classname::attributesList();
+			  				      	$result = $classname::find()->where(['reviewprocess_id'=>$model->id])->one();
+			  				      	if($lists) {
+			  				      	if($result) {
+			  				      		echo '<td colspan="5" align="left">';
+										echo '<font color="#00CC66">';
+			  				      		echo '<table>';
+			  					      	foreach ($lists as $key=>$list) {
+			  					      		echo '<tr>';
+			  					      		echo '<td>';
+			  					      		if($result[$key]) {
+			  					      			echo '<strong>是<i class="fa fa-check-square-o"></i></strong>&nbsp;&nbsp;';
+			  					      			echo '<strong>否<i class="fa fa-square-o"></i></strong>';
+			  					      		} else { 
+			  					      			echo '<strong>是<i class="fa fa-square-o"></i></string>&nbsp;&nbsp;';
+			  					      			echo '<strong>否<i class="fa fa-check-square-o"></i></strong>';
+			  					      		}
+			  					      		echo '</td>';
+			  					      		echo '<td>';
+			  					      		echo '&nbsp;&nbsp;'.$list;
+			  					      		echo '</td>';
+			  					      		echo '<td>';
+			  					      		if($result[$key.'content'])
+			  					      			echo '&nbsp;&nbsp;<font color="red"><strong>情况说明：'.$result[$key.'content'].'</strong></font>';
+			  					      		echo "</td>";
+			  					      		echo '</tr>';
+			  					      	}
+			  					      	echo '</table>';
+										echo '</font>';
+			  					      	echo '</td>';
+			  				      	}
+			  				      	}
+			  				      ?>
+   </tr>
+   <tr>
+     <td colspan="5" align="left" ><?php
+			  		              if($model->$value == 1) {
+			  		              	echo '<font color="#0033FF"><strong>';
+			  				    	echo Reviewprocess::state($model->$value);
+			  				    	echo '</strong></font>';
+			  		              } else 
+			  		              	echo Reviewprocess::state($model->$value);
+			  				    	echo "<br>";
+			  				    	if(!$model->$value) {
+			  				    		echo '<font color="#FF0000"><strong>';
+			  				    		$modelStr = $value.'content';
+			  				    		echo '</strong></font>';
+			  				    		echo "原由：".$model->$modelStr;
+			  				    	}
+			  				    ?></td>
+   </tr>
+   <?php }?>
+   <?php }?>
+   <tr>
+     <td align="center"><strong>备&nbsp;&nbsp;&nbsp;&nbsp;注</strong></td>
+     <td colspan="5" align="center"><br />
+       <br />
+       <br />
+       <br /></td>
+   </tr>
+ </table>
+
 <?php if($class == 'projectapplication') {?>
 <table class="table table-bordered table-hover">
   <tr>

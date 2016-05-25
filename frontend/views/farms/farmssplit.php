@@ -615,6 +615,7 @@ $('#findZongdi').keyup(function (event) {
 						if(data.showmsg)
 							alert(data.message);
 						$("#findZongdi").val('');
+						$('#findMeasure').val('');
 						$("#findZongdi").focus();
 					}
 				}
@@ -642,6 +643,7 @@ $('#findZongdi').blur(function (event) {
 						if(data.showmsg)
 							alert(data.message);
 						$("#findZongdi").val('');
+						$('#findMeasure').val('');
 						$("#findZongdi").focus();
 					}
 				}

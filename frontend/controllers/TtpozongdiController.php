@@ -55,7 +55,7 @@ class TtpozongdiController extends Controller
         $model = $this->findModel($id);
 		
         $model->load(Yii::$app->request->post());
-        $reviewprocessID = Reviewprocess::processRun ($model->auditprocess_id, $model->oldfarms_id, $model->newfarms_id );
+        $reviewprocessID = Reviewprocess::processRun ($model->auditprocess_id, $model->oldfarms_id, $model->newfarms_id,$model->id );
 //         var_dump($reviewprocessID);exit;
         $model->reviewprocess_id = $reviewprocessID;
         $model->state = 1;
@@ -99,37 +99,40 @@ class TtpozongdiController extends Controller
 //         var_dump($model);exit;
     	$old = $model->attributes;
     	Logs::writeLog('删除转让信息',$id,$old);
-       
+
 		$oldfarms = Farms::findOne($model->oldfarms_id);
 		$oldfarms->locked = 0;
 		$oldfarms->save();
 		
-		$newfarms = Farms::findOne($model->newfarms_id);
-		$new = $newfarms->attributes;
-		if($model->actionname == 'farmssplit' or $model->actionname == 'farmstransfer') {			
+		if($model->newfarms_id) {
+			$newfarms = Farms::findOne($model->newfarms_id);
+			if($model->actionname == 'farmstozongdi') {
+				$newfarms->locked = 0;
+				$newfarms->save();
+			} else
+				$newfarms->delete();
+		}
+		if($model->oldnewfarms_id) {
+			$newfarms = Farms::findOne($model->oldnewfarms_id);
 			$newfarms->delete();
 		}
-		if($model->actionname == 'farmstozongdi') {
-			$newfarms->state = 1;
-			$newfarms->locked = 0;
-			$newfarms->save();		
+		if($model->newnewfarms_id) {
+			$newfarms = Farms::findOne($model->newnewfarms_id);
+			$newfarms->delete();
 		}
-// 		if($model->actionname == 'farmstozongdi') {
-// 			Zongdioffarm::zongdiDelete($model->newfarms_id, $model->ttpozongdi);
-// 			Zongdioffarm::zongdiUpdate($model->oldfarms_id, $model->oldzongdi);
-// 		} else {
-			Zongdioffarm::zongdiUpdate($model->newfarms_id,$model->newnewfarms_id ,$model->newzongdi);
-			Zongdioffarm::zongdiUpdate($model->oldfarms_id,$model->oldnewfarms_id, $model->oldzongdi);
-// 		}
-		
 		$lockedinfo = Lockedinfo::find()->where(['farms_id'=>$model->oldfarms_id])->one();
 		$lockedinfoModel = Lockedinfo::findOne($lockedinfo['id']);
 		$lockedinfoModel->delete();
+
 		$lockedinfo = Lockedinfo::find()->where(['farms_id'=>$model->newfarms_id])->one();
 		if($lockedinfo) {
 			$lockedinfoModel = Lockedinfo::findOne($lockedinfo['id']);
 			$lockedinfoModel->delete();
 		}
+		
+		Zongdioffarm::zongdiUpdate($model->newnewfarms_id, $model->newfarms_id,$model->newzongdi);
+		Zongdioffarm::zongdiUpdate($model->oldnewfarms_id,$model->oldfarms_id, $model->oldzongdi);		
+		
 		$model->delete();
 		Contractnumber::contractnumberSub();
         return $this->redirect(['farms/farmsmenu', 'farms_id'=>$model->oldfarms_id]);

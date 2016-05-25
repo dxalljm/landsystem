@@ -64,4 +64,13 @@ class Filereview extends \yii\db\ActiveRecord
             'areaisyz' => '合同面积是否与实测面积一致',
     	];
     }
+    
+    public static function attributesKey()
+    {
+    	return [
+    			'fileishg',
+    			'htisyz',
+    			'areaisyz',
+    	];
+    }
 }

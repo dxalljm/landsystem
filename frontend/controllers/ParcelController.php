@@ -16,6 +16,7 @@ use app\models\Farms;
 use app\models\Logs;
 use app\models\Lease;
 use app\models\Zongdioffarm;
+use app\models\User;
 /**
  * ParcelController implements the CRUD actions for Parcel model.
  */
@@ -220,12 +221,13 @@ class ParcelController extends Controller
     public  function  actionParcelarea($zongdi)
     {
     	$netarea = 0;
-
-	    	$parcel = Parcel::find()->where(['unifiedserialnumber' => $zongdi])->one();
-
+		$areaNumber = explode('-', $zongdi);
+		$management = User::getUserManagementArea();
+		if(in_array($areaNumber[0],$management)) {
+			$parcel = Parcel::find()->where(['unifiedserialnumber' => $zongdi])->one();
 	    	if($parcel) {	
 	    		$zongdiinfo = $this->findParcel($zongdi);
-// 	    		var_dump($zongdiinfo);
+	// 	    		var_dump($zongdiinfo);
 	    		if($zongdiinfo['state']) {
 	    			if($zongdiinfo['area']) {
 	    				$result = $zongdiinfo['netarea'] - $zongdiinfo['area'];
@@ -252,6 +254,11 @@ class ParcelController extends Controller
 	    		$showmsg = true;
 	    		$message = '对不起，您输入的地块不存在！';
 	    	}
+		} else {
+			$status = 0;
+			$showmsg = true;
+			$message = '对不起，您只能输入您所辖管理区的宗地号！';
+		}
 	    	
     	echo json_encode(['status' => $status, 'area' => $netarea,'message' => $message,'showmsg' => $showmsg]);
 
