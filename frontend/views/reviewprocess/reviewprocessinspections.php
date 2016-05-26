@@ -57,7 +57,7 @@ use app\models\Farms;
 			    <td align="center" bgcolor="#D0F5FF"><span class="italic"><?= $oldfarm->contractarea?>亩</span></td>
 			    <td align="center" bgcolor="#FFFFD5"><span class="italic"><?= $newfarm->farmname?></span></td>
 			    <td align="center" bgcolor="#FFFFD5"><span class="italic"><?= $newfarm->farmername?></span></td>
-			    <td align="center" bgcolor="#FFFFD5"><span class="italic"><?=  Farms::getContractnumberArea($newttpozongdi['newchangecontractnumber'])?>亩</span></td>
+			    <td align="center" bgcolor="#FFFFD5"><span class="italic"><?php if($newttpozongdi['newchangecontractnumber']) echo Farms::getContractnumberArea($newttpozongdi['newchangecontractnumber'])?>亩</span></td>
 			  </tr>
 			  <tr>
 			    <td align="right" bgcolor="#D0F5FF"><strong>农场位置</strong></td>
@@ -203,7 +203,7 @@ use app\models\Farms;
 			    <td align='right' bgcolor="#D0F5FF"><font color="red">剩余面积</font></td>
 			    <td colspan="2" align="left" bgcolor="#D0F5FF"><font color="red"><?= Farms::getContractnumberArea($newttpozongdi['oldchangecontractnumber'])?></font></td>
 			    <td align='center' bgcolor="#FFFFD5"><font color="red">原面积</font></td>
-			    <td colspan="2" align="left" bgcolor="#FFFFD5"><font color="red"><?= Farms::getContractnumberArea($newttpozongdi['newcontractnumber'])?></font></td>
+			    <td colspan="2" align="left" bgcolor="#FFFFD5"><font color="red"><?php if($newttpozongdi['newcontractnumber']) echo Farms::getContractnumberArea($newttpozongdi['newcontractnumber'])?></font></td>
 		       </tr>
                 <?php foreach ($process as $value) { 
 // 			    	var_dump($value);
@@ -222,7 +222,7 @@ use app\models\Farms;
 // 			  		var_dump($itemname);
 			  ?>
 			    <tr>
-			    <td rowspan="2"><strong>
+			    <td><strong>
 			      <?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?>
 			    </strong></td>
 			     
@@ -234,17 +234,31 @@ use app\models\Farms;
 			      		echo '<td colspan="5" align="left">';
 			      		echo '<table>';
 				      	foreach ($lists as $key=>$list) {
-				      		echo '<tr>';
-				      		echo '<td>';
-				      		echo Html::radioList($key,'',['否','是'],['onclick'=>'showContent("'.$key.'")','class'=>'radiolist']);
-				      		echo '</td>';
-				      		echo '<td>';
-				      		echo '&nbsp;&nbsp;'.$list;
-				      		echo '</td>';
-				      		echo '<td>';
-				      		echo '&nbsp;&nbsp;'.Html::textarea($key.'content','',['class'=>'econtent','rows'=>1,'cols'=>80,'id'=>$key.'content']);
-				      		echo "</td>";
-				      		echo '</tr>';
+				      		if($key == 'isAgree') {
+				      			echo '<tr>';
+				      			echo '<td>';
+				      			echo Html::radioList($key,'',[1=>'同意',0=>'不同意'],['onclick'=>'showContent("'.$key.'")','class'=>'radiolist']);
+				      			echo '</td>';
+				      			echo '<td>';
+				      			echo '&nbsp;&nbsp;'.$list;
+				      			echo '</td>';
+				      			echo '<td id="'.$key.'-add">';
+				      			// 				      		echo '&nbsp;&nbsp;'.Html::textarea($key.'content','',['rows'=>1,'cols'=>80,'id'=>$key.'content','disabled'=>'disabled']);
+				      			echo "</td>";
+				      			echo '</tr>';
+				      		} else {
+					      		echo '<tr>';
+					      		echo '<td>';
+					      		echo Html::radioList($key,'',['否','是'],['onclick'=>'showContent("'.$key.'")','class'=>'radiolist']);
+					      		echo '</td>';
+					      		echo '<td>';
+					      		echo '&nbsp;&nbsp;'.$list;
+					      		echo '</td>';
+					      		echo '<td id="'.$key.'-add">';
+	// 				      		echo '&nbsp;&nbsp;'.Html::textarea($key.'content','',['rows'=>1,'cols'=>80,'id'=>$key.'content','disabled'=>'disabled']);
+					      		echo "</td>";
+					      		echo '</tr>';
+				      		}
 			      		}
 			      		echo '</table>';
 			      		echo '</td>';
@@ -253,25 +267,7 @@ use app\models\Farms;
 			      
 			      
 		       </tr>
-			   
-		       
-               <tr>
-	              <td colspan="5" align="left" ><?php 
-			    if($model->$value == 2 or $model->$value == 0) {
-			    	if($model->$value == 2)
-			    		$model->$value = 1; 
-			    	echo $form->field($model,$value)->radioList([1=>'同意',0=>'不同意'],['onclick'=>'CheckState("'.$value.'")'])->label(false)->error(false); 
-			    	echo $form->field($model,$value.'content')->textInput()->label(false)->error(false);
-			    	echo $form->field($model,$value.'time')->hiddenInput(['value'=>time()])->label(false)->error(false);
-			    } else {
-			    	echo Reviewprocess::state($model->$value);
-			    	echo "<br>";
-			    	if(!$model->$value) {
-			    		$modelStr = $value.'content';
-			    		echo "原由：".$model->$modelStr;
-			    	}
-			    }?></td>
-               </tr>
+
 			  <?php } else {?>
 			  	<tr>
 			  	<td rowspan="2"><strong>
@@ -429,7 +425,7 @@ use app\models\Farms;
 			    <?php 
 			    if($model->$value == 2 or $model->$value == 0) {
 			    	
-			    		$model->$value = 1; 
+// 			    		$model->$value = 1; 
 			    	echo $form->field($model,$value)->radioList([1=>'同意',0=>'不同意'],['onclick'=>'CheckState("'.$value.'")'])->label(false)->error(false); 
 			    	echo $form->field($model,$value.'content')->textarea(['rows'=>10,'disabled'=>'disabled'])->label(false)->error(false);
 			    	echo $form->field($model,$value.'time')->hiddenInput(['value'=>time()])->label(false)->error(false);
@@ -462,166 +458,125 @@ use app\models\Farms;
 </section>
 </div>
 <script language="javascript" type="text/javascript">
-isSubmit();
+// alert($('#tjsqjbzscontent').prop('disabled'));
+// alert($('#tjsqjbzs-content').val());
 // $('input:radio[name="isdydk"]:eq(1)').attr("checked",'checked');
-$('#isdydkcontent').css('display','none');
-$('#isdydkcontent').attr('disabled',true);
-// $('input:radio[name="sfdj"]:eq(1)').attr("checked",'checked');
-$('#sfdjcontent').css('display','none');
-$('#sfdjcontent').attr('disabled',true);
-// $('input:radio[name="isqcbf"]:eq(1)').attr("checked",'checked');
-$('#isqcbfcontent').css('display','none');
-$('#isqcbfcontent').attr('disabled',true);
-// $('input:radio[name="other"]:eq(1)').attr("checked",'checked');
-$('#othercontent').css('display','none');
-$('#othercontent').attr('disabled',true);
-// $('input:radio[name="sfyzy"]:eq(1)').attr("checked",'checked');
-$('#sfyzycontent').css('display','none');
-$('#sfyzycontent').attr('disabled',true);
+// $('#isdydkcontent').css('display','none');
+// $('#isdydkcontent').attr('disabled',true);
+// // $('input:radio[name="sfdj"]:eq(1)').attr("checked",'checked');
+// $('#sfdjcontent').css('display','none');
+// $('#sfdjcontent').attr('disabled',true);
+// // $('input:radio[name="isqcbf"]:eq(1)').attr("checked",'checked');
+// $('#isqcbfcontent').css('display','none');
+// $('#isqcbfcontent').attr('disabled',true);
+// // $('input:radio[name="other"]:eq(1)').attr("checked",'checked');
+// $('#othercontent').css('display','none');
+// $('#othercontent').attr('disabled',true);
+// // $('input:radio[name="sfyzy"]:eq(1)').attr("checked",'checked');
+// $('#sfyzycontent').css('display','none');
+// $('#sfyzycontent').attr('disabled',true);
 function showContent(key)
 {
 	var state = true;
+// 	state = processListState()
+	state = radioListState();
+// 	alert(state);
 	if(key == 'isdydk' || key == 'sfdj' || key == 'isqcbf' || key == 'other' || key == 'sfyzy') {
 		if($('input:radio[name="'+key+'"]:checked').val() == 1) {
-			
-			$('#'+key+'content').css('display','inline');
-			$('#'+key+'content').attr('disabled',false);
-			$('#'+key+'content').focus();
-			$('#'+key+'content').keyup(function(e){
-				var input = $(this).val();
-				if(input == '')
-					$('#submitbutton').attr('disabled',true);
-				else
-					$('#submitbutton').attr('disabled',false);
-			});
-// 			$('#submitbutton').attr('disabled',true);
+// 			state = true;
+			var html = '<textarea id="'+key+'content" name="'+key+'content" rows="1" cols="80" class="isText"></textarea>';
+			if($('#'+key+'content').val() == undefined) {
+// 				alert('ffff');
+// 				$('#submitbutton').attr('disabled',true);
+				$('#'+key+'-add').append(html);
+				$('#'+key+'content').focus();
+				$('#'+key+'content').keyup(function(e){
+					state = contentListState();
+					$('#submitbutton').attr('disabled',state);
+				});
+			}
 		} else {
-			$('#'+key+'content').css('display','none');
-			$('#'+key+'content').attr('disabled',true);
+// 			state = false;
+			$('#'+key+'content').remove();
 		}
 	} else {	
 		if($('input:radio[name="'+key+'"]:checked').val() == 1) {
-			$('#'+key+'content').css('display','none');
+// 			state = false;
+			$('#'+key+'content').remove();
+// 			alert($('#tjsqjbzscontent').prop('disabled'));
 		} else {
-			
-			$('#'+key+'content').css('display','inline');
-			$('#'+key+'content').attr('disabled',false);
-			$('#'+key+'content').focus();
-			$('#'+key+'content').keyup(function(e){
-				var input = $(this).val();
-				if(input == '')
-					$('#submitbutton').attr('disabled',true);
-				else
-					$('#submitbutton').attr('disabled',false);
-			});
-// 			alert('ddd');
-// 			$('#submitbutton').attr('disabled',true);
+// 			state = true;
+			var html = '<textarea id="'+key+'content" name="'+key+'content" rows="1" cols="80" class="isText"></textarea>';
+// 			alert($('#'+key+'content').val());
+			if($('#'+key+'content').val() == undefined) {
+				
+// 				$('#submitbutton').attr('disabled',true);
+				$('#'+key+'-add').append(html);
+				$('#'+key+'content').focus();
+				$('#'+key+'content').keyup(function(e){
+					state = contentListState();
+					$('#submitbutton').attr('disabled',state);
+				});
+			}
 		}
 	}
-	isSubmit();
+	$('#submitbutton').attr('disabled',state);
+// alert(state);
+// 	isSubmit();
 }
-function isSubmit()
-{
-// 	alert(state);
-	var arr = new Array();
-	var str = "<?= implode(',', Estate::attributesKey())?>";
-	arr = str.split(',');
-	var state = false;
 
+function radioListState()
+{
+	var arr = new Array();
+	var str = "<?= Processname::getIdentification()?>";
+	arr = str.split(',');
+	var state = true
 	$.each(arr,function(){
-		if($('input:radio[name="'+this+'"]:checked').val() == undefined)
-			state = true;
+// 		if($('input:radio[name="'+this+'"]:checked').val() == undefined)
+// 			state = true;
 		if(this == 'isdydk' || this == 'sfdj' || this == 'isqcbf' || this == 'other' || this == 'sfyzy') {
 			if($('input:radio[name="'+this+'"]:checked').val() == 1) {
 				state = true;				
-// 				$.each(arr,function(){
-// // 					alert($('#'+this+'content').val());
-// 					if($('#'+this+'content').val() != '')
-// 						state = false;
-
-// 				});
 			}
 		} else {
 			if($('input:radio[name="'+this+'"]:checked').val() == 0) {
 				state = true;				
-// 				$.each(arr,function(){
-// // 					alert($('#'+this+'content').val());
-// 					if($('#'+this+'content').val() != '')
-// 						state = false;
-
-// 				});
 			}
-		}
-	
-		
+		}	
 	});
-	
+// 	state = 
+	return state;
+}
+function contentListState()
+{
+	var state = false;
+	$(".isText").each(function(){
+		if($(this).val() == "") {
+		　　state = true;
+		}
+	}); 
+	return state;
+}
+function processListState()
+{
+	var str = "<?= implode(',', $process)?>";
+	arr = str.split(',');
+	var state = true;
+	$.each(arr,function(){
+		if($('#reviewprocess-'+this).val() != undefined) {	
+			if($('input:radio[name="Reviewprocess['+this+']"]:checked').val() == 1) {
+				state = false;
+			} else {
+// 				alert(state);
+				if($('#reviewprocess-'+this+'content').val() == '')
+						state = true;
+					else
+						state = false;
+			}
+		}			
+	});
 // 	alert(state);
-	$('#submitbutton').attr('disabled',state);
+	return state;
 }
-if($('input:radio[name="Reviewprocess[estate]"]:checked').val() == 0){
-	$('#reviewprocess-estatecontent').css('display', 'inline');
-} else {
-	$('#reviewprocess-estatecontent').css('display', 'none');
-}
-if($('input:radio[name="Reviewprocess[finance]"]:checked').val() == 0){
-	$('#reviewprocess-financecontent').css('display', 'inline');
-} else {
-	$('#reviewprocess-financecontent').css('display', 'none');
-}
-if($('input:radio[name="Reviewprocess[filereview]"]:checked').val() == 0){
-	$('#reviewprocess-filereviewcontent').css('display', 'inline');
-} else {
-	$('#reviewprocess-filereviewcontent').css('display', 'none');
-}
-if($('input:radio[name="Reviewprocess[regulations]"]:checked').val() == 0){
-	$('#reviewprocess-regulationscontent').css('display', 'inline');
-} else {
-	$('#reviewprocess-regulationscontent').css('display', 'none');
-}
-if($('input:radio[name="Reviewprocess[publicsecurity]"]:checked').val() == 0){
-	$('#reviewprocess-publicsecuritycontent').css('display', 'inline');
-} else {
-	$('#reviewprocess-publicsecuritycontent').css('display', 'none');
-}
-if($('input:radio[name="Reviewprocess[leader]"]:checked').val() == 0){
-	$('#reviewprocess-leadercontent').css('display', 'inline');
-} else {
-	$('#reviewprocess-leadercontent').css('display', 'none');
-}
-if($('input:radio[name="Reviewprocess[mortgage]"]:checked').val() == 0){
-	$('#reviewprocess-mortgagecontent').css('display', 'inline');
-} else {
-	$('#reviewprocess-mortgagecontent').css('display', 'none');
-}
-if($('input:radio[name="Reviewprocess[steeringgroup]"]:checked').val() == 0){
-	$('#reviewprocess-steeringgroupcontent').css('display', 'inline');
-} else {
-	$('#reviewprocess-steeringgroupcontent').css('display', 'none');
-}
-function CheckState(process) {
-$('#reviewprocess-'+process).click(function(){
- 	var val = $('input:radio[name="Reviewprocess['+process+']"]:checked').val();
-	if(val == 0) {
-		$('#reviewprocess-'+process+'content').css('display', 'inline');
-		$('#submitbutton').attr('disabled',true);
-		var content = $('#reviewprocess-'+process+'content').val();
-		if(content == '') {
-			$('#submitbutton').attr('disabled',true);
-		} else 
-			$('#submitbutton').attr('disabled',false);
-		$('#reviewprocess-'+process+'content').keyup(function(e){
-				var input = $(this).val();
-				if(input == '')
-					$('#submitbutton').attr('disabled',true);
-				else
-					$('#submitbutton').attr('disabled',false);
-			});
-		
-	} else {
-		$('#reviewprocess-'+process+'content').css('display', 'none');
-		$('#submitbutton').attr('disabled',false);
-	}
-});
-}
+
 </script>

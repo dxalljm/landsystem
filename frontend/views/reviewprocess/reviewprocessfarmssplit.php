@@ -162,7 +162,7 @@ use app\models\User;
 			  	<td height="30" align="center">剩余面积</td>
 			  	<td colspan="2" align="center"><?= Farms::getContractnumberArea($newttpozongdi->oldchangecontractnumber)?></td>
 			  	<td align="center">原面积</td>
-			  	<td colspan="2" align="center"><?= Farms::getContractnumberArea($newttpozongdi->newcontractnumber)?></td>
+			  	<td colspan="2" align="center"><?php if($newttpozongdi->newcontractnumber) echo Farms::getContractnumberArea($newttpozongdi->newcontractnumber)?></td>
 			  	</tr>
 			  <?php 
 			  

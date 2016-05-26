@@ -46,4 +46,16 @@ class Processname extends \yii\db\ActiveRecord
             'sparerole' => '备用角色',
         ];
     }
+    
+    public static function getIdentification()
+    {
+    	$data = self::find()->where(['rolename'=>User::getItemname()])->all();
+    	$result = [];
+    	foreach ($data as $value) {
+    		$classname = 'app\\models\\'.ucfirst($value['Identification']);
+    		$arr = $classname::attributesKey();
+    		$result[] = implode(',', $arr);
+    	}
+    	return implode(',', $result);
+    }
 }

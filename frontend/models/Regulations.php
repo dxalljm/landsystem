@@ -52,4 +52,11 @@ class Regulations extends \yii\db\ActiveRecord
     			'sfdj' => '是否有司法机关、行政机关查封、冻结行为',
     	];
     }
+    
+    public static function attributesKey()
+    {
+    	return [
+    			'sfdj',
+    	];
+    }
 }

@@ -71,6 +71,7 @@ class Estate extends \yii\db\ActiveRecord
     			'sfyzy' => '拟转让的承包经营权限有无争议',
     			'sfmqzongdi' => '双方当事人提供的拟转让地块图与实际是否一致',
     			'sfydcbg' => '是否撰写调查报告',
+    			'isAgree' => ''
 //     			'reviewprocess_id' => '审核过程ID',
     	];
     }
@@ -84,6 +85,7 @@ class Estate extends \yii\db\ActiveRecord
     			'sfyzy',
     			'sfmqzongdi',
     			'sfydcbg',
+    			'isAgree',
     			//     			'reviewprocess_id' => '审核过程ID',
     	];
     }
