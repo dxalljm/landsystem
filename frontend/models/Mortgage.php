@@ -28,8 +28,8 @@ class Mortgage extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['isdydk', 'reviewprocess_id'], 'integer'],
-            [['isdydkcontent'], 'string']
+            [['isdydk', 'reviewprocess_id','mortgageisAgree'], 'integer'],
+            [['isdydkcontent','mortgageisAgreecontent'], 'string']
         ];
     }
 
@@ -43,6 +43,8 @@ class Mortgage extends \yii\db\ActiveRecord
             'isdydk' => '是否存在抵押贷款',
             'isdydkcontent' => '情况说明',
             'reviewprocess_id' => '审核过程ID',
+        	'mortgageisAgree' => '是否同意',
+        	'mortgageisAgreecontent' => '情况说明'
         ];
     }
     
@@ -50,6 +52,7 @@ class Mortgage extends \yii\db\ActiveRecord
     {
     	return [
     			'isdydk' => '是否存在抵押贷款',
+    			'mortgageisAgree' => ''
     	];
     }
     
@@ -57,6 +60,7 @@ class Mortgage extends \yii\db\ActiveRecord
     {
     	return [
     			'isdydk',
+    			'mortgageisAgree'
     	];
     }
 }

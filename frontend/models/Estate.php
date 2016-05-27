@@ -36,8 +36,8 @@ class Estate extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tjsqjbzs', 'tjsffyj', 'sfyzy', 'sfmqzongdi', 'sfydcbg', 'reviewprocess_id'], 'integer'],
-            [['tjsqjbzscontent', 'tjsffyjcontent', 'sfyzycontent', 'sfmqzongdicontent', 'sfydcbgcontent'], 'string']
+            [['tjsqjbzs', 'tjsffyj', 'sfyzy', 'sfmqzongdi', 'sfydcbg', 'reviewprocess_id','estateisAgree'], 'integer'],
+            [['tjsqjbzscontent', 'tjsffyjcontent', 'sfyzycontent', 'sfmqzongdicontent', 'sfydcbgcontent','estateisAgreecontent'], 'string']
         ];
     }
 
@@ -59,6 +59,8 @@ class Estate extends \yii\db\ActiveRecord
             'sfydcbg' => '是否有调查报告',
             'sfydcbgcontent' => '情况说明',
             'reviewprocess_id' => '审核过程ID',
+        	'estateisAgree' => '是否同意',
+        	'estateisAgreecontent' => '情况说明'
         ];
     }
     
@@ -71,7 +73,7 @@ class Estate extends \yii\db\ActiveRecord
     			'sfyzy' => '拟转让的承包经营权限有无争议',
     			'sfmqzongdi' => '双方当事人提供的拟转让地块图与实际是否一致',
     			'sfydcbg' => '是否撰写调查报告',
-    			'isAgree' => ''
+    			'estateisAgree' => ''
 //     			'reviewprocess_id' => '审核过程ID',
     	];
     }
@@ -85,7 +87,7 @@ class Estate extends \yii\db\ActiveRecord
     			'sfyzy',
     			'sfmqzongdi',
     			'sfydcbg',
-    			'isAgree',
+    			'estateisAgree',
     			//     			'reviewprocess_id' => '审核过程ID',
     	];
     }

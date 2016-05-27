@@ -19,7 +19,7 @@ class Leader extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%mortgage}}';
+        return '{{%leader}}';
     }
 
     /**
@@ -28,7 +28,8 @@ class Leader extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-          
+        		[['reviewprocess_id', 'leaderisAgree'], 'integer'],
+        		[['leaderisAgreecontent'], 'string']
         ];
     }
 
@@ -37,16 +38,19 @@ class Leader extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return [];
+        return [
+        	'leaderisAgree' => '是否同意',
+        	'leaderisAgreecontent' => '情况说明'
+        ];
     }
     
     public static function attributesList()
     {
-    	return [];
+    	return ['leaderisAgree' => ''];
     }
     
     public static function attributesKey()
     {
-    	return [];
+    	return ['leaderisAgree'];
     }
 }

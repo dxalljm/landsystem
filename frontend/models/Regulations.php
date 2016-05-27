@@ -28,8 +28,8 @@ class Regulations extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['reviewprocess_id', 'sfdj'], 'integer'],
-            [['sfdjcontent'], 'string']
+            [['reviewprocess_id', 'sfdj','regulationsisAgree'], 'integer'],
+            [['sfdjcontent','regulationsisAgreecontent'], 'string']
         ];
     }
 
@@ -43,6 +43,8 @@ class Regulations extends \yii\db\ActiveRecord
             'reviewprocess_id' => '审核过程ID',
             'sfdj' => '是否有司法机关、行政机关查封、冻结行为',
             'sfdjcontent' => '情况说明',
+        	'regulationsisAgree' => '是否同意',
+        	'regulationsisAgreecontent' => '情况说明'
         ];
     }
     
@@ -50,6 +52,7 @@ class Regulations extends \yii\db\ActiveRecord
     {
     	return [
     			'sfdj' => '是否有司法机关、行政机关查封、冻结行为',
+    			'regulationsisAgree' => '',
     	];
     }
     
@@ -57,6 +60,7 @@ class Regulations extends \yii\db\ActiveRecord
     {
     	return [
     			'sfdj',
+    			'regulationsisAgree'
     	];
     }
 }

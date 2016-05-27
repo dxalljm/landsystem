@@ -234,10 +234,10 @@ use app\models\Farms;
 			      		echo '<td colspan="5" align="left">';
 			      		echo '<table>';
 				      	foreach ($lists as $key=>$list) {
-				      		if($key == 'isAgree') {
+				      		if(strstr($key,'isAgree')) {
 				      			echo '<tr>';
 				      			echo '<td>';
-				      			echo Html::radioList($key,'',[1=>'同意',0=>'不同意'],['onclick'=>'showContent("'.$key.'")','class'=>'radiolist']);
+				      			echo Html::radioList($key,'',[1=>'同意',0=>'不同意'],['onclick'=>'showContent("'.$key.'","'.$value.'")','class'=>'radiolist'.$value]);
 				      			echo '</td>';
 				      			echo '<td>';
 				      			echo '&nbsp;&nbsp;'.$list;
@@ -249,7 +249,7 @@ use app\models\Farms;
 				      		} else {
 					      		echo '<tr>';
 					      		echo '<td>';
-					      		echo Html::radioList($key,'',['否','是'],['onclick'=>'showContent("'.$key.'")','class'=>'radiolist']);
+					      		echo Html::radioList($key,'',['否','是'],['onclick'=>'showContent("'.$key.'","'.$value.'")','class'=>'radiolist']);
 					      		echo '</td>';
 					      		echo '<td>';
 					      		echo '&nbsp;&nbsp;'.$list;
@@ -263,6 +263,11 @@ use app\models\Farms;
 			      		echo '</table>';
 			      		echo '</td>';
 			      	}
+			      	
+			      	echo $form->field($model,$value)->hiddenInput()->label(false)->error(false);
+			      	echo $form->field($model,$value.'content')->hiddenInput()->label(false)->error(false);
+			      	echo $form->field($model,$value.'time')->hiddenInput(['value'=>time()])->label(false)->error(false);
+			      	
 			      ?>
 			      
 			      
@@ -277,6 +282,7 @@ use app\models\Farms;
 			  					  $classname = 'app\\models\\'.ucfirst($value);
 			  				      	$lists = $classname::attributesList();
 			  				      	$result = $classname::find()->where(['reviewprocess_id'=>$model->id])->one();
+// 			  				      	var_dump($lists);
 			  				      	if($lists) {
 			  				      	if($result) {
 			  				      		echo '<td colspan="5" align="left">';
@@ -310,7 +316,7 @@ use app\models\Farms;
 			  				      ?>
 			  			       </tr>
 			  				   
-			  			       
+			  			      
 			  	               <tr>
 			  		              <td colspan="5" align="left" ><?php
 			  		              if($model->$value == 1) {
@@ -475,44 +481,38 @@ use app\models\Farms;
 // // $('input:radio[name="sfyzy"]:eq(1)').attr("checked",'checked');
 // $('#sfyzycontent').css('display','none');
 // $('#sfyzycontent').attr('disabled',true);
-function showContent(key)
+function showContent(key,process)
 {
+	$('#'+key+'content').remove();	
 	var state = true;
-// 	state = processListState()
-	state = radioListState();
-// 	alert(state);
-	if(key == 'isdydk' || key == 'sfdj' || key == 'isqcbf' || key == 'other' || key == 'sfyzy') {
-		if($('input:radio[name="'+key+'"]:checked').val() == 1) {
-// 			state = true;
-			var html = '<textarea id="'+key+'content" name="'+key+'content" rows="1" cols="80" class="isText"></textarea>';
+	state = contentListState();
+// 	alert($('input:radio[name="'+key+'"]:checked').val());
+	if(key == 'isdydk' || key == 'sfdj' || key == 'isqcbf' || key == 'other' || key == 'sfyzy' || key.indexOf('isAgree') >=0) {
+// 		alert($('input:radio[name="'+key+'"]').prop('checked'));
+		if($('input:radio[name="'+key+'"]').prop('checked') == false) {
 			if($('#'+key+'content').val() == undefined) {
-// 				alert('ffff');
-// 				$('#submitbutton').attr('disabled',true);
+				var html = '<textarea id="'+key+'content" name="'+key+'content" rows="1" cols="80" class="isText"></textarea>';
 				$('#'+key+'-add').append(html);
 				$('#'+key+'content').focus();
+				state = contentListState();
 				$('#'+key+'content').keyup(function(e){
+					if(key.indexOf('isAgree')) {
+						$('#reviewprocess-'+process+'content').val($(this).val());
+					}
 					state = contentListState();
+// 					alert(state);
 					$('#submitbutton').attr('disabled',state);
 				});
 			}
-		} else {
-// 			state = false;
-			$('#'+key+'content').remove();
 		}
-	} else {	
-		if($('input:radio[name="'+key+'"]:checked').val() == 1) {
-// 			state = false;
-			$('#'+key+'content').remove();
-// 			alert($('#tjsqjbzscontent').prop('disabled'));
-		} else {
-// 			state = true;
-			var html = '<textarea id="'+key+'content" name="'+key+'content" rows="1" cols="80" class="isText"></textarea>';
-// 			alert($('#'+key+'content').val());
+	} else {
+		if($('input:radio[name="'+key+'"]').prop('checked') == true) {
 			if($('#'+key+'content').val() == undefined) {
-				
+				var html = '<textarea id="'+key+'content" name="'+key+'content" rows="1" cols="80" class="isText"></textarea>';
 // 				$('#submitbutton').attr('disabled',true);
 				$('#'+key+'-add').append(html);
 				$('#'+key+'content').focus();
+				state = contentListState();
 				$('#'+key+'content').keyup(function(e){
 					state = contentListState();
 					$('#submitbutton').attr('disabled',state);
@@ -520,9 +520,13 @@ function showContent(key)
 			}
 		}
 	}
+	if(key.indexOf('isAgree')){
+		$('#reviewprocess-'+process).val($('input:radio[name="'+key+'"]:checked').val());
+		if($('input:radio[name="'+key+'"]:checked').val() == 1)
+			$('#reviewprocess-'+process+'content').val('');
+	}
 	$('#submitbutton').attr('disabled',state);
-// alert(state);
-// 	isSubmit();
+	
 }
 
 function radioListState()
@@ -530,31 +534,38 @@ function radioListState()
 	var arr = new Array();
 	var str = "<?= Processname::getIdentification()?>";
 	arr = str.split(',');
-	var state = true
+	var state = false
 	$.each(arr,function(){
-// 		if($('input:radio[name="'+this+'"]:checked').val() == undefined)
-// 			state = true;
-		if(this == 'isdydk' || this == 'sfdj' || this == 'isqcbf' || this == 'other' || this == 'sfyzy') {
-			if($('input:radio[name="'+this+'"]:checked').val() == 1) {
-				state = true;				
-			}
-		} else {
-			if($('input:radio[name="'+this+'"]:checked').val() == 0) {
-				state = true;				
-			}
-		}	
+// 		alert($('input:radio[name="'+this+'"]:checked').val());
+		if($('input:radio[name="'+this+'"]:checked').val() == undefined)
+			state = true;
+// 		if(this == 'isdydk' || this == 'sfdj' || this == 'isqcbf' || this == 'other' || this == 'sfyzy') {
+// 			if($('input:radio[name="'+this+'"]:checked').val() == 1) {
+// 				state = true;				
+// 			}
+// 		} else {
+// 			if($('input:radio[name="'+this+'"]:checked').val() == 0) {
+// 				state = true;				
+// 			}
+// 		}	
 	});
-// 	state = 
+// 	alert(state);
 	return state;
 }
 function contentListState()
 {
-	var state = false;
-	$(".isText").each(function(){
-		if($(this).val() == "") {
-		　　state = true;
-		}
-	}); 
+	var state = radioListState();
+// 	alert(state);
+	if(state === false) {
+// 		alert($(".isText").val());
+		$(".isText").each(function(){
+// 			alert($(this).val());
+			if($(this).val() == "") {
+			　　state = true;
+			}
+		});
+	}
+// 	alert(state);
 	return state;
 }
 function processListState()

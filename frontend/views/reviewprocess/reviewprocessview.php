@@ -68,7 +68,7 @@ use app\models\Farms;
        <?= $newfarm->farmername?>
      </span></td>
      <td align="center" bgcolor="#FFFFD5"><span class="italic">
-       <?=  Farms::getContractnumberArea($newttpozongdi['newchangecontractnumber'])?>
+       <?php if($newttpozongdi['newchangecontractnumber']) echo Farms::getContractnumberArea($newttpozongdi['newchangecontractnumber']);?>
        亩</span></td>
    </tr>
    <tr>
@@ -227,11 +227,11 @@ use app\models\Farms;
    <tr height="40px">
      <td align='right' bgcolor="#D0F5FF"><font color="red">剩余面积</font></td>
      <td colspan="2" align="left" bgcolor="#D0F5FF"><font color="red">
-       <?= Farms::getContractnumberArea($newttpozongdi['oldchangecontractnumber'])?>
+       <?php if($newttpozongdi['oldchangecontractnumber']) echo Farms::getContractnumberArea($newttpozongdi['oldchangecontractnumber']);?>
      </font></td>
      <td align='center' bgcolor="#FFFFD5"><font color="red">原面积</font></td>
      <td colspan="2" align="left" bgcolor="#FFFFD5"><font color="red">
-       <?= Farms::getContractnumberArea($newttpozongdi['newcontractnumber'])?>
+       <?php if($newttpozongdi['newcontractnumber']) echo Farms::getContractnumberArea($newttpozongdi['newcontractnumber']);?>
      </font></td>
    </tr>
    <?php foreach ($process as $value) { 
@@ -252,28 +252,32 @@ use app\models\Farms;
 										echo '<font color="#00CC66">';
 			  				      		echo '<table>';
 			  					      	foreach ($lists as $key=>$list) {
-			  					      		echo '<tr>';
-			  					      		echo '<td>';
-			  					      		if($result[$key]) {
-			  					      			echo '<strong>是<i class="fa fa-check-square-o"></i></strong>&nbsp;&nbsp;';
-			  					      			echo '<strong>否<i class="fa fa-square-o"></i></strong>';
-			  					      		} else { 
-			  					      			echo '<strong>是<i class="fa fa-square-o"></i></string>&nbsp;&nbsp;';
-			  					      			echo '<strong>否<i class="fa fa-check-square-o"></i></strong>';
-			  					      		}
-			  					      		echo '</td>';
-			  					      		echo '<td>';
-			  					      		echo '&nbsp;&nbsp;'.$list;
-			  					      		echo '</td>';
-			  					      		echo '<td>';
-			  					      		if($result[$key.'content'])
-			  					      			echo '&nbsp;&nbsp;<font color="red"><strong>情况说明：'.$result[$key.'content'].'</strong></font>';
-			  					      		echo "</td>";
-			  					      		echo '</tr>';
-			  					      	}
-			  					      	echo '</table>';
-										echo '</font>';
-			  					      	echo '</td>';
+			  					      		if(!strstr($key,'isAgree')) {
+				  					      		echo '<tr>';
+				  					      		echo '<td>';
+				  					      		
+				  					      		if($result[$key]) {
+				  					      			echo '<strong>是<i class="fa fa-check-square-o"></i></strong>&nbsp;&nbsp;';
+				  					      			echo '<strong>否<i class="fa fa-square-o"></i></strong>';
+				  					      		} else { 
+				  					      			echo '<strong>是<i class="fa fa-square-o"></i></string>&nbsp;&nbsp;';
+				  					      			echo '<strong>否<i class="fa fa-check-square-o"></i></strong>';
+				  					      		}
+				  					      		echo '</td>';
+				  					      		echo '<td>';
+				  					      		echo '&nbsp;&nbsp;'.$list;
+				  					      		echo '</td>';
+				  					      		echo '<td>';
+// 				  					      		if(!strstr($key,'isAgree')) {
+				  					      		if($result[$key.'content'])
+				  					      			echo '&nbsp;&nbsp;<font color="red"><strong>情况说明：'.$result[$key.'content'].'</strong></font>';
+// 				  					      		}
+				  					      		echo "</td>";
+				  					      		echo '</tr>';
+				  					      	}}
+				  					      	echo '</table>';
+											echo '</font>';
+				  					      	echo '</td>';
 			  				      	}
 			  				      	}
 			  				      ?>

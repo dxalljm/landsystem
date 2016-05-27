@@ -160,10 +160,13 @@ class ReviewprocessController extends Controller
     	$process = Auditprocess::find()->where(['actionname'=>$model->actionname])->one()['process'];
     	$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$model->oldfarms_id])->one();
     	$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$model->newfarms_id])->one();
+//     	var_dump(Yii::$app->request->post());exit;
     	if($class == 'farmstransfer') {
+    		
 	    	$oldfarm = Farms::find()->where(['id'=>$model->oldfarms_id])->one();
 	    	$newfarm = Farms::find()->where(['id'=>$model->newfarms_id])->one();
 	    	if($model->load(Yii::$app->request->post())) {
+
 	    		$model->save();
 // 	    		var_dump($_POST);exit;
 	    		$state = Reviewprocess::isNextProcess($model->id);
@@ -184,6 +187,7 @@ class ReviewprocessController extends Controller
 		    		}
 		    		$estateModel->reviewprocess_id = $id;
 		    		$estateModel->save();
+// 		    		var_dump($estateModel);exit;
 	    		}
 // 	    		var_dump($id);
 	    		if($state) {

@@ -34,8 +34,8 @@ class Filereview extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fileishg', 'htisyz', 'areaisyz', 'reviewprocess_id'], 'integer'],
-            [['fileishgcontent', 'htisyzcontent', 'areaisyzcontent'], 'string']
+            [['fileishg', 'htisyz', 'areaisyz', 'reviewprocess_id','filereviewisAgree'], 'integer'],
+            [['fileishgcontent', 'htisyzcontent', 'areaisyzcontent','filereviewisAgreecontent'], 'string']
         ];
     }
 
@@ -53,6 +53,8 @@ class Filereview extends \yii\db\ActiveRecord
             'areaisyz' => '合同面积是否与实测面积一致',
             'areaisyzcontent' => '情况说明',
             'reviewprocess_id' => '审核过程ID',
+        	'filereviewisAgree' => '是否同意',
+        	'filereviewisAgreecontent' => '情况说明',
         ];
     }
     
@@ -62,6 +64,7 @@ class Filereview extends \yii\db\ActiveRecord
             'fileishg' => '审查承包人（出让方）合同档案是否审查合格',
             'htisyz' => '承包人提供的合同与存档是否真实一致',
             'areaisyz' => '合同面积是否与实测面积一致',
+    		'filereviewisAgree' => ''
     	];
     }
     
@@ -71,6 +74,7 @@ class Filereview extends \yii\db\ActiveRecord
     			'fileishg',
     			'htisyz',
     			'areaisyz',
+    			'filereviewisAgree'
     	];
     }
 }
