@@ -1302,9 +1302,11 @@ class FarmsController extends Controller {
 			$ttpoModel->actionname = \Yii::$app->controller->action->id;
 			$ttpoModel->state = 0;
 			$ttpoModel->save ();
+			
 			Contractnumber::contractnumberAdd ();
 			Zongdioffarm::zongdiUpdate($oldmodel->id, $newoldmodel->id, $ttpoModel->oldchangezongdi);
 			Zongdioffarm::zongdiUpdate('',$newmodel->id,$ttpoModel->newzongdi);
+// 			var_dump($ttpoModel->oldchangenotclear);exit;
 			return $this->redirect ([
 					'farmsttpozongdiview',
 					'id'=> $ttpoModel->id,
@@ -1321,7 +1323,28 @@ class FarmsController extends Controller {
 			] );
 		}
 	}
-	
+	// 农场转让
+	public function actionFarmsttpotransfer($farms_id) {
+		$search = Yii::$app->request->post ( 'search' );
+		$management_area = Farms::getManagementArea ();
+		$farmsSearch = null;
+		$dataProvider = null;
+		if ($search) {
+			$farmsSearch = new farmsSearch ();
+			$params = Yii::$app->request->queryParams;
+			$params ['farmsSearch'] ['farmname'] = $search;
+			$params ['farmsSearch'] ['farmername'] = $search;
+			$params ['farmsSearch'] ['management_area'] = $management_area ['id'];
+			// 			$params ['farmsSearch'] ['state'] = 1;
+			// 			$params ['farmsSearch'] ['locked'] = 0;
+			$dataProvider = $farmsSearch->search ( $params );
+		}
+		return $this->render ( 'farmsttpotransfer', [
+				'searchModel' => $farmsSearch,
+				'dataProvider' => $dataProvider,
+				'oldfarms_id' => $farms_id
+		] );
+	}
 	
 	// 农场转让
 	public function actionFarmsttpozongdi($farms_id) {

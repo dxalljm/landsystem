@@ -112,14 +112,15 @@ use yii\helpers\Url;
         <?php  
         if($ttpoModel->actionname !== 'farmstransfer') {
         	if($model->zongdi) {
-        $arrayZongdi = explode('、', $model->zongdi);
+        $arrayZongdi = explode('、', $model->zongdi);       
         $ttpozongdi = explode('、', $ttpoModel->ttpozongdi);
-
+        $tempArrayZongdi = $ttpozongdi;
+		$diff = array_diff($arrayZongdi, $ttpozongdi);
         foreach ($arrayZongdi as $key => $zongdi) {
         	foreach ($ttpozongdi as $tkey => $tzongdi) {
         		if(Lease::getZongdi($zongdi) == Lease::getZongdi($tzongdi)) {
-        			$cha = Lease::getArea($zongdi) - Lease::getArea($tzongdi);
-     
+        			unset($tempArrayZongdi[$tkey]);
+        			$cha = Lease::getArea($zongdi) - Lease::getArea($tzongdi);     
         			$arrayZongdi[$key] = Lease::getZongdi($zongdi)."(".$cha.")";
         		}
         	}
@@ -264,13 +265,13 @@ use yii\helpers\Url;
 				<li class="select2-search select2-search--inline">
 					<input class="select2-search__field" type="search" tabindex="-1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="textbox" placeholder="" style="width: 0.75em;">
 					<?php 
-					if($model->zongdi == '') {
-						$dialogname = 'dialog2';
-					} else 
-						$dialogname = 'dialog';
 					$zongdiarr = explode('、', $ttpoModel->ttpozongdi);
-					foreach ($zongdiarr as $zongdi) {
-						echo '<li class="select2-selection__choice" id="new'.Lease::getZongdi($zongdi).'" title="'.$zongdi.'"><span class="remove text-red" role="presentation" onclick=zongdiRemove("'.Lease::getZongdi($zongdi).'","'.Lease::getArea($zongdi).'","'.$dialogname.'")>×</span>'.$zongdi.'</li>';
+					$diff = array_diff($zongdiarr, $tempArrayZongdi);
+					foreach ($diff as $zongdi) {
+						echo '<li class="select2-selection__choice" id="new'.Lease::getZongdi($zongdi).'" title="'.$zongdi.'"><span class="remove text-red" role="presentation" onclick=zongdiRemove("'.Lease::getZongdi($zongdi).'","'.Lease::getArea($zongdi).'","dialog")>×</span>'.$zongdi.'</li>';
+					}
+					foreach ($tempArrayZongdi as $zongdi) {
+						echo '<li class="select2-selection__choice" id="new'.Lease::getZongdi($zongdi).'" title="'.$zongdi.'"><span class="remove text-red" role="presentation" onclick=zongdiRemove("'.Lease::getZongdi($zongdi).'","'.Lease::getArea($zongdi).'","dialog2")>×</span>'.$zongdi.'</li>';
 					}
 					?>
 				</li>
@@ -366,20 +367,18 @@ function zongdiRemove(zongdi,measure,dialogID)
 	$('#new'+zongdi).remove();
 // 	var zongdiarr = zongdi.split('_');
 // 	alert($('#'+zongdi).val());
-	if($('#'+zongdi).val() == undefined) {
-		var oldnotclear = $('#oldfarms-notclear').val();
-		var newnotclear = oldnotclear*1 + measure*1;
-		$('#oldfarms-notclear').val(newnotclear.toFixed(2));
-	} else {
-		$('#'+zongdi).attr('disabled',false);
-		var getzongdivalue = $('#'+zongdi).val();	
-		var zongdiarea = getArea(getzongdivalue);	
-		var zongdivalue = zongdiarea*1 + measure*1;
-		$('#'+zongdi).attr('value',zongdi+"("+zongdivalue+")");
-		$('#'+zongdi).text(zongdi+"("+zongdivalue+")");
-		$('#'+zongdi).attr('onclick',"toZongdi('"+zongdi+"',"+zongdivalue+")");
-	}
+// 	alert($('#oldfarms-notclear').val());
+	
 	if(dialogID == 'dialog') {
+		if($('#'+zongdi).val() != undefined) {	
+			$('#'+zongdi).attr('disabled',false);
+			var getzongdivalue = $('#'+zongdi).val();	
+			var zongdiarea = getArea(getzongdivalue);	
+			var zongdivalue = zongdiarea*1 + measure*1;
+			$('#'+zongdi).attr('value',zongdi+"("+zongdivalue+")");
+			$('#'+zongdi).text(zongdi+"("+zongdivalue+")");
+			$('#'+zongdi).attr('onclick',"toZongdi('"+zongdi+"',"+zongdivalue+")");
+		}
 		//宗地面积计算开始
 		var value = $('#oldfarms-measure').val()*1+measure*1;
 		$('#oldfarms-measure').val(value.toFixed(2));
@@ -399,10 +398,13 @@ function zongdiRemove(zongdi,measure,dialogID)
 		$('#temp_measure').val(newvalue.toFixed(2));
 		$('#'+zongdi).text($('#'+zongdi).val());
 	}
+	
 	if(dialogID == 'dialog2') {
 		
 		var value = $('#oldfarms-notclear').val()*1+measure*1;
 		$('#oldfarms-notclear').val(value.toFixed(2));
+		
+// 		alert($('#oldfarms-notclear').val());
 		//如果存在未明确状态面积，那么先减未明确状态面积
 		var notstate = $('#farms-notstate').val();
 		if(notstate > 0) {

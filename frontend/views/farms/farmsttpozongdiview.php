@@ -81,7 +81,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		
 		<tr>
 			<td width=20% align='right'>未明确地块面积</td>
-			<td align='left'><?= $oldFarm->notclear?>亩</td>
+			<td align='left'><?= $ttpoModel->oldchangenotclear?>亩</td>
 		</tr>
 		<tr>
 			<td width=20% align='right'>未明确状态面积</td>

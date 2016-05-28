@@ -15,12 +15,13 @@ use app\models\Lockedinfo;
 use app\models\Auditprocess;
 use app\models\Reviewprocess;
 use app\models\Session;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model app\models\farms */
 
 ?>
 <div class="farms-view">
-
+ 
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
@@ -32,60 +33,52 @@ use app\models\Session;
                 </div>
                 <div class="box-body">
 	<p>
-	<?php if(!Farms::getLocked($farms_id)) {?>
-    	 <?= Html::a('整体转让', ['farmstransfer', 'farms_id' => $farms_id], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('部分转让', ['farmsttpozongdi', 'farms_id' => $farms_id],['class' => 'btn btn-primary']) ?>
-    <?php } else {?>
-    	<h4><?= Lockedinfo::find()->where(['farms_id'=>$farms_id])->one()['lockedcontent']?></h4>
-    <?php }?>
-        
+
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
     </p>
-    <?php if(!empty($ttpoModel)) {?>
-    <h3>过户信息</h3>
-    <table class="table table-bordered table-hover">
-    	<tr>
-    		<td align="center" valign="middle">原农场</td>
-    		<td align="center" valign="middle">过户农场</td>
-    		<td align="center" valign="middle">过户时间</td>
-    		<td align="center" valign="middle">操作</td>
-    	</tr>
-    <?php foreach($ttpoModel as $value) {    	
-    	
-    ?>
-       	<tr><?php $oldfarm = Farms::find()->where(['id'=>$value['oldfarms_id']])->one(); $newfarm = Farms::find()->where(['id'=>$value['newfarms_id']])->one();?>
-    		<td align="center" valign="middle"><?= $oldfarm->farmname ?>(<?= $oldfarm->farmername ?>)</td>
-    		<td align="center" valign="middle"><?= $newfarm->farmname ?>(<?= $newfarm->farmername ?>)</td>
-    		<td align="center" valign="middle"><?= date('Y-m-d',$value['create_at']) ?></td>
-    		<td align="center" valign="middle"><?= Html::a('查看详情', ['reviewprocess/reviewprocessfarmstransfer', 'oldfarmsid' => $oldfarm->id,'newfarmsid'=>$newfarm->id,'reviewprocessid'=>$value['reviewprocess_id']], ['class' => 'btn btn-success']) ?></td>
-    	</tr>
-    	<?php }?>
-    </table>
-    <?php }?>
-    <br>
-    <?php if(!empty($ttpozongdiModel)) {?>
-    <h3>宗地转让信息</h3>
-    <table class="table table-bordered table-hover">
-   		 <tr>
-    		<td align="center" valign="middle">原农场</td>
-    		<td align="center" valign="middle">转让农场</td>
-    		<td align="center" valign="middle">过户时间</td>
-    		<td align="center" valign="middle">操作</td>
-    	</tr>
-       	<?php foreach($ttpozongdiModel as $value) {?>
-       	<tr><?php $oldfarm = Farms::find()->where(['id'=>$value['oldfarms_id']])->one(); $newfarm = Farms::find()->where(['id'=>$value['newfarms_id']])->one();?>
-    		<td align="center" valign="middle"><?= $oldfarm->farmname ?>(<?= $oldfarm->farmername ?>)</td>
-    		<td align="center" valign="middle"><?= $newfarm->farmname ?>(<?= $newfarm->farmername ?>)</td>
-    		<td align="center" valign="middle"><?= date('Y-m-d',$value['create_at']) ?></td>
-    		<td align="center" valign="middle"><?= Html::a('查看详情', ['farmsttpozongdiview', 'id' => $value['id'],'farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?></td>
-    	</tr>
-    	<?php }?>
-    </table>
-    <?php }?>
-    
-	                </div>
-            </div>
+    <div class="row">
+        <div class="col-md-4">
+
         </div>
-    </div>
+        <!-- /.col -->
+        <div class="col-md-4">
+          <!-- Widget: user widget style 1 -->
+          <div class="box box-widget widget-user">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="widget-user-header bg-aqua-active">
+              <h3 class="widget-user-username">Alexander Pierce</h3>
+              <h5 class="widget-user-desc">Founder &amp; CEO</h5>
+            </div>
+
+            <div class="box-footer">
+              <div class="row">
+                <div class="col-sm-6 border-right">
+                  <div class="description-block">
+                    <h2 >整体转让</h2>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-6">
+                  <div class="description-block">
+                    <h2>部分转让</h2>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- /.row -->
+            </div>
+          </div>
+          <!-- /.widget-user -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-4">
+        
+        </div>
+        <!-- /.col -->
+      </div>
+      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
 </section>
 </div>
 

@@ -30,6 +30,7 @@ class AppAsset extends AssetBundle
     	'vendor/bower/AdminLTE/plugins/select2/select2.min.css',
         'vendor/bower/AdminLTE/dist/css/AdminLTE.min.css',
         'vendor/bower/AdminLTE/dist/css/skins/_all-skins.min.css',
+    	'vendor/bower/AdminLTE/dist/css/ionicons.min.css',
     	'vendor/bower/nprogress/nprogress.css',
         'css/site.css',
     	'vendor/bower/jquery-ui-1.11.4/jquery-ui.css',

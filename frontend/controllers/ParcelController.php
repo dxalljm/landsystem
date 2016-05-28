@@ -230,11 +230,19 @@ class ParcelController extends Controller
 	// 	    		var_dump($zongdiinfo);
 	    		if($zongdiinfo['state']) {
 	    			if($zongdiinfo['area']) {
-	    				$result = $zongdiinfo['netarea'] - $zongdiinfo['area'];
-		    			$status = 1;
-		    			$netarea = $zongdiinfo['area'];
-		    			$showmsg = true;
-		    			$message = '已被占用'.$result.'亩，将显示剩余面积。';
+	    				$cha = $zongdiinfo['netarea'] - $zongdiinfo['area'];
+	    				if($cha > 0) {
+		    				$result = $cha;
+			    			$status = 1;
+			    			$netarea = $zongdiinfo['area'];
+			    			$showmsg = true;
+			    			$message = '已被占用'.$result.'亩，将显示剩余面积。';
+	    				} else {
+	    					$status = 0;
+	    					$netarea = 0;
+	    					$showmsg = true;
+	    					$message = '对不起，您输入的地块已经被占用';
+	    				}
 	    			} else {
 	    				$status = 0;
 	    				$netarea = 0;
