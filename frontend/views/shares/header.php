@@ -8,7 +8,11 @@ use yii\helpers\Html;
 use app\models\Tempauditing;
 use app\models\Huinong;
 ?>
-
+<style>
+    li{
+        width:auto;margin:0px 0px;;
+    }
+</style>
 <header class="main-header">
 
     <a href="/" class="logo">
@@ -30,8 +34,11 @@ use app\models\Huinong;
                     //$menuliststr = MenuToUser::find()->where(['role_id'=>User::getItemname()])->one()['menulist'];
                     $menulistarr = MenuToUser::getUserMenu();
 					//asort($menulistarr);
+
                     foreach($menulistarr as $val) {
                         $menu = Mainmenu::find()->where(['id'=>$val])->one();
+
+
                         if($menu['menuurl'] == 'dropdown') {?>
                         	<li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">数据管理 <span class="caret"></span></a>
@@ -64,13 +71,18 @@ use app\models\Huinong;
                         <li class="divider"></li>
                         <li><a href="<?= Url::to('index.php?r=insurancecompany/insurancecompanyindex')?>">保险公司管理</a></li>
                     </ul>
+
                         <?php } else {
-                        echo "<li ><a href=" . Url::to('index.php?r='.$menu['menuurl']) . ">". $menu['menuname'];
+
+                                echo "<li width='auto'><a href=" . Url::to('index.php?r=' . $menu['menuurl']) . ">" . $menu['menuname'];
+
                         $isReviewprocess = false;
                         if($menu['menuurl'] == 'reviewprocess/reviewprocessindex') {
                         	$isReviewprocess = true;
                         	echo Reviewprocess::getUserProcessCount();
                         }
+
+
                         if($menu['menuurl'] == 'huinong/huinonglist') {
                         	echo huinong::getHuinongCount();
                         }
@@ -79,7 +91,7 @@ use app\models\Huinong;
                     } 
                     
                     ?>
-                    
+
                
                 <?php }} 
 //                 echo "<li >";
@@ -94,18 +106,32 @@ use app\models\Huinong;
                 }
                 ?>
             </ul>
+            <?php
+//            $dropdownmenu = Mainmenu::find()->where(['dropdown'=>'任务列表'])->all();
+//            if($dropdownmenu) {
+//                echo '<li class="dropdown">';
+//                echo '<a href="#" class="dropdown-toggle" data-toggle="dropdown">任务列表<span class="caret"></span></a>';
+//                echo '<ul class="dropdown-menu" role="menu">';
+//                echo '<li class="divider"></li>';
+//                foreach ($dropdownmenu as $menu) {
+//                    echo '<li><a href="' . Url::to([$menu['menuurl']]) . '">' . $menu['menuname'] . '</a></li>';
+//                }
+//                echo '</ul></li>';
+//            }
+            ?>
             <ul class="nav navbar-nav">
                     <li>
                         <a href="<?= Url::to(['updatecache/updateall'])?>">更新首页图表数据</a>
                     </li>
                 </ul>
-            <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="javascript:void(0);" id="currentTime"><?= date('Y年m月j日 H:i:s')?></a>
-                    </li>
-                </ul>
-            </div>
+<!--            <div class="navbar-custom-menu">-->
+<!--                <ul class="nav navbar-nav">-->
+<!--                    <li>-->
+<!--                        <a href="javascript:void(0);" id="currentTime">--><?//= date('Y年m月j日')?><!--</a>-->
+<!--                    </li>-->
+<!---->
+<!--                </ul>-->
+<!--            </div>-->
         </div>
     </nav>
 </header>

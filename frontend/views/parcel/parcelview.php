@@ -13,13 +13,7 @@ $this->params['breadcrumbs'][] = ['label' => $title, 'url' => ['parcelindex']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="parcel-view">
-
-<section class="content-header">
-    <h1>
-        <?= Html::encode($this->title) ?>
-        <small></small>
-    </h1>
-</section>
+    
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
@@ -30,17 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </h3>
                 </div>
                 <div class="box-body">
-    <p>
-    	 <?= Html::a('添加', ['parcelcreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('更新', ['parcelupdate', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('删除', ['parceldelete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => '您确定要删除这项吗？',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+
 
     <?= DetailView::widget([
         'model' => $model,

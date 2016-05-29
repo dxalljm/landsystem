@@ -55,15 +55,15 @@ use yii\helpers\Url;
         <td width="20%" align='right' valign="middle">农场位置</td>
         <td colspan="5" align='left' valign="middle"><?= $oldFarm->address?></td>
         </tr>
-      <tr>
+
       <tr>
         <td width="20%" align='right' valign="middle">管理区</td>
         <td colspan="5" align='left' valign="middle"><?= ManagementArea::find()->where(['id'=>$oldFarm->management_area])->one()['areaname']?></td>
         </tr>
+
       <tr>
-      <tr>
-			<td width=15% align='right'>合同号</td><?php if($oldFarm->contractnumber == '') $oldFarm->contractnumber = Farms::getContractnumber($_GET['farms_id']);?>
-			<td colspan="5" align='left'><?= html::textInput('oldcontractnumber',$oldFarm->contractnumber,['id'=>'oldfarms-contractnumber','class'=>'form-control','readonly'=>true])?></td>
+			<td width=15% align='right'>合同号</td>
+			<td colspan="5" align='left'><?= $oldFarm->contractnumber?></td>
 		</tr>
 		<tr>
 			<td width=15% align='right'>承包年限</td>
@@ -76,48 +76,30 @@ use yii\helpers\Url;
 		<tr>
         <td width="20%" align='right' valign="middle">宗地</td>
         <td colspan="5" align='left' valign="middle">
-        <table width="100%" height="100%" border="0" cellspacing="5">
-        <?php  
-        if(!empty($oldFarm->zongdi)) {
-        $arrayZongdi = explode('、', $oldFarm->zongdi);
-        for($i = 0;$i<count($arrayZongdi);$i++) {
-        	// 			    	echo $i%6;
-        	if($i%4 == 0) {
-        		echo '<tr height="10">';
-        		echo '<td>';
-        			echo html::button($arrayZongdi[$i],['onclick'=>'toZongdi("'.Lease::getZongdi($arrayZongdi[$i]).'","'.Lease::getArea($arrayZongdi[$i]).'")','value'=>$arrayZongdi[$i],'id'=>Lease::getZongdi($arrayZongdi[$i]),'class'=>"btn btn-default"]);
-        		echo '</td>';
-        	} else {
-        		echo '<td>';
-        			echo html::button($arrayZongdi[$i],['onclick'=>'toZongdi("'.Lease::getZongdi($arrayZongdi[$i]).'","'.Lease::getArea($arrayZongdi[$i]).'")','value'=>$arrayZongdi[$i],'id'=>Lease::getZongdi($arrayZongdi[$i]),'class'=>"btn btn-default"]);
-        		echo '</td>';
-        	}
-        }}
-        ?>
-        </table>
+        <?php echo $oldFarm->zongdi;?>
         </td>
         </tr>
       <tr><?= Html::hiddenInput('oldzongdi',$oldFarm->zongdi,['id'=>'oldfarm-zongdi','class'=>'form-control']) ?>
       <?= Html::hiddenInput('oldzongdichange',$oldFarm->zongdi,['id'=>'oldzongdiChange','class'=>'form-control']) ?>
-      <?= Html::hiddenInput('ttpozongdi','',['id'=>'ttpozongdi-zongdi']) ?>
+      <?= Html::hiddenInput('ttpozongdi',$oldFarm->zongdi,['id'=>'ttpozongdi-zongdi']) ?>
       <?= Html::hiddenInput('newzongdi','',['id'=>'new-zongdi']) ?>
-      <?= Html::hiddenInput('ttpoarea',0,['id'=>'ttpozongdi-area']) ?>
+      <?= Html::hiddenInput('ttpoarea',$oldFarm->contractarea,['id'=>'ttpozongdi-area']) ?>
         <td align='right' valign="middle">宗地面积</td><?= html::hiddenInput('tempoldmeasure',$oldFarm->measure,['id'=>'temp_oldmeasure']) ?>
         										 <?= html::hiddenInput('tempoldnotclear',$oldFarm->notclear,['id'=>'temp_oldnotclear']) ?>
         										 <?= html::hiddenInput('tempoldcontractarea',$oldFarm->contractarea,['id'=>'temp_oldcontractarea']) ?>
-        <td colspan="5" align='left' valign="middle"><?= html::textInput('oldmeasure',$oldFarm->measure,['readonly' => true,'id'=>'oldfarms-measure','class'=>'form-control']) ?></td>
+        <td colspan="5" align='left' valign="middle"><?= $oldFarm->measure?></td>
         </tr>
         <tr>
         <td align='right' valign="middle">合同面积</td>
-        <td colspan="5" align='left' valign="middle"><?= html::textInput('oldcontractarea',$oldFarm->contractarea,['readonly' => true,'id'=>'oldfarms-contractarea','class'=>'form-control']) ?></td>
+        <td colspan="5" align='left' valign="middle"><?= $oldFarm->contractarea ?></td>
         </tr>
       <tr>
         <td align='right' valign="middle">未明确地块面积</td>
-        <td colspan="5" align='left' valign="middle"><?= html::textInput('oldnotclear',$oldFarm->notclear,['readonly' => true,'id'=>'oldfarms-notclear','class'=>'form-control']) ?></td>
+        <td colspan="5" align='left' valign="middle"><?= $oldFarm->notclear?></td>
         </tr>
          <tr>
         <td align='right' valign="middle">未明确状态面积</td>
-        <td colspan="5" align='left' valign="middle"><?= html::textInput('oldnotstate',$oldFarm->notstate,['readonly' => true,'id'=>'oldfarms-notstate','class'=>'form-control']) ?></td>
+        <td colspan="5" align='left' valign="middle"><?= $oldFarm->notstate?></td>
         </tr>
       <tr>
         <td align='right' valign="middle">备注</td>
@@ -168,7 +150,12 @@ use yii\helpers\Url;
 		  <td colspan="5" align='left'><?= $newFarm->zongdi?></td>
 		  </tr>
 		<tr>
-		  <td align='right'>新宗地</td><?= html::hiddenInput('tempzongdi','',['id'=>'temp-zongdi'])?><?= $form->field($newFarm, 'zongdi')->hiddenInput()->label(false)->error(false) ?>
+			<td align='right'>新宗地</td>
+			<td colspan="5" align='left'><?= $oldFarm->zongdi?></td>
+		</tr>
+		<?php if($oldFarm->notclear > 0) {?>
+		<tr>
+		  <td align='right'>新宗地</td><?= html::hiddenInput('tempzongdi','',['id'=>'temp-zongdi'])?><?php $newFarm->zongdi = $oldFarm->zongdi;?><?= $form->field($newFarm, 'zongdi')->hiddenInput()->label(false)->error(false) ?>
 		  <td colspan="5" align='left'><span id="inputZongdi" class="select2-container select2-container--default select2-container--below" dir="ltr" style="width: 100%; color: #000;">
 	<span class="selection">
 		<span class="select2-selection select2-selection--multiple" role="combobox" aria-autocomplete="list" aria-haspopup="true" aria-expanded="false" tabindex="0">
@@ -181,19 +168,21 @@ use yii\helpers\Url;
 </span>
 		  </td>
 		  </tr>
+		<?php }?>
 		<tr>
         <td align='right'>宗地面积</td><?= html::hiddenInput('tempmeasure',$newFarm->measure,['id'=>'temp_measure']) ?>
         							<?= html::hiddenInput('measure',$newFarm->measure,['id'=>'ymeasure']) ?>
 								  <?= html::hiddenInput('tempnotclear',$newFarm->notclear,['id'=>'temp_notclear']) ?>
 								  <?= html::hiddenInput('tempnotstate',$newFarm->notstate,['id'=>'temp_notstate']) ?>
+			<?php $newFarm->measure += $oldFarm->measure;?>
         <td colspan="5" align='left'><?= $form->field($newFarm, 'measure')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
         </tr>
         <tr>
-        <td align='right'>合同面积</td>
+        <td align='right'>合同面积</td><?PHP $newFarm->contractarea += $oldFarm->contractarea;?>
         <td colspan="5" align='left'><?= $form->field($newFarm, 'contractarea')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
        </tr>
       <tr>
-        <td align='right'>未明确地块面积</td>
+        <td align='right'>未明确地块面积</td><?php $newFarm->notclear = $oldFarm->notclear + $newFarm->notclear;$newFarm->notstate = $oldFarm->notstate + $newFarm->notstate;?>
         <td colspan="5" align='left'><?= $form->field($newFarm, 'notclear')->textInput(['readonly' => true])->label(false)->error(false) ?></td>
        </tr>
         <tr>
@@ -250,6 +239,9 @@ use yii\helpers\Url;
 	</table>
 </div>
 <script>
+$(function(){
+	toHTH();
+});
 function zongdiRemove(zongdi,measure,dialogID)
 {
 	removeZongdiForm(zongdi,measure);
@@ -278,25 +270,19 @@ function zongdiRemove(zongdi,measure,dialogID)
 		$('#farms-measure').val(newvalue.toFixed(2));
 		$('#temp_measure').val(newvalue.toFixed(2));
 		$('#'+zongdi).text($('#'+zongdi).val());
+		toHTH();
 	}
 	if(dialogID == 'dialog2') {
-		var value = $('#oldfarms-notclear').val()*1+measure*1;
-		$('#oldfarms-notclear').val(value.toFixed(2));
-		//如果存在未明确状态面积，那么先减未明确状态面积
-		var notstate = $('#farms-notstate').val();
-		if(notstate > 0) {
-			if(notstate >= measure) {
-				$('#farms-notstate').val(notstate - measure);
-			} else {
-				$('#farms-notstate').val(0);
-			}
-		}
+
+		$('#farms-notclear').val($('#farms-notclear').val()*1 + measure*1);
+
 		var newvalue = $('#farms-measure').val()*1 - measure*1;
 		$('#farms-measure').val(newvalue.toFixed(2));
 		$('#temp_measure').val(newvalue.toFixed(2));
+		toHTH();
 	}
 	//宗地面积计算结束
-	toHTH();
+
 }
 function removeZongdiForm(zongdi,measure)
 {
@@ -398,45 +384,67 @@ $('#dialog2').dialog({
 		  					} else {
 		  						$( this ).dialog( "close" );
 		  						zongdiForm(zongdi,measure);
-		  						oldZongdiChange(zongdi,measure,'change');					
-		  					 	var newzongdi = zongdi+'('+measure+')';
-		  					 	var newzongdihtml = '<li class="select2-selection__choice" id="new'+zongdi+'" title="'+newzongdi+'"><span class="remove text-red" role="presentation" onclick=zongdiRemove("'+zongdi+'","'+measure+'","dialog2")>×</span>'+newzongdi+'</li>';
-		  						
-		  						$('.select2-selection__rendered').append(newzongdihtml);
-		  						$('#'+zongdi).attr('disabled',true);
-		  						var value = $('#oldfarms-notclear').val()*1-measure*1;
-		  						$('#oldfarms-notclear').val(value.toFixed(2));
-		  						var newvalue = $('#farms-measure').val()*1 + measure*1;
-		  						$('#farms-measure').val(newvalue.toFixed(2));
-		  						$('#temp_measure').val(newvalue.toFixed(2));
-		  						toHTH();
-		  						var ycontractarea = parseFloat($('#farms-contractarea').val());
-		  						var oldcontractarea = parseFloat($('#oldfarms-contractarea').val());
-		  						
-		  						if(oldcontractarea < 0 && ycontractarea > 0) {
-		  							alert('宗地面积已经大于合同面积，多出面积自动加入未明确状态面积');
-		  						}
-		  						if(oldcontractarea < 0) {
-		  							$('#farms-notstate').val(Math.abs(oldcontractarea));
-		  							toHTH();
-		  						}
-		  						$('#findZongdi').val('');
-					  			$('#findMeasure').val('');
-		  						var ttpozongdi = $('#ttpozongdi-zongdi').val();
-								var zongdistr = zongdi+"("+measure+")";
-								$('#ttpozongdi-zongdi').val(zongdistr+'、'+ttpozongdi);
-								var ttpozongdi = $('#ttpozongdi-zongdi').val();
-								var last = ttpozongdi.substr(ttpozongdi.length-1,1);
-								if(last == '、') {
-									$('#ttpozongdi-zongdi').val(ttpozongdi.substring(0,ttpozongdi.length-1));
+		  						oldZongdiChange(zongdi,measure,'change');
+								if(measure > $('#farms-notclear').val()) {
+									alert('已经超过原合同面积，将自动截取为剩余面积。');
+									var newzongdi = zongdi+'('+$('#farms-notclear').val()+')';
+									var newzongdihtml = '<li class="select2-selection__choice" id="new'+zongdi+'" title="'+newzongdi+'"><span class="remove text-red" role="presentation" onclick=zongdiRemove("'+zongdi+'","'+$('#farms-notclear').val()+'","dialog2")>×</span>'+newzongdi+'</li>';
+									$('.select2-selection__rendered').append(newzongdihtml);
+
+									var newvalue = $('#farms-measure').val()*1 + $('#farms-notclear').val()*1;
+
+									$('#farms-measure').val(newvalue.toFixed(2));
+									$('#temp_measure').val(newvalue.toFixed(2));
+									$('#farms-notclear').val(0);
+									toHTH();
+									$('#findZongdi').val('');
+									$('#findMeasure').val('');
+									var ttpozongdi = $('#ttpozongdi-zongdi').val();
+									var zongdistr = zongdi+"("+$('#farms-notclear').val()+")";
+									$('#ttpozongdi-zongdi').val(zongdistr+'、'+ttpozongdi);
+									var ttpozongdi = $('#ttpozongdi-zongdi').val();
+									var last = ttpozongdi.substr(ttpozongdi.length-1,1);
+									if(last == '、') {
+										$('#ttpozongdi-zongdi').val(ttpozongdi.substring(0,ttpozongdi.length-1));
+									}
+									var newtempzongdi = $('#new-zongdi').val();
+									$("#new-zongdi").val(zongdi+'|'+newtempzongdi);
+
+									$('#ymeasure').val(0);
+									var ttpoarea = $('#ttpozongdi-area').val();
+
+									$('#ttpozongdi-area').val(ttpoarea*1 + $('#farms-notclear').val()*1);
+								} else {
+									var newzongdi = zongdi+'('+measure+')';
+									var newzongdihtml = '<li class="select2-selection__choice" id="new'+zongdi+'" title="'+newzongdi+'"><span class="remove text-red" role="presentation" onclick=zongdiRemove("'+zongdi+'","'+measure+'","dialog2")>×</span>'+newzongdi+'</li>';
+
+									$('.select2-selection__rendered').append(newzongdihtml);
+									var value = $('#farms-notclear').val()*1-measure*1;
+									$('#farms-notclear').val(value.toFixed(2));
+									var newvalue = $('#farms-measure').val()*1 + measure*1;
+									$('#farms-measure').val(newvalue.toFixed(2));
+									$('#temp_measure').val(newvalue.toFixed(2));
+									toHTH();
+									$('#findZongdi').val('');
+									$('#findMeasure').val('');
+									var ttpozongdi = $('#ttpozongdi-zongdi').val();
+									var zongdistr = zongdi+"("+measure+")";
+									$('#ttpozongdi-zongdi').val(zongdistr+'、'+ttpozongdi);
+									var ttpozongdi = $('#ttpozongdi-zongdi').val();
+									var last = ttpozongdi.substr(ttpozongdi.length-1,1);
+									if(last == '、') {
+										$('#ttpozongdi-zongdi').val(ttpozongdi.substring(0,ttpozongdi.length-1));
+									}
+									var newtempzongdi = $('#new-zongdi').val();
+									$("#new-zongdi").val(zongdi+'|'+newtempzongdi);
+
+									$('#ymeasure').val(0);
+									var ttpoarea = $('#ttpozongdi-area').val();
+
+									$('#ttpozongdi-area').val(ttpoarea*1 + measure*1);
 								}
-								var newtempzongdi = $('#new-zongdi').val();
-		  						$("#new-zongdi").val(zongdi+'|'+newtempzongdi);
-		  						
-					  			$('#ymeasure').val(0);	
-					  			var ttpoarea = $('#ttpozongdi-area').val();
-								
-					  			$('#ttpozongdi-area').val(ttpoarea*1 + measure*1);
+
+
 		  					}
 	  						
 		  				}
@@ -531,7 +539,9 @@ $( "#dialog" ).dialog({
 });
 //点击宗地输入框弹出宗地信息查找框
 $('#inputZongdi').dblclick(function(){
-	if($('#oldfarms-notclear').val() > 0) {
+	var notclear = $('#farms-notclear').val();
+
+	if(notclear > 0) {
 		$("#dialogSelect").val('dialog2');
 		$( "#dialog2" ).dialog( "open" );
 	}
@@ -665,17 +675,7 @@ function toHTH()
 	arrayhth[2] = cutZero(contractarea.toFixed(2));
 	$('#farms-contractnumber').val(arrayhth.join('-'));
 	$('#farms-contractarea').val(arrayhth[2]);
-	
-	var hth = $('#oldfarms-contractnumber').val();
-	var arrayhth = hth.split('-');
-	$.each(arrayhth,function(n,value) { 
-		if(value == '')
-			arrayhth.splice(n,1);
-	});
-	var oldcontractarea = $('#oldfarms-measure').val()*1 + $('#oldfarms-notclear').val()*1 - $('#oldfarms-notstate').val()*1;
-	arrayhth[2] = cutZero(oldcontractarea.toFixed(2));
-	$('#oldfarms-contractarea').val(arrayhth[2]);
-	$('#oldfarms-contractnumber').val(arrayhth.join('-'));
+
 }
 $('#input-notclear').blur(function(){
 	var input = $(this).val();

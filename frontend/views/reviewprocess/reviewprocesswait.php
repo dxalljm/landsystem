@@ -44,7 +44,7 @@ $this->params ['breadcrumbs'] [] = $this->title;
     <?php 
 //     var_dump(Auditprocess::isShowProcess('承包经营权转让'));
     if(Auditprocess::isShowProcess('承包经营权转让')) {
-    if($farmstransfer) {?>
+    if($ttpozongdi) {?>
     <h3>宜农林地承包经营权转让审批</h3>
 						<table class="table table-bordered table-hover">
 							<tr height="40px">
@@ -60,7 +60,7 @@ $this->params ['breadcrumbs'] [] = $this->title;
 							</tr>
 							<?php 
 // 							var_dump($farmstransfer);exit;
-							foreach ($farmstransfer as $value) {
+							foreach ($ttpozongdi as $value) {
 //								var_dump($value);
 								$newfarm = Farms::find()->where(['id'=>$value['newfarms_id']])->one();
 								$oldfarm = Farms::find()->where(['id'=>$value['oldfarms_id']])->one();

@@ -19,8 +19,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'menuname')->textInput(['maxlength' => 500]) ?>
 
     <?= $form->field($model, 'menuurl')->textInput(['maxlength' => 500]) ?>
-	
-	
+
+    <?= $form->field($model, 'dropdown')->textInput(['maxlength' => 500]) ?>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

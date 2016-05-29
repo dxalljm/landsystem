@@ -281,6 +281,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$processs = explode('>',$auditprocess->process);
 //     	var_dump();exit;
     	$reviewprocessModel = new Reviewprocess();
+//		var_dump($reviewprocessModel->attributes);exit;
     	$reviewprocessModel->oldfarms_id = $oldfarms_id;
     	$reviewprocessModel->newfarms_id = $newfarms_id;
     	$reviewprocessModel->ttpozongdi_id = $ttpozongdi_id;
@@ -289,18 +290,21 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$reviewprocessModel->create_at = time();
     	$reviewprocessModel->update_at = $reviewprocessModel->create_at;
     	$reviewprocessModel->operation_id = $auditprocess_id;
-//     	var_dump($processs);exit;
+//		$reviewprocessModel->estate = 1;
+//     	var_dump($reviewprocessModel->attributes);exit;
     	for($i=0;$i<count($processs);$i++) {
-    		if($processs[$i] == 'estate')
-    			$reviewprocessModel->$processs[$i] = 2;
+			$str = $processs[$i];
+    		if($str == 'estate')
+    			$reviewprocessModel->$str = 2;
     		else
-    			$reviewprocessModel->$processs[$i] = 3;
-    		if($processs[$i] == 'leader')
+    			$reviewprocessModel->$str = 3;
+    		if($str == 'leader')
     			if($i == 0)
-    				$reviewprocessModel->$processs[$i] = 2;
-    			else 
-    				$reviewprocessModel->$processs[$i] = 3;
+    				$reviewprocessModel->$str = 2;
+    			else
+    				$reviewprocessModel->$str = 3;
     	}
+		
     	$reviewprocessModel->state = 4;
 //     	var_dump($reviewprocessModel);exit;
     	if($reviewprocessModel->save()) {

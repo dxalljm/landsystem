@@ -20,7 +20,7 @@ use app\models\Loan;
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">
-                        部分转让</h3>
+                        整体转让</h3>
                 </div>
                 <div class="box-body">
                 <?php if(!Farms::getLocked($_GET['farms_id'])) {?>
@@ -51,7 +51,7 @@ use app\models\Loan;
             'format'=>'raw',
             //'class' => 'btn btn-primary btn-lg',
             'value' => function($model,$key){
-            	$url = ['farms/farmstozongdi','farms_id'=>$_GET['farms_id'],'newfarms_id'=>$model->id];
+            	$url = ['farms/farmstransfermergecontract','farms_id'=>$_GET['farms_id'],'newfarms_id'=>$model->id];
             	$disputerows = Dispute::find()->where(['farms_id'=>$model->id])->count();
             	if($disputerows) {
             		$option = '转让<i class="fa fa-commenting"></i>';

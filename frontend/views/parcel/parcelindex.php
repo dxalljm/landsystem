@@ -58,6 +58,7 @@ $data = arraySearch::find($totalData)->search();
 						        <td><strong></strong></td>
 						        <td><strong></strong></td>
 								<td><strong></strong></td>
+								<td><strong></strong></td>
 						        <td><strong>'.$data->count('farms_id',false).'块</strong></td>
 						        </tr>',
                             'columns' => [
@@ -65,7 +66,8 @@ $data = arraySearch::find($totalData)->search();
                                 'unifiedserialnumber',
                                 'agrotype',
                                 'stonecontent',
-                                'grossarea',
+                                'netarea',
+                                'figurenumber',
                                 [
                                 	'attribute' => 'farms_id',
                                 	'value' => function ($model) {

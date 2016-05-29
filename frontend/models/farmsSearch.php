@@ -22,8 +22,8 @@ class farmsSearch extends Farms
     public function rules()
     {
         return [
-            [['id', 'create_at', 'update_at','state','oldfarms_id','locked'], 'integer'],
-            [['farmname', 'farmername', 'address','measure','notstateinfo', 'management_area','telephone', 'spyear', 'zongdi', 'cooperative_id','notclear','surveydate', 'groundsign', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate','latitude','longitude','accountnumber','contractarea'], 'safe'],
+            [['id', 'create_at', 'update_at','state','oldfarms_id','locked','management_area'], 'integer'],
+            [['farmname', 'farmername', 'address','measure','notstateinfo','telephone', 'spyear', 'zongdi', 'cooperative_id','notclear','surveydate', 'groundsign', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate','latitude','longitude','accountnumber','contractarea','cardid'], 'safe'],
             [['notstate'], 'number'],
         ];
     }

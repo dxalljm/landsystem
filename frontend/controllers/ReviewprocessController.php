@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use app\models\Ttpo;
 use Yii;
 use app\models\Reviewprocess;
 use frontend\models\ReviewprocessSearch;
@@ -49,7 +50,9 @@ class ReviewprocessController extends Controller
     	} else {
     		$whereArray = Farms::getManagementArea();
     	}
-        $farmstransfer = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer'])->all();
+		$Identification = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
+        $farmstransfer = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer',$Identification=>2])->all();
+//		var_dump($farmstransfer);exit;
 
 		$projectapplication = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'projectapplication'])->all();
        	
@@ -62,6 +65,75 @@ class ReviewprocessController extends Controller
         ]);
     }
 
+	public function actionReviewprocesswait()
+	{
+
+		$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+		if($temp) {
+			$whereArray = Farms::getUserManagementArea($temp['user_id']);
+		} else {
+			$whereArray = Farms::getManagementArea();
+		}
+		$ttpozongdi = Ttpozongdi::find()->where(['state'=>0])->all();
+
+		$projectapplication = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'projectapplication'])->all();
+
+		$loan = Reviewprocess::find()->where(['management_area' => $whereArray['id'],'actionname'=>'loancreate'])->all();
+
+		return $this->render('reviewprocesswait', [
+			'ttpozongdi' => $ttpozongdi,
+			'projectapplication' => $projectapplication,
+			'loan' => $loan,
+		]);
+	}
+
+	public function actionReviewprocessing()
+	{
+
+		$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+		if($temp) {
+			$whereArray = Farms::getUserManagementArea($temp['user_id']);
+		} else {
+			$whereArray = Farms::getManagementArea();
+		}
+		$Identification = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
+		$farmstransfer = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer',$Identification=>1,'state'=>4])->all();
+//		var_dump($farmstransfer);exit;
+
+		$projectapplication = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'projectapplication'])->all();
+
+		$loan = Reviewprocess::find()->where(['management_area' => $whereArray['id'],'actionname'=>'loancreate'])->all();
+
+		return $this->render('reviewprocessindex', [
+			'farmstransfer' => $farmstransfer,
+			'projectapplication' => $projectapplication,
+			'loan' => $loan,
+		]);
+	}
+
+	public function actionReviewprocessfinished()
+	{
+
+		$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+		if($temp) {
+			$whereArray = Farms::getUserManagementArea($temp['user_id']);
+		} else {
+			$whereArray = Farms::getManagementArea();
+		}
+//		$Identification = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
+		$farmstransfer = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer','state'=>7])->all();
+//		var_dump($farmstransfer);exit;
+
+		$projectapplication = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'projectapplication'])->all();
+
+		$loan = Reviewprocess::find()->where(['management_area' => $whereArray['id'],'actionname'=>'loancreate'])->all();
+
+		return $this->render('reviewprocessindex', [
+			'farmstransfer' => $farmstransfer,
+			'projectapplication' => $projectapplication,
+			'loan' => $loan,
+		]);
+	}
     /**
      * Displays a single Reviewprocess model.
      * @param integer $id

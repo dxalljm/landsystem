@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use Composer\IO\NullIO;
 use Yii;
 use app\models\Farms;
 use app\models\User;
@@ -711,21 +712,60 @@ class FarmsController extends Controller {
 	}
 	// 转让主页面
 	public function actionFarmsttpomenu($farms_id) {
-		$ttpoModel = Ttpo::find ()->orWhere ( [ 
-				'oldfarms_id' => $farms_id 
-		] )->orWhere ( [ 
-				'newfarms_id' => $farms_id 
-		] )->all ();
+//		$ttpoModel = Ttpo::find ()->orWhere ( [
+//				'oldfarms_id' => $farms_id
+//		] )->orWhere ( [
+//				'newfarms_id' => $farms_id
+//		] )->all ();
 		$ttpozongdiModel = Ttpozongdi::find ()->orWhere ( [ 
 				'oldfarms_id' => $farms_id 
 		] )->orWhere ( [ 
 				'newfarms_id' => $farms_id 
 		] )->all ();
+
 		Logs::writeLog ( '农场转让信息', $farms_id );
 		return $this->render ( 'farmsttpomenu', [ 
-				'ttpoModel' => $ttpoModel,
+//				'ttpoModel' => $ttpozongdiModel,
 				'ttpozongdiModel' => $ttpozongdiModel,
 				'farms_id' => $farms_id 
+		] );
+	}
+// 整体转让选择页面
+	public function actionFarmsttpowhole($farms_id) {
+		$ttpoModel = Ttpo::find ()->orWhere ( [
+			'oldfarms_id' => $farms_id
+		] )->orWhere ( [
+			'newfarms_id' => $farms_id
+		] )->all ();
+		$ttpozongdiModel = Ttpozongdi::find ()->orWhere ( [
+			'oldfarms_id' => $farms_id
+		] )->orWhere ( [
+			'newfarms_id' => $farms_id
+		] )->all ();
+		Logs::writeLog ( '农场转让信息', $farms_id );
+		return $this->render ( 'farmsttpowhole', [
+			'ttpoModel' => $ttpoModel,
+			'ttpozongdiModel' => $ttpozongdiModel,
+			'farms_id' => $farms_id
+		] );
+	}
+	// 部分转让选择页面
+	public function actionFarmsttpopart($farms_id) {
+		$ttpoModel = Ttpo::find ()->orWhere ( [
+			'oldfarms_id' => $farms_id
+		] )->orWhere ( [
+			'newfarms_id' => $farms_id
+		] )->all ();
+		$ttpozongdiModel = Ttpozongdi::find ()->orWhere ( [
+			'oldfarms_id' => $farms_id
+		] )->orWhere ( [
+			'newfarms_id' => $farms_id
+		] )->all ();
+		Logs::writeLog ( '农场转让信息', $farms_id );
+		return $this->render ( 'farmsttpopart', [
+			'ttpoModel' => $ttpoModel,
+			'ttpozongdiModel' => $ttpozongdiModel,
+			'farms_id' => $farms_id
 		] );
 	}
 	// 查看过户信息
@@ -889,12 +929,13 @@ class FarmsController extends Controller {
 		}
 	}
 	//整体合并
-	public function actionFarmstransfermerge($farms_id,$newfarms_id) {
-		$oldmodel = $this->findModel ( $farms_id );	
+	public function actionFarmstransfermergecontract($farms_id,$newfarms_id) {
+		$oldmodel = $this->findModel ( $farms_id );
 		$old = $oldmodel->attributes;
+
 		$newmodel = $this->findModel($newfarms_id);
 		$new = $newmodel->attributes;
-	
+
 		$reviewprocess = new Reviewprocess ();
 	
 		$oldnewmodel = new Farms();
@@ -907,17 +948,12 @@ class FarmsController extends Controller {
 			$lockedinfoModel = new Lockedinfo ();
 			$lockedinfoModel->farms_id = $farms_id;
 			$lockedinfoModel->lockedcontent = '整体过户审核中，已被冻结。';
-			$lockedinfoModel->save ();
+			$lockedinfoModel->save();
 			$lockedinfoModel = new Lockedinfo ();
 			$lockedinfoModel->farms_id = $newfarms_id;
 			$lockedinfoModel->lockedcontent = '整体过户审核中，已被冻结。';
-			$lockedinfoModel->save ();
-			
-			$oldmodel->locked = 1;
-			$oldmodel->save();
-			$newmodel->locked = 1;
-			$newmodel->save();
-			
+			$lockedinfoModel->save();
+
 			$newnewmodel->farmname = $newmodel->farmname;
 			$newnewmodel->farmername = $newmodel->farmername;
 			$newnewmodel->cardid = $newmodel->cardid;
@@ -929,7 +965,7 @@ class FarmsController extends Controller {
 			$newnewmodel->zongdi = $newmodel->zongdi;
 			$newnewmodel->cooperative_id = $newmodel->cooperative_id;
 			$newnewmodel->surveydate = $newmodel->surveydate;
-			$newnewmodel->groundsign = $newmodel->groudsign;
+//			$newnewmodel->groundsign = $newmodel->groudsign;
 			$newnewmodel->farmersign = $newmodel->farmersign;
 			$newnewmodel->create_at = time();
 			$newnewmodel->pinyin = $newmodel->pinyin;
@@ -942,7 +978,7 @@ class FarmsController extends Controller {
 			$newnewmodel->accountnumber = $newmodel->accountnumber;
 			$newnewmodel->remarks = $newmodel->remarks;
 			$newnewmodel->update_at = time();
-			
+
 			$newnewmodel->notclear = $newmodel->notclear;
 			$newnewmodel->notstate = $newmodel->notstate;
 			$newnewmodel->contractarea = $newmodel->contractarea;
@@ -950,12 +986,20 @@ class FarmsController extends Controller {
 			$newnewmodel->state = 0;
 			$newnewmodel->locked = 0;
 			$newnewmodel->save();
-			
-			$oldfarmer = Farmer::find()->where(['farms_id'=>$oldmodel->id])->one();
+
+			$oldfarmer = Farmer::find()->where(['farms_id' => $oldmodel->id])->one();
+
 			$oldfarmerModel = Farmer::findOne($oldfarmer['id']);
-			$oldfarmerModel->id = '';
+//			$oldfarmerModel->id = '';
 			$farmerModel = new Farmer();
-			$farmerModel = $oldfarmerModel;
+			if ($oldfarmerModel) {
+				unset($oldfarmerModel->id);
+				$farmerModel->attributes = $oldfarmerModel->attributes;
+//				var_dump($farmerModel);exit;
+				$farmerModel->id = Null;
+			}
+			else
+				$farmerModel->farms_id = $oldmodel->id;
 			$farmerModel->save();
 			
 			$ttpoModel = new Ttpozongdi ();
@@ -996,8 +1040,14 @@ class FarmsController extends Controller {
 			$ttpoModel->actionname = \Yii::$app->controller->action->id;
 			$ttpoModel->state = 0;
 			$ttpoModel->save ();
-			$newAttr = $newModel->attributes;
-			Logs::writeLog ( '农场转让信息', $newModel->id, $old, $newAttr );
+			$Oldmodel = $this->findModel($ttpoModel->oldfarms_id);
+			$Oldmodel->locked = 1;
+			$Oldmodel->save();
+			$Newmocel = $this->findModel($ttpoModel->newfarms_id);
+			$Newmocel->locked = 1;
+			$Newmocel->save();
+			$newAttr = $newmodel->attributes;
+			Logs::writeLog ( '农场转让信息', $newmodel->id, $old, $newAttr );
 			$oldFarm = Farms::find()->where(['id'=>$ttpoModel->oldfarms_id])->one();
 			$newFarm = Farms::find()->where(['id'=>$ttpoModel->newfarms_id])->one();
 			return $this->redirect ([
@@ -1015,9 +1065,9 @@ class FarmsController extends Controller {
 			// 					'reviewprocessid' => $reviewprocessID
 			// 			] );
 		} else {
-			return $this->render ( 'farmstransfer', [
-					'model' => $oldmodel,
-					'nowModel' => $newmodel,
+			return $this->render ( 'farmstransfermergecontract', [
+					'oldFarm' => $oldmodel,
+					'newFarm' => $newmodel,
 					'farms_id' => $farms_id
 			] );
 		}
@@ -1127,7 +1177,59 @@ class FarmsController extends Controller {
 			] );
 		}
 	}
-	
+//整体转让合并修改页面
+	public function actionFarmsttpoupdatefarmstransfermergecontract($id)
+	{
+
+		$ttpoModel = Ttpozongdi::findOne($id);
+		$oldmodel = Farms::findOne($ttpoModel->oldfarms_id);
+		$newmodel = Farms::findOne($ttpoModel->newfarms_id);
+		$post = Yii::$app->request->post ();
+		if ($post) {
+			$newmodel->load ( Yii::$app->request->post () );
+			$newmodel->save();
+			$ttpoModel->create_at = (string)time ();
+			// 			var_dump($post['Farms']);exit;
+// 			if($ttpoModel->actionname !== 'farmstransfer') {
+// 				//原转让改变的信息
+// 				$ttpoModel->oldchangezongdi = $post['oldzongdichange'];
+// 				$ttpoModel->oldchangemeasure = $post['oldmeasure'];
+// 				$ttpoModel->oldchangenotclear = $post['oldnotclear'];
+// 				$ttpoModel->oldchangenotstate = $post['oldnotstate'];
+// 				$ttpoModel->oldchangecontractnumber = $post['oldcontractnumber'];
+// 			}
+			//新转让改变信息
+			$ttpoModel->newchangezongdi = $post['Farms']['zongdi'];
+			$ttpoModel->newchangemeasure = $post['Farms']['measure'];
+			$ttpoModel->newchangenotclear = $post['Farms']['notclear'];
+			$ttpoModel->newchangenotstate = $post['Farms']['notstate'];
+			$ttpoModel->newchangecontractnumber = $post['Farms']['contractnumber'];
+
+			$ttpoModel->ttpozongdi = $post['ttpozongdi'];
+			$ttpoModel->ttpoarea = $post['ttpoarea'];
+
+			$ttpoModel->state = 0;
+			$ttpoModel->save ();
+
+			Zongdioffarm::zongdiUpdate($ttpoModel->oldfarms_id,$ttpoModel->newfarms_id, $ttpoModel->newzongdi);
+			return $this->redirect ([
+				'farmsttpozongdiview',
+				'id'=> $ttpoModel->id,
+				'farms_id'=>$ttpoModel->oldfarms_id,
+				'ttpoModel' => $ttpoModel,
+				'oldFarm' => $oldmodel,
+				'newFarm' => $newmodel,
+			]);
+		} else {
+			return $this->render ( 'farmsttpoupdatefarmstransfermergecontract', [
+				'oldFarm' => $oldmodel,
+				'newFarm' => $newmodel,
+				'ttpoModel' => $ttpoModel,
+				'farms_id' => $ttpoModel->oldfarms_id,
+			] );
+		}
+	}
+
 	public function actionFarmsttpoupdatefarmssplit($id)
 	{
 	
@@ -1346,29 +1448,42 @@ class FarmsController extends Controller {
 		] );
 	}
 	
-	// 农场转让
-	public function actionFarmsttpozongdi($farms_id) {
-		$search = Yii::$app->request->post ( 'search' );
-		$management_area = Farms::getManagementArea ();
-		$farmsSearch = null;
-		$dataProvider = null;
-		if ($search) {
-			$farmsSearch = new farmsSearch ();
-			$params = Yii::$app->request->queryParams;
-			$params ['farmsSearch'] ['farmname'] = $search;
-			$params ['farmsSearch'] ['farmername'] = $search;
-			$params ['farmsSearch'] ['management_area'] = $management_area ['id'];
-// 			$params ['farmsSearch'] ['state'] = 1;
-// 			$params ['farmsSearch'] ['locked'] = 0;
-			$dataProvider = $farmsSearch->search ( $params );
-		}
+	// 农场转让,部分合并
+	public function actionFarmsttpozongdi($farms_id) 
+	{
+		$management_area = Farms::getManagementArea();
+		$searchModel = new farmsSearch ();
+
+		$params = Yii::$app->request->queryParams;
+		$params['farmsSearch']['management_area'] = $management_area['id'];
+		$params['farmsSearch']['state'] = 1;
+		$params['farmsSearch']['locked'] = 0;
+		$dataProvider = $searchModel->search ( $params );
+
 		return $this->render ( 'farmsttpozongdi', [ 
-				'searchModel' => $farmsSearch,
+				'searchModel' => $searchModel,
 				'dataProvider' => $dataProvider,
 				'oldfarms_id' => $farms_id 
 		] );
 	}
-	
+	// 农场转让，整体合并
+	public function actionFarmstransfermerge($farms_id)
+	{
+		$management_area = Farms::getManagementArea();
+		$searchModel = new farmsSearch ();
+
+		$params = Yii::$app->request->queryParams;
+		$params['farmsSearch']['management_area'] = $management_area['id'];
+		$params['farmsSearch']['state'] = 1;
+		$params['farmsSearch']['locked'] = 0;
+		$dataProvider = $searchModel->search ( $params );
+
+		return $this->render ( 'farmstransfermerge', [
+			'searchModel' => $searchModel,
+			'dataProvider' => $dataProvider,
+			'oldfarms_id' => $farms_id
+		] );
+	}
 	public function actionOldzongdichange($yzongdi,$zongdi,$measure,$state)
 	{
 		$oldarr = explode ( '、',$yzongdi );
@@ -1915,7 +2030,7 @@ class FarmsController extends Controller {
 				if (Fireprevention::find ()->where ( [ 
 						'farms_id' => $_GET ['farms_id'] 
 				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count ())
-					$$value ['info'] = '完成防火工作';
+					$value ['info'] = '完成防火工作';
 				
 				$value ['description'] = '防火宣传、合同签订信息';
 				break;

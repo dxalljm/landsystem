@@ -106,11 +106,8 @@ class TtpozongdiController extends Controller
 		
 		if($model->newfarms_id) {
 			$newfarms = Farms::findOne($model->newfarms_id);
-			if($model->actionname == 'farmstozongdi') {
-				$newfarms->locked = 0;
-				$newfarms->save();
-			} else
-				$newfarms->delete();
+			$newfarms->locked = 0;
+			$newfarms->save();
 		}
 		if($model->oldnewfarms_id) {
 			$newfarms = Farms::findOne($model->oldnewfarms_id);
