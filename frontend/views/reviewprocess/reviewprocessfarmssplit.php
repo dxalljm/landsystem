@@ -9,8 +9,11 @@ use app\models\Tablefields;
 use app\models\Farms;
 use app\models\Estate;
 use app\models\User;
+<<<<<<< HEAD
 use app\models\Lease;
 use app\models\ManagementArea;
+=======
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 /* @var $this yii\web\View */
 /* @var $model app\models\Reviewprocess */
 
@@ -39,6 +42,7 @@ use app\models\ManagementArea;
 .ttpoprint {
 	font-family: "仿宋";
 	font-size:15px;
+<<<<<<< HEAD
 	border: 1px;
 }
 .ttpotitle{
@@ -77,6 +81,8 @@ use app\models\ManagementArea;
 }
 .zongdi15{
 	font-size:15px;
+=======
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 }
 .tablehead{ width:100%; height:30px; line-height:20px; text-align:center; float:left; font-size:30px; font-family:"黑体"}
 </style>    
@@ -93,6 +99,7 @@ use app\models\ManagementArea;
             </div>
             <!-- /.box-header -->
             <div class="box-body">
+<<<<<<< HEAD
             <span class="ttpotitle">管理区：<?= ManagementArea::getManagementareaName($oldfarm->id)?><?php 
 				if($ttpoModel->actionname == 'farmstransfer' or $ttpoModel->actionname == 'farmstransfermergecontract') 
 					echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;整体转让';
@@ -144,6 +151,66 @@ use app\models\ManagementArea;
 			    <?php 
 			    $tableclass = 'zongdi13';
 			    if($ttpoModel->oldzongdi) {
+=======
+             <table width="100%" border="1" cellpadding="0" cellspacing="0" class="ttpoprint">
+			  <tr height="30px">
+			    <td width="16%" align="center">原农场名称</td>
+			    <td width="16%" align="center">原法人</td>
+			    <td width="16%" align="center">原面积</td>
+			    <td width="16%" align="center">现农场名称</td>
+			    <td width="17%" align="center">现法人</td>
+			    <td width="19%" align="center">现面积</td>
+			  </tr>
+			  <tr height="30px">
+			    <td align="center"><?= $oldfarm->farmname?></td>
+			    <td align="center"><?= $oldfarm->farmername?></td>
+			    <td align="center"><?= $oldfarm->contractarea?></td>
+			    <td align="center"><?= $newfarm->farmname?></td>
+			    <td align="center"><?= $newfarm->farmername?></td>
+			    <td align="center"><?= Farms::getContractnumberArea($newttpozongdi->newchangecontractnumber)?></td>
+			  </tr>
+			  <tr height="30px">
+			    <td align="center">原合同号</td>
+			    <td colspan="2" align="center"><?= $oldfarm->contractnumber?></td>
+			    <td align="center">现合同号</td>
+			    <td colspan="2" align="center"><?= $newttpozongdi->newchangecontractnumber?></td>
+			    </tr>
+			  <tr height="30px">
+			    <td align="center">原法人身份证号</td>
+			    <td colspan="2" align="center"><?= $oldfarm->cardid?></td>
+			    <td align="center">现法人身份证号</td>
+			    <td colspan="2" align="center"><?= $newfarm->cardid?></td>
+			    </tr>
+			  <tr height="30px">
+			    <td align="center">原宗地信息</td><?php if(!empty($oldttpozongdi->oldzongdi)) $zongdiArray = explode('、', $oldttpozongdi->oldzongdi); if($oldfarm->notclear) $zongdiArray[] = '未明确地块面积('.$oldfarm->notclear.')';if($oldfarm->notstate) $zongdiArray[] = '未明确状态面积('.$oldfarm->notstate.')';?>
+			    
+			    <td colspan="2" align="center"><table width="100%" border="0" align="right"><?php for($i = 0;$i<count($zongdiArray);$i++) {
+// 			    	echo $i%6;
+			    	if($i%2 == 0) {
+			    		echo '<tr height="2">';
+			    		echo '<td>';
+			    		echo '<font size="2">'.$zongdiArray[$i].'</font>';
+			    		echo '</td>';
+			    	} else {
+			    		echo '<td>';
+			    		echo '<font size="2">'.$zongdiArray[$i].'</font>';
+			    		echo '</td>';
+			    	} 	
+			    }?></table></td>
+			    <td align="center">现宗地信息</td>
+                <?php if(!empty($newttpozongdi->newchangezongdi)) $zongdiArray = explode('、', $newttpozongdi->newchangezongdi); if($newttpozongdi->newchangenotclear) $zongdiArray[] = '未明确地块面积('.$newttpozongdi->newchangenotclear.')';if($newttpozongdi->newchangenotstate) $zongdiArray[] = '未明确状态面积('.$newttpozongdi->newchangenotstate.')';?>
+			    <td colspan="2" align="center"><table width="100%" border="0" align="center"><?php for($i = 0;$i<count($zongdiArray);$i++) {
+			    	if($i%2 == 0) {
+			    		echo '<tr height="2">';
+			    		echo '<td>';
+			    		echo '<font size="2">'.$zongdiArray[$i].'</font>';
+			    		echo '</td>';
+			    	} else {
+			    		echo '<td>';
+			    		echo '<font size="2">'.$zongdiArray[$i].'</font>';
+			    		echo '</td>';
+			    	}
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			    	
 			    	$ttpooldzongdiRows = count(explode('、', $ttpoModel->oldzongdi));
 // 			    	var_dump(round(($ttpooldzongdiRows-15)/3));
@@ -302,6 +369,7 @@ use app\models\ManagementArea;
 			     <?php if($ttpoModel->actionname !== 'farmstransfer') {?>
 			  
 			  <tr>
+<<<<<<< HEAD
 			  	<td height="30" align="center" bgcolor="" class="ttpotitle">减少面积</td>
 			  	<td colspan="2" align="center" bgcolor=""><?php
 					if($ttpoModel->actionname == 'farmssplitcontinue')
@@ -359,10 +427,64 @@ use app\models\ManagementArea;
 						 <?= $ttpoModel->newchangecontractnumber?></td>
 				 </tr>
 				<?php }?>
+=======
+			    <td height="30px" align="center">减少宗地</td>
+			    <td colspan="2" align="center">
+                <table width="100%" border="0" align="right">
+			      <?php 
+				$zongdiArray = explode('、', $newttpozongdi->ttpozongdi);
+				for($i = 0;$i<count($zongdiArray);$i++) {
+// 			    	echo $i%6;
+			    	if($i%2 == 0) {
+			    		echo '<tr height="2">';
+			    		echo '<td>';
+			    		echo '<font size="2">'.$zongdiArray[$i].'</font>';
+			    		echo '</td>';
+			    	} else {
+			    		echo '<td>';
+			    		echo '<font size="2">'.$zongdiArray[$i].'</font>';
+			    		echo '</td>';
+			    	} 	
+			    }?></table>
+			      </td>
+			    <td align="center">新增宗地</td>
+			    <td colspan="2" align="center">
+			      <table width="100%" border="0" align="right">
+			        <?php 
+				$zongdiArray = explode('、', $newttpozongdi->ttpozongdi);
+				for($i = 0;$i<count($zongdiArray);$i++) {
+// 			    	echo $i%6;
+			    	if($i%2 == 0) {
+			    		echo '<tr height="2">';
+			    		echo '<td>';
+			    		echo '<font size="2">'.$zongdiArray[$i].'</font>';
+			    		echo '</td>';
+			    	} else {
+			    		echo '<td>';
+			    		echo '<font size="2">'.$zongdiArray[$i].'</font>';
+			    		echo '</td>';
+			    	} 	
+			    }?></table>
+			      </td>
+			    </tr>
+			  <tr>
+			  	<td height="30" align="center">减少面积</td>
+			  	<td colspan="2" align="center"><?= $newttpozongdi->ttpoarea?></td>
+			  	<td align="center">新增面积</td>
+			  	<td colspan="2" align="center"><?= $newttpozongdi->ttpoarea?></td>
+			  	</tr>
+			  <tr>
+			  	<td height="30" align="center">剩余面积</td>
+			  	<td colspan="2" align="center"><?= Farms::getContractnumberArea($newttpozongdi->oldchangecontractnumber)?></td>
+			  	<td align="center">原面积</td>
+			  	<td colspan="2" align="center"><?php if($newttpozongdi->newcontractnumber) echo Farms::getContractnumberArea($newttpozongdi->newcontractnumber)?></td>
+			  	</tr>
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			  <?php 
 			  
 			  foreach ($process as $value) { ?>
 			  	<tr>
+<<<<<<< HEAD
 			  	<td align="center" class="ttpotitle"><strong><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?></strong></td>	
 			  	<td colspan="5" align="left">		  				      
 			  				      <?php
@@ -452,6 +574,53 @@ use app\models\ManagementArea;
 									  echo '</tr>';
 									  echo '</table>';
 								  }
+=======
+			  	<td align="center"><strong><?= Tablefields::find()->where(['fields'=>$value.'content'])->one()['cfields']?></strong></td>	
+			  	<td colspan="5" align="left">		  				      
+			  				      <?php 
+			  				      if($value == 'leader')
+			  				      	echo "<br><br>";
+			  					  $classname = 'app\\models\\'.ucfirst($value);
+			  				      	$lists = $classname::attributesList();
+			  				      	$result = Estate::find()->where(['reviewprocess_id'=>$_GET['reviewprocessid']])->one();
+// 			  				      	$lists[] = 'leader';
+// 			  				      	var_dump($result);
+// 			  				      	if($lists) {
+// 			  				      	if($result) {
+			  				      		
+			  				      		echo '<table>';
+			  					      	foreach ($lists as $key=>$list) {
+			  					      		echo '<tr>';
+			  					      		echo '<td>';
+			  					      		if($value == 'estate') {
+				  					      		if($result[$key]) {
+				  					      			echo '<font size="2"><strong>是</strong>&nbsp;</font>';
+				  					      		} else { 
+				  					      			echo '<font size="2"><strong>否</strong></font>';
+				  					      		}
+			  					      		} else {
+				  					      		echo '<font size="2"><strong>是<i class="fa fa-square-o"></i></strong>&nbsp;</font>';
+				  					      		echo '<font size="2"><strong>否<i class="fa fa-square-o"></i></strong></font>';
+			  					      		}
+			  					      		
+			  					      		echo '</td>';
+			  					      		echo '<td>';
+			  					      		
+			  					      		echo '<font size="2">&nbsp;'.$list."</font>";
+			  					      		echo '</td>';
+			  					      		echo '<td>';
+			  					      		if($value == 'estate') {
+			  					      			if($result[$key."content"])
+			  					      				echo '&nbsp;<font size="2"><font ><strong>情况说明：'.$result[$key."content"].'</strong></font>';
+			  					      		} 
+			  					      		echo "</td>";
+			  					      		echo '</tr>';
+			  					      	}
+			  					      	echo '</table>';
+			  					      	
+// 			  				      	}
+// 			  				      	}
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			  				      ?>
 			  				      <br>
 			  				      <font size="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;签字：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日 </font></p>
@@ -494,7 +663,11 @@ use app\models\ManagementArea;
 		LODOP=getLodop();  
 		LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_整页缩放打印输出");
 		strCenterStyle="<style>#ttpoprint {text-align: center}</style>"; 
+<<<<<<< HEAD
 		LODOP.ADD_PRINT_HTM("5%","5%","100%","96%","<body leftmargin=20 topmargin=0>"+document.getElementById('ttpoprint').innerHTML+"</body>");
+=======
+		LODOP.ADD_PRINT_HTM("5%","5%","100%","95%","<body leftmargin=20 topmargin=0>"+document.getElementById('ttpoprint').innerHTML+"</body>");
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		LODOP.SET_PRINT_STYLEA(0,"Horient",3);        
 		LODOP.SET_PRINT_STYLEA(0,"Vorient",2);
 		LODOP.SET_PREVIEW_WINDOW(0,0,0,0,0,"");	

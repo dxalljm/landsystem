@@ -30,7 +30,11 @@ class Finance extends \yii\db\ActiveRecord
     {
         return [
             [['isqcbf', 'other','reviewprocess_id','financeisAgree'], 'integer'],
+<<<<<<< HEAD
             [['isqcbfcontent', 'othercontent','financeisAgreecontent','financeundo'], 'string']
+=======
+            [['isqcbfcontent', 'othercontent','financeisAgreecontent'], 'string']
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         ];
     }
 
@@ -47,8 +51,12 @@ class Finance extends \yii\db\ActiveRecord
             'othercontent' => '情况说明',
         	'reviewprocess_id' => '流程ID',
         	'financeisAgree' => '是否同意',
+<<<<<<< HEAD
         	'financeisAgreecontent'=>'情况说明',
             'financeundo' => '退回',
+=======
+        	'financeisAgreecontent'=>'情况说明'
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         ];
     }
     
@@ -57,7 +65,11 @@ class Finance extends \yii\db\ActiveRecord
     	return [
     		'isqcbf' => '是否欠缴宜农林地承包费',
             'other' => '是否存在其他款项',
+<<<<<<< HEAD
 //    		'financeisAgree' => ''
+=======
+    		'financeisAgree' => ''
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     	];
     }
     
@@ -69,6 +81,7 @@ class Finance extends \yii\db\ActiveRecord
     			'financeisAgree'
     	];
     }
+<<<<<<< HEAD
 
     public static function loanAttributesList()
     {
@@ -87,4 +100,6 @@ class Finance extends \yii\db\ActiveRecord
             'financeisAgree'
         ];
     }
+=======
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 }

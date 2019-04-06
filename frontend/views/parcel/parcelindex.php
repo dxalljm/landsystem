@@ -56,7 +56,11 @@ $data = arraySearch::find($totalData)->search();
 						        <td><strong></strong></td>
 								
 								<td><strong></strong></td>
+<<<<<<< HEAD
 								<td><strong>'.$netareaSum.'</strong></td>
+=======
+								<td><strong></strong></td>
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 						        <td><strong>'.$data->count('farms_id',false).'块</strong></td>
 						        </tr>',
                             'columns' => [
@@ -64,6 +68,7 @@ $data = arraySearch::find($totalData)->search();
                                 'unifiedserialnumber',
                                 'agrotype',
                                 'stonecontent',
+<<<<<<< HEAD
 //                                 'netarea',
                                 'figurenumber',
                                 [
@@ -78,6 +83,10 @@ $data = arraySearch::find($totalData)->search();
                                 		}
                                 }
                                 ],
+=======
+                                'netarea',
+                                'figurenumber',
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
                                 [
                                 	'attribute' => 'farms_id',
                                 	'value' => function ($model) {

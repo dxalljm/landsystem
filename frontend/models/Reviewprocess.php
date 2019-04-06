@@ -58,7 +58,11 @@ class Reviewprocess extends \yii\db\ActiveRecord
 	public function rules() 
     { 
         return [
+<<<<<<< HEAD
             [['newfarms_id','ttpozongdi_id', 'operation_id', 'create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime', 'regulations', 'regulationstime', 'oldfarms_id', 'management_area', 'state', 'project', 'projecttime','samefarms_id'], 'integer'],
+=======
+            [['newfarms_id','ttpozongdi_id', 'operation_id', 'create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime', 'regulations', 'regulationstime', 'oldfarms_id', 'management_area', 'state', 'project', 'projecttime'], 'integer'],
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
             [['projectcontent'], 'string'],
             [['estatecontent','financecontent', 'filereviewcontent', 'publicsecuritycontent', 'leadercontent', 'mortgagecontent', 'steeringgroupcontent', 'regulationscontent', 'actionname','undo','fromundo'], 'string', 'max' => 500],
 		];
@@ -107,10 +111,25 @@ class Reviewprocess extends \yii\db\ActiveRecord
             'projectcontent' => '项目科内容',
             'projecttime' => '项目科审核时间',
         	'ttpozongdi_id' => '转让信息ID',
+<<<<<<< HEAD
 			'undo' => '退回',
 			'fromundo' => '从哪退回',
 			'samefarms_id' => '分户指向原农场ID'
         ];
+=======
+        ]; 
+    } 
+    
+    public static function getProcessRole($Identification)
+    {
+//     	var_dump($Identification);
+    	$processname = Processname::find()->where(['Identification'=>$Identification])->one();
+//     	var_dump($processname);exit;
+   		$result['rolename'] = $processname['rolename'];
+   		$result['sparerole'] = $processname['sparerole'];
+    	$result['isFinished'] = Reviewprocess::find()->where([$Identification=>2])->count();
+    	return $result;
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     }
 
 	public static function getProcessRole($Identification)
@@ -147,6 +166,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
 //		var_dump(array_intersect($result,$auArr));exit;
     	return array_intersect($result,$auArr);
     }
+<<<<<<< HEAD
 
 	public static function getUndo($model)
 	{
@@ -692,6 +712,51 @@ class Reviewprocess extends \yii\db\ActiveRecord
 		$State = $model->state;
 		$model->update_at = time();
 //		var_dump($model);exit;
+=======
+    
+    public static function isNextProcess($id)
+    {
+    	$model = self::findOne($id);
+    	$processs = self::getProcess($model->operation_id);
+    	$processname = Processname::find()->where(['Identification'=>'leader'])->one();
+    	$rows = count($processs);
+    	$i = 0;
+    	$no = true;
+//     	var_dump($processs);
+    	foreach ($processs as $value) {
+    		if($model->$value == 0 or $model->$value == 2)
+    			$no = false;
+    	}
+//     	var_dump($no);exit;
+    	
+    	foreach ($processs as $value) {
+    		if(($model->$value == 3) and $no) {
+    			$result = $model->$value-1;
+    			$model->$value = $result;
+    		}
+    		if($model->$value == 1)
+    			$i++;
+    	}
+    	$l = $rows - 1;
+    	if($i < $l) {
+    		$model->leader = 3;
+    	} else
+    		$model->leader = 2;
+    	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+		if(User::getItemname() == $processname['rolename'] or $temp) {
+			$model->leader = 1;
+			$i++;
+		}
+    	if($i >= $rows) {
+    		$model->state = 7;
+    		$state = true;
+    	}
+		else {
+			$model->state = 4;
+			$state = false;
+		}	
+// 		var_dump(self::isShowProess($model->operation_id));exit;
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		$model->save();
 		Logs::writeLogs('更新审核信息',$model);
 		return $State;
@@ -1346,16 +1411,25 @@ class Reviewprocess extends \yii\db\ActiveRecord
     //返回审核流程
     public static function getProcess($id)
     {
+<<<<<<< HEAD
+=======
+    	
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     	return explode('>', Auditprocess::findOne($id)['process']);
     }
     //判断当前角色是否审核流程
     public static function isShowProess($auditprocess_id) {
+<<<<<<< HEAD
 //		if(User::getItemname()) {
 //			return true;
 //		}
 //		var_dump($auditprocess_id);exit;
     	$process = Reviewprocess::getProcess($auditprocess_id);
 //		var_dump($process);exit;
+=======
+//     	var_dump($actionname);exit;
+    	$process = Reviewprocess::getProcess($auditprocess_id);
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
 //     	var_dump($process);exit;
     	foreach ($process as $p) {
@@ -1376,10 +1450,17 @@ class Reviewprocess extends \yii\db\ActiveRecord
    
     
     //保存流程
+<<<<<<< HEAD
     public static function processRun($auditprocess_id,$oldfarms_id=NULL,$newfarms_id=null,$ttpozongdi_id = NULL,$samefarms_id=null)
     { 	
     	$auditprocess = Auditprocess::find()->where(['id'=>$auditprocess_id])->one();
 //     	var_dump($auditprocess);exit;
+=======
+    public static function processRun($auditprocess_id,$oldfarms_id=NULL,$newfarms_id=null,$ttpozongdi_id = NULL)
+    { 	
+    	$auditprocess = Auditprocess::find()->where(['id'=>$auditprocess_id])->one();
+//     	var_dump($auditprocess_id);exit;
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     	$processs = explode('>',$auditprocess->process);
 //     	var_dump();exit;
     	$reviewprocessModel = new Reviewprocess();
@@ -1392,8 +1473,11 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$reviewprocessModel->create_at = time();
     	$reviewprocessModel->update_at = $reviewprocessModel->create_at;
     	$reviewprocessModel->operation_id = $auditprocess_id;
+<<<<<<< HEAD
 		$reviewprocessModel->samefarms_id = $samefarms_id;
 		$reviewprocessModel->undo = '';
+=======
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 //		$reviewprocessModel->estate = 1;
 //     	var_dump($reviewprocessModel->attributes);exit;
     	for($i=0;$i<count($processs);$i++) {
@@ -1402,6 +1486,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
     			$reviewprocessModel->$str = 2;
     		else
     			$reviewprocessModel->$str = 3;
+<<<<<<< HEAD
     		if($str == 'leader') {
 				if ($i == 0)
 					$reviewprocessModel->$str = 2;
@@ -1415,6 +1500,13 @@ class Reviewprocess extends \yii\db\ActiveRecord
 				$reviewprocessModel->estate = 1;
 				$reviewprocessModel->mortgage = 2;
 			}
+=======
+    		if($str == 'leader')
+    			if($i == 0)
+    				$reviewprocessModel->$str = 2;
+    			else
+    				$reviewprocessModel->$str = 3;
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     	}
 		
     	$reviewprocessModel->state = 4;

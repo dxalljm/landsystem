@@ -121,10 +121,14 @@ class MachineController extends Controller
     	$machine = Machine::find()->where(['id'=>$id])->one();
 
     	$result['machinename'] = $machine['productname'];
+<<<<<<< HEAD
     	$result['machinemodel'] = $machine['implementmodel'];
         $result['filename'] = $machine['filename'];
         $result['enterprisename'] = $machine['enterprisename'];
         $result['parameter'] = $machine['parameter'];
+=======
+    	
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     	$father_id = Machinetype::find()->where(['id'=>$machine['machinetype_id']])->one()['father_id'];
     	$last = Machinetype::find()->where(['id'=>$father_id])->one();
     	
@@ -148,6 +152,7 @@ class MachineController extends Controller
 // 		var_dump($result);
     	echo json_encode(['status'=>1,'data'=>$result]);
     }
+<<<<<<< HEAD
 
     public function actionMachineyear()
     {
@@ -160,6 +165,9 @@ class MachineController extends Controller
         echo 'finished';
     }
 
+=======
+    
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     public function actionMachinexls()
     {
     	set_time_limit(0);

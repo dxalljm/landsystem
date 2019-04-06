@@ -29,6 +29,7 @@ use app\models\Lease;
 class farmsSearch extends Farms
 {
 	public $farmername;
+<<<<<<< HEAD
 	public $careful;
 	public $carefulwc;
 	public $businesstype;
@@ -82,6 +83,34 @@ class farmsSearch extends Farms
 	{
 		$this->measure = $str;
 		if (!empty($this->measure)) {
+=======
+	
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['id', 'create_at', 'update_at','state','oldfarms_id','locked','management_area'], 'integer'],
+            [['farmname', 'farmername', 'address','measure','notstateinfo','telephone', 'spyear', 'zongdi', 'cooperative_id','notclear','surveydate', 'groundsign', 'farmersign', 'pinyin','farmerpinyin','contractnumber', 'begindate', 'enddate','latitude','longitude','accountnumber','contractarea','cardid'], 'safe'],
+            [['notstate'], 'number'],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        // bypass scenarios() implementation in the parent class
+        return Model::scenarios();
+    }
+
+    
+    public function betweenSearch()
+    {
+    	if(!empty($this->measure)) {
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			preg_match_all('/(.*)([0-9]+?)/iU', $this->measure, $where);
 			//print_r($where);
 

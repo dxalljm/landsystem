@@ -31,11 +31,15 @@ class AppAsset extends AssetBundle
         'vendor/bower/AdminLTE/dist/css/AdminLTE.css',
         'vendor/bower/AdminLTE/dist/css/skins/_all-skins.min.css',
     	'vendor/bower/AdminLTE/dist/css/ionicons.min.css',
+<<<<<<< HEAD
 //        'vendor/bower/AdminLTE/dist/css/material-dashboard.css',
 //    	'vendor/bower/nprogress/nprogress.css',
         'vendor/bower/grumble/css/grumble.min.css',
 //        'vendor/bower/tooltip/themes/2/tooltip.css',
 //        'vendor/bower/jQuery-tips/css/jq22.css',
+=======
+    	'vendor/bower/nprogress/nprogress.css',
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         'css/site.css',
     	'vendor/bower/jquery-ui-1.11.4/jquery-ui.css',
     ];
@@ -46,6 +50,7 @@ class AppAsset extends AssetBundle
         'js/date.js',
         'js/selected.js',
 //     	'js/jquery.imgbox.pack.js',
+<<<<<<< HEAD
          'vendor/bower/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
 
         'vendor/bower/AdminLTE/bootstrap/js/bootstrap.min.js',
@@ -56,14 +61,28 @@ class AppAsset extends AssetBundle
     	'vendor/bower/blueimp-file-upload/js/jquery.fileupload.js',
         'vendor/bower/blueimp-file-upload/js/jquery.fileupload-process.js',
         'vendor/bower/blueimp-file-upload/js/jquery.fileupload-validate.js',
+=======
+//         'vendor/bower/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
+        
+    		
+        'vendor/bower/AdminLTE/bootstrap/js/bootstrap.min.js',
+    	'vendor/bower/jquery-ui-1.11.4/jquery-ui.js',
+    	'vendor/bower/blueimp-file-upload/js/jquery.fileupload.js',
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         'vendor/bower/AdminLTE/dist/js/app.min.js',
         'vendor/bower/AdminLTE/plugins/select2/select2.full.min.js',
     	'vendor/bower/devbridge-autocomplete/dist/jquery.autocomplete.min.js',
         'vendor/bower/grumble/js/jquery.grumble.min.js',
     	'js/vendor/bower/lodop/LodopFuncs.js',
+<<<<<<< HEAD
 //        'vendor/bower/tooltip/themes/2/tooltip.js',
 //         'vendor/bower/nprogress/nprogress.js',
         'vendor/bower/echarts/build/dist/echarts.js',
+=======
+    		
+//         'vendor/bower/nprogress/nprogress.js',
+//         'vendor/bower/echarts/build/dist/echarts.js',
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     	'vendor/bower/echarts/build/dist/echarts.min.js',
     		
 

@@ -28,7 +28,11 @@ public function rules()
     { 
         return [
             [['sort','typename'], 'integer'],
+<<<<<<< HEAD
             [['menuname', 'menuurl','dropdown','level','class'], 'string', 'max' => 500]
+=======
+            [['menuname', 'menuurl','dropdown'], 'string', 'max' => 500]
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         ]; 
     } 
 
@@ -43,9 +47,13 @@ public function rules()
             'menuurl' => '菜单地址',
             'sort' => '排序',
         	'typename' => '菜单类型',
+<<<<<<< HEAD
             'dropdown' => '下拉菜单标识',
             'level' => '访问等级',
             'class' => '可访问类',
+=======
+            'dropdown' => '下拉菜单标识'
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         ]; 
     }
     public static function getLevelMenu($level)

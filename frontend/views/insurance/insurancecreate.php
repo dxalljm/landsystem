@@ -1,6 +1,11 @@
 <?php
+<<<<<<< HEAD
 namespace frontend\controllers;use app\models\User;
 use app\models\Tables;
+=======
+namespace backend\controllers;
+use app\models\tables;
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 use yii\helpers\Html;
 
 
@@ -26,12 +31,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('insurance_form', [
         'model' => $model,
+<<<<<<< HEAD
         'farms_id' => $farms_id,
         'farm' => $farm,
         'plantArea' => $plantArea,
         'insuredarea' => $insuredarea,
         'people' => $people,
         'isShowAll' => $isShowAll,
+=======
+    	'farms_id' => $farms_id,
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     ]) ?>
 
 </div>

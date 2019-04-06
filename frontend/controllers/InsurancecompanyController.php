@@ -2,7 +2,10 @@
 
 namespace frontend\controllers;
 
+<<<<<<< HEAD
 use app\models\Logs;
+=======
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 use Yii;
 use app\models\Insurancecompany;
 use frontend\models\insurancecompanySearch;
@@ -26,6 +29,7 @@ class InsurancecompanyController extends Controller
             ],
         ];
     }
+<<<<<<< HEAD
     public function beforeAction($action)
     {
         if(Yii::$app->user->isGuest) {
@@ -34,6 +38,9 @@ class InsurancecompanyController extends Controller
             return true;
         }
     }
+=======
+
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     public static function actionName()
     {
     	$result = get_class_methods('InsurancecompanyController');
@@ -47,7 +54,11 @@ class InsurancecompanyController extends Controller
     {
         $searchModel = new insurancecompanySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+<<<<<<< HEAD
         Logs::writeLogs('保险公司列表');
+=======
+
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         return $this->render('insurancecompanyindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -61,8 +72,11 @@ class InsurancecompanyController extends Controller
      */
     public function actionInsurancecompanyview($id)
     {
+<<<<<<< HEAD
         $model = $this->findModel($id);
         Logs::writeLogs('查看保险公司名称',$model);
+=======
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         return $this->render('insurancecompanyview', [
             'model' => $this->findModel($id),
         ]);
@@ -78,7 +92,10 @@ class InsurancecompanyController extends Controller
         $model = new Insurancecompany();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+<<<<<<< HEAD
             Logs::writeLogs('新增保险公司',$model);
+=======
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
             return $this->redirect(['insurancecompanyview', 'id' => $model->id]);
         } else {
             return $this->render('insurancecompanycreate', [
@@ -98,7 +115,10 @@ class InsurancecompanyController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+<<<<<<< HEAD
             Logs::writeLogs('更新保险公司',$model);
+=======
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
             return $this->redirect(['insurancecompanyview', 'id' => $model->id]);
         } else {
             return $this->render('insurancecompanyupdate', [
@@ -115,8 +135,13 @@ class InsurancecompanyController extends Controller
      */
     public function actionInsurancecompanydelete($id)
     {
+<<<<<<< HEAD
         $model = $this->findModel($id)->delete();
         Logs::writeLogs('删除保险公司',$model);
+=======
+        $this->findModel($id)->delete();
+
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         return $this->redirect(['insurancecompanyindex']);
     }
 

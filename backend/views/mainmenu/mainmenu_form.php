@@ -21,12 +21,16 @@ use app\models\Userlevel;
     <?= $form->field($model, 'menuname')->textInput(['maxlength' => 500]) ?>
 
     <?= $form->field($model, 'menuurl')->textInput(['maxlength' => 500]) ?>
+<<<<<<< HEAD
     <?php
     $model->level = explode(',',$model->level);
     ?>
     <?= $form->field($model, 'level')->checkboxList(ArrayHelper::map(Userlevel::find()->all(),'id' , 'levelname'))?>
 
     <?= $form->field($model, 'class')->textInput(['maxlength' => 500])?>
+=======
+
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     <?= $form->field($model, 'dropdown')->textInput(['maxlength' => 500]) ?>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

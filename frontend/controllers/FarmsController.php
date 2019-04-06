@@ -2,11 +2,15 @@
 
 namespace frontend\controllers;
 
+<<<<<<< HEAD
 use app\models\Fixed;
 use app\models\Lockstate;
 use app\models\Log;
 use app\models\Numberlock;
 use app\models\Plantingstructurecheck;
+=======
+use Composer\IO\NullIO;
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 use Yii;
 use app\models\Farms;
 use app\models\User;
@@ -51,9 +55,18 @@ use app\models\Auditprocess;
 use app\models\Contractnumber;
 use app\models\Farmermembers;
 use app\models\Machineoffarm;
+<<<<<<< HEAD
 use app\models\Insurance;
 use app\models\Estate;
 use app\models\Farmerinfo;
+=======
+use app\models\elasticsearchtest;
+use app\models\Farmselastic;
+use app\models\Otherfarms;
+use app\models\Insurance;
+use app\models\Estate;
+use app\models\Leader;
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 use app\models\Zongdioffarm;
 // use PHPExcel_IOFactory;
 
@@ -796,6 +809,7 @@ class FarmsController extends Controller {
 				'farmer' => $farmer,
 		] );
 	}
+<<<<<<< HEAD
 	public function actionFarmsadminview($id) {
 		$model = $this->findModel ( $id );
 		$farmer = Farmerinfo::find()->where(['cardid'=>$model->cardid])->one();
@@ -817,6 +831,8 @@ class FarmsController extends Controller {
 			'farmer' => $farmer,
 		] );
 	}
+=======
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 	//八大块，宜农林地查看详情
 	public function actionFarmslandview($id) {
 		$model = $this->findModel ( $id );
@@ -845,7 +861,10 @@ class FarmsController extends Controller {
 //		] )->orWhere ( [
 //				'newfarms_id' => $farms_id
 //		] )->all ();
+<<<<<<< HEAD
 		$farm = Farms::findOne($farms_id);
+=======
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		$ttpozongdiModel = Ttpozongdi::find ()->orWhere ( [ 
 				'oldnewfarms_id' => $farms_id
 		] )->orWhere ( [ 
@@ -858,6 +877,44 @@ class FarmsController extends Controller {
 				'ttpozongdiModel' => $ttpozongdiModel,
 				'farms_id' => $farms_id,
 				'farm' => $farm,
+		] );
+	}
+// 整体转让选择页面
+	public function actionFarmsttpowhole($farms_id) {
+		$ttpoModel = Ttpo::find ()->orWhere ( [
+			'oldfarms_id' => $farms_id
+		] )->orWhere ( [
+			'newfarms_id' => $farms_id
+		] )->all ();
+		$ttpozongdiModel = Ttpozongdi::find ()->orWhere ( [
+			'oldfarms_id' => $farms_id
+		] )->orWhere ( [
+			'newfarms_id' => $farms_id
+		] )->all ();
+		Logs::writeLog ( '农场转让信息', $farms_id );
+		return $this->render ( 'farmsttpowhole', [
+			'ttpoModel' => $ttpoModel,
+			'ttpozongdiModel' => $ttpozongdiModel,
+			'farms_id' => $farms_id
+		] );
+	}
+	// 部分转让选择页面
+	public function actionFarmsttpopart($farms_id) {
+		$ttpoModel = Ttpo::find ()->orWhere ( [
+			'oldfarms_id' => $farms_id
+		] )->orWhere ( [
+			'newfarms_id' => $farms_id
+		] )->all ();
+		$ttpozongdiModel = Ttpozongdi::find ()->orWhere ( [
+			'oldfarms_id' => $farms_id
+		] )->orWhere ( [
+			'newfarms_id' => $farms_id
+		] )->all ();
+		Logs::writeLog ( '农场转让信息', $farms_id );
+		return $this->render ( 'farmsttpopart', [
+			'ttpoModel' => $ttpoModel,
+			'ttpozongdiModel' => $ttpozongdiModel,
+			'farms_id' => $farms_id
 		] );
 	}
 // 整体转让选择页面
@@ -917,6 +974,10 @@ class FarmsController extends Controller {
 	// 查看转让信息
 	public function actionFarmsttpozongdiview($id) {
 		$ttpoModel = Ttpozongdi::findOne ( $id );
+<<<<<<< HEAD
+=======
+// 		var_dump($ttpoModel);exit;
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		$state = Estate::find()->where(['reviewprocess_id'=>$ttpoModel->reviewprocess_id])->count();
 		if($ttpoModel->oldnewfarms_id)
 			$oldfarms_id = $ttpoModel->oldnewfarms_id;
@@ -937,7 +998,10 @@ class FarmsController extends Controller {
 				'id' => $newfarms_id 
 		] )->one ();
 // 		var_dump($newFarm);exit;
+<<<<<<< HEAD
 		Logs::writeLogs ( '农场转让信息', $ttpoModel ,'ttpozongdi');
+=======
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		return $this->render ( 'farmsttpozongdiview', [ 
 				'ttpoModel' => $ttpoModel,
 				'oldFarm' => $oldFarm,
@@ -948,7 +1012,10 @@ class FarmsController extends Controller {
 	}
 	// 农场过户，state状态：0为已经失效，1为当前正用
 	public function actionFarmstransfer($farms_id) {
+<<<<<<< HEAD
 		Logs::writeLog ( '整体过户-新建',$farms_id);
+=======
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		$oldmodel = $this->findModel ( $farms_id );
 		
 		$old = $oldmodel->attributes;
@@ -957,6 +1024,7 @@ class FarmsController extends Controller {
 		$reviewprocess = new Reviewprocess ();
 		
 		$newmodel = new Farms ();
+<<<<<<< HEAD
 // 		var_dump($oldmodel);exit;
 		$new = $newmodel->attributes;
 		if ($newmodel->load ( Yii::$app->request->post () )) {
@@ -964,33 +1032,52 @@ class FarmsController extends Controller {
 			// 保存审核信息，成功返回reviewprocessID，失败返回flase
 // 			var_dump(Yii::$app->request->post ());
 // 			var_dump($newmodel);exit;
+=======
+		$new = $newmodel->attributes;
+		if ($newmodel->load ( Yii::$app->request->post () )) {
+			// 保存审核信息，成功返回reviewprocessID，失败返回flase
+// 			var_dump($nowModel);exit;
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			// var_dump($reviewprocessModel->getErrors());exit;
 			$lockedinfoModel = new Lockedinfo ();
 			$lockedinfoModel->farms_id = $farms_id;
 			$lockedinfoModel->lockedcontent = '整体过户审核中，已被冻结。';
 			$lockedinfoModel->save ();
+<<<<<<< HEAD
 			Logs::writeLogs ( '增加整体过户冻结信息', $lockedinfoModel ,'lockedinfo');
 						
 // 			$newmodel->address = $oldmodel->address;
+=======
+						
+			$newmodel->address = $oldmodel->address;
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			$newmodel->management_area = $oldmodel->management_area;
 			$newmodel->spyear = $oldmodel->spyear;
 			$newmodel->measure = $newmodel->measure;
 			$newmodel->contractarea =  $oldmodel->contractarea;
+<<<<<<< HEAD
 			$newmodel->zongdi = Farms::zongdiHB($newmodel->zongdi);
+=======
+			$newmodel->zongdi = $newmodel->zongdi;
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			$newmodel->cooperative_id = $oldmodel->cooperative_id;
 			$newmodel->surveydate = $oldmodel->surveydate;
 			$newmodel->groundsign = $oldmodel->groundsign;
 			$newmodel->investigator = $oldmodel->investigator;
 			$newmodel->notclear = $newmodel->notclear;
 			$newmodel->notstate = $newmodel->notstate;
+<<<<<<< HEAD
 			$newmodel->begindate = date('Y-m-d');
 			$newmodel->enddate = '2025-09-13';
+=======
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			$newmodel->create_at = time ();
 			$newmodel->update_at = $newmodel->create_at;
 			$newmodel->pinyin = Pinyin::encode ( $newmodel->farmname );
 			$newmodel->farmerpinyin = Pinyin::encode ( $newmodel->farmername );
 			$newmodel->state = 0;
 			$newmodel->locked = 1;
+<<<<<<< HEAD
 			$newmodel->tempdata = 0;
 //			var_dump($newmodel->contractnumber);
 //			var_dump(Farms::getContractstate($farms_id));
@@ -1006,6 +1093,14 @@ class FarmsController extends Controller {
 			$farmerModel->farms_id = $newmodel->id;
 			$farmerModel->save();
 			Logs::writeLogs ( '新增法人', $farmerModel ,'farmer');
+=======
+			$newmodel->save ();
+			
+			$farmerModel = new Farmer();
+			$farmerModel->farms_id = $newmodel->id;
+			$farmerModel->save();
+			
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			$oldModel = $this->findModel ( $farms_id );
 			$oldModel->locked = 1;
 			$oldModel->save ();
@@ -1013,11 +1108,18 @@ class FarmsController extends Controller {
 // 			var_dump($oldModel->getErrors());exit;
 // 			$reviewprocessID = Reviewprocess::processRun ( $model->id, $nowModel->id );
 			$ttpoModel = new Ttpozongdi ();
+<<<<<<< HEAD
 			$ttpoModel->management_area = $oldmodel->management_area;
 			$ttpoModel->oldfarms_id = $oldmodel->id;
 			$ttpoModel->newfarms_id = '';
 			$ttpoModel->oldnewfarms_id = '';
 			$ttpoModel->newnewfarms_id = $newmodel->id;;
+=======
+			$ttpoModel->oldfarms_id = $oldmodel->id;
+			$ttpoModel->newfarms_id = $newmodel->id;
+			$ttpoModel->oldnewfarms_id = '';
+			$ttpoModel->newnewfarms_id = '';
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			$ttpoModel->create_at = (string)time ();
 			
 			$ttpoModel->oldzongdi = $old['zongdi'];
@@ -1026,6 +1128,7 @@ class FarmsController extends Controller {
 			$ttpoModel->oldnotstate = $old['notstate'];
 			$ttpoModel->oldcontractnumber = $old['contractnumber'];
 			//原转让改变的信息
+<<<<<<< HEAD
 //			$ttpoModel->oldchangezongdi = $oldmodel->zongdi;
 //			$ttpoModel->oldchangemeasure = $oldmodel->measure;
 //			$ttpoModel->oldchangenotclear = $oldmodel->notclear;
@@ -1041,10 +1144,28 @@ class FarmsController extends Controller {
 //			$ttpoModel->newcontractnumber = $new['contractnumber'];
 			//新转让改变信息
 			$ttpoModel->newchangezongdi = Farms::zongdiHB($newmodel->zongdi);
+=======
+			$ttpoModel->oldchangezongdi = $oldmodel->zongdi;
+			$ttpoModel->oldchangemeasure = $oldmodel->measure;
+			$ttpoModel->oldchangenotclear = $oldmodel->notclear;
+			$ttpoModel->oldchangenotstate = $oldmodel->notstate;
+			$ttpoModel->oldchangecontractnumber = $oldmodel->contractnumber;
+			
+			$ttpoModel->auditprocess_id = 1;
+			//新转让信息
+			$ttpoModel->newzongdi = $new['zongdi'];
+			$ttpoModel->newmeasure = $new['measure'];
+			$ttpoModel->newnotclear = $new['notclear'];
+			$ttpoModel->newnotstate = $new['notstate'];
+			$ttpoModel->newcontractnumber = $new['contractnumber'];
+			//新转让改变信息
+			$ttpoModel->newchangezongdi = $newmodel->zongdi;
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			$ttpoModel->newchangemeasure = $newmodel->measure;
 			$ttpoModel->newchangenotclear = $newmodel->notclear;
 			$ttpoModel->newchangenotstate = $newmodel->notstate;
 			$ttpoModel->newchangecontractnumber = $newmodel->contractnumber;
+<<<<<<< HEAD
 //			var_dump(Yii::$app->request->post ( 'ttpozongdi' ));exit;
 			$ttpoModel->ttpozongdi = Farms::zongdiHB(Yii::$app->request->post ( 'ttpozongdi' ));
 			$ttpoModel->ttpoarea = Yii::$app->request->post ( 'ttpoarea' );
@@ -1322,11 +1443,24 @@ class FarmsController extends Controller {
 			
 			Zongdioffarm::zongdiUpdate($ttpoModel->oldfarms_id, $ttpoModel->oldnewfarms_id,$ttpoModel->oldchangezongdi);
 			Zongdioffarm::zongdiUpdate($ttpoModel->newfarms_id, $ttpoModel->newnewfarms_id,$ttpoModel->newchangezongdi);
+=======
+			
+			$ttpoModel->ttpozongdi = Yii::$app->request->post ( 'ttpozongdi' );
+			$ttpoModel->ttpoarea = Yii::$app->request->post ( 'ttpoarea' );
+			$ttpoModel->actionname = \Yii::$app->controller->action->id;
+			$ttpoModel->state = 0;
+			$ttpoModel->save ();
+			
+			Logs::writeLog ( '农场转让信息', $newmodel->id, $old, $new );
+			$oldFarm = Farms::find()->where(['id'=>$ttpoModel->oldfarms_id])->one();
+			$newFarm = Farms::find()->where(['id'=>$ttpoModel->newfarms_id])->one();
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			return $this->redirect ([
 					'farmsttpozongdiview',
 					'id'=> $ttpoModel->id,
 					'farms_id'=>$ttpoModel->oldfarms_id,
 					'ttpoModel' => $ttpoModel,
+<<<<<<< HEAD
 					'oldFarm' => $oldnewmodel,
 					'newFarm' => $newnewmodel,
 			]);
@@ -1502,10 +1636,354 @@ class FarmsController extends Controller {
 			// 			}
 			//新转让改变信息
 			$ttpoModel->newchangezongdi = Farms::zongdiHB($post['Farms']['zongdi']);
+=======
+					'oldFarm' => $oldFarm,
+					'newFarm' => $newFarm,
+			]);
+// 			return $this->redirect ( [ 
+// 					Reviewprocess::getReturnAction (),
+// 					'newfarmsid' => $nowModel->id,
+// 					'oldfarmsid' => $model->id,
+// 					'reviewprocessid' => $reviewprocessID 
+// 			] );
+		} else {
+			return $this->render ( 'farmstransfer', [ 
+					'model' => $oldmodel,
+					'nowModel' => $newmodel,
+					'farms_id' => $farms_id 
+			] );
+		}
+	}
+	//整体合并
+	public function actionFarmstransfermergecontract($farms_id,$newfarms_id) {
+		$oldmodel = $this->findModel ( $farms_id );
+		$old = $oldmodel->attributes;
+
+		$newmodel = $this->findModel($newfarms_id);
+		$new = $newmodel->attributes;
+
+		$reviewprocess = new Reviewprocess ();
+	
+		$oldnewmodel = new Farms();
+		$newnewmodel = new Farms();
+		
+		if ($newmodel->load ( Yii::$app->request->post () )) {
+			// 保存审核信息，成功返回reviewprocessID，失败返回flase
+			// 			var_dump($nowModel);exit;
+			// var_dump($reviewprocessModel->getErrors());exit;
+			$lockedinfoModel = new Lockedinfo ();
+			$lockedinfoModel->farms_id = $farms_id;
+			$lockedinfoModel->lockedcontent = '整体过户审核中，已被冻结。';
+			$lockedinfoModel->save();
+			$lockedinfoModel = new Lockedinfo ();
+			$lockedinfoModel->farms_id = $newfarms_id;
+			$lockedinfoModel->lockedcontent = '整体过户审核中，已被冻结。';
+			$lockedinfoModel->save();
+
+			$newnewmodel->farmname = $newmodel->farmname;
+			$newnewmodel->farmername = $newmodel->farmername;
+			$newnewmodel->cardid = $newmodel->cardid;
+			$newnewmodel->telephone = $newmodel->telephone;
+			$newnewmodel->address = $newmodel->address;
+			$newnewmodel->management_area = $newmodel->management_area;
+			$newnewmodel->spyear = $newmodel->spyear;
+			$newnewmodel->measure = $newmodel->measure;
+			$newnewmodel->zongdi = $newmodel->zongdi;
+			$newnewmodel->cooperative_id = $newmodel->cooperative_id;
+			$newnewmodel->surveydate = $newmodel->surveydate;
+//			$newnewmodel->groundsign = $newmodel->groudsign;
+			$newnewmodel->farmersign = $newmodel->farmersign;
+			$newnewmodel->create_at = time();
+			$newnewmodel->pinyin = $newmodel->pinyin;
+			$newnewmodel->farmerpinyin = $newmodel->farmerpinyin;
+			$newnewmodel->begindate = $newmodel->begindate;
+			$newnewmodel->enddate = $newmodel->enddate;
+			$newnewmodel->oldfarms_id = $oldmodel->id;
+			$newnewmodel->latitude = $newmodel->latitude;
+			$newnewmodel->longitude = $newmodel->longitude;
+			$newnewmodel->accountnumber = $newmodel->accountnumber;
+			$newnewmodel->remarks = $newmodel->remarks;
+			$newnewmodel->update_at = time();
+
+			$newnewmodel->notclear = $newmodel->notclear;
+			$newnewmodel->notstate = $newmodel->notstate;
+			$newnewmodel->contractarea = $newmodel->contractarea;
+			$newnewmodel->contractnumber = $newmodel->contractnumber;
+			$newnewmodel->state = 0;
+			$newnewmodel->locked = 0;
+			$newnewmodel->save();
+
+			$oldfarmer = Farmer::find()->where(['farms_id' => $oldmodel->id])->one();
+
+			$oldfarmerModel = Farmer::findOne($oldfarmer['id']);
+//			$oldfarmerModel->id = '';
+			$farmerModel = new Farmer();
+			if ($oldfarmerModel) {
+				unset($oldfarmerModel->id);
+				$farmerModel->attributes = $oldfarmerModel->attributes;
+//				var_dump($farmerModel);exit;
+				$farmerModel->id = Null;
+			}
+			else
+				$farmerModel->farms_id = $oldmodel->id;
+			$farmerModel->save();
+			
+			$ttpoModel = new Ttpozongdi ();
+			$ttpoModel->oldfarms_id = $oldmodel->id;
+			$ttpoModel->newfarms_id = $newmodel->id;
+			$ttpoModel->oldnewfarms_id = '';
+			$ttpoModel->newnewfarms_id = $newnewmodel->id;
+			$ttpoModel->create_at = (string)time ();
+				
+			$ttpoModel->oldzongdi = $old['zongdi'];
+			$ttpoModel->oldmeasure = $old['measure'];
+			$ttpoModel->oldnotclear = $old['notclear'];
+			$ttpoModel->oldnotstate = $old['notstate'];
+			$ttpoModel->oldcontractnumber = $old['contractnumber'];
+			//原转让改变的信息
+			$ttpoModel->oldchangezongdi = $oldmodel->zongdi;
+			$ttpoModel->oldchangemeasure = $oldmodel->measure;
+			$ttpoModel->oldchangenotclear = $oldmodel->notclear;
+			$ttpoModel->oldchangenotstate = $oldmodel->notstate;
+			$ttpoModel->oldchangecontractnumber = $oldmodel->contractnumber;
+				
+			$ttpoModel->auditprocess_id = 1;
+			//新转让信息
+			$ttpoModel->newzongdi = $new['zongdi'];
+			$ttpoModel->newmeasure = $new['measure'];
+			$ttpoModel->newnotclear = $new['notclear'];
+			$ttpoModel->newnotstate = $new['notstate'];
+			$ttpoModel->newcontractnumber = $new['contractnumber'];
+			//新转让改变信息
+			$ttpoModel->newchangezongdi = $newmodel->zongdi;
+			$ttpoModel->newchangemeasure = $newmodel->measure;
+			$ttpoModel->newchangenotclear = $newmodel->notclear;
+			$ttpoModel->newchangenotstate = $newmodel->notstate;
+			$ttpoModel->newchangecontractnumber = $newmodel->contractnumber;
+				
+			$ttpoModel->ttpozongdi = Yii::$app->request->post ( 'ttpozongdi' );
+			$ttpoModel->ttpoarea = Yii::$app->request->post ( 'ttpoarea' );
+			$ttpoModel->actionname = \Yii::$app->controller->action->id;
+			$ttpoModel->state = 0;
+			$ttpoModel->save ();
+			$Oldmodel = $this->findModel($ttpoModel->oldfarms_id);
+			$Oldmodel->locked = 1;
+			$Oldmodel->save();
+			$Newmocel = $this->findModel($ttpoModel->newfarms_id);
+			$Newmocel->locked = 1;
+			$Newmocel->save();
+			$newAttr = $newmodel->attributes;
+			Logs::writeLog ( '农场转让信息', $newmodel->id, $old, $newAttr );
+			$oldFarm = Farms::find()->where(['id'=>$ttpoModel->oldfarms_id])->one();
+			$newFarm = Farms::find()->where(['id'=>$ttpoModel->newfarms_id])->one();
+			return $this->redirect ([
+					'farmsttpozongdiview',
+					'id'=> $ttpoModel->id,
+					'farms_id'=>$ttpoModel->oldfarms_id,
+					'ttpoModel' => $ttpoModel,
+					'oldFarm' => $oldFarm,
+					'newFarm' => $newFarm,
+			]);
+			// 			return $this->redirect ( [
+			// 					Reviewprocess::getReturnAction (),
+			// 					'newfarmsid' => $nowModel->id,
+			// 					'oldfarmsid' => $model->id,
+			// 					'reviewprocessid' => $reviewprocessID
+			// 			] );
+		} else {
+			return $this->render ( 'farmstransfermergecontract', [
+					'oldFarm' => $oldmodel,
+					'newFarm' => $newmodel,
+					'farms_id' => $farms_id
+			] );
+		}
+	}
+	
+	public function actionFarmsttpoupdatefarmstozongdi($id) 
+	{
+		
+		$ttpoModel = Ttpozongdi::findOne($id);
+		$oldmodel = Farms::findOne($ttpoModel->oldnewfarms_id);
+		$newmodel = Farms::findOne($ttpoModel->newnewfarms_id);
+		$post = Yii::$app->request->post ();
+		if ($post) {
+			$newmodel->load ( Yii::$app->request->post () );
+			$newmodel->save();
+			$ttpoModel->create_at = (string)time ();
+// 			var_dump($post['Farms']);exit;
+			if($ttpoModel->actionname !== 'farmstransfer') {
+				//原转让改变的信息
+				$ttpoModel->oldchangezongdi = $post['oldzongdichange'];
+				$ttpoModel->oldchangemeasure = $post['oldmeasure'];
+				$ttpoModel->oldchangenotclear = $post['oldnotclear'];
+				$ttpoModel->oldchangenotstate = $post['oldnotstate'];
+				$ttpoModel->oldchangecontractnumber = $post['oldcontractnumber'];
+			}
+			//新转让改变信息
+			$ttpoModel->newchangezongdi = $post['Farms']['zongdi'];
 			$ttpoModel->newchangemeasure = $post['Farms']['measure'];
 			$ttpoModel->newchangenotclear = $post['Farms']['notclear'];
 			$ttpoModel->newchangenotstate = $post['Farms']['notstate'];
 			$ttpoModel->newchangecontractnumber = $post['Farms']['contractnumber'];
+			
+			$ttpoModel->ttpozongdi = $post['ttpozongdi'];
+			$ttpoModel->ttpoarea = $post['ttpoarea'];
+			
+			$ttpoModel->state = 0;
+			$ttpoModel->save ();
+			
+			
+			Zongdioffarm::zongdiUpdate($ttpoModel->oldfarms_id, $ttpoModel->oldnewfarms_id,$ttpoModel->oldchangezongdi);
+			Zongdioffarm::zongdiUpdate($ttpoModel->newfarms_id, $ttpoModel->newnewfarms_id,$ttpoModel->newchangezongdi);
+			return $this->redirect ([
+					'farmsttpozongdiview',
+					'id'=> $ttpoModel->id,
+					'farms_id'=>$ttpoModel->oldfarms_id,
+					'ttpoModel' => $ttpoModel,
+					'oldFarm' => $oldmodel,
+					'newFarm' => $newmodel,
+			]);
+		} else {
+			return $this->render ( 'farmsttpoupdatefarmstozongdi', [
+					'model' => $oldmodel,
+					'nowModel' => $newmodel,
+					'ttpoModel' => $ttpoModel,
+					'farms_id' => $ttpoModel->oldfarms_id,
+			] );
+		}
+	}
+	public function actionFarmsttpoupdatefarmstransfer($id)
+	{
+	
+		$ttpoModel = Ttpozongdi::findOne($id);
+		$oldmodel = Farms::findOne($ttpoModel->oldfarms_id);
+		$newmodel = Farms::findOne($ttpoModel->newfarms_id);
+		$post = Yii::$app->request->post ();
+		if ($post) {
+			$newmodel->load ( Yii::$app->request->post () );
+			$newmodel->save();
+			$ttpoModel->create_at = (string)time ();
+			// 			var_dump($post['Farms']);exit;
+// 			if($ttpoModel->actionname !== 'farmstransfer') {
+// 				//原转让改变的信息
+// 				$ttpoModel->oldchangezongdi = $post['oldzongdichange'];
+// 				$ttpoModel->oldchangemeasure = $post['oldmeasure'];
+// 				$ttpoModel->oldchangenotclear = $post['oldnotclear'];
+// 				$ttpoModel->oldchangenotstate = $post['oldnotstate'];
+// 				$ttpoModel->oldchangecontractnumber = $post['oldcontractnumber'];
+// 			}
+			//新转让改变信息
+			$ttpoModel->newchangezongdi = $post['Farms']['zongdi'];
+			$ttpoModel->newchangemeasure = $post['Farms']['measure'];
+			$ttpoModel->newchangenotclear = $post['Farms']['notclear'];
+			$ttpoModel->newchangenotstate = $post['Farms']['notstate'];
+			$ttpoModel->newchangecontractnumber = $post['Farms']['contractnumber'];
+				
+			$ttpoModel->ttpozongdi = $post['ttpozongdi'];
+			$ttpoModel->ttpoarea = $post['ttpoarea'];
+				
+			$ttpoModel->state = 0;
+			$ttpoModel->save ();				
+				
+			Zongdioffarm::zongdiUpdate($ttpoModel->oldfarms_id,$ttpoModel->newfarms_id, $ttpoModel->newzongdi);
+			return $this->redirect ([
+					'farmsttpozongdiview',
+					'id'=> $ttpoModel->id,
+					'farms_id'=>$ttpoModel->oldfarms_id,
+					'ttpoModel' => $ttpoModel,
+					'oldFarm' => $oldmodel,
+					'newFarm' => $newmodel,
+			]);
+		} else {
+			return $this->render ( 'farmsttpoupdatefarmstransfer', [
+					'model' => $oldmodel,
+					'nowModel' => $newmodel,
+					'ttpoModel' => $ttpoModel,
+					'farms_id' => $ttpoModel->oldfarms_id,
+			] );
+		}
+	}
+//整体转让合并修改页面
+	public function actionFarmsttpoupdatefarmstransfermergecontract($id)
+	{
+
+		$ttpoModel = Ttpozongdi::findOne($id);
+		$oldmodel = Farms::findOne($ttpoModel->oldfarms_id);
+		$newmodel = Farms::findOne($ttpoModel->newfarms_id);
+		$post = Yii::$app->request->post ();
+		if ($post) {
+			$newmodel->load ( Yii::$app->request->post () );
+			$newmodel->save();
+			$ttpoModel->create_at = (string)time ();
+			// 			var_dump($post['Farms']);exit;
+// 			if($ttpoModel->actionname !== 'farmstransfer') {
+// 				//原转让改变的信息
+// 				$ttpoModel->oldchangezongdi = $post['oldzongdichange'];
+// 				$ttpoModel->oldchangemeasure = $post['oldmeasure'];
+// 				$ttpoModel->oldchangenotclear = $post['oldnotclear'];
+// 				$ttpoModel->oldchangenotstate = $post['oldnotstate'];
+// 				$ttpoModel->oldchangecontractnumber = $post['oldcontractnumber'];
+// 			}
+			//新转让改变信息
+			$ttpoModel->newchangezongdi = $post['Farms']['zongdi'];
+			$ttpoModel->newchangemeasure = $post['Farms']['measure'];
+			$ttpoModel->newchangenotclear = $post['Farms']['notclear'];
+			$ttpoModel->newchangenotstate = $post['Farms']['notstate'];
+			$ttpoModel->newchangecontractnumber = $post['Farms']['contractnumber'];
+
+			$ttpoModel->ttpozongdi = $post['ttpozongdi'];
+			$ttpoModel->ttpoarea = $post['ttpoarea'];
+
+			$ttpoModel->state = 0;
+			$ttpoModel->save ();
+
+			Zongdioffarm::zongdiUpdate($ttpoModel->oldfarms_id,$ttpoModel->newfarms_id, $ttpoModel->newzongdi);
+			return $this->redirect ([
+				'farmsttpozongdiview',
+				'id'=> $ttpoModel->id,
+				'farms_id'=>$ttpoModel->oldfarms_id,
+				'ttpoModel' => $ttpoModel,
+				'oldFarm' => $oldmodel,
+				'newFarm' => $newmodel,
+			]);
+		} else {
+			return $this->render ( 'farmsttpoupdatefarmstransfermergecontract', [
+				'oldFarm' => $oldmodel,
+				'newFarm' => $newmodel,
+				'ttpoModel' => $ttpoModel,
+				'farms_id' => $ttpoModel->oldfarms_id,
+			] );
+		}
+	}
+
+	public function actionFarmsttpoupdatefarmssplit($id)
+	{
+	
+		$ttpoModel = Ttpozongdi::findOne($id);
+		$oldmodel = Farms::findOne($ttpoModel->oldfarms_id);
+		$newmodel = Farms::findOne($ttpoModel->newfarms_id);
+		$post = Yii::$app->request->post ();
+		if ($post) {
+			$newmodel->load ( Yii::$app->request->post () );
+			$newmodel->save();
+			$ttpoModel->create_at = (string)time ();
+			// 			var_dump($post['Farms']);exit;
+			// 			if($ttpoModel->actionname !== 'farmstransfer') {
+			// 				//原转让改变的信息
+			// 				$ttpoModel->oldchangezongdi = $post['oldzongdichange'];
+			// 				$ttpoModel->oldchangemeasure = $post['oldmeasure'];
+			// 				$ttpoModel->oldchangenotclear = $post['oldnotclear'];
+			// 				$ttpoModel->oldchangenotstate = $post['oldnotstate'];
+			// 				$ttpoModel->oldchangecontractnumber = $post['oldcontractnumber'];
+			// 			}
+			//新转让改变信息
+			$ttpoModel->newchangezongdi = $post['Farms']['zongdi'];
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
+			$ttpoModel->newchangemeasure = $post['Farms']['measure'];
+			$ttpoModel->newchangenotclear = $post['Farms']['notclear'];
+			$ttpoModel->newchangenotstate = $post['Farms']['notstate'];
+			$ttpoModel->newchangecontractnumber = $post['Farms']['contractnumber'];
+<<<<<<< HEAD
 	
 			$ttpoModel->ttpozongdi = $post['ttpozongdi'];
 			$ttpoModel->ttpoarea = $post['ttpoarea'];
@@ -1514,23 +1992,42 @@ class FarmsController extends Controller {
 			$ttpoModel->save ();
 			Logs::writeLogs ( '更新过户信息', $ttpoModel ,'ttpozongdi');
 			Zongdioffarm::zongdiUpdate($ttpoModel->oldfarms_id,$ttpoModel->newnewfarms_id, $ttpoModel->newchangezongdi);
+=======
+	
+			$ttpoModel->ttpozongdi = $post['ttpozongdi'];
+			$ttpoModel->ttpoarea = $post['ttpoarea'];
+	
+			$ttpoModel->state = 0;
+			$ttpoModel->save ();
+	
+			Zongdioffarm::zongdiUpdate($ttpoModel->oldfarms_id,$ttpoModel->newfarms_id, $ttpoModel->newzongdi);
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			return $this->redirect ([
 					'farmsttpozongdiview',
 					'id'=> $ttpoModel->id,
 					'farms_id'=>$ttpoModel->oldfarms_id,
 					'ttpoModel' => $ttpoModel,
 					'oldFarm' => $oldmodel,
+<<<<<<< HEAD
 					'newFarm' => $newnewmodel,
+=======
+					'newFarm' => $newmodel,
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			]);
 		} else {
 			return $this->render ( 'farmsttpoupdatefarmssplit', [
 					'model' => $oldmodel,
+<<<<<<< HEAD
 					'nowModel' => $newnewmodel,
+=======
+					'nowModel' => $newmodel,
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 					'ttpoModel' => $ttpoModel,
 					'farms_id' => $ttpoModel->oldfarms_id,
 			] );
 		}
 	}
+<<<<<<< HEAD
 
 	//获取新增合同流水号并锁定流水号
 	public function actionFarmsautonumber($farms_id)
@@ -1539,6 +2036,8 @@ class FarmsController extends Controller {
 		echo json_decode($number);
 	}
 
+=======
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 	// 农场转让——新增
 	public function actionFarmssplit($farms_id) {
 		Logs::writeLog ( '农场部分转让', $farms_id );
@@ -1551,6 +2050,7 @@ class FarmsController extends Controller {
 		// $ttpoModel = Ttpo::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
 		// $ttpozongdiModel = Ttpozongdi::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
 		// 原农场转让宗地后，重新签订合同后，生成新的农场信息
+<<<<<<< HEAD
 		$post = Yii::$app->request->post ();
 		if ($post) {
 			$oldmodel->locked = 1;
@@ -1574,11 +2074,77 @@ class FarmsController extends Controller {
 				$newmodel->update_at = $newmodel->create_at;
 				$newmodel->pinyin = Pinyin::encode($newmodel->farmname);
 				$newmodel->farmerpinyin = Pinyin::encode($newmodel->farmername);
+=======
+		if ($oldmodel->load ( Yii::$app->request->post () )) {
+			
+// 			var_dump($oldmodel);exit;
+			$lockedinfoModel = new Lockedinfo ();
+			$lockedinfoModel->farms_id = $farms_id;
+			$lockedinfoModel->lockedcontent = '部分过户审核中，已被冻结。';
+			$lockedinfoModel->save();
+			// $oldmodel->state = 1;
+			$oldmodel = $this->findModel ( $farms_id );
+			$oldmodel->update_at = time ();			
+			$oldmodel->locked = 1;
+			$oldmodel->save ();
+			$newoldmodel = new Farms();
+			$newoldmodel->farmname = $oldmodel->farmname;
+			$newoldmodel->farmername = $oldmodel->farmername;
+			$newoldmodel->cardid = $oldmodel->cardid;
+			$newoldmodel->telephone = $oldmodel->telephone;
+			$newoldmodel->address = $oldmodel->address;
+			$newoldmodel->management_area = $oldmodel->management_area;
+			$newoldmodel->spyear = $oldmodel->spyear;
+			$newoldmodel->measure = $oldmodel->measure;
+			$newoldmodel->zongdi = $oldmodel->zongdi;
+			$newoldmodel->cooperative_id = $oldmodel->cooperative_id;
+			$newoldmodel->surveydate = $oldmodel->surveydate;
+			$newoldmodel->groundsign = $oldmodel->groundsign;
+			$newoldmodel->farmersign = $oldmodel->farmersign;
+			$newoldmodel->create_at = $oldmodel->create_at;
+			$newoldmodel->pinyin = $oldmodel->pinyin;
+			$newoldmodel->farmerpinyin = $oldmodel->farmerpinyin;
+			$newoldmodel->begindate = $oldmodel->begindate;
+			$newoldmodel->enddate = $oldmodel->enddate;
+			$newoldmodel->oldfarms_id = $oldmodel->id;
+			$newoldmodel->latitude = $oldmodel->latitude;
+			$newoldmodel->longitude = $oldmodel->longitude;
+			$newoldmodel->accountnumber = $oldmodel->accountnumber;
+			$newoldmodel->remarks = $oldmodel->remarks;
+			$newoldmodel->update_at = time();
+			$newoldmodel->notclear = $oldmodel->notclear;
+			$newoldmodel->notstate = $oldmodel->notstate;
+			$newoldmodel->contractarea = $oldmodel->contractarea;
+			$newoldmodel->contractnumber = $oldmodel->contractnumber;
+			$newoldmodel->state = 1;
+			$newoldmodel->locked = 0;
+			$newoldmodel->save();
+			
+			if ($newmodel->load ( Yii::$app->request->post () )) {
+				// var_dump($newmodel->zongdi);exit;
+				$newmodel->farmname = $newmodel->farmname;
+				$newmodel->farmername = $newmodel->farmername;
+				$newmodel->cardid = $newmodel->cardid;
+				$newmodel->telephone = $newmodel->telephone;
+				$newmodel->address = $oldmodel->address;
+				$newmodel->management_area = $oldmodel->management_area;				
+				$newmodel->measure = $newmodel->measure;
+				$newmodel->zongdi = $newmodel->zongdi;
+				$newmodel->begindate = $oldmodel->begindate;
+				$newmodel->enddate = $oldmodel->enddate;
+				$newmodel->latitude = $oldmodel->latitude;
+				$newmodel->longitude = $oldmodel->longitude;
+				$newmodel->create_at = time ();
+				$newmodel->update_at = $newmodel->create_at;
+				$newmodel->pinyin = Pinyin::encode($newmodel->pinyin);
+				$newmodel->farmerpinyin = Pinyin::encode($newmodel->farmerpinyin);
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 				$newmodel->contractnumber = $newmodel->contractnumber;
 				$newmodel->contractarea = $newmodel->contractarea;
 				$newmodel->state = 0;
 				$newmodel->locked = 0;
 				$newmodel->notclear = $newmodel->notclear;
+<<<<<<< HEAD
 				$newmodel->remarks = $newmodel->remarks;
 				$newmodel->save ();
 				$cn = Contractnumber::now();
@@ -1644,6 +2210,19 @@ class FarmsController extends Controller {
 			$ttpoModel->newfarms_id = '';
 			$ttpoModel->oldnewfarms_id = $newoldmodel->id;
 			$ttpoModel->newnewfarms_id = $newmodel->id;;
+=======
+				$newmodel->remarks = $newmodel->remarks;		
+				$newmodel->save ();
+				$new = $newmodel->attributes;
+// 				Parcel::parcelState(['farms_id'=>$newmodel->id,'zongdi'=>$newmodel->zongdi,'state'=>true]);
+			}
+			
+			$ttpoModel = new Ttpozongdi ();
+			$ttpoModel->oldfarms_id = $oldmodel->id;
+			$ttpoModel->newfarms_id = $newmodel->id;
+			$ttpoModel->oldnewfarms_id = $newoldmodel->id;
+			$ttpoModel->newnewfarms_id = '';
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			$ttpoModel->create_at = (string)time ();
 			//新转让的信息
 			$ttpoModel->oldzongdi = $old['zongdi'];
@@ -1652,6 +2231,7 @@ class FarmsController extends Controller {
 			$ttpoModel->oldnotstate = $old['notstate'];
 			$ttpoModel->oldcontractnumber = $old['contractnumber'];
 			//原转让改变的信息
+<<<<<<< HEAD
 			$ttpoModel->oldchangezongdi =  Farms::zongdiHB($newoldmodel->zongdi);
 			$ttpoModel->oldchangemeasure = $newoldmodel->measure;
 			$ttpoModel->oldchangenotclear = $newoldmodel->notclear;
@@ -1682,6 +2262,37 @@ class FarmsController extends Controller {
 
 			Zongdioffarm::zongdiUpdate($oldmodel->id, $newoldmodel->id, $ttpoModel->oldchangezongdi);
 			Zongdioffarm::zongdiUpdate('',$newmodel->id,$ttpoModel->newchangezongdi);
+=======
+			$ttpoModel->oldchangezongdi =  Yii::$app->request->post ('oldzongdichange');
+			$ttpoModel->oldchangemeasure = Yii::$app->request->post ('oldmeasure');
+			$ttpoModel->oldchangenotclear = Yii::$app->request->post ('oldnotclear');
+			$ttpoModel->oldchangenotstate = Yii::$app->request->post ('oldnotstate');
+			$ttpoModel->oldchangecontractnumber = Yii::$app->request->post ('oldcontractnumber');
+				
+			$ttpoModel->auditprocess_id = 1;
+			//新转让信息
+			$ttpoModel->newzongdi = $new['zongdi'];
+			$ttpoModel->newmeasure = $new['measure'];
+			$ttpoModel->newnotclear = $new['notclear'];
+			$ttpoModel->newnotstate = $new['notstate'];
+			$ttpoModel->newcontractnumber = $new['contractnumber'];
+			//新转让改变信息
+// 			$ttpoModel->newchangezongdi = $newmodel->zongdi;
+// 			$ttpoModel->newchangemeasure = $newmodel->measure;
+// 			$ttpoModel->newchangenotclear = $newmodel->notclear;
+// 			$ttpoModel->newchangenotstate = $newmodel->notstate;
+// 			$ttpoModel->newchangecontractnumber = $newmodel->contractnumber;
+				
+			$ttpoModel->ttpozongdi = Yii::$app->request->post ( 'ttpozongdi' );
+			$ttpoModel->ttpoarea = Yii::$app->request->post ( 'ttpoarea' );
+			$ttpoModel->actionname = \Yii::$app->controller->action->id;
+			$ttpoModel->state = 0;
+			$ttpoModel->save ();
+			
+			Contractnumber::contractnumberAdd ();
+			Zongdioffarm::zongdiUpdate($oldmodel->id, $newoldmodel->id, $ttpoModel->oldchangezongdi);
+			Zongdioffarm::zongdiUpdate('',$newmodel->id,$ttpoModel->newzongdi);
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 // 			var_dump($ttpoModel->oldchangenotclear);exit;
 			return $this->redirect ([
 					'farmsttpozongdiview',
@@ -1699,6 +2310,7 @@ class FarmsController extends Controller {
 			] );
 		}
 	}
+<<<<<<< HEAD
 
 	public function actionFarmssplitcontinue($samefarms_id,$farms_id,$oldfarms_id,$ttpozongdi_id) {
 		Logs::writeLog('分户',$samefarms_id);
@@ -1879,6 +2491,10 @@ class FarmsController extends Controller {
 	// 农场转让
 	public function actionFarmsttpotransfer($farms_id) {
 		Logs::writeLog('过户转让',$farms_id);
+=======
+	// 农场转让
+	public function actionFarmsttpotransfer($farms_id) {
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		$search = Yii::$app->request->post ( 'search' );
 		$management_area = Farms::getManagementArea ();
 		$farmsSearch = null;
@@ -1897,6 +2513,7 @@ class FarmsController extends Controller {
 				'searchModel' => $farmsSearch,
 				'dataProvider' => $dataProvider,
 				'oldfarms_id' => $farms_id
+<<<<<<< HEAD
 		] );
 	}
 	
@@ -1923,15 +2540,47 @@ class FarmsController extends Controller {
 	public function actionFarmstransfermerge($farms_id)
 	{
 		Logs::writeLog('整体合并查询',$farms_id);
+=======
+		] );
+	}
+	
+	// 农场转让,部分合并
+	public function actionFarmsttpozongdi($farms_id) 
+	{
 		$management_area = Farms::getManagementArea();
 		$searchModel = new farmsSearch ();
 
 		$params = Yii::$app->request->queryParams;
 		$params['farmsSearch']['management_area'] = $management_area['id'];
 		$params['farmsSearch']['state'] = 1;
+		$params['farmsSearch']['locked'] = 0;
+		$dataProvider = $searchModel->search ( $params );
+
+		return $this->render ( 'farmsttpozongdi', [ 
+				'searchModel' => $searchModel,
+				'dataProvider' => $dataProvider,
+				'oldfarms_id' => $farms_id 
+		] );
+	}
+	// 农场转让，整体合并
+	public function actionFarmstransfermerge($farms_id)
+	{
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
+		$management_area = Farms::getManagementArea();
+		$searchModel = new farmsSearch ();
+
+		$params = Yii::$app->request->queryParams;
+		$params['farmsSearch']['management_area'] = $management_area['id'];
+		$params['farmsSearch']['state'] = 1;
+<<<<<<< HEAD
 //		$params['farmsSearch']['locked'] = 0;
 		$dataProvider = $searchModel->search ( $params );
 // 		var_dump($dataProvider);exit;
+=======
+		$params['farmsSearch']['locked'] = 0;
+		$dataProvider = $searchModel->search ( $params );
+
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		return $this->render ( 'farmstransfermerge', [
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
@@ -1993,7 +2642,10 @@ class FarmsController extends Controller {
 	}
 	// 转让给现有法人
 	public function actionFarmstozongdi($farms_id, $newfarms_id) {
+<<<<<<< HEAD
 		Logs::writeLog('部分转让-合并',$farms_id);
+=======
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		$oldmodel = $this->findModel ( $farms_id );
 		$old = $oldmodel->attributes;
 		$newmodel = $this->findModel($newfarms_id);
@@ -2002,18 +2654,31 @@ class FarmsController extends Controller {
 		$oldzongdi = $oldmodel->zongdi;
 		$oldcontractnumber = $oldmodel->contractnumber;
 		$oldmeasure = $oldmodel->measure;
+<<<<<<< HEAD
 
+=======
+		$oldmodel->update_at = time ();
+		$oldmodel->locked = 1;
+		$oldmodel->save ();
+		$newmodel->locked = 1;
+		$newmodel->update_at = time();
+		$newmodel->save ();
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 // 		var_dump($new);exit;
 		$zongditemp = $newmodel->zongdi;
 		$lockedinfoModel = new Lockedinfo ();
 		$lockedinfoModel->farms_id = $farms_id;
 		$lockedinfoModel->lockedcontent = '部分过户审核中，已被冻结。';
 		$lockedinfoModel->save();
+<<<<<<< HEAD
 		Logs::writeLogs('创建部分过户冻结信息',$lockedinfoModel,'lockedinfo');
+=======
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		$lockedinfoModel = new Lockedinfo ();
 		$lockedinfoModel->farms_id = $newmodel->id;
 		$lockedinfoModel->lockedcontent = '部分过户审核中，已被冻结。';
 		$lockedinfoModel->save();
+<<<<<<< HEAD
 		Logs::writeLogs('创建部分过户冻结信息',$lockedinfoModel,'lockedinfo');
 		// $ttpoModel = Ttpo::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
 		// $ttpozongdiModel = Ttpozongdi::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
@@ -2046,6 +2711,13 @@ class FarmsController extends Controller {
 			$newmodel->update_at = time();
 			$newmodel->save ();
 			Logs::writeLogs('冻结农场',$newmodel);
+=======
+		// $ttpoModel = Ttpo::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
+		// $ttpozongdiModel = Ttpozongdi::find()->orWhere(['oldfarms_id'=>$farms_id])->orWhere(['newfarms_id'=>$farms_id])->all();
+		// 原农场转让宗地后，重新签订合同后，生成新的农场信息
+		
+		if ($newmodel->load ( Yii::$app->request->post () )) {			
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			$newoldmodel = new Farms();			
 			$newoldmodel->farmname = $oldmodel->farmname;
 			$newoldmodel->farmername = $oldmodel->farmername;
@@ -2058,7 +2730,11 @@ class FarmsController extends Controller {
 			$newoldmodel->surveydate = $oldmodel->surveydate;
 			$newoldmodel->groundsign = $oldmodel->groundsign;
 			$newoldmodel->farmersign = $oldmodel->farmersign;
+<<<<<<< HEAD
 			$newoldmodel->create_at = time();
+=======
+			$newoldmodel->create_at = $oldmodel->create_at;
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			$newoldmodel->pinyin = $oldmodel->pinyin;
 			$newoldmodel->farmerpinyin = $oldmodel->farmerpinyin;
 			$newoldmodel->begindate = $oldmodel->begindate;
@@ -2068,21 +2744,38 @@ class FarmsController extends Controller {
 			$newoldmodel->longitude = $oldmodel->longitude;
 			$newoldmodel->accountnumber = $oldmodel->accountnumber;
 			$newoldmodel->remarks = $oldmodel->remarks;
+<<<<<<< HEAD
 			$newoldmodel->update_at = $newoldmodel->create_at;
 			$newoldmodel->measure = Yii::$app->request->post ('oldmeasure');
 			$newoldmodel->zongdi = Yii::$app->request->post ('oldzongdi');
 			$newoldmodel->notclear = Yii::$app->request->post ('oldnotclear');
 			$newoldmodel->notstate = Yii::$app->request->post ('oldnotstate');
+=======
+			$newoldmodel->update_at = time();
+			$newoldmodel->measure = Yii::$app->request->post ('oldmeasure');
+			$newoldmodel->zongdi = Yii::$app->request->post ('zongdi');
+			$newoldmodel->notclear = Yii::$app->request->post ('notclear');
+			$newoldmodel->notstate = Yii::$app->request->post ('notstate');
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			$newoldmodel->contractarea = Farms::getContractnumberArea(Yii::$app->request->post ('oldcontractnumber'));
 			$newoldmodel->contractnumber = Yii::$app->request->post ('oldcontractnumber');
 			$newoldmodel->state = 0;
 			$newoldmodel->locked = 0;
+<<<<<<< HEAD
 			$newoldmodel->begindate = date('Y-m-d');
 			$newoldmodel->enddate = '2025-09-13';
 			$newoldmodel->save();
 			Logs::writeLogs('新增农场',$newoldmodel);
 // 			var_dump($newoldmodel->getErrors());exit;
 
+=======
+			$newoldmodel->save();
+// 			var_dump($newoldmodel);
+			$oldfarmer = Farmer::find()->where(['farms_id'=>$oldmodel->id])->one();
+			$newoldfarmerModel = new Farmer();
+			$newoldfarmerModel->farms_id = $newoldmodel->id;
+			$newoldfarmerModel->save();
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			$newnewmodel = new Farms();
 			
 			$newnewmodel->farmname = $newmodel->farmname;
@@ -2092,13 +2785,22 @@ class FarmsController extends Controller {
 			$newnewmodel->address = $newmodel->address;
 			$newnewmodel->management_area = $newmodel->management_area;
 			$newnewmodel->spyear = $newmodel->spyear;
+<<<<<<< HEAD
 			$newnewmodel->measure = $post['Farms']['measure'];
 			$newnewmodel->zongdi = Farms::zongdiHB($post['Farms']['zongdi']);
+=======
+			$newnewmodel->measure = $newmodel->measure;
+			$newnewmodel->zongdi = $newmodel->zongdi;
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			$newnewmodel->cooperative_id = $newmodel->cooperative_id;
 			$newnewmodel->surveydate = $newmodel->surveydate;
 			$newnewmodel->groundsign = $newmodel->groundsign;
 			$newnewmodel->farmersign = $newmodel->farmersign;
+<<<<<<< HEAD
 			$newnewmodel->create_at = time();
+=======
+			$newnewmodel->create_at = $newmodel->create_at;
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			$newnewmodel->pinyin = $newmodel->pinyin;
 			$newnewmodel->farmerpinyin = $newmodel->farmerpinyin;
 			$newnewmodel->begindate = $newmodel->begindate;
@@ -2108,6 +2810,7 @@ class FarmsController extends Controller {
 			$newnewmodel->longitude = $newmodel->longitude;
 			$newnewmodel->accountnumber = $newmodel->accountnumber;
 			$newnewmodel->remarks = $newmodel->remarks;
+<<<<<<< HEAD
 			$newnewmodel->update_at = $newnewmodel->create_at;
 			$newnewmodel->notclear = $post['Farms']['notclear'];
 			$newnewmodel->notstate = $post['Farms']['notstate'];
@@ -2123,6 +2826,24 @@ class FarmsController extends Controller {
 // 			var_dump($newnewmodel->getErrors());exit;
 			$ttpoModel = new Ttpozongdi ();
 			$ttpoModel->management_area = $oldmodel->management_area;
+=======
+			$newnewmodel->update_at = time();
+			$newnewmodel->notclear = $newmodel->notclear;
+			$newnewmodel->notstate = $newmodel->notstate;
+			$newnewmodel->contractarea = $newmodel->contractarea;
+			$newnewmodel->contractnumber = $newmodel->contractnumber;
+			$newnewmodel->state = 0;
+			$newnewmodel->locked = 0;
+			$newnewmodel->save();
+			
+			$newfarmer = Farmer::find()->where(['farms_id'=>$newmodel->id])->one();
+			$newnewfarmerModel = new Farmer();
+			$newnewfarmerModel->farms_id = $newnewmodel->id;
+			$newnewfarmerModel->save();
+			
+// 			var_dump($newnewmodel);exit;
+			$ttpoModel = new Ttpozongdi ();
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			$ttpoModel->oldfarms_id = $oldmodel->id;
 			$ttpoModel->newfarms_id = $newmodel->id;
 			$ttpoModel->oldnewfarms_id = $newoldmodel->id;
@@ -2136,6 +2857,7 @@ class FarmsController extends Controller {
 			$ttpoModel->oldnotstate = $old['notstate'];
 			$ttpoModel->oldcontractnumber = $old['contractnumber'];
 			//原转让改变的信息
+<<<<<<< HEAD
 			
 			$ttpoModel->oldchangezongdi =  Farms::zongdiHB($newoldmodel->zongdi);
 			$ttpoModel->oldchangemeasure = $newoldmodel->measure;
@@ -2168,16 +2890,54 @@ class FarmsController extends Controller {
 // 			var_dump($newmodel);exit;
 			Contractnumber::contractnumberAdd ();
 //			var_dump($ttpoModel);exit;
+=======
+			$ttpoModel->oldchangezongdi =  Yii::$app->request->post ('oldzongdichange');
+			$ttpoModel->oldchangemeasure = Yii::$app->request->post ('oldmeasure');
+			$ttpoModel->oldchangenotclear = Yii::$app->request->post ('oldnotclear');
+			$ttpoModel->oldchangenotstate = Yii::$app->request->post ('oldnotstate');
+			$ttpoModel->oldchangecontractnumber = Yii::$app->request->post ('oldcontractnumber');
+				
+			$ttpoModel->auditprocess_id = 1;
+			//新转让信息
+			$ttpoModel->newzongdi = $new['zongdi'];
+			$ttpoModel->newmeasure = $new['measure'];
+			$ttpoModel->newnotclear = $new['notclear'];
+			$ttpoModel->newnotstate = $new['notstate'];
+			$ttpoModel->newcontractnumber = $new['contractnumber'];
+			//新转让改变信息
+			$ttpoModel->newchangezongdi = $newmodel->zongdi;
+			$ttpoModel->newchangemeasure = $newmodel->measure;
+			$ttpoModel->newchangenotclear = $newmodel->notclear;
+			$ttpoModel->newchangenotstate = $newmodel->notstate;
+			$ttpoModel->newchangecontractnumber = $newmodel->contractnumber;
+				
+			$ttpoModel->ttpozongdi = Yii::$app->request->post ( 'ttpozongdi' );
+			$ttpoModel->ttpoarea = Yii::$app->request->post ( 'ttpoarea' );
+			$ttpoModel->actionname = \Yii::$app->controller->action->id;
+			$ttpoModel->state = 0;
+			$ttpoModel->save ();
+			
+// 			var_dump($_POST);
+// 			var_dump($newmodel);exit;
+			Contractnumber::contractnumberAdd ();
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			Zongdioffarm::zongdiUpdate($oldmodel->id,$newoldmodel->id, $ttpoModel->oldchangezongdi);
 			Zongdioffarm::zongdiUpdate($newmodel->id,$newnewmodel->id, $ttpoModel->newchangezongdi);
 			// var_dump($ttpozongdi->getErrors());exit;
 			return $this->redirect ([
 					'farmsttpozongdiview',
 					'id'=> $ttpoModel->id,
+<<<<<<< HEAD
 //					'farms_id'=>$ttpoModel->oldfarms_id,
 //					'ttpoModel' => $ttpoModel->id,
 //					'oldFarm' => $oldmodel,
 //					'newFarm' => $newmodel,
+=======
+					'farms_id'=>$ttpoModel->oldfarms_id,
+					'ttpoModel' => $ttpoModel,
+					'oldFarm' => $oldmodel,
+					'newFarm' => $newmodel,
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			]);
 		} else {
 			
@@ -2215,6 +2975,7 @@ class FarmsController extends Controller {
 			$model->pinyin = Pinyin::encode ( $model->farmname );
 			$model->farmerpinyin = Pinyin::encode ( $model->farmername );
 			$model->contractarea = Farms::getContractnumberArea($model->contractnumber);
+<<<<<<< HEAD
 // 			$model->save();
 // 			var_dump($model);
 // 			var_dump($model->getErrors());exit;
@@ -2260,6 +3021,16 @@ class FarmsController extends Controller {
 			}
 
 			Zongdioffarm::zongdiUpdate($model->id,$model->id, $model->zongdi);
+=======
+			if($model->save ()) {
+				$farmerModel = new Farmer();
+				$farmerModel->farms_id = $model->id;
+				$farmerModel->save();
+			}
+			$newAttr = $model->attributes;
+			Logs::writeLog ( '创建农场', $model->id, '', $newAttr );
+			
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			return $this->redirect ( [ 
 					'farmsview',
 					'id' => $model->id 
@@ -2449,6 +3220,7 @@ class FarmsController extends Controller {
 			$model->pinyin = Pinyin::encode ( $model->farmname );
 			$model->farmerpinyin = Pinyin::encode ( $model->farmername );
 			$model->surveydate = (string)strtotime($model->surveydate);
+<<<<<<< HEAD
 
 			if($model->save ()) {
 				$cn = Contractnumber::now();
@@ -2498,6 +3270,11 @@ class FarmsController extends Controller {
 				}
 			}
 			Zongdioffarm::zongdiUpdate($id,$id, $model->zongdi);
+=======
+			$model->save ();
+			$newAttr = $model->attributes;
+			Logs::writeLog ( '更新农场信息', $id, $oldAttr, $newAttr );
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			
 			return $this->redirect ( [ 
 					'farmsview',
@@ -3309,6 +4086,7 @@ class FarmsController extends Controller {
 				$value ['title'] = $menuUrl ['menuname'];
 				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
 				$value ['info'] = '未完成防火工作';
+<<<<<<< HEAD
 				if (Fireprevention::find ()->where ( [
 						'farms_id' => $_GET ['farms_id'],
 						'year'=>User::getYear(),
@@ -3316,6 +4094,13 @@ class FarmsController extends Controller {
 				] )->count ())
 					$value ['info'] = '完成防火工作';
 
+=======
+				if (Fireprevention::find ()->where ( [ 
+						'farms_id' => $_GET ['farms_id'] 
+				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count ())
+					$value ['info'] = '完成防火工作';
+				
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 				$value ['description'] = '防火宣传、合同签订信息';
 				break;
 			case 'yields' :
@@ -3419,6 +4204,7 @@ class FarmsController extends Controller {
 				$value ['description'] = '农机器具';
 				break;
 			case 'insurance' :
+<<<<<<< HEAD
 				$value['color'] = 'bx';
 				$value ['icon'] = 'fa fa-file-text-o';
 				$value ['title'] = $menuUrl ['menuname'];
@@ -3479,6 +4265,20 @@ class FarmsController extends Controller {
 					$value ['info'] = '没有固定资产';
 				$value ['description'] = '农场固定资产情况';
 				break;
+=======
+				$value ['icon'] = 'fa fa-file-text-o';
+				$value ['title'] = $menuUrl ['menuname'];
+				$value ['url'] = Url::to ( 'index.php?r=' . $menuUrl ['menuurl'] . '&farms_id=' . $farms_id );
+				$insurance = Insurance::find ()->where ( [
+						'farms_id' => $_GET ['farms_id']
+				] )->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count ();
+				if($insurance)
+					$value ['info'] = '已参加保险';
+				else 
+					$value ['info'] = '未参加保险';
+				$value ['description'] = '种植业保险';
+				break;
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			default :
 				$value = false;
 		}

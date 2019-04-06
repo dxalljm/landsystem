@@ -683,8 +683,13 @@ class Farms extends \yii\db\ActiveRecord {
 	 */
 	public static function searchAll() {
 
+<<<<<<< HEAD
 		$cacheKey = 'farms-search-all27'.\Yii::$app->getUser()->id;
 
+=======
+		$cacheKey = 'farms-search-all18'.\Yii::$app->getUser()->id;
+		
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		$result = Yii::$app->cache->get($cacheKey);
 		if (!empty($result)) {
 			return $result;
@@ -703,7 +708,11 @@ class Farms extends \yii\db\ActiveRecord {
 		// 所有农场
 		$data = [];
 		$where = self::getManagementArea()['id'];
+<<<<<<< HEAD
 		$result = Farms::find()->where(['management_area'=>$where,'state'=>[1,2,3,4,5]])->all();
+=======
+		$result = Farms::find()->where(['management_area'=>$where,'state'=>1])->all();
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		foreach ($result as $farm) {
 			$data[] = [
 				'value' => $farm['pinyin'], // 拼音
@@ -970,8 +979,12 @@ class Farms extends \yii\db\ActiveRecord {
 	
 	public static function getContractnumberArea($contractnumber)
 	{
+<<<<<<< HEAD
  		if(empty($contractnumber))
 			return 0;
+=======
+// 		var_dump($contractnumber);exit;
+>>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		$array = explode ( '-', $contractnumber );
 //		var_dump($array);exit;
 		return $array [2];
