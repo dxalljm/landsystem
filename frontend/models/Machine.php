@@ -31,9 +31,9 @@ class Machine extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-        	[['id','machinetype_id'],'integer'],
-            [['parameter','content'], 'string'],
-            [['productname', 'implementmodel', 'filename', 'province', 'enterprisename'], 'string', 'max' => 500]
+        	[['id','machinetype_id','year','state'],'integer'],
+            [['parameter','content',], 'string'],
+            [['productname', 'implementmodel', 'filename', 'province', 'enterprisename','machinetype'], 'string', 'max' => 500]
         ];
     }
 
@@ -52,6 +52,9 @@ class Machine extends \yii\db\ActiveRecord
             'enterprisename' => '企业名称',
             'parameter' => '基本配置及参数',
         	'content' => '备注',
+            'year' => '年度',
+            'state' => '状态',
+            'machinetype' => '机具类型'
         ];
     }
 

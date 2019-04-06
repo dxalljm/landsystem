@@ -25,6 +25,14 @@ class DisputetypeController extends Controller
             ],
         ];
     }
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -43,7 +51,7 @@ class DisputetypeController extends Controller
     {
         $searchModel = new disputetypeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        Logs::writeLogs('纠纷种类列表');
         return $this->render('disputetypeindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -57,8 +65,10 @@ class DisputetypeController extends Controller
      */
     public function actionDisputetypeview($id)
     {
+        $model = $this->findModel($id);
+        Logs::writeLogs('查看纠纷种类',$model);
         return $this->render('disputetypeview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -72,6 +82,7 @@ class DisputetypeController extends Controller
         $model = new Disputetype();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Logs::writeLogs('新增纠纷种类',$model);
             return $this->redirect(['disputetypeview', 'id' => $model->id]);
         } else {
             return $this->render('disputetypecreate', [
@@ -91,6 +102,7 @@ class DisputetypeController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Logs::writeLogs('更新纠纷种类',$model);
             return $this->redirect(['disputetypeview', 'id' => $model->id]);
         } else {
             return $this->render('disputetypeupdate', [
@@ -107,8 +119,9 @@ class DisputetypeController extends Controller
      */
     public function actionDisputetypedelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id);
+        $model->delete();
+        Logs::writeLogs('删除纠纷种类',$model);
         return $this->redirect(['disputetypeindex']);
     }
 

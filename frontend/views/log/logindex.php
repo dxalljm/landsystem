@@ -1,6 +1,6 @@
 <?php
-namespace backend\controllers;
-use app\models\tables;
+namespace frontend\controllers;use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
 
@@ -14,12 +14,13 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="log-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a('添加', ['logcreate'], ['class' => 'btn btn-success']) ?>
-    </p>
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3>&nbsp;&nbsp;&nbsp;&nbsp;<?= $this->title ?></h3></div>
+                        <div class="box-body">
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -28,19 +29,36 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'user_id',
-            'user_ip',
-            'action',
+            [
+                'attribute' => 'user_id',
+                'value' => function($model) {
+                    return User::find()->where(['id'=>$model->user_id])->one()['realname'];
+                }
+            ],
+//            'user_ip',
+//            'action',
             'action_type',
-            // 'object_name',
-            // 'object_id',
-            // 'operate_desc',
-            // 'operate_time',
+             'object_name',
+             'object_id',
+             'operate_desc',
+            [
+                'attribute' => 'operate_time',
+                'value' => function($model) {
+                    return date('Y-m-d H:i:s',$model->operate_time);
+                }
+            ],
+            'user_ip',
+            'macadress',
+//             'operate_time',
             // 'object_old_attr:ntext',
             // 'object_new_attr:ntext',
 
             ['class' => 'frontend\helpers\eActionColumn'],
         ],
     ]); ?>
-
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 </div>

@@ -5,7 +5,7 @@ use frontend\helpers\ActiveFormrdiv;
 use yii\helpers\ArrayHelper;
 use app\models\Disastertype;
 use app\models\Plant;
-use app\models\Plantingstructure;
+use app\models\Plantingstructurecheck;
 use app\models\Farms;
 use app\models\Theyear;
 /* @var $this yii\web\View */
@@ -31,7 +31,7 @@ use app\models\Theyear;
 <tr>
 <td width=15% align='right'>受灾作物</td>
 <?php 
-	$plantingstracutres = Plantingstructure::find()->where(['farms_id'=>$_GET['farms_id']])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
+	$plantingstracutres = Plantingstructurecheck::find()->where(['farms_id'=>$_GET['farms_id']])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
 	$plantValue = [];
 	if($plantingstracutres) {
 		foreach ($plantingstracutres as $value) {

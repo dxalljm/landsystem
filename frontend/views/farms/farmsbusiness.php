@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
-use app\models\tables;
+use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
 use app\models\ManagementArea;
@@ -14,25 +15,68 @@ use app\models\Projectapplication;
 use app\models\Collection;
 use app\models\Theyear;
 use app\models\Farms;
+use app\models\Mainmenu;
+use yii\helpers\ArrayHelper;
+
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\farmsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-
+if(isset($_GET['farmsSearch']['businesstype'])) {
+	$businesstype = $_GET['farmsSearch']['businesstype'];
+} else {
+	$businesstype = null;
+}
+if(isset($_GET['farmsSearch']['condition'])) {
+	$conidion = $_GET['farmsSearch']['condition'];
+} else {
+	$conidion = null;
+}
+$arrclass = explode('\\',$dataProvider->query->modelClass);
 ?>
 <div class="farms-menu">
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">
-                        业务办理&nbsp;&nbsp;<?php //echo html::a('导出XLS',Url::to(['farms/farmstoxls']),['class'=>'btn btn-primary'])?>
-                    </h3>
-                </div>
-                <div class="box-body">
+			<?php
+			User::tableBegin('业务办理');
+			if(isset($_GET['iszx'])) {
+				$state = 'checked=""';
+				$iszx = 1;
+			} else {
+				$state = "";
+				$iszx = 0;
+			}
+			?>
+			<span class="pull-right">
+				<div _ngcontent-c3="" class="togglebutton">
+					<label _ngcontent-c3="">
+						<input _ngcontent-c3="" name="iszx" type="checkbox" id="Iszx" <?= $state?>>
+						<span _ngcontent-c3="" class="toggle"></span> 已流转
+					</label>
+				</div>
+			</span>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+		'filterSelector' => "select[name='".$dataProvider->getPagination()->pageSizeParam."'],input[name='".$dataProvider->getPagination()->pageParam."']",
+		'pager' => [
+			'class' => \frontend\helpers\page\LinkPager::className(),
+			'template' => '{pageButtons} {customPage} {pageSize}', //分页栏布局
+			'pageSizeList' => [10, 20, 30, 50], //页大小下拉框值
+			'customPageWidth' => 50,            //自定义跳转文本框宽度
+			'customPageBefore' => ' 跳转到第 ',
+			'customPageAfter' => ' 页 ',
+		],
+						'total' => '<tr height="40">
+                                        <td></td>	
+                                        <td align="left"><strong>合计</strong></td>
+                                        <td align="left" id="t1"><strong><div class="shclDefault" style="width: 25px; height: 25px;"></div></strong></td>
+                                        <td align="left" id="t2"><strong><div class="shclDefault" style="width: 25px; height: 25px;"></div></strong></td>
+                                        <td align="left" id="t3"><strong><div class="shclDefault" style="width: 25px; height: 25px;"></div></strong></td>
+                                        <td align="left" id="t4"></td>
+                                        <td align="left" id="t5"></td>
+                                        <td></td>
+                                    </tr>',
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
@@ -51,8 +95,32 @@ use app\models\Farms;
 //             			return $model->farmername;
 //             	}
             ],
+//			[
+//				'attribute' => 'create_at',
+//				'value' => function($model) {
+//					return date('Y-m-d',$model->create_at);
+//				}
+//			],
             'contractarea',
-            //'management_area',
+            'contractnumber',
+			[
+				'attribute' => 'businesstype',
+				'label' => '业务类型',
+				'value' => function($model) {
+					if(isset($_GET['farmsSearch']['businesstype']))
+						return Mainmenu::getTenMenuOne($_GET['farmsSearch']['businesstype']);
+				},
+				'filter' => Mainmenu::getTenMenu()
+			],
+			[
+				'attribute' => 'condition',
+				'label' => '筛选条件',
+				'value' => function($model) {
+					if(isset($_GET['farmsSearch']['businesstype']) and isset($_GET['farmsSearch']['condition']))
+						return Mainmenu::getConditonListOne($_GET['farmsSearch']['businesstype'],$_GET['farmsSearch']['condition']);
+				},
+				'filter' => Mainmenu::getConditionList()
+			],
             [
             
             'format'=>'raw',
@@ -107,7 +175,7 @@ use app\models\Farms;
             		]);
             		$html .= '&nbsp;';
             	}
-            	$machine = Machineoffarm::find()->where(['farms_id'=>$model->id])->count();
+            	$machine = Machineoffarm::find()->where(['cardid'=>$model->cardid])->count();
             	if($machine) {
             		$machineoption = '<i class="fa fa-truck text-red"></i>';
             		$machinetitle = $machine.'台农机';
@@ -127,16 +195,26 @@ use app\models\Farms;
             		]);
             		$html .= '&nbsp;';
             	}
-            	$collection = Collection::find()->where(['farms_id'=>$model->id])->andWhere ( 'update_at>=' . Theyear::getYeartime ()[0] )->andWhere ( 'update_at<=' . Theyear::getYeartime ()[1] )->count();
-            	if($collection) {
-            		$collecitonoption = '<i class="fa fa-cny text-red"></i>';
-            		$collectiontitle = '已交费';
-            		$url = '#';
-            		$html .= Html::a($collecitonoption,$url, [
-            				'title' => $collectiontitle,
-            		]);
-            		$html .= '&nbsp;';
-            	}
+            	$collection = Collection::find()->where(['farms_id'=>$model->id,'state'=>1,'payyear'=>User::getYear()])->count();
+				if($collection) {
+					$collecitonoption = '<i class="fa fa-cny text-red"></i>';
+					$collectiontitle = '已交费';
+					$url = '#';
+					$html .= Html::a($collecitonoption,$url, [
+						'title' => $collectiontitle,
+					]);
+					$html .= '&nbsp;';
+				}
+				$collectiondckpay = Collection::find()->where(['farms_id'=>$model->id,'dckpay'=>1,'state'=>0,'payyear'=>User::getYear()])->count();
+				if($collectiondckpay) {
+					$collecitonoption = '<i class="fa fa-bullhorn text-red"></i>';
+					$collectiontitle = '已提交财务科';
+					$url = '#';
+					$html .= Html::a($collecitonoption,$url, [
+						'title' => $collectiontitle,
+					]);
+					$html .= '&nbsp;';
+				}
 //             	if($model->zongdi) {
 //             		$option .= '<i class="fa fa-check text-red"></i>';
 //             	}
@@ -178,19 +256,34 @@ use app\models\Farms;
 //             ],
         ],
     ]); ?>
-	                </div>
+			<?php
+			User::tableEnd();
+			?>
             </div>
         </div>
     </div>
 </section>
 </div>
-<?php \yii\bootstrap\Modal::begin([
-    'id' => 'farmercontract-modal',
-	'size'=>'modal-lg',
-	//'header' => '<h4 class="modal-title">登记表</h4>',
-	'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>',
 
-]); 
-
-?>
-<?php \yii\bootstrap\Modal::end(); ?>
+<script>
+	$('.shclDefault').shCircleLoader({color: "red"});
+	$(document).ready(function () {
+		$.getJSON('index.php?r=search/search', {modelClass: '<?= $arrclass[2]?>',where:'<?= json_encode($dataProvider->query->where)?>',command:'count-id'}, function (data) {
+			$('#t1').html(data + '户');
+		});
+		$.getJSON('index.php?r=search/search', {modelClass: '<?= $arrclass[2]?>',where:'<?= json_encode($dataProvider->query->where)?>',command:'count-farmer_id'}, function (data) {
+			$('#t2').html(data + '人');
+		});
+		$.getJSON('index.php?r=search/search', {modelClass: '<?= $arrclass[2]?>',where:'<?= json_encode($dataProvider->query->where)?>',command:'sum-contractarea'}, function (data) {
+			$('#t3').html(data + '亩');
+		});
+	});
+	$('#Iszx').click(function () {
+		var input = $("input[name='iszx']:checked").val();
+		if(input == 'on') {
+			window.location.href = "<?= Url::to(['farms/farmsbusiness','iszx'=>1])?>";
+		} else {
+			window.location.href = "<?= Url::to(['farms/farmsbusiness'])?>";
+		}
+	});
+</script>

@@ -19,7 +19,7 @@ class farmermembersSearch extends Farmermembers
     {
         return [
             [['id', 'farmer_id', 'isupdate'], 'integer'],
-            [['relationship', 'membername', 'cardid', 'remarks'], 'safe'],
+            [['relationship', 'membername', 'cardid', 'farmercardid','remarks'], 'safe'],
         ];
     }
 
@@ -64,6 +64,7 @@ class farmermembersSearch extends Farmermembers
         $query->andFilterWhere(['like', 'relationship', $this->relationship])
             ->andFilterWhere(['like', 'membername', $this->membername])
             ->andFilterWhere(['like', 'cardid', $this->cardid])
+            ->andFilterWhere(['like', 'farmercardid', $this->farmercardid])
             ->andFilterWhere(['like', 'remarks', $this->remarks])
             ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 

@@ -16,7 +16,6 @@ use app\models\Goodseed;
 /* @var $model app\models\Plantingstructure */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
 <div class="plantingstructure-form">
 <section class="content">
     <div class="row">
@@ -24,7 +23,7 @@ use app\models\Goodseed;
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">
-                    <?php $farms = Farms::find()->where(['id'=>$_GET['farms_id']])->one();?>
+                    <?php $farms = Farms::find()->where(['id'=>$model->farms_id])->one();?>
                         <?= $farms['farmname']; ?> 的种植结构
                     </h3>
                 </div>
@@ -39,7 +38,7 @@ use app\models\Goodseed;
 
 <td align='left'><?= $farm->farmername?></td>
 <td align='right'>承租人</td>
-<td align='left'><?= Lease::find()->where(['id'=>$_GET['lease_id']])->one()['lessee'] ?></td>
+<td align='left'><?= Lease::find()->where(['id'=>$model->lease_id])->one()['lessee'] ?></td>
 
 <td align='right'>农场面积：<?= $farm->measure.' 亩'?></td>
 <td align='left'>种植面积：<?= $model->area?>亩</td>
@@ -61,7 +60,7 @@ use app\models\Goodseed;
 
 </table>
 
-<table class="table table-bordered table-hover" id="plantinputproduct">
+<table class="table table-bordered table-hover">
 
 	<tbody>
 		<tr>
@@ -84,7 +83,7 @@ use app\models\Goodseed;
 	</tbody>
 </table>
 
-<table class="table table-bordered table-hover" id="plantpesticides">
+<table class="table table-bordered table-hover">
 	
 	<tbody>
 		<tr>
@@ -103,12 +102,15 @@ use app\models\Goodseed;
 	</tbody>
 </table>
 	<p>
-	<?= Html::a('返回', Yii::$app->getRequest()->getReferrer(), ['class' => 'btn btn-success'])?>
+        <?php
+        if(Yii::$app->controller->id == 'plantingstructure') {
+            echo Html::a('返回', Yii::$app->getRequest()->getReferrer(), ['class' => 'btn btn-success']);
+        }
+        ?>
 	</p>
                 </div>
             </div>
         </div>
     </div>
-</section>
 </div>
 

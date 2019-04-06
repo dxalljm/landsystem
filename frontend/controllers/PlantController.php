@@ -26,7 +26,14 @@ class PlantController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -60,9 +67,10 @@ class PlantController extends Controller
      */
     public function actionPlantview($id)
     {
-    	Logs::writeLog('查看作物信息',$id);
+        $model = $this->findModel($id);
+    	Logs::writeLogs('查看作物信息',$model);
         return $this->render('plantview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -76,8 +84,7 @@ class PlantController extends Controller
         $model = new Plant();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$new = $model->attributes;
-        	Logs::writeLog('添加作物',$model->id,'',$new);
+        	Logs::writeLogs('添加作物',$model);
             return $this->redirect(['plantview', 'id' => $model->id]);
         } else {
             return $this->render('plantcreate', [
@@ -115,10 +122,8 @@ class PlantController extends Controller
     public function actionPlantupdate($id)
     {
         $model = $this->findModel($id);
-		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$new = $model->attributes;
-        	Logs::writeLog('更新作物信息',$id,$old,$new);
+        	Logs::writeLogs('更新作物信息',$model);
             return $this->redirect(['plantview', 'id' => $model->id]);
         } else {
             return $this->render('plantupdate', [
@@ -136,8 +141,7 @@ class PlantController extends Controller
     public function actionPlantdelete($id)
     {
         $model = $this->findModel($id);
-    	$old = $model->attributes;
-    	Logs::writeLog('删除作物',$id,$old);
+    	Logs::writeLogs('删除作物',$model);
         $model->delete();
 
         return $this->redirect(['plantindex']);

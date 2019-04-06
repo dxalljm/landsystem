@@ -7,12 +7,14 @@
 
 namespace frontend\helpers;
 
+use app\models\Farms;
 use Yii;
 use Closure;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use app\models\Reviewprocess;
 use yii\grid\Column;
+use app\models\User;
 /**
  * ActionColumn is a column for the [[GridView]] widget that displays buttons for viewing and manipulating the items.
  *
@@ -118,65 +120,116 @@ class eActionColumn extends Column
 	        }
     	}
     }
-    protected function initDefaultButtons()
-    {
+	protected function initDefaultButtons()
+	{
 //     	$this->$id;
-    	
-    	$action = $this->controller.'view';
-    	if(\Yii::$app->user->can($action)){
-	        if (!isset($this->buttons['view'])) {
-	            $this->buttons['view'] = function ($url, $model) {
-	            	if(!empty($this->farms_id))
-	            		$url.='&farms_id='.$this->farms_id;
-		            return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
-		                'title' => Yii::t('yii', '查看'),
-		                'data-pjax' => '0',
-		        	]);
-	            };
-	        }
-    	}
-    	$action = $this->controller.'update';
-    	if(\Yii::$app->user->can($action)){
-	        if (!isset($this->buttons['update'])) {
-	            $this->buttons['update'] = function ($url, $model) {
-	            	if(!empty($this->farms_id))
-	            		$url.='&farms_id='.$this->farms_id;
-	            	$state = 1;
-	            	if($this->controller == 'projectapplication') {
-	            		$state = Reviewprocess::find()->where(['id'=>$model->reviewprocess_id])->one()['state'];
-	            	}
-	            	if($state !== 7) {
-		                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
-		                    'title' => Yii::t('yii', '更新'),
-		                    'data-pjax' => '0',
-		                ]);
-	            	}
-	            };
-	        }
-    	}
-    	$action = $this->controller.'delete';
-    	if(\Yii::$app->user->can($action)){
-	        if (!isset($this->buttons['delete'])) {
-	            $this->buttons['delete'] = function ($url, $model) {
-	            	if(!empty($this->farms_id))
-	            		$url.='&farms_id='.$this->farms_id;
-	            	$state = 1;
-	            	if($this->controller == 'projectapplication') {
-	            		$state = Reviewprocess::find()->where(['id'=>$model->reviewprocess_id])->one()['state'];
-	            	}
-	            	if($state !== 7) {
-		                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
-		                    'title' => Yii::t('yii', '删除'),
-		                    'data-confirm' => Yii::t('yii', '确定要删除此项吗?'),
-		                    'data-method' => 'post',
-		                    'data-pjax' => '0',
-		                ]);
-	            	}
-	            };
-	        }
-    	}
-    }
+		$action = $this->controller.'view';
+//		var_dump($this->getUserRole($action));
+		if($this->getUserRole($action)){
+			if (!isset($this->buttons['view'])) {
+				$this->buttons['view'] = function ($url, $model) {
+					if(!empty($this->farms_id))
+						$url.='&farms_id='.$this->farms_id;
+					return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
+						'title' => Yii::t('yii', '查看'),
+						'data-pjax' => '0',
+					]);
+				};
+			}
+		}
+//		$farm = Farms::findOne($this->id);
+//		var_dump($farm);
+		$action = $this->controller.'update';
+		if($this->getUserRole($action)){
+			if (!isset($this->buttons['update'])) {
+				$this->buttons['update'] = function ($url, $model) {
+					if(!empty($this->farms_id))
+						$url.='&farms_id='.$this->farms_id;
+					$state = 1;
+//					if($this->controller == 'projectapplication') {
+//						$state = Reviewprocess::find()->where(['id'=>$model->reviewprocess_id])->one()['state'];
+//					}
+					if(User::getItemname('法规科')) {
+						if($model->locked == 0) {
+							$url = Url::to(['farms/farmsadminupdate', 'id' => $model->id]);
+						} else {
+							$r = Reviewprocess::find()->where(['oldfarms_id'=>$model->id,'state'=>4])->count();
+							if($r) {
+								$url = '#';
+								return '';
+							}
+						}
+					}
+					if(User::disabled()) {
+						$url = '#';
+					}
 
+					if($state !== 7) {
+						if(User::disabled()) {
+							return '';
+						} else {
+							return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
+								'title' => Yii::t('yii', '更新'),
+								'data-pjax' => '0',
+							]);
+						}
+					}
+				};
+			}
+		}
+		$action = $this->controller.'delete';
+		if($this->getUserRole($action)){
+			if (!isset($this->buttons['delete'])) {
+				$this->buttons['delete'] = function ($url, $model) {
+					if(!empty($this->farms_id))
+						$url.='&farms_id='.$this->farms_id;
+					$state = 1;
+//					if($this->controller == 'projectapplication') {
+//						$state = Reviewprocess::find()->where(['id'=>$model->reviewprocess_id])->one()['state'];
+//					}
+
+					if($state !== 7) {
+						if(User::disabled()) {
+							return '';
+						} else {
+							return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
+								'title' => Yii::t('yii', '删除'),
+								'data-confirm' => Yii::t('yii', '确定要删除此项吗?'),
+								'data-method' => 'post',
+								'data-pjax' => '0',
+							]);
+						}
+					}
+				};
+			}
+		}
+	}
+
+
+	protected function getUserRole($action)
+	{
+		$plateArray = User::getPlateRole();
+//		var_dump($plateArray);exit;
+//		$plateArray[] = 'log-view';
+		$nowController = Yii::$app->controller->id;
+		$data = ['machine','plantingstructurecheck','bankaccount','nation','plant','inputproduct','inputproductbrandmodel','pesticides','goodseed','cooperative','disputetype','breedtype','infrastructuretype','projecttype','disastertype','machinetype','insurancecompany','fixed'];
+		if(in_array($nowController,$data)) {
+			return true;
+		}
+//		if()
+//		return in_array($nowController,$plateArray);
+		foreach ($plateArray as $key => $plate) {
+			if($key == $nowController) {
+				foreach ($plate as $p) {
+					$tempaction = $key.$p;
+					if($action == $tempaction) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
     /**
      * Creates a URL for the given action and model.
      * This method is called for each button and each row.

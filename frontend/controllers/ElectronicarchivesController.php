@@ -25,7 +25,14 @@ class ElectronicarchivesController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
     /**
      * Lists all Electronicarchives models.
      * @return mixed
@@ -34,7 +41,7 @@ class ElectronicarchivesController extends Controller
     {
         $searchModel = new electronicarchivesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        
         return $this->render('electronicarchivesindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

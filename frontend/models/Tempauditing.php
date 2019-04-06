@@ -31,8 +31,8 @@ class Tempauditing extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'update_at', 'create_at','state'], 'integer'],
-            [['tempauditing', 'begindate', 'enddate'], 'string', 'max' => 500]
+            [['user_id','tempauditing', 'update_at', 'create_at','state'], 'integer'],
+            [['begindate', 'enddate'], 'string', 'max' => 500]
         ];
     }
 

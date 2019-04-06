@@ -20,7 +20,7 @@ class projectapplicationSearch extends Projectapplication
     public function rules()
     {
         return [
-            [['id','farms_id', 'farmer_id','create_at', 'update_at', 'is_agree','management_area','reviewprocess_id'], 'integer'],
+            [['id','farms_id', 'farmer_id','create_at', 'update_at', 'is_agree','management_area','reviewprocess_id','farmstate'], 'integer'],
             [['projectdata'],'number'],
         	[['projecttype'], 'safe'],
         	[['content','unit'],'string']
@@ -53,7 +53,11 @@ class projectapplicationSearch extends Projectapplication
         ]);
 
         $this->load($params);
-
+//		var_dump($this->management_area);
+		if(is_array($this->management_area) and count($this->management_area) > 1) {
+			$this->management_area = null;
+		}
+//		var_dump($this->management_area);exit;
         $query->andFilterWhere([
             'id' => $this->id,
         	'farms_id' => $this->farms_id,
@@ -63,12 +67,14 @@ class projectapplicationSearch extends Projectapplication
             'is_agree' => $this->is_agree,
         	'management_area' => $this->management_area,
         	'projectdata' => $this->projectdata,
+			'farmstate' => $this->farmstate,
+			'year' => $this->year,
         ]);
 
         $query->andFilterWhere(['like', 'projecttype', $this->projecttype])
         ->andFilterWhere(['like', 'content', $this->content])
-        ->andFilterWhere(['like', 'unit', $this->unit])
-        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
+        ->andFilterWhere(['like', 'unit', $this->unit]);
+//        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }
@@ -101,10 +107,18 @@ class projectapplicationSearch extends Projectapplication
     	$dataProvider = new ActiveDataProvider([
     			'query' => $query,
     	]);
-    	if($params['projectapplicationSearch']['management_area'] == 0)
-    		$this->management_area = NULL;
-    	else
-    		$this->management_area = $params['projectapplicationSearch']['management_area'];
+    	if(isset($params['projectapplicationSearch']['management_area'])) {
+	    	if($params['projectapplicationSearch']['management_area'] == 0)
+	    		$this->management_area = NULL;
+	    	else
+	    		$this->management_area = $params['projectapplicationSearch']['management_area'];
+		} else {
+			$management_area = Farms::getManagementArea()['id'];
+			if(count($management_area) > 1)
+				$this->management_area = NULL;
+			else 
+				$this->management_area = $management_area;
+		}
     	$farmid = [];
     	if((isset($params['projectapplicationSearch']['farms_id']) and $params['projectapplicationSearch']['farms_id'] !== '') or (isset($params['projectapplicationSearch']['farmer_id']) and $params['projectapplicationSearch']['farmer_id'] !== '')) {
 	    	$farm = Farms::find();
@@ -127,11 +141,15 @@ class projectapplicationSearch extends Projectapplication
     	}
     	if(isset($params['projectapplicationSearch']['projecttype']) and $params['projectapplicationSearch']['projecttype'] !== '')
     		$this->projecttype = $params['projectapplicationSearch']['projecttype'];
+		if(isset($params['projectapplicationSearch']['farmstate']) and $params['projectapplicationSearch']['farmstate'] !== '')
+			$this->farmstate = $params['projectapplicationSearch']['farmstate'];
     	$query->andFilterWhere([
 //     			'id' => $this->id,
     			'farms_id' => $farmid,
     			'projecttype' => $this->projecttype,
     			'management_area' => $this->management_area,
+				'farmstate' => $this->farmstate,
+				'year' => $this->year
     	]);
     
     	$query->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);

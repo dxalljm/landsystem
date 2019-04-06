@@ -13,10 +13,7 @@ use yii\helpers\Html;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>
-                    </h3>
-                </div>
+                    <h3>&nbsp;&nbsp;&nbsp;&nbsp;<?= $this->title ?></h3></div>
                 <div class="box-body">
 
     <?= $this->render('_userinfoform', [

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<item value="D:\wamp\www" key="org.eclipse.dltk.ui.last.external.project"/>
 	<section name="CallHierarchySearchScope">
 	</section>
 </section>

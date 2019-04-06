@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use app\models\Logs;
 use Yii;
 use app\models\Prevention;
 use frontend\models\preventionSearch;
@@ -30,7 +31,14 @@ class PreventionController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -60,6 +68,7 @@ class PreventionController extends Controller
 		$params = Yii::$app->request->queryParams;
 		$params['preventionSearch']['farms_id'] = $farms_id;
 		$preventionData = $preventionSearch->search($params);
+        Logs::writeLog('防疫情况列表',$farms_id);
         return $this->render('preventionindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -75,6 +84,8 @@ class PreventionController extends Controller
      */
     public function actionPreventionview($id)
     {
+        $model = $this->findModel($id);
+        Logs::writeLogs('查看防疫情况',$model);
         return $this->render('preventionview', [
             'model' => $this->findModel($id),
         ]);
@@ -95,6 +106,7 @@ class PreventionController extends Controller
         	$model->management_area = Farms::getFarmsAreaID($farms_id);
         	$model->breedtype_id = Breedinfo::find()->where(['id'=>$id])->one()['breedtype_id'];
         	$model->save();
+            Logs::writeLogs('新增防疫情况',$model);
             return $this->redirect(['preventionindex', 'farms_id'=>$farms_id]);
         } else {
             return $this->render('preventioncreate', [
@@ -114,6 +126,7 @@ class PreventionController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Logs::writeLogs('更新防疫情况',$model);
             return $this->redirect(['preventionview', 'id' => $model->id]);
         } else {
             return $this->render('preventionupdate', [
@@ -130,8 +143,9 @@ class PreventionController extends Controller
      */
     public function actionPreventiondelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id);
+        $model->delete();
+        Logs::writeLogs('删除防疫情况',$model);
         return $this->redirect(['preventionindex']);
     }
 
@@ -146,7 +160,7 @@ class PreventionController extends Controller
     				'tab' => $_GET['tab'],
     				'begindate' => strtotime($_GET['begindate']),
     				'enddate' => strtotime($_GET['enddate']),
-					$class =>['management_area' =>  $_GET['management_area']],
+// 					$class =>['management_area' =>  $_GET['management_area']],
     		]);
     	} 
     	$searchModel = new preventionSearch();
@@ -156,6 +170,7 @@ class PreventionController extends Controller
 			 $_GET['enddate'] = strtotime($_GET['enddate']);
 
     	$dataProvider = $searchModel->searchIndex ( $_GET );
+        Logs::writeLogs('综合查询-防疫情况');
     	return $this->render('preventionsearch',[
 	    			'searchModel' => $searchModel,
 	    			'dataProvider' => $dataProvider,

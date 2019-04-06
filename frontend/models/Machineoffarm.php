@@ -27,8 +27,8 @@ class Machineoffarm extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['machine_id', 'farms_id','create_at','update_at'], 'integer'],
-        	[['machinename'],'string'],
+            [['machine_id', 'farms_id','create_at','update_at','management_area'], 'integer'],
+        	[['machinename','cardid'],'string'],
         ];
     }
 
@@ -45,6 +45,8 @@ class Machineoffarm extends \yii\db\ActiveRecord
         	'create_at' => '创建日期',
         	'update_at' => '更新日期',
         	'acquisitiontime' => '购置年限',
+            'cardid' => '身份证号',
+            'management_area' => '管理区'
         ];
     }
 }

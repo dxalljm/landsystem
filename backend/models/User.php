@@ -9,6 +9,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 use app\models\SignupForm;
+use app\models\AuthAssignment;
 /**
  * This is the model class for table "{{%user}}".
  *
@@ -50,10 +51,11 @@ class User extends \yii\db\ActiveRecord
     {
         return [
 			[['username', 'auth_key', 'password_hash', 'created_at', 'updated_at', 'department_id'], 'required'],
-            [['status', 'created_at', 'updated_at','autoyear'], 'integer'],
-            [['username', 'password_hash', 'password_reset_token', 'email','year'], 'string', 'max' => 255],
+            [['status', 'created_at', 'updated_at','autoyear','level'], 'integer'],
+            [['username', 'password_hash', 'password_reset_token', 'email','year','ip','mac'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
-        	[['realname'], 'string', 'max' => 200],
+        	[['realname','auditinguser'], 'string', 'max' => 500],
+            [['mainmenu','plate'],'string'],
 			['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
 
@@ -79,6 +81,11 @@ class User extends \yii\db\ActiveRecord
             'updated_at' => '更新时间',
         	'department_id' => '科室ID',
         	'autoyear' => '自动获取',
+        	'ip' => 'ip地址',
+            'level' => '职级',
+            'plate' => '管辖板块',
+            'mainmenu' => '导航菜单',
+            'auditinguser' => '审核权限'
         ];
     }
 	
@@ -208,5 +215,10 @@ class User extends \yii\db\ActiveRecord
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+    
+    public static function getItemname()
+    {
+    	return AuthAssignment::find()->where(['user_id'=>\Yii::$app->getUser ()->id])->one()['item_name'];
     }
 }

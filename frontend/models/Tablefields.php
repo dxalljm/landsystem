@@ -51,9 +51,25 @@ class Tablefields extends \yii\db\ActiveRecord
     
     public static function getCfields($contrller,$modelfield)
     {
-//     	var_dump($modelfield);exit;
     	$tableid = Tables::find()->where(['tablename'=>$contrller])->one()['id'];
     	$field = Tablefields::find()->where(['tables_id'=>$tableid,'fields'=>$modelfield])->one();
+//        var_dump($field['cfields']);exit;
     	return $field['cfields'];
+//
+//        if($modelfield == 'photo') {
+//            return '照片';
+//        }
+//        if($modelfield == 'cardpic' or $modelfield == 'cardpicback') {
+//            return '身份证扫描件';
+//        }
+//        if($modelfield == 'archivesimage') {
+//            return '合同扫描件';
+//        }
+    }
+
+    public static function getCTable($class)
+    {
+        $tableid = Tables::find()->where(['tablename'=>$class])->one();
+        return $tableid['Ctablename'];
     }
 }

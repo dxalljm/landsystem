@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use app\models\Logs;
 use Yii;
 use app\models\Yieldbase;
 use frontend\models\yieldbaseSearch;
@@ -28,7 +29,14 @@ class YieldbaseController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
     /**
      * Lists all Yieldbase models.
      * @return mixed
@@ -37,7 +45,7 @@ class YieldbaseController extends Controller
     {
         $searchModel = new yieldbaseSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        Logs::writeLogs('产量基数列表');
         return $this->render('yieldbaseindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -51,8 +59,10 @@ class YieldbaseController extends Controller
      */
     public function actionYieldbaseview($id)
     {
+        $model = $this->findModel($id);
+        Logs::writeLogs('查看产量基数',$model);
         return $this->render('yieldbaseview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -75,6 +85,7 @@ class YieldbaseController extends Controller
         		$model->yield = $yields[$i];
         		$model->year = User::getYear();
         		$model->save();
+                Logs::writeLogs('创建'.$model->year.'产量基数',$model);
         	}
             return $this->redirect(['yieldbaseindex']);
         } else {
@@ -92,13 +103,26 @@ class YieldbaseController extends Controller
      */
     public function actionYieldbaseupdate($id)
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['yieldbaseview', 'id' => $model->id]);
+        $one = $this->findModel($id);
+        $yieldbases = Yieldbase::find()->where(['year'=>$one->year])->all();
+        $plant = Plantingstructure::getPlantname();
+//         var_dump($plant);exit;
+        if (Yii::$app->request->post()) {
+        	$yields = Yii::$app->request->post('yields');
+        	$plantids = Yii::$app->request->post('plantids');
+        	foreach ($yieldbases as $value) {
+        		$model = $this->findModel($value['id']);
+        		$model->plant_id = $plantids[$i];
+        		$model->yield = $yields[$i];
+        		$model->year = User::getYear();
+        		$model->save();
+                Logs::writeLogs('更新'.$model->year.'产量基数',$model);
+        	}
+            return $this->redirect(['yieldbaseindex']);
         } else {
             return $this->render('yieldbaseupdate', [
-                'model' => $model,
+                'yieldbases' => $yieldbases,
+            		
             ]);
         }
     }
@@ -111,8 +135,9 @@ class YieldbaseController extends Controller
      */
     public function actionYieldbasedelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id);
+        $model->delete();
+        Logs::writeLogs('删除产量基数',$model);
         return $this->redirect(['yieldbaseindex']);
     }
 

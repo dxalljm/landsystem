@@ -1,6 +1,6 @@
 <?php
-namespace backend\controllers;
-use app\models\tables;
+namespace frontend\controllers;use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
 use app\models\Plant;
@@ -25,13 +25,13 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header"><?php if(empty($date)) $date = date('Y');?>
-                    <table><tr><td><h3 class="box-title"><?= $this->title ?></h3></td><td width="30"></td><td width="60"><?= DateTimePicker::widget([
+                    <table><tr><td><h3>&nbsp;&nbsp;&nbsp;&nbsp;<?= $this->title ?></h3></td><td width="30"></td><td width="60"><?= DateTimePicker::widget([
                 'id' => 'setYear',
 				'name' => 'setyear',
 				'value' => $date,
 				'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
 // 				'options' => ['class'=>''],
-				'inline' => false, 
+				'inline' => false,
 		    	'language'=>'zh-CN',
 		        'clientOptions' => [
 		            'autoclose' => true,
@@ -42,9 +42,10 @@ $this->params['breadcrumbs'][] = $this->title;
 			]);?></td><td>年度</td></tr></table>
                 </div>
                 <div class="box-body">
-                 
+
     			<table class="table table-bordered table-hover">
     				<tr>
+						<td align="center">年度</td>
     					<td align="center">补贴类型</td>
     					<td align="center">补贴种类</td>
     					<td align="center">操作</td>
@@ -53,6 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
     					$type = Subsidiestype::find()->where(['id'=>$value['subsidiestype_id']])->one();
     					?>
     				<tr>
+						<td align="center"><?= $value['year']?></td>
     					<td align="center"><?= $type['typename']?></td>
     					<td align="center"><?php $classFile = 'app\\models\\'. $type['urladdress'];
 				            		$data = $classFile::find()->where(['id'=>$value['typeid']])->one();
@@ -68,7 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
     				</tr>
     				<?php }?>
     			</table>
-    			
+
                 </div>
             </div>
         </div>

@@ -2,9 +2,11 @@
 
 namespace frontend\controllers;
 
+use app\models\Indexecharts;
+use app\models\Logs;
 use Yii;
 use app\models\User;
-use frontend\models\signupform;
+use frontend\models\SignupForm;
 use frontend\models\userSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -28,7 +30,14 @@ class UserController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -155,7 +164,28 @@ class UserController extends Controller
     		]);
     	}
     }
-    
+
+    public function actionUserindexecharts($user_id)
+    {
+        $indexecharts = Indexecharts::find()->where(['user_id'=>$user_id])->one();
+        if($indexecharts) {
+            $model = Indexecharts::findOne($indexecharts['id']);
+        } else {
+            $model = new Indexecharts();
+        }
+        if ($model->load(Yii::$app->request->post())) {
+            $model->user_id = $user_id;
+            $model->save();
+            Logs::writeLogs('更新用户首页图表',$model);
+            return $this->redirect(['site/index']);
+        }
+    }
+
+    public function actionModfiypassword($password)
+    {
+    	$model = new SignupForm();
+		$model->signmodpass($password);
+    }
     /**
      * Finds the user model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

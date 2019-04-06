@@ -8,21 +8,24 @@ use yii\data\ActiveDataProvider;
 use app\models\Plantingstructure;
 use app\models\Theyear;
 use app\models\Farms;
+use app\models\Goodseed;
+use yii\helpers\ArrayHelper;
 /**
  * plantingstructureSearch represents the model behind the search form about `app\models\Plantingstructure`.
  */
 class plantingstructureSearch extends Plantingstructure
 {
 	public $farmer_id;
+//	public $insurancetype;
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'plant_id', 'goodseed_id', 'lease_id', 'farms_id','farmer_id','management_area'], 'integer'],
+            [['id', 'plant_id', 'goodseed_id', 'lease_id', 'farms_id','farmer_id','management_area','planter','state','isinsurance'], 'integer'],
             [['area'], 'number'],
-            [['zongdi'], 'safe'],
+            [['zongdi','year'], 'safe'],
         ];
     }
 
@@ -63,6 +66,7 @@ class plantingstructureSearch extends Plantingstructure
         	'lease_id' => $this->lease_id,
             'farms_id' => $this->farms_id,
         	'management_area'=>$this->management_area,
+			'year' => $this->year,
         ]);
 
         $query->andFilterWhere(['like', 'zongdi', $this->zongdi])
@@ -114,29 +118,36 @@ class plantingstructureSearch extends Plantingstructure
     public function searchIndex($params)
     {
 //     	echo date('Y-m-d',$params['begindate']);
+//		echo '<br>';
+//		echo date('Y-m-d',$params['enddate']);
 //     	 var_dump($params);exit;
     	$query = Plantingstructure::find();
     
     	$dataProvider = new ActiveDataProvider([
     			'query' => $query,
     	]);
-    	if($params['plantingstructureSearch']['management_area'] == 0)
-    		$this->management_area = NULL;
-    	else
-    		$this->management_area = $params['plantingstructureSearch']['management_area'];
+		$this->load($params);
+    	if(isset($_GET['plantingstructureSearch']['management_area'])) {
+			$this->management_area = $_GET['plantingstructureSearch']['management_area'];
+    	} else {
+			$this->management_area = Farms::getManagementArea()['id'];
+		}
+//		$management_area = Farms::getManagementArea()['id'];
+		if(count($this->management_area) > 1)
+			$this->management_area = null;
     	$farmid = [];
-    	if((isset($params['plantingstructureSearch']['farms_id']) and $params['plantingstructureSearch']['farms_id'] !== '') or (isset($params['plantingstructureSearch']['farmer_id']) and $params['plantingstructureSearch']['farmer_id'] !== '')) {
+    	if((isset($_GET['plantingstructureSearch']['farms_id']) and $_GET['plantingstructureSearch']['farms_id'] !== '') or (isset($_GET['plantingstructureSearch']['farmer_id']) and $_GET['plantingstructureSearch']['farmer_id'] !== '')) {
 	    	$farm = Farms::find();
 	    	$farm->andFilterWhere(['management_area'=>$this->management_area]);
     	}
-    	if(isset($params['plantingstructureSearch']['farms_id']) and $params['plantingstructureSearch']['farms_id'] !== '') {
-    		$this->farms_id = $params['plantingstructureSearch']['farms_id'];
+    	if(isset($_GET['plantingstructureSearch']['farms_id']) and $_GET['plantingstructureSearch']['farms_id'] !== '') {
+    		$this->farms_id = $_GET['plantingstructureSearch']['farms_id'];
     		$farm->andFilterWhere($this->pinyinSearch($this->farms_id));
     		    		
     	}
 
-    	if(isset($params['plantingstructureSearch']['farmer_id']) and $params['plantingstructureSearch']['farmer_id'] !== '') {
-    		$this->farmer_id = $params['plantingstructureSearch']['farmer_id'];
+    	if(isset($_GET['plantingstructureSearch']['farmer_id']) and $_GET['plantingstructureSearch']['farmer_id'] !== '') {
+    		$this->farmer_id = $_GET['plantingstructureSearch']['farmer_id'];
     		$farm->andFilterWhere($this->farmerpinyinSearch($this->farmer_id));
     	}
     	if(isset($farm)) {
@@ -145,28 +156,49 @@ class plantingstructureSearch extends Plantingstructure
 	    	}
     	}
 //     	var_dump($farmid);exit;
-    	if(isset($params['plantingstructureSearch']['plant_id']))
-    		$this->plant_id = $params['plantingstructureSearch']['plant_id'];
+    	if(isset($_GET['plantingstructureSearch']['plant_id']))
+    		$this->plant_id = $_GET['plantingstructureSearch']['plant_id'];
 
-    	
-    	if(isset($params['plantingstructureSearch']['goodseed_id']))
-    		$this->goodseed_id = $params['plantingstructureSearch']['goodseed_id'];
-		
-    	if(isset($params['plantingstructureSearch']['area']))
-    		$query->andFilterWhere($this->areaSearch($params['plantingstructureSearch']['area']));
-    	//         $this->setAttributes($params);
-    
+//		if(isset($_GET['plantingstructureSearch']['insurancetype']))
+//			$this->plant_id = $_GET['plantingstructureSearch']['insurancetype'];
+
+		if(isset($_GET['plantingstructureSearch']['state']))
+			$this->state = $_GET['plantingstructureSearch']['state'];
+		if(isset($_GET['plantingstructureSearch']['goodseed_id']))
+			$this->goodseed_id = $_GET['plantingstructureSearch']['goodseed_id'];
+
+		if(isset($_GET['plantingstructureSearch']['year']))
+			$this->year = $_GET['plantingstructureSearch']['year'];
+
+		if(isset($_GET['plantingstructureSearch']['planter']))
+			$this->planter = $_GET['plantingstructureSearch']['planter'];
+
+    	if(isset($_GET['plantingstructureSearch']['goodseed_id'])) {
+    		$this->goodseed_id = $_GET['plantingstructureSearch']['goodseed_id'];
+    		$goodseeds = ArrayHelper::map(Goodseed::find()->where(['plant_id'=>$this->plant_id])->all(), 'id', 'id');
+    		if(!in_array($this->goodseed_id, $goodseeds)) {
+    			$this->goodseed_id = null;
+    		}
+    	}
+    	if(isset($_GET['plantingstructureSearch']['area']))
+    		$query->andFilterWhere($this->areaSearch($_GET['plantingstructureSearch']['area']));
+    	//         $this->setAttributes($_GET);
+
     	$query->andFilterWhere([
 //     			'id' => $this->id,
     			'plant_id' => $this->plant_id,
     			'goodseed_id' => $this->goodseed_id,
     			'lease_id' => $this->lease_id,
     			'farms_id' => $farmid,
+				'planter' => $this->planter,
     			'management_area' => $this->management_area,
+				'year' => $this->year,
+				'state' => $this->state,
     	]);
-    	
-    	$query->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
-//     	var_dump($dataProvider->getModels());exit;
+    	if(isset($_GET['begindate'])) {
+			$query->andFilterWhere(['between', 'create_at', $_GET['begindate'], $_GET['enddate']]);
+		}
+//     	var_dump($dataProvider->query->where);exit;
     	return $dataProvider;
     }
 }

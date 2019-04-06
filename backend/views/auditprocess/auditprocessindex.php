@@ -1,6 +1,6 @@
 <?php
 namespace backend\controllers;
-use app\models\tables;
+use app\models\Tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
 
@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'process',
             'actionname',
 
-            ['class' => 'frontend\helpers\eActionColumn'],
+            ['class' => 'backend\helpers\eActionColumn'],
         ],
     ]); ?>
                 </div>

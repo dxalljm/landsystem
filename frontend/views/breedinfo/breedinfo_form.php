@@ -14,7 +14,7 @@ use frontend\helpers\ActiveFormrdiv;
 <table class="table table-striped table-bordered table-hover table-condensed">
 		<tr>
 <td width=15% align='right'>养殖户ID</td>
-<td align='left'><?= $form->field($model, 'breed_id')->textInput()->label(false)->error(false) ?></td>
+<td align='left'><?= $form->field($model, 'breed_id')->dr()->label(false)->error(false) ?></td>
 </tr>
 <tr>
 <td width=15% align='right'>数量</td>

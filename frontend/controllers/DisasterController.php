@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use app\models\Logs;
 use Yii;
 use app\models\Disaster;
 use frontend\models\disasterSearch;
@@ -26,7 +27,14 @@ class DisasterController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -46,7 +54,7 @@ class DisasterController extends Controller
         $params = Yii::$app->request->queryParams;
         $params['disasterSearch']['farms_id'] = $farms_id;
         $dataProvider = $searchModel->search($params);
-
+        Logs::writeLog('农场灾害情况',$farms_id);
         return $this->render('disasterindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -66,7 +74,7 @@ class DisasterController extends Controller
     	if (is_array($searchModel->management_area)) {
     		$searchModel->management_area = null;
     	}
-    
+        Logs::writeLogs('灾害查询');
     	return $this->render('disasterinfo', [
     			'searchModel' => $searchModel,
     			'dataProvider' => $dataProvider,
@@ -81,8 +89,10 @@ class DisasterController extends Controller
      */
     public function actionDisasterview($id)
     {
+        $model = $this->findModel($id);
+        Logs::writeLogs('查看灾害情况',$model);
         return $this->render('disasterview', [
-            'model' => $this->findModel($id),
+            'model' => $model
         ]);
     }
 
@@ -100,6 +110,7 @@ class DisasterController extends Controller
         	$model->update_at = $model->create_at;
         	$model->management_area = Farms::getFarmsAreaID($farms_id);
         	$model->save();
+            Logs::writeLogs('新增农场灾害情况',$model);
             return $this->redirect(['disasterindex', 'farms_id' => $farms_id]);
         } else {
             return $this->render('disastercreate', [
@@ -121,6 +132,7 @@ class DisasterController extends Controller
         if ($model->load(Yii::$app->request->post())) {
         	$model->update_at = time();
         	$model->save();
+            Logs::writeLogs('更新农场灾害情况',$model);
             return $this->redirect(['disasterview', 'id' => $model->id]);
         } else {
             return $this->render('disasterupdate', [
@@ -137,8 +149,9 @@ class DisasterController extends Controller
      */
     public function actionDisasterdelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model= $this->findModel($id);
+        $model->delete();
+        Logs::writeLogs('删除农场灾害情况',$model);
         return $this->redirect(['disasterindex']);
     }
 
@@ -153,7 +166,7 @@ class DisasterController extends Controller
     				'tab' => $_GET['tab'],
     				'begindate' => strtotime($_GET['begindate']),
     				'enddate' => strtotime($_GET['enddate']),
-					$class =>['management_area' =>  $_GET['management_area']],
+// 					$class =>['management_area' =>  $_GET['management_area']],
     		]);
     	} 
     	$searchModel = new disasterSearch();
@@ -163,6 +176,7 @@ class DisasterController extends Controller
 			 $_GET['enddate'] = strtotime($_GET['enddate']);
 
     	$dataProvider = $searchModel->searchIndex ( $_GET );
+        Logs::writeLogs('综合查询-灾害');
     	return $this->render('disastersearch',[
 	    			'searchModel' => $searchModel,
 	    			'dataProvider' => $dataProvider,

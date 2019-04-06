@@ -2,9 +2,13 @@
 
 namespace frontend\controllers;
 
+use app\models\Goodseedinfo;
+use app\models\User;
+use app\models\Plantingstructure;
 use Yii;
 use app\models\Goodseed;
 use frontend\models\goodseedSearch;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -25,6 +29,14 @@ class GoodseedController extends Controller
                 ],
             ],
         ];
+    }
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
     }
 //     public function beforeAction($action)
 //     {
@@ -58,9 +70,10 @@ class GoodseedController extends Controller
      */
     public function actionGoodseedview($id)
     {
-    	Logs::writeLog('查看良种信息',$id);
+        $model = $this->findModel($id);
+    	Logs::writeLogs('查看良种信息',$model);
         return $this->render('goodseedview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -73,8 +86,7 @@ class GoodseedController extends Controller
     {
         $model = new Goodseed();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$new = $model->attributes;
-        	Logs::writeLog('创建良种信息',$model->id,'',$new);
+        	Logs::writeLogs('创建良种信息',$model);
             return $this->redirect(['goodseedview', 'id' => $model->id]);
         } else {
             return $this->render('goodseedcreate', [
@@ -85,12 +97,71 @@ class GoodseedController extends Controller
     //获取良种信息
     public function  actionGoodseedgetmodel($plant_id)
     {
-    	$goodseed = Goodseed::find()->where(['plant_id'=>$plant_id])->all();
-    	$newData = NULL;
-    	foreach($goodseed as $key=>$val){
-    		$newData[$key] = $val->attributes;
-    	}
-    	echo json_encode(['status'=>1,'goodseed'=>$newData]);
+        $goodseed = Goodseed::find()->where(['plant_id'=>$plant_id])->all();
+        $newData = NULL;
+        foreach($goodseed as $key=>$val){
+            $newData[$key] = $val->attributes;
+        }
+        echo json_encode(['status'=>1,'goodseed'=>$newData]);
+    }
+
+    public function  actionGoodseedsave($typename_id,$plant_id)
+    {
+//        $goodseed = Goodseed::find()->where(['typename'=>$typename])->one();
+//        if(empty($goodseed)) {
+//            $model = new Goodseed();
+//            $model->plant_id = $plant_id;
+//            $model->typename = $typename;
+//            $model->save();
+//            $goodseed_id = $model->id;
+//        } else {
+//            $goodseed_id = $goodseed['id'];
+//        }
+//        $planting = Plantingstructure::find
+//        $goodseedinfo = Goodseedinfo::find()->where([''])
+//        echo json_encode(['goodseed_id'=>$goodseed_id]);
+    }
+
+    public function actionGetgoodseed($plant_id)
+    {
+        $goodseed = Goodseed::find()->where(['plant_id'=>$plant_id])->one();
+        if($goodseed) {
+            return true;
+        }
+        return false;
+    }
+
+    public function  actionGoodseedlistajax($farms_id,$plant_id,$planter,$type,$input,$id)
+    {
+        $goodseedtypename = '';
+        $goodseed = Goodseed::find()->where(['plant_id'=>$plant_id])->all();
+        $newData = ArrayHelper::map($goodseed,'id','typename');
+        $goodseed_id = Plantingstructure::find()->where(['farms_id'=>$farms_id,'plant_id'=>$plant_id,'lease_id'=>$planter,'year'=>User::getYear()])->one();
+
+        if($goodseed_id) {
+            $goodseedtypename = Goodseed::find()->where(['id'=>$goodseed_id['goodseed_id']])->one()['typename'];
+        }
+
+        $goodseedinfo = Goodseedinfo::find()->where(['farms_id'=>$farms_id,'total_area'=>$input])->all();
+        if($goodseedinfo) {
+            foreach ($goodseedinfo as $key => $value) {
+                $input -= $value['area'];
+            }
+        }
+//        var_dump($goodseedinfo);exit;
+
+        return $this->renderAjax('goodseedlistajax',
+            [
+                'goodseedlist'=>$newData,
+                'plant_id'=>$plant_id,
+                'planter' => $planter,
+                'type' => $type,
+                'goodseedtypename' => $goodseedtypename,
+                'goodseedinfo' => $goodseedinfo,
+                'goodseed_id' => $goodseed_id,
+                'input' => sprintf('%.2f',$input),
+                'id' => $id,
+            ]);
     }
 
     /**
@@ -102,10 +173,8 @@ class GoodseedController extends Controller
     public function actionGoodseedupdate($id)
     {
         $model = $this->findModel($id);
-		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$new = $model->attributes;
-        	Logs::writeLog('更新良种信息',$id,$old,$new);
+        	Logs::writeLogs('更新良种信息',$model);
             return $this->redirect(['goodseedview', 'id' => $model->id]);
         } else {
             return $this->render('goodseedupdate', [
@@ -123,10 +192,8 @@ class GoodseedController extends Controller
     public function actionGoodseeddelete($id)
     {
     	$model = $this->findModel($id);
-    	$old = $model->attributes;
-    	Logs::writeLog('删除良咱信息',$id,$old);
         $model->delete();
-
+        Logs::writeLogs('删除良种信息',$model);
         return $this->redirect(['goodseedindex']);
     }
 

@@ -1,6 +1,6 @@
 <?php
 namespace backend\controllers;
-use app\models\tables;
+use app\models\Tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
 
@@ -27,13 +27,16 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            [
+                'attribute' => 'id',
+                'options' => ['width'=>20],
+            ],
             'departmentname',
             'membership',
 			'leader',
 			'sectionchief',
 			'chippackage',
-            ['class' => 'frontend\helpers\eActionColumn'],
+            ['class' => 'backend\helpers\eActionColumn'],
         ],
     ]); ?>
 

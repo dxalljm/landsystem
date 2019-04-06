@@ -30,7 +30,7 @@ class Breed extends \yii\db\ActiveRecord
     {
         return [
             [['farms_id', 'is_demonstration','create_at','update_at','management_area'], 'integer'],
-            [['breedname', 'breedaddress'], 'string', 'max' => 500]
+            [['breedname', 'breedaddress','year'], 'string', 'max' => 500]
         ];
     }
 
@@ -48,6 +48,7 @@ class Breed extends \yii\db\ActiveRecord
         	'create_at' => '创建日期',
         	'update_at' => '更新日期',
         	'management_area' => '管理区',
+            'year' => '年份',
         ];
     }
 }

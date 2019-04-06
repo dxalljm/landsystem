@@ -19,7 +19,7 @@ class logSearch extends Log
     {
         return [
             [['id', 'user_id'], 'integer'],
-            [['user_ip', 'action', 'action_type', 'object_name', 'object_id', 'operate_desc', 'operate_time', 'object_old_attr', 'object_new_attr'], 'safe'],
+            [['user_ip', 'action', 'action_type', 'object_name', 'object_id', 'operate_desc', 'operate_time', 'object_old_attr', 'object_new_attr','macadress'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class logSearch extends Log
      */
     public function search($params)
     {
-        $query = Log::find();
+        $query = Log::find()->orderBy('id DESC');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -68,6 +68,7 @@ class logSearch extends Log
             ->andFilterWhere(['like', 'operate_desc', $this->operate_desc])
             ->andFilterWhere(['like', 'operate_time', $this->operate_time])
             ->andFilterWhere(['like', 'object_old_attr', $this->object_old_attr])
+            ->andFilterWhere(['like', 'macadress', $this->macadress])
             ->andFilterWhere(['like', 'object_new_attr', $this->object_new_attr]);
 
         return $dataProvider;

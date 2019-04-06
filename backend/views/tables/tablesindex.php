@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'tablename',
             'Ctablename',
 
-            ['class' => 'frontend\helpers\eActionColumn'],
+            ['class' => 'yii\grid\ActionColumn'],
             [
             //'label'=>'更多操作',
             'format'=>'raw',

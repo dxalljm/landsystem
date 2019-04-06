@@ -42,32 +42,53 @@ class ManagementArea extends \yii\db\ActiveRecord
         ];
     }
     
-    public static function getAreaname()
+    public static function getAreaname($id = NULL)
     {
 //     	$cache = 'cache-key-areaname'.\Yii::$app->getUser()->id;
 //     	$data = Yii::$app->cache->get($cache);
 //     	if (!empty($data)) {
 //     		return $data;
 //     	}
-    	$whereArray = Farms::getManagementArea();
-    	$area = ManagementArea::find()->where(['id'=>$whereArray['id']])->all();
+        $data = '';
+		if(empty($id)) {
+	    	$whereArray = Farms::getManagementArea();
+	    	$area = ManagementArea::find()->where(['id'=>$whereArray['id']])->all();
 
-        foreach ($area as $key => $val) {
-            $data[$val->id] = $val->areaname;
-        }
+	        foreach ($area as $key => $val) {
+	            $data[$val->id] = $val->areaname;
+	        }
+//            return '';
+		} else {
+			$data = ManagementArea::find()->where(['id'=>$id])->one()['areaname'];
+		}
 //         if(count($data) > 1)
 //         	array_splice($data,0,0,[0=>'全部']);
 		
 //         Yii::$app->cache->set($cache, $data, 86400);
-
     	return $data;
     }
     
-    public static function getAreanameOne($id)
+    public static function getAreanameOne($id=null)
     {
-//     	var_dump($id);
+//     	var_dump($id);exit;
+        if(empty($id)) {
+            return '';
+        }
     	$data = self::getAreaname();
 //     	var_dump($data);exit;
     	return  $data[$id];   //主要通过此种方式实现
+    }
+
+    public static function getManagementareaName($farms_id)
+    {
+        $farm = Farms::findOne($farms_id);
+        return self::getAreanameOne($farm->management_area);
+    }
+    
+    public static function getNowManagementareaName()
+    {
+    	$m = Farms::getManagementArea()['id'];
+    	if(count($m) == 1)
+    		return ManagementArea::find()->where(['id'=>$m])->one()['areaname'];
     }
 }

@@ -37,7 +37,7 @@ class Log extends \yii\db\ActiveRecord
         return [
             [['user_id', 'object_id'], 'integer'],
             [['object_old_attr', 'object_new_attr'], 'string'],
-            [['user_ip', 'action', 'action_type', 'object_name', 'operate_desc'], 'string', 'max' => 500]
+            [['user_ip','macadress', 'action', 'action_type', 'object_name', 'operate_desc','class'], 'string', 'max' => 500]
         ];
     }
 
@@ -50,6 +50,7 @@ class Log extends \yii\db\ActiveRecord
 			'id' => 'ID',
             'user_id' => '用户ID',
             'user_ip' => '用户IP',
+            'macadress' => 'MAC地址',
             'action' => '动作',
             'action_type' => '操作类型',
             'object_name' => '对象名称',
@@ -58,6 +59,62 @@ class Log extends \yii\db\ActiveRecord
             'operate_time' => '操作时间',
             'object_old_attr' => '对象旧数据',
             'object_new_attr' => '对象新数据',
+            'class' => '操作类'
         ];
+    }
+
+    public static function getData($model)
+    {
+        $old = unserialize($model->object_old_attr);
+        $new = unserialize($model->object_new_attr);
+        $html = '';
+        switch ($model->action) {
+            case 'basedataverify':
+                $class = 'plantingstructurecheck';
+                $view = true;
+                break;
+            case 'site':
+                $view = false;
+                break;
+            default:
+                $class = $model->action;
+                $view = true;
+        }
+        if($view) {
+            if ($model->class) {
+                $classname = $model->class;
+            } else {
+                $classname = 'app\\models\\' . ucfirst($class);
+            }
+            $obj = new $classname();
+            $attributeLabels = $obj->attributeLabels();
+//        var_dump($attributeLabels);exit;
+            $html .= '<table class="table table2-bordered">';
+            foreach ($attributeLabels as $key => $val) {
+                $html .= '<tr>';
+                $html .= '<td>' . $val . '</td>';
+                if ($old) {
+                    if (isset($old[$key])) {
+                        $html .= '<td>' . $old[$key] . '</td>';
+                    }
+                }
+                $class = '';
+                if ($old and $new) {
+                    if (isset($old[$key])) {
+                        if (!((string)$old[$key] === (string)$new[$key])) {
+                            $class = 'text-red';
+                        }
+                    }
+                }
+                if ($new) {
+                    if (isset($new[$key])) {
+                        $html .= '<td class="' . $class . '">' . $new[$key] . '</td>';
+                    }
+                }
+                $html .= '</tr>';
+            }
+            $html .= '</table>';
+        }
+        return $html;
     }
 }

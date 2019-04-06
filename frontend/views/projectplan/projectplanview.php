@@ -1,6 +1,6 @@
 <?php
-namespace backend\controllers;
-use app\models\tables;
+namespace frontend\controllers;use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\Projectapplication;
@@ -40,9 +40,15 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'begindate',
             'value' => date('Y年m月d日',$model->enddate),
             ],
+            [ 
+            	'attribute' => 'money',
+            	'value' => $model->money.'元',
+            ],
             [
-            	'label' => '项目计划',
-            	'value' => $model->content,
+            	'label' => '项目施工合同扫描件',
+            	'attribute' => 'contract',
+            	'value' => Html::img($model->contract,['width'=>600]),
+            	'format' => 'raw',
             ],
             
         ],

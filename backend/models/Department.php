@@ -28,7 +28,8 @@ class Department extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['departmentname', 'membership','leader','sectionchief','chippackage'], 'string', 'max' => 500]
+            [['departmentname', 'membership','leader','sectionchief','chippackage'], 'string', 'max' => 500],
+            [['menulist','businessmenu','searchmenu'],'string'],
         ];
     }
 
@@ -44,6 +45,20 @@ class Department extends \yii\db\ActiveRecord
         	'leader' => '分管领导',
         	'sectionchief' => '科长',
         	'chippackage' => '包片负责人',
+            'menulist' => '导航菜单',
+            'businessmenu' => '业务菜单',
+            'searchmenu' => '综合查询',
         ];
+    }
+
+    public static function getControllerID($menulist)
+    {
+        $result = [];
+        $name = explode(',',$menulist);
+        foreach ($name as $value) {
+            $menu = Mainmenu::find()->where(['id'=>$value])->one();
+            $result[] = $menu['id'];
+        }
+        return $result;
     }
 }

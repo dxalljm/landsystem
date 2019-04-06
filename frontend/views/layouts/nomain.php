@@ -34,8 +34,8 @@ AppAsset::register($this);
                     'class' => 'navbar-fixed-top',
                 ],
             ]);
-            
-            
+
+
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 //'items' => $menuItems,

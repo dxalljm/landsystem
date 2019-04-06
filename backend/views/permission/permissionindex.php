@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
 			],
 
-            ['class' => 'frontend\helpers\eActionColumn'],
+            ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 

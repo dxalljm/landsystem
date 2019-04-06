@@ -1,7 +1,7 @@
 <?php
-namespace backend\controllers;
+namespace frontend\controllers;use app\models\User;
 use yii;
-use app\models\tables;
+use app\models\Tables;
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
 use app\models\Plant;
@@ -53,9 +53,7 @@ $result = [];
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>                    </h3>
-                </div>
+                    <h3>&nbsp;&nbsp;&nbsp;&nbsp;<?= $this->title ?><font color="red">(<?= User::getYear()?>年度)</font></h3></div>
                 <div class="box-body">
                 <?php $huinongGrant = Huinonggrant::find();
                 

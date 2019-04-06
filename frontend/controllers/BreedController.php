@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use app\models\User;
 use Yii;
 use app\models\Breed;
 use frontend\models\breedSearch;
@@ -28,7 +29,14 @@ class BreedController extends Controller
             ],
         ];
     }
-
+	public function beforeAction($action)
+	{
+		if(Yii::$app->user->isGuest) {
+			return $this->redirect(['site/logout']);
+		} else {
+			return true;
+		}
+	}
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -45,6 +53,9 @@ class BreedController extends Controller
      */
     public function actionBreedindex()
     {
+		if(Yii::$app->user->isGuest) {
+			return $this->redirect(['site/login']);
+		}
     	$model = new Breed();
     	$breedtypeFather = Breedtype::find()->where(['father_id'=>1])->all();
     	$breedinfo = Breedinfo::find()->where(['breed_id'=>$loadBreed->id])->all();
@@ -87,7 +98,7 @@ class BreedController extends Controller
     			$oldAttr = $model->attributes;
 //     			var_dump($oldAttr);
 //     			exit;
-    			Logs::writeLog('删除养殖种类信息',$val,$oldAttr);
+    			Logs::writeLogs('删除养殖种类信息',$model);
     			$model->delete();
     		}
     		return true;
@@ -101,6 +112,9 @@ class BreedController extends Controller
      */
     public function actionBreedcreate($farms_id)
     {
+		if(Yii::$app->user->isGuest) {
+			return $this->redirect(['site/login']);
+		}
     	$breedtypeFather = Breedtype::find()->where(['father_id'=>1])->all();
     	$breedtypePost = Yii::$app->request->post('breedtypePost');
     	$loadBreed = Breed::find()->where(['farms_id'=>$farms_id])->one();
@@ -113,9 +127,14 @@ class BreedController extends Controller
     		$old = $model->attributes;
     		if ($model->load(Yii::$app->request->post())) {
     			$model->update_at = time();
-    			$model->save();
-    			$new = $model->attributes;
-	    		Logs::writeLog('更新养殖信息',$loadBreed->id,$old,$new);
+				$model->year = User::getYear();
+    			$save = $model->save();
+    			if($save) {
+					$farmsModel = Farms::findOne($farms_id);
+					$farmsModel->isbreed = 1;
+					$farmsModel->save();
+				}
+	    		Logs::writeLogs('更新养殖信息',$model);
 	    		
 	    		$this->deleteBreedtype($breedinfo, $breedtypePost['id']);
 	    		if ($breedtypePost) {
@@ -139,10 +158,10 @@ class BreedController extends Controller
 	    				$breedinfoModel->basicinvestment = (float)$breedtypePost['basicinvestment'][$i];
 	    				$breedinfoModel->housingarea = (float)$breedtypePost['housingarea'][$i];
 	    				$breedinfoModel->breedtype_id = (int)$breedtypePost['breedtype_id'][$i];
-	    				$breedinfoModel->create_at = time();
-	    				$breedinfoModel->update_at = $breedinfoModel->create_at;
+						$breedinfoModel->farms_id = $farms_id;
+						$breedinfoModel->year = User::getYear();
 	    				$breedinfoModel->save();
-	    				Logs::writeLog('更新养殖种类信息',$breedinfoModel->id,$old,$breedinfoModel->attributes);
+	    				Logs::writeLogs('更新养殖种类信息',$breedinfoModel);
 	    			}
 	    		}
 	    		if($loadBreed)
@@ -163,8 +182,14 @@ class BreedController extends Controller
         		$model->management_area = Farms::getFarmsAreaID($farms_id);
         		$model->create_at = time();
         		$model->update_at = $model->create_at;
-        		$model->save();
-        		Logs::writeLog('创建养殖信息',$model->id,'',$model->attributes);
+				$model->year = User::getYear();
+        		$save = $model->save();
+				if($save) {
+					$farmsModel = Farms::findOne($farms_id);
+					$farmsModel->isbreed = 1;
+					$farmsModel->save();
+				}
+        		Logs::writeLogs('创建养殖信息',$model);
         		if ($breedtypePost) {
         			//var_dump($parmembers);
         			for($i=1;$i<count($breedtypePost['breedtype_id']);$i++) {
@@ -177,8 +202,10 @@ class BreedController extends Controller
         				$breedinfoModel->breedtype_id = (int)$breedtypePost['breedtype_id'][$i];
         				$breedinfoModel->create_at = time();
         				$breedinfoModel->update_at = $breedinfoModel->create_at;
+						$breedinfoModel->year = User::getYear();
+						$breedinfoModel->farms_id = $farms_id;
         				$breedinfoModel->save();
-        				Logs::writeLog('新增养殖各类信息',$breedinfoModel->id,'',$breedinfoModel->attributes);
+        				Logs::writeLogs('新增养殖各类信息',$breedinfoModel);
         			}
         		}
         		//return $this->redirect(['breedview', 'id' => $model->id,'farms_id'=>$farms_id]);
@@ -198,6 +225,104 @@ class BreedController extends Controller
     			'breedinfo' => $breedinfo,
     	]);
     }
+
+	public function actionBreedcreateajax($farms_id)
+	{
+		if(Yii::$app->user->isGuest) {
+			return $this->redirect(['site/login']);
+		}
+		$breedtypeFather = Breedtype::find()->where(['father_id'=>1])->all();
+		$breedtypePost = Yii::$app->request->post('breedtypePost');
+		$loadBreed = Breed::find()->where(['farms_id'=>$farms_id])->one();
+		if($loadBreed)
+			$breedinfo = Breedinfo::find()->where(['breed_id'=>$loadBreed->id])->all();
+		else
+			$breedinfo = '';
+		if($loadBreed) {
+			$model = $this->findModel($loadBreed->id);
+			$old = $model->attributes;
+			if ($model->load(Yii::$app->request->post())) {
+				$model->update_at = time();
+				$model->year = User::getYear();
+				$model->save();
+				$new = $model->attributes;
+				Logs::writeLogs('更新养殖信息',$loadBreed);
+
+				$this->deleteBreedtype($breedinfo, $breedtypePost['id']);
+				if ($breedtypePost) {
+					$old = '';
+					for($i=1;$i<count($breedtypePost['breedtype_id']);$i++) {
+						if(Breedinfo::findOne($breedtypePost['id'][$i])) {
+							$breedinfoModel = Breedinfo::findOne($breedtypePost['id'][$i]);
+							$old = $breedinfoModel->attributes;
+							$breedinfoModel->update_at = time();
+						}
+						else {
+							$breedinfoModel = new Breedinfo();
+							$breedinfoModel->create_at = time();
+							$breedinfoModel->update_at = $breedinfoModel->create_at;
+							$breedinfoModel->management_area = Farms::getFarmsAreaID($farms_id);
+							$breedinfoModel->farms_id = $farms_id;
+						}
+
+						$breedinfoModel->breed_id = $model->id;
+						$breedinfoModel->number = (int)$breedtypePost['number'][$i];
+						$breedinfoModel->basicinvestment = (float)$breedtypePost['basicinvestment'][$i];
+						$breedinfoModel->housingarea = (float)$breedtypePost['housingarea'][$i];
+						$breedinfoModel->breedtype_id = (int)$breedtypePost['breedtype_id'][$i];
+						$breedinfoModel->create_at = time();
+						$breedinfoModel->update_at = $breedinfoModel->create_at;
+						$breedinfoModel->year = User::getYear();
+						$breedinfoModel->save();
+						Logs::writeLogs('更新养殖种类信息',$breedinfoModel);
+					}
+				}
+				if($loadBreed)
+					$breedinfo = Breedinfo::find()->where(['breed_id'=>$loadBreed->id])->all();
+				else
+					$breedinfo = '';
+				return $this->redirect(['/sixcheck/sixcheckindex','farms_id'=>$farms_id]);
+
+			}
+		}
+		else {
+			$model = new Breed();
+			if ($model->load(Yii::$app->request->post())) {
+				$model->management_area = Farms::getFarmsAreaID($farms_id);
+				$model->create_at = time();
+				$model->update_at = $model->create_at;
+				$model->save();
+				Logs::writeLogs('创建养殖信息',$model);
+				if ($breedtypePost) {
+					//var_dump($parmembers);
+					for($i=1;$i<count($breedtypePost['breedtype_id']);$i++) {
+						$breedinfoModel = new Breedinfo();
+						$breedinfoModel->breed_id = $model->id;
+						$breedinfoModel->management_area = Farms::getFarmsAreaID($farms_id);
+						$breedinfoModel->number = (int)$breedtypePost['number'][$i];
+						$breedinfoModel->basicinvestment = (float)$breedtypePost['basicinvestment'][$i];
+						$breedinfoModel->housingarea = (float)$breedtypePost['housingarea'][$i];
+						$breedinfoModel->breedtype_id = (int)$breedtypePost['breedtype_id'][$i];
+						$breedinfoModel->create_at = time();
+						$breedinfoModel->update_at = $breedinfoModel->create_at;
+						$breedinfoModel->year = User::getYear();
+						$breedinfoModel->save();
+						Logs::writeLogs('新增养殖各类信息',$breedinfoModel);
+					}
+				}
+				//return $this->redirect(['breedview', 'id' => $model->id,'farms_id'=>$farms_id]);
+
+				$breedinfo = Breedinfo::find()->where(['breed_id'=>$model->id])->all();
+
+				return $this->redirect(['/sixcheck/sixcheckindex','farms_id'=>$farms_id]);
+			}
+		}
+		return $this->renderAjax('breedcreateajax', [
+			'model' => $model,
+			'breedtypeFather' => $breedtypeFather,
+			'breedinfo' => $breedinfo,
+		]);
+	}
 
     public function actionGetbreedtypeson($father_id)
     {

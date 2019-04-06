@@ -60,8 +60,8 @@ class inputproductSearch extends Inputproduct
             'father_id' => $this->father_id,
         ]);
 
-        $query->andFilterWhere(['like', 'fertilizer', $this->fertilizer])
-        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
+        $query->andFilterWhere(['like', 'fertilizer', $this->fertilizer]);
+//        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

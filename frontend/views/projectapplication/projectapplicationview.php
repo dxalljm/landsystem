@@ -1,6 +1,6 @@
 <?php
-namespace backend\controllers;
-use app\models\tables;
+namespace frontend\controllers;use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\Inputproduct;
@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                             </h3>
                 </div>
                 <div class="box-body">
-<?php if(User::getItemname() == '地产科科长') {?>
+<?php if(User::getItemname('地产科')) {?>
     <p>
     	 <?= Html::a('添加', ['projectapplicationcreate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
         <?= Html::a('更新', ['projectapplicationupdate', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>

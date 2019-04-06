@@ -42,6 +42,7 @@ class TempauditingSearch extends Tempauditing
      */
     public function search($params)
     {
+//     	var_dump($params);exit;
         $query = Tempauditing::find();
 
         $dataProvider = new ActiveDataProvider([

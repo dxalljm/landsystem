@@ -1,6 +1,7 @@
 <?php
-namespace backend\controllers;
-use app\models\tables;
+namespace frontend\controllers;use app\models\User;
+use app\models\Farms;
+use app\models\Tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\ManagementArea;
@@ -25,12 +26,10 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>
-                    </h3>
-                </div>
+                    <h3>&nbsp;&nbsp;&nbsp;&nbsp;<?= $this->title ?><font color="red">(<?= User::getYear()?>年度)</font></h3></div>
                 <div class="box-body">
-<?= Html::a('添加', ['farmscreate'], ['class' => 'btn btn-success']) ?>
+<?php echo Html::a('更新', ['farmsupdate','id'=>$_GET['id']], ['class' => 'btn btn-success']) ?> 
+<?php echo Html::a('返回', ['farmsindex'], ['class' => 'btn btn-success']) ?>
 <table
 		class="table table-bordered table-hover">
   <tr>
@@ -75,18 +74,17 @@ $this->params['breadcrumbs'][] = $this->title;
           </strong></td>
           <td align='right'>合同领取日期</td>
           <td align='left'><strong>
-            <?php $model->surveydate = date('Y-m-d',$model->surveydate);?>
+            <?php if($model->surveydate) echo date('Y-m-d',$model->surveydate);?>
           </strong></td>
         </tr>
         <tr>
           <td width="15%" align='right'>承包年限</td>
-          <?php $model->begindate = '2010-09-13'?>
+          <?php if(empty($model->begindate)) $model->begindate = '2010-09-13';if(empty($model->enddate)) $model->enddate = '2025-09-13';?>
           <td align='center'>自</td>
           <td align='center'><strong>
             <?= $model->begindate?>
           </strong></td>
           <td align='center'>至</td>
-          <?php $model->enddate = '2025-09-13'?>
           <td align='center'><strong>
             <?= $model->enddate?>
           </strong></td>
@@ -148,7 +146,7 @@ $this->params['breadcrumbs'][] = $this->title;
           <td align='left'><strong>
             <?= $model->notclear?>
             亩</strong></td>
-          <td align='right'><?= $model->notstateinfo?></td>
+          <td align='right'><?= Farms::notstateInfo($model->notstateinfo)?></td>
           <td align='left'><strong>
             <?= $model->notstate?>
           </strong></td>
@@ -164,7 +162,8 @@ $this->params['breadcrumbs'][] = $this->title;
           </strong></td>
           <td align='right'>状态</td>
           <td colspan="3"><strong>
-            <?= $model->state ? '正常' : '销户'?>
+          
+            <?= Farms::getStateInfo($model->state)?>
           </strong></td>
         </tr>
         <tr>
@@ -179,10 +178,10 @@ $this->params['breadcrumbs'][] = $this->title;
         </tr>
         <tr>
           <td align='right'>法人近照</td>
-          <td colspan="2" align='left'><?php echo Html::img($farmer->photo,['width'=>'180px','height'=>'200px','id'=>'photo']); ?></td>
+          <td colspan="2" align='left'><?php if($farmer) echo Html::img($farmer->photo,['width'=>'180px','height'=>'200px','id'=>'photo']); ?></td>
           <td align='left'>身份证扫描件</td>
-          <td colspan="2" align='left'><?php echo '&nbsp;'.Html::img($farmer->cardpic,['width'=>'400px','height'=>'220px','id'=>'cardpic']); ?></td>
-          <td colspan="2" align='left'><?php echo '&nbsp;'.Html::img($farmer->cardpicback,['width'=>'400px','height'=>'220px','id'=>'cardpicback']); ?></td>
+          <td colspan="2" align='left'><?php if($farmer) echo '&nbsp;'.Html::img($farmer->cardpic,['width'=>'400px','height'=>'220px','id'=>'cardpic']); ?></td>
+          <td colspan="2" align='left'><?php if($farmer) echo '&nbsp;'.Html::img($farmer->cardpicback,['width'=>'400px','height'=>'220px','id'=>'cardpicback']); ?></td>
           </tr>
       </table></td>
     </tr>

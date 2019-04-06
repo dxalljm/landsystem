@@ -1,6 +1,6 @@
 <?php
-namespace frontend\controllers;
-use app\models\tables;
+namespace frontend\controllers;use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\ManagementArea;
@@ -21,36 +21,7 @@ use app\models\Cooperative;
                 </div>
                 <div class="box-body">
 
-<table class="table table-striped table-bordered table-hover table-condensed">
-      <tr>
-        <td width="128" align="right">管理区：</td>
-        <td width="193" align="left"><?= ManagementArea::find()->where(['id'=>$farm->management_area])->one()['areaname']?></td>
-        <td width="92" align="right">农场名称：</td>
-        <td width="278" align="left"><?= $farm->farmname?></td>
-      </tr>
-      <tr>
-        <td align="right">合作社</td>
-        <td align="left">&nbsp;
-          <?= Cooperative::find()->where(['id'=>$farm->cooperative_id])->one()['cooperativename']?></td>
-        <td align="right">审批年度：</td>
-        <td align="left">&nbsp;
-          <?= $farm->spyear;?></td>
-      </tr>
-      <tr>
-        <td align="right">面积：</td>
-        <td align="left">&nbsp;
-          <?= $farm->measure.'亩'?></td>
-        <td align="right">宗地：</td>
-        <td align="left">&nbsp;
-          <?= $farm->zongdi;?></td>
-      </tr>
-      <tr>
-        <td align="right">农场位置：</td>
-        <td colspan="3" align="left">&nbsp;
-          <?= $farm->address;?></td>
-      </tr>
-  </table>
-    <table class="table table-striped table-bordered table-hover table-condensed">
+    <table class="table table-bordered table-condensed">
   <tr>
     <td colspan="5" align="center"><h4>承租人基础信息</h4></td>
     </tr>
@@ -60,6 +31,7 @@ use app\models\Cooperative;
     <td align="center">电话</td>
     <td align="center">租赁面积</td>
     <td align="center">租赁期限</td>
+      <td align="center"></td>
   </tr>
   <?php foreach($leases as $lease) {?>
   <tr>

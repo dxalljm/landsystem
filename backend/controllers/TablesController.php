@@ -2,7 +2,7 @@
 
 namespace backend\controllers;
 use Yii;
-use app\models\tables;
+use app\models\Tables;
 use backend\models\tablesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;

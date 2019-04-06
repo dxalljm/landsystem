@@ -122,11 +122,14 @@ class preventionSearch extends Prevention
     	$dataProvider = new ActiveDataProvider([
     			'query' => $query,
     	]);
-    
-   		if($params['preventionSearch']['management_area'] == 0)
-    		$this->management_area = NULL;
-    	else
-    		$this->management_area = $params['preventionSearch']['management_area'];
+    	if(isset($params['preventionSearch']['management_area'])) {
+			if ($params['preventionSearch']['management_area'] == 0)
+				$this->management_area = NULL;
+			else
+				$this->management_area = $params['preventionSearch']['management_area'];
+		} else {
+			$this->management_area = NULL;
+		}
     	$farmid = [];
     	if((isset($params['preventionSearch']['farms_id']) and $params['preventionSearch']['farms_id'] !== '') or (isset($params['preventionSearch']['farmer_id']) and $params['preventionSearch']['farmer_id'] !== '')) {
 	    	$farm = Farms::find();

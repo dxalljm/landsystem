@@ -1,6 +1,6 @@
 <?php
-namespace backend\controllers;
-use app\models\tables;
+namespace frontend\controllers;use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
 use app\models\Farms;
@@ -21,13 +21,17 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title"><?= $this->title?></h3>
-                </div>
+                    <h3>&nbsp;&nbsp;&nbsp;&nbsp;<?= $this->title ?><font color="red">(<?= User::getYear()?>年度)</font></h3></div>
                 <div class="box-body">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('添加', ['disastercreate','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success']) ?>
+        <?php
+        if(User::disabled()) {
+            echo Html::a('添加', '#', ['class' => 'btn btn-success','disabled'=>User::disabled()]);
+        } else {
+            echo Html::a('添加', ['disastercreate', 'farms_id' => $_GET['farms_id']], ['class' => 'btn btn-success']);
+        }?>
     </p>
 
     <?= GridView::widget([

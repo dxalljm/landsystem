@@ -1,6 +1,9 @@
 <?php
-namespace backend\controllers;
-use app\models\tables;
+namespace frontend\controllers;
+
+use app\models\Photograph;
+use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\ManagementArea;
@@ -10,6 +13,7 @@ use yii\web\View;
 use app\models\Cooperativetype;
 use app\models\Parcel;
 use app\models\Lease;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model app\models\farms */
 
@@ -19,19 +23,17 @@ $this->params['breadcrumbs'][] = ['label' => $title, 'url' => ['farmsindex']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="farms-view">
-
+  <?php
+//  var_dump($farmer);exit;
+  ?>
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>
-                    </h3>
-                </div>
+                    <h3>&nbsp;&nbsp;&nbsp;&nbsp;<?= $this->title ?><font color="red">(<?= User::getYear()?>年度)</font></h3></div>
                 <div class="box-body">
-<table
-		class="table table-bordered table-hover">
+<table class="table table-bordered table-hover">
   <tr>
       <td align='right'><table
 		class="table table-bordered table-hover">
@@ -74,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
           </strong></td>
           <td align='right'>合同领取日期</td>
           <td align='left'><strong>
-            <?php $model->surveydate = date('Y-m-d',$model->surveydate);?>
+            <?php if($model->surveydate) echo date('Y-m-d',$model->surveydate);?>
           </strong></td>
         </tr>
         <tr>
@@ -176,12 +178,13 @@ $this->params['breadcrumbs'][] = $this->title;
           <td align='right'>&nbsp;</td>
           <td colspan="7" align='left'>&nbsp;</td>
         </tr>
+
         <tr>
-          <td align='right'>法人近照</td>
-          <td colspan="2" align='left'><?php echo Html::img($farmer->photo,['width'=>'180px','height'=>'200px','id'=>'photo']); ?></td>
+          <td align='right'>法人近照<br><?= Html::a('导出证件',Url::to(['photograph/photographexplode','farms_id'=>$model->id]),['class' => 'btn btn-primary btn-xs','id'=>'explodepic']);?></td>
+          <td colspan="2" align='left'><?php if($farmer) echo Html::img('http://192.168.1.10/'.$farmer->photo,['width'=>'180px','height'=>'200px','id'=>'photo']); ?></td>
           <td align='left'>身份证扫描件</td>
-          <td colspan="2" align='left'><?php echo '&nbsp;'.Html::img($farmer->cardpic,['width'=>'400px','height'=>'220px','id'=>'cardpic']); ?></td>
-          <td colspan="2" align='left'><?php echo '&nbsp;'.Html::img($farmer->cardpicback,['width'=>'400px','height'=>'220px','id'=>'cardpicback']); ?></td>
+          <td colspan="2" align='left'><?php if($farmer) echo '&nbsp;'.Html::img('http://192.168.1.10/'.$farmer->cardpic,['width'=>'400px','height'=>'220px','id'=>'cardpic']); ?></td>
+          <td colspan="2" align='left'><?php if($farmer) echo '&nbsp;'.Html::img('http://192.168.1.10/'.$farmer->cardpicback,['width'=>'400px','height'=>'220px','id'=>'cardpicback']); ?></td>
           </tr>
       </table></td>
     </tr>
@@ -192,9 +195,14 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </section>
 </div>
+<?php
+//Photograph::batchDownload($fileInfo);
+?>
 <?php $this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
 
-   <script>$(function () 
+   <script>
+     $(function ()
       { $("[data-toggle='popover']").popover();
       });
+
    </script>

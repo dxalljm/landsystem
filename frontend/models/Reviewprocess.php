@@ -2,10 +2,15 @@
 
 namespace app\models;
 
+use app\models\User;
+use Composer\Package\Loader\ValidatingArrayLoader;
+use frontend\models\employeeSearch;
 use Yii;
 use app\models\Auditprocess;
-use app\models\Session;
+use yii\helpers\Html;
 use app\models\Logicalpoint;
+use app\models\Tempauditing;
+
 /**
  * This is the model class for table "{{%reviewprocess}}".
  *
@@ -53,10 +58,10 @@ class Reviewprocess extends \yii\db\ActiveRecord
 	public function rules() 
     { 
         return [
-            [['newfarms_id', 'operation_id', 'create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime', 'regulations', 'regulationstime', 'oldfarms_id', 'management_area', 'state', 'project', 'projecttime'], 'integer'],
+            [['newfarms_id','ttpozongdi_id', 'operation_id', 'create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime', 'regulations', 'regulationstime', 'oldfarms_id', 'management_area', 'state', 'project', 'projecttime','samefarms_id'], 'integer'],
             [['projectcontent'], 'string'],
-            [['estatecontent', 'financecontent', 'filereviewcontent', 'publicsecuritycontent', 'leadercontent', 'mortgagecontent', 'steeringgroupcontent', 'regulationscontent', 'actionname'], 'string', 'max' => 500]
-        ]; 
+            [['estatecontent','financecontent', 'filereviewcontent', 'publicsecuritycontent', 'leadercontent', 'mortgagecontent', 'steeringgroupcontent', 'regulationscontent', 'actionname','undo','fromundo'], 'string', 'max' => 500],
+		];
     } 
 
     /** 
@@ -101,68 +106,674 @@ class Reviewprocess extends \yii\db\ActiveRecord
             'project' => '项目科状态',
             'projectcontent' => '项目科内容',
             'projecttime' => '项目科审核时间',
-        ]; 
-    } 
-    
-    public static function getProcessRole($Identification)
-    {
-    	$processname = Processname::find()->where(['Identification'=>$Identification])->one();
-   		$result['rolename'] = $processname['rolename'];
-   		$result['sparerole'] = $processname['sparerole'];
-    	$result['isFinished'] = Reviewprocess::find()->where([$Identification=>2])->count();
-    	return $result;
+        	'ttpozongdi_id' => '转让信息ID',
+			'undo' => '退回',
+			'fromundo' => '从哪退回',
+			'samefarms_id' => '分户指向原农场ID'
+        ];
     }
+
+	public static function getProcessRole($Identification)
+	{
+//     	var_dump($Identification);
+		$processname = Processname::find()->where(['Identification'=>$Identification])->one();
+//     	var_dump($processname);exit;
+		$result['department_id'] = $processname['department_id'];
+		$result['level_id'] = $processname['level_id'];
+//		var_dump($result);exit;
+//    	$result['isFinished'] = Reviewprocess::find()->where([$Identification=>2])->count();
+//		var_dump($result);
+		return $result;
+	}
     
-    public static function getProcessIdentification()
+    public static function getProcessIdentification($actionname)
     {
+		$result = [];
 //     	$processname = Processname::find()->orWhere(['rolename'=>User::getItemname()])->orWhere(['sparerole'=>User::getItemname()])->one();
+		$au = Auditprocess::find()->where(['actionname'=>$actionname])->one()['process'];
+		$auArr = explode('>',$au);
     	$processname = [];
     	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
     	if($temp) {
-    		$processname[] = Processname::find()->where(['rolename'=>User::getUserItemname($temp['user_id'])])->all();
+    		$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+			$processname[] = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
     	}
-    	$processname[] = Processname::find()->where(['rolename'=>User::getItemname()])->all();
-    	    	
+    	$processname[] = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id,Yii::$app->getUser()->getIdentity()->level);
+//    	    	var_dump($processname);exit;a
     	foreach ($processname as $value) {
     		foreach ($value as $val)
-    			$result[] = $val['Identification'];
+    			$result[] = $val;
     	}
-    	    	 
-    	return $result;
+//		var_dump(array_intersect($result,$auArr));exit;
+    	return array_intersect($result,$auArr);
     }
-    
-    public static function isNextProcess($id)
-    {
-    	$model = self::findOne($id);
-    	$processs = self::getProcess($model->actionname);
-    	$rows = count($processs);
-    	$i = 0;
-    	$no = true;
-//     	var_dump($processs);
-    	foreach ($processs as $value) {
-    		if($model->$value == 0 or $model->$value == 2)
-    			$no = false;
-    	}
-    	foreach ($processs as $value) {
-    		if(($model->$value == 3) and $no) {
-    			$result = $model->$value-1;
-    			$model->$value = $result;
-    		}
-    		if($model->$value == 1)
-    			$i++;
-    		
-    	}
-    	if($i == $rows) {
-    		$model->state = 7;
-    		$state = true;
-    	}
-		else {
-			$model->state = 4;
-			$state = false;
-		}	
+
+	public static function getUndo($model)
+	{
+		$auditprocess = Auditprocess::find()->where(['actionname'=>'farmstransfer'])->one();
+		$processname = explode('>',$auditprocess['process']);
+		foreach ($processname as $item) {
+			if($model->$item == 0)
+				return $item;
+		}
+		return false;
+	}
+
+	public static function isNextLoanProcess($id,$field,$post)
+	{
+		$model = self::findOne($id);
+		$processs = self::getProcess($model->operation_id);
+		$tempProcess = $processs;
+		$rows = count($processs);
+		$i = 0;
+		switch ($field) {
+			case 'estate':
+				$model->estate = 1;
+				$model->mortgage = 2;
+				$model->state = 4;
+				break;
+			case 'mortgage':
+				$model->mortgage = $post['mortgageisAgree'];
+
+//				var_dump($post['mortgageisAgree']);exit;
+				if(self::isUndo($field,$model)) {
+
+					//fromundo为退回用户
+//					$fromundoArray = explode(',',$model->fromundo);
+//					if(count($fromundoArray) > 1)
+//						$model->$fromundoArray[1] = 2;
+//					else
+						$model->$model->fromundo = 0;
+					$model->leader = 3;
+				} else {
+					unset($tempProcess[0]);
+					unset($tempProcess[1]);
+					unset($tempProcess[$rows - 1]);
+//					var_dump($tempProcess);
+					$model->mortgage = $post['mortgageisAgree'];
+
+					foreach ($tempProcess as $process) {
+						$model->$process = 2;
+					}
+//					var_dump($model->mortgage);
+				}
+
+				if($model->mortgage == 0) {
+					$model->state = 9;
+//					if(!empty($model->undo)) {
+//						$model->state = 8;
+//						$model->undo = 8;
+//						$undoArray = explode(',', $model->undo);
+//						$undoArray[] = 'undo';
+//						$model->undo = implode(',', $undoArray);
+//					} else
+						$model->undo = 'undo';
+//					if(!empty($model->fromundo)) {
+//						$fromundoArray = explode(',', $model->fromundo);
+//						$fromundoArray[] = 'mortgage';
+//						$model->fromundo = implode(',', $fromundoArray);
+//					} else
+						$model->fromundo = 'mortgage';
+				} else {
+					$undo = self::getUndo($model);
+					if($undo)
+						$model->$undo = 2;
+					$model->state = 4;
+				}
+
+				if(isset($post['mortgageisAgreecontent']))
+					$model->mortgagecontent = $post['mortgageisAgreecontent'];
+				$model->mortgagetime = time();
+				$model->save();
+				Logs::writeLogs('更新审核信息',$model);
+//				exit;
+				break;
+			case 'leader':
+				$i = 0;
+				$model->leader = $post['leaderisAgree'];
+				$model->leadertime = time();
+//				foreach ($processs as $process) {
+//					if($model->$process == 1) {
+//						$i++;
+//					}
+//				}
+				if($model->leader == 0) {
+//					if($post['leaderundo'] == 'undo') {
+						$model->state = 9;
+
+//					}
+
+//					if($post['leaderundo'] !== '' and $post['leaderundo'] !== 'undo') {
+//						$undo = $post['leaderundo'];
+//						$model->state = 8;
+//						$model->$undo = 8;
+//					}
+//					if(!empty($model->undo)) {
+//						$undoArray = explode(',', $model->undo);
+//						$undoArray[] = $post['leaderundo'];
+//						$model->undo = implode(',', $undoArray);
+//					} else
+						$model->undo = 'undo';
+//					if(!empty($model->fromundo)) {
+//						$fromundoArray = explode(',', $model->fromundo);
+//						$fromundoArray[] = 'leader';
+//						$model->fromundo = implode(',', $fromundoArray);
+//					} else
+						$model->fromundo = 'leader';
+					if(isset($post['leaderisAgreecontent']))
+						$model->leadercontent = $post['leaderisAgreecontent'];
+				} else {
+					if($model->actionname == 'loancreate') {
+						$model->state = 7;
+					} else {
+						$model->state = 6;
+					}
+				}
+				break;
+
+			default:
+//				var_dump($model->$field);
+				switch ($model->$field) {
+					case 0:
+//						if($post[$field.'undo'] == 'undo')
+							$model->state = 9;
+//						if($post[$field.'undo'] !== '' and $post[$field.'undo'] !== 'undo') {
+//							$model->state = 8;
+//						}
+//						if(!empty($model->undo)) {
+//							$undoArray = explode(',', $model->undo);
+//							$undoArray[] = 'undo';
+//							$model->undo = implode(',', $undoArray);
+//						} else
+							$model->undo = 'undo';
+//						if(!empty($model->fromundo)) {
+////							$fromundoArray = explode(',', $model->fromundo);
+////							$fromundoArray[] = $field;
+//							$model->fromundo = $field;
+//						} else
+							$model->fromundo = $field;
+						$contentStr = $field.'isAgreecontent';
+						$modelContentStr = $field.'content';
+						if(isset($post[$contentStr]))
+							$model->$modelContentStr = $post[$contentStr];
+						break;
+					case 2:
+//						$undofield = $post[$field.'undo'];
+						$model->$field = $post[$field.'isAgree'];
+						$contentStr = $field.'isAgreecontent';
+						$modelContentStr = $field.'content';
+						if(isset($post[$contentStr]))
+							$model->$modelContentStr = $post[$contentStr];
+//						var_dump($field);
+//						var_dump($model->$undofield);exit;
+						if($model->$field == 0) {
+//							var_dump($undofield);exit;
+//							if(!empty($model->undo)) {
+//								$undoArray = explode(',', $model->undo);
+//								$undoArray[] = 'undo';
+//								$model->undo = implode(',', $undoArray);
+//							} else
+								$model->undo = 'undo';
+//							var_dump($post[$field.'undo']);
+							if($model->undo == 'undo') {
+								$model->state = 9;
+							}
+//							if($post[$field.'undo'] !== 'undo' and $post[$field.'undo'] !== '') {
+//								$model->state = 8;
+//								$model->$undofield = 8;
+//							}
+
+//							if(!empty($model->fromundo)) {
+//								$fromundoArray = explode(',', $model->fromundo);
+//								$fromundoArray[] = $field;
+//								$model->fromundo = implode(',', $fromundoArray);
+//							} else
+								$model->fromundo = $field;
+						} else {
+//							var_dump($model);exit;
+							$model->$field = 1;
+							$model->state = 4;
+							if(!empty($model->undo)) {
+								$undoArray = self::getUndoArray($model);
+								$undolast = $model->undo;
+								$fromlast = $model->fromundo;
+//								var_dump($model->$last);
+//								if($undolast !== 'undo' and $model->$undolast == 8) {
+//									$model->state = 8;
+//								}
+								if($undolast == 'undo' and $model->$fromlast == 0) {
+									$model->state = 9;
+								}
+							}
+//							var_dump($model->state);exit;
+						}
+
+						break;
+					case 3:
+						$model->state = 4;
+						$contentStr = $field.'isAgreecontent';
+						$modelContentStr = $field.'content';
+						if(isset($post[$contentStr]))
+							$model->$modelContentStr = $post[$contentStr];
+						break;
+//					case 8:
+//						//退回后,再退回出现问题
+////						$model->undo = '';
+//
+//						$model->$field = $post[$field.'isAgree'];
+//						$contentStr = $field.'isAgreecontent';
+//						$modelContentStr = $field.'content';
+//						if(isset($post[$contentStr]))
+//							$model->$modelContentStr = $post[$contentStr];
+//						if($model->$field == 0) {
+//							if($post[$field.'undo'] == 'undo') {
+//								$model->state = 9;
+//							} else {
+//								$undoArray = explode(',', $model->undo);
+//								$undoArray[] = $post[$field . 'undo'];
+//								$model->undo = implode(',', $undoArray);
+//								$fromundoArray = explode(',', $model->fromundo);
+//								$fromundoArray[] = $field;
+//								$model->fromundo = implode(',', $fromundoArray);
+//								$model->leader = 3;
+//								$undo = $post[$field.'undo'];
+//								$model->$undo = 8;
+//								$model->state = 8;
+//							}
+//						} else {
+//							$model->state = 4;
+//						}
+//						break;
+				}
+				$i = 0;
+				if(isset($post[$field.'isAgree']))
+					$model->$field = $post[$field.'isAgree'];
+				foreach ($processs as $process) {
+					if($model->$process == 1) {
+						$i++;
+					}
+				}
+				$state = true;
+				unset($tempProcess[$rows - 1]);
+				foreach ($tempProcess as $process) {
+					if($model->$process == 0 or $model->$process == 2) {
+						$state = false;
+					}
+				}
+				if($state) {
+					$model->leader = 2;
+				}
+
+		}
+		$timeStr = $field.'time';
+		$model->$timeStr = time();
+		$State = $model->state;
+		$model->update_at = time();
+//		var_dump($model);exit;
 		$model->save();
-    	return $state;
-    }
+		Logs::writeLogs('更新审核信息',$model);
+		return $State;
+	}
+
+	public static function isNextProcess($id,$field,$post)
+	{
+//		var_dump($id);var_dump($field);var_dump($post);exit;
+		$model = self::findOne($id);
+		$processs = self::getProcess($model->operation_id);
+		$tempProcess = $processs;
+		$rows = count($processs);
+    	$i = 0;
+		switch ($field) {
+			case 'estate':
+				//如果退回字段值与当前用户流程标识相同
+				$model->estate = $post['estateisAgree'];
+				$undo = self::isUndo($field,$model);
+				if($undo) {
+
+					//fromundo为退回用户
+//					$fromundoArray = explode(',',$model->fromundo);
+//					if(count($fromundoArray) > 1)
+//						$model->$fromundoArray[1] = 2;
+//					else
+						$model->$undo = 2;
+					$model->leader = 3;
+				} else {
+					unset($tempProcess[0]);
+					unset($tempProcess[$rows - 1]);
+					$model->estate = $post['estateisAgree'];
+					foreach ($tempProcess as $process) {
+						$model->$process = 2;
+					}
+				}
+				if($model->estate == 0) {
+					$model->state = 9;
+//					if(!empty($model->undo)) {
+//						$undoArray = explode(',', $model->undo);
+//						$undoArray[] = $post['estateundo'];
+//						$model->undo = implode(',', $undoArray);
+//					} else
+						$model->undo = 'undo';
+//					if(!empty($model->fromundo)) {
+//						$fromundoArray = explode(',', $model->fromundo);
+//						$fromundoArray[] = 'estate';
+//						$model->fromundo = implode(',', $fromundoArray);
+//					} else
+						$model->fromundo = 'estate';
+				} else {
+					$undo = self::getUndo($model);
+					if($undo)
+						$model->$undo = 2;
+					$model->state = 4;
+				}
+
+				if(isset($post['estateisAgreecontent']))
+					$model->estatecontent = $post['estateisAgreecontent'];
+				$model->estatetime = time();
+				break;
+			case 'leader':
+				$i = 0;
+				$model->leader = $post['leaderisAgree'];
+				$model->leadertime = time();
+//				foreach ($processs as $process) {
+//					if($model->$process == 1) {
+//						$i++;
+//					}
+//				}
+				if($model->leader == 0) {
+//					if($post['leaderundo'] == 'undo') {
+						$model->state = 9;
+
+//					}
+
+//					if($post['leaderundo'] !== '' and $post['leaderundo'] !== 'undo') {
+//						$undo = $post['leaderundo'];
+//						$model->state = 8;
+//						$model->$undo = 8;
+//					}
+//					if(!empty($model->undo)) {
+//						$undoArray = explode(',', $model->undo);
+//						$undoArray[] = $post['leaderundo'];
+//						$model->undo = implode(',', $undoArray);
+//					} else
+						$model->undo = $post['leaderundo'];
+//					if(!empty($model->fromundo)) {
+//						$fromundoArray = explode(',', $model->fromundo);
+//						$fromundoArray[] = 'leader';
+//						$model->fromundo = implode(',', $fromundoArray);
+//					} else
+						$model->fromundo = 'leader';
+					if(isset($post['leaderisAgreecontent']))
+						$model->leadercontent = $post['leaderisAgreecontent'];
+				} else {
+					if($model->actionname == 'loancreate') {
+						$model->state = 7;
+					} else {
+						$model->state = 6;
+					}
+				}
+				break;
+			case 'project':
+				$i = 0;
+				$model->project = $post['projectisAgree'];
+				$model->projecttime = time();
+//				foreach ($processs as $process) {
+//					if($model->$process == 1) {
+//						$i++;
+//					}
+//				}
+				if($model->project == 0) {
+//					if($post['projectundo'] == 'undo') {
+						$model->state = 9;
+
+//					}
+
+//					if($post['projectundo'] !== '' and $post['projectundo'] !== 'undo') {
+//						$undo = $post['projectundo'];
+//						$model->state = 8;
+//						$model->$undo = 8;
+//					}
+//					if(!empty($model->undo)) {
+//						$undoArray = explode(',', $model->undo);
+//						$undoArray[] = $post['projectundo'];
+//						$model->undo = implode(',', $undoArray);
+//					} else
+						$model->undo = 'undo';
+//					if(!empty($model->fromundo)) {
+//						$fromundoArray = explode(',', $model->fromundo);
+//						$fromundoArray[] = 'project';
+//						$model->fromundo = implode(',', $fromundoArray);
+//					} else
+						$model->fromundo = 'project';
+					if(isset($post['projectisAgreecontent']))
+						$model->projectcontent = $post['projectisAgreecontent'];
+				} else {
+					$model->state = 7;
+				}
+				break;
+			default:
+//				var_dump($model->$field);
+				switch ($model->$field) {
+					case 0:
+//						if($post[$field.'undo'] == 'undo')
+							$model->state = 9;
+//						if($post[$field.'undo'] !== '' and $post[$field.'undo'] !== 'undo') {
+//							$model->state = 8;
+//						}
+//						if(!empty($model->undo)) {
+//							$undoArray = explode(',', $model->undo);
+//							$undoArray[] = 'undo';
+//							$model->undo = implode(',', $undoArray);
+//						} else
+							$model->undo = 'undo';
+//						if(!empty($model->fromundo)) {
+//							$fromundoArray = explode(',', $model->fromundo);
+//							$fromundoArray[] = $field;
+//							$model->fromundo = implode(',', $fromundoArray);
+//						} else
+							$model->fromundo = $field;
+						$contentStr = $field.'isAgreecontent';
+						$modelContentStr = $field.'content';
+						if(isset($post[$contentStr]))
+							$model->$modelContentStr = $post[$contentStr];
+						break;
+					case 2:
+//						$undofield = $post[$field.'undo'];
+//						var_dump($field);exit;
+						if(isset($post[$field.'isAgree'])) {
+							$model->$field = $post[$field . 'isAgree'];
+						}
+						$contentStr = $field.'isAgreecontent';
+						$modelContentStr = $field.'content';
+						if(isset($post[$contentStr]))
+							$model->$modelContentStr = $post[$contentStr];
+//						var_dump($field);
+//						var_dump($model->$undofield);exit;
+						if($model->$field == 0) {
+//							var_dump($undofield);exit;
+//							if(!empty($model->undo)) {
+//								$undoArray = explode(',', $model->undo);
+//								$undoArray[] = 'undo';
+//								$model->undo = implode(',', $undoArray);
+//							} else
+								$model->undo = 'undo';
+//							var_dump($post[$field.'undo']);
+//							if($model->$field == 0) {
+								$model->state = 9;
+//							}
+//							if($model->$field !== 0 and $post[$field.'undo'] !== '') {
+//								$model->state = 8;
+//								$model->$field = 8;
+//							}
+
+//							if(!empty($model->fromundo)) {
+//								$fromundoArray = explode(',', $model->fromundo);
+//								$fromundoArray[] = $field;
+//								$model->fromundo = implode(',', $fromundoArray);
+//							} else
+								$model->fromundo = $field;
+						} else {
+//							var_dump($model);exit;
+							$model->$field = 1;
+							$model->state = 4;
+							if(!empty($model->undo)) {
+//								$undoArray = self::getUndoArray($model);
+								$undolast = $model->undo;
+								$fromlast = $model->fromundo;
+//								var_dump($model->$last);
+//								if($undolast !== 'undo' and $model->$undolast == 8) {
+//									$model->state = 8;
+//								}
+								if($undolast == 'undo' and $model->$fromlast == 0) {
+									$model->state = 9;
+								}
+							}
+//							var_dump($model->state);exit;
+						}
+
+						break;
+					case 3:
+						$model->state = 4;
+						$contentStr = $field.'isAgreecontent';
+						$modelContentStr = $field.'content';
+						if(isset($post[$contentStr]))
+							$model->$modelContentStr = $post[$contentStr];
+						break;
+//					case 8:
+//						//退回后,再退回出现问题
+////						$model->undo = '';
+//
+//						$model->$field = $post[$field.'isAgree'];
+//						$contentStr = $field.'isAgreecontent';
+//						$modelContentStr = $field.'content';
+//						if(isset($post[$contentStr]))
+//							$model->$modelContentStr = $post[$contentStr];
+//						if($model->$field == 0) {
+//							if($post[$field.'undo'] == 'undo') {
+//								$model->state = 9;
+//							} else {
+//								$undoArray = explode(',', $model->undo);
+//								$undoArray[] = $post[$field . 'undo'];
+//								$model->undo = implode(',', $undoArray);
+//								$fromundoArray = explode(',', $model->fromundo);
+//								$fromundoArray[] = $field;
+//								$model->fromundo = implode(',', $fromundoArray);
+//								$model->leader = 3;
+//								$undo = $post[$field.'undo'];
+//								$model->$undo = 8;
+//								$model->state = 8;
+//							}
+//						} else {
+//							$model->state = 4;
+//						}
+//						break;
+				}
+				$i = 0;
+				if(isset($post[$field.'isAgree']))
+					$model->$field = $post[$field.'isAgree'];
+				foreach ($processs as $process) {
+					if($model->$process == 1) {
+						$i++;
+					}
+				}
+				$state = true;
+				unset($tempProcess[$rows - 1]);
+				foreach ($tempProcess as $process) {
+					if($model->$process == 0 or $model->$process == 2) {
+						$state = false;
+					}
+				}
+				if($state) {
+					$model->leader = 2;
+				}
+
+		}
+		$timeStr = $field.'time';
+		$model->$timeStr = time();
+		$State = $model->state;
+		$model->update_at = time();
+//		var_dump($model);exit;
+		$model->save();
+		Logs::writeLogs('更新审核信息',$model);
+		return $State;
+	}
+
+	public static function getUndoArray($model)
+	{
+//		$undoArray = explode(',',$model->undo);
+//		$fromundoArray = explode(',',$model->fromundo);
+		$result['undo'] = $model->undo;
+		$result['fromundo'] = $model->fromundo;
+		return $result;
+	}
+
+	public static function isUndo($field,$model)
+	{
+		$v = false;
+		$result = self::getUndoArray($model);
+//		foreach ($result['undo'] as $value) {
+		if($field == $result['undo']) {
+			$v = $field;
+		}
+//		}
+		return $v;
+	}
+
+	public static function getDepartment($field,$model)
+	{
+		$v = false;
+		$result = self::getUndoArray($model);
+//		foreach ($result['fromundo'] as $key => $value) {
+			if($field == $result['fromundo']) {
+				$v = $result['undo'];
+			}
+//		}
+		return $v;
+	}
+//    public static function isNextProcess($id,$field)
+//    {
+//    	$model = self::findOne($id);
+//    	$processs = self::getProcess($model->operation_id);
+//    	$processname = Processname::find()->where(['Identification'=>'leader'])->one();
+//    	$rows = count($processs);
+//    	$i = 0;
+//    	$no = true;
+//    	foreach ($processs as $value) {
+//    		if($model->$value == 0)
+//    			$no = false;
+//    	}
+////     	var_dump($no);exit;
+//
+//    	foreach ($processs as $value) {
+//    		if($no and $model->$value == 3) {
+//    			$result = $model->$value-1;
+//    			$model->$value = $result;
+//    		}
+//    		if($model->$value == 1)
+//    			$i++;
+//    	}
+//    	$l = $rows - 1;
+//    	if($i < $l) {
+//    		$model->leader = 3;
+//    	}
+//		else
+//    		$model->leader = 2;
+//    	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+//		if(User::getItemname() == $processname['rolename'] or $temp) {
+//			$model->leader = 1;
+//			$i++;
+//		}
+//    	if($i >= $rows) {
+//    		$model->state = 6;
+//    		$state = true;
+//    	}
+//		else {
+//			$model->state = 4;
+//			$state = false;
+//		}
+//// 		var_dump(self::isShowProess($model->operation_id));exit;
+//		$model->save();
+//    	return $state;
+//    }
     
 //     public static function isNextProcess($id)
 //     {
@@ -198,29 +809,531 @@ class Reviewprocess extends \yii\db\ActiveRecord
 //     	}
 //     	return $state;
 //     }
-    
-    public static function state($num)
+	//审核角色或临时授权角色与当前用户角色是否相同，返回布尔型
+	public static function isRole($field)
+	{
+		//获取当前流程的角色信息
+		$newField = explode(',',$field);
+		if(count($newField) > 1) {
+			$role = self::getProcessRole($newField[1]);
+		} else
+			$role = self::getProcessRole($newField[0]);
+// 			  	var_dump($role);exit;
+		$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+		$tempitem = '';
+
+		if($temp) {
+			$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+			if(in_array($userinfo['department_id'],explode(',',$role['department_id'])) and $role['level_id'] == $userinfo['level'])
+				return true;
+			else
+				return false;
+		}
+		if(in_array(Yii::$app->getUser()->getIdentity()->department_id,explode(',',$role['department_id'])) and $role['level_id'] == Yii::$app->getUser()->getIdentity()->level)
+			return true;
+	}
+
+
+
+	public static function showReviewprocess($model,$field,$process,$key=null)
+	{
+		$html = '';
+		$fromundo = '';
+		$classname = 'app\\models\\' . ucfirst($field);
+		$classdata = $classname::find()->where(['reviewprocess_id'=>$model->id])->one();
+		if($model->actionname == 'loancreate') {
+			$lists = $classname::loanAttributesList();
+		} else
+			$lists = $classname::attributesList();
+//		var_dump($field);exit;
+//		var_dump($lists);exit;
+//		if(!empty($key)) {
+//			foreach ($key as $val) {
+//				$newlist[$val] = $lists[$val];
+//			}
+//			$lists = $newlist;
+//		}
+		switch ($model->$field)
+		{
+			case 0:
+				if ($lists) {
+					if ($classdata) {
+						$html .= '<td colspan="7" align="left">';
+						$html .= '<font color="#00CC66">';
+						$html .= '<table>';
+						foreach ($lists as $key => $list) {
+							if (!strstr($key, 'isAgree')) {
+								$html .= '<tr>';
+								$html .= '<td>';
+								if ($classdata[$key]) {
+									$html .= '<strong>否<i class="fa fa-square-o"></i></strong>&nbsp;&nbsp;';
+									$html .= '<strong>是<i class="fa fa-check-square-o"></i></strong>';
+								} else {
+									$html .= '<strong>否<i class="fa fa-check-square-o"></i></strong>&nbsp;&nbsp;';
+									$html .= '<strong>是<i class="fa fa-square-o"></i></string>';
+								}
+								$html .= '</td>';
+								$html .= '<td>';
+								$html .= '&nbsp;&nbsp;' . $list;
+								$html .= '</td>';
+								$html .= '<td>';
+								if ($classdata[$key . 'content'])
+									$html .= '&nbsp;&nbsp;<font color="red"><strong>情况说明：' . $classdata[$key . 'content'] . '</strong></font>';
+								$html .= "</td>";
+								$html .= '</tr>';
+							}
+						}
+						$html .= '</table>';
+
+						$html .= '</font>';
+						$html .= '</td>';
+					}
+				}
+				$html .= '<tr>';
+				$html .= '<td colspan="7" align="left" >';
+				$html .= '<font color="#0033FF"><strong>';
+				$html .= self::state($model->$field);
+				$html .= '</strong></font>';
+				$html .= "<br>";
+				$content = $field.'content';
+				if($model->$content and ($model->state == 8 or $model->state == 9)) {
+					$html .= '<font color="#FF0000"><strong>';
+					$modelStr = $field.'content';
+					$department = Processname::getDepartment($field,$model);;
+					$html .= $department."<br>原由：".$model->$modelStr;
+					$html .= '</strong></font>';
+				}
+				$html .= '</td>';
+				$html .= '</tr>';
+//				}
+				break;
+			case 1:
+//				if(self::isRole($field)) {
+					if ($lists) {
+						if ($classdata) {
+							$html .= '<td colspan="7" align="left">';
+							$html .= '<font color="#00CC66">';
+							$html .= '<table>';
+							foreach ($lists as $key => $list) {
+								if (!strstr($key, 'isAgree')) {
+									$html .= '<tr>';
+									$html .= '<td>';
+									if ($classdata[$key]) {
+										$html .= '<strong>否<i class="fa fa-square-o"></i></strong>&nbsp;&nbsp;';
+										$html .= '<strong>是<i class="fa fa-check-square-o"></i></strong>';
+									} else {
+										$html .= '<strong>否<i class="fa fa-check-square-o"></i></strong>&nbsp;&nbsp;';
+										$html .= '<strong>是<i class="fa fa-square-o"></i></string>';
+									}
+									$html .= '</td>';
+									$html .= '<td>';
+									$html .= '&nbsp;&nbsp;' . $list;
+									$html .= '</td>';
+									$html .= '<td>';
+									if ($classdata[$key . 'content'])
+										$html .= '&nbsp;&nbsp;<font color="red"><strong>情况说明：' . $classdata[$key . 'content'] . '</strong></font>';
+									$html .= "</td>";
+									$html .= '</tr>';
+								}
+							}
+							$html .= '</table>';
+
+							$html .= '</font>';
+							$html .= '</td>';
+						}
+					}
+				$html .= '<tr>';
+				$html .= '<td colspan="7" align="left" >';
+					$html .= '<font color="#0033FF"><strong>';
+					$timefield = $field.'time';
+					$html .= self::state($model->$field).'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ed0404">审核时间：'.date('Y-m-d H:i:s',$model->$timefield).'</font>';
+					$html .= '</strong></font>';
+				$html .= "<br>";
+				$content = $field.'content';
+				if($model->$content and ($model->state == 8 or $model->state == 9)) {
+					$html .= '<font color="#FF0000"><strong>';
+
+					$modelStr = $field.'content';
+					$department = Processname::getDepartment($field,$model);;
+					$html .= $department."<br>原由：".$model->$content;
+
+					$html .= '</strong></font>';
+				}
+				$html .= '</td>';
+				$html .= '</tr>';
+//				}
+				break;
+			case 2:
+				if(self::isRole($field) and Yii::$app->controller->action->id !== 'reviewprocessview') {
+					if ($field == 'leader' or $field == 'project') {
+						echo '<td colspan="7" align="left">';
+						echo '<table class="table">';
+						echo '<tr>';
+						echo '<td width="150">';
+						echo Html::radioList($field . 'isAgree', '', [1 => '同意', 0 => '不同意'], ['onChange' => 'showContent("' . $field . 'isAgree' . '","' . $field . '","'.$model[$field.'content'].'")', 'class' => 'radiolist' . $field]);
+						echo '</td>';
+						echo '<td align="center" width="10%" id="' . $field . 'isAgree' . '-text">';
+						echo '</td>';
+						echo '<td class="text-right" id="' . $field . 'isAgree' . '-text2">';
+//						echo Html::dropDownList($field.'undo', '', Reviewprocess::showProccessList($process), ['class' => 'form-control', 'id' => $field.'Undo']);
+						echo '</td>';
+						echo '<td id="' . $field . 'isAgree' . '-add">';
+						echo "</td>";
+						echo '</tr>';
+						echo '</table>';
+						echo '</td>';
+					} else {
+						if($lists) {
+							$html .= '<td colspan="7" align="left">';
+							$html .= '<table class="table">';
+							foreach ($lists as $key => $list) {
+								$html .= '<tr>';
+								$html .= '<td width="100">';
+
+								$html .= Html::radioList($key, $classdata[$key], ['否', '是'], ['onChange' => 'showContent("' . $key . '","' . $field . '","' . $classdata[$key . 'content'] . '")', 'class' => 'radiolist']);
+								$html .= '</td>';
+								$html .= '<td colspan="2" align="left" width="40%">';
+								$html .= '&nbsp;&nbsp;' . $list;
+								$html .= '</td>';
+								$html .= '<td id="' . $key . '-add" colspan="2">';
+								if (self::yesOrNo($classdata[$key], $key)) {
+									$html .= Html::textarea($key . 'content', $classdata[$key . 'content'], ['id' => $key . 'content', 'rows' => 1, 'cols' => 50, 'class' => "isText form-control"]);
+								}
+								$html .= "</td>";
+								$html .= '</tr>';
+							}
+							$html .= '<tr>';
+							$html .= '<td width="150">';
+							$html .= Html::radioList($field . 'isAgree', '', [1 => '同意', 0 => '不同意'], ['onChange' => 'showContent("' . $field . 'isAgree' . '","' . $field . '","' . $model[$field . 'content'] . '")', 'class' => 'radiolist' . $field]);
+							$html .= '</td>';
+							$html .= '<td align="center" width="10%" id="' . $field . 'isAgree' . '-text">';
+							$html .= '</td>';
+							$html .= '<td class="text-right" id="' . $field . 'isAgree' . '-text2">';
+//							$html .= Html::dropDownList($field .'undo', '', Reviewprocess::showProccessList($process), ['class' => 'form-control', 'id' => $field .'Undo']);
+							$html .= '</td>';
+							$html .= '<td id="' . $field . 'isAgree' . '-add">';
+							$html .= "</td>";
+							$html .= '</tr>';
+							$html .= '</table>';
+							$html .= '</td>';
+						}
+					}
+				} else {
+					if($lists) {
+						if ($classdata) {
+							$html .= '<td colspan="7" align="left">';
+							$html .= '<font color="#00CC66">';
+							$html .= '<table>';
+							foreach ($lists as $key => $list) {
+								if (!strstr($key, 'isAgree')) {
+									$html .= '<tr>';
+									$html .= '<td>';
+									if ($classdata[$key]) {
+										$html .= '<strong>是<i class="fa fa-check-square-o"></i></strong>&nbsp;&nbsp;';
+										$html .= '<strong>否<i class="fa fa-square-o"></i></strong>';
+									} else {
+										$html .= '<strong>是<i class="fa fa-square-o"></i></string>&nbsp;&nbsp;';
+										$html .= '<strong>否<i class="fa fa-check-square-o"></i></strong>';
+									}
+									$html .= '</td>';
+									$html .= '<td>';
+									$html .= '&nbsp;&nbsp;' . $list;
+									$html .= '</td>';
+									$html .= '<td>';
+									if ($classdata[$key . 'content'])
+										$html .= '&nbsp;&nbsp;<font color="red"><strong>情况说明：' . $classdata[$key . 'content'] . '</strong></font>';
+									$html .= "</td>";
+									$html .= '</tr>';
+								}
+							}
+							$html .= '</table>';
+
+							$html .= '</font>';
+							$html .= '</td>';
+						}
+					}
+				}
+				$html .= '<tr>';
+				$html .= '<td colspan="7" align="left" >';
+				$html .= '<font color="#0033FF"><strong>';
+				$html .= self::state($model->$field);
+				$html .= '</strong></font>';
+				$html .= "<br>";
+				$content = $field.'content';
+				if($model->$content and ($model->state == 8 or $model->state == 9)) {
+					$html .= '<font color="#FF0000"><strong>';
+					$modelStr = $field.'content';
+					$department = Processname::getDepartment($field,$model);;
+					$html .= $department."<br>原由：".$model->$content;
+					$html .= '</strong></font>';
+				}
+				$html .= '</td>';
+				$html .= '</tr>';
+				break;
+			case 3:
+				$html .= '<tr>';
+				$html .= '<td colspan="7" align="left" >';
+				$html .= '<font color="#0033FF"><strong>';
+				$html .= self::state($model->$field);
+				$html .= '</strong></font>';
+				$html .= "<br>";
+				$content = $field.'content';
+				if($model->$content and ($model->state == 8 or $model->state == 9)) {
+					$html .= '<font color="#FF0000"><strong>';
+					$department = Processname::getDepartment($field,$model);;
+					$html .= $department."<br>原由：".$model->$content;
+
+					$html .= '</strong></font>';
+				}
+				$html .= '</td>';
+				$html .= '</tr>';
+				break;
+			case 8:
+				$undo = self::isUndo($field,$model);
+//				var_dump(self::isRole($model->undo));
+				if (self::isRole($field) and Yii::$app->controller->action->id !== 'reviewprocessview') {
+					$html .= '<td colspan="7" align="left">';
+					$html .= '<table class="table">';
+					foreach ($lists as $key => $list) {
+						$html .= '<tr>';
+						$html .= '<td width="100">';
+						$html .= Html::radioList($key, $classdata[$key], ['否', '是'], ['onChange' => 'showContent("' . $key . '","' . $undo . '","'.$classdata[$key.'content'].'")', 'class' => 'radiolist']);
+						$html .= '</td>';
+						$html .= '<td colspan="2" align="left" width="40%">';
+						$html .= '&nbsp;&nbsp;' . $list;
+						$html .= '</td>';
+						$html .= '<td id="' . $key . '-add" colspan="2">';
+						if(self::yesOrNo($classdata[$key],$key)) {
+							$html .= Html::textarea($key.'content',$classdata[$key.'content'],['id'=>$key.'content','rows'=>1, 'cols'=>50, 'class'=>"isText form-control"]);
+						}
+						$html .= "</td>";
+						$html .= '</tr>';
+					}
+					$html .= '<tr>';
+					$html .= '<td width="150">';
+					$html .= Html::radioList($undo . 'isAgree', '', [1 => '同意', 0 => '不同意'], ['onChange' => 'showContent("' . $undo . 'isAgree' . '","' . $undo . '","'.$model[$undo.'content'].'")', 'class' => 'radiolist' . $undo]);
+					$html .= '</td>';
+					$html .= '<td align="center" width="10%" id="' . $undo . 'isAgree' . '-text">';
+					$html .= '</td>';
+					$html .= '<td class="text-right" id="' . $field . 'isAgree' . '-text2">';
+//					$html .= Html::dropDownList($field.'undo', $classdata[$field.'undo'], Reviewprocess::showProccessList($process), ['class' => 'form-control', 'id' => $field.'Undo']);
+					$html .= '</td>';
+					$html .= '<td id="' . $undo . 'isAgree' . '-add">';
+					$html .= "</td>";
+					$html .= '</tr>';
+					$html .= '</table>';
+					$html .= '</td>';
+				} else {
+					if ($lists) {
+						if ($classdata) {
+							$html .= '<td colspan="7" align="left">';
+							$html .= '<font color="#00CC66">';
+							$html .= '<table>';
+							foreach ($lists as $key => $list) {
+								if (!strstr($key, 'isAgree')) {
+									$html .= '<tr>';
+									$html .= '<td>';
+									if ($classdata[$key]) {
+										$html .= '<strong>是<i class="fa fa-check-square-o"></i></strong>&nbsp;&nbsp;';
+										$html .= '<strong>否<i class="fa fa-square-o"></i></strong>';
+									} else {
+										$html .= '<strong>是<i class="fa fa-square-o"></i></string>&nbsp;&nbsp;';
+										$html .= '<strong>否<i class="fa fa-check-square-o"></i></strong>';
+									}
+									$html .= '</td>';
+									$html .= '<td>';
+									$html .= '&nbsp;&nbsp;' . $list;
+									$html .= '</td>';
+									$html .= '<td>';
+									if ($classdata[$key . 'content'])
+										$html .= '&nbsp;&nbsp;<font color="red"><strong>情况说明：' . $classdata[$key . 'content'] . '</strong></font>';
+									$html .= "</td>";
+									$html .= '</tr>';
+								}
+							}
+							$html .= '</table>';
+
+							$html .= '</font>';
+							$html .= '</td>';
+						}
+					}
+				}
+				$html .= '<tr>';
+				$html .= '<td colspan="7" align="left" >';
+				$html .= '<font color="#0033FF"><strong>';
+				$html .= self::state($model->$field);
+				$html .= '</strong></font>';
+				$html .= "<br>";
+				$content = $field.'content';
+				if($model->$content and ($model->state == 8 or $model->state == 9)) {
+					$html .= '<font color="#FF0000"><strong>';
+					$department = Processname::getDepartment($field,$model);
+					if($department)
+						$html .= $department."<br>原由：".$model->$content;
+					$html .= '</strong></font>';
+				}
+				$html .= '</td>';
+				$html .= '</tr>';
+				break;
+
+		}
+		$html .= '</td>';
+		return $html;
+	}
+
+	public static function yesOrNo($value,$key)
+	{
+		if ($key == 'isdydk' or $key == 'sfdj' or $key == 'isqcbf' or $key == 'other' or $key == 'sfyzy') {
+			if($value)
+				return true;
+			else
+				return false;
+		} else {
+			if($value === 0) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+	}
+	
+    public static function state($num,$reviewprocess=null,$process=null)
     {
-    	
-    	$stateArray = [3=>'排队等待',2=>'待审核',1=>'同意',0=>'不同意',-1=>'无',4=>'审核中',7=>'通过',5=>'审核未通过'];
-    	
-    	return $stateArray[$num];
+		$html = '';
+		$fromundolast = '';
+		$undolast = '';
+		if($reviewprocess) {
+			if ($reviewprocess['fromundo']) {
+				$fromundoArray = explode(',', $reviewprocess['fromundo']);
+				$fromundolast = end($fromundoArray);
+			}
+			if ($reviewprocess['undo']) {
+				$undoArray = explode(',', $reviewprocess['undo']);
+				$undolast = end($undoArray);
+			}
+		}
+//    	if($reviewprocess['sate'] === null)
+//			return null;
+    	$stateArray = [3=>'排队等待',2=>'待审核',1=>'同意',0=>'不同意',-1=>'无',4=>'审核中',7=>'通过',5=>'审核未通过',6=>'合同未领取',8=>'退回',9=>'撤消',21=>'重新审核',10=>'被退回'];
+		switch ($num) {
+			case 3:
+				$html = '<font color="blue">'.$stateArray[$num].'</font>';
+//				if($fromundolast == $process) {
+//					$html = '<font color="red">'.$stateArray[8].'</font>';
+//				}
+//				if($undolast == $process) {
+//					$html = '<font color="red">'.$stateArray[10].'</font>';
+//				}
+				break;
+			case 2:
+				$html = '<font color="blue">'.$stateArray[$num].'</font>';
+//				if($fromundolast == $process) {
+//					$html = '<font color="red">'.$stateArray[8].'</font>';
+//				}
+//				if($undolast == $process) {
+//					$html = '<font color="red">'.$stateArray[10].'</font>';
+//				}
+				break;
+			case 1:
+				$html = '<font color="green">'.$stateArray[$num].'</font>';
+//				if($fromundolast == $process) {
+//					$html = '<font color="red">'.$stateArray[8].'</font>';
+//				}
+//				if($undolast == $process) {
+//					$html = '<font color="red">'.$stateArray[10].'</font>';
+//				}
+				break;
+			case 0:
+				$html = '<font color="red">'.$stateArray[$num].'</font>';
+				if($reviewprocess['state'] == 9) {
+					$html = '<font color="red">'.$stateArray[9].'</font>';
+				}
+				break;
+			case 4:
+				$html = '<font color="#8a2be2">'.$stateArray[$num].'</font>';
+//				if($fromundolast == $process) {
+//					$html = '<font color="red">'.$stateArray[8].'</font>';
+//				}
+//				if($undolast == $process) {
+//					$html = '<font color="red">'.$stateArray[10].'</font>';
+//				}
+				break;
+			case 7:
+				$html = '<font color="green">'.$stateArray[$num].'</font>';
+//				if($fromundolast == $process) {
+//					$html = '<font color="red">'.$stateArray[8].'</font>';
+//				}
+//				if($undolast == $process) {
+//					$html = '<font color="red">'.$stateArray[10].'</font>';
+//				}
+				break;
+			case 5:
+				$html = '<font color="red">'.$stateArray[$num].'</font>';
+				if($fromundolast == $process) {
+					$html = '<font color="red">'.$stateArray[8].'</font>';
+				}
+				if($undolast == $process) {
+					$html = '<font color="red">'.$stateArray[10].'</font>';
+				}
+				break;
+			case 6:
+				$html = '<font color="black">'.$stateArray[$num].'</font>';
+//				if($fromundolast == $process) {
+//				$html = '<font color="red">'.$stateArray[8].'</font>';
+//			}
+//				if($undolast == $process) {
+//					$html = '<font color="red">'.$stateArray[10].'</font>';
+//				}
+				break;
+			case 8:
+				$html = '<font color="red">'.$stateArray[$num].'</font>';
+				if($fromundolast == $process) {
+					$html = '<font color="red">'.$stateArray[8].'</font>';
+				}
+				if($undolast == $process) {
+					$html = '<font color="red">'.$stateArray[10].'</font>';
+				}
+				break;
+			case 9:
+				$html = '<font color="red">'.$stateArray[$num].'</font>';
+//				if($fromundolast == $process) {
+//					$html = '<font color="red">'.$stateArray[9].'</font>';
+//				}
+				if($reviewprocess[$process] == 0) {
+					$html = '<font color="red">'.$stateArray[9].'</font>';
+				}
+//				if($undolast == $process) {
+//					$html = '<font color="red">'.$stateArray[10].'</font>';
+//				}
+				break;
+		}
+    	return $html;
     }
+	//得到当前流程状态
+	public static function getState($reviewprocess_id)
+	{
+		if(empty($reviewprocess_id))
+			return '待办理';
+		$model = Reviewprocess::findOne($reviewprocess_id);
+		return self::state($model->state);
+	}
     //返回指定的审核流程
     public static function getAuditprocess($actionname = NULL)
     {
     	if(empty($actionname)) {
     		$processID = Logicalpoint::find()->where(['actionname'=>yii::$app->controller->action->id])->one()['processname'];
+//     		var_dump(Auditprocess::find()->where(['id'=>$processID])->one());exit;
    			return Auditprocess::find()->where(['id'=>$processID])->one();
     	}
     	else 
     		return Auditprocess::find()->where(['actionname'=>$actionname])->one();
     }
     //返回访问地址
-    public static function getReturnAction() 
+    public static function getReturnAction($id) 
     {
-    	
-    	return 'reviewprocess/reviewprocess'.yii::$app->controller->action->id;
+//     	var_dump($id);
+    	return 'reviewprocess/reviewprocess'.Auditprocess::findOne($id)['actionname'];
     }
     //返回定位方法名称
     public static function getAction($key = NULL)
@@ -231,54 +1344,83 @@ class Reviewprocess extends \yii\db\ActiveRecord
     		return self::getReviewprocessOne($key)['actionname'];
     }
     //返回审核流程
-    public static function getProcess($actionname = NULL)
+    public static function getProcess($id)
     {
-    	
-    	return explode('>', self::getAuditprocess($actionname)['process']);
+    	return explode('>', Auditprocess::findOne($id)['process']);
     }
     //判断当前角色是否审核流程
-    public static function isShowProess($actionname) {
-    	$process = Reviewprocess::getProcess($actionname);
+    public static function isShowProess($auditprocess_id) {
+//		if(User::getItemname()) {
+//			return true;
+//		}
+//		var_dump($auditprocess_id);exit;
+    	$process = Reviewprocess::getProcess($auditprocess_id);
+//		var_dump($process);exit;
     	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+//     	var_dump($process);exit;
     	foreach ($process as $p) {
 //     		if(self::getProcessRole($p)['rolename'] == User::getItemname() or self::getProcessRole($p)['sparerole'] == User::getItemname())
-			
 			if($temp) {
-				if(self::getProcessRole($p)['rolename'] == User::getUserItemname($temp['user_id']))
+				$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+				if(in_array($userinfo['department_id'],explode(',',self::getProcessRole($p)['department_id'])) and self::getProcessRole($p)['level_id'] == $userinfo['level'])
 					return true;
 			} else {
-				if(self::getProcessRole($p)['rolename'] == User::getItemname())
+//				var_dump(self::getProcessRole($p));
+				if(in_array(Yii::$app->getUser()->getIdentity()->department_id,explode(',',self::getProcessRole($p)['department_id'])) and self::getProcessRole($p)['level_id'] == Yii::$app->getUser()->getIdentity()->level)
 	    			return true;
 			}
     	}
+//		exit;
     	return false;
     }
    
     
     //保存流程
-    public static function processRun($oldfarms_id=NULL,$newfarms_id=null,$operation_id=NULL)
+    public static function processRun($auditprocess_id,$oldfarms_id=NULL,$newfarms_id=null,$ttpozongdi_id = NULL,$samefarms_id=null)
     { 	
-    	$processs = self::getProcess();
-//     	var_dump($processs);exit;
+    	$auditprocess = Auditprocess::find()->where(['id'=>$auditprocess_id])->one();
+//     	var_dump($auditprocess);exit;
+    	$processs = explode('>',$auditprocess->process);
+//     	var_dump();exit;
     	$reviewprocessModel = new Reviewprocess();
+//		var_dump($reviewprocessModel->attributes);exit;
     	$reviewprocessModel->oldfarms_id = $oldfarms_id;
     	$reviewprocessModel->newfarms_id = $newfarms_id;
-    	$reviewprocessModel->operation_id = $operation_id;
+    	$reviewprocessModel->ttpozongdi_id = $ttpozongdi_id;
     	$reviewprocessModel->management_area = Farms::find()->where(['id'=>$oldfarms_id])->one()['management_area'];
-    	$reviewprocessModel->actionname = self::getAction();
+    	$reviewprocessModel->actionname = $auditprocess->actionname;
     	$reviewprocessModel->create_at = time();
     	$reviewprocessModel->update_at = $reviewprocessModel->create_at;
-    	//var_dump($processs);exit;
+    	$reviewprocessModel->operation_id = $auditprocess_id;
+		$reviewprocessModel->samefarms_id = $samefarms_id;
+		$reviewprocessModel->undo = '';
+//		$reviewprocessModel->estate = 1;
+//     	var_dump($reviewprocessModel->attributes);exit;
     	for($i=0;$i<count($processs);$i++) {
-    		$reviewprocessModel->$processs[$i] = 2;
-    		if($processs[$i] == 'leader')
-    			if($i == 0)
-    				$reviewprocessModel->$processs[$i] = 2;
-    			else 
-    				$reviewprocessModel->$processs[$i] = 3;
+			$str = $processs[$i];
+    		if($str == 'estate')
+    			$reviewprocessModel->$str = 2;
+    		else
+    			$reviewprocessModel->$str = 3;
+    		if($str == 'leader') {
+				if ($i == 0)
+					$reviewprocessModel->$str = 2;
+				else
+					$reviewprocessModel->$str = 3;
+			}
+			if($str == 'project') {
+				$reviewprocessModel->$str = 2;
+			}
+			if(Yii::$app->controller->action->id == 'loancreate') {
+				$reviewprocessModel->estate = 1;
+				$reviewprocessModel->mortgage = 2;
+			}
     	}
+		
     	$reviewprocessModel->state = 4;
-//     	var_dump($reviewprocessModel);exit;
+		if($auditprocess->actionname == 'loancreate') {
+			$reviewprocessModel->estatetime = time();
+		}
     	if($reviewprocessModel->save()) {
 //     		Session::sessionSave($oldfarms_id,'reviewprocess_id',$reviewprocessModel->id);
     		return $reviewprocessModel->id;    	
@@ -298,26 +1440,861 @@ class Reviewprocess extends \yii\db\ActiveRecord
     }
     
     //获取当前用户的审核任务数量
-    public static function getUserProcessCount()
+    public static function getUserProcessCountHtml($state)
     {
-    	$mamangmentarea = Farms::getManagementArea();
-    	$processRows = 0;
-    	//判断是否有临时授权人
-    	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
-    	if($temp) {
-    		$processself = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
-    		$processRows += Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$processself=>2])->count();
-    		$process = Processname::find()->where(['rolename'=>User::getUserItemname($temp['user_id'])])->one()['Identification'];
-    		$processRows += Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$process=>2])->count();
-    	} else {	    	
-	    	
-	    	$process = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
-			
-	    	$processRows += Reviewprocess::find()->where(['management_area'=>$mamangmentarea['id'],$process=>2])->count();
-    	}
-    	if($processRows)
-    		return '<small class="label pull-right bg-red">'.$processRows.'</small>';
-    	else 
-    		return false;
+		$processRows = 0;
+		$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+		if($temp) {
+			$whereArray = Farms::getUserManagementArea($temp['user_id']);
+		} else {
+			$whereArray = Farms::getManagementArea();
+		}
+		$result = false;
+		switch ($state) {
+			//待办任务
+			case 0:
+				$processRows = self::getUserProcessCount(0);
+				if($processRows)
+					$result = $processRows;
+				break;
+			//审核任务
+			case 2:
+				$processRows = self::getUserProcessCount(2);
+				if($processRows)
+					$result = $processRows;
+				break;
+			//正在办理
+			case 4:
+				$processRows = self::getUserProcessCount(4);
+				if($processRows)
+					$result = $processRows;
+				break;
+			//已完成
+			case 6:
+				$processRows = self::getUserProcessCount(6);
+				if($processRows)
+					$result = $processRows;
+				break;
+			case 7:
+				$processRows = self::getUserProcessCount(7);
+				if($processRows)
+					$result = $processRows;
+				break;
+			//退回
+			case 8:
+				$processRows = self::getUserProcessCount(8);
+				if($processRows)
+					$result = $processRows;
+				break;
+			case 9:
+				$processRows = self::getUserProcessCount(9);
+				if($processRows)
+					$result = $processRows;
+				break;
+		}
+
+    	return $result;
     }
+	public static function getUserProcessCount($state)
+	{
+		$processRows = 0;
+		$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+		if($temp) {
+			$whereArray = Farms::getUserManagementArea($temp['user_id']);
+		} else {
+			$whereArray = Farms::getManagementArea();
+		}
+		$result = false;
+		$where = [];
+		$orWhere = [];
+		switch ($state) {
+			//待办任务
+			case 0:
+				if(User::getItemname('主任') or User::getItemname('副主任') or User::getItemname('地产科'))
+					$processRows += Ttpozongdi::find()->where(['state'=>0,'management_area'=>$whereArray['id']])->count();
+				break;
+			//审核任务
+			case 2:
+				if(Auditprocess::isAuditing('承包经营权转让')) {
+					$reviewprocess = Reviewprocess::find();
+					$temp2 = Tempauditing::find()->where(['tempauditing' => Yii::$app->getUser()->id, 'state' => 1])->andWhere('begindate<=' . strtotime(date('Y-m-d')) . ' and enddate>=' . strtotime(date('Y-m-d')))->one();
+					if ($temp2) {
+						$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+						$processnames = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
+						if ($processnames) {
+							foreach ($processnames as $proces) {
+								$reviewprocess->orWhere(['management_area' => $whereArray['id'], 'actionname'=>'farmstransfer',$proces => $state, 'state' => 4]);
+							}
+							$processRows += $reviewprocess->count();
+						}
+					} else {
+// 					var_dump(User::getItemname());
+
+						$processnames = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id, Yii::$app->getUser()->getIdentity()->level);
+						if ($processnames) {
+							$where = [];
+							foreach ($processnames as $proces) {
+								$reviewprocess->orWhere(['management_area' => $whereArray['id'], 'actionname' => 'farmstransfer', $proces => $state, 'state' => 4]);
+							}
+							$processRows += $reviewprocess->count();
+						}
+					}
+				}
+
+				if(Auditprocess::isAuditing('项目审核')) {
+					$reviewprocess = Reviewprocess::find();
+					$temp2 = Tempauditing::find()->where(['tempauditing' => Yii::$app->getUser()->id, 'state' => 1])->andWhere('begindate<=' . strtotime(date('Y-m-d')) . ' and enddate>=' . strtotime(date('Y-m-d')))->one();
+					if ($temp2) {
+						$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+						$processnames = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
+						if ($processnames) {
+							foreach ($processnames as $proces) {
+								$reviewprocess->orWhere(['management_area' => $whereArray['id'], 'actionname'=>'projectapplication',$proces => $state, 'state' => 4]);
+							}
+							$processRows += $reviewprocess->count();
+						}
+					}
+// 					var_dump(User::getItemname());
+
+					$processnames = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id,Yii::$app->getUser()->getIdentity()->level);
+					if ($processnames) {
+						$where = [];
+						foreach ($processnames as $proces) {
+							$reviewprocess->orWhere(['management_area' => $whereArray['id'],'actionname'=>'projectapplication', $proces => $state, 'state' => 4]);
+						}
+						$processRows += $reviewprocess->count();
+					}
+//					var_dump($reviewprocess->where);
+				}
+				if(Auditprocess::isAuditing('贷款冻结审批')) {
+					$reviewprocess = Reviewprocess::find();
+					$temp2 = Tempauditing::find()->where(['tempauditing' => Yii::$app->getUser()->id, 'state' => 1])->andWhere('begindate<=' . strtotime(date('Y-m-d')) . ' and enddate>=' . strtotime(date('Y-m-d')))->one();
+					if ($temp2) {
+						$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+						$processnames = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
+						if ($processnames) {
+							foreach ($processnames as $proces) {
+								$reviewprocess->orWhere(['management_area' => $whereArray['id'], 'actionname'=>'loancreate',$proces => $state, 'state' => 4]);
+							}
+							$processRows += $reviewprocess->count();
+						}
+					} else {
+// 					var_dump(User::getItemname());
+
+						$processnames = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id, Yii::$app->getUser()->getIdentity()->level);
+						if ($processnames) {
+							$where = [];
+							foreach ($processnames as $proces) {
+								$reviewprocess->orWhere(['management_area' => $whereArray['id'], 'actionname' => 'loancreate', $proces => $state, 'state' => 4]);
+							}
+							$processRows += $reviewprocess->count();
+						}
+					}
+				}
+				break;
+			//正在办理
+			case 4:
+				if(Auditprocess::isAuditing('承包经营权转让')) {
+					$temp2 = Tempauditing::find()->where(['tempauditing' => Yii::$app->getUser()->id, 'state' => 1])->andWhere('begindate<=' . strtotime(date('Y-m-d')) . ' and enddate>=' . strtotime(date('Y-m-d')))->one();
+					if ($temp2) {
+//					$processnames = Processname::find()->where(['rolename'=>User::getItemname()])->all();
+//						$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+//						$processnames = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
+//						if ($processnames) {
+//							foreach ($processnames as $proces) {
+//								$orWhere[] = ['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer','state' => 4];
+//								$orWhere[] = ['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer',$proces => 0, 'state' => 8];
+//								$orWhere[] = ['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer',$proces => 8, 'state' => 8];
+////								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'farmstransfer', $proces => 1, 'state' => 4];
+////								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'farmstransfer', $proces => 8, 'state' => 8];
+//							}
+							$processModel = Reviewprocess::find();
+//							foreach ($orWhere as $or) {
+//								$processModel->orWhere($or);
+//							}
+//
+//						}
+						$processRows += $processModel->where(['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer','state' => [4,8]])->count();
+					} else {
+						$processnames = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id, Yii::$app->getUser()->getIdentity()->level);
+//					if ($processnames) {
+//						$orWhere = [];
+//						foreach ($processnames as $proces) {
+//							if (User::getItemname('地产科') or User::getItemname('管委会领导')) {
+//								$orWhere[] = ['management_area' => $whereArray['id'], 'actionname'=>'farmstransfer','state' => 4];
+//								$orWhere[] = ['management_area' => $whereArray['id'], 'actionname'=>'farmstransfer','state' => 8];
+//							} else {
+//								$orWhere[] = ['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer','state' => 4];
+//								$orWhere[] = ['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer',$proces => 0, 'state' => 8];
+//								$orWhere[] = ['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer',$proces => 8, 'state' => 8];
+//							}
+//						}
+						$processModel = Reviewprocess::find();
+//						foreach ($orWhere as $or) {
+//							$processModel->orWhere($or);
+//						}
+						$processRows += $processModel->where(['management_area' => $whereArray['id'], 'actionname' => 'farmstransfer', 'state' => [4, 8]])->count();
+					}
+//					}
+				}
+				if(Auditprocess::isAuditing('项目审核')) {
+//					var_dump($processRows);
+					$temp2 = Tempauditing::find()->where(['tempauditing' => Yii::$app->getUser()->id, 'state' => 1])->andWhere('begindate<=' . strtotime(date('Y-m-d')) . ' and enddate>=' . strtotime(date('Y-m-d')))->one();
+					if ($temp2) {
+//					$processnames = Processname::find()->where(['rolename'=>User::getItemname()])->all();
+//						$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+//						$processnames = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
+//						if ($processnames) {
+//							foreach ($processnames as $proces) {
+//								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'projectapplication', $proces => 1, 'state' => 4];
+//								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'projectapplication', $proces => 8, 'state' => 8];
+//							}
+							$processModel = Reviewprocess::find();
+//							foreach ($orWhere as $or) {
+//								$processModel->orWhere($or);
+//							}
+//							$processRows += $processModel->andFilterWhere(['between','create_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+//						}
+						$processRows += $processModel->where(['management_area'=>$whereArray['id'],'actionname'=>'projectapplication','state' => [4,8]])->andFilterWhere(['between','create_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+					} else {
+//					var_dump($processRows);
+//					$processnames = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id,Yii::$app->getUser()->getIdentity()->level);
+//					if ($processnames) {
+//						$orWhere = [];
+//						foreach ($processnames as $proces) {
+//							if (User::getItemname()) {
+//								$orWhere[] = ['management_area' => $whereArray['id'], 'state' => 4];
+//								$orWhere[] = ['management_area' => $whereArray['id'], 'state' => 8];
+//							} else {
+//								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'projectapplication','state' => 4];
+//								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'projectapplication','state' => 8];
+//							}
+//						}
+//
+//						foreach ($orWhere as $or) {
+						$processModel = Reviewprocess::find();
+//							$processModel->orWhere($or);
+////							var_dump($processModel->where);
+////							var_dump($processModel->count());
+//
+////							var_dump($processRows);
+//						}
+//						$processRows += $processModel->andFilterWhere(['between','create_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+//					}
+
+//					foreach ($processModel->all() as $value) {
+//						var_dump($value['id']);
+//					}
+						$processRows += $processModel->where(['management_area' => $whereArray['id'], 'actionname' => 'projectapplication', 'state' => [4, 8]])->andFilterWhere(['between', 'create_at', Theyear::getYeartime()[0], Theyear::getYeartime()[1]])->count();
+					}
+				}
+				if(Auditprocess::isAuditing('贷款冻结审批')) {
+					$temp2 = Tempauditing::find()->where(['tempauditing' => Yii::$app->getUser()->id, 'state' => 1])->andWhere('begindate<=' . strtotime(date('Y-m-d')) . ' and enddate>=' . strtotime(date('Y-m-d')))->one();
+					if ($temp2) {
+//					$processnames = Processname::find()->where(['rolename'=>User::getItemname()])->all();
+//						$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+//						$processnames = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
+//						if ($processnames) {
+//							foreach ($processnames as $proces) {
+//								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'loancreate', $proces => 1, 'state' => 4];
+//								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'loancreate', $proces => 8, 'state' => 8];
+//							}
+							$processModel = Reviewprocess::find();
+//							foreach ($orWhere as $or) {
+//								$processModel->orWhere($or);
+//							}
+//							$processRows += $processModel->andFilterWhere(['between','create_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+//						}
+						$processRows += $processModel->where(['management_area'=>$whereArray['id'],'actionname'=>'loancreate','state' => [4,8]])->andFilterWhere(['between','create_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+					} else {
+//					$processnames = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id,Yii::$app->getUser()->getIdentity()->level);
+//					if ($processnames) {
+//						$orWhere = [];
+//						foreach ($processnames as $proces) {
+//							if (User::getItemname()) {
+//								$orWhere[] = ['management_area' => $whereArray['id'], 'state' => 4];
+//								$orWhere[] = ['management_area' => $whereArray['id'], 'state' => 8];
+//							} else {
+//								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'loancreate', $proces => 1, 'state' => 4];
+//								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'loancreate', $proces => 8, 'state' => 8];
+//							}
+//						}
+						$processModel = Reviewprocess::find();
+//						foreach ($orWhere as $or) {
+//							$processModel->orWhere($or);
+//						}
+//						$processRows += $processModel->andFilterWhere(['between','create_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+//					}
+						$processRows += $processModel->where(['management_area' => $whereArray['id'], 'actionname' => 'loancreate', 'state' => [4, 8]])->andFilterWhere(['between', 'create_at', Theyear::getYeartime()[0], Theyear::getYeartime()[1]])->count();
+					}
+				}
+				break;
+			//已经完成
+			case 6:
+//				var_dump(User::getItemname());
+				if(Auditprocess::isAuditing('承包经营权转让')) {
+					$orWhere = [];
+					$temp2 = Tempauditing::find()->where(['tempauditing' => Yii::$app->getUser()->id, 'state' => 1])->andWhere('begindate<=' . strtotime(date('Y-m-d')) . ' and enddate>=' . strtotime(date('Y-m-d')))->one();
+					if ($temp2) {
+//					$processnames = Processname::find()->where(['rolename'=>User::getItemname()])->all();
+						$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+						$processnames = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
+						if ($processnames) {
+							foreach ($processnames as $proces) {
+								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'farmstransfer', $proces => 1, 'state' => 6];
+								$orWhere[] = ['management_area' => $whereArray['id'], 'actionname'=>'farmstransfer',$proces => 1, 'state' => 7];
+							}
+							$processModel = Reviewprocess::find();
+							foreach ($orWhere as $or) {
+								$processModel->orWhere($or);
+							}
+							$processRows += $processModel->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+						}
+					} else {
+						$orWhere = [];
+						if (User::getItemname()) {
+//						$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'farmstransfer',  'state' => 6];
+//						$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'farmstransfer',  'state' => 7];
+							$processModel = Reviewprocess::find()->andFilterWhere(['management_area' => $whereArray['id'], 'actionname' => 'farmstransfer', 'state' => [6, 7]]);
+						} else {
+							$processnames = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id, Yii::$app->getUser()->getIdentity()->level);
+							if ($processnames) {
+								foreach ($processnames as $proces) {
+//								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'farmstransfer', $proces => 1, 'state' => 6];
+//								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'farmstransfer', $proces => 1, 'state' => 7];
+									$processModel = Reviewprocess::find()->andFilterWhere(['management_area' => $whereArray['id'], $proces => 1, 'actionname' => 'farmstransfer', 'state' => [6, 7]]);
+								}
+							}
+						}
+						$processRows += $processModel->andFilterWhere(['between', 'update_at', Theyear::getYeartime()[0], Theyear::getYeartime()[1]])->count();
+					}
+				}
+				if(Auditprocess::isAuditing('项目审核')) {
+					$orWhere = [];
+					$temp2 = Tempauditing::find()->where(['tempauditing' => Yii::$app->getUser()->id, 'state' => 1])->andWhere('begindate<=' . strtotime(date('Y-m-d')) . ' and enddate>=' . strtotime(date('Y-m-d')))->one();
+					if ($temp2) {
+						$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+						$processnames = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
+						if ($processnames) {
+							foreach ($processnames as $proces) {
+								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'projectapplication', $proces => 1, 'state' => 7];
+							}
+							$processModel = Reviewprocess::find();
+							foreach ($orWhere as $or) {
+								$processModel->orWhere($or);
+							}
+							$processRows += $processModel->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+						}
+					}
+					$orWhere = [];
+					if (User::getItemname()) {
+						$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'projectapplication',  'state' => 7];
+					} else {
+						$processnames = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id,Yii::$app->getUser()->getIdentity()->level);
+						if ($processnames) {
+							foreach ($processnames as $proces) {
+								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'projectapplication', $proces => 1, 'state' => 7];
+							}
+						}
+					}
+					$processModel = Reviewprocess::find();
+					foreach ($orWhere as $or) {
+						$processModel->orFilterWhere($or);
+						$processRows += $processModel->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+					}
+
+//					var_dump($processModel->where);
+				}
+				if(Auditprocess::isAuditing('贷款冻结审批')) {
+					$orWhere = [];
+					$temp2 = Tempauditing::find()->where(['tempauditing' => Yii::$app->getUser()->id, 'state' => 1])->andWhere('begindate<=' . strtotime(date('Y-m-d')) . ' and enddate>=' . strtotime(date('Y-m-d')))->one();
+					if ($temp2) {
+						$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+						$processnames = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
+						if ($processnames) {
+							foreach ($processnames as $proces) {
+								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'loancreate', $proces => 1, 'state' => 7];
+							}
+							$processModel = Reviewprocess::find();
+							foreach ($orWhere as $or) {
+								$processModel->orWhere($or);
+							}
+							$processRows += $processModel->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+						}
+					} else {
+						$orWhere = [];
+						if (User::getItemname()) {
+							$orWhere[] = ['management_area' => $whereArray['id'], 'actionname' => 'loancreate', 'state' => 7];
+						} else {
+							$processnames = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id, Yii::$app->getUser()->getIdentity()->level);
+//						var_dump($processnames);exit;
+							if ($processnames) {
+								foreach ($processnames as $proces) {
+									$orWhere[] = ['management_area' => $whereArray['id'], 'actionname' => 'loancreate', $proces => 1, 'state' => 7];
+								}
+							}
+						}
+						$processModel = Reviewprocess::find();
+						foreach ($orWhere as $or) {
+							$processModel->orWhere($or);
+						}
+//					var_dump($processModel->where);
+						$processRows += $processModel->andFilterWhere(['between', 'update_at', Theyear::getYeartime()[0], Theyear::getYeartime()[1]])->count();
+					}
+				}
+				break;
+			//已完成
+			case 7:
+				if(Auditprocess::isAuditing('承包经营权转让')) {
+					$temp2 = Tempauditing::find()->where(['tempauditing' => Yii::$app->getUser()->id, 'state' => 1])->andWhere('begindate<=' . strtotime(date('Y-m-d')) . ' and enddate>=' . strtotime(date('Y-m-d')))->one();
+					$where['management_area'] = $whereArray['id'];
+					if ($temp2) {
+						$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+						$processnames = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
+						if ($processnames) {
+							foreach ($processnames as $proces) {
+								$where[$proces] = 1;
+							}
+							$where['actionname'] = 'farmstransfer';
+							$where['state'] = $state;
+							$processRows += Reviewprocess::find()->where($where)->andFilterWhere(['between','create_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+						}
+					} else {
+						$processnames = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id, Yii::$app->getUser()->getIdentity()->level);
+						if ($processnames) {
+							$where['management_area'] = $whereArray['id'];
+							foreach ($processnames as $proces) {
+								$where[$proces] = 1;
+							}
+							$where['actionname'] = 'farmstransfer';
+							$where['state'] = $state;
+							$processRows += Reviewprocess::find()->where($where)->andFilterWhere(['between', 'update_at', Theyear::getYeartime()[0], Theyear::getYeartime()[1]])->count();
+						}
+					}
+				}
+
+
+				if(Auditprocess::isAuditing('项目审核')) {
+					$temp2 = Tempauditing::find()->where(['tempauditing' => Yii::$app->getUser()->id, 'state' => 1])->andWhere('begindate<=' . strtotime(date('Y-m-d')) . ' and enddate>=' . strtotime(date('Y-m-d')))->one();
+					$where['management_area'] = $whereArray['id'];
+					if ($temp2) {
+						$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+						$processnames = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
+						if ($processnames) {
+							foreach ($processnames as $proces) {
+								$where[$proces] = 1;
+							}
+							$where['actionname'] = 'projectapplication';
+							$where['state'] = $state;
+							$processRows += Reviewprocess::find()->where($where)->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+						}
+					} else {
+						$processnames = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id, Yii::$app->getUser()->getIdentity()->level);
+						if ($processnames) {
+							$where['management_area'] = $whereArray['id'];
+							foreach ($processnames as $proces) {
+								$where[$proces] = 1;
+							}
+							$where['actionname'] = 'projectapplication';
+							$where['state'] = $state;
+							$processRows += Reviewprocess::find()->where($where)->andFilterWhere(['between', 'create_at', Theyear::getYeartime()[0], Theyear::getYeartime()[1]])->count();
+						}
+					}
+				}
+				if(Auditprocess::isAuditing('贷款冻结审批')) {
+					$temp2 = Tempauditing::find()->where(['tempauditing' => Yii::$app->getUser()->id, 'state' => 1])->andWhere('begindate<=' . strtotime(date('Y-m-d')) . ' and enddate>=' . strtotime(date('Y-m-d')))->one();
+					$where['management_area'] = $whereArray['id'];
+					if ($temp2) {
+						$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+						$processnames = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
+						if ($processnames) {
+							foreach ($processnames as $proces) {
+								$where[$proces] = 1;
+							}
+							$where['actionname'] = 'loancreate';
+							$where['state'] = $state;
+							$processRows += Reviewprocess::find()->where($where)->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+						}
+					} else {
+						$processnames = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id, Yii::$app->getUser()->getIdentity()->level);
+						if ($processnames) {
+							$where['management_area'] = $whereArray['id'];
+							foreach ($processnames as $proces) {
+								$where[$proces] = 1;
+							}
+							$where['actionname'] = 'loancreate';
+							$where['state'] = $state;
+							$processRows += Reviewprocess::find()->where($where)->andFilterWhere(['between', 'update_at', Theyear::getYeartime()[0], Theyear::getYeartime()[1]])->count();
+						}
+					}
+				}
+				break;
+			//退回
+			case 8:
+				if(Auditprocess::isAuditing('承包经营权转让')) {
+					$temp2 = Tempauditing::find()->where(['tempauditing' => Yii::$app->getUser()->id, 'state' => 1])->andWhere('begindate<=' . strtotime(date('Y-m-d')) . ' and enddate>=' . strtotime(date('Y-m-d')))->one();
+					if ($temp2) {
+						$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+						$processnames = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
+						if ($processnames) {
+							foreach ($processnames as $proces) {
+								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'farmstransfer', $proces => $state, 'state' => $state];
+							}
+							$reviewprocess = Reviewprocess::find();
+							foreach ($orWhere as $or) {
+								$reviewprocess->orWhere($or);
+							}
+							$processRows += $reviewprocess->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+						}
+					} else {
+						$processnames = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id, Yii::$app->getUser()->getIdentity()->level);
+						if ($processnames) {
+							$orWhere = [];
+							foreach ($processnames as $proces) {
+								$orWhere[] = ['management_area' => $whereArray['id'], 'actionname' => 'farmstransfer', $proces => $state, 'state' => $state];
+							}
+							$reviewprocess = Reviewprocess::find();
+							foreach ($orWhere as $or) {
+								$reviewprocess->orWhere($or);
+							}
+							$processRows += $reviewprocess->andFilterWhere(['between', 'update_at', Theyear::getYeartime()[0], Theyear::getYeartime()[1]])->count();
+						}
+					}
+				}
+				if(Auditprocess::isAuditing('项目审核')) {
+					$temp2 = Tempauditing::find()->where(['tempauditing' => Yii::$app->getUser()->id, 'state' => 1])->andWhere('begindate<=' . strtotime(date('Y-m-d')) . ' and enddate>=' . strtotime(date('Y-m-d')))->one();
+					if ($temp2) {
+						$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+						$processnames = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
+						if ($processnames) {
+							foreach ($processnames as $proces) {
+								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'projectapplication', $proces => $state, 'state' => $state];
+							}
+							$reviewprocess = Reviewprocess::find();
+							foreach ($orWhere as $or) {
+								$reviewprocess->orWhere($or);
+							}
+							$processRows += $reviewprocess->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+						}
+					} else {
+						$processnames = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id, Yii::$app->getUser()->getIdentity()->level);
+						if ($processnames) {
+							$orWhere = [];
+							foreach ($processnames as $proces) {
+								$orWhere[] = ['management_area' => $whereArray['id'], 'actionname' => 'projectapplication', $proces => $state, 'state' => $state];
+							}
+							$reviewprocess = Reviewprocess::find();
+							foreach ($orWhere as $or) {
+								$reviewprocess->orWhere($or);
+							}
+							$processRows += $reviewprocess->andFilterWhere(['between', 'update_at', Theyear::getYeartime()[0], Theyear::getYeartime()[1]])->count();
+						}
+					}
+				}
+				if(Auditprocess::isAuditing('贷款冻结审批')) {
+					$temp2 = Tempauditing::find()->where(['tempauditing' => Yii::$app->getUser()->id, 'state' => 1])->andWhere('begindate<=' . strtotime(date('Y-m-d')) . ' and enddate>=' . strtotime(date('Y-m-d')))->one();
+					if ($temp2) {
+						$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+						$processnames = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
+						if ($processnames) {
+							foreach ($processnames as $proces) {
+								$orWhere[] = ['management_area' => $whereArray['id'],'actionname'=>'loancreate', $proces => $state, 'state' => $state];
+							}
+							$reviewprocess = Reviewprocess::find();
+							foreach ($orWhere as $or) {
+								$reviewprocess->orWhere($or);
+							}
+							$processRows += $reviewprocess->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+						}
+					} else {
+						$processnames = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id, Yii::$app->getUser()->getIdentity()->level);
+						if ($processnames) {
+							$orWhere = [];
+							foreach ($processnames as $proces) {
+								$orWhere[] = ['management_area' => $whereArray['id'], 'actionname' => 'loancreate', $proces => $state, 'state' => $state];
+							}
+							$reviewprocess = Reviewprocess::find();
+							foreach ($orWhere as $or) {
+								$reviewprocess->orWhere($or);
+							}
+							$processRows += $reviewprocess->andFilterWhere(['between', 'update_at', Theyear::getYeartime()[0], Theyear::getYeartime()[1]])->count();
+						}
+					}
+				}
+				break;
+			case 9:
+				if(Auditprocess::isAuditing('承包经营权转让')) {
+						$processRows += Reviewprocess::find()->where(['management_area' => $whereArray['id'],'actionname'=>'farmstransfer', 'state' => $state])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+				}
+				if(Auditprocess::isAuditing('项目审核')) {
+
+						$processRows += Reviewprocess::find()->where(['management_area' => $whereArray['id'],'actionname'=>'projectapplication', 'state' => $state])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+
+				}
+				if(Auditprocess::isAuditing('贷款冻结审批')) {
+
+						$processRows += Reviewprocess::find()->where(['management_area' => $whereArray['id'],'actionname'=>'loancreate', 'state' => $state])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->count();
+				}
+				break;
+		}
+
+		return $processRows;
+	}
+	public static function getUserProcessAllCount()
+	{
+		$result = self::getUserProcessCount(2) + self::getUserProcessCount(0) + self::getUserProcessCount(8);
+		if($result)
+			return $result;
+		else
+			return false;
+	}
+
+	public static function showProccessList($process,$model=null)
+	{
+		$result = [];
+		$list = [];
+		$processRolename = Processname::getProcessnameobj(Yii::$app->getUser()->getIdentity()->department_id,Yii::$app->getUser()->getIdentity()->level);
+		foreach ($process as $proces) {
+			$list[$proces] = Processname::find()->where(['Identification'=>$proces])->one()['processdepartment'];
+		}
+//		var_dump($processRolename);exit;
+		$result['estate'] = '地产科';
+		foreach ($processRolename as $item) {
+			switch ($item['processdepartment'])
+			{
+				case '财务科':
+//					$result['estate'] = '地产科';
+					break;
+				case '档案审查':
+//					$result['estate'] = '地产科';
+					break;
+				case '法规科':
+//					$result['estate'] = '地产科';
+					break;
+				case '公安部门':
+//					$result['estate'] = '地产科';
+					break;
+				case '抵押贷款审查':
+//					$result['estate'] = '地产科';
+					break;
+				case '项目科':
+//					$result['estate'] = '地产科';
+					break;
+				case '分管领导':
+					if(empty($model)) {
+						$result = $list;
+					}
+					else {
+						if($model->actionname == 'projectapplication') {
+							$result['estate'] = '地产科';
+						}
+
+					}
+					if(!in_array('地产科',$result)) {
+						$result = array_merge($result, ['estate' => '地产科']);
+					}
+					array_pop($result);
+					break;
+			}
+		}
+
+		$result['undo'] = '撤消申请';
+		return $result;
+	}
+
+	//判断部分过户中,如果合同面积为0,则销户
+	public static function isContractNumberZero($farms_id)
+	{
+		$model = Farms::findOne($farms_id);
+		if($model->contractarea == 0) {
+			$model->state = 0;
+			$model->save();
+			return true;
+		}
+		return false;
+	}
+
+	//贷款是否已经开始审核
+	public static function loanISexamine($id)
+	{
+		$loan = Loan::findOne($id);
+		$reviewprocess = Reviewprocess::find()->where(['id'=>$loan->reviewprocess_id])->one();
+		if($reviewprocess['mortgage'] == 1)
+			return true;
+		else
+			return false;
+
+	}
+
+	public static function getBtn($reviewprocess_id)
+	{
+		$html = '';
+		$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+		if($temp) {
+			$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+			$processname = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
+		} else {
+			$processname = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id,Yii::$app->getUser()->getIdentity()->level);
+		}
+		$model = Reviewprocess::findOne($reviewprocess_id);
+		switch ($model->state) {
+			case 4:
+				$html = html::a('查看', ['reviewprocess/reviewprocessview', 'id' => $model->id, 'class' => $model->actionname], ['class' => 'btn btn-success']);
+				foreach ($processname as $process) {
+					if($model->$process == 2) {
+						$html = html::a('审核', ['reviewprocess/reviewprocessinspections', 'id' => $model->id, 'class' => $model->actionname], ['class' => 'btn btn-danger']);
+					}
+				}
+				break;
+			case 8:
+				$html = html::a('查看', ['reviewprocess/reviewprocessview', 'id' => $model->id, 'class' => $model->actionname], ['class' => 'btn btn-success']);
+				foreach ($processname as $process) {
+					if($model->$process == 8) {
+						$html = html::a('审核', ['reviewprocess/reviewprocessinspections', 'id' => $model->id, 'class' => $model->actionname], ['class' => 'btn btn-danger']);
+					}
+				}
+				break;
+			default:
+				$html = html::a('查看', ['reviewprocess/reviewprocessview', 'id' => $model->id, 'class' => $model->actionname], ['class' => 'btn btn-success']);
+		}
+		return $html;
+	}
+
+	public static function getRows($actionname,$begindate=null,$enddate=null)
+	{
+		switch (Yii::$app->controller->action->id) {
+			case 'reviewprocessindex':
+				$state = 4;
+				$iden = 2;
+				$class = 'label bg-red';
+				$where = [];
+				break;
+			case 'reviewprocessing':
+				$state = 4;
+				$iden = null;
+				$class = 'label pull-right bg-green';
+				$where = [];
+				break;
+			case 'reviewprocesswait':
+				$state = 0;
+				$iden = null;
+				$class = 'label pull-right bg-green';
+				$where = ['between','update_at',$begindate,$enddate];
+				break;
+			case 'reviewprocessfinished':
+				$state = [6,7];
+				$iden = null;
+				$class = 'label pull-right bg-green';
+				$where = ['between','update_at',$begindate,$enddate];
+				break;
+			case 'reviewprocesscacle':
+				$state = 9;
+				$iden = null;
+				$class = 'label pull-right bg-green';
+				$where = ['between','update_at',$begindate,$enddate];
+				break;
+			case 'reviewprocessreturn':
+				$state = 8;
+				$iden = 8;
+				$class = 'label pull-right bg-red';
+				$where = ['between','update_at',$begindate,$enddate];
+				break;
+		}
+		$processRows = 0;
+		$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+		if($temp) {
+			$whereArray = Farms::getUserManagementArea($temp['user_id']);
+		} else {
+			$whereArray = Farms::getManagementArea();
+		}
+		$temp2 = Tempauditing::find()->where(['tempauditing' => Yii::$app->getUser()->id, 'state' => 1])->andWhere('begindate<=' . strtotime(date('Y-m-d')) . ' and enddate>=' . strtotime(date('Y-m-d')))->one();
+		if ($temp2) {
+			$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+			$processnames = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
+			if ($processnames) {
+				$reviewprocess = Reviewprocess::find();
+				if($iden) {
+					foreach ($processnames as $proces) {
+						$orWhere[] = ['management_area' => $whereArray['id'], 'actionname' => $actionname, $proces => $iden, 'state' => $state];
+					}
+					foreach ($orWhere as $or) {
+						$reviewprocess->orWhere($or);
+					}
+				} else {
+					$reviewprocess->where(['management_area' => $whereArray['id'], 'actionname' => $actionname, 'state' => $state]);
+				}
+				if(empty($where)) {
+					$processRows += $reviewprocess->count();
+				} else {
+					$processRows += $reviewprocess->andFilterWhere($where)->count();
+				}
+			}
+		} else {
+			$processnames = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id, Yii::$app->getUser()->getIdentity()->level);
+			if ($processnames) {
+				$reviewprocess = Reviewprocess::find();
+				if ($iden) {
+					foreach ($processnames as $proces) {
+						$orWhere[] = ['management_area' => $whereArray['id'], 'actionname' => $actionname, $proces => $iden, 'state' => $state];
+					}
+					foreach ($orWhere as $or) {
+						$reviewprocess->orWhere($or);
+					}
+				} else {
+					$reviewprocess->where(['management_area' => $whereArray['id'], 'actionname' => $actionname, 'state' => $state]);
+				}
+				if (empty($where)) {
+					$processRows += $reviewprocess->count();
+				} else {
+					$processRows += $reviewprocess->andFilterWhere($where)->count();
+				}
+			}
+		}
+
+		return '<small class="'.$class.'">'.$processRows.'</small>';
+	}
+
+	public static function getOldFarms()
+	{
+		$result = [];
+		$data = Reviewprocess::find()->where(['state'=>[6,7],'actionname'=>'farmstransfer','management_area'=>Farms::getManagementArea()['id']])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
+		foreach ($data as $value) {
+			if($value['samefarms_id']) {
+				$result[$value['samefarms_id']] = $value['samefarms_id'];
+			} else {
+				$result[$value['oldfarms_id']] = $value['oldfarms_id'];
+			}
+		}
+//		var_dump($result);exit;
+		sort($result);
+		return $result;
+	}
+	//获取当年流转的农场ID与原ID数组
+	public static function getReviewFarms($farms_id=null)
+	{
+		if(empty($farms_id)) {
+			return false;
+		}
+		$result = [];
+		$new = Reviewprocess::find()->where(['newfarms_id'=>$farms_id,'state'=>[6,7]])->all();
+		if($new) {
+			foreach ($new as $value) {
+				if($value['samefarms_id']) {
+					$result[] = $value['samefarms_id'];
+				} else {
+					$result[] = $value['oldfarms_id'];
+				}
+			}
+		}
+		$old = Reviewprocess::find()->where(['oldfarms_id'=>$farms_id,'state'=>[6,7]])->all();
+		foreach ($old as $value) {
+			if($value['samefarms_id']) {
+				$result[] = $value['samefarms_id'];
+			} else {
+				$result[] = $value['newfarms_id'];
+			}
+		}
+//		var_dump($result);exit;
+		return $result;
+	}
 }

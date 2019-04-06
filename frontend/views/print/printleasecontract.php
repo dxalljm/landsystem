@@ -8,7 +8,8 @@ classid='clsid:E77E049B-23FC-4DB8-B756-60529A35FAD5' codebase='WebOffice.cab#Ver
 </OBJECT> 
 <!-- --------------------=== 调用Weboffice初始化方法 ===--------------------- -->
 
-<?php 
+<?php
+	echo \yii\helpers\Html::a('返回', yii::$app->request->getReferrer(), ['class' => 'btn btn-success']);
 	$url = '/leasefile/'.$filename;
 ?>
 <SCRIPT LANGUAGE=javascript FOR=WebOffice1 EVENT=NotifyCtrlReady>
@@ -20,6 +21,7 @@ classid='clsid:E77E049B-23FC-4DB8-B756-60529A35FAD5' codebase='WebOffice.cab#Ver
  webObj.HideMenuItem(0x01 + 0x02 + 0x20 +0x4000); //Hide it
 
  document.all.WebOffice1.HideMenuArea('hideall','','','');
+ document.all.WebOffice1.ProtectDoc(1,0,'402203');
  function WebOffice1_NotifyCtrlReady() {
 	    document.all.WebOffice1.LoadOriginalFile("<?= $url?>", "doc");
 	   

@@ -5,7 +5,7 @@ use frontend\helpers\ActiveFormrdiv;
 use app\models\Farmer;
 use yii\helpers\ArrayHelper;
 use app\models\Farms;
-use app\models\Parcel;
+use app\models\Help;
 use yii\web\View;
 use app\models\Plant;
 use app\models\Inputproduct;
@@ -19,9 +19,10 @@ use app\models\Plantingstructure;
 /* @var $model app\models\Plantingstructure */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
 <div class="plantingstructure-form">
-
+	<?php
+//	var_dump($noarea);
+	?>
     <?php $form = ActiveFormrdiv::begin(); ?>
 <table width="61%" class="table table-bordered table-hover">
 <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$farm->id])->label(false)->error(false) ?>
@@ -38,11 +39,11 @@ use app\models\Plantingstructure;
 <td align='right'><?= Lease::find()->where(['id'=>$_GET['lease_id']])->one()['lessee'] ?></td>
 <?php }?>
 <td align='right'>农场面积：<?= $farm->contractarea.' 亩'?></td>
-<td align='left'>租赁面积：<?= $overarea?>亩</td>
+<td align='left'><?= Help::showHelp3('租赁面积','plantingstructure-leaseArea')?>：<?= sprintf('%.2f',$overarea)?>亩</td>
 </tr>
 <tr>
-  <td align='right'>种植面积</td><?php if(!empty($model->area)) $value = $model->area; else $value = $noarea;?>
-  <td colspan="6" align='left'><?= $form->field($model, 'area')->textInput(['value'=>$value])->label(false)->error(false) ?></td>
+  <td align='right'>种植面积</td><?php if(bccomp($overarea, $noarea) == 0) $value = sprintf('%.2f',$overarea); else $value = sprintf('%.2f',$noarea);?>
+  <td colspan="6" align='left'><?= $form->field($model, 'area')->textInput(['value'=>$value,'help'=>'plantingstructure-PlantArea'])->label(false)->error(false) ?></td>
   </tr>
 <tr>
   <td align='right'>种植作物</td><?php $fatherid = Plant::find()->where(['id'=>$model->plant_id])->one()['father_id'];?>
@@ -203,7 +204,7 @@ use app\models\Plantingstructure;
 
 
 
-<?php $this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
+<?php //$this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
 </div>
 <script type="text/javascript">
 
@@ -306,7 +307,7 @@ function setLeasearea() {
          </div>
       </div><!-- /.modal-content -->
 </div><!-- /.modal -->
-<?php $this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
+<?php //$this->registerJsFile('js/vendor/bower/jquery/dist/jquery.min.js', ['position' => View::POS_HEAD]); ?>
 <script type="text/javascript">
 function plantinputproductcreate(lease_id,farms_id) {
 			$.get(
@@ -370,10 +371,11 @@ $('#plantingstructure-area').blur(function(){
 	if(input > mease) {
 		alert('对不起，输入的面积不能大于'+mease+'亩');
 		$('#plantingstructure-area').focus();
+		$('#plantingstructure-area').val(mease);
 	}
 })
 $('#plantfather').change(function(){
-	father_id = $(this).val();
+	var father_id = $(this).val();
 	$.getJSON('index.php?r=plant/plantgetson', {father_id: father_id}, function (data) {
 		if (data.status == 1) {
 			$('#plantingstructure-plant_id').html(null);
@@ -390,7 +392,7 @@ $('#plantfather').change(function(){
 	});
 });
 $('#plantingstructure-plant_id').change(function(){
-	plant_id = $(this).val();
+	var plant_id = $(this).val();
 	
 	$.getJSON('index.php?r=goodseed/goodseedgetmodel', {plant_id: plant_id}, function (data) {
 		
@@ -409,7 +411,7 @@ $('#plantingstructure-plant_id').change(function(){
 	});
 });
 $('#inputproductfather').change(function(){
-	father_id = $(this).val();
+	var father_id = $(this).val();
 	
 	$.getJSON('index.php?r=inputproduct/inputproductgetfertilizer', {father_id: father_id}, function (data) {
 		
@@ -448,16 +450,16 @@ $('#inputproductson').change(function(){
 });
 </script>
 <script type="text/javascript" charset="utf-8">
-  var brandjson = <?= Inputproductbrandmodel::getBrandmodel() ?>;
-  $('.brandsearch').autocomplete({
-	  lookup: brandjson,
-	  formatResult: function (json) {
-		  return json.data;
-	  },
-	  onSelect: function (suggestion) {
-		  $(this).val(suggestion.data);
-
-	  }
-  });
+//  var brandjson = <?//= Inputproductbrandmodel::getBrandmodel() ?>//;
+//  $('.brandsearch').autocomplete({
+//	  lookup: brandjson,
+//	  formatResult: function (json) {
+//		  return json.data;
+//	  },
+//	  onSelect: function (suggestion) {
+//		  $(this).val(suggestion.data);
+//
+//	  }
+//  });
 </script>
 </div>

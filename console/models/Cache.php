@@ -33,8 +33,8 @@ class Cache extends \yii\db\ActiveRecord
     { 
         return [
             [['user_id'], 'integer'],
-            [['farmscache', 'collectioncache', 'plantingstructurecache', 'plantinputproductcache', 'huinongcache', 'infrastructurecache', 'plantinputproductcategories', 'infrastructurecategories','projectapplicationcache','projectapplicationcategories'], 'string'],
-            [['farmstitle', 'farmscategories', 'collectiontitle', 'collectioncategories', 'plantingstructuretitle', 'plantingstructurecategories', 'huinongtitle', 'huinongcategories', 'plantinputproducttitle', 'infrastructuretitle','projectapplicationtitle'], 'string', 'max' => 500]
+            [['farmscache', 'collectioncache', 'plantingstructurecache', 'plantinputproductcache', 'huinongcache', 'infrastructurecache', 'plantinputproductcategories', 'infrastructurecategories','projectapplicationcache','projectapplicationcategories','firecache','firecategories','loancache','loancategories'], 'string'],
+            [['farmstitle', 'farmscategories', 'collectiontitle', 'collectioncategories', 'plantingstructuretitle', 'plantingstructurecategories', 'huinongtitle', 'huinongcategories', 'plantinputproducttitle', 'infrastructuretitle','projectapplicationtitle','firetitle','loantitle','year'], 'string', 'max' => 500]
         ]; 
     } 
 
@@ -67,6 +67,13 @@ class Cache extends \yii\db\ActiveRecord
         	'projectapplicationtitle' => '项目标题',
         	'projectapplicationcache' => '项目暂存',
         	'projectapplicationcategories' => '项目列表',
+        	'loantitle' => '贷款标题',
+        	'loancache' => '贷款暂存',
+        	'loancategories' => '贷款列表',
+        	'firetitle' => '防火标题',
+        	'firecache' => '防火暂存',
+        	'firecategories' => '防火列表',
+        	'year' => '年度'
         ]; 
     }  
 }

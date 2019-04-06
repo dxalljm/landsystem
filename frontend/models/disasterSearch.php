@@ -108,17 +108,24 @@ class disasterSearch extends Disaster
     }
     public function searchIndex($params)
     {
-//     	var_dump($params);exit;
+//     	var_dump($params);
     	$query = Disaster::find();
     
     	$dataProvider = new ActiveDataProvider([
     			'query' => $query,
     	]);
-    
-    	if($params['disasterSearch']['management_area'] == 0)
-    		$this->management_area = NULL;
-    	else
-    		$this->management_area = $params['disasterSearch']['management_area'];
+    	if(isset($params['disasterSearch']['management_area'])) {
+	    	if($params['disasterSearch']['management_area'] == 0)
+	    		$this->management_area = NULL;
+	    	else
+	    		$this->management_area = $params['disasterSearch']['management_area'];
+		} else {
+			$management_area = Farms::getManagementArea()['id'];
+			if(count($management_area) > 1)
+				$this->management_area = NULL;
+			else 
+				$this->management_area = $management_area;
+		}
     	$farmid = [];
     	if((isset($params['disasterSearch']['farms_id']) and $params['disasterSearch']['farms_id'] !== '') or (isset($params['disasterSearch']['farmer_id']) and $params['disasterSearch']['farmer_id'] !== '')) {
 	    	$farm = Farms::find();
@@ -154,12 +161,12 @@ class disasterSearch extends Disaster
     	if(isset($params['disasterSearch']['disasterarea']) and $params['disasterSearch']['disasterarea'] !== '') {
     		$query->andFilterWhere($this->numberSearch('disasterarea',$params['disasterSearch']['disasterarea']));
     	}
-
+// var_dump($this->management_area);exit;
     	$query->andFilterWhere([
     			'id' => $this->id,
     			'farms_id' => $farmid,
     			'disastertype_id' => $this->disastertype_id,
-//     			'disasterarea' => $this->disasterarea,
+    			'management_area' => $this->management_area,
     			'insurancearea' => $this->insurancearea,
     			'disasterplant' => $this->disasterplant,
     			'yieldreduction' => $this->yieldreduction,

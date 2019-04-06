@@ -27,23 +27,35 @@ use yii\helpers\Url;
 
 <table>
   <tr>
-	    <td valign="top"> 
+	    <td style="vertical-align: top;">
 	    <?= html::dropDownList('select',$select,$selectItem,['class'=>'form-control','id'=>'selectID'])?>
 	    </td>
 	    <td>&nbsp;&nbsp;</td>
-	  <td  valign="top">
+	  <td style="vertical-align: top;">
 	  <form method="POST" action="--WEBBOT-SELF--" name="form1">
-	      <input type="button" value="启动主" name="StartBtn" onClick="Start1_onclick()">
-	      <input type="button" value="启动副" name="StopBtn" onClick="Start2_onclick()">
-	      <input type="button" value="停止" name="StopBtn" onClick="Stop_onclick()">
-	      <input type="button" value="设置切黑边" name="SaveTIFBtn" onClick="CutHB_onclick()">
-	      <input type="button" value="设置矫正" name="SaveTIFBtn" onClick="Skew_onclick()">
+	      <input class="btn btn-xs" type="button" value="启动主" name="StartBtn" onClick="Start1_onclick()">
+	      <input class="btn btn-xs" type="button" value="启动副" name="StopBtn" onClick="Start2_onclick()">
+	      <input class="btn btn-xs" type="button" value="停止" name="StopBtn" onClick="Stop_onclick()">
+	      <input class="btn btn-xs" type="button" value="设置切黑边" name="SaveTIFBtn" onClick="CutHB_onclick()">
+	      <input class="btn btn-xs" type="button" value="设置矫正" name="SaveTIFBtn" onClick="Skew_onclick()">
 	      
-	      <input type="button" value="删除JPG" name="DeleteJPGBtn" onClick="DeleteJPG_onclick()">
-	      <input type="button" value="上传JPG" name="UpLoadBtn" onClick="UpLoadJPG_onclick()">
+	      <input class="btn btn-xs" type="button" value="删除JPG" name="DeleteJPGBtn" onClick="DeleteJPG_onclick()">
+	      <input class="btn btn-xs" type="button" value="上传JPG" name="UpLoadBtn" onClick="UpLoadJPG_onclick()">
 	      
-	      亮度:<input type="text" value="20" style="width:30px;" id="BrightnessValue"/>
-	      <input type="button" value="设置"  onclick="SetBrightness_onclick()">
+	      亮度:
+	       <select id="BrightnessValue" onChange="SetBrightness(this)">';
+	    <option value="0" selected="selected">0</option>;
+	    <option value="10">10</option>;
+	    <option value="20">20</option>;
+	    <option value="30">30</option>;
+	    <option value="40">40</option>;
+	    <option value="50">50</option>;
+	    <option value="60">60</option>;
+	    <option value="70">70</option>;
+	    <option value="80">80</option>;
+	    <option value="90">90</option>;
+	    <option value="100">100</option>;
+	    </select>';
 	      
 	      曝光度:
 	      <select id="ExposureValue" onChange="SelectExposure(this)">
@@ -60,35 +72,36 @@ use yii\helpers\Url;
 	        <option value="100">100</option>
 	        </select>
 	      
-	      <input type="button" value="主旋" onClick="rotateMain()">
+	      <input class="btn btn-xs" type="button" value="主旋" onClick="rotateMain()">
 	      
-	      <input type="button" value="硬件ID" onClick="getDeviceId()">		    
-	      <input type="radio" value="3" name="mode" id="autoMode" onClick="selectAutoMode(this)"/>
+	      <input class="btn btn-xs" type="button" value="硬件ID" onClick="getDeviceId()">
+	      <input class="btn btn-xs" type="radio" value="3" name="mode" id="autoMode" onClick="selectAutoMode(this)"/>
 	      <label for="autoMode">自动</label>
-	      <input type="radio" value="1" name="mode" id="customMode" onClick="selectSfzMode(this)"/><label for="autoMode">自定义</label>
+	      <input class="btn btn-xs" type="radio" value="1" name="mode" id="customMode" onClick="selectSfzMode(this)"/>
+		  <label for="autoMode">自定义</label>
 	      <?= Html::hiddenInput('checkboxValue',0,['id'=>'electronic-id'])?>
 	      </form>
 	    <br>
+
 	    <?php 
 // 	    var_dump($ea);
 	    echo '<table id="imageTable" border="0">';
 	    
-// 	    var_dump($select);
 	    	if($select == 'electronicarchives-archivesimage') {
-	    		
+//				var_dump($ea);
 		    	if($ea) {
 					$n = 0;
 		    		for($i=0;$i<count($ea);$i++) {
 		    			$m=$i*2;
 		    			echo '<tr id="imageTr'.$m.'">';
 		    			for($j=0;$j<count($ea[$i]);$j++) {
-		    				$imageInfo = imageClass::getImageInfo( iconv("UTF-8","gbk//TRANSLIT", $ea[$i][$j]['archivesimage']));
+		    				$imageInfo = imageClass::getImageInfo($ea[$i][$j]['archivesimage']);
 		    				$width = floor($imageInfo['width']/15);
 		    				
 		    				$height = floor($imageInfo['height']/15);
 	// 	    				var_dump($imageInfo);
 		    				echo '<td>';
-		    				echo '<a href="#" class="dialog-link" class="ui-state-default ui-corner-all" onclick=Zoom("'.$ea[$i][$j]['archivesimage'].'",'.$ea[$i][$j]['pagenumber'].','.$imageInfo['width'].','.$imageInfo['height'].')><img alt="" src="'.$ea[$i][$j]['archivesimage'].'" width="'.$width.'"/></a>';
+		    				echo '<a href="#" class="dialog-link" class="ui-state-default ui-corner-all" onclick=Zoom("'.$ea[$i][$j]['archivesimage'].'",'.$ea[$i][$j]['pagenumber'].','.$imageInfo['width'].','.$imageInfo['height'].')><img alt="" src="http://192.168.1.10/'.$ea[$i][$j]['archivesimage'].'" width="'.$width.'"/></a>';
 		    				echo '</td>';
 		    			}
 		    			echo '</tr>';
@@ -103,12 +116,14 @@ use yii\helpers\Url;
 		    			echo '</tr>';
 		    		}
 		    	}	    		
-	    	} else { 
-	    		echo '<tr>';
-	    		echo '<td>';
-	    		echo '&nbsp;'.Html::img($photo,['width'=>$photoInfo['width'],'height'=>$photoInfo['height'],'id'=>'photoShow']); 
-	    		echo '</td>';
-	    		echo '</tr>';
+	    	} else {
+	    		if(isset($_GET['select'])) {
+		    		echo '<tr>';
+		    		echo '<td>';
+		    		echo Html::img($photo,['width'=>"400px",'id'=>'photoShow','src'=>'#']); 
+		    		echo '</td>';
+		    		echo '</tr>';
+	    		}
 	    	}	    	
 	    	echo '</table>';
 	    ?></td>
@@ -138,19 +153,24 @@ use yii\helpers\Url;
 <script>
 jQuery('#selectID').change(function(){
     var input = $(this).val();
-    $.get("/landsystem/frontend/web/index.php?r=photograph/photographindex",{farms_id:<?= $_GET['farms_id']?>,select:input},function (data) {
+    $.get("<?= Url::to(["photograph/photographindex"])?>",{farms_id:<?= $farms_id?>,select:input},function (data) {
+//		alert(data);
 		$('body').html(data);
 	});
+    Stop_onclick();
 });
+
   function Start1_onclick()
   {
         var str=captrue.bStopPlay();  	
         var str = captrue.bStartPlay();
+        DefaultBrightness();
   }
   function Start2_onclick()
   {
 	  var str=captrue.bStopPlay();
 	  var str = captrue.bStartPlay2(0);
+	  DefaultBrightness();
   }
   function Stop_onclick()
   {
@@ -166,16 +186,32 @@ jQuery('#selectID').change(function(){
 	{
 		$("#electronic-id").val(eid);
 	}
+
+	function upload() {
+		var fileName = 'JPG.jpg';
+        captrue.bSaveJPG(savePath, fileName);
+        var port;
+        if (location.port != "") {
+            port = location.port;
+        } else {
+            port = 80;
+        }
+        captrue.bUpLoadImage(savePath + fileName + ".jpg", location.hostname, port, "/web/uploadimage/upload.php");
+    }
 	
 	function UpLoadJPG_onclick()
 	{
-		var save = captrue.bSaveJPG("d:\\","JPG");
-		if(save) {
+		captrue.bSaveJPG("d:\\","jpg");
+		var upload = captrue.bUpLoadImage("D:\\JPG.jpg", "192.168.1.9", 80, "uploadimage/upload.php");
+// 		alert(upload);
+		if(upload) {
 			eid = $('#electronic-id').val();
-	        $.getJSON('index.php?r=photogallery/photograph', {farms_id: <?= $_GET['farms_id']?>,select:$('#selectID').val(),eid:eid}, function (data) {
-// 	           	alert(data.url);
+	        $.getJSON("<?= Url::to(['photogallery/photograph'])?>", {farms_id: <?= $_GET['farms_id']?>,select:$('#selectID').val(),eid:eid}, function (data) {
+
 				var select = $('#selectID').val();
+// 				alert(select);
 				if(select == 'electronicarchives-archivesimage') {
+//					alert(data.url);
 					var width = Math.floor(data.info['width']/15);
 					var height = Math.floor(data.info['height']/15);
 // 					alert(data.page);
@@ -216,7 +252,7 @@ jQuery('#selectID').change(function(){
 						var deleteid = data.id - 1;						
 						$('#cha'+deleteid).attr('class','');
 					} else {
-// 						alert(data.id);
+						
 						$('#img'+data.id).attr('src',data.url);
 						$('#img'+data.id).attr('width',width);
 			        	$('#img'+data.id).attr('height',height);	
@@ -226,15 +262,19 @@ jQuery('#selectID').change(function(){
 					
 					
 				} else {
-					var width = Math.floor(data.info['width']/15);
-					var height = Math.floor(data.info['height']/15);
+// 					if(data.message <> '')
+// 						alert(data.message);
+					var width = "400px";
+//					var url = "http://192.168.1.10/"+data.url;
+
 		        	$('#photoShow').attr('src', data.url);
 		        	$('#photoShow').attr('width',width);
 		        	$('#photoShow').attr('height',height);
 				}
-				captrue.bDeleteFile("d:\\JPG.jpg");       			
+				captrue.bDeleteFile("D:\\JPG.jpg");
 	        });
-		}
+		} else 
+			alert('图片上传失败，请与开发人员联系。');
 	}
 
 	function deleteImg(id,tr1,tr2)
@@ -322,7 +362,15 @@ jQuery('#selectID').change(function(){
 		var BrightnessValue = document.getElementById("BrightnessValue").value;
 		captrue.vSetBrightness(BrightnessValue);
 	}
-	
+
+	//默认亮度0
+	function DefaultBrightness(){
+		captrue.vSetBrightness(0);
+		$('#BrightnessValue').val(0);
+	}
+	function SetBrightness(el){
+		captrue.vSetBrightness(el.value);
+	}
 	function SetContrast_onclick(){
 		var ContrastValue = document.getElementById("ContrastValue").value;
 		captrue.vSetContrast(ContrastValue);
@@ -369,8 +417,11 @@ function Zoom(src,page,width,height)
 {
 	var bodyheight = document.body.offsetHeight - window.screenTop - 50;
 	var bei = bodyheight/height;
+// 	alert(bei);
+	
 	var newwidth = Math.floor(width*bei) + 35;
-	$('#showImage').attr('src',src);
+// 	alert(newwidth);
+	$('#showImage').attr('src','http://192.168.1.10/'+src);
 	$('#showImage').attr('height',bodyheight);
 	$( "#dialog" ).attr('title','第'+page+'页');
 	$( "#dialog" ).dialog({

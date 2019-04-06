@@ -59,8 +59,8 @@ class pesticidesSearch extends Pesticides
             'id' => $this->id,
         ]);
 
-        $query->andFilterWhere(['like', 'pesticidename', $this->pesticidename])
-        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
+        $query->andFilterWhere(['like', 'pesticidename', $this->pesticidename]);
+//        ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
 
         return $dataProvider;
     }

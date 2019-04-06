@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use app\models\Lockstate;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -10,14 +11,13 @@ use frontend\models\SignupForm;
 use app\models\Logs;
 use app\models\User;
 use app\models\Department;
-use app\models\Parcel;
+use app\models\Theyear;
 use app\models\ManagementArea;
-use app\models\Farms;
-use app\models\Collection;
+use frontend\models\collectionSearch;
 use frontend\models\tempprintbillSearch;
-use frontend\helpers\Pinyin;
 use app\models\Tempauditing;
-
+use frontend\helpers\MacAddress;
+use app\models\Farms;
 /**
  * Site controller
  */
@@ -51,7 +51,13 @@ class SiteController extends Controller
             ],
         ];
     }
-
+//    public function beforeAction($action)
+//    {
+////        var_dump(Yii::$app->user->isGuest);
+//        if(Yii::$app->user->isGuest) {
+//            return $this->redirect(['site/login']);
+//        }
+//    }
     /**
      * @inheritdoc
      */
@@ -68,67 +74,89 @@ class SiteController extends Controller
     {
     	return $this->render('mainiframe');
     }
-    
+
     public function actionIndex()
     {
-//       echo Pinyin::encode('杨淑华');
 
-//       exit;
-//     	if(\Yii::$app->user->identity->username == 'cwk01') {
-//     		Logs::writeLog('票据打印');
-//     		$searchModel = new tempprintbillSearch();
-//     		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-//     		return $this->redirect(['tempprintbill/tempprintbillindex', 'searchModel' => $searchModel,'dataProvider'=>$dataProvider]);
-    		
-//     	} else {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        }
+//        var_dump(Lockstate::getSystemLockState());exit;
+        if(Lockstate::getSystemLockState()) {
+            $this->layout='@app/views/layouts/main2.php';
+            return $this->render('locked');
+        }
     	Tempauditing::tempauditingIsExpire();
-	    	Logs::writeLog('访问首页');
-	    	$user = User::find()->where(['id'=>yii::$app->getUser()->id])->one();
-	    	$dep_id = $user['department_id'];
-	    	$departmentData = Department::find()->where(['id'=>$dep_id])->one();
-	    	$arrayDepartment = explode(',',$departmentData['membership']);
-	    	$management = ManagementArea::find()->where(['id' =>$arrayDepartment])->all();
-// 	    	var_dump($management);
-// 	    	exit;
-			if(is_array($management)) {
-                $arrayResult = [];
-				foreach($management as $value) {
-					$arrayResult[] = $value['areaname'];
-				}
-				$result = implode(',',$arrayResult);	
-			}				
-			else 
-				$result = $management;
-	        $areaname = [];
-	        return $this->render('index',[
-	            'areaname' => $result,
-	        	'user' => $user,
-	        ]);
-//     	}
+	    Logs::writeLogs('访问首页');
+	    $user = User::find()->where(['id'=>yii::$app->getUser()->id])->one();
+
+	    $dep_id = $user['department_id'];
+	    $departmentData = Department::find()->where(['id'=>$dep_id])->one();
+	    $arrayDepartment = explode(',',$departmentData['membership']);
+	    $management = ManagementArea::find()->where(['id' =>$arrayDepartment])->all();
+//        var_dump($management);
+		if(is_array($management)) {
+               $arrayResult = [];
+			foreach($management as $value) {
+				$arrayResult[] = $value['areaname'];
+			}
+			$result = implode(',',$arrayResult);
+		}
+		else
+			$result = $management;
+        $searchModel = new collectionSearch();
+        $params = Yii::$app->request->queryParams;
+        $whereArray = Farms::getManagementArea()['id'];
+        if (empty($params['collectionSearch']['management_area'])) {
+            $params ['collectionSearch'] ['management_area'] = $whereArray;
+        }
+        $params['collectionSearch']['payyear'] = Theyear::getYear();
+        $dataProvider = $searchModel->searchIndex ( $params );
+
+        if (is_array($searchModel->management_area)) {
+            $searchModel->management_area = null;
+        }
+
+	    return $this->render('index',[
+	       'areaname' => $result,
+	      	'user' => $user,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider
+	    ]);
     }
 
     public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {
+            Logs::writeLogs('登录失败');
             return $this->goHome();
         }
 
         $model = new LoginForm();
+        $mac = new MacAddress();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-        	if(\Yii::$app->getUser()->getIdentity()['autoyear']) {
-        		$userModel = User::findOne(\Yii::$app->getUser()->id);
+        	$userModel = User::findOne(\Yii::$app->getUser()->id);
+//        	if(\Yii::$app->getUser()->getIdentity()['autoyear']) {
         		if($userModel->year !== date('Y')) {
-        			$userModel->year = date('Y');
-        			$userModel->save();
-        		}
+        			$userModel->year = date('Y');        			
+        			
+        		}        		
+//        	}
+        	if($userModel->ip == '') {
+        		$userModel->ip = Yii::$app->getRequest()->getUserIP();
         	}
-//         	var_dump(\Yii::$app->getUser());
+        	if($userModel->mac == '') {
+        		$userModel->mac = $mac->getMac();
+        	}
+//         	var_dump($userModel);exit;
+        	$userModel->save();
         	if($model->username == 'admin')
         		throw new \yii\web\UnauthorizedHttpException('对不起，此用户不能在前台页面登录。');
-        	
+        	Logs::writeLogs(Yii::$app->user->identity->realname.'登录成功');
             	return $this->goBack();
         } else {
             $this->layout='@app/views/layouts/main2.php';
+            Logs::writeLogs('用户登录');
             return $this->render('login', [
                 'model' => $model,
             ]);
@@ -179,7 +207,6 @@ class SiteController extends Controller
                 Yii::$app->getSession()->setFlash('error', 'Sorry, we are unable to reset password for email provided.');
             }
         }
-
         return $this->render('requestPasswordResetToken', [
             'model' => $model,
         ]);

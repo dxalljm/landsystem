@@ -26,6 +26,14 @@ class CooperativeoffarmController extends Controller
             ],
         ];
     }
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -46,7 +54,7 @@ class CooperativeoffarmController extends Controller
         $params = Yii::$app->request->queryParams;
         $params ['cooperativeoffarmSearch'] ['farms_id'] = $farms_id;
         $dataProvider = $searchModel->search($params);
-		Logs::writeLog('农场合作社信息');
+		Logs::writeLogs('农场合作社信息');
         return $this->render('cooperativeoffarmindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -79,8 +87,7 @@ class CooperativeoffarmController extends Controller
         	$model->create_at = time();
         	$model->update_at = time();
         	$model->save();
-        	$newAttr = $model->attributes;
-        	Logs::writeLog('创建农场合作社信息',$model->id,'',$newAttr);
+        	Logs::writeLogs('创建农场合作社信息',$model);
             return $this->redirect(['cooperativeoffarmview', 'id' => $model->id,'farms_id'=>$farms_id]);
         } else {
             return $this->render('cooperativeoffarmcreate', [
@@ -98,12 +105,10 @@ class CooperativeoffarmController extends Controller
     public function actionCooperativeoffarmupdate($id,$farms_id)
     {
         $model = $this->findModel($id);
-		$oldAttr = $model->attributes;
         if ($model->load(Yii::$app->request->post())) {
         	$model->update_at = time();
         	$model->save();
-        	$newAttr = $model->attributes;
-        	Logs::writeLog('更新农场合作社信息',$id,$oldAttr,$newAttr);
+        	Logs::writeLogs('更新农场合作社信息',$model);
             return $this->redirect(['cooperativeoffarmview', 'id' => $model->id,'farms_id'=>$farms_id]);
         } else {
             return $this->render('cooperativeoffarmupdate', [
@@ -121,8 +126,7 @@ class CooperativeoffarmController extends Controller
     public function actionCooperativeoffarmdelete($id,$farms_id)
     {
     	$model = $this->findModel($id);
-        $oldAttr = $model->attributes;
-        Logs::writeLog('删除农场合作社信息',$id,$oldAttr);
+        Logs::writeLogs('删除农场合作社信息',$model);
 
         return $this->redirect(['cooperativeoffarmindex','farms_id'=>$farms_id]);
     }

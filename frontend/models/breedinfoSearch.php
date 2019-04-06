@@ -25,7 +25,7 @@ class breedinfoSearch extends Breedinfo
     public function rules()
     {
         return [
-            [['id', 'breed_id', 'number', 'breedtype_id','create_at','update_at','management_area','farms_id','farmer_id','breedname','breedaddress','is_demonstration'], 'integer'],
+            [['id', 'breed_id', 'number', 'breedtype_id','create_at','update_at','management_area','farms_id','farmer_id','breedname','breedaddress','is_demonstration','farmstate','state','clrate'], 'integer'],
             [['basicinvestment', 'housingarea'], 'number'],
         ];
     }
@@ -87,8 +87,9 @@ class breedinfoSearch extends Breedinfo
             'housingarea' => $this->housingarea,
             'breedtype_id' => $this->breedtype_id,
         	'management_area' => $this->management_area,
+			'farmstate' => $this->farmstate,
         ]);
-        $query->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
+//        $query->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
         return $dataProvider;
     }
     public function numberSearch($field,$str = NULL)
@@ -114,11 +115,15 @@ class breedinfoSearch extends Breedinfo
     	$dataProvider = new ActiveDataProvider([
     			'query' => $query,
     	]);
-    
-    	if($params['breedinfoSearch']['management_area'] == 0)
-    		$this->management_area = NULL;
-    	else
-    		$this->management_area = $params['breedinfoSearch']['management_area'];
+    	if(isset($params['breedinfoSearch']['management_area'])) {
+			$this->management_area = $params['breedinfoSearch']['management_area'];
+		} else {
+			$this->management_area = Farms::getManagementArea()['id'];
+		}
+		if(count($this->management_area) > 1) {
+			$this->management_area = null;
+		}
+//		var_dump($this->management_area);exit;
     	$farmid = [];
     	if((isset($params['breedinfoSearch']['farms_id']) and $params['breedinfoSearch']['farms_id'] !== '') or (isset($params['breedinfoSearch']['farmer_id']) and $params['breedinfoSearch']['farmer_id'] !== '')) {
     		$farm = Farms::find();
@@ -163,6 +168,9 @@ class breedinfoSearch extends Breedinfo
     	
     	if(isset($params['breedinfoSearch']['breedtype_id']))
     		$this->breedtype_id = $params['breedinfoSearch']['breedtype_id'];
+
+		if(isset($params['breedinfoSearch']['farmstate']))
+			$this->farmstate = $params['breedinfoSearch']['farmstate'];
     	
     	$query->andFilterWhere([
     			'id' => $this->id,
@@ -174,8 +182,10 @@ class breedinfoSearch extends Breedinfo
 //     			'housingarea' => $this->housingarea,
     			'breedtype_id' => $this->breedtype_id,
     			'management_area' => $this->management_area,
+				'farmstate' => $this->farmstate,
     	]);
     	$query->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+//		var_dump($query->where);exit;
     	return $dataProvider;
     }
 }

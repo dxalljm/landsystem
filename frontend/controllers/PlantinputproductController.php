@@ -29,7 +29,14 @@ class PlantinputproductController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -56,7 +63,7 @@ class PlantinputproductController extends Controller
     public function actionPlantinputproductindex($farms_id)
     {
         $planting = Plantingstructure::find()->where(['farms_id'=>$farms_id])->all();
-		Logs::writeLog('投入品使用情况');
+		Logs::writeLogs('投入品使用情况');
         return $this->render('plantinputproductindex', [
             'plantings' => $planting,
         ]);
@@ -69,9 +76,10 @@ class PlantinputproductController extends Controller
      */
     public function actionPlantinputproductview($id)
     {
-    	Logs::writeLog('查看投入品使用情况',$id);
+        $model = $this->findModel($id);
+    	Logs::writeLogs('查看投入品使用情况',$model);
         return $this->renderAjax('plantinputproductview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -101,8 +109,7 @@ class PlantinputproductController extends Controller
         		$model->create_at = time();
         		$model->update_at = time();
         		$model->save();
-        		$new = $model->attributes;
-        		Logs::writeLog('添加投入品',$model->id,'',$new);
+        		Logs::writeLogs('添加投入品',$model);
         	}
             return $this->redirect(['plantinputproductindex', 'farms_id' => $planting->farms_id]);
         } else {
@@ -123,12 +130,10 @@ class PlantinputproductController extends Controller
     public function actionPlantinputproductupdate($id)
     {
         $model = $this->findModel($id);
-		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post())) {
         	$model->update_at = time();
         	$model->save();
-        	$new = $model->attributes;
-        	Logs::writeLog('更新投入品使用情况',$id,$old,$new);
+        	Logs::writeLogs('更新投入品使用情况',$model);
             return $this->redirect(['plantinputproductview', 'id' => $model->id]);
         } else {
             return $this->renderAjax('plantinputproductupdate', [
@@ -146,8 +151,7 @@ class PlantinputproductController extends Controller
     public function actionPlantinputproductdelete($id)
     {
     	$model = $this->findModel($id);
-    	$old = $model->attributes;
-    	Logs::writeLog('删除投入品使用情况',$id,$old);
+    	Logs::writeLogs('删除投入品使用情况',$model);
         $model->delete();
 
         return $this->redirect(['plantinputproductindex']);

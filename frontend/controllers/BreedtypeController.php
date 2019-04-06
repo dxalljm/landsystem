@@ -25,7 +25,14 @@ class BreedtypeController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -42,6 +49,7 @@ class BreedtypeController extends Controller
      */
     public function actionBreedtypeindex()
     {
+        Logs::writeLogs('畜牧种类列表');
         $searchModel = new breedtypeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -58,8 +66,10 @@ class BreedtypeController extends Controller
      */
     public function actionBreedtypeview($id)
     {
+        $model = $this->findModel($id);
+        Logs::writeLogs('查看畜牧种类',$model);
         return $this->render('breedtypeview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -73,6 +83,7 @@ class BreedtypeController extends Controller
         $model = new Breedtype();
 		$father = Breedtype::find()->where(['father_id'=>[0,1]])->all();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Logs::writeLogs('新增畜牧种类',$model);
             return $this->redirect(['breedtypeview', 'id' => $model->id]);
         } else {
             return $this->render('breedtypecreate', [
@@ -94,7 +105,7 @@ class BreedtypeController extends Controller
             $model->father_id = $father_id;
             $model->save();
             $newAttr = $model->attributes;
-            Logs::writeLog('创建养殖种类',$model->id,'',$newAttr);
+            Logs::writeLogs('创建畜牧种类',$model);
             echo json_encode(['status' => 1, 'data' => [$model->id, $model->typename]]);
             Yii::$app->end();
         } else {
@@ -117,6 +128,7 @@ class BreedtypeController extends Controller
         $model = $this->findModel($id);
         $father = Breedtype::find()->where(['father_id'=>[0,1]])->all();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Logs::writeLogs('更新畜牧种类',$model);
             return $this->redirect(['breedtypeindex']);
         } else {
             return $this->render('breedtypeupdate', [
@@ -135,8 +147,9 @@ class BreedtypeController extends Controller
      */
     public function actionBreedtypedelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id);
+        $model->delete();
+        Logs::writeLogs('删除畜牧种类',$model);
         return $this->redirect(['breedtypeindex']);
     }
 

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%subsidiestype}}".
@@ -41,5 +42,10 @@ class Subsidiestype extends \yii\db\ActiveRecord
             'typename' => '类型名称',
             'urladdress' => '访问地址',
         ];
+    }
+
+    public static function getTypelist()
+    {
+        return ArrayHelper::map(Subsidiestype::find()->all(),'id','typename');
     }
 }

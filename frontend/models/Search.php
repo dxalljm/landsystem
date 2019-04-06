@@ -6,7 +6,8 @@ use Yii;
 use frontend\helpers\MoneyFormat;
 use app\models\ManagementArea;
 use app\models\Fireprevention;
-use app\models\Collection;
+use app\models\Farms;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use app\models\Subsidiestype;
 use yii\helpers\Url;
@@ -73,28 +74,43 @@ class Search extends \yii\db\ActiveRecord {
 				                'format'=>'raw',
 				            	//'class' => 'btn btn-primary btn-lg',
 				                'value' => function($model,$key){
+// 				                var_dump(User::getItemname());
 					                $option = '查看详情';
 					                $title = '';
+									$url = '#';
 				                	switch (Yii::$app->controller->id)
 				                	{
 				                		case 'farms':
-				                			if(User::getItemname() == '法规科科长' or User::getItemname() == '大厅主任')
+				                			if(User::getItemname('法规科') or User::getItemname('服务大厅') or User::getItemname('副主任') or User::getItemname('主任'))
 				                				$url = Url::to(['farms/farmslandview','id'=>$model->id]);
 				                			else
 				                				$url = Url::to(['farms/farmsfile','farms_id'=>$model->id]);
 				                			break;
 				                		case 'plantingstructure':
 				                			$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'view','id'=>$model->id,'farms_id'=>$model->farms_id,'lease_id'=>$model->lease_id];
-				                			break;
+											break;
 				                		case 'collection':
-				                			$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'send','farms_id'=>$model->farms_id];
-				                			$collection = Collection::find()->where(['farms_id'=>$model->farms_id,'dckpay'=>1])->count();
-				                			if($collection) {
-				                				$option = '已缴费';
-// 				                				$disabled = true;
-				                			} else {
-				                				$option = '缴费';
+//											var_dump(User::getItemname());
+											
+				                			if(User::getItemname('地产科','科长') or User::getItemname('财务科','科长')) {
+					                			if($model->state >= 1) {
+					                				$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'send','farms_id'=>$model->farms_id];
+					                				$option = '已缴费';
+					                			} else {
+													$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'send','farms_id'=>$model->farms_id];
+					                				if($model->dckpay == 1)
+					                					$option = '详情';
+					                				else
+					                					$option = '缴费';
+					                			}
 				                			}
+// 				                			var_dump(User::getItemname());
+				                			if(User::getItemname('财务科','科员')) {
+				                				$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'view','farms_id'=>$model->farms_id];
+				                				$option = '详情';
+// 				                				var_dump($option);
+				                			}
+				                			
 				                			break;
 				                		default:
 				                			$url = [Yii::$app->controller->id.'/'.Yii::$app->controller->id.'view','id'=>$model->id,'farms_id'=>$model->farms_id];
@@ -106,15 +122,15 @@ class Search extends \yii\db\ActiveRecord {
 						            			'class' => 'btn btn-primary btn-xs',
 // 				                    			'disabled' => $disabled,
 						            	]);
-									if(User::getItemname() == '法规科科长') {
+				                    
+									if(User::getItemname('服务大厅')) {
 										$farmer = Farmer::find()->where(['farms_id'=>$model->id])->one();
-										if($farmer['photo'] == '' or $farmer['cardpic'] == '' or $farmer['cardpicback'] == '') {
-											$html.= '&nbsp;';
+// 										if($farmer['photo'] == '' or $farmer['cardpic'] == '' or $farmer['cardpicback'] == '') {
+// 											$html.= '&nbsp;';
 											$html.= Html::a('电子信息采集',Url::to(['photograph/photographindex','farms_id'=>$model->id]),['class' => 'btn btn-primary btn-xs',]);
-										}
+// 										}
 									}
-									
-					            	if(User::getItemname() == '主任' or User::getItemname() == '法规科科长' or User::getItemname() == '地产科科长') {
+					            	if(User::getItemname('主任') or User::getItemname('法规科') or User::getItemname('地产科') or User::getItemname('财务科')) {
 						            	return $html;
 					            	}
 					            	else 
@@ -122,11 +138,26 @@ class Search extends \yii\db\ActiveRecord {
 				                }
 				            ];
 						break;
+					case 'issame':
+						$columns [] = [
+//							'label'=>'是否一致',
+							'format' =>'raw',
+							'attribute'=>$value,
+							'headerOptions' => ['width' => '150'],
+							'value'=> function($model) {
+								if($model->issame)
+									return '一致';
+								else
+									return '<font color="red">不一致</font>';
+							},
+							'filter' => [0=>'不一致',1=>'一致'],     //此处我们可以将筛选项组合成key-value形式
+						];
+						break;
 					case 'management_area' :
 						$columns [] = [
 				            	'label'=>'管理区',
 				            	'attribute'=>$value,
-				            	'headerOptions' => ['width' => '200'],
+				            	'headerOptions' => ['width' => '130'],
 				            	'value'=> function($model) {
 // 				            	var_dump($model);exit;
 				            		return ManagementArea::getAreanameOne($model->management_area);
@@ -148,10 +179,25 @@ class Search extends \yii\db\ActiveRecord {
 								'attribute' => $value,
 								'options' =>['width'=>120],
 								'value' => function ($model) {
+								
 									return Farms::find ()->where ( [ 
 											'id' => $model->farms_id 
 									] )->one ()['farmname'];
-								} 
+								
+						} 
+						];
+						break;
+					case 'update_at':
+						$columns [] = [
+								'label' => '缴费日期',
+// 								'attribute' => $value,
+								'options' =>['width'=>120],
+								'value' => function ($model) {
+								if($model->state >= 1)
+									return date('Y-m-d',$model->update_at);
+								else
+									return '';
+								}
 						];
 						break;
 					case 'farmer_id':
@@ -414,6 +460,7 @@ class Search extends \yii\db\ActiveRecord {
 					case 'amounts_receivable' :
 						$columns [] = [ 
 								'attribute' => $value,
+// 								'options' => ['width' => 150],
 								'value' => function ($model) {
 									return MoneyFormat::num_format ( $model->amounts_receivable ) . '元';
 								} 
@@ -422,8 +469,12 @@ class Search extends \yii\db\ActiveRecord {
 					case 'real_income_amount' :
 						$columns [] = [ 
 								'attribute' => $value,
+								'options' => ['width' => 150],
 								'value' => function ($model) {
-									return MoneyFormat::num_format ( $model->real_income_amount ) . '元';
+									if($model->real_income_amount)
+										return MoneyFormat::num_format ( $model->real_income_amount ) . '元';
+									else 
+										return '0元';
 								} 
 						];
 						break;
@@ -446,6 +497,7 @@ class Search extends \yii\db\ActiveRecord {
 					case 'ypaymoney' :
 						$columns [] = [ 
 								'attribute' => $value,
+								'options' => ['width' => 150],
 								'value' => function ($model) {
 									return MoneyFormat::num_format ( $model->ypaymoney ) . '元';
 								} 
@@ -574,17 +626,17 @@ class Search extends \yii\db\ActiveRecord {
 								self::$subsidiestypename = Subsidiestype::find()->where(['id'=>$model->subsidiestype_id])->one()['urladdress'];
 									if(self::$subsidiestypename == 'Plant') {
 										$result = self::$totalData->getName(self::$subsidiestypename, 'typename', 'typeid')->getOne($model->typeid);										
-										$_SESSION['typenamelist'] = self::$totalData->getName(self::$subsidiestypename, 'typename', 'typeid')->getList();
+										self::$saveTemp = self::$totalData->getName(self::$subsidiestypename, 'typename', 'typeid')->getList();
 										return $result;
 									}
 									if(self::$subsidiestypename == 'Goodseed') {
 										$result = self::$totalData->getName(self::$subsidiestypename, 'typename', 'typeid')->getOne($model->typeid);
-										$_SESSION['typenamelist'] = [$model->typeid => self::$totalData->getName(self::$subsidiestypename, 'typename', 'typeid')->typenameList()];
+										self::$saveTemp = [$model->typeid => self::$totalData->getName(self::$subsidiestypename, 'typename', 'typeid')->typenameList()];
 										return $result;
 									}
 									
 								},
-								'filter' => $_SESSION['typenamelist'],
+								'filter' => self::$saveTemp,
 							];
 // 							var_dump($_SESSION['typenamelist']);
 							break;
@@ -599,6 +651,7 @@ class Search extends \yii\db\ActiveRecord {
 							break;
 						case 'projectstate':
 							$columns [] = [
+							
 							'label' => '工程情况',
 							'value' => function ($model) {
 								$plan = Projectplan::find()->where(['project_id'=>$model->id])->one();
@@ -616,6 +669,48 @@ class Search extends \yii\db\ActiveRecord {
 							}
 							];
 							break;
+					case 'company_id':
+						$columns[] = [
+							'attribute' => $value,
+							'options' =>['width' => '150'],
+							'value' => function($model) {
+								$company = Insurancecompany::find()->where(['id'=>$model->company_id])->one();
+								return $company['companynname'];
+							},
+							'filter' => ArrayHelper::map(Insurancecompany::find()->all(),'id','companynname'),
+						];
+						break;
+					case 'state':
+						$columns[] = [
+						'format'=>'raw',
+							'attribute' => $value,
+							'options' =>['width' => '100'],
+							'value' => function($model) {
+								if($model->state) {
+									if($model->state == 1)
+										return '<span class="text-green">已缴纳</span>';
+									if($model->state == 2)
+										return '<span class="text-green">部分缴纳</span>';
+								}
+								else {
+									if($model->dckpay)
+										return '<span class="text-blue">已提交</span>';
+									else
+										return '<span class="text-red">未缴纳</span>';
+								}
+							},
+							'filter' => [1=>'已缴纳',0=>'未缴纳',2=>'部分缴纳',3=>'已提交'],
+						];
+						break;
+					case 'whereabouts':
+						$columns[] = [
+							'attribute' => 'whereabouts',
+							'value' => function($model) {
+								return Saleswhere::find()->where(['id'=>$model->whereabouts])->one()['wherename'];
+							},
+							'filter' => ArrayHelper::map(Saleswhere::find()->all(),'id','wherename')
+						];
+						break;
 					default :
 						$columns [] = $value;
 				}
@@ -635,5 +730,76 @@ class Search extends \yii\db\ActiveRecord {
 // 			}
 // 		}
 		return $columns;
+	}
+
+
+
+	public static function getFarmerrows($modelClass,$params=null,$andwhere=null)
+	{
+		$where = [];
+		$classname = "app\\models\\" . $modelClass;
+		if(!empty($params)) {
+            foreach ($params as $key => $value) {
+                if ($value !== '')
+                    $where[$key] = $value;
+            }
+			if(empty($andwhere)) {
+				$result = $classname::find ()->where ($where)->all ();
+			} else {
+				$result = $classname::find ()->where ($where)->andwhere($andwhere)->all ();
+			}
+
+        } else {
+			if(empty($andwhere)) {
+				$result = $classname::find()->all();
+			} else {
+				$result = $classname::find()->andwhere($andwhere)->all();
+			}
+        }
+
+
+		//     	var_dump($farms);exit;
+		$data = [];
+		$allid = [];
+		foreach($result as $value) {
+			if($modelClass == 'Farms')
+				$allid[] = $value['id'];
+			else
+				$allid[] = $value['farms_id'];
+		}
+		$count = Farms::getFarmerCount($allid);
+		return $count;
+
+	}
+	
+	public static function getFarmsrows($modelClass,$params=null)
+	{
+		$where = [];
+		$classname = "app\\models\\" . $modelClass;
+		if(!empty($params)) {
+			foreach ($params as $key => $value) {
+				if ($value !== '')
+					$where[$key] = $value;
+			}
+			$result = $classname::find ()->where ($where)->all ();
+		} else {
+			$result = $classname::find ()->all ();
+		}
+
+	
+		//     	var_dump($farms);exit;
+// 		var_dump($result);exit;
+		$data = [];
+		$allid = [];
+		foreach($result as $value) {
+			if($modelClass == 'Farms')
+				$allid[] = $value['id'];
+			else
+				$allid[] = $value['farms_id'];
+		}
+		$newid = array_unique($allid);
+		return count($newid);
+		
+	
 	}
 }

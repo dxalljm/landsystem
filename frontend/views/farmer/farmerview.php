@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\ArrayHelper;
 use frontend\helpers\ActiveFormrdiv;
-use app\models\tables;
+use app\models\Tables;
 use app\models\Nation;
 use yii\helpers\Html;
 use yii\widgets\DetailView;

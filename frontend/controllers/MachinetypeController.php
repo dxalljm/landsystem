@@ -2,9 +2,11 @@
 
 namespace frontend\controllers;
 
+use app\models\Logs;
 use Yii;
 use app\models\Machinetype;
 use frontend\models\MachinetypeSearch;
+use yii\debug\models\search\Log;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -26,7 +28,14 @@ class MachinetypeController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
     /**
      * Lists all Machinetype models.
      * @return mixed
@@ -35,7 +44,7 @@ class MachinetypeController extends Controller
     {
         $searchModel = new MachinetypeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        Logs::writeLogs('农机类型列表');
         return $this->render('machinetypeindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -49,8 +58,10 @@ class MachinetypeController extends Controller
      */
     public function actionMachinetypeview($id)
     {
+        $model = $this->findModel($id);
+        Logs::writeLogs('查看农机类型',$model);
         return $this->render('machinetypeview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -65,6 +76,7 @@ class MachinetypeController extends Controller
         $model = new Machinetype();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Logs::writeLogs('创建农机类型',$model);
             return $this->redirect(['machinetypeview', 'id' => $model->id]);
         } else {
             return $this->render('machinetypecreate', [
@@ -84,7 +96,8 @@ class MachinetypeController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['machinetypeview', 'id' => $model->id]);
+            Logs::writeLogs('更新农机类型',$model);
+            return $this->redirect(['machinetypeindex']);
         } else {
             return $this->render('machinetypeupdate', [
                 'model' => $model,
@@ -108,9 +121,10 @@ class MachinetypeController extends Controller
     public function actionMachinetypexls()
     {
     	set_time_limit(0);
+        require_once '../../vendor/phpoffice/phpexcel/Classes/PHPExcel/IOFactory.php';
     	$model = new UploadForm();
     	//echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";
-    	
+    	Logs::writeLogs('xls批量导入农机类型');
     	if (Yii::$app->request->isPost) {
     		$model->file = UploadedFile::getInstance($model, 'file');
     	

@@ -1,6 +1,7 @@
 <?php
-namespace backend\controllers;
-use app\models\tables;
+namespace frontend\controllers;
+use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
 use app\models\Plant;
@@ -24,9 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>                    </h3>
-                </div>
+                    <h3>&nbsp;&nbsp;&nbsp;&nbsp;<?= $this->title ?><font color="red">(<?= User::getYear()?>年度)</font></h3></div>
                 <div class="box-body">
     			<table class="table table-bordered table-hover">
     				<tr>

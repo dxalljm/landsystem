@@ -34,11 +34,11 @@ class Plantingstructure extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['plant_id', 'plant_father','farms_id', 'lease_id','management_area'], 'integer'],
+            [['plant_id', 'plant_father','farms_id', 'lease_id','management_area','state','year','planter','isinsurance'], 'integer'],
             [['area'], 'number'],
             [['zongdi'], 'string'],
         	[['goodseed_id'],'safe'],
-        ]; 
+        ];
     }
 
     /**
@@ -58,9 +58,13 @@ class Plantingstructure extends \yii\db\ActiveRecord
         	'create_at' => '创建日期',
         	'update_at' => '更新日期',
         	'management_area' => '管理区',
+			'year' => '年度',
+			'state' => '农场状态',
+			'planter' => '是否法人种植',
+			'isinsurance' => '是否参加保险'
         ];
     }
-   
+
     public static function getALlsum()
     {
     	$sum = 0.0;
@@ -70,34 +74,76 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	}
     	return $sum;
     }
-    
+
     //得到已经填写种植信息的宗地
-    public static function getOverArea($lease_id,$farms_id)
+    public static function getOverArea($lease_id,$farms_id,$year=null)
     {
-    	$result = Plantingstructure::find()->where(['lease_id'=>$lease_id,'farms_id'=>$farms_id])->sum('area');
+		if(empty($year)) {
+			$year = User::getYear();
+		}
+    	if($lease_id == 0) {
+    		$contractarea = Farms::getContractarea($farms_id);
+    		$leasearea = Lease::find()->where(['farms_id'=>$farms_id,'year'=>$year])->sum('lease_area');
+    		$plantarea = Plantingstructure::find()->where(['farms_id'=>$farms_id,'lease_id'=>$lease_id,'year'=>$year])->sum('area');
+    		$farmerarea = bcsub($contractarea, $leasearea,2);
+    		$result = bcsub($farmerarea,$plantarea,2);
+//     		var_dump($result);exit;
+    	} else {
+    		$result = Plantingstructure::find()->where(['farms_id'=>$farms_id,'lease_id'=>$lease_id,'year'=>$year])->sum('area');
+    	}
+		
 		if($result)
-    		return $result;
-		else 
+    		return sprintf('%.2f',$result);
+		else
 			return 0;
     }
-    
-    public static function getNoArea($lease_id,$farms_id)
+
+	public static function getWriteArea($farms_id,$year)
+	{
+		$result = self::find()->where(['farms_id'=>$farms_id,'year'=>$year])->sum('area');
+//		var_dump($result);exit;
+		return sprintf("%.2f",$result);
+	}
+
+	//已经租赁的面积
+	public static function getLeaseArea($lease_id)
+	{
+		$result = Lease::find()->where(['id'=>$lease_id])->one()['lease_area'];
+		if($result)
+			return $result;
+		else
+			return 0.0;
+	}
+    public static function getNoArea($lease_id,$farms_id,$year=null)
     {
-    	$over = self::getOverArea($lease_id, $farms_id);
-//     	$plantingAllArea = Plantingstructure::getAllArea($lease_id,$farms_id);
-    	$all = Lease::getAllLeaseArea($lease_id,$farms_id);
-//     	$all = $plantingAllArea + $leaseAllArea;
-    	
-    	if($over)
-    		$result = bcsub($all,$over,2);
-    	else 
-    		$result = $all;
-		if($result == 0)
-			return $all;
-// 		var_dump($over);var_dump($all);var_dump($result);exit;
+    	$over = (float)self::getOverArea($lease_id, $farms_id,$year);
+//     	var_dump($over);exit;
+		$leaseArea = (float)self::getLeaseArea($lease_id);
+		
+		$plantingAllArea = Plantingstructure::getAllArea($lease_id,$farms_id);
+// 		var_dump($leaseArea);exit;
+		$contractarea = Farms::getContractarea($farms_id);
+// 		if($leaseArea !== $contractarea) {
+// 			$farmerArea = bcsub($contractarea,$leaseArea,2);
+// // 			var_dump($contractarea);exit;
+// // 			var_dump($farmerArea);exit;
+// 		} else {
+// 			$farmerArea = $contractarea;
+// 		}
+    	if($over > 0) {
+    		
+    		$result = abs(bcsub($leaseArea,$over,2));
+    		
+    	} else {
+    		$result = $leaseArea;
+    	}
+// 		if($result == 0)
+// 			return $contractarea;
+		
+// 		var_dump($leaseArea);var_dump($contractarea);exit;
     	return $result;
     }
-    
+
     public static function getAllArea($lease_id,$farms_id)
     {
     	$planting = self::find()->where(['farms_id'=>$farms_id,'lease_id'=>$lease_id])->all();
@@ -107,7 +153,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	}
     	return $result;
     }
-    
+
     //处理种植结构剩余宗地面积 $over=已经有种植结构的地块，$all为当前承租人的所有地块
     public static function getLastArea($over,$all)
     {
@@ -121,13 +167,13 @@ class Plantingstructure extends \yii\db\ActiveRecord
 // 		var_dump($over);
 // 		exit;
     	foreach($result as $key => $value) {
-    		
+
 	    	foreach ($over as $k => $v) {
 	    		if(!strstr($v,'(')) {
     				$result[$k] = $k - $v;
     			} else {
 	    			if($key == Lease::getZongdi($v)) {
-	    				
+
 	    				if($value == Lease::getArea($v)) {
 	    					unset($result[$key]);
 	    				} else {
@@ -136,7 +182,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
 	    				}
 	    			}
     			}
-	    	}		
+	    	}
     	}
     	$zongdi = [];
     	foreach ($result as $key=>$value) {
@@ -145,7 +191,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
 //     		} else {
 // 	    		if($value !== 0.0 and $key !== '')
 // 	    			$zongdi[] = $key.'('.$value.')';
-// 	    		else 
+// 	    		else
 // 	    			$zongdi[] = $value;
 //     		}
 			$zongdi[] = $key.'('.$value.')';
@@ -157,7 +203,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
 
 	public static function getPlantname($totalData = NULL)
     {
-    	$result = ['id'=>[],'typename'=>[]];
+    	$result = [];
     	$data = [];
     	if(empty($totalData)) {
     		$where = Farms::getManagementArea()['id'];
@@ -165,7 +211,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     		foreach ($planting as $value) {
     			$data[] = ['id'=>$value['plant_id']];
     		}
-    	} else {	
+    	} else {
 	    	foreach($totalData->getModels() as $value) {
 	//     		var_dump($value->attributes);exit;
 	    		$data[] = ['id'=>$value->attributes['plant_id']];
@@ -174,16 +220,14 @@ class Plantingstructure extends \yii\db\ActiveRecord
 	    if($data) {
 	    	$newdata = Farms::unique_arr($data);
 	    	foreach ($newdata as $value) {
-	    		$result['id'][] = $value['id'];
-	    		$result['typename'][] = Plant::find()->where(['id' => $value['id']])->one()['typename'];
+	    		$result[$value['id']] = Plant::find()->where(['id' => $value['id']])->one()['typename'];
 	    	}
 	    }
-    	
     	return $result;
     }
     public static function getGoodseedname($totalData)
     {
-		
+
     	$data = [];
     	foreach($totalData->getModels() as $value) {
 //     		var_dump($value);exit;
@@ -199,26 +243,26 @@ class Plantingstructure extends \yii\db\ActiveRecord
 	    			$result['typename'][] = Goodseed::find()->where(['id' => $value['id']])->one()['typename'];
     			}
     		}
-    	} else 
+    	} else
     		return false;
 //     	    	var_dump($result);exit;
     	return $result;
     }
     public static function farmSearch($str)
     {
-    
+
     	if (preg_match ("/^[A-Za-z]/", $str)) {
     		$tj = ['like','pinyin',$str];
     	} else {
     		$tj = ['like','farmname',$str];
     	}
-    		
+
     	return $tj;
     }
-    
+
     public static function farmerSearch($str)
     {
-    
+
     	if (preg_match ("/^[A-Za-z]/", $str)) {
     		$tj = ['like','farmerpinyin',$str];
     	} else {
@@ -244,14 +288,14 @@ class Plantingstructure extends \yii\db\ActiveRecord
 		$plantid = self::getPlantname($totalData);
 		if(isset($totalData->query->where[1]['management_area']))
 			$management_area = $totalData->query->where[1]['management_area'];
-		else 
+		else
 			$management_area = [1,2,3,4,5,6,7];
 		if(is_array($management_area)) {
 			foreach ($management_area as $value) {
 // 				array_search($value,$totalData->getModels());
 // 			}
 			$plantArea = [];
-			foreach ($plantid['id'] as $val) {
+			foreach ($plantid as $id => $val) {
 				foreach ($totalData->getModels() as $v) {
 					$area += $v->attributes['area'];
 				}
@@ -286,13 +330,13 @@ class Plantingstructure extends \yii\db\ActiveRecord
 		}
 //     	var_dump($result);
     	$jsonData = json_encode ($result);
-    	
+
     	return $jsonData;
     }
-    
+
     public static function getGoodseedEcharts($totalData)
     {
-    	
+
     	$data = [];
     	$result = [];
     	$areaNum = 0;
@@ -304,7 +348,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
 		$oldp = $totalData->query->where;
 		if(isset($totalData->query->where[1]['management_area']))
 			$management_area = $totalData->query->where[1]['management_area'];
-		else 
+		else
 			$management_area = [1,2,3,4,5,6,7];
 		$Plantingstructure = Plantingstructure::find();
     	if(is_array($management_area)) {
@@ -345,17 +389,17 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	}
     	//     	var_dump($result);
     	$jsonData = json_encode ($result);
-    	 
+
     	return $jsonData;
     }
-    
+
     public static function areaWhere($str = NULL)
     {
-    	
+
     	if(!empty($str)) {
     		preg_match_all('/(.*)([0-9]+?)/iU', $str, $where);
     		//print_r($where);
-    
+
     		// 		string(2) ">="
     		// 		string(3) "300"
     		if($where[1][0] == '>' or $where[1][0] == '>=')
@@ -371,7 +415,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     }
     public static function getFarmRows($totalData)
     {
-    	
+
 	   	foreach ($totalData->getModels() as $value) {
 	   		$data[] = ['id'=>$value['farms_id']];
 	   	}
@@ -383,10 +427,10 @@ class Plantingstructure extends \yii\db\ActiveRecord
     		$result = 0;
     	return $result;
     }
-    
+
     public static function getPlanter($totalData)
     {
-// 		var_dump($totalData);exit;	
+// 		var_dump($totalData);exit;
     	foreach ($totalData->getModels() as $value) {
 //     		var_dump($val);exit;
     		$allid[] = ['id'=>$value->attributes['farms_id']];
@@ -412,7 +456,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     }
     public static function getLeaseRows($totalData)
     {
-    	
+
     	foreach($totalData->getModels() as $value) {
     		$allid[] = $value->attributes['lease_id'];
     	}
@@ -421,7 +465,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     		$data[] = ['lessee'=>$val['lessee'],'lessee_cardid'=>$val['lessee_cardid']];
     	}
 
-    		
+
     	if($data) {
     		$newdata = Farms::unique_arr($data);
     		$result = count($newdata);
@@ -440,7 +484,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	foreach($planting->all() as $value) {
     		$data[] = ['id'=>$value['plant_id']];
     	}
-    	 
+
     	if($data) {
     		$newdata = Farms::unique_arr($data);
     		//     		var_dump(count($newdata));exit;
@@ -448,7 +492,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	}
     	else
     		return 0;
-    	 
+
     }
     public static function getPlantRows($totalData)
     {
@@ -456,20 +500,20 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	foreach($totalData->getModels() as $value) {
     		$data[] = ['id'=>$value->attributes['plant_id']];
     	}
-    	
+
 		if($data) {
     		$newdata = Farms::unique_arr($data);
 //     		var_dump(count($newdata));exit;
     		return count($newdata);
 		}
-		else 
+		else
 			return 0;
-    	
+
     }
-    
+
     public static function getGoodseedRows($totalData)
     {
-    	
+
     	foreach($totalData as $value) {
     		if($value['goodseed_id'])
     			$data[] = ['id'=>$value->attributes['goodseed_id']];
@@ -478,10 +522,10 @@ class Plantingstructure extends \yii\db\ActiveRecord
     		$newdata = Farms::unique_arr($data);
     		return count($newdata);
 		}
-		else 
+		else
 			return 0;
     }
-    
+
     public static function getArea($params)
     {
     	if(is_array($params)) {
@@ -502,7 +546,7 @@ class Plantingstructure extends \yii\db\ActiveRecord
 		    	}
 	    		if(isset($params['plantingstructureSearch']['farms_id'])) {
 		    		$farm->andFilterWhere(self::farmSearch($params['plantingstructureSearch']['farms_id']));
-		    		 
+
 		    	}
 		    	if(isset($params['plantingstructureSearch']['farmer_id'])) {
 		    		$farm->andFilterWhere(self::farmerSearch($params['plantingstructureSearch']['farmer_id']));
@@ -515,11 +559,11 @@ class Plantingstructure extends \yii\db\ActiveRecord
 		    	}
 		    	if(isset($params['plantingstructureSearch']['plant_id']))
 		    		$Plantingstructure->andFilterWhere(['plant_id'=>$params['plantingstructureSearch']['plant_id']]);
-		    	 
-		    	
+
+
 		    	if(isset($params['plantingstructureSearch']['goodseed_id']))
 		    		$Plantingstructure->andFilterWhere(['goodseed_id'=>$params['plantingstructureSearch']['goodseed_id']]);
-		    	 
+
 		    	if(isset($params['plantingstructureSearch']['area']))
 		    		$Plantingstructure->andFilterWhere(self::areaWhere($params['plantingstructureSearch']['area']));
 	    	$area = $Plantingstructure->sum ('area');
@@ -534,29 +578,32 @@ class Plantingstructure extends \yii\db\ActiveRecord
     {
     	$result = [];
     	$data = [];
+		$type = [];
 //     	var_dump($totalData->query->where);exit;
     	if(isset($totalData->query->where['plant_id']) and $totalData->query->where !== 0 and $totalData->query->where !== '') {
     		$type = Goodseed::find()->where(['plant_id'=>$totalData->query->where['plant_id']])->all();
-    	} else {
-	    	foreach($totalData->getModels() as $value) {
-	    		if($value->attributes['goodseed_id'])
-	    			$data[] = ['id'=>$value->attributes['goodseed_id']];
-	    	}
-	    	if($data) {
-	    		$newdata = Farms::unique_arr($data);
-	    		foreach($newdata as $value) {
-	    			$allid[] = $value['id'];
-	    			//     		var_dump($value);exit;
-	    			// 	    		$result[$value['id']] = Plant::find()->where(['id'=>$value['id']])->one()['typename'];
-	    		}
-	    		$type = Goodseed::find()->where(['id'=>$allid])->all();
-	    		
-	    	}
     	}
+//		else {
+//	    	foreach($totalData->getModels() as $value) {
+//	    		if($value->attributes['goodseed_id'])
+//	    			$data[] = ['id'=>$value->attributes['goodseed_id']];
+//	    	}
+//	    	if($data) {
+//	    		$newdata = Farms::unique_arr($data);
+//	    		foreach($newdata as $value) {
+//	    			$allid[] = $value['id'];
+//	    			//     		var_dump($value);exit;
+//	    			// 	    		$result[$value['id']] = Plant::find()->where(['id'=>$value['id']])->one()['typename'];
+//	    		}
+//	    		$type = Goodseed::find()->where(['id'=>$allid])->all();
+//
+//	    	}
+//    	}
 //     	var_dump($type);exit;
     	foreach ($type as $value) {
-    		$result[$value['id']] = Plant::find()->where(['id'=>$value['plant_id']])->one()['typename'].'->'.$value['typename'];
+    		$result[$value['id']] = $value['typename'];
     	}
+		$result = array_unique($result);
 //     	var_dump($result);
     	return $result;
     }
@@ -568,4 +615,24 @@ class Plantingstructure extends \yii\db\ActiveRecord
     	$data = self::getAllname($totalData);
     	return $data[$id];
     }
+
+	//判断调查数据与核查数据是否一致
+	public static function isSame($farms_id)
+	{
+		
+	}
+
+	public static function deletePlanting($farms_id)
+	{
+		$planold = Plantingstructure::find()->where(['farms_id'=>$farms_id,'year'=>User::getYear()])->all();
+		if($planold) {
+			foreach ($planold as $value) {
+				$model = Plantingstructure::findOne($value['id']);
+				Logs::writeLogs('删除农场种植信息', $model);
+				$model->delete();
+			}
+		}
+	}
+	
+
 }

@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use app\models\Logs;
 use Yii;
 use app\models\Infrastructuretype;
 use frontend\models\infrastructuretypeSearch;
@@ -25,7 +26,14 @@ class InfrastructuretypeController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -43,7 +51,7 @@ class InfrastructuretypeController extends Controller
     {
         $searchModel = new infrastructuretypeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        Logs::writeLogs('项目类别列表');
         return $this->render('infrastructuretypeindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -57,8 +65,10 @@ class InfrastructuretypeController extends Controller
      */
     public function actionInfrastructuretypeview($id)
     {
+        $model = $this->findModel($id);
+        Logs::writeLogs('查看项目类别',$model);
         return $this->render('infrastructuretypeview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -73,7 +83,7 @@ class InfrastructuretypeController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
         	$model->save();
-        	
+        	Logs::writeLogs('新增项目类别',$model);
             return $this->redirect(['infrastructuretypeview', 'id' => $model->id]);
         } else {
             return $this->render('infrastructuretypecreate', [
@@ -93,6 +103,7 @@ class InfrastructuretypeController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Logs::writeLogs('更新项目类别',$model);
             return $this->redirect(['infrastructuretypeview', 'id' => $model->id]);
         } else {
             return $this->render('infrastructuretypeupdate', [
@@ -122,8 +133,8 @@ class InfrastructuretypeController extends Controller
      */
     public function actionInfrastructuretypedelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id)->delete();
+        Logs::writeLogs('删除项目类别',$model);
         return $this->redirect(['infrastructuretypeindex']);
     }
 

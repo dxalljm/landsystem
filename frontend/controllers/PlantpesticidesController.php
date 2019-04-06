@@ -27,7 +27,14 @@ class PlantpesticidesController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -55,7 +62,7 @@ class PlantpesticidesController extends Controller
     public function actionPlantpesticidesindex($farms_id)
     {
         $planting = Plantingstructure::find()->where(['farms_id'=>$farms_id])->all();
-		Logs::writeLog('农药使用情况');
+		Logs::writeLogs('农药使用情况');
         return $this->render('plantpesticidesindex', [
             'plantings' => $planting,
         ]);
@@ -68,9 +75,10 @@ class PlantpesticidesController extends Controller
      */
     public function actionPlantpesticidesview($id)
     {
-    	Logs::writeLog('查看农药使用情况',$id);
+        $model = $this->findModel($id);
+    	Logs::writeLogs('查看农药使用情况',$model);
         return $this->render('plantpesticidesview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -87,8 +95,7 @@ class PlantpesticidesController extends Controller
         	$model->create_at = time();
         	$model->update_at = time();
         	$model->save();
-        	$new = $model->attributes;
-        	Logs::writeLog('添加农药情况情况',$model->id,'',$new);
+        	Logs::writeLogs('添加农药情况情况',$model);
             return $this->redirect(['plantpesticidesindex', 'farms_id'=>$farms_id]);
         } else {
             return $this->render('plantpesticidescreate', [
@@ -106,12 +113,10 @@ class PlantpesticidesController extends Controller
     public function actionPlantpesticidesupdate($id,$farms_id)
     {
         $model = $this->findModel($id);
-		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post())) {
         	$model->update_at = time();
         	$model->save();
-        	$new = $model->attributes;
-        	Logs::writeLog('更新农药使用情况',$id,$old,$new);
+        	Logs::writeLogs('更新农药使用情况',$model);
             return $this->redirect(['plantpesticidesindex', 'farms_id'=>$farms_id]);
         } else {
             return $this->render('plantpesticidesupdate', [
@@ -129,9 +134,8 @@ class PlantpesticidesController extends Controller
     public function actionPlantpesticidesdelete($id,$farms_id)
     {
         $model = $this->findModel($id);
-    	$old = $model->attributes;
-    	Logs::writeLog('删除农药使用情况',$id,$old);
         $model->delete();
+        Logs::writeLogs('删除农药使用情况',$model);
 
         return $this->redirect(['plantpesticidesindex','farms_id'=>$farms_id]);
     }

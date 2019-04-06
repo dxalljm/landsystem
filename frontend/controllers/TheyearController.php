@@ -26,16 +26,23 @@ class TheyearController extends Controller
             ],
         ];
     }
-
     public function beforeAction($action)
     {
-    	$action = Yii::$app->controller->action->id;
-    	if(\Yii::$app->user->can($action)){
-    		return true;
-    	}else{
-    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
-    	}
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
     }
+//    public function beforeAction($action)
+//    {
+//    	$action = Yii::$app->controller->action->id;
+//    	if(\Yii::$app->user->can($action)){
+//    		return true;
+//    	}else{
+//    		throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+//    	}
+//    }
     /**
      * Lists all Theyear models.
      * @return mixed
@@ -58,9 +65,10 @@ class TheyearController extends Controller
      */
     public function actionTheyearview($id)
     {
-    	Logs::writeLog('查看年度',$id);
+        $model = $this->findModel($id);
+    	Logs::writeLog('查看年度',$model);
         return $this->render('theyearview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -94,10 +102,8 @@ class TheyearController extends Controller
     public function actionTheyearupdate()
     {
         $model = $this->findModel(1);
-		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$new = $model->attributes;
-        	Logs::writeLog('更新年度',1,$old,$new);
+        	Logs::writeLogs('更新年度',1,$model);
             return $this->redirect(['theyearview', 'id' => $model->id]);
         } else {
             return $this->render('theyearupdate', [

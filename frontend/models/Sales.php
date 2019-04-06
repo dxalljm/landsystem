@@ -29,9 +29,9 @@ class Sales extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['planting_id','farms_id','plant_id','create_at','update_at','management_area'], 'integer'],
+            [['planting_id','farms_id','plant_id','create_at','update_at','management_area','year','state'], 'integer'],
             [['volume', 'price'], 'number'],
-            [['whereabouts'], 'string', 'max' => 500]
+            [['whereabouts'],'string'],
         ];
     }
 
@@ -51,24 +51,20 @@ class Sales extends \yii\db\ActiveRecord
         	'create_at' => '创建日期',
         	'update_at' => '更新日期',
         	'management_area' => '管理区',
+            'year' => '年度',
+            'state' => '农场状态',
         ];
     }
     
     public static function getVolume($planting_id)
     {
-    	$addSingle = 0;
-    	$yields = Yields::find()->where(['planting_id'=>$planting_id])->one();
+        $allSingle = 0;
+		$plantingstructurecheck = Plantingstructurecheck::find()->where(['id'=>$planting_id])->one();
+        $sales = Sales::find()->where(['planting_id'=>$planting_id])->sum('volume');
+    	$yields = Yieldbase::find()->where(['plant_id'=>$plantingstructurecheck['plant_id'],'year'=>User::getLastYear()])->one();
     	if($yields)
-    		$allSingle = $yields->single*Plantingstructure::find()->where(['id'=>$planting_id])->one()['area'];
-    	else
-    		$allSingle = 0;
-    	$sales = Sales::find()->where(['planting_id'=>$planting_id])->all();
-    	if($sales) {
-    		foreach ($sales as $value) {
-    			$addSingle += $value['volume'];
-    		}
-    	}
-    	$allSingle -= $addSingle;
-    	return $allSingle;
+    		$allSingle = $yields->yield*$plantingstructurecheck['area'];
+    	$result = bcsub($allSingle,$sales,2);
+    	return $result;
     }
 }

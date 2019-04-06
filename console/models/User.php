@@ -247,13 +247,30 @@ class User extends \yii\db\ActiveRecord
     	return AuthAssignment::find()->where(['user_id'=>$user_id])->one()['item_name'];
     }
     
-    public static function getYear($user_id)
+    public static function getYear($id = NULL)
     {
 //     	var_dump($user_id);exit;
-    	$model = User::findOne($user_id);
+		if(empty($id)) {
+    		$model = User::findOne(Yii::$app->user->id);
+		} else {
+			$model = User::findOne($id);
+		}
     	if($model)
     		return $model->year;
     	else 
     		return false;
+    }
+
+    /**
+     * @return int
+     */
+    public static function setAllUserYear($year)
+    {
+        $users = User::find()->all();
+        foreach ($users as $user) {
+            $model = User::findOne($user['id']);
+            $model->year = $year;
+            $model->save();
+        }
     }
 }

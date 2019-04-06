@@ -1,7 +1,7 @@
 <?php
-namespace backend\controllers;
+namespace frontend\controllers;use app\models\User;
 use yii;
-use app\models\tables;
+use app\models\Tables;
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
 use app\models\Plant;
@@ -48,9 +48,7 @@ $result = [];
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>                    </h3>
-                </div>
+                    <h3>&nbsp;&nbsp;&nbsp;&nbsp;<?= $this->title ?><font color="red">(<?= User::getYear()?>年度)</font></h3></div>
                 <div class="box-body">
                 <?php if(isset($_GET['huinong_id'])) {?>
                 <table class="table table-bordered table-hover">
@@ -212,9 +210,11 @@ $result = [];
 		            					</tr>
 		            					<tr>
 		            						<td align="right" valign="middle">法人照片</td>
-		            						<td colspan="3" align="center"><?= Html::img($farmer['photo'],['height'=>"320"])?></td>
+		            						<td align="center"><?= Html::img($farmer['photo'],['height'=>"220"])?></td>
 		            						<td align="right" valign="middle">身份证复印件</td>
-		            						<td colspan="3" align="center"><?= Html::img($farmer['cardpic'])?></td>
+		            						<td align="center"><?= Html::img($farmer['cardpic'],['height'=>"220"])?></td>
+		            						<td align="right" valign="middle">身份证复印件反面</td>
+		            						<td align="center"><?= Html::img($farmer['cardpicback'],['height'=>"220"])?></td>
 		            					</tr>
 		            				</table>
 				      </div>

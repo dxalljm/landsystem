@@ -1,6 +1,10 @@
 <?php
-namespace backend\controllers;
-use app\models\tables;
+namespace frontend\controllers;
+
+use app\models\User;
+use frontend\helpers\MoneyFormat;
+use yii;
+use app\models\Tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -22,10 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>
-                    </h3>
-                </div>
+                    <h3>&nbsp;&nbsp;&nbsp;&nbsp;<?= $this->title ?><font color="red">(<?= User::getYear()?>年度)</font></h3></div>
                 <div class="box-body">
      <p>
         
@@ -38,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <td colspan="3" align="center"><h3>大兴安岭岭南宜农林地承包费专用票据</h3></td>
     </tr>
   <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo date('Y年m月d日',$model->create_at)?></td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo date('Y年m月d日',$model->kptime)?></td>
     <td align="right">NO:</td>
     <td width="30%"><?= $model->nonumber?></td>
   </tr>
@@ -46,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <table width="100%" border="1">
   <tr>
     <td width="14%" height="31" align="center">&nbsp;收款单位（缴款人）      </td>
-    <td height="31" colspan="5">&nbsp;&nbsp;<?= $farm['farmname'].'('.$model->farmername.')&nbsp;&nbsp;&nbsp;&nbsp;合同号：'.$farm['contractnumber']?></td>
+    <td height="31" colspan="5">&nbsp;&nbsp;<?= $farm['farmname'].'('.$model->farmername.')&nbsp;&nbsp;&nbsp;&nbsp;合同号：'.$farm['contractnumber']?><span class="pull-right">账页号:<?= $farm['accountnumber'].'&nbsp;&nbsp;'?></span></td>
     </tr>
   <tr>
     <td height="31" colspan="2" align="center">收费项目</td>
@@ -55,10 +56,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <td width="17%" align="center">标准</td>
     <td width="21%" align="center">金额</td>
   </tr>
+  <?php if($model->year == date('Y')) $yearstr = ''; else $yearstr = $model->year.'年度'?>
   <tr>
-    <td height="23" colspan="2" align="center" valign="middle">      宜农林地承包费</td>
+    <td height="23" colspan="2" align="center" valign="middle">宜农林地承包费</td>
     <td align="center" valign="middle">      元/亩<br /></td>
-    <td align="center" valign="middle"><?= $model->number?></td>
+    <td align="center" valign="middle"><?= $model->measure?></td>
     <td align="center" valign="middle"><?= $model->standard?></td>
     <td align="center" valign="middle"><?= $model->amountofmoney?></td>
   </tr>
@@ -98,32 +100,34 @@ function myDesign() {
 function CreatePage() {
 	LODOP=getLodop(); 
 	LODOP.PRINT_INITA(10,10,"190mm","100.01mm","打印控件功能演示_Lodop功能_移动公司发票全样");
-	LODOP.ADD_PRINT_SETUP_BKIMG("D:\\wamp\\www\\landsystem\\frontend\\web\\images\\IMG_2015.jpg");
+// 	LODOP.ADD_PRINT_SETUP_BKIMG("http://front.lngwh.gov:8001/front/images/img_2015.jpg");
 	LODOP.SET_SHOW_MODE("BKIMG_LEFT",8);
 	LODOP.SET_SHOW_MODE("BKIMG_TOP",-29);
 	LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW",true);
 	LODOP.SET_PRINT_STYLE("FontColor","#0000FF");
-	LODOP.ADD_PRINT_TEXT(51,134,40,20,"<?= date('Y',$model->create_at)?>");
+	LODOP.ADD_PRINT_TEXT(51,134,40,20,"<?= date('Y',$model->kptime)?>");
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
-	LODOP.ADD_PRINT_TEXT(51,188,23,20,"<?= date('m',$model->create_at)?>");
+	LODOP.ADD_PRINT_TEXT(51,188,23,20,"<?= date('m',$model->kptime)?>");
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
-	LODOP.ADD_PRINT_TEXT(52,231,25,20,"<?= date('d',$model->create_at)?>");
+	LODOP.ADD_PRINT_TEXT(52,231,25,20,"<?= date('d',$model->kptime)?>");
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
 	LODOP.ADD_PRINT_TEXT(-8,67,290,20,"注：电子票号与纸质票号不一致则为无效票");
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
-	LODOP.ADD_PRINT_TEXT(76,212,200,21,"<?= $model->farmername?>");
+	LODOP.ADD_PRINT_TEXT(76,212,400,21,"<?= $farm->farmname.'('.$model->farmername.') 合同号：'.$farm->contractnumber?>");
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
-	LODOP.ADD_PRINT_TEXT(136,146,115,20,"宜林农地承包费");
+	LODOP.ADD_PRINT_TEXT(76,612,100,21,"<?= $farm['accountnumber']?>");
+	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+	LODOP.ADD_PRINT_TEXT(136,106,155,20,"宜农林地承包费");
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
 	LODOP.ADD_PRINT_TEXT(136,293,44,20,"元/亩");
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
-	LODOP.ADD_PRINT_TEXT(136,363,54,20,"<?= $model->number?>");
+	LODOP.ADD_PRINT_TEXT(136,363,74,20,"<?= $model->measure?>");
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
 	LODOP.ADD_PRINT_TEXT(136,482,38,20,"<?= $model->standard?>");
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
-	LODOP.ADD_PRINT_TEXT(136,582,100,20,"<?= $model->amountofmoney?>");
+	LODOP.ADD_PRINT_TEXT(136,582,100,20,"<?= MoneyFormat::num_format($model->amountofmoney)?>");
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
-	LODOP.ADD_PRINT_TEXT(254,544,100,20,"<?= $model->amountofmoney?>");
+	LODOP.ADD_PRINT_TEXT(254,544,100,20,"<?= MoneyFormat::num_format($model->amountofmoney)?>");
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",11);
 	LODOP.ADD_PRINT_TEXT(254,205,290,20,"<?= $model->bigamountofmoney?>");
 	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);

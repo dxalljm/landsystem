@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
-use app\models\tables;
+use app\models\Mainmenu;
+use app\models\Tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\ManagementArea;
@@ -41,6 +42,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'leader',
             'sectionchief',
             'chippackage',
+            [
+                'attribute' => 'menulist',
+//                'value' => Mainmenu::find()->where(['id' =>$model->controllername])->one()['menuname'],
+            ],
+            'businessmenu',
+            'searchmenu',
         ],
     ]) ?>
 

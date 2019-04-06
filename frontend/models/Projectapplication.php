@@ -29,9 +29,9 @@ class Projectapplication extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['create_at', 'update_at', 'is_agree','farms_id','management_area','reviewprocess_id'], 'integer'],
+            [['create_at', 'update_at', 'is_agree','farms_id','management_area','reviewprocess_id','farmstate'], 'integer'],
         	[['projectdata'],'number'],
-            [['projecttype','unit'], 'string', 'max' => 500],
+            [['projecttype','unit','year'], 'string', 'max' => 500],
         	[['content'],'string']
         ];
     }
@@ -53,6 +53,8 @@ class Projectapplication extends \yii\db\ActiveRecord
         	'reviewprocess' => '流程ID',
         	'projectdata' => '数量',
         	'unit' => '单位',
+			'year' => '年度',
+			'farmstate' => '农场状态'
         ];
     }
     public static function farmSearch($str)
@@ -80,10 +82,14 @@ class Projectapplication extends \yii\db\ActiveRecord
     }
     public static function getFarmRows($params)
     {
-    	if($params['projectapplicationSearch']['management_area'] == 0){
-    		$management_area = [1,2,3,4,5,6,7];
-    	} else
-    		$management_area = $params['projectapplicationSearch']['management_area'];
+		if(isset($params['projectapplicationSearch']['management_area'])) {
+			if ($params['projectapplicationSearch']['management_area'] == 0) {
+				$management_area = [1, 2, 3, 4, 5, 6, 7];
+			} else
+				$management_area = $params['projectapplicationSearch']['management_area'];
+		} else {
+			$management_area = Farms::getManagementArea()['id'];
+		}
     	$where = [];
     	$Farm = Farms::find();
     	$Projectapplication = Projectapplication::find ();
@@ -124,10 +130,14 @@ class Projectapplication extends \yii\db\ActiveRecord
     
     public static function getFarmerrows($params)
     {
-   		if($params['projectapplicationSearch']['management_area'] == 0){
-    		$management_area = [1,2,3,4,5,6,7];
-    	} else
-    		$management_area = $params['projectapplicationSearch']['management_area'];
+		if(isset($params['projectapplicationSearch']['management_area'])) {
+			if ($params['projectapplicationSearch']['management_area'] == 0) {
+				$management_area = [1, 2, 3, 4, 5, 6, 7];
+			} else
+				$management_area = $params['projectapplicationSearch']['management_area'];
+		} else {
+			$management_area = Farms::getManagementArea()['id'];
+		}
     	$where = [];
     	$Farm = Farms::find();
     	$Projectapplication = Projectapplication::find ();
@@ -166,10 +176,14 @@ class Projectapplication extends \yii\db\ActiveRecord
     
     public static function getProjecttype($params)
     {
-    	if($params['projectapplicationSearch']['management_area'] == 0){
-    		$management_area = [1,2,3,4,5,6,7];
-    	} else
-    		$management_area = $params['projectapplicationSearch']['management_area'];
+		if(isset($params['projectapplicationSearch']['management_area'])) {
+			if ($params['projectapplicationSearch']['management_area'] == 0) {
+				$management_area = [1, 2, 3, 4, 5, 6, 7];
+			} else
+				$management_area = $params['projectapplicationSearch']['management_area'];
+		} else {
+			$management_area = Farms::getManagementArea()['id'];
+		}
     	$where = [];
     	$Farm = Farms::find();
     	$Projectapplication = Projectapplication::find ();
@@ -202,10 +216,14 @@ class Projectapplication extends \yii\db\ActiveRecord
     }
     public static function getProjecttypename($params)
     {
-    	if($params['projectapplicationSearch']['management_area'] == 0){
-    		$management_area = [1,2,3,4,5,6,7];
-    	} else
-    		$management_area = $params['projectapplicationSearch']['management_area'];
+		if(isset($params['projectapplicationSearch']['management_area'])) {
+			if ($params['projectapplicationSearch']['management_area'] == 0) {
+				$management_area = [1, 2, 3, 4, 5, 6, 7];
+			} else
+				$management_area = $params['projectapplicationSearch']['management_area'];
+		} else {
+			$management_area = Farms::getManagementArea()['id'];
+		}
     	$where = [];
     	$Farm = Farms::find();
     	$Projectapplication = Projectapplication::find ();
@@ -234,16 +252,20 @@ class Projectapplication extends \yii\db\ActiveRecord
     }
     public static function getTypenamelist($params = NULL)
     {
-    	if($params['projectapplicationSearch']['management_area'] == 0){
-    		$management_area = [1,2,3,4,5,6,7];
-    	} else
-    		$management_area = $params['projectapplicationSearch']['management_area'];
+		if(isset($params['projectapplicationSearch']['management_area'])) {
+			if ($params['projectapplicationSearch']['management_area'] == 0) {
+				$management_area = [1, 2, 3, 4, 5, 6, 7];
+			} else
+				$management_area = $params['projectapplicationSearch']['management_area'];
+		} else {
+			$management_area = Farms::getManagementArea()['id'];
+		}
     	$where = [];
     	$Farm = Farms::find();
     	$Projectapplication = Projectapplication::find ();
     	$data = [];
-    	$Projectapplication->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
-    	$Projectapplication->andFilterWhere(['management_area'=>$management_area]);
+//    	$Projectapplication->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+    	$Projectapplication->andFilterWhere(['management_area'=>$management_area,'year'=>User::getYear()]);
     	$farmid = [];
     
     	//     	var_dump($farmid);exit;
@@ -281,10 +303,14 @@ class Projectapplication extends \yii\db\ActiveRecord
     }
     public static function getProjectapplication($params) 
     {
-    	if($params['projectapplicationSearch']['management_area'] == 0){
-    		$management_area = [1,2,3,4,5,6,7];
-    	} else
-    		$management_area = $params['projectapplicationSearch']['management_area'];
+		if(isset($params['projectapplicationSearch']['management_area'])) {
+			if ($params['projectapplicationSearch']['management_area'] == 0) {
+				$management_area = [1, 2, 3, 4, 5, 6, 7];
+			} else
+				$management_area = $params['projectapplicationSearch']['management_area'];
+		} else {
+			$management_area = Farms::getManagementArea()['id'];
+		}
     	$where = [];
     	$Farm = Farms::find();
     	$Projectapplication = Projectapplication::find ();
@@ -355,4 +381,70 @@ class Projectapplication extends \yii\db\ActiveRecord
     	$result = array_unique($data);
     	return $result;
     }
+
+	public static function getProjectapplicationcache()
+	{
+		$where = Farms::getManagementArea()['id'];
+		$type = self::getTypename()['id'];
+//     	var_dump($type);
+		//     	var_dump($input);exit;
+		$data = [];
+		$result = [];
+		$dw = [];
+		foreach ($where as $areaid) {
+			foreach ($type as $value) {
+				$sum = Projectapplication::find()->where(['management_area'=>$areaid,'projecttype'=>$value,'state'=>1])->sum('projectdata');
+				if($sum)
+					$data[$areaid][] = (float)$sum;
+				else
+					$data[$areaid][] = 0.0;
+			}
+		}
+		if($data) {
+			foreach ($data as $key => $value) {
+				$result[] = [
+					'name' => str_ireplace('管理区', '', ManagementArea::find()->where(['id' => $key])->one()['areaname']),
+					'type' => 'bar',
+					'stack' => $key,
+					'data' => $value,
+				];
+			}
+		} else {
+			foreach ($where as $areaid) {
+				$result[] = [
+					'name' => str_ireplace('管理区', '', ManagementArea::find()->where(['id' => $areaid])->one()['areaname']),
+					'type' => 'bar',
+					'stack' => $areaid,
+					'data' => [],
+				];
+			}
+		}
+//     	var_dump($result);
+		$jsonData = json_encode ($result);
+
+		return $jsonData;
+	}
+
+	public static function getTypename()
+	{
+		$where = Farms::getManagementArea()['id'];
+
+		$input = Projectapplication::find()->where(['management_area'=>$where,'year'=>User::getYear()])->all();
+		//     	var_dump($input);exit;
+		$data = [];
+		$result = ['id'=>[],'projecttype'=>[],'unit'=>[]];
+		foreach ($input as $value) {
+			$data[] = ['id'=>Infrastructuretype::find()->where(['id'=>$value['projecttype']])->one()['id']];
+		}
+		if($data) {
+			$newdata = Farms::unique_arr($data);
+			foreach ($newdata as $value) {
+				$result['id'][] = $value['id'];
+				$result['projecttype'][] = Infrastructuretype::find()->where(['id' => $value['id']])->one()['typename'];
+				$result['unit'][] = Projectapplication::find()->where(['projecttype'=>$value['id']])->one()['unit'];
+			}
+		}
+//     	    	var_dump($result);
+		return $result;
+	}
 }

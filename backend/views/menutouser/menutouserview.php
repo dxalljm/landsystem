@@ -1,6 +1,6 @@
 <?php
 namespace backend\controllers;
-use app\models\tables;
+use app\models\Tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\Mainmenu;
@@ -39,7 +39,9 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             
             'plate',
-            'businessmenu'
+            'businessmenu',
+            'searchmenu',
+            'auditinguser',
         ],
     ]) ?>
 

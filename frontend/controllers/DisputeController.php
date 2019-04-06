@@ -26,7 +26,14 @@ class DisputeController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -46,7 +53,7 @@ class DisputeController extends Controller
         $params = Yii::$app->request->queryParams;
         $params ['disputeSearch'] ['farms_id'] = $farms_id;
         $dataProvider = $searchModel->search($params);
-		Logs::writeLog('纠纷');
+		Logs::writeLog('农场纠纷情况');
         return $this->render('disputeindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -60,9 +67,10 @@ class DisputeController extends Controller
      */
     public function actionDisputeview($id)
     {
-    	Logs::writeLog('查看纠纷',$id);
+    	$model = $this->findModel($id);
+        Logs::writeLogs('查看纠纷',$model);
         return $this->render('disputeview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -80,8 +88,7 @@ class DisputeController extends Controller
         	$model->update_at = time();
         	$model->state = 1;
         	$model->save();
-        	$newAttr = $model->attributes;
-        	Logs::writeLog('创建纠纷',$model->id,'',$newAttr);
+        	Logs::writeLogs('创建纠纷',$model);
             //var_dump($model->getErrors());
             return $this->redirect(['disputeview', 'id' => $model->id,'farms_id' => $model->farms_id]);
         } else {
@@ -100,12 +107,10 @@ class DisputeController extends Controller
     public function actionDisputeupdate($id)
     {
         $model = $this->findModel($id);
-		$oldAttr = $model->attributes;
         if ($model->load(Yii::$app->request->post())) {
         	$model->update_at = time();
         	$model->save();
-        	$newAttr = $model->attributes;
-        	Logs::writeLog('更新纠纷',$id,$oldAttr,$newAttr);
+        	Logs::writeLogs('更新纠纷',$model);
             return $this->redirect(['disputeview', 'id' => $model->id,'farms_id' => $model->farms_id]);
         } else {
             return $this->render('disputeupdate', [
@@ -123,20 +128,17 @@ class DisputeController extends Controller
     public function actionDisputedelete($id,$farms_id)
     {
     	$model = $this->findModel($id);
-    	$oldAttr = $model->attributes;
-    	Logs::writeLog('删除纠纷',$id,$oldAttr);
         $model->delete();
-
+        Logs::writeLogs('删除纠纷',$model);
         return $this->redirect(['disputeindex','farms_id'=>$farms_id]);
     }
 
     public function actionDisputestate($id,$farms_id)
     {
     	$model = $this->findModel($id);
-    	$oldAttr = $model->attributes;
-    	Logs::writeLog('解决纠纷',$id,$oldAttr);
     	$model->state = 1;
     	$model->save();
+        Logs::writeLogs('解决纠纷',$model);
     	return $this->redirect(['disputeindex','farms_id'=>$farms_id]);
     }
     /**

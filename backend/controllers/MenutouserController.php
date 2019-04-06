@@ -79,6 +79,10 @@ class MenutouserController extends Controller
         		$model->plate = implode(',',$model->plate);
         	if(is_array($model->businessmenu))
         		$model->businessmenu = implode(',',$model->businessmenu);
+        	if(is_array($model->searchmenu))
+        		$model->searchmenu = implode(',', $model->searchmenu);
+            if(is_array($model->auditinguser))
+                $model->auditinguser = implode(',', $model->auditinguser);
         	$model->save();
             return $this->redirect(['menutouserview', 'id' => $model->id]);
         } else {
@@ -105,6 +109,10 @@ class MenutouserController extends Controller
         		$model->plate = implode(',',$model->plate);
         	if(is_array($model->businessmenu))
         		$model->businessmenu = implode(',',$model->businessmenu);
+        	if(is_array($model->searchmenu))
+        		$model->searchmenu = implode(',', $model->searchmenu);
+            if(is_array($model->auditinguser))
+                $model->auditinguser = implode(',', $model->auditinguser);
         	$model->save();
             return $this->redirect(['menutouserview', 'id' => $model->id]);
         } else {

@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use app\models\Logs;
 use Yii;
 use app\models\Disastertype;
 use frontend\models\disastertypeSearch;
@@ -25,7 +26,14 @@ class DisastertypeController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -43,7 +51,7 @@ class DisastertypeController extends Controller
     {
         $searchModel = new disastertypeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        Logs::writeLogs('灾害类型列表');
         return $this->render('disastertypeindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -57,8 +65,10 @@ class DisastertypeController extends Controller
      */
     public function actionDisastertypeview($id)
     {
+        $model = $this->findModel($id);
+        Logs::writeLogs('查看灾害种类',$model);
         return $this->render('disastertypeview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -72,6 +82,7 @@ class DisastertypeController extends Controller
         $model = new Disastertype();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Logs::writeLogs('新增灾害种类',$model);
             return $this->redirect(['disastertypeview', 'id' => $model->id]);
         } else {
             return $this->render('disastertypecreate', [
@@ -91,6 +102,7 @@ class DisastertypeController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Logs::writeLogs('更新灾害种类',$model);
             return $this->redirect(['disastertypeview', 'id' => $model->id]);
         } else {
             return $this->render('disastertypeupdate', [
@@ -107,8 +119,9 @@ class DisastertypeController extends Controller
      */
     public function actionDisastertypedelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id);
+        $model->delete();
+        Logs::writeLogs('删除灾害种类',$model);
         return $this->redirect(['disastertypeindex']);
     }
 

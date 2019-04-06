@@ -2,6 +2,8 @@
 
 namespace frontend\controllers;
 
+use app\models\Plant;
+use app\models\User;
 use Yii;
 use app\models\Huinong;
 use frontend\models\HuinongSearch;
@@ -9,16 +11,17 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Logs;
-use app\models\Plantingstructure;
+use app\models\Plantingstructurecheck;
 use app\models\Huinonggrant;
 use app\models\Farms;
 use frontend\models\HuinonggrantSearch;
-use yii\data\ActiveDataProvider;
+use frontend\models\plantingstructurecheckSearch;
 use app\models\Lease;
 use app\models\Subsidiestype;
 use app\models\Goodseed;
 use app\models\Tempprogress;
 use app\models\Farmer;
+use app\models\Theyear;
 
 /**
  * HuinongController implements the CRUD actions for Huinong model.
@@ -36,7 +39,14 @@ class HuinongController extends Controller
             ],
         ];
     }
-
+	public function beforeAction($action)
+	{
+		if(Yii::$app->user->isGuest) {
+			return $this->redirect(['site/logout']);
+		} else {
+			return true;
+		}
+	}
     /**
      * Lists all Huinong models.
      * @return mixed
@@ -45,7 +55,7 @@ class HuinongController extends Controller
     {
         $searchModel = new HuinongSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+		Logs::writeLog('惠农政策发布列表');
         return $this->render('huinongindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -58,20 +68,39 @@ class HuinongController extends Controller
 		$post = Yii::$app->request->post('setyear');
 
 		if($post) {
-			$huinongs->andFilterWhere(['begindate'=>$post]);
-		} else 
-			$huinongs->andFilterWhere(['begindate'=>date('Y')]);
+			$huinongs->andFilterWhere(['year'=>$post]);
+		} else
+			$huinongs->andFilterWhere(['year'=>User::getLastYear()]);
     	$data = $huinongs->all();
+		Logs::writeLogs(User::getLastYear().'年度惠农政策列表');
     	return $this->render('huinonglist', [
     			'huinongs' => $data,
     			'date' => $post,
     	]);
     }
-    
+//	public function actionHuinonglist()
+//    {
+//    	$huinongs = Huinong::find()->where(['year'=>User::getYear()])->all();
+//		$plant = [];
+//		foreach ($huinongs as $value) {
+//			$plant[] = $value['typeid'];
+//		}
+//		$searchModel = new plantingstructurecheckSearch();
+//		$params = Yii::$app->request->queryParams;
+//		$params['plantingstructurecheckSearch']['plant_id'] = $plant;
+//		$params ['plantingstructurecheckSearch'] ['year'] = User::getYear();
+//		$dataProvider = $searchModel->searchIndex ( $params );
+//		Logs::writeLogs(User::getLastYear().'年度惠农政策列表');
+//    	return $this->render('huinonglist', [
+//			'searchModel' => $searchModel,
+//			'dataProvider' => $dataProvider,
+//    	]);
+//    }
     public function actionHuinonginfo()
     {
     	$whereArray = Farms::getManagementArea();
-    	$huinongs = Huinong::find()->all();
+    	$huinongs = Huinong::find()->where(['year'=>User::getYear()])->all();
+		Logs::writeLogs(User::getLastYear().'年度惠农政策首页统计');
     	return $this->render('huinonginfo', [
     			'huinongs' => $huinongs,
     	]);
@@ -79,15 +108,28 @@ class HuinongController extends Controller
     
     public function actionHuinongprovidelist()
     {
-    	$huinongs = Huinong::find()->all();
-    	return $this->render('huinongprovidelist', [
-    			'huinongs' => $huinongs,
-    	]);
+
+		$searchModel = new plantingstructurecheckSearch();
+		$params = Yii::$app->request->queryParams;
+//		$params['plantingstructurecheckSearch']['plant_id'] = $plant;
+		$params ['plantingstructurecheckSearch'] ['year'] = User::getYear();
+		$params ['plantingstructurecheckSearch'] ['isbank'] = 1;
+		$dataProvider = $searchModel->searchHuinong( $params );
+		Logs::writeLogs(User::getLastYear().'年度惠农政策列表');
+		return $this->render('huinongprovidelist', [
+			'searchModel' => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
+//		$huinongs = Huinong::find()->where(['year'=>User::getYear()])->all();
+//    	return $this->render('huinongprovidelist', [
+//    			'huinongs' => $huinongs,
+//    	]);
     }
    //惠农政策获取相关数据列表
    public function actionHuinongdata($id)
    {
    		$model = $this->findModel($id);
+
    		$management_area = Farms::getManagementArea()['id'];
    		$issubmitsearch = Yii::$app->request->post('issubmitSearch');
    		$allData = Huinonggrant::find()->where(['huinong_id'=>$id,'management_area'=>$management_area])->all();
@@ -113,7 +155,7 @@ class HuinongController extends Controller
    				$huinonggrantModel->issubmit = 1;
    				$huinonggrantModel->update_at = time();
    				$huinonggrantModel->save();
-   				Logs::writeLog('地产科提交符合惠农政策条件的农场用户',$huinonggrantModel->id,'',$huinonggrantModel->attributes);
+   				Logs::writeLogs('地产科提交符合惠农政策条件的农场用户',$huinonggrantModel);
    			}
    			return $this->redirect(['huinongsend']);
    		}
@@ -134,16 +176,16 @@ class HuinongController extends Controller
 		switch ($model->subsidiestype_id) {
 	   		case 'plant':
 	   			$classname = 'plantingstructure';
-	   			$data = Plantingstructure::find()->where(['plant_id'=>$model->typeid,'farms_id'=>$farmsallid])->all();
+	   			$data = Plantingstructurecheck::find()->where(['plant_id'=>$model->typeid,'farms_id'=>$farmsallid])->all();
 	   			break;
 	   		case 'goodseed':
 	   			$classname = 'plantingstructure';
-	   			$data = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid,'farms_id'=>$farmsallid])->all();
+	   			$data = Plantingstructurecheck::find()->where(['goodseed_id'=>$model->typeid,'farms_id'=>$farmsallid])->all();
 	   			break;
 	   	}
 	   	$whereArray = Farms::getManagementArea()['id'];
 		$data = Huinonggrant::find()->where(['huinong_id'=>$id,'management_area'=>$whereArray])->all();
-   		
+   		Logs::writeLog('惠农补贴发放明细');
 	   	return $this->render('huinongdatainfo', [
 	   			'data' => $data,
 	   			'classname' => $classname,
@@ -158,11 +200,11 @@ class HuinongController extends Controller
    	switch ($model->subsidiestype_id) {
    		case 'plant':
    			$classname = 'plantingstructure';
-   			$data = Plantingstructure::find()->where(['plant_id'=>$model->typeid,'farms_id'=>$farmsallid])->all();
+   			$data = Plantingstructurecheck::find()->where(['plant_id'=>$model->typeid,'farms_id'=>$farmsallid])->all();
    			break;
    		case 'goodseed':
    			$classname = 'plantingstructure';
-   			$data = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid,'farms_id'=>$farmsallid])->all();
+   			$data = Plantingstructurecheck::find()->where(['goodseed_id'=>$model->typeid,'farms_id'=>$farmsallid])->all();
    			break;
    	}
    	$whereArray = Farms::getManagementArea()['id'];
@@ -184,10 +226,10 @@ class HuinongController extends Controller
 	   	$typename = Subsidiestype::find()->where(['id'=>$model->subsidiestype_id])->one()['urladdress'];
 	   	switch ($typename) {
 	   		case 'Plant':
-	   			$classname = 'plantingstructure';
+	   			$classname = 'plantingstructurecheck';
 	   			break;
 	   		case 'Goodseed':
-	   			$classname = 'plantingstructure';
+	   			$classname = 'plantingstructurecheck';
 	   			break;
 	   	}
 // 	   	var_dump($post);exit;
@@ -350,50 +392,119 @@ class HuinongController extends Controller
 				$model->typeid = Yii::$app->request->post('plant');
         	$model->create_at = time();
         	$model->update_at = $model->create_at;
-        	$model->begindate = (string)$model->begindate;
+//			$model->year = User::getYear();
+//        	$model->begindate = (string)$model->begindate;
         	if(Yii::$app->request->post('goodseed'))
-        		$model->totalsubsidiesarea = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid])->andFilterWhere(['between','create_at',strtotime($model->begindate.'-01-01'),strtotime($model->begindate.'-12-31')])->sum('area');
+        		$model->totalsubsidiesarea = sprintf("%.2f", Plantingstructurecheck::find()->where(['goodseed_id'=>$model->typeid,'year'=>$model->year])->sum('area'));
         	if(Yii::$app->request->post('plant'))
-        		$model->totalsubsidiesarea = Plantingstructure::find()->where(['plant_id'=>$model->typeid])->andFilterWhere(['between','create_at',strtotime($model->begindate.'-01-01'),strtotime($model->begindate.'-12-31')])->sum('area');
+        		$model->totalsubsidiesarea = sprintf("%.2f", Plantingstructurecheck::find()->where(['plant_id'=>$model->typeid,'year'=>$model->year])->sum('area'));
         	if(Yii::$app->request->post('goodseed'))
-        		$model->totalamount = Plantingstructure::find()->where(['goodseed_id'=>$model->typeid])->andFilterWhere(['between','create_at',strtotime($model->begindate.'-01-01'),strtotime($model->begindate.'-12-31')])->sum('area')*$model->subsidiesmoney;
+        		$model->totalamount = sprintf("%.2f", Plantingstructurecheck::find()->where(['goodseed_id'=>$model->typeid,'year'=>$model->year])->sum('area')*$model->subsidiesmoney);
         	if(Yii::$app->request->post('plant'))
-        		$model->totalamount = Plantingstructure::find()->where(['plant_id'=>$model->typeid])->andFilterWhere(['between','create_at',strtotime($model->begindate.'-01-01'),strtotime($model->begindate.'-12-31')])->sum('area')*$model->subsidiesmoney;
-        	
-        	if($model->save()) {
-        		if(Yii::$app->request->post('goodseed'))
-        			$plantingsructure = Plantingstructure::find()->andFilterWhere(['goodseed_id'=>$model->typeid])->andFilterWhere(['between','create_at',strtotime($model->begindate.'-01-01'),strtotime($model->begindate.'-12-31')])->all();
-        		if(Yii::$app->request->post('plant'))
-        			$plantingsructure = Plantingstructure::find()->andFilterWhere(['plant_id'=>$model->typeid])->andFilterWhere(['between','create_at',strtotime($model->begindate.'-01-01'),strtotime($model->begindate.'-12-31')])->all();
-        		
-//         		foreach ($plantingsructure as $val) {
-//         			$temp = new Tempprogress();
-//         			$temp->id = $val['id'];
-//         			$temp->save();
-//         		}
-        		
-        		foreach ($plantingsructure as $value) {
-	        		$huinonggrantModel = new Huinonggrant();
+        		$model->totalamount = sprintf("%.2f", Plantingstructurecheck::find()->where(['plant_id'=>$model->typeid,'year'=>$model->year])->sum('area')*$model->subsidiesmoney);
+			$model->year = User::getYear();
+			$model->save();
+//			var_dump($model->getErrors());exit;
+//        	if($model->save()) {
 
-	        		$huinonggrantModel->farms_id = $value['farms_id'];
-	        		$huinonggrantModel->management_area = $value['management_area'];
-	        		$huinonggrantModel->huinong_id = $model->id;
-	        		$huinonggrantModel->subsidiestype_id = $model->subsidiestype_id;
-	        		$huinonggrantModel->typeid = $model->typeid;
-	        		$huinonggrantModel->lease_id = $value['lease_id'];
-	        		$huinonggrantModel->money = $model->subsidiesarea*0.01*$value['area'] * $model->subsidiesmoney;
-	        		$huinonggrantModel->area = $value['area'];
-	        		$huinonggrantModel->state = 0;
-	        		$huinonggrantModel->issubmit = 0;
-	        		$huinonggrantModel->create_at = time();
-	        		$huinonggrantModel->update_at = $huinonggrantModel->create_at;
-	        		$huinonggrantModel->save();
-	        		Logs::writeLog('建立所有符合条件用户数据',$huinonggrantModel->id,'',$huinonggrantModel->attributes);
+//				var_dump($model);exit;
+//        		if(Yii::$app->request->post('goodseed'))
+//        			$plantingsructure = Plantingstructurecheck::find()->andFilterWhere(['goodseed_id'=>$model->typeid,'year'=>$model->year])->all();
+//        		if(Yii::$app->request->post('plant'))
+//        			$plantingsructure = Plantingstructurecheck::find()->andFilterWhere(['plant_id'=>$model->typeid,'year'=>$model->year])->all();
+//
+//        		foreach ($plantingsructure as $value) {
+//					$huinongascription = Lease::getHuinonginfo($value['lease_id']);
+//					if($huinongascription) {
+//						$plant = Plant::findOne($model->typeid);
+//						$bfb = ['farmer' => 0, 'lessee' => 0];
+//						switch ($plant->typename) {
+//							case '大豆':
+//								$bfb['farmer'] = Lease::getBFBnumber($huinongascription['farmer']['ddcj']);
+//								$bfb['lessee'] = Lease::getBFBnumber($huinongascription['lessee']['ddcj']);
+//								break;
+//							case '玉米':
+//								$bfb['farmer'] = Lease::getBFBnumber($huinongascription['farmer']['ymcj']);
+//								$bfb['lessee'] = Lease::getBFBnumber($huinongascription['lessee']['ymcj']);
+//								break;
+//						}
+//						if (bccomp($bfb['farmer'], 0) == 1) {
+//							$huinonggrantModel = Huinonggrant::find()->where(['farms_id'=>$value['farms_id'],'lease_id'=>0,'huinong_id'=>$model->id,'typeid'=>$model->typeid])->one();
+//							if(empty($huinonggrantModel)) {
+//								$huinonggrantModel = new Huinonggrant();
+//								$huinonggrantModel->create_at = time();
+//								$huinonggrantModel->update_at = $huinonggrantModel->create_at;
+//							} else {
+//								$huinonggrantModel->update_at = time();
+//							}
+//
+//							$huinonggrantModel->farms_id = $value['farms_id'];
+//							$huinonggrantModel->management_area = $value['management_area'];
+//							$huinonggrantModel->huinong_id = $model->id;
+//							$huinonggrantModel->subsidiestype_id = $model->subsidiestype_id;
+//							$huinonggrantModel->typeid = $model->typeid;
+//							$huinonggrantModel->lease_id = 0;
+//							$huinonggrantModel->money = $model->subsidiesarea * 0.01 * $value['area'] * $model->subsidiesmoney * ($bfb['farmer']/100);
+//							$huinonggrantModel->area = $value['area'];
+//							$huinonggrantModel->state = 0;
+//							$huinonggrantModel->issubmit = 0;
+//							$huinonggrantModel->subsidyobject = Farms::find()->where(['id'=>$value['farms_id']])->one()['farmername'];
+//							$huinonggrantModel->proportion = $bfb['farmer'].'%';
+//							$huinonggrantModel->year = $model->year;
+//							$huinonggrantModel->save();
+//							Logs::writeLogs('建立所有符合条件用户数据', $huinonggrantModel);
+//						}
+//						if (bccomp($bfb['lessee'], 0) == 1) {
+//							$huinonggrantModel = Huinonggrant::find()->where(['farms_id'=>$value['farms_id'],'lease_id'=>$value['lease_id'],'huinong_id'=>$model->id,'typeid'=>$model->typeid])->one();
+//							if(empty($huinonggrantModel)) {
+//								$huinonggrantModel = new Huinonggrant();
+//								$huinonggrantModel->create_at = time();
+//								$huinonggrantModel->update_at = $huinonggrantModel->create_at;
+//							} else {
+//								$huinonggrantModel->update_at = time();
+//							}
+//
+//							$huinonggrantModel->farms_id = $value['farms_id'];
+//							$huinonggrantModel->management_area = $value['management_area'];
+//							$huinonggrantModel->huinong_id = $model->id;
+//							$huinonggrantModel->subsidiestype_id = $model->subsidiestype_id;
+//							$huinonggrantModel->typeid = $model->typeid;
+//							$huinonggrantModel->lease_id = $value['lease_id'];
+//							$huinonggrantModel->money = $model->subsidiesarea * 0.01 * $value['area'] * $model->subsidiesmoney * ($bfb['lessee']/100);
+//							$huinonggrantModel->area = $value['area'];
+//							$huinonggrantModel->state = 0;
+//							$huinonggrantModel->issubmit = 0;
+//							$huinonggrantModel->subsidyobject = Lease::find()->where(['id'=>$value['lease_id']])->one()['lessee'];
+//							$huinonggrantModel->proportion = $bfb['lessee'].'%';
+//							$huinonggrantModel->year = $model->year;
+//							$huinonggrantModel->save();
+//							Logs::writeLogs('建立所有符合条件用户数据', $huinonggrantModel);
+//						}
+//					}
+//					} else {
+//						$huinonggrantModel = new Huinonggrant();
+//
+//						$huinonggrantModel->farms_id = $value['farms_id'];
+//						$huinonggrantModel->management_area = $value['management_area'];
+//						$huinonggrantModel->huinong_id = $model->id;
+//						$huinonggrantModel->subsidiestype_id = $model->subsidiestype_id;
+//						$huinonggrantModel->typeid = $model->typeid;
+//						$huinonggrantModel->lease_id = $value['lease_id'];
+//						$huinonggrantModel->money = $model->subsidiesarea * 0.01 * $value['area'] * $model->subsidiesmoney;
+//						$huinonggrantModel->area = $value['area'];
+//						$huinonggrantModel->state = 0;
+//						$huinonggrantModel->issubmit = 0;
+//						$huinonggrantModel->subsidyobject = Huinong::showSubsidyName($huinongascription);
+//						$huinonggrantModel->proportion = '100%';
+//						$huinonggrantModel->create_at = time();
+//						$huinonggrantModel->update_at = $huinonggrantModel->create_at;
+//						$huinonggrantModel->save();
+//						Logs::writeLog('建立所有符合条件用户数据', $huinonggrantModel->id, '', $huinonggrantModel->attributes);
+//					}
 // 	        		$tempModel = Tempprogress::findOne($value['id']);
 // 	        		$tempModel->delete();
-        		}
-        	}
-        	
+//        		}
+//        	}
         	Logs::writeLog('新增惠农政策',$model->id,'',$model->attributes);
             return $this->redirect(['huinongindex']);
         } else {
@@ -412,23 +523,118 @@ class HuinongController extends Controller
     public function actionHuinongupdate($id)
     {
         $model = $this->findModel($id);
-		$old = $model->attributes;
-        if ($model->load(Yii::$app->request->post())) {
-        	$model->typeid = Yii::$app->request->post($model->subsidiestype_id);
-        	$model->update_at = time();
-        	$model->begindate = (string)strtotime($model->begindate);
-        	$model->enddate = (string)strtotime($model->enddate);
-//         	var_dump($model->begindate);exit;
-        	$model->save();
-//         	var_dump($model->getErrors());exit;
-        	$new = $model->attributes;
-        	Logs::writeLog('更新惠农政策',$model->id,$old,$new);
-            return $this->redirect(['huinongindex']);
-        } else {
-            return $this->render('huinongupdate', [
-                'model' => $model,
-            ]);
-        }
+		if ($model->load(Yii::$app->request->post())) {
+//			if(Yii::$app->request->post('goodseed'))
+//				$model->typeid = Yii::$app->request->post('goodseed');
+			if(Yii::$app->request->post('plant'))
+				$model->typeid = Yii::$app->request->post('plant');
+			$model->create_at = time();
+			$model->update_at = $model->create_at;
+			$model->year = (string)$model->year;
+//			if(Yii::$app->request->post('goodseed'))
+//				$model->totalsubsidiesarea = sprintf("%.2f", Plantingstructurecheck::find()->where(['goodseed_id'=>$model->typeid,'year'=>$model->year])->sum('area'));
+			if(Yii::$app->request->post('plant'))
+				$model->totalsubsidiesarea = sprintf("%.2f", Plantingstructurecheck::find()->where(['plant_id'=>$model->typeid,'year'=>$model->year])->sum('area'));
+//			if(Yii::$app->request->post('goodseed'))
+//				$model->totalamount = sprintf("%.2f", Plantingstructurecheck::find()->where(['goodseed_id'=>$model->typeid,'year'=>$model->year])->sum('area')*$model->subsidiesmoney);
+			if(Yii::$app->request->post('plant'))
+				$model->totalamount = Plantingstructurecheck::find()->where(['plant_id'=>$model->typeid,'year'=>$model->year])->sum('area')*$model->subsidiesmoney;
+			$model->save();
+//			if($model->save()) {
+////				var_dump($model);exit;
+//				if(Yii::$app->request->post('goodseed'))
+//					$plantingsructure = Plantingstructurecheck::find()->andFilterWhere(['goodseed_id'=>$model->typeid,'year'=>$model->year])->all();
+//				if(Yii::$app->request->post('plant'))
+//					$plantingsructure = Plantingstructurecheck::find()->andFilterWhere(['plant_id'=>$model->typeid,'year'=>$model->year])->all();
+//
+////         		foreach ($plantingsructure as $val) {
+////         			$temp = new Tempprogress();
+////         			$temp->id = $val['id'];
+////         			$temp->save();
+////         		}
+////				var_dump($model);
+////				var_dump($plantingsructure);exit;
+//				foreach ($plantingsructure as $value) {
+//					$huinongascription = Lease::getHuinonginfo($value['lease_id']);
+////					var_dump($huinongascription);
+//					if($huinongascription) {
+//						$plant = Plant::findOne($model->typeid);
+//						$bfb = ['farmer' => 0, 'lessee' => 0];
+//						switch ($plant->typename) {
+//							case '大豆':
+//								$bfb['farmer'] = Lease::getBFBnumber($huinongascription['farmer']['ddcj']);
+//								$bfb['lessee'] = Lease::getBFBnumber($huinongascription['lessee']['ddcj']);
+//								break;
+//							case '玉米':
+//								$bfb['farmer'] = Lease::getBFBnumber($huinongascription['farmer']['ymcj']);
+//								$bfb['lessee'] = Lease::getBFBnumber($huinongascription['lessee']['ymcj']);
+//								break;
+//						}
+//						var_dump($bfb);
+//						if (bccomp($bfb['farmer'], 0) == 1) {
+//							$huinonggrantModel = Huinonggrant::find()->where(['farms_id' => $value['farms_id'], 'lease_id' => 0, 'huinong_id' => $model->id, 'typeid' => $model->typeid])->one();
+//							if (empty($huinonggrantModel)) {
+//								$huinonggrantModel = new Huinonggrant();
+//								$huinonggrantModel->create_at = time();
+//								$huinonggrantModel->update_at = $huinonggrantModel->create_at;
+//							} else {
+//								$huinonggrantModel->update_at = time();
+//							}
+//
+//							$huinonggrantModel->farms_id = $value['farms_id'];
+//							$huinonggrantModel->management_area = $value['management_area'];
+//							$huinonggrantModel->huinong_id = $model->id;
+//							$huinonggrantModel->subsidiestype_id = $model->subsidiestype_id;
+//							$huinonggrantModel->typeid = $model->typeid;
+//							$huinonggrantModel->lease_id = 0;
+//							$huinonggrantModel->money = $model->subsidiesarea * 0.01 * $value['area'] * $model->subsidiesmoney * ($bfb['farmer'] / 100);
+//							$huinonggrantModel->area = $value['area'];
+//							$huinonggrantModel->state = 0;
+//							$huinonggrantModel->issubmit = 0;
+//							$huinonggrantModel->subsidyobject = Farms::find()->where(['id'=>$value['farms_id']])->one()['farmername'];
+//							$huinonggrantModel->proportion = $bfb['farmer'].'%';
+//							$huinonggrantModel->year = $model->year;
+//							$huinonggrantModel->save();
+//							var_dump($huinonggrantModel->getErrors());
+//							Logs::writeLogs('建立所有符合条件用户数据', $huinonggrantModel);
+//						}
+//						if (bccomp($bfb['lessee'], 0) == 1) {
+//							$huinonggrantModel = Huinonggrant::find()->where(['farms_id' => $value['farms_id'], 'lease_id' => $value['lease_id'], 'huinong_id' => $model->id, 'typeid' => $model->typeid])->one();
+//							if (empty($huinonggrantModel)) {
+//								$huinonggrantModel = new Huinonggrant();
+//								$huinonggrantModel->create_at = time();
+//								$huinonggrantModel->update_at = $huinonggrantModel->create_at;
+//							} else {
+//								$huinonggrantModel->update_at = time();
+//							}
+//
+//							$huinonggrantModel->farms_id = $value['farms_id'];
+//							$huinonggrantModel->management_area = $value['management_area'];
+//							$huinonggrantModel->huinong_id = $model->id;
+//							$huinonggrantModel->subsidiestype_id = $model->subsidiestype_id;
+//							$huinonggrantModel->typeid = $model->typeid;
+//							$huinonggrantModel->lease_id = $value['lease_id'];
+//							$huinonggrantModel->money = $model->subsidiesarea * 0.01 * $value['area'] * $model->subsidiesmoney * ($bfb['lessee'] / 100);
+//							$huinonggrantModel->area = $value['area'];
+//							$huinonggrantModel->state = 0;
+//							$huinonggrantModel->issubmit = 0;
+//							$huinonggrantModel->subsidyobject = Lease::find()->where(['id'=>$value['lease_id']])->one()['lessee'];
+//							$huinonggrantModel->proportion = $bfb['lessee'].'%';
+//							$huinonggrantModel->year = $model->year;
+//							$huinonggrantModel->save();
+//							Logs::writeLogs('建立所有符合条件用户数据', $huinonggrantModel);
+//						}
+//					}
+//				}
+//			}
+//			exit;
+			Logs::writeLogs('更新惠农政策',$model);
+			return $this->redirect(['huinongindex']);
+		} else {
+			return $this->render('huinongcreate', [
+				'model' => $model,
+			]);
+		}
     }
 
     /**
@@ -439,8 +645,10 @@ class HuinongController extends Controller
      */
     public function actionHuinongdelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id);
+		Huinonggrant::deleteAll(['huinong_id'=>$id]);
+		$model->delete();
+		Logs::writeLogs('删除惠农政策',$model);
         return $this->redirect(['huinongindex']);
     }
 

@@ -85,16 +85,23 @@ class yieldsSearch extends Yields
     }
     public function searchIndex($params)
     {
-//     	var_dump($params);
     	$query = Yields::find();
     
     	$dataProvider = new ActiveDataProvider([
     			'query' => $query,
     	]);
-    	if($params['yieldsSearch']['management_area'] == 0)
-    		$this->management_area = NULL;
-    	else
-    		$this->management_area = $params['yieldsSearch']['management_area'];
+    	if(isset($params['yieldsSearch']['management_area'])) {
+	    	if($params['yieldsSearch']['management_area'] == 0)
+	    		$this->management_area = NULL;
+	    	else
+	    		$this->management_area = $params['yieldsSearch']['management_area'];
+		} else {
+			$management_area = Farms::getManagementArea()['id'];
+			if(count($management_area) > 1)
+				$this->management_area = NULL;
+			else 
+				$this->management_area = $management_area;
+		}
     	$farmid = [];
     	if((isset($params['yieldsSearch']['farms_id']) and $params['yieldsSearch']['farms_id'] !== '') or (isset($params['yieldsSearch']['farmer_id']) and $params['yieldsSearch']['farmer_id'] !== '')) {
 	    	$farm = Farms::find();

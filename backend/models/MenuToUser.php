@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-
+use app\models\User;
 /**
  * This is the model class for table "{{%menu_to_user}}".
  *
@@ -27,7 +27,7 @@ class MenuToUser extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['role_id','menulist','plate','businessmenu'], 'string', 'max' => 500]
+            [['role_id','menulist','plate','businessmenu','searchmenu','auditinguser'], 'string', 'max' => 500]
         ];
     }
 
@@ -41,12 +41,62 @@ class MenuToUser extends \yii\db\ActiveRecord
             'role_id' => '角色ID',
             'menulist' => '所属导航',
         	'plate' => '八大板块',
-        	'businessmenu' => '业务菜单'
+        	'businessmenu' => '业务菜单',
+        	'searchmenu' => '综合查询',
+			'auditinguser' => '审核权限',
         ];
     }
     
     public function getUser()
     {
     	return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+	public static function getAuditingList()
+	{
+		$result = [];
+		$aud = Auditprocess::find()->all();
+		foreach ($aud as $item) {
+			$result[$item['id']] = $item['projectname'];
+		}
+		return $result;
+	}
+
+    public static function getSearchList()
+    {
+    	$class = [
+    			'farms'=>'农场法人',
+    			'insurance'=>'保险业务',
+    			'plantingstructure'=>'种植作物',
+    			'projectapplication'=>'项目申报',
+    			'yields'=>'产量信息',
+    			'sales'=>'销量信息',
+    			'huinonggrant'=>'惠农政策',
+    			'breedinfo'=>'养殖信息',
+    			'prevention'=>'防疫情况',
+    			'fireprevention'=>'防火情况',
+    			'loan'=>'贷款情况',
+    			'collection'=>'缴费情况',
+    			'disaster'=>'灾害情况' ,
+				'machineapply'=>'农机补贴'
+    	];
+    	return $class;
+    }
+    
+    public static function getSearchOne($id)
+    {
+    	$class = self::getSearchList();
+    	if($id)
+    		return $class[$id];
+    	else 
+    		return '';
+    }
+    
+    public static function getUserSearch()
+    {
+    	$useritem = User::getItemname();
+    	$searchMenuStr = self::find()->where(['role_id'=>$useritem])->one()['searchmenu'];
+    	$searchMenuArray = explode(',', $searchMenuStr);
+    	return $searchMenuArray;
     }
 }

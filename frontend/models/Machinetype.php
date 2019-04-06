@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%Machinetype}}".
@@ -20,7 +21,7 @@ class Machinetype extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%Machinetype}}';
+        return '{{%machinetype}}';
     }
 
     /**
@@ -97,8 +98,41 @@ class Machinetype extends \yii\db\ActiveRecord
 	    	$two = $machinetype2['typename'];
 	    	$machinetype1 = self::find()->where(['id'=>$machinetype2->father_id])->one();
 	    	$one = $machinetype1['typename'];
+//			var_dump($two);
+//			var_dump($one);exit;
 	    	return [$one,$two,$three];
     	} else 
     		return ['','',''];
     }
+
+	public static function getApplyType()
+	{
+		$types = [];
+		$applys = Machineapply::find()->where(['year'=>User::getYear(),'scanfinished'=>1,'state'=>1])->all();
+		foreach ($applys as $apply) {
+			$machinetype = Machinetype::findOne($apply['machinetype_id']);
+			$father = Machinetype::findOne($machinetype['father_id']);
+			$types[$apply['machinetype_id']] = $father['typename'];
+		}
+//		var_dump($types);exit;
+		return array_unique($types);
+	}
+
+	public static function getBigclass()
+	{
+		$data = Machinetype::find()->where(['father_id'=>0])->all();
+		return ArrayHelper::map($data,'id','typename');
+	}
+
+	public static function getSmallclass($bigclass)
+	{
+		$data = Machinetype::find()->where(['father_id'=>$bigclass])->all();
+		return ArrayHelper::map($data,'id','typename');
+	}
+
+	public static function getMachinetype($smallclass)
+	{
+		$data = Machinetype::find()->where(['father_id'=>$smallclass])->all();
+		return ArrayHelper::map($data,'id','typename');
+	}
 }

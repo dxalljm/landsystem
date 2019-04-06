@@ -13,12 +13,9 @@ use yii\helpers\Url;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>
-                    </h3>
-                </div>
+                    <h3>&nbsp;&nbsp;&nbsp;&nbsp;<?= $this->title ?></h3></div>
                 <div class="box-body">
-                <div id="remainSeconds" style="display:none">5</div>
+                <div id="remainSeconds" style="display:none">2</div>
          <div id="remainTime" style="font-size:20px;font-weight:800;color:#FF9900"></div>
   <h4>缴费信息已经成功发送到财务科，请到财务科进行交费。</h4>
               </div>
@@ -28,7 +25,7 @@ use yii\helpers\Url;
 </section>
 </div>
 <script type="text/javascript" language="javascript">
-//setTimeout(function(){window.location="<?= Url::to('index.php?r=farms/farmsmenu&farms_id='.$farms_id)?>";},5000);
+//setTimeout(function(){window.location="<?//= Url::to('index.php?r=collection/collectionsend&farms_id='.$farms_id)?>";},5000);
 
 var SysSecond;
 var InterValObj;
@@ -46,7 +43,7 @@ var day = Math.floor((SysSecond / 3600) / 24);
 $("#remainTime").html(second + "秒"+'后跳转页面');
  } else {
 	 window.clearInterval(InterValObj);
-	 window.location="<?= Url::to('index.php?r=farms/farmsmenu&farms_id='.$farms_id)?>";
+	 window.location="<?= Url::to('index.php?r=collection/collectionsend&farms_id='.$farms_id)?>";
  }
  }
 </script>

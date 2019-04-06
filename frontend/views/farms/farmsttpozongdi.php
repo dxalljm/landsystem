@@ -1,13 +1,13 @@
 <?php
-namespace frontend\controllers;
+namespace frontend\controllers;use app\models\User;
 use yii;
 use app\models\Farms;
 use yii\helpers\Html;
-use frontend\helpers\ActiveFormrdiv;
 use frontend\helpers\grid\GridView;
 use app\models\Dispute;
 use app\models\ManagementArea;
-use app\models\Loan;
+use app\models\Help;
+use app\models\Lockedinfo;
 /* @var $this yii\web\View */
 /* @var $model app\models\farms */
 
@@ -20,28 +20,14 @@ use app\models\Loan;
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">
-                        转让</h3>
+                        <?= Help::showHelp3('部分转让(合并)','ttpo-ttpozongdi')?></h3>
                 </div>
                 <div class="box-body">
-                <?php if(!Farms::getLocked($_GET['farms_id'])) {?>
-                  <?php $form = ActiveFormrdiv::begin(); ?>
-	<table class="table table-bordered table-hover">
-	  <tr>
-    		<td align="center" valign="middle">农场查询</td>
-    		<td align="center" valign="middle"><?= html::textInput('search','',['class'=>'form-control']) ?></td>
-			<td align="center" valign="middle"><?= Html::submitButton('查询', ['class' => 'btn btn-primary']) ?></td>
-    	</tr>
-    	<tr>
-    		<td colspan="3" align="center" valign="middle">注：被转让法人如果是已经存在，可以在查询框中输入法人或农场名称的简写拼音或中文进行查询。</td>
-    	</tr>
+                <?php //if(!Farms::getLocked($_GET['farms_id'])) {?>
 
-  </table>
-<?php ActiveFormrdiv::end(); ?>
-<?php if(!empty($dataProvider)) {?>
-    
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        //'filterModel' => $searchModel,
+        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
@@ -50,44 +36,51 @@ use app\models\Loan;
             	'attribute' => 'farmname',
             ],
             'farmername',
-            [
-            	'attribute' => 'management_area',
-            	'value' => function($model) {
-            		return ManagementArea::find()->where(['id'=>$model->management_area])->one()['areaname'];
-            	}
-            ],
+//            [
+//            	'attribute' => 'management_area',
+//            	'value' => function($model) {
+//            		return ManagementArea::find()->where(['id'=>$model->management_area])->one()['areaname'];
+//            	}
+//            ],
+            'contractnumber',
             'contractarea',
-            //'management_area',
+			'cardid',
+            'telephone',
             [
             
             'format'=>'raw',
             //'class' => 'btn btn-primary btn-lg',
             'value' => function($model,$key){
-            	$url = ['farms/farmstozongdi','farms_id'=>$model->id,'oldfarms_id'=>$_GET['farms_id']];
+            	$url = ['farms/farmstozongdi','farms_id'=>$_GET['farms_id'],'newfarms_id'=>$model->id];
             	$disputerows = Dispute::find()->where(['farms_id'=>$model->id])->count();
             	if($disputerows) {
-            		$option = '确认<i class="fa fa-commenting"></i>';
+            		$option = '转让<i class="fa fa-commenting"></i>';
             		$title = '此农场有'.$disputerows.'条纠纷';
             	}
-            	else { 
+            	else {
             		$option = '转让';
             		$title = '确认转让到此农场';
             	}
-            	return Html::a($option,$url, [
-            			'id' => 'farmermenu',
-            			'title' => $title,
-            			'class' => 'btn btn-success',
-            	]);
+                if($model->locked == 1) {
+                    return '<span class="text text-red">冻结中</span>';
+                }
+//                var_dump($model->id);var_dump($_GET['farms_id']);
+                if((int)$_GET['farms_id'] !== $model->id) {
+                    return Html::a($option, $url, [
+                        'id' => 'farmermenu',
+                        'title' => $title,
+                        'class' => 'btn btn-success',
+                    ]);
+                } else {
+                    return '不能转让给自己';
+                }
+
             }
             ],
         ],
     ]); ?>
-    <?php }?>
-    <?= Html::a('新建', ['farmssplit', 'farms_id' => $_GET['farms_id']], ['class' => 'btn btn-primary']) ?>
     <?= Html::a('返回', [Yii::$app->controller->id.'ttpomenu','farms_id'=>$_GET['farms_id']], ['class' => 'btn btn-success'])?>
-    <?php } else {?>
-    	<h4><?= Lockedinfo::find()->where(['farms_id'=>$farms_id])->one()['lockedcontent']?></h4>
-    <?php }?>
+
               </div>
             </div>
         </div>

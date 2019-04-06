@@ -1,5 +1,5 @@
 <?php
-namespace backend\controllers;
+namespace frontend\controllers;use app\models\User;
 
 use frontend\helpers\ActiveFormrdiv;
 

@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-
+use app\models\Plantingstructurecheck;
 /**
  * This is the model class for table "{{%plant}}".
  *
@@ -43,6 +43,17 @@ class Plant extends \yii\db\ActiveRecord
             'father_id' => '类别',
         ];
     }
+
+	public static function otherPlant()
+	{
+
+	}
+
+	public static function zdPlant()
+	{
+
+	}
+
     public static function areaWhere($str = NULL)
     {
     	 
@@ -86,12 +97,28 @@ class Plant extends \yii\db\ActiveRecord
     	//     	var_dump($tj);exit;
     	return $tj;
     }
-    public static function getAllname($totalData)
+
+	public static function getTypename()
+	{
+		$result = [];
+		$plants = Plant::find()->where('father_id>1')->all();
+		foreach ($plants as $value) {
+			$result[] = $value['typename'];
+		}
+//		var_dump($result);
+		return $result;
+	}
+
+    public static function getPlanAllname($year=null)
     {
-//     	var_dump($totalData);exit;
+//     	var_dump($totalData);
+		if(empty($year)) {
+			$year = User::getYear();
+		}
     	$result = [];
-    	
-    	foreach($totalData->getModels() as $value) {
+    	$data = [];
+    	$totalData = Plantingstructure::find()->where(['management_area'=>Farms::getManagementArea()['id'],'year'=>$year])->all();
+    	foreach($totalData as $value) {
 //     		var_dump($value->attributes);
     		$data[] = ['id'=>$value->attributes['plant_id']];
     	}
@@ -110,6 +137,89 @@ class Plant extends \yii\db\ActiveRecord
 //     	Yii::$app->cache->set($cache, $result, 86400);
     	return $result;
     }
+
+	public static function getAllname()
+	{
+//     	var_dump($totalData);
+		$result = [];
+		$data = [];
+		$totalData = Plantingstructure::find()->where(['management_area'=>Farms::getManagementArea()['id'],'year'=>User::getYear()])->all();
+		foreach($totalData as $value) {
+//     		var_dump($value->attributes);
+			$data[] = ['id'=>$value->attributes['plant_id']];
+		}
+		if($data) {
+			$newdata = Farms::unique_arr($data);
+			foreach($newdata as $value) {
+				$allid[] = $value['id'];
+				//     		var_dump($value);exit;
+// 	    		$result[$value['id']] = Plant::find()->where(['id'=>$value['id']])->one()['typename'];
+			}
+			$plants = Plant::find()->where(['id'=>$allid])->all();
+			foreach ($plants as $value) {
+				$result[$value->id] = $value->typename;
+			}
+		}
+//     	Yii::$app->cache->set($cache, $result, 86400);
+		return $result;
+	}
+
+
+	public static function getCheckAllname($year=null)
+	{
+//     	var_dump($totalData);
+		if(empty($year)) {
+			$year = User::getYear();
+		}
+		$result = [];
+		$data = [];
+		$totalData = Plantingstructurecheck::find()->where(['management_area'=>Farms::getManagementArea()['id'],'year'=>User::getYear()])->all();
+//		$totalData = Plantingstructurecheck::find()->where(['management_area'=>Farms::getManagementArea()['id'],'year'=>$year])->all();
+		foreach($totalData as $value) {
+//     		var_dump($value->attributes);
+			$data[] = ['id'=>$value->attributes['plant_id']];
+		}
+		if($data) {
+			$newdata = Farms::unique_arr($data);
+			foreach($newdata as $value) {
+				$allid[] = $value['id'];
+				//     		var_dump($value);exit;
+// 	    		$result[$value['id']] = Plant::find()->where(['id'=>$value['id']])->one()['typename'];
+			}
+			$plants = Plant::find()->where(['id'=>$allid])->all();
+			foreach ($plants as $value) {
+				$result[$value->id] = $value->typename;
+			}
+		}
+//     	Yii::$app->cache->set($cache, $result, 86400);
+		return $result;
+	}
+
+	public static function getSalesAllname($year)
+	{
+//     	var_dump($totalData);
+		$result = [];
+		$data = [];
+		$totalData = Sales::find()->where(['management_area'=>Farms::getManagementArea()['id'],'year'=>$year])->all();
+		foreach($totalData as $value) {
+//     		var_dump($value->attributes);
+			$data[] = ['id'=>$value->attributes['plant_id']];
+		}
+		if($data) {
+			$newdata = Farms::unique_arr($data);
+			foreach($newdata as $value) {
+				$allid[] = $value['id'];
+				//     		var_dump($value);exit;
+// 	    		$result[$value['id']] = Plant::find()->where(['id'=>$value['id']])->one()['typename'];
+			}
+			$plants = Plant::find()->where(['id'=>$allid])->all();
+			foreach ($plants as $value) {
+				$result[$value->id] = $value->typename;
+			}
+		}
+//     	Yii::$app->cache->set($cache, $result, 86400);
+		return $result;
+	}
     
     public static function getNameOne($totalData,$id)
     {

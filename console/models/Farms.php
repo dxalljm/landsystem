@@ -9,6 +9,8 @@ use console\models\ManagementArea;
 use console\models\User;
 use yii\helpers\Url;
 use yii\helpers\Html;
+use PhpOffice\PhpWord\Writer\Word2007\Part\Theme;
+use console\models\Theyear;
 
 /**
  * This is the model class for table "{{%farms}}".
@@ -447,26 +449,51 @@ public function rules() {
     	$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
     	$all = Farms::find ()->sum ('contractarea');
     	foreach (self::getUserManagementArea($id) as $value) {
-
-			$area = ( float ) Farms::find ()->where ( [
-    		  		'management_area' => $value,
-					'state'=>1,
-    		 ] )->sum ( 'contractarea' );
-			
-    		$areas[] = (float)sprintf("%.2f", $area);
-    		$percent[] = sprintf("%.2f", $area/$all*100);
-    		$i++;
+			if(date('Y') == User::getYear($id)) {
+				$area = ( float ) Farms::find ()->where ( [
+						'management_area' => $value,
+// 											'state'=>1,
+				] )->andFilterWhere(['between', 'state', 1,5])->sum ( 'contractarea' );
+				
+				$areas[] = (float)sprintf("%.2f", $area);
+				$percent[] = sprintf("%.2f", $area/$all*100);
+				$i++;
+			} else {
+			    $query = self::getLandCondition($id);
+				$area = $query->andFilterWhere(['management_area' => $value])->sum ( 'contractarea' );
+				
+	    		$areas[] = (float)sprintf("%.2f", $area);
+	    		$percent[] = sprintf("%.2f", $area/$all*100);
+	    		$i++;
+			}
     	}
-    	
-    	$all = Farms::find ()->count ();
-    	foreach (self::getUserManagementArea($id) as $value) {
-    		$row = ( float ) Farms::find ()->where ( [
-    				'management_area' => $value,
-    				'state' => 1,
+    	if(date('Y') == User::getYear($id)) {
+    		$all = Farms::find ()->where ( [
+    							'state'=>[1,2,3,4,5],
     		] )->count ();
-    	
-    		$rows[] = $row;
-    		$rowpercent[] = sprintf("%.2f", $row/$all*100);
+    	} else {
+    		$query = self::getLandCondition($id);
+    		$query->andFilterWhere(['management_area' => $value])->count();
+    	}
+    	foreach (self::getUserManagementArea($id) as $value) {
+    		if(date('Y') == User::getYear($id)) {
+    			$row = ( float ) Farms::find ()->where ( [
+    					'management_area' => $value,
+//     					    				'state' => 1,
+    			] )->andFilterWhere(['between', 'state', 1,5])->count ();
+    			
+    			$rows[] = $row;
+    			$rowpercent[] = sprintf("%.2f", $row/$all*100);
+    		} else {
+    		    $query = self::getLandCondition($id);
+	    		$row = ( float ) $query->andFilterWhere( [
+	    				'management_area' => $value,
+	//     				'state' => 1,
+	    		] )->count ();
+	    	
+	    		$rows[] = $row;
+	    		$rowpercent[] = sprintf("%.2f", $row/$all*100);
+    		}
     	}
 //     	var_dump($areas);
     	//$allvalue = $all - $sum;
@@ -510,24 +537,54 @@ public function rules() {
 //     	Yii::$app->cache->set ( $cacheKey, $jsonData, 1 );
     	return $jsonData;
     }
-    
+    public static function getLandCondition($userid)
+    {
+        $query = Farms::find()->orderBy('farmerpinyin asc');
+        if(date('Y') == User::getYear($userid)) {
+
+            $query->andFilterWhere(['between', 'state', 1, 5]);
+        } else {
+            //创建日期在所选年度里
+
+            $query->where([
+                'and',
+                ['between', 'state', 1, 5],
+                ['between','create_at',strtotime('2015-01-01 00:00:01'),Theyear::getYeartime($userid)[1]],
+            ]);
+        }
+        return $query;
+
+    }
     public static function totalNum($userid)
     {
     	$whereArray = self::getUserManagementArea($userid);
-    	return Farms::find()->where(['management_area'=>$whereArray,'state'=>1])->count().'户';
+    	if(date('Y') == User::getYear($userid)) {
+    		return Farms::find()->where(['management_area'=>$whereArray])->andFilterWhere(['between', 'state', 1,5])->count().'户';
+    	} else {
+    	    $query = self::getLandCondition($userid);
+            return $query->count().'户';
+        }
+
     }
     public static function totalArea($userid)
     {
     	$whereArray = self::getUserManagementArea($userid);
-    	$farms = Farms::find()->where(['management_area'=>$whereArray,'state'=>1])->all();
-    	$measue = 0.0;
-    	$notclear = 0.0;
-    	foreach ($farms as $farm) {
-    		$measue += $farm['contractarea'];
-    		if($farm['contractarea'] < self::getNowContractnumberArea($farm['id']))
-    			$notclear += $farm['notclear'];
-    	}
-    	$area = $measue + $notclear;
+//     	var_dump($whereArray);
+    	if(date('Y') == User::getYear($userid)) {
+    		$area = Farms::find()->where(['management_area'=>$whereArray])->andFilterWhere(['between', 'state', 1,5])->sum('contractarea');
+    	} else {
+            $query = self::getLandCondition($userid);
+            $area = $query->sum('contractarea');
+        }
+//    		$farms = Farms::find()->where(['management_area'=>$whereArray])->andFilterWhere(['between','create_at',Theyear::getYeartime($userid)[0],Theyear::getYeartime($userid)[1]])->all();
+//    	$measue = 0.0;
+//    	$notclear = 0.0;
+//    	foreach ($farms as $farm) {
+//    		$measue += $farm['contractarea'];
+//    		if($farm['contractarea'] < self::getNowContractnumberArea($farm['id']))
+//    			$notclear += $farm['notclear'];
+//    	}
+//    	$area = $measue + $notclear;
     	return sprintf("%.2f",$area).'亩';
     }
     

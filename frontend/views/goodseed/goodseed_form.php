@@ -16,7 +16,7 @@ use yii\helpers\ArrayHelper;
 <table class="table table-bordered table-hover">
 		<tr>
 <td width=15% align='right'>种植结构大类</td><?php if(isset($_GET['father_id'])) $fathervalue = $_GET['father_id']; else $fathervalue = 1;?>
-<td align='left'><?= html::dropDownList('plant_father',$fathervalue,ArrayHelper::map(Plant::find()->where(['father_id'=>1])->all(), 'id', 'typename'),['id'=>'plantfather','class'=>'form-control']) ?></td>
+<td align='left'><?= html::dropDownList('plant_father',$fathervalue,ArrayHelper::map(Plant::find()->where(['father_id'=>1])->all(), 'id', 'typename'),['prompt'=>'请选择...','id'=>'plantfather','class'=>'form-control']) ?></td>
 </tr>
 <tr>
 <td width=15% align='right'>种植结构</td><?php if(isset($_GET['father_id'])) {if($_GET['father_id'] == 1) $sonvalue = 0; else $sonvalue = $_GET['father_id'];} else {$sonvalue = 0;}?>

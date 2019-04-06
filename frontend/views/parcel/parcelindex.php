@@ -1,6 +1,6 @@
 <?php
-namespace backend\controllers;
-use app\models\tables;
+namespace frontend\controllers;use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
 use yii\helpers\Url;
@@ -18,8 +18,8 @@ $data = arraySearch::find($totalData)->search();
 ?>
 <section class="content-header">
   <h1>
-       <?= Html::a('添加', ['parcelcreate'], ['class' => 'btn btn-success']) ?>
-       <?= Html::a('XLS导入', ['parcelxls'], ['class' => 'btn btn-success']) ?>
+       <?php //echo Html::a('添加', ['parcelcreate'], ['class' => 'btn btn-success']) ?>
+       <?php //echo Html::a('XLS导入', ['parcelxls'], ['class' => 'btn btn-success']) ?>
   </h1>
   <ol class="breadcrumb">
 
@@ -37,16 +37,13 @@ $data = arraySearch::find($totalData)->search();
     </li>
   </ol>
 </section>
-
+<?php $arossareaSum = $data->sum('grossarea');$netareaSum = $data->sum('netarea');$chaSum = $arossareaSum - $netareaSum;?>
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>
-                    </h3>
-                </div>
+                    <h3>&nbsp;&nbsp;&nbsp;&nbsp;<?= $this->title ?><font color="red">(<?= User::getYear()?>年度)</font></h3></div>
                 <div class="box-body">
                     <?=
                         GridView::widget([
@@ -57,7 +54,9 @@ $data = arraySearch::find($totalData)->search();
 						        <td align="center"><strong>合计</strong></td>
 						        <td><strong></strong></td>
 						        <td><strong></strong></td>
+								
 								<td><strong></strong></td>
+								<td><strong>'.$netareaSum.'</strong></td>
 						        <td><strong>'.$data->count('farms_id',false).'块</strong></td>
 						        </tr>',
                             'columns' => [
@@ -65,7 +64,20 @@ $data = arraySearch::find($totalData)->search();
                                 'unifiedserialnumber',
                                 'agrotype',
                                 'stonecontent',
-                                'grossarea',
+//                                 'netarea',
+                                'figurenumber',
+                                [
+                                	'format'=>'raw',
+                                	'attribute' => 'netarea',
+                                	'value' => function ($model) {
+                                		if($model->grossarea == $model->netarea) {
+                                			return $model->netarea;
+                                		} else {
+                                			$cha = $model->grossarea - $model->netarea;
+                                			return "<font color='red'>".$model->netarea."(".$cha.")</font>";
+                                		}
+                                }
+                                ],
                                 [
                                 	'attribute' => 'farms_id',
                                 	'value' => function ($model) {

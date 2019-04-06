@@ -3,7 +3,7 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\mainmenu;
+use app\models\Mainmenu;
 use backend\models\mainmenuSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -72,8 +72,15 @@ class MainmenuController extends Controller
     {
         $model = new mainmenu();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['mainmenuview', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+//            var_dump($model->level);
+            if(is_array($model->level))
+                $model->level = implode(',',$model->level);
+//            var_dump($model->level);
+            if($model->save()) {
+//                var_dump($model->getErrors());exit;
+                return $this->redirect(['mainmenuview', 'id' => $model->id]);
+            }
         } else {
             return $this->render('mainmenucreate', [
                 'model' => $model,
@@ -91,8 +98,15 @@ class MainmenuController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['mainmenuview', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+//            var_dump($model->level);
+            if(is_array($model->level))
+                $model->level = implode(',',$model->level);
+//            var_dump($model->level);
+            if($model->save()) {
+//                var_dump($model->getErrors());exit;
+                return $this->redirect(['mainmenuview', 'id' => $model->id]);
+            }
         } else {
             return $this->render('mainmenuupdate', [
                 'model' => $model,

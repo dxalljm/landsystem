@@ -35,19 +35,22 @@ use app\models\Collection;
     <?= $form->field($model, 'price')->textInput() ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary','data-toggle'=>"modal", 
-   'data-target'=>"#plantprice-modal",'onclick'=> 'createModel("plantprice/plantpricemodel",'.$model->id.')',]) ?>
+        <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['id'=>'showWait','class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
 
 </div>
-<?php \yii\bootstrap\Modal::begin([
-    'id' => 'plantprice-modal',
-	'size'=>'modal-lg',
+<div id="dialogWait" title="正在生成数据...">
+    <?= Html::img('images/wait.gif')?>
+</div>
 
-]); 
-
-?>
-
-<?php \yii\bootstrap\Modal::end(); ?>
+<script>
+    $( "#dialogWait" ).dialog({
+        autoOpen: false,
+        width: 300,
+    });
+    $('#showWait').click(function(){
+        $( "#dialogWait" ).dialog( "open" );
+    });
+</script>

@@ -52,10 +52,15 @@ use app\models\User;
         ]]) ?></td>
 </tr>
 </table>
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? '提交' : '提交', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
-
+    <?php
+    if(!\app\models\Tempauditing::find()->where(['user_id'=>Yii::$app->user->id,'state'=>1])->count()) {
+        ?>
+        <div class="form-group">
+            <?= Html::submitButton($model->isNewRecord ? '提交' : '提交', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        </div>
+        <?php
+    }
+    ?>
     <?php ActiveFormrdiv::end(); ?>
 
 </div>

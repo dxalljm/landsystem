@@ -19,7 +19,7 @@ class Inputproductbrandmodel extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%Inputproductbrandmodel}}';
+        return '{{%inputproductbrandmodel}}';
     }
 
     /**
@@ -50,7 +50,7 @@ class Inputproductbrandmodel extends \yii\db\ActiveRecord
     public static function getBrandmodel()
     {
     	$result = '';
-    	$brandmodel = Inputproductbrandmodel::find()->all();
+    	$brandmodel = self::find()->all();
     	foreach ($brandmodel as $value) {
     		$result[] = [
     			'value' => $value['brandpinyin'],

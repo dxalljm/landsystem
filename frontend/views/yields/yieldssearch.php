@@ -1,17 +1,17 @@
 <?php
 
-use app\models\tables;
+use app\models\Tables;
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
 use app\models\Farms;
-use app\models\Plantingstructure;
+use app\models\Yieldbase;
 use app\models\Plant;
-use app\models\Lease;
+use app\models\User;
 use yii\helpers\ArrayHelper;
 use app\models\ManagementArea;
 use dosamigos\datetimepicker\DateTimePicker;
 use yii\helpers\Url;
-use frontend\helpers\ActiveFormrdiv;
+use frontend\helpers\MoneyFormat;
 use app\models\Search;
 use frontend\helpers\arraySearch;
 /* @var $this yii\web\View */
@@ -27,13 +27,12 @@ use frontend\helpers\arraySearch;
 	$totalData->pagination = ['pagesize'=>0];
 	$data = arraySearch::find($totalData)->search();
 // 	$data->getName('Plant', 'typename', 'plant_id')->getEchartsData('area',10000);
-	$planter = $data->count('farmer_id');
-	$leaseer = $data->count('lease_id');
-	$plantFarmer = $planter - $leaseer;
+$arrclass = explode('\\',$dataProvider->query->modelClass);
+//var_dump($data->getName('Goodseed', 'typename', 'goodseed_id')->getList());
 ?>
 
 <div class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-pills nav-pills-warning">
               <li class="active"><a href="#activity" data-toggle="tab" aria-expanded="true">数据表</a></li>
               <li class=""><a href="#plantingstructure" data-toggle="tab" aria-expanded="false">种植结构图表</a></li>
               <?php if($data->getName('Goodseed', 'typename', 'goodseed_id')->getList()) {?>
@@ -45,28 +44,105 @@ use frontend\helpers\arraySearch;
                <?= GridView::widget([
 			        'dataProvider' => $dataProvider,
 			        'filterModel' => $searchModel,
-			        'total' => '<tr>
-						        <td></td>
-						        <td align="center"><strong>合计（'.$data->count('farms_id').'户）</strong></td>
-						        <td><strong>种植者'.$planter.'个</strong></td>
-						        <td><strong>法人种植'.$plantFarmer.'个</strong></td>
-						        <td><strong>'.$leaseer.'个</strong></td>
-						        <td><strong>'.$data->count('plant_id').'种</strong></td>
-						        <td><strong>'.$data->count('goodseed_id').'种</strong></td>
-						        <td><strong>'.$data->sum('area').'亩</strong></td>
-   		<td><strong></strong></td>
-		<td><strong>'.$data->mulyieldSum('area', 'plant_id').'斤</strong></td>
-						        </tr>',
-			        'columns' => Search::getColumns(['management_area','farms_id','farmer_id','lease_id','plant_id','goodseed_id','area','single','allsingle'],$totalData),
-			    ]); ?>
+                   'total' => '<tr height="40">
+                                        <td></td>
+                                        <td align="center" id="t0"><strong><div class="shclDefault" style="width: 25px; height: 25px;"></div></strong></td>
+                                        <td align="center" id="t1"><strong><div class="shclDefault" style="width: 25px; height: 25px;"></div></strong></td>
+                                        <td align="center" id="t2"><strong><div class="shclDefault" style="width: 25px; height: 25px;"></div></strong></td>
+                                        <td align="center" id="t3"><strong><div class="shclDefault" style="width: 25px; height: 25px;"></div></strong></td>
+                                        <td align="center" id="t4"><strong><div class="shclDefault" style="width: 25px; height: 25px;"></div></strong></td>
+                                        <td align="center" id="t5"><strong></strong></td>
+                                        <td align="center" id="t6"><strong><div class="shclDefault" style="width: 25px; height: 25px;"></div></strong></td>
+                                        <td></td>
+                                        <td align="center" id="t7"><strong><div class="shclDefault" style="width: 25px; height: 25px;"></div></strong></td>
+                                    </tr>',
+                   'columns' => [
+                       ['class' => 'yii\grid\SerialColumn'],
+                       [
+                           'label'=>'管理区',
+                           'attribute'=>'management_area',
+                           'headerOptions' => ['width' => '130'],
+                           'value'=> function($model) {
+// 				            	var_dump($model);exit;
+                               return ManagementArea::getAreanameOne($model->management_area);
+                           },
+                           'filter' => ManagementArea::getAreaname(),
+                       ],
+                       [
+                           'label' => '农场名称',
+                           'attribute' => 'farms_id',
+                           'options' =>['width'=>120],
+                           'value' => function ($model) {
+
+                               return Farms::find ()->where ( [
+                                   'id' => $model->farms_id
+                               ] )->one ()['farmname'];
+
+                           }
+                       ],
+                       [
+                           'label' => '法人名称',
+                           'attribute' => 'farmer_id',
+                           'options' =>['width'=>150],
+                           'value' => function ($model) {
+
+                               return Farms::find ()->where ( [
+                                   'id' => $model->farms_id
+                               ] )->one ()['farmername'];
+
+                           }
+                       ],
+                       [
+                           'label' => '承租人',
+                           'attribute' => 'lease_id',
+                           'value' => function($model) {
+                               return \app\models\Lease::find()->where(['id'=>$model->lease_id])->one()['lessee'];
+                           }
+                       ],
+                       [
+                           'label' => '种植结构',
+                           'attribute' => 'plant_id',
+                           'value' => function($model) {
+                               return \app\models\Plant::find()->where(['id'=>$model->plant_id])->one()['typename'];
+                           },
+                           'filter' => \app\models\Plantingstructurecheck::getPlantname($totalData)
+                       ],
+                       [
+                           'label' => '良种',
+                           'attribute' => 'goodseed_id',
+                           'value' => function($model) {
+                               return \app\models\Goodseed::find()->where(['id'=>$model->goodseed_id])->one()['typename'];
+                           },
+                           'filter' => \app\models\Plantingstructurecheck::getAllname($totalData)
+                       ],
+                       'area',
+                       [
+                           'label' => '单产（每亩）',
+                           'options' =>['width'=>150],
+                           'value' => function ($model) {
+                               return Yieldbase::find()->where(['plant_id'=>$model->plant_id,'year'=>$model->year])->one()['yield'] . '斤';
+                           }
+                       ],
+                       [
+                           'label' => '总产',
+                           'options' =>['width'=>200],
+                           'value' => function ($model) {
+                               return MoneyFormat::num_format($model->area * Yieldbase::find()->where(['plant_id'=>$model->plant_id,'year'=>$model->year])->one()['yield']) . '斤';
+                           }
+                       ],
+
+                   ],
+               ]);  ?>
               </div>
               <!-- /.tab-pane -->
               <div class='tab-pane' id="plantingstructure">
               <div id="plantingstructuredata" style="width:1000px; height: 600px; margin: 0 auto"></div>
-				<?php $data->getName('Plant', 'typename', 'plant_id')->typenameList();?>
+				<?php
+                $year = \app\models\Theyear::getYearArray($_GET['begindate'],$_GET['enddate']);
+                var_dump($data->getName('Plant', 'typename', 'plant_id')->showAllShadow('mulyieldSum',['area', 'plant_id'],1,$year));?>
               </div>
               <script type="text/javascript">
-				showAllShadow('plantingstructuredata',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Plant', 'typename', 'plant_id')->typenameList())?>,<?= $data->getName('Plant', 'typename', 'plant_id')->showAllShadow('mulyieldSum',['area', 'plant_id']);?>,'亩');
+				showAllShadow('plantingstructuredata',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Plant', 'typename', 'plant_id')->typenameList())?>,<?= $data->getName('Plant', 'typename', 'plant_id')->showAllShadow('mulyieldSum',['area', 'plant_id'],1,$year);?>,'斤');
 			</script>
               <!-- /.tab-pane -->
 
@@ -76,7 +152,7 @@ use frontend\helpers\arraySearch;
               <?php //var_dump(Plantingstructure::getGoodseedname($params));?>
             </div>
             <script type="text/javascript">
-				showAllShadow('goodseedinfo',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Goodseed', 'typename', 'goodseed_id')->typenameList())?>,<?= $data->getName('Goodseed', 'typename', 'goodseed_id')->showAllShadow('mulyieldSum',['area', 'plant_id',]);?>,'亩');
+				showAllShadow('goodseedinfo',<?= json_encode(Farms::getManagementArea('small')['areaname'])?>,<?= json_encode($data->getName('Goodseed', 'typename', 'goodseed_id')->typenameList())?>,<?= $data->getName('Goodseed', 'typename', 'goodseed_id')->showAllShadow('mulyieldSum',['area', 'plant_id'],1,$year);?>,'斤');
 		</script>
             <?php }?>
               <!-- /.tab-pane -->
@@ -89,5 +165,33 @@ use frontend\helpers\arraySearch;
     </div>
 </section>
 </div>
-
+<script>
+    $('.shclDefault').shCircleLoader({color: "red"});
+    $(document).ready(function () {
+        $.getJSON('index.php?r=search/search', {modelClass: '<?= $arrclass[2]?>',where:'<?= json_encode($dataProvider->query->where)?>',command:'count-farms_id'}, function (data) {
+            $('#t0').html('合计('+ data + ')户');
+        });
+        $.getJSON('index.php?r=search/search', {modelClass: '<?= $arrclass[2]?>',where:'<?= json_encode($dataProvider->query->where)?>',command:'count-farmer_id'}, function (data) {
+            $('#t1').html('种植者'+ data + '人');
+        });
+        $.getJSON('index.php?r=search/search', {modelClass: '<?= $arrclass[2]?>',where:'<?= json_encode($dataProvider->query->where)?>',command:'count-farmer_id',andwhere:'<?= json_encode(['lease_id'=>0])?>'}, function (data) {
+            $('#t2').html('法人种植'+data + '人');
+        });
+        $.getJSON('index.php?r=search/search', {modelClass: '<?= $arrclass[2]?>',where:'<?= json_encode($dataProvider->query->where)?>',command:'count-lease_id'}, function (data) {
+            $('#t3').html(data + '人');
+        });
+        $.getJSON('index.php?r=search/search', {modelClass: '<?= $arrclass[2]?>',where:'<?= json_encode($dataProvider->query->where)?>',command:'count-plant_id'}, function (data) {
+            $('#t4').html(data + '种');
+        });
+//        $.getJSON('index.php?r=search/search', {modelClass: '<?//= $arrclass[2]?>//',where:'<?//= json_encode($dataProvider->query->where)?>//',command:'count-goodseed_id'}, function (data) {
+//            $('#t5').html(data + '种');
+//        });
+        $.getJSON('index.php?r=search/search', {modelClass: '<?= $arrclass[2]?>',where:'<?= json_encode($dataProvider->query->where)?>',command:'sum-area'}, function (data) {
+            $('#t6').html(data + '亩');
+        });
+        $.getJSON('index.php?r=search/search', {modelClass: '<?= $arrclass[2]?>',where:'<?= json_encode($dataProvider->query->where)?>',command:'mulyieldSum-area-plant_id'}, function (data) {
+            $('#t7').html(data + '斤');
+        });
+    });
+</script>
 		

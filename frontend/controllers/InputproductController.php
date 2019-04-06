@@ -27,7 +27,14 @@ class InputproductController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -45,7 +52,7 @@ class InputproductController extends Controller
     {
         $searchModel = new inputproductSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-		Logs::writeLog('投入器管理');
+		Logs::writeLog('投入品管理');
         return $this->render('inputproductindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -59,9 +66,10 @@ class InputproductController extends Controller
      */
     public function actionInputproductview($id)
     {
-    	Logs::writeLog('查看投入品信息',$id);
+        $model = $this->findModel($id);
+    	Logs::writeLogs('查看投入品信息',$model);
         return $this->render('inputproductview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -72,7 +80,12 @@ class InputproductController extends Controller
     	foreach($inputproduct as $key=>$val){
     		$newData[$key] = $val->attributes;
     	}
-    	echo json_encode(['status'=>1,'inputproductson'=>$newData]);
+        if(empty($newData)) {
+            $status = 0;
+        } else {
+            $status = 1;
+        }
+    	echo json_encode(['status'=>$status,'inputproductson'=>$newData]);
     }
     
     /**
@@ -85,8 +98,7 @@ class InputproductController extends Controller
         $model = new Inputproduct();
 		$brandModel = new Inputproductbrandmodel();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$new = $model->attributes;
-        	Logs::writeLog('创建投入品',$model->id,'',$new);
+        	Logs::writeLogs('创建投入品',$model);
             return $this->redirect(['inputproductview', 'id' => $model->id]);
         } else {
             return $this->render('inputproductcreate', [
@@ -105,10 +117,8 @@ class InputproductController extends Controller
     public function actionInputproductupdate($id)
     {
         $model = $this->findModel($id);
-		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$new = $model->attributes;
-        	Logs::writeLog('更新调入品信息',$id,$old,$new);
+        	Logs::writeLogs('更新调入品信息',$model);
             return $this->redirect(['inputproductview', 'id' => $model->id]);
         } else {
             return $this->render('inputproductupdate', [
@@ -126,8 +136,7 @@ class InputproductController extends Controller
     public function actionInputproductdelete($id)
     {
     	$model = $this->findModel($id);
-    	$old = $model->attributes;
-    	Logs::writeLog('删除投入品',$id,$old);
+    	Logs::writeLogs('删除投入品',$model);
         $model->delete();
 
         return $this->redirect(['inputproductindex']);

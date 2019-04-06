@@ -1,5 +1,5 @@
 <?php
-namespace frontend\controllers;
+namespace frontend\controllers;use app\models\User;
 use Yii;
 use yii\helpers\Html;
 use app\models\Machine;
@@ -74,7 +74,7 @@ use app\models\Farmer;
 			    <td align="center">文化程序</td>
 			    <td align="center"><?php if($farmer) echo $farmer->cultural_degree?></td>
 			    <td align="center">承包面积</td>
-			    <td align="center"><?= $farm->measure?></td>
+			    <td align="center"><?= $farm->contractarea?></td>
 			    </tr>
 			  <tr height="40px">
 			    <td align="center">身份证号码</td>
@@ -92,13 +92,13 @@ use app\models\Farmer;
 			    </tr>
 			  <tr>
 			    <td align="center">农场位置</td>
-			    <td colspan="4" align="left"><br><?= $farm->address?><br><br></td>
+			    <td colspan="4" align="left"><?= $farm->address?></td>
 			    </tr>
 			  <tr>
 			 
 			    <td align="center">宗地</td>
-			    <td colspan="4" align="left"><br><table width="100%" border="0" align="right">
-			    <?php if(!empty($newfarm->zongdi)) $zongdiArray = explode('、', $newfarm->zongdi); else $zongdiArray = [];?>
+			    <td colspan="4" align="left"><table width="100%" border="0" align="right">
+			    <?php if(!empty($farm->zongdi)) $zongdiArray = explode('、', $farm->zongdi); else $zongdiArray = [];?>
 			    <?php for($i = 0;$i<count($zongdiArray);$i++) {
 			    	
 			    	if($i%5 == 0) {
@@ -115,28 +115,28 @@ use app\models\Farmer;
 			    }?></table><br></td>
 			    </tr>
 			  <tr>
-			    <td align="center"  valign="middle"><br>户籍所在地<br><br></td>
-			    <td colspan="4" align="left"><br><?php if($farmer) echo $farmer->domicile?><br><br></td>              
+			    <td align="center"  valign="middle">户籍所在地</td>
+			    <td colspan="4" align="left"><?php if($farmer) echo $farmer->domicile?></td>
 			    </tr>
 			  <tr>
-			    <td align="center"><br>现住地<br><br></td>
-			    <td colspan="4" align="left"  valign="middle"><br><?php if($farmer) echo $farmer->nowlive?><br><br>             
+			    <td align="center">现住地<</td>
+			    <td colspan="4" align="left"  valign="middle"><?php if($farmer) echo $farmer->nowlive?>
 			    </tr>
 			  <tr>
 			    <td colspan="5" align="center"><br>家庭主要成员 <br><br></td>
 			    </tr>
 			    <tr>
 			    <td align="center"><br>关系<br><br></td>
-			    <td align="center"><br>姓名 <br><br> </td>                 
-			    <td colspan="2" align="center"><br>身份证号码<br><br> </td>                    
+			    <td align="center"><br>姓名 <br><br> </td>
+			    <td colspan="2" align="center"><br>身份证号码<br><br> </td>
 			    <td align="center"><br>备注<br><br> </td>
 			    </tr>
 			    <?php if($members) {?>
 			    <?php foreach ($members as $member) {?>
 			  	<tr>
 			  	  <td align="center"><br><?= Farmer::getRelationship($member['relationship'])?><br><br></td>
-			  	  <td align="center"><br><?= $member['membername']?><br><br></td>                        
-			  	  <td colspan="2" align="center"><br><?= $member['cardid']?><br><br></td>                
+			  	  <td align="center"><br><?= $member['membername']?><br><br></td>
+			  	  <td colspan="2" align="center"><br><?= $member['cardid']?><br><br></td>
 			  	  <td align="center"><br><?= $member['remarks']?><br><br></td>
 		  	    </tr>
 			  	<?php }}?>
@@ -154,7 +154,7 @@ use app\models\Farmer;
     <td align="center">备注</td>
   </tr>
   <?php
-	
+
   foreach ($machine as $value) {?>
   <tr>
     <td align="center"><?= $value['machinename']?></td>

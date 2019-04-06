@@ -2,6 +2,11 @@
 
 namespace frontend\controllers;
 
+use app\models\Logs;
+use app\models\User;
+use frontend\models\FixedSearch;
+use frontend\models\MachineoffarmSearch;
+use frontend\models\MachineSearch;
 use Yii;
 use app\models\Projectapplication;
 use frontend\models\projectapplicationSearch;
@@ -29,7 +34,14 @@ class ProjectapplicationController extends Controller
             ],
         ];
     }
-
+	public function beforeAction($action)
+	{
+		if(Yii::$app->user->isGuest) {
+			return $this->redirect(['site/logout']);
+		} else {
+			return true;
+		}
+	}
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -49,7 +61,7 @@ class ProjectapplicationController extends Controller
         $params = Yii::$app->request->queryParams;
         $params['projectapplicationSearch']['farms_id'] = $farms_id;
         $dataProvider = $searchModel->search($params);
-
+		Logs::writeLogs('项目列表');
         return $this->render('projectapplicationindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -74,23 +86,46 @@ class ProjectapplicationController extends Controller
     	$searchModel = new projectapplicationSearch();
     	$params = Yii::$app->request->queryParams;
     	$params ['projectapplicationSearch'] ['state'] = 1;
+		$params ['projectapplicationSearch'] ['year'] = User::getYear();
 		// 管理区域是否是数组
 		if (empty($params['projectapplicationSearch']['management_area'])) {
 			$params ['projectapplicationSearch'] ['management_area'] = $where;
 		}
-		$params['begindate'] = Theyear::getYeartime()[0];
-		$params['enddate'] = Theyear::getYeartime()[1];
+//		$params['begindate'] = Theyear::getYeartime()[0];
+//		$params['enddate'] = Theyear::getYeartime()[1];
 		$dataProvider = $searchModel->search ( $params );
 
 		// 如果选择多个区域, 默认为空
 		if (is_array($searchModel->management_area)) {
 			$searchModel->management_area = null;
 		}
-    
+
+		//固定资产信息列表
+		$fixedSearch = new FixedSearch();
+		$fparams = Yii::$app->request->queryParams;
+		if (empty($fparams['FixedSearch']['management_area'])) {
+			$fparams ['FixedSearch'] ['management_area'] = $where;
+		}
+		$dataFixed = $fixedSearch->search ( $fparams );
+
+		//农机列表
+		$machineSearch = new MachineoffarmSearch();
+		$mparams = Yii::$app->request->queryParams;
+		if (empty($mparams['MachineoffarmSearch']['management_area'])) {
+			$mparams ['MachineoffarmSearch'] ['management_area'] = $where;
+		}
+		$dataMachine = $machineSearch->search ( $mparams );
+    	Logs::writeLogs('首页十大板块-项目申报');
     	return $this->render('projectapplicationinfo', [
     			'searchModel' => $searchModel,
     			'dataProvider' => $dataProvider,
     			'params' => $params,
+				'fixedSearch' => $fixedSearch,
+				'dataFixed' => $dataFixed,
+				'fparams' => $fparams,
+				'dataMachine' => $dataMachine,
+				'machineSearch' => $machineSearch,
+				'mparams' => $mparams,
     	]);
     }
 
@@ -102,7 +137,7 @@ class ProjectapplicationController extends Controller
     	$params['projectapplicationSearch']['management_area'] = $whereArray;
     	$params['projectapplicationSearch']['state'] = 1;
     	$dataProvider = $searchModel->search($params);
-    
+    	Logs::writeLogs('项目申报列表');
     	return $this->render('projectapplicationlist', [
     			'searchModel' => $searchModel,
     			'dataProvider' => $dataProvider,
@@ -115,8 +150,10 @@ class ProjectapplicationController extends Controller
      */
     public function actionProjectapplicationview($id)
     {
+		$model = $this->findModel($id);
+		Logs::writeLogs('查看项目申报',$model);
         return $this->render('projectapplicationview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -131,8 +168,9 @@ class ProjectapplicationController extends Controller
 		$farm = Farms::find()->where(['id'=>$farms_id])->one();
         if ($model->load(Yii::$app->request->post())) {
 //         	var_dump($model);exit;
-        	$reviewprocessID =Reviewprocess::processRun($farms_id);
+        	$reviewprocessID = Reviewprocess::processRun(2,$farms_id);
         	$model->farms_id = $farms_id;
+			$model->year = User::getYear();
 //         	$model->content = Yii::$app->request->post('projectapplication-content');
 //         	$model->projectdata = Yii::$app->request->post('projectapplication-projectdata');
 //         	$model->unit = Yii::$app->request->post('projectapplication-unit');
@@ -142,8 +180,9 @@ class ProjectapplicationController extends Controller
         	$model->update_at = $model->create_at;
         	$model->is_agree = 0;
         	$model->state = 0;
+			$model->farmstate = $farm['state'];
         	$model->save();
-        	
+			Logs::writeLogs('创建项目',$model);
             return $this->redirect(['projectapplicationindex', 'farms_id' => $farms_id]);
         } else {
             return $this->render('projectapplicationcreate', [
@@ -158,6 +197,7 @@ class ProjectapplicationController extends Controller
     	$model = $this->findModel($id);
     	$farm = Farms::find()->where(['id'=>$model->farms_id])->one();
     	$projecttypename = Infrastructuretype::find()->where(['id'=>$model->projecttype])->one()['typename'];
+		Logs::writeLogs('打印项目申请表',$model);
 //     	var_dump($projecttypename);exit;
     	return $this->render('projectapplicationprint', [
     			'model' => $model,
@@ -179,6 +219,7 @@ class ProjectapplicationController extends Controller
         if ($model->load(Yii::$app->request->post())) {
         	$model->update_at = time();
         	$model->save();
+			Logs::writeLogs('更新项目',$model);
             return $this->redirect(['projectapplicationindex', 'farms_id' => $farms_id]);
         } else {
             return $this->render('projectapplicationupdate', [
@@ -195,8 +236,12 @@ class ProjectapplicationController extends Controller
      */
     public function actionProjectapplicationdelete($id,$farms_id)
     {
-        $this->findModel($id)->delete();
-
+		$model = $this->findModel($id);
+		$reviewprocessModel = Reviewprocess::findOne($model->reviewprocess_id);
+        $model->delete();
+		Logs::writeLogs('删除项目',$model);
+		$reviewprocessModel->delete();
+		Logs::writeLogs('删除项目时同时删除流转信息',$reviewprocessModel);
         return $this->redirect(['projectapplicationindex','farms_id'=>$farms_id]);
     }
 
@@ -211,7 +256,7 @@ class ProjectapplicationController extends Controller
     				'tab' => $_GET['tab'],
     				'begindate' => strtotime($_GET['begindate']),
     				'enddate' => strtotime($_GET['enddate']),
-					$class =>['management_area' =>  $_GET['management_area']],
+// 					$class =>['management_area' =>  $_GET['management_area']],
     		]);
     	} 
     	$searchModel = new projectapplicationSearch();
@@ -221,6 +266,7 @@ class ProjectapplicationController extends Controller
 			 $_GET['enddate'] = strtotime($_GET['enddate']);
 
     	$dataProvider = $searchModel->searchIndex ( $_GET );
+		Logs::writeLogs('综合查询-项目');
     	return $this->render('projectapplicationsearch',[
 	    			'searchModel' => $searchModel,
 	    			'dataProvider' => $dataProvider,

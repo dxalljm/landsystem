@@ -1,6 +1,6 @@
 <?php
-namespace backend\controllers;
-use app\models\tables;
+namespace frontend\controllers;use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 
 
@@ -15,16 +15,13 @@ use yii\helpers\Html;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>
-                    </h3>
-                </div>
                 <div class="box-body">
 
     <?= $this->render('createandview_form', [
         'model' => $model,
+        'farmerinfoModel' => $farmerinfoModel,
     	'membermodel' => $membermodel,
-    	'farm' => $farm,
+    	'farmModel' => $farmModel,
     ]) ?>
 	                </div>
             </div>

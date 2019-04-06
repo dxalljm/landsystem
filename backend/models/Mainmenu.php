@@ -28,7 +28,7 @@ public function rules()
     { 
         return [
             [['sort','typename'], 'integer'],
-            [['menuname', 'menuurl'], 'string', 'max' => 500]
+            [['menuname', 'menuurl','dropdown','level','class'], 'string', 'max' => 500]
         ]; 
     } 
 
@@ -42,8 +42,22 @@ public function rules()
             'menuname' => '菜单名称',
             'menuurl' => '菜单地址',
             'sort' => '排序',
-        	'typename' => '菜单类型'
+        	'typename' => '菜单类型',
+            'dropdown' => '下拉菜单标识',
+            'level' => '访问等级',
+            'class' => '可访问类',
         ]; 
-    } 
-
+    }
+    public static function getLevelMenu($level)
+    {
+        $result = [];
+        $menus = Mainmenu::find()->orderBy('sort ASC')->all();
+        foreach ($menus as $menu) {
+            $levelArray = explode(',',$menu['level']);
+            if(in_array($level,$levelArray)) {
+                $result[] = $menu['id'];
+            }
+        }
+        return $result;
+    }
 }

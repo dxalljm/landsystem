@@ -16,10 +16,10 @@ use dosamigos\datetimepicker\DateTimePicker;
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
-    <td colspan="5" align="center"><h3>大兴安岭岭南宜农林地承包费专用票据</h3></td>
+    <td colspan="5" align="center"><h3 style="font-size: 30px">大兴安岭岭南宜农林地承包费专用票据</h3></td>
     </tr>
   <tr>
-    <td width="15%" align="right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;开票日期：</td><?php $model->create_at = date('Y-m-d');?>
+    <td width="15%" align="right"  style="vertical-align: middle">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;开票日期：</td><?php $model->create_at = date('Y-m-d');?>
     <td width="12%"><?= $form->field($model, 'create_at')->textInput()->label(false)->error(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
@@ -35,16 +35,16 @@ use dosamigos\datetimepicker\DateTimePicker;
         ]
 ]);?></td>
     <td width="13%">&nbsp;</td>
-    <td width="24%" align="right">NO:</td><?php $model->nonumber = $nonumber?>
+    <td width="24%" align="right"  style="vertical-align: middle">NO:</td><?php $model->nonumber = $nonumber?>
     <td width="29%"><?= $form->field($model, 'nonumber')->textInput()->label(false)->error(false) ?></td>
   </tr>
 </table>
 <?= $form->field($model, 'amountofmoneys')->hiddenInput()->label(false)->error(false)?>
-<table width="100%" border="1">
+<table width="100%" border="1" class="table table-bordered table-hover">
   <tr>
     <td width="14%" height="31" align="center">&nbsp;收款单位（缴款人）      </td>
-    <td height="31" colspan="5">&nbsp;&nbsp;<?= $farm['farmname'].'('.$farm['farmername'].')&nbsp;&nbsp;&nbsp;&nbsp;合同号：'.$farm['contractnumber']?><?= $form->field($model, 'farmername')->hiddenInput(['readonly'=>true])->label(false)->error(false) ?></td>
-    </tr>
+    <td height="31" colspan="5"><div class="user-block">&nbsp;&nbsp;<?= $farm['farmname'].'('.$farm['farmername'].')&nbsp;&nbsp;&nbsp;&nbsp;合同号：'.$farm['contractnumber']?><span class="pull-right">账页号:<?= $farm['accountnumber']?>&nbsp;&nbsp;</span></div></td>
+    </tr><?= $form->field($model, 'farmername')->hiddenInput(['readonly'=>true])->label(false)->error(false) ?>
   <tr>
     <td height="31" colspan="2" align="center">收费项目</td>
     <td width="13%" align="center">单位</td>
@@ -53,9 +53,9 @@ use dosamigos\datetimepicker\DateTimePicker;
     <td width="21%" align="center">金额</td>
   </tr>
   <tr>
-    <td height="23" colspan="2" align="center" valign="middle">      宜农林地承包费</td>
-    <td align="center" valign="middle">      元/亩<br /></td><?php $model->number = $farm['contractarea'];?>
-    <td align="center" valign="middle"><?= $form->field($model, 'number')->textInput(['readonly'=>true])->label(false)->error(false) ?></td>
+    <td height="23" colspan="2" align="center" valign="middle"><?= $collectionModel->payyear?>年度宜农林地承包费</td>
+    <td align="center" valign="middle">      元/亩<br /></td>
+    <td align="center" valign="middle"><?= $form->field($model, 'measure')->textInput(['readonly'=>true])->label(false)->error(false) ?></td>
     <td align="center" valign="middle"><?= $form->field($model, 'standard')->textInput(['value'=>30,'readonly'=>'readonly'])->label(false)->error(false) ?></td>
     <td align="center" valign="middle"><?= $form->field($model, 'amountofmoney')->textInput(['readonly'=>'readonly'])->label(false)->error(false) ?></td>
   </tr>
@@ -73,7 +73,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td width="60%">收款单位（盖章）大兴安岭林业管理局岭南管委会</td>
-    <td width="13%">收款人：王丽静</td>
+    <td width="13%">收款人：<?= Yii::$app->getUser()->getIdentity()->realname?></td>
     <td width="27%" align="right">（微机专用 手填无效）</td>
   </tr>
 </table>

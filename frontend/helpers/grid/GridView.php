@@ -53,6 +53,7 @@ class GridView extends BaseListView
     const FILTER_POS_BODY = 'body';
 
     public $total;
+
     /**
      * @var string the default data column class if the class name is not explicitly specified when configuring a data column.
      * Defaults to 'yii\grid\DataColumn'.
@@ -73,7 +74,8 @@ class GridView extends BaseListView
      * @var array the HTML attributes for the grid table element.
      * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
-    public $tableOptions = ['class' => 'table table-striped table-bordered'];
+    public $tableOptions = ['class' => 'table table-striped table-brodered'];
+    public $tableOptions2018 = ['class' => 'table'];
     /**
      * @var array the HTML attributes for the container tag of the grid view.
      * The "tag" element specifies the tag name of the container element and defaults to "div".
@@ -353,8 +355,15 @@ class GridView extends BaseListView
             $tableFooter,
             $tableBody,
         ]);
+        switch(Yii::$app->user->identity->template) {
+            case 'default':
+                return Html::tag('table', implode("\n", $content), $this->tableOptions);
+                break;
+            case 'template2018':
+                return Html::tag('table', implode("\n", $content), $this->tableOptions2018);
+                break;
+        }
 
-        return Html::tag('table', implode("\n", $content), $this->tableOptions);
     }
 
     /**

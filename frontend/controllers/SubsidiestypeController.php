@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use app\models\Logs;
 use Yii;
 use app\models\Subsidiestype;
 use frontend\models\subsidiestypeSearch;
@@ -25,7 +26,14 @@ class SubsidiestypeController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
     /**
      * Lists all Subsidiestype models.
      * @return mixed
@@ -34,7 +42,6 @@ class SubsidiestypeController extends Controller
     {
         $searchModel = new subsidiestypeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
         return $this->render('subsidiestypeindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

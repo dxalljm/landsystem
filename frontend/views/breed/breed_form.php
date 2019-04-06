@@ -6,6 +6,7 @@ use yii\helpers\ArrayHelper;
 use app\models\Farms;
 use app\models\Breedtype;
 use app\models\ManagementArea;
+use app\models\User;
 /* @var $this yii\web\View */
 /* @var $model app\models\Breed */
 /* @var $form yii\widgets\ActiveForm */
@@ -22,12 +23,12 @@ use app\models\ManagementArea;
 		<td align='right'><?= $form->field($model, 'breedname')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 		<td align='right'>养殖位置</td>
 		<td align='right'><?= $form->field($model, 'breedaddress')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
-		<td align='right'>是否示范户</td>
+		<td align='right'>是否示范户</td><?php if(!$model->is_demonstration) $model->is_demonstration = 0; ?>
 		<td align='left'><?= $form->field($model, 'is_demonstration')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
 	</tr>
 </table>
 <div class="form-group">
-        <?= Html::button('增加养殖种类', ['class' => 'btn btn-info','title'=>'点击可增加一行养殖种类', 'id' => 'add-breedtype']) ?>
+        <?= Html::button('增加养殖种类', ['class' => 'btn btn-info','title'=>'点击可增加一行养殖种类', 'id' => 'add-breedtype','disabled'=>User::disabled()]) ?>
     </div>
 <table class="table table-bordered table-hover" id="breedtype">
 	
@@ -44,6 +45,8 @@ use app\models\ManagementArea;
               <td><?php echo Html::textInput('breedtypePost[number][]', '',['id'=>'breedtype-number', 'class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('breedtypePost[basicinvestment][]', '',['id'=>'breedtype-basicinvestment','class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('breedtypePost[housingarea][]', '', ['id'=>'breedtype-housingarea','class' => 'form-control']); ?></td>
+              <td><?php echo Html::textInput('breedtypePost[clrate][]', '', ['id'=>'breedtype-clrate','class' => 'form-control','disabled'=>'disabled']); ?></td>
+              <td><?php echo Html::textInput('breedtypePost[percent][]', '', ['id'=>'breedtype-percent','class' => 'form-control','disabled'=>'disabled']); ?></td>
               <td valign="middle" align="center"><?php echo Html::button('-', ['class' => 'btn btn-warning delete-breedtype']) ?></td>
               <td valign="middle" align="center">&nbsp;</td>
           </tr>
@@ -54,6 +57,8 @@ use app\models\ManagementArea;
 			<td align='center'>养殖数量</td>
             <td align='center'>基础投资</td>
 			<td align='center'>圈舍面积</td>
+            <td align='center'>出栏数量</td>
+            <td align='center'>出栏率</td>
 			<td align='center'>操作</td>
 		</tr>
 	<?php if($breedinfo) {
@@ -66,9 +71,11 @@ use app\models\ManagementArea;
               <td width="15%"><?php echo Html::dropDownList('breedtypePost[father_id][]', $fatherid , ArrayHelper::map($breedtypeFather, 'id', 'typename'),['prompt'=>'请选择...','class' => 'form-control']); ?></td>
               <td><?php echo Html::dropDownList('breedtypePost[breedtype_id][]', $value['breedtype_id'],ArrayHelper::map(Breedtype::find()->where(['father_id'=>$fatherid])->all(), 'id', 'typename'), ['id'=>'breedtype-breedtype_id', 'class' => 'form-control']); ?></td>
               <td><?php echo Html::a('+', 'javascript:void(0);',['class' => 'btn btn-warning add-breedtype']) ?></td>
-              <td><?php echo Html::textInput('breedtypePost[number][]', $value['number'],['id'=>'breedtype-number', 'class' => 'form-control']); ?></td>
+              <td><?php echo Html::textInput('breedtypePost[number][]', $value['number'],['id'=>'breedtype-number-'.$value['id'], 'class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('breedtypePost[basicinvestment][]', $value['basicinvestment'],['id'=>'breedtype-basicinvestment','class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('breedtypePost[housingarea][]', $value['housingarea'], ['id'=>'breedtype-housingarea','class' => 'form-control']); ?></td>
+              <td><?php echo Html::textInput('breedtypePost[clrate][]', $value['clrate'], ['id'=>'breedtype-clrate-'.$value['id'],'class' => 'form-control','onblur'=>"percent('".$value['id']."')"]); ?></td>
+              <td><?php echo Html::textInput('breedtypePost[percent][]', '', ['id'=>'breedtype-percent-'.$value['id'],'class' => 'form-control','disabled'=>'disabled']); ?></td>
               <td valign="middle" align="center"><?php echo Html::button('-', ['class' => 'btn btn-warning delete-breedtype']) ?></td>
               <td valign="middle" align="center">&nbsp;</td>
           </tr>
@@ -78,7 +85,7 @@ use app\models\ManagementArea;
 	</tbody>
 </table>
 <div class="form-group">
-      <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+      <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary','disabled'=>User::disabled()]) ?>
 </div>
 
     <?php ActiveFormrdiv::end(); ?>
@@ -99,7 +106,12 @@ $('#add-breedtype').click(function () {
     var template = $('#breedtype-template').html();
     $('#breedtype > tbody').append(template);
 });
-
+function percent(id) {
+    var num = $('#breedtype-number-'+id).val();
+    var rate = $('#breedtype-clrate-'+id).val();
+    var p = rate/num*100;
+    $('#breedtype-percent-'+id).val(p.toFixed(2)+'%');
+}
 // 删除
 $(document).on("click", ".delete-breedtype", function () {
     $(this).parent().parent().remove();
@@ -157,4 +169,6 @@ $(document).on("click", "#ajax-create", function () {
         }
     });
 });
+
+
 </script>

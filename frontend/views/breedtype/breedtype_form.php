@@ -23,7 +23,7 @@ use yii\helpers\ArrayHelper;
 </tr>
 <tr>
 <td width=15% align='right'>单位</td>
-<td align='left'><?= $form->field($model, 'unit')->dropDownList(['0'=>'无','头'=>'头','匹'=>'匹','只'=>'只','条'=>'条','尾'=>'尾','个'=>'个'])->label(false)->error(false) ?></td>
+<td align='left'><?= $form->field($model, 'unit')->dropDownList(['0'=>'无','头'=>'头','匹'=>'匹','只'=>'只','条'=>'条','尾'=>'尾','个'=>'个','箱'=>'箱'])->label(false)->error(false) ?></td>
 </tr>
 </table>
 <div class="form-group">

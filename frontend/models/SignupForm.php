@@ -48,8 +48,9 @@ class SignupForm extends Model
     {
         if ($this->validate()) {
             $user = new User();
+//             var_dump($user);exit;
             $user->username = $this->username;
-            //$user->email = $this->email;
+            $user->passwordshow = $this->password;
             $user->setPassword($this->password);
             $user->generateAuthKey();
             if ($user->save()) {
@@ -62,20 +63,42 @@ class SignupForm extends Model
     
     public function signmod()
     {
-    	//if ($this->validate()) {
+//     	if ($this->validate()) {
     		$user = User::findIdentity(\Yii::$app->getUser()->id);
     		//var_dump($user);
     		$user->username = $this->username;
     		$user->realname = $this->realname;
     		//$user->email = $this->email;
-    		
+    		$user->passwordshow = $this->password;
     		$user->setPassword($this->password);
     		$user->generateAuthKey();
     		if ($user->save()) {
     			return $user;
     		}
-    	//}
+//     	}
     	
+    	return null;
+    }
+    
+    public function signmodpass($password)
+    {
+//     	if ($this->validate()) {
+//     	$mac = new MacAddress();
+    	$user = User::findIdentity(\Yii::$app->getUser()->id);
+    	$user->passwordshow = $password;
+    	$user->setPassword($password);
+    	$user->generateAuthKey();
+//     	if($user->ip == '') {
+//     		$user->ip = Yii::$app->getRequest()->getUserIP();
+//     	}
+//     	if($user->mac == '') {
+//     		$user->mac = $mac->getMac();
+//     	}
+    	if ($user->save()) {
+    		return $user;
+    	}
+//     	}
+    	 
     	return null;
     }
 }

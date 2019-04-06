@@ -44,14 +44,14 @@ $('#dalei').change(function(){
 		
 		if (data.status == 1) {
 			$('#inputproduct-father_id').html(null);
-			$('#inputproduct-father_id').append('<option value="1">大类</option>');
+			$('#inputproduct-father_id').append('<option value="'+father_id+'">子类</option>');
 			for(i=0;i<data.inputproductson.length;i++) {
 				$('#inputproduct-father_id').append('<option value="'+data.inputproductson[i]['id']+'">'+data.inputproductson[i]['fertilizer']+'</option>');
 			}
 		}
 		else {
 			$('#inputproduct-father_id').html(null);
-			$('#inputproduct-father_id').append('<option value="1">大类</option>');
+			$('#inputproduct-father_id').append('<option value="'+father_id+'">子类</option>');
 		}
 			
 	});

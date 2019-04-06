@@ -1,7 +1,8 @@
 <?php
-namespace fontend\controllers;
+namespace frontend\controllers;
 use Yii;
-use app\models\tables;
+use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
 use app\models\Breed;
@@ -26,9 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>
-                    </h3>
+                    <h3>&nbsp;&nbsp;&nbsp;&nbsp;<?= $this->title ?><font color="red">(<?= User::getYear()?>年度)</font></h3>
                 </div>
                 <div class="box-body">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -92,6 +91,9 @@ $this->params['breadcrumbs'][] = $this->title;
             			];
             		$row = Prevention::find()->where(['breedinfo_id'=>$model->id])->count();
             		if(!$row)
+						if(User::disabled()) {
+							$url = '#';
+						}
             			return Html::a('防疫', $url, ['class'=>'btn btn-success']);
             		},
                                 

@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use backend\controllers\MenutouserController;
 use Yii;
 
 /**
@@ -45,20 +46,18 @@ class Auditprocess extends \yii\db\ActiveRecord
         ];
     }
     
-    public static function isShowProcess($projectname)
+     public static function isShowProcess($projectname)
     {
-    	$role = User::getItemname();
-//     	var_dump($role);
-    	$processname = Processname::find()->where(['rolename'=>$role])->all();
+    	$processname = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id,Yii::$app->getUser()->getIdentity()->level);
+// 		var_dump($processname);exit;
     	$rolenames = [];
     	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
-    	foreach ($processname as $process) {
-    		$rolenames[] = $process['Identification'];
+
+		foreach ($processname as $process) {
+    		$rolenames[] = $process;
     	}
-    	
     	$auditprocess = self::find()->where(['projectname'=>$projectname])->one();
-    	$audits = [];
-//     	var_dump($rolenames);
+//		var_dump($rolenames);var_dump($auditprocess);exit;
 //     	foreach($auditprocess as $value) {
     		foreach ($rolenames as $rolename) {
     			if(in_array($rolename, explode('>',$auditprocess['process'])))
@@ -66,9 +65,53 @@ class Auditprocess extends \yii\db\ActiveRecord
     		}
     		
 //     	}
+
     	if($temp)
     		return true;
     	else
     		return false;
     }
+
+	public static function getAuditing()
+	{
+		$result = [];
+		$m = MenuToUser::find()->where(['role_id'=>User::getItemname()])->one();
+// 		var_dump($m);
+		if($m['auditinguser']) {
+			$mArr = explode(',', $m['auditinguser']);
+			$audit = MenuToUser::getAuditingList();
+			$result = [];
+			foreach ($mArr as $value) {
+				$result[] = $audit[$value];
+			}
+		}
+		return $result;
+	}
+
+	public static function isAuditing($str)
+	{
+		$audit_id = Auditprocess::find()->where(['projectname'=>$str])->one()['id'];
+
+		$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
+		if($temp) {
+			$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
+			if(in_array($audit_id,explode(',',$userinfo['auditinguser']))) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+//		if($str == '贷款冻结审批' and yii::$app->controller->action->id == 'reviewprocessing') {
+//			if(User::getItemname('地产科')) {
+//				return true;
+//			} else {
+//				return false;
+//			}
+//		}
+		if(in_array($audit_id,explode(',',Yii::$app->getUser()->getIdentity()->auditinguser))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

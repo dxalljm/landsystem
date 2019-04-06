@@ -5,7 +5,7 @@ namespace console\models;
 use Yii;
 use console\models\Plantingstructure;
 use console\models\Yieldbase;
-
+use console\models\Theyear;
 /**
  * This is the model class for table "{{%yield}}".
  *
@@ -65,7 +65,7 @@ class Yields extends \yii\db\ActiveRecord
     		$newdata = Farms::unique_arr($data);
     		foreach($newdata as $value) {
     			//     		var_dump($value);exit;
-    			$result[$value['id']] = Plant::find()->where(['id'=>$value['id']])->one()['cropname'];
+    			$result[$value['id']] = Plant::find()->where(['id'=>$value['id']])->one()['typename'];
     		}
     	}
     	return $result;
@@ -211,7 +211,7 @@ class Yields extends \yii\db\ActiveRecord
     	foreach($yields->all() as $value) {
     		$planting = Plantingstructure::find()->where(['id'=>$value['planting_id']])->one();
     		if($planting)
-    			$data[] = ['plant_id'=>Plant::find()->where(['id'=>$planting['plant_id']])->one()['cropname']];
+    			$data[] = ['plant_id'=>Plant::find()->where(['id'=>$planting['plant_id']])->one()['typename']];
     	}
     	if($data) {
     		$newdata = Farms::unique_arr($data);
@@ -378,7 +378,7 @@ class Yields extends \yii\db\ActiveRecord
     		$newdata = Farms::unique_arr($data);
     		foreach ($newdata as $value) {
     			$result['id'][] = $value['id'];
-    			$result['typename'][] = Plant::find()->where(['id' => $value['id']])->one()['cropname'];
+    			$result['typename'][] = Plant::find()->where(['id' => $value['id']])->one()['typename'];
     		}
     	}
     	return  $result;
@@ -480,7 +480,7 @@ class Yields extends \yii\db\ActiveRecord
     		$newdata = Farms::unique_arr($data);
     		foreach ($newdata as $value) {
     			$result['id'][] = $value['id'];
-    			$result['typename'][] = Plant::find()->where(['id' => $value['id']])->one()['cropname'];
+    			$result['typename'][] = Plant::find()->where(['id' => $value['id']])->one()['typename'];
     		}
     	}
     	return  $result;
@@ -504,7 +504,7 @@ class Yields extends \yii\db\ActiveRecord
     			foreach ($plantid['id'] as $val) {
 //     				var_dump($val);
     				$sum = 0.0;
-    				$area = Plantingstructure::find()->where(['plant_id'=>$val,'management_area'=>$value])->sum('area');
+    				$area = Plantingstructure::find()->where(['plant_id'=>$val,'management_area'=>$value])->andFilterWhere(['between','update_at',$time[0],$time[1]])->sum('area');
     				$sum += Yieldbase::find()->where(['plant_id'=>$val,'year'=>User::getYear($id)])->one()['yield']*$area;
 //     				var_dump($sum);
     				$plantArea[] = (float)sprintf("%.4f", $sum);
@@ -522,7 +522,7 @@ class Yields extends \yii\db\ActiveRecord
     		foreach ($plantid['id'] as $val) {
     			$yields->andFilterWhere(['plant_id'=>$val,'management_area'=>$value]);
     			foreach ($yields->all() as $value) {
-    				$area = Plantingstructure::find()->where(['id'=>$y['planting_id']])->one()['area'];
+    				$area = Plantingstructure::find()->where(['id'=>$y['planting_id']])->andFilterWhere(['between','update_at',$time[0],$time[1]])->one()['area'];
     					$sum += $y['single']*$area;
     				}
     				$plantArea[] = (float)sprintf("%.4f", $sum);

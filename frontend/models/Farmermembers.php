@@ -32,7 +32,7 @@ public function rules()
         return [
             [['farmer_id', 'isupdate'], 'integer'],
             [['remarks'], 'string'],
-            [['relationship', 'membername', 'cardid'], 'string', 'max' => 500]
+            [['relationship', 'membername', 'cardid','farmercardid'], 'string', 'max' => 500]
         ]; 
     } 
 
@@ -44,6 +44,7 @@ public function rules()
         return [ 
             'id' => 'ID',
             'farmer_id' => '法人ID',
+            'farmercardid' => '法人身份证号',
             'relationship' => '关系',
             'membername' => '姓名',
             'cardid' => '身份证号',

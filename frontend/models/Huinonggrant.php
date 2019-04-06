@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\models\Huinong;
 use Yii;
 
 /**
@@ -31,9 +32,9 @@ class Huinonggrant extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['farms_id', 'huinong_id','lease_id','subsidiestype_id','typeid', 'state','create_at','update_at','lease_id','management_area','issubmit'], 'integer'],
+            [['farms_id', 'huinong_id','lease_id','subsidiestype_id','typeid', 'state','create_at','update_at','management_area','issubmit'], 'integer'],
             [['money', 'area'], 'number'],
-            [['note'], 'string']
+            [['note','subsidyobject','proportion'], 'string']
         ];
     }
 
@@ -58,6 +59,8 @@ class Huinonggrant extends \yii\db\ActiveRecord
         	'update_at' => '更新日期',
         	'management_area' => '管理区ID',
         	'issubmit' => '是否提交',
+            'proportion' => '占比',
+            'subsidyobject' => '补贴对象',
         ];
     }
     
@@ -68,5 +71,104 @@ class Huinonggrant extends \yii\db\ActiveRecord
     		return true;
     	else 
     		return false;
+    }
+
+    public static function getHuinonggrantinfo()
+    {
+
+        $areaid = Farms::getManagementArea()['id'];
+        $sum = [];
+        $allSum = [];
+        $result = NULL;
+        $name = '';
+        $huinong = Huinong::find()->all();
+        $query = Farms::getAllCondition();
+        if($huinong) {
+            foreach ($areaid as $key => $value) {
+                $farms = $query->where(['management_area' => $value]);
+                $huinonggrantSum = 0.0;
+                foreach ($huinong as $val) {
+                    $class = Subsidiestype::find()->where(['id' => $val['subsidiestype_id']])->one()['typename'];
+                    if ($class == 'Plant') {
+                        $name = Plant::find()->where(['id' => $val['typeid']])->one()['cropname'];
+                    }
+                    if ($class == 'Goodseed') {
+                        $goodseed = Goodseed::find()->where(['id' => $val['typeid']])->one();
+                        $name = Plant::find()->where(['id' => $goodseed['plant_id']])->one()['cropname'] . '/' . $goodseed['plant_model'];
+                    }
+                    $allSum[$val['subsidiestype_id']]['name'] = $name;
+                    $allSum[$val['subsidiestype_id']]['key'] = $val['subsidiestype_id'];
+                    $allSum[$val['subsidiestype_id']]['data'][$key] = (float)sprintf("%.2f", $val['subsidiesmoney'] * $farms->sum('contractarea'));
+                    $allSum[$val['subsidiestype_id']]['stack'] = $val['subsidiestype_id'];
+                    foreach ($farms->all() as $v) {
+                        $huinonggrant = Huinonggrant::find()->where(['farms_id' => $v['id'], 'huinong_id' => $val['id'], 'state' => 1])->one();
+                        $huinonggrantSum += $huinonggrant['money'];
+                    }
+                    $sum[$val['subsidiestype_id']]['name'] = $name;
+                    $sum[$val['subsidiestype_id']]['key'] = $val['subsidiestype_id'];
+                    $sum[$val['subsidiestype_id']]['data'][$key] = (float)sprintf("%.2f", $huinonggrantSum);
+                    $sum[$val['subsidiestype_id']]['stack'] = $val['subsidiestype_id'];
+                }
+            }
+        } else {
+            $sum[] = 0;
+            $allSum[] = 0;
+        }
+        foreach ($sum as $value) {
+            //     		var_dump($value['key']);exit;
+            $result[] =
+                [
+                    // 					'color' => '#FFF',
+                    'name' => '实发',
+                    'type' => 'bar',
+                    'data' => $value['data'],
+                    'stack' => 'sum',
+                    'barCategoryGap' => '50%',
+                    'itemStyle' => [
+                        'normal' => [
+                            'color' => 'tomato',
+                            'barBorderColor' => 'tomato',
+                            'barBorderWidth' => 3,
+                            'barBorderRadius' => 0,
+                            'label' => [
+                                'show' => true,
+                                'position' => 'insideTop'
+                            ]
+                        ]
+                    ],
+                ];
+        }
+        foreach ($allSum as $value) {
+            $result[] =
+                [
+                    // 					'color' => '#FFF',
+                    'name' => '应发',
+                    'type' => 'bar',
+                    'data' => $value['data'],
+                    'stack' => 'sum',
+                    'itemStyle' => [
+                        'normal' => [
+                            'color' => '#fff',
+                            'barBorderColor' => 'tomato',
+                            'barBorderWidth' => 3,
+                            'barBorderRadius' => 0,
+                            'label' => [
+                                'show' => false,
+                                'position' => 'top',
+                                // 						'formatter'=> '{c}',
+                                'textStyle' => [
+                                    'color' => 'tomato'
+                                ]
+                            ]
+                        ]
+                    ],
+                ];
+        }
+//     	var_dump($result);
+        if(!empty($result))
+            $jsonData = json_encode ($result);
+        else
+            $jsonData = $result;
+        return $jsonData;
     }
 }

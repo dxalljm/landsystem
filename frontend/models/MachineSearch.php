@@ -18,8 +18,8 @@ class MachineSearch extends Machine
     public function rules()
     {
         return [
-            [['id','machinetype_id'], 'integer'],
-            [['productname', 'implementmodel', 'filename', 'province', 'enterprisename', 'parameter','content'], 'safe'],
+            [['id','machinetype_id','year','state'], 'integer'],
+            [['productname', 'implementmodel', 'filename', 'province', 'enterprisename', 'parameter','content','machinetype'], 'safe'],
         ];
     }
 
@@ -54,6 +54,9 @@ class MachineSearch extends Machine
         $query->andFilterWhere([
             'id' => $this->id,
         	'machinetype_id' => $this->machinetype_id,
+            'year' => $this->year,
+            'state' => $this->state,
+            'machinetype' => $this->machinetype,
         ]);
 
         $query->andFilterWhere(['like', 'productname', $this->productname])

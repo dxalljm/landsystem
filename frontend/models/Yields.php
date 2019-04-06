@@ -335,7 +335,26 @@ class Yields extends \yii\db\ActiveRecord
     	}
     	return (float)sprintf("%.2f", $sum/10000);
     }
-	
+
+	public static function getTypename()
+	{
+		$data = [];
+		$result = ['id'=>[],'typename'=>[]];
+		$yields = Plantingstructurecheck::find()->where(['management_area'=>Farms::getManagementArea()['id'],'year'=>User::getYear()]);
+		foreach ($yields->all() as $value) {
+			$data[] = ['id'=>$value['plant_id']];
+		}
+		if($data) {
+			$newdata = Farms::unique_arr($data);
+			foreach ($newdata as $value) {
+				$result['id'][] = $value['id'];
+				$result['typename'][] = Plant::find()->where(['id' => $value['id']])->one()['typename'];
+			}
+		}
+//		var_dump($result);
+		return  $result;
+	}
+
 	public static function getTypenamelist($params)
     {
     	$sum = 0.0;
@@ -459,10 +478,60 @@ class Yields extends \yii\db\ActiveRecord
 // 		var_dump($result);
     	return  json_encode($result);
     }
+
+	public static function getYieldsCache()
+	{
+		$result = [];
+		$areaNum = 0;
+		$area = Farms::getManagementArea()['id'];
+		$plantid = Plantingstructurecheck::getPlantname();
+
+		foreach ( $area as $key => $value ) {
+			$areaNum++;
+			// 农场区域
+			$plantArea = [];
+			foreach ($plantid['id'] as $val) {
+				$area = Plantingstructurecheck::find()->where(['management_area'=>$value,'plant_id'=>$val,'year'=>User::getYear()])->sum('area');
+				$yieldBase = Yieldbase::find()->where(['year'=>User::getYear(),'plant_id'=>$val])->one()['yield'];
+				$plantArea[] = (float)bcmul($area,$yieldBase,2);
+			}
+			$result[] = [
+				'name' => str_ireplace('管理区', '', ManagementArea::find()->where(['id'=>$value])->one()['areaname']),
+				'type' => 'bar',
+				'stack' => $value,
+				'data' => $plantArea
+			];
+		}
+//		var_dump($result);
+		$jsonData = json_encode ($result);
+
+		return $jsonData;
+	}
+
+	public static function getYieldsSum()
+	{
+		$result = [];
+		$areaNum = 0;
+		$area = Farms::getManagementArea()['id'];
+		$plantid = Plantingstructurecheck::getPlantname();
+		$sum = 0;
+		foreach ( $area as $key => $value ) {
+			$areaNum++;
+			// 农场区域
+
+			foreach ($plantid['id'] as $val) {
+				$area = Plantingstructurecheck::find()->where(['management_area'=>$value,'plant_id'=>$val,'year'=>User::getYear()])->sum('area');
+				$yieldBase = Yieldbase::find()->where(['year'=>User::getYear(),'plant_id'=>$val])->one()['yield'];
+				$sum += (float)bcmul($area,$yieldBase,2);
+			}
+		}
+		return $sum;
+	}
     
     public static function getUserTypenamelist($user_id)
     {
     	$sum = 0.0;
+		$data = [];
     	$result = ['id'=>[],'typename'=>[]];
     	$yields = Yields::find ();
     	$where = Farms::getUserManagementArea($user_id);

@@ -3,9 +3,9 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\tablefields;
-use app\models\tables;
-use app\models\farms;
+use app\models\Tablefields;
+use app\models\Tables;
+use app\models\Farms;
 use backend\models\tablefieldsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -88,38 +88,26 @@ class TablefieldsController extends Controller
     public function actionTablefieldscreate($tables_id)
     {
     	$this->layout='@app/views/layouts/nomain.php';
-        $model = new tablefields();
+        $model = new Tablefields();
         
         $mir = new Migration();
-<<<<<<< HEAD
-//         var_dump($mir->get)
-        $sch = new \yii\db\mysql\Schema;
-        if ($model->load(Yii::$app->request->post())) {
-        	$tablename = tables::find()->where(['id'=>$model->tables_id])->one()['tablename'];
-//         	$columns = $mir->getColumns($tablename);
-// 			if($this->isIn($model->fields, $columns)) {
-// 				return $this->render('tablefieldserror', [
-//                 	'message' => '该表项已经存在，不能被创建！',
-//             	]);
-// 			} else {
-=======
+
         $this->db = $mir->db;
         $sch = new \yii\db\mysql\Schema;
         if ($model->load(Yii::$app->request->post())) {
         	$tablename = tables::find()->where(['id'=>$model->tables_id])->one()['tablename'];
         	$columns = $this->getColumns($tablename);
-//         	var_dump($this->getTableColumns());exit;
-			if($this->isIn($model->fields, $columns)) {
-				return $this->render('tablefieldserror', [
-                	'message' => '该表项已经存在，不能被创建！',
-            	]);
-			} else {
->>>>>>> cf16ead055468d3c8eecdc12168d08580aeca0b1
+//			if($this->isIn($model->fields, $columns)) {
+//				return $this->render('tablefieldserror', [
+//                	'message' => '该表项已经存在，不能被创建！',
+//            	]);
+//			} else {
+
 				$table = Tables::find()->where(['id'=>$model->tables_id])->one(); 
 				$mir->addColumn($mir->db->tablePrefix.$table->tablename, $model->fields, $model->type);    
 			    $model->save(); 
             	return $this->redirect(['tablefieldsview', 'id' => $model->id]);
-// 			}
+//			}
         } else {
             return $this->render('tablefieldscreate', [
                 'model' => $model,

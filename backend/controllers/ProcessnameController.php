@@ -62,8 +62,15 @@ class ProcessnameController extends Controller
     {
         $model = new Processname();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['processnameview', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            if(is_array($model->department_id)) {
+                $model->department_id = implode(',',$model->department_id);
+            }
+            if(is_array($model->level_id)) {
+                $model->level_id = implode(',',$model->level_id);
+            }
+            if($model->save())
+                return $this->redirect(['processnameview', 'id' => $model->id]);
         } else {
             return $this->render('processnamecreate', [
                 'model' => $model,
@@ -81,8 +88,15 @@ class ProcessnameController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['processnameview', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            if(is_array($model->department_id)) {
+                $model->department_id = implode(',',$model->department_id);
+            }
+            if(is_array($model->level_id)) {
+                $model->level_id = implode(',',$model->level_id);
+            }
+            if($model->save())
+                return $this->redirect(['processnameview', 'id' => $model->id]);
         } else {
             return $this->render('processnameupdate', [
                 'model' => $model,

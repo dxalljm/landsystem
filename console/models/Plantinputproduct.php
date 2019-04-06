@@ -8,7 +8,7 @@ use console\models\Plantinputproduct;
 use console\models\Lease;
 use console\models\Inputproduct;
 use console\models\Plantingstructure;
-
+use console\models\Theyear;
 //use frontend\helpers\eActionColumn;
 
 /**
@@ -85,9 +85,9 @@ class Plantinputproduct extends \yii\db\ActiveRecord
     	$lastresult = [];
     	$name = '';
     	foreach ($plantlist['id'] as $plantkey => $plant) {
-    		$name = Plant::find()->where(['id'=>$plant])->one()['cropname'];
+    		$name = Plant::find()->where(['id'=>$plant])->one()['typename'];
     		foreach ($typenamelist['id'] as $typenamekey => $val) {
-    			$input = Plantinputproduct::find()->where(['management_area'=>$where,'inputproduct_id'=>$val['id'],'plant_id'=>$plant['id']])->all();
+    			$input = Plantinputproduct::find()->where(['management_area'=>$where,'inputproduct_id'=>$val['id'],'plant_id'=>$plant['id']])->andFilterWhere(['between','create_at',Theyear::getYeartime($userid)[0],Theyear::getYeartime($userid)[1]])->all();
 	    		$sum = 0.0;
 	    		foreach ($input as $value) {
 	    			$sum += (float)Lease::getArea($value->attributes['zongdi'])*$value->attributes['pconsumption'];

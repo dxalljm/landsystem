@@ -1,6 +1,6 @@
 <?php
 namespace backend\controllers;
-use app\models\tables;
+use app\models\Tables;
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
 
@@ -20,7 +20,8 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">
-                        <?= $this->title ?>                    </h3>
+                        <?= $this->title ?><font color="red">（<?= User::getYear()?>年度）</font>
+                    </h3>
                 </div>
                 <div class="box-body">
     <?= GridView::widget([

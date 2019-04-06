@@ -1,5 +1,5 @@
 <?php
-namespace frontend\controllers;
+namespace frontend\controllers;use app\models\User;
 use yii\helpers\Html;
 use frontend\helpers\MoneyFormat;
 /* @var $this yii\web\View */

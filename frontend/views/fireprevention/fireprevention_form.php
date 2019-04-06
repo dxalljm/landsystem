@@ -4,102 +4,56 @@ use yii\helpers\Html;
 use frontend\helpers\ActiveFormrdiv;
 use app\models\Firepreventionemployee;
 use app\models\Farms;
+use app\models\Fireprevention;
+use app\models\User;
+use app\models\Picturelibrary;
 /* @var $this yii\web\View */
 /* @var $model app\models\Fireprevention */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
+<style>
+    .showimg img {
+        vertical-align: middle;
+    }
+</style>
 <div class="fireprevention-form">
-
+    <?= Farms::showFarminfo2($_GET['farms_id'])?>
     <?php $form = ActiveFormrdiv::begin(); ?>
     <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false)->error(false) ?>
-<?php Farms::showRow($_GET['farms_id']);?>
+
     <table width="57%" class="table table-bordered table-hover">
+        <?php
+        foreach (Fireprevention::sixLabels() as $key => $value):
+//            var_dump($key);
+        ?>
 		<tr>
+            <td class="text-right" width="15%"><?= $value['label']?></td>
+            <td class="showimg">
+                <?php
+                switch ($value['type']) {
+                    case 'radioList':
+                        echo $form->field($model, $key)->radioList([1=>'是',0=>'否'],['disabled'=>User::disabled()])->label(false)->error(false);
+                        break;
+                    case 'dialog':
+                        echo Html::button('上传照片',['onclick'=>"showDialog('".$key."')",'class'=>'btn btn-success','disabled'=>User::disabled()]);
+                        echo Html::button('查看照片',['onclick'=>"javascript:window.open('".yii::$app->urlManager->createUrl(['picturelibrary/showimg','farms_id'=>$model->farms_id,'class'=>'Fireprevention','field'=>$key,'disabled'=>User::disabled()])."','','width=1200,height=800,top=250,left=380, location=no, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",'class'=>'btn btn-success']);
+                        foreach (Picturelibrary::find()->where(['farms_id'=>$_GET['farms_id'],'year'=>User::getYear(),'field'=>$key])->all() as $img) {
+                            echo Html::img('http://192.168.1.10/'.$img['pic'],['width'=>80,'v']);
+                            echo Html::a('<i class="fa fa-fw fa-times-circle text-danger"></i>',\yii\helpers\Url::to(['picturelibrary/picturelibrarydelete','id'=>$img['id']]),['data' => [
+                                'confirm' => '您确定要删除这项吗？',
+                                'method' => 'post',
+                            ],]);
+                        }
+                }
 
-<td colspan="3" align='center'><h4>防火、安全、环保合同</h4></td>
-
-<td colspan="7" align='center' valign="middle"><h4>防火设施及火源管理</h4></td>
-</tr>
-
-<tr>
-
-<td width=8% align='center'>防火合同</td>
-
-<td width="11%" align='center'>安全生产<br />
-  合同</td>
-<td width="10%" align='center'>环境保护<br />
-  协议</td>
-<td width="8%" align='center'>扑火工具</td>
-<td width="9%" align='center'>机械设备<br />
-  防火罩</td>
-<td width="8%" align='center'>烟囱<br />
-  防火罩</td>
-<td width="9%" align='center'>房屋防火<br />
-  隔离带</td>
-<td width="9%" align='center'>防火义务<br />
-  宣管员</td>
-<td width="11%" align='center'>一盒火<br />
-  管理员</td>
-<td width="17%" align='center'>液化气<br />
-  灶具</td>
-
-</tr>
-
-<tr>
-
-<td width=8% align='center'><?php if($model->firecontract == '') $model->firecontract = 0;?><?= $form->field($model, 'firecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php if($model->safecontract == '') $model->safecontract = 0;?><?= $form->field($model, 'safecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php if($model->environmental_agreement == '') $model->environmental_agreement = 0;?><?= $form->field($model, 'environmental_agreement')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php if($model->firetools == '') $model->firetools = 0;?><?= $form->field($model, 'firetools')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php if($model->mechanical_fire_cover == '') $model->mechanical_fire_cover = 0;?><?= $form->field($model, 'mechanical_fire_cover')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php if($model->chimney_fire_cover == '') $model->chimney_fire_cover = 0;?><?= $form->field($model, 'chimney_fire_cover')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php if($model->isolation_belt == '') $model->isolation_belt = 0;?><?= $form->field($model, 'isolation_belt')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php if($model->propagandist == '') $model->propagandist = 0;?><?= $form->field($model, 'propagandist')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php if($model->fire_administrator == '') $model->fire_administrator = 0;?><?= $form->field($model, 'fire_administrator')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php if($model->cooker == '') $model->cooker = 0;?><?= $form->field($model, 'cooker')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-
-</tr>
-
-<tr>
-
-<td colspan="5" align='center'><h4>农场防火宣传栏</h4></td>
-<td colspan="3" align='center'><h4>防火宣传检查现场取景照</h4></td>
-<td align='left'>&nbsp;</td>
-<td align='left'>&nbsp;</td>
-
-</tr>
-
-<tr>
-
-<td width=8% align='center'>野外作业许可证</td>
-<td align='center'>消防宣传合同</td>
-<td align='center'>防火宣传单</td>
-<td align='center'>雇工防火合同</td>
-<td align='center'>防火检查整改记录</td>
-<td align='center'>设备照片</td>
-<td align='center'>人员照片</td>
-<td align='center'>设施照片</td>
-<td align='left'>&nbsp;</td>
-<td align='left'>&nbsp;</td>
-
-</tr>
-
-<tr>
-
-<td width=8% align='center'><?php if($model->fieldpermit == '') $model->fieldpermit = 0;?><?= $form->field($model, 'fieldpermit')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php if($model->propaganda_firecontract == '') $model->propaganda_firecontract = 0;?><?= $form->field($model, 'propaganda_firecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php if($model->leaflets == '') $model->leaflets = 0;?><?= $form->field($model, 'leaflets')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php if($model->employee_firecontract == '') $model->employee_firecontract = 0;?><?= $form->field($model, 'employee_firecontract')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php if($model->rectification_record == '') $model->rectification_record = 0;?><?= $form->field($model, 'rectification_record')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php if($model->equipmentpic == '') $model->equipmentpic = 0;?><?= $form->field($model, 'equipmentpic')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php if($model->peoplepic == '') $model->peoplepic = 0;?><?= $form->field($model, 'peoplepic')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='center'><?php if($model->facilitiespic == '') $model->facilitiespic = 0;?><?= $form->field($model, 'facilitiespic')->radioList([1=>'是',0=>'否'])->label(false)->error(false) ?></td>
-<td align='left'>&nbsp;</td>
-<td align='left'>&nbsp;</td>
-
-</tr>
-</table>
+                ?>
+            </td>
+        </tr>
+        <?php
+        endforeach;
+        ?>
+    </table>
+    <?= Html::hiddenInput('field','',['id'=>'fieldname'])?>
 <table width="57%" class="table table-striped table-bordered table-hover table-condensed">
 <tr>
 
@@ -143,9 +97,12 @@ foreach($employees as $emp) {
 <?php $i++;}}?>
 </table>
 <?php }?>
+
+    <div id="dialogMsg" title="图库"></div>
+
 <?php Farms::showRow($_GET['farms_id']);?>
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary','disabled'=>User::disabled()]) ?>
         
     </div>
 
@@ -158,5 +115,63 @@ $('#rowjump').keyup(function(event){
 	$.getJSON('index.php?r=farms/getfarmid', {id: input}, function (data) {
 		$('#setFarmsid').val(data.farmsid);
 	});
+});
+function showDialog(field)
+{
+    $('#fieldname').val(field);
+    $.get('index.php?r=webupload/show', function (body) {
+        $('#dialogMsg').html('');
+        $('#dialogMsg').html(body);
+        $("#dialogMsg").dialog("open");
+    });
+}
+function showImage(field)
+{
+    $.get('index.php?r=webupload/showimg', {farms_id: <?= $_GET['farms_id']?>,table:'Fireprevention',field:field}, function (body) {
+        $('#dialogMsg').html('');
+        $('#dialogMsg').html(body);
+        $("#dialogMsg").dialog("open");
+    });
+}
+
+$( "#dialogMsg" ).dialog({
+    autoOpen: false,
+    width: 1500,
+    //    show: "blind",
+    //    hide: "explode",
+    modal: true,//设置背景灰的
+    position: { using:function(pos){
+        var topOffset = $(this).css(pos).offset().top;
+        if (topOffset = 0||topOffset>0) {
+            $(this).css('top', 20);
+        }
+        var leftOffset = $(this).css(pos).offset().left;
+        if (leftOffset = 0||leftOffset>0) {
+            $(this).css('left', 360);
+        }
+    }},
+    buttons: [
+        {
+            text: "确定",
+            class:'btn btn-success',
+            click: function() {
+                $( this ).dialog( "close" );
+                $.getJSON('index.php?r=webupload/ftpupload',{'farms_id':"<?= $_GET['farms_id']?>",'class':'fireprevention','field':$('#fieldname').val()},function (data) {
+//                    if(data.state) {
+
+//                    }
+                });
+                window.location.reload();
+            }
+
+        },
+        {
+            text: "取消",
+            class:'btn btn-danger',
+            click: function() {
+                $( this ).dialog( "close" );
+            }
+        }
+    ]
 });
 </script>

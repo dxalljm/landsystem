@@ -1,6 +1,6 @@
 <?php
-namespace frontend\controllers;
-use app\models\tables;
+namespace frontend\controllers;use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
 use app\models\Infrastructuretype;
@@ -49,6 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             
 			[
+				'format' => 'raw',
 				'label'=>'审核状态',
 				'value' => function ($model) {
 					return Reviewprocess::state(Reviewprocess::find()->where(['id'=>$model->reviewprocess_id])->one()['state']);

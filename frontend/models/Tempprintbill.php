@@ -31,9 +31,10 @@ class Tempprintbill extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-        	[['state','farms_id'],'integer'],
-        	[['amountofmoneys'], 'number'],
-            [['standard', 'number', 'nonumber','amountofmoney','farmername', 'bigamountofmoney','remarks'], 'string', 'max' => 500]
+        	[['state','farms_id','management_area','collection_id','year','farmstate','kptime'],'integer'],
+        	[['amountofmoneys','measure','amountofmoney'], 'number'],
+            [['standard', 'nonumber','farmername', 'bigamountofmoney','remarks'], 'string', 'max' => 500],
+        	[['farmername'],'required'],
         ];
     }
 
@@ -45,17 +46,22 @@ class Tempprintbill extends \yii\db\ActiveRecord
         return [
 			'id' => 'ID',
         	'farms_id' => '农场',
+            'management_area' => '管理区',
             'farmername' => '法人姓名',
         	'remarks' => '备注',
             'standard' => '标准',
-            'number' => '数量',
+            'measure' => '数量',
             'amountofmoney' => '金额',
             'bigamountofmoney' => '大写金额',
-            'nonumber' => '票号',
+            'nonumber' => '发票号',
 			'create_at' => '创建日期',
         	'update_at' => '更新日期',  
         	'amountofmoneys' => '金额计算', 
-        	'state' => '状态',     		
+        	'state' => '状态',   
+        	'collection_id' => '收缴情况id',
+        	'year' => '年度'	,
+            'farmstate' => '农场状态',
+            'kptime' => '开票日期'
         ];
     }
 }

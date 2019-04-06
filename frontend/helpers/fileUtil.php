@@ -16,7 +16,30 @@ namespace frontend\helpers;
  */
 class fileUtil {
 
-	/**
+    public static function ListDir ($dirname)
+    {
+        $result = [];
+        $Ld= dir($dirname);
+//        echo"<ul>";
+        while(false !== ($entry= $Ld->read())) {
+            $checkdir=$dirname."/".$entry;
+            if(is_dir($checkdir)&&!preg_match("[^\.]",$entry)){
+//                echo"<li><p>".$checkdir."当前<span style='color:#ff00a
+//                a'>是</span>目录</p></li>";
+                self::ListDir($checkdir);
+            }else{
+                if($entry !== '.' and $entry !== '..')
+                    $result[] = $entry;
+//                echo"<li><p>".$entry."当前不是目录</p></li>";
+            }
+        }
+        $Ld->close();
+//        var_dump($result);exit;
+        return $result;
+//        echo"</ul>";
+    }
+
+/**
 	 * 判断文件是否存在
 	 *
 	 * @param string $aimUrl
@@ -38,9 +61,13 @@ class fileUtil {
         $arr = explode('/', $aimUrl);
         $result = true;
         foreach ($arr as $str) {
+//            chown($str,'daemon');
             $aimDir .= $str . '/';
+//            chmod($aimDir,0777);
             if (!file_exists($aimDir)) {
-                $result = mkdir($aimDir);
+//                chown($aimDir,'daemon');
+                $result = mkdir($aimDir,0777);
+//                chmod($aimDir,0777);
             }
         }
         return $result;

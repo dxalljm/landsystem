@@ -1,11 +1,11 @@
 <?php
-
+use dosamigos\datetimepicker\DateTimePicker;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\models\groups;
 use yii\helpers\ArrayHelper;
 use app\models\Department;
-use dosamigos\datetimepicker\DateTimePicker;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\user */
 /* @var $form yii\widgets\ActiveForm */
@@ -20,11 +20,11 @@ use dosamigos\datetimepicker\DateTimePicker;
                 </div>
                 <div class="box-body">
     <?php $form = ActiveForm::begin(); ?>
-	
+
     <?= $form->field($model, 'year')->textInput(['maxlength' => 11])->label('年度设置')->widget(
-    DateTimePicker::className(), [
+        DateTimePicker::className(), [
         // inline too, not bad
-        'inline' => false, 
+        'inline' => false,
     	'language'=>'zh-CN',
         'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
         'clientOptions' => [
@@ -33,7 +33,7 @@ use dosamigos\datetimepicker\DateTimePicker;
         	'minView' => 4,
             'format' => 'yyyy'
         ]
-]);   ?>    
+]);   ?>
 	<?= $form->field($model, 'autoyear')->checkbox(['id'=>'isAuto'])->label(false)?>  
     <div class="form-group">
         <?= Html::submitButton('更新', ['class' => 'btn btn-primary']) ?>

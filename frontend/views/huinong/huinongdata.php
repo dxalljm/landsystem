@@ -1,6 +1,6 @@
 <?php
-namespace backend\controllers;
-use app\models\tables;
+namespace frontend\controllers;use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
 use app\models\Plant;
@@ -22,6 +22,7 @@ $this->title = 'huinong';
 $this->title = Tables::find()->where(['tablename'=>$this->title])->one()['Ctablename'];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
 <div class="huinong-index">
 
     <section class="content">
@@ -29,9 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>                    </h3>
-                </div>
+                    <h3>&nbsp;&nbsp;&nbsp;&nbsp;<?= $this->title ?><font color="red">(<?= User::getYear()?>年度)</font></h3></div>
                 <div class="box-body">
                 <?php $form = ActiveFormrdiv::begin(); ?>
     			<table class="table table-bordered table-hover">
@@ -41,6 +40,8 @@ $this->params['breadcrumbs'][] = $this->title;
     					<td align="center"><b>农场名称</b></td>
     					<td align="center"><b>法人</b></td>
     					<td align="center"><b>租赁者</b></td>
+						<td align="center"><b>补贴对象</b></td>
+						<td align="center"><b>补贴比率</b></td>
     					<?php if($classname == 'Plant') {?>
     					<td align="center"><b>作物</b></td>
     					<?php } if($classname == 'Goodseed') {?>
@@ -58,13 +59,17 @@ $this->params['breadcrumbs'][] = $this->title;
     				if($data) {
     				foreach ($data as $value) {
     					$areaSum += $value['area'];
-    					$money = $model->subsidiesmoney*0.01*$value['area']*$model->subsidiesarea;
-    				?>
+    					$money = $model->subsidiesmoney*0.01*$value['area']*$model->subsidiesarea*(float)$value['proportion']/100;
+						$huinongascription = Lease::getHuinonginfo($value['lease_id']);
+					?>
     				<tr><?php $farm = Farms::find()->where(['id'=>$value['farms_id']])->one();?>
     					<td align="center"><?= $i++ ?></td>
     					<td align="center"><?= $farm->farmname ?></td>
     					<td align="center"><?= $farm->farmername ?></td>
-    					<td align="center"><?= Lease::find()->where(['id'=>$value['lease_id']])->one()['lessee']?></td>
+						<td align="center"><?= Lease::find()->where(['id'=>$value['lease_id']])->one()['lessee']?></td>
+
+						<td align="center"><?= $value['subsidyobject']?></td>
+						<td align="center"><?= $value['proportion']?></td>
     					<?php if($classname == 'Plant') {?>
     					<td align="center"><?= Plant::find()->where(['id'=>$value['typeid']])->one()['typename']?></td>
     					<?php }
@@ -75,7 +80,7 @@ $this->params['breadcrumbs'][] = $this->title;
     					<td align="center"><?= '有'.Dispute::find()->where(['farms_id'=>$value['farms_id']])->count().'条纠纷'?></td>
     					<td align="center"><?= Collection::getCollecitonInfo($value['farms_id'])?></td>
     					<td align="center"><?= $value['area'].' 亩'?></td>
-    					<td align="center"><?= MoneyFormat::num_format($value['money']).' 元'?></td>
+    					<td align="center"><?= $value['money'].' 元'?></td>
     					<td align="center"><?php if($value->issubmit) echo '已提交'; else {?><label><input type="checkbox" name="isSubmit[]" class="nodes" value=<?= $value['id'].'/'.$value['lease_id'].'/'.sprintf("%.2f",$money).'/'.$value['area']?>/>是否提交</label><?php }?></td>
     				</tr>
     				<?php }?>
@@ -84,6 +89,8 @@ $this->params['breadcrumbs'][] = $this->title;
     					<td align="center"><b></b></td>
     					<td align="center"><b></b></td>
     					<td align="center"><b></b></td>
+						<td align="center"><b></b></td>
+						<td align="center"><b></b></td>
     					<td align="center"><b></b></td>
     					<?php if($classname == 'Plant') {?>
     					<td align="center"><b></b></td>
@@ -92,7 +99,7 @@ $this->params['breadcrumbs'][] = $this->title;
     					<?php }?>
     					<td align="center"><b></b></td>
     					<td align="center" width="150px"><b><?php if($issubmitSearch) echo $areaSum.'亩'; else echo html::textInput('areaSum',0.0,['readonly'=>'readonly','class'=>'form-control','id'=>'area'])?></b></td>
-    					<td align="center" width="150px"><b><?php if($issubmitSearch) echo MoneyFormat::num_format($money).'元'; else echo html::textInput('moneySum',0.0,['readonly'=>'readonly','class'=>'form-control','id'=>'money'])?></b></td>
+    					<td align="center" width="150px"><b><?php if($issubmitSearch) echo $money.'元'; else echo html::textInput('moneySum',0.0,['readonly'=>'readonly','class'=>'form-control','id'=>'money'])?></b></td>
     					<td align="center"><?php if(!$issubmitSearch) {?><label><input type="checkbox" class="all"/> 全选</label><label><input type="checkbox" class="invert"/> 反选</label><label><input type="checkbox" class="revoke"/> 取消选择 </label><?php }?></td>
     				</tr>
     				<?php }}?>

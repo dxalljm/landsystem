@@ -68,4 +68,64 @@ class Plantinputproduct extends \yii\db\ActiveRecord
         	'management_area' => '管理区',
         ];
     }
+
+    public static function getInputproduct($userid)
+    {
+//     	var_dump($userid);
+        $where = Farms::getUserManagementArea($userid);
+        $typenamelist = self::getTypenamelist($userid);
+        $plantlist = Plantingstructure::getPlantname($userid);
+//     	var_dump($typenamelist);exit;
+        $data = [];
+        $result = [];
+        $lastresult = [];
+        $name = '';
+        foreach ($plantlist['id'] as $plantkey => $plant) {
+            $name = Plant::find()->where(['id'=>$plant])->one()['typename'];
+            foreach ($typenamelist['id'] as $typenamekey => $val) {
+                $input = Plantinputproduct::find()->where(['management_area'=>$where,'inputproduct_id'=>$val['id'],'plant_id'=>$plant['id']])->andFilterWhere(['between','create_at',Theyear::getYeartime($userid)[0],Theyear::getYeartime($userid)[1]])->all();
+                $sum = 0.0;
+                foreach ($input as $value) {
+                    $sum += (float)Lease::getArea($value->attributes['zongdi'])*$value->attributes['pconsumption'];
+                }
+                $data[$name][$typenamekey] = (float)sprintf("%.2f", $sum);
+            }
+        }
+        foreach ($data as $key => $value) {
+            $result[] = [
+                'name' => $key,
+                'type' => 'bar',
+                'data' => $value,
+            ];
+        }
+
+//     	sort($result);
+//     	var_dump($result);
+
+        $jsonData = json_encode ($result);
+
+        return $jsonData;
+    }
+
+    public static function getTypenamelist($userid)
+    {
+
+        $input = Plantinputproduct::find()->all();
+//     	var_dump($input);exit;
+        $data = [];
+        $result = [];
+        foreach ($input as $value) {
+            $data[] = ['id'=>$value['inputproduct_id']];
+        }
+        if($data) {
+            $newdata = Farms::unique_arr($data);
+            foreach ($newdata as $value) {
+                $result['id'][] = $value;
+                $result['typename'][] = Inputproduct::find()->where(['id' => $value])->one()['fertilizer'];
+            }
+        }
+
+//     	var_dump($result);exit;
+        return $result;
+    }
 }

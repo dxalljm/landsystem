@@ -1,6 +1,6 @@
 <?php
-namespace backend\controllers;
-use app\models\tables;
+namespace frontend\controllers;use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 use app\models\Farms;
 /* @var $this yii\web\View */
@@ -28,6 +28,7 @@ $this->params['breadcrumbs'][] = '更新';
 
     <?= $this->render('loan_form', [
         'model' => $model,
+    	'process' => $process,
     ]) ?>
               </div>
             </div>

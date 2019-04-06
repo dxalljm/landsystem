@@ -1,8 +1,9 @@
 <?php
-namespace backend\controllers;
-use app\models\tables;
+namespace frontend\controllers;use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
+use app\models\Plant;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\yieldbaseSearch */
@@ -17,16 +18,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <section class="content">
     <div class="row">
         <div class="col-xs-12">
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>                    </h3>
-                </div>
-                <div class="box-body">
+            <?php User::tableBegin('产量基数');?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a('添加', ['yieldbasecreate'], ['class' => 'btn btn-success']) ?>
+ 
     </p>
 
     <?= GridView::widget([
@@ -36,15 +33,19 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'plant_id',
+            [
+            	'attribute' =>'plant_id',
+            	'value' => function($model) {
+            		return Plant::find()->where(['id'=>$model->plant_id])->one()['typename'];
+            	}
+            ],
             'yield',
             'year',
 
             ['class' => 'frontend\helpers\eActionColumn'],
         ],
     ]); ?>
-                </div>
-            </div>
+            <?php User::tableEnd();?>
         </div>
     </div>
 </section>

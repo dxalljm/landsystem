@@ -1,8 +1,8 @@
 <?php
-namespace frontend\controllers;
+namespace frontend\controllers;use app\models\User;
 use Yii;
 use yii\helpers\Url;
-use app\models\tables;
+use app\models\Tables;
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
 use app\models\ManagementArea;
@@ -23,61 +23,97 @@ use app\models\Farms;
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">
-                        缴费业务(<?= Theyear::findOne(1)['years']?>年度)
+                        缴费业务
                     </h3>
                 </div>
                 <div class="box-body">
 <br />
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        //'filterModel' => $searchModel,
+        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
           // 'id',
             [
 	            'attribute' => 'management_area',
+				'options' => ['width'=>150],
 	            'value' => function($model) {
-	            	return ManagementArea::find()->where(['id'=>$model->management_area])->one()['areaname'];
-            }
-            ],
+					return ManagementArea::getAreanameOne($model->management_area);
+            },
+				'filter' => ManagementArea::getAreaname(),
+			],
            
             [
             	'label' => '农场名称',
-              	'attribute' => 'farmname',
-            	'value' => 'farms.farmname',
+				
+              	'attribute' => 'farms_id',
+				'value' => function ($model){
+				
+					return Farms::find()->where(['id'=>$model->farms_id])->one()['farmname'];
+				}
             ],
             [
 	            'label' => '法人姓名',
+				'attribute'=>'farmer_id',
+// 				'options' => ['width'=>100],
 	            'value' => function ($model){
             		return Farms::find()->where(['id'=>$model->farms_id])->one()['farmername'];
             	}
             ],
+			[
+				'label' => '合同号',
+				'attribute' => 'contractnumber',
+				'value' => function($model) {
+					$farm = Farms::find()->where(['id'=>$model->farms_id])->one();
+					return $farm['contractnumber'];
+				}
+			],
+			[
+				'label' => '合同面积',
+				'attribute' => 'contractarea',
+				'options' =>['width' => '120'],
+			],
             [
             'label' => '缴费年度',
-            'attribute' => 'ypayyear',
+            'attribute' => 'payyear',
+            'format' => 'raw',
+            'options' => ['width'=>100],
             'value' => function($model) {
-            	return $model->ypayyear.'年度';
+            	if($model->payyear == date('Y'))
+            		return '<strong class="text text-red">'.$model->payyear.'年度</strong>';
+            	else
+            		return $model->payyear.'年度';
             }
+            ],
+            [
+            	'attribute' => 'measure',
+            		'value' => function($model) {
+            			return $model->measure.'亩';
+            		}
             ],
             [
             	//'label' => '应收金额',
             	'attribute' => 'amounts_receivable',
             	'value' => function($model) {
+					if(Collection::find()->where(['farms_id'=>$model->farms_id,'ypayyear'=>$model->ypayyear])->count() > 1) {
+						return MoneyFormat::num_format($model->real_income_amount).'元';
+					}
             		return MoneyFormat::num_format($model->amounts_receivable).'元';
             	}
             ],
+//            [
+//	            //'label' => '实收金额',
+//	            'attribute' => 'real_income_amount',
+//	            'value' => function($model) {
+//	            	return MoneyFormat::num_format($model->real_income_amount).'元';
+//	            }
+//            ],
             [
-	            //'label' => '实收金额',
-	            'attribute' => 'real_income_amount',
+	            'label' => '应追缴金额',
+				'attribute' => 'owe',
 	            'value' => function($model) {
-	            	return MoneyFormat::num_format($model->real_income_amount).'元';
-	            }
-            ],
-            [
-	            'label' => '差额',
-	            'value' => function($model) {
-	            	return MoneyFormat::num_format(bcsub($model->amounts_receivable, $model->real_income_amount,2)).'元';
+	            	return MoneyFormat::num_format(Collection::getOwe($model->farms_id,$model->ypayyear)).'元';
 	            }
             ],
             //'cardid',
@@ -87,9 +123,13 @@ use app\models\Farms;
             'format'=>'raw',
             //'class' => 'btn btn-primary btn-lg',
             'value' => function($model,$key){
-            	return Html::a('确认缴费','index.php?r=tempprintbill/tempprintbillcreate&id='.$model->id, [
+            if($model->payyear == date('Y'))
+            	$class = 'btn btn-danger';
+            else 
+            	$class = 'btn btn-success';
+            	$html = Html::a('确认缴费','index.php?r=tempprintbill/tempprintbillcreate&id='.$model->id, [
             			'id' => 'collectioncreate',
-            			'class' => 'btn btn-success',
+            			'class' => $class,
             			'title' => '地产科确认提交的缴费申请，点击按钮确认缴费并打印发票',
             			
             			//'data-toggle' => 'modal',
@@ -97,6 +137,12 @@ use app\models\Farms;
             			//'onclick' => 'collectioncreate('.$model->farms_id.','.$model->cardid.')',
             			//'onclick' => "javascript:window.open('".yii::$app->urlManager->createUrl(['/collection/collectioncreate','id'=>$key,'year'=>$years])."','','width=700,height=600,top=50,left=380, toolbar=no, status=no, menubar=no, resizable=no, scrollbars=yes');return false;",
             	]);
+//				$html .= '&nbsp;';
+//				$html .= Html::a('撤消','index.php?r=collection/collectionreset&id='.$model->id, [
+//					'id' => 'collectionreset',
+//					'class' => 'btn btn-danger',
+//				]);
+				return $html;
             }
             ],
         ],

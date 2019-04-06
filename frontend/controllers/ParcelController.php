@@ -15,6 +15,9 @@ use app\models\UploadForm;
 use app\models\Farms;
 use app\models\Logs;
 use app\models\Lease;
+use app\models\Zongdioffarm;
+use app\models\User;
+use app\models\ManagementArea;
 /**
  * ParcelController implements the CRUD actions for Parcel model.
  */
@@ -31,7 +34,14 @@ class ParcelController extends Controller
             ],
         ];
     }
-
+	public function beforeAction($action)
+	{
+		if(Yii::$app->user->isGuest) {
+			return $this->redirect(['site/logout']);
+		} else {
+			return true;
+		}
+	}
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -93,9 +103,10 @@ class ParcelController extends Controller
      */
     public function actionParcelview($id)
     {
-    	Logs::writeLog('查看宗地信息',$id);
+		$model = $this->findModel($id);
+    	Logs::writeLogs('查看宗地信息',$model);
         return $this->render('parcelview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -109,8 +120,7 @@ class ParcelController extends Controller
         $model = new Parcel();
 		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$new = $model->attributes;
-        	Logs::writeLog('创建宗地',$model->id,'',$new);
+        	Logs::writeLogs('创建宗地',$model);
             return $this->redirect(['parcelview', 'id' => $model->id]);
         } else {
             return $this->render('parcelcreate', [
@@ -152,7 +162,7 @@ class ParcelController extends Controller
     				$parchmodel->figurenumber =  $loadxls->getActiveSheet()->getCell('L'.$i)->getValue();
     				$parchmodel->save();
     				$new = $parchmodel->attributes;
-    				Logs::writeLog('xls批量导入创建宗地信息',$parchmodel->id,'',$new);
+    				Logs::writeLogs('xls批量导入创建宗地信息',$parchmodel);
     				//print_r($parchmodel->getErrors());
 	            }
 	        }
@@ -172,10 +182,8 @@ class ParcelController extends Controller
     public function actionParcelupdate($id)
     {
         $model = $this->findModel($id);
-		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$new = $model->attributes;
-        	Logs::writeLog('更新宗地信息',$id,$old,$new);
+        	Logs::writeLogs('更新宗地信息',$model);
             return $this->redirect(['parcelview', 'id' => $model->id]);
         } else {
             return $this->render('parcelupdate', [
@@ -193,8 +201,7 @@ class ParcelController extends Controller
     public function actionParceldelete($id)
     {
         $model = $this->findModel($id);
-    	$old = $model->attributes;
-    	Logs::writeLog('删除宗地',$id,$old);
+    	Logs::writeLogs('删除宗地',$model);
         $model->delete();
 
         return $this->redirect(['parcelindex']);
@@ -216,41 +223,148 @@ class ParcelController extends Controller
         }
     }
     //得到宗的面积（累加值）$zongdi='1-100、2-100'
-    public  function  actionParcelarea($zongdi)
+public  function  actionParcelarea($zongdi,$farms_id=null)
     {
-    	$grossarea = 0;
-	    $zongdiarr = explode('、',$zongdi);
-	    $count = count($zongdiarr);
-	    
-	    $zd = $zongdiarr[$count-1];
-	    if(!strstr($zd,'(')) {
-	    //foreach ($zongdiarr as $zd) {
-	    	$parcel = Parcel::find()->where(['unifiedserialnumber' => $zd])->one();
-	    	$area = $parcel['grossarea'];
-	    	if($area) {	
-	    		if(!empty($parcel['farms_id'])) {
-	    			$status = 0;
-	    			$grossarea = 0;
-	    			$message = '对不起，您输入的地块已经被“'.Farms::find()->where(['id'=>$parcel['farms_id']])->one()['farmname'].'”占用';
-	    		} else {
-		    		$status = 1;
-		    		$grossarea += $area;
-		    		$message = true;
-	    		}
-	    	}
-	    	else {
-	    		$status = 0;
-	    		$message = '对不起，您输入的地块不存在！';
-	    	}
-	    } else {
-	    	$area = Parcel::find()->where(['unifiedserialnumber' => $zd])->one()['grossarea'];
-	    	$status = 1;
-	    	$grossarea = $area;
-	    	$message = '';
-	    }
-	    	
-    	echo json_encode(['status' => $status, 'area' => $grossarea,'message' => $message]);
+    	$netarea = 0;
+		$areaNumber = explode('-', $zongdi);
+		$management = User::getUserManagementArea();
+// 		if(in_array($areaNumber[0],$management)) {
+			$parcel = Parcel::find()->where(['unifiedserialnumber' => $zongdi])->one();
+	    	if($parcel) {
+				$zongdiinfo = $this->findParcel($zongdi,$farms_id);
+				$newzongdiinfo = $zongdiinfo;
+// 		    		var_dump($zongdiinfo);
+// 				if (in_array($farms_id,$zongdiinfo['farms_id'])) {
+// 					$status = 1;
+// 					$netarea = $newzongdiinfo['netarea'];
+// 					$message = true;
+// 					$showmsg = false;
+// 				} else {
+					if ($zongdiinfo['state']) {
+						$status = 0;
+						$netarea = 0;
+						$showmsg = true;
+						$message = '对不起' . "</br>";
+						$sum = 0.0;
+						unset($zongdiinfo['state']);
+						unset($zongdiinfo['netarea']);
+						unset($zongdiinfo['farms_id']);
+						unset($zongdiinfo['measure']);
+						unset($zongdiinfo[$farms_id]);
+						$message .= $zongdi . '面积为' . $newzongdiinfo['measure'] . '亩<br>';
+// 						var_dump($zongdiinfo);
+						foreach ($zongdiinfo as $value) {
+							$message .= $value['management_area'] . '-' . $value['farmname'] . '(' . $value['farmername'] . ')占用' . $value['area'] . '亩' . "</br>";
+							$message .= '合同号：' . $value['contractnumber'] . '</br>';
+// 							$sum += $value['area'];
+						}
 
+						if (bccomp($newzongdiinfo['netarea'], $newzongdiinfo['measure'], 2)) {
+							//$cha为被占用面积
+							$cha = bcsub($newzongdiinfo['netarea'], $sum, 2);
+							if ($cha > 0) {
+								$result = $cha;
+								$status = 1;
+								//剩余面积
+								$netarea = $cha;
+// 			    			$showmsg = true;
+								$message .= '将显示剩余面积' . $cha . '亩。';
+							} else {
+								$status = 0;
+								$netarea = 0;
+// 	    					$showmsg = true;
+								$message .= '没有剩余面积。';
+							}
+						} else {
+							$status = 0;
+							$netarea = 0;
+// 	    				$showmsg = true;
+							$message .= '没有剩余面积。';
+
+						}
+					} else {
+						$status = 1;
+						$netarea = $newzongdiinfo['netarea'];
+						$message = true;
+						$showmsg = false;
+					}
+// 				}
+			} else {
+					$status = 0;
+					$showmsg = true;
+					$message = '对不起，您输入的地块不存在！';
+				}
+
+// 		} else {
+// 			$status = 0;
+// 			$showmsg = true;
+// 			$message = '对不起，您只能输入您所辖管理区的宗地号！';
+// 		}
+// 	    	var_dump($netarea);var_dump($message);var_dump($showmsg);
+    	echo json_encode(['status' => $status, 'area'=>$netarea, 'message' => $message,'showmsg' => $showmsg]);
+
+    }
+
+	public function actionParcelzongdioffarmsave($farms_id,$zongdiinfo)
+	{
+		$model = new Zongdioffarm();
+		$model->zongdinumber = Lease::getZongdi($zongdiinfo);
+		$model->farms_id = $farms_id;
+		$model->measure = Lease::getArea($zongdiinfo);
+		$model->save();
+	}
+
+	public function actionParcelzongdioffarmdelete($farms_id,$zongdi)
+	{
+		$zdof = Zongdioffarm::find()->where(['zongdinumber'=>$zongdi,'farms_id'=>$farms_id])->one();
+//		var_dump($zdof);exit;
+		$model = Zongdioffarm::findOne($zdof['id']);
+		$model->delete();
+		echo json_encode(['data'=>$zdof]);
+		var_dump($model->getErrors());exit;
+	}
+	//查找宗地信息，如果状态为真，则被占用，返回被占用的面积值和原净面积值
+    private function findParcel($zongdi,$farms_id=null)
+    {
+    	$result = [];
+		$result['farms_id'] = '';
+		$farmsarea = 0.0;
+    	$parcel = Parcel::find()->where(['unifiedserialnumber' => $zongdi])->one();
+//     	var_dump($parcel['netarea']);
+    	
+    	$parcels = Zongdioffarm::find()->where(['zongdinumber' => $zongdi])->all();
+//		var_dump($parcels);
+    	$sum = 0.0;
+//     	$state = false;
+    	
+    	$farmname = '';
+     	if($parcels) {
+			foreach ($parcels as $value) {
+				$farm = Farms::find()->where(['id' => $value['farms_id']])->one();
+				$result[$farm['id']]['management_area'] = ManagementArea::getAreaname($farm['management_area']);
+				$result[$farm['id']]['farmname'] = $farm['farmname'];
+				$result[$farm['id']]['farmername'] = $farm['farmername'];
+				$result[$farm['id']]['contractnumber'] = $farm['contractnumber'];
+				$result[$farm['id']]['area'] = $value['measure'];
+				$result['farms_id'][] = $farm['id'];
+				if($value['farms_id'] !== (int)$farms_id) { 					
+					$farmsarea += $value['measure'];
+				}
+			}
+			
+		}
+// 		var_dump($farmsarea);
+//     	$result['area'] = $parcel['netarea'] - $sum;
+    	
+    	$result['netarea'] = $parcel['netarea'] - $farmsarea;
+    	$result['measure'] = $parcel['netarea'];
+    	if($result['netarea'] < $parcel['netarea']) {
+    		$state = true;
+    	} else
+    		$state = false;
+    	$result['state'] = $state;
+//     	var_dump($result);exit;
+    	return $result;
     }
     
     public function actionParcelsetfarms()
@@ -291,7 +405,7 @@ class ParcelController extends Controller
     			unset($key);
     		else {
     			if(!strstr($value,'(')) {
-		    		$area = Parcel::find()->where(['unifiedserialnumber' => $value])->one()['grossarea'];
+		    		$area = Parcel::find()->where(['unifiedserialnumber' => $value])->one()['netarea'];
 		    		$format[] = $value.'('.$area.')';
 		    		$areaSum += $area;
     			}	

@@ -27,7 +27,14 @@ class AfterchenqianController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
     /**
      * Lists all Afterchenqian models.
      * @return mixed

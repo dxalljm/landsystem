@@ -1,6 +1,6 @@
 <?php
 namespace backend\controllers;
-use app\models\tables;
+use app\models\Tables;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -37,7 +37,8 @@ $this->params['breadcrumbs'][] = $this->title;
             [
             	'attribute' => 'typename',
             	'value' => $typenamearr[$model->typename],
-            ]
+            ],
+            'level',
         ],
     ]) ?>
 

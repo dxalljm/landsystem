@@ -33,7 +33,8 @@ class Projectplan extends \yii\db\ActiveRecord
     {
         return [
             [['project_id', 'create_at', 'update_at', 'state'], 'integer'],
-            [['content'], 'string']
+        	[['money'], 'number'],
+            [['content','contract'], 'string']
         ];
     }
 
@@ -51,6 +52,8 @@ class Projectplan extends \yii\db\ActiveRecord
             'create_at' => '创建日期',
             'update_at' => '更新日期',
             'state' => '状态',
+        	'money' => '补贴金额',
+        	'contract' => '项目施工合同',
         ];
     }
 }

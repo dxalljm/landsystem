@@ -26,6 +26,14 @@ class NationController extends Controller
             ],
         ];
     }
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -57,7 +65,8 @@ class NationController extends Controller
      */
     public function actionNationview($id)
     {
-    	Logs::writeLog('查看民族管理',$id);
+        $model = $this->findModel($id);
+    	Logs::writeLog('查看民族管理',$model);
         return $this->render('nationview', [
             'model' => $this->findModel($id),
         ]);
@@ -73,8 +82,7 @@ class NationController extends Controller
         $model = new Nation();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$new = $model->attributes;
-        	Logs::writeLog('创建民族',$model->id,'',$new);
+        	Logs::writeLogs('创建民族',$model);
             return $this->redirect(['nationview', 'id' => $model->id]);
         } else {
             return $this->render('nationcreate', [
@@ -92,10 +100,8 @@ class NationController extends Controller
     public function actionNationupdate($id)
     {
         $model = $this->findModel($id);
-		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$new = $model->attributes;
-        	Logs::writeLog('更新民族信息',$id,$old,$new);
+        	Logs::writeLogs('更新民族信息',$model);
             return $this->redirect(['nationview', 'id' => $model->id]);
         } else {
             return $this->render('nationupdate', [
@@ -113,8 +119,7 @@ class NationController extends Controller
     public function actionNationdelete($id)
     {
     	$model = $this->findModel($id);
-    	$old = $model->attributes;
-    	Logs::writeLog('删除民族',$id,$old);
+    	Logs::writeLogs('删除民族',$model);
         $model->delete();
 
         return $this->redirect(['nationindex']);

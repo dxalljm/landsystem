@@ -117,37 +117,28 @@ class Collection extends \yii\db\ActiveRecord {
 		$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
 		$amountsColor = ['#fedfdf','#feeedf','#fefddf','#e1fedf','#dffcfe','#dfe3fe','#fedffe'];
 		foreach ( Farms::getUserManagementArea($userid) as $value ) {
+			$allmeasure = Farms::find ()->where ( [
+					'management_area' => $value,
+// 					'state' => 1,
+			] )->andFilterWhere(['between', 'state', 1,3])->andFilterWhere(['between','create_at',Theyear::getYeartime($userid)[0],Theyear::getYeartime($userid)[1]])->sum ( 'contractarea' );
 			
-			$allmeasure = Farms::find ()->where ( [ 
-					'management_area' => $value 
-			] )->sum ( 'measure' );
-			$amountsSum =  (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [
-							'years' => Theyear::findOne(1)['years'] 
-					] )->one ()['price']);
-			$amounts_receivable[] = $amountsSum;
-// 			$amounts_receivable [] = [ 
-// 					'color' => $amountsColor[$i],
-// 					'borderColor' => $color [$i],
-// 					'y' => (float)sprintf("%.2f",$allmeasure * PlantPrice::find ()->where ( [
-// 							'years' => date ( 'Y' ) 
-// 					] )->one ()['price']/10000)
-// 			];
+			$amountsSum = ( float ) sprintf ( "%.2f", $allmeasure * PlantPrice::find ()->where ( [
+					'years' => User::getYear($userid)
+			] )->one ()['price'] );
+			
+			
 			$collectionSUm = 0.0;
-
-			$collectionSUm =  Collection::find ()->where ( [ 
-						'management_area' => $value,
-						'dckpay' => 1,
-				] )->sum ( 'real_income_amount' );
 			
-// 			$real_income_amount [] = [
-// 					'color' => $color[$i],
-// 					'y' => $collectionSUm,
-// 			];
-// 			if($collectionSUm)
-				$real_income_amount[] = ( float ) sprintf("%.2f",$collectionSUm);
-// 			else 
-// 				$real_income_amount[] = 0;
-			$i ++;
+			$collectionSUm = Collection::find ()->where ( [
+					'management_area' => $value,
+// 					'state' => 1,
+					'payyear' => User::getYear($userid),
+			] )->andWhere('farms_id<>0')->sum ( 'real_income_amount' );
+// 			$amounts_receivable  = ( float )bcsub($amountsSum , $collectionSUm ,2);
+			$amounts_receivable = $amountsSum;
+			$real_income_amount  = ( float ) sprintf ( "%.2f", $collectionSUm );
+			$result['all'][] = $amounts_receivable;
+			$result['real'][] = $real_income_amount;
 		}
 // 		$cha = [];
 // 		var_dump($real_income_amount);
@@ -175,7 +166,7 @@ class Collection extends \yii\db\ActiveRecord {
 					]
 				]
 			],
-			'data'=>$real_income_amount,
+			'data'=>$result['real'],
 		],
 		[
 			'name'=>'应收金额',
@@ -197,7 +188,7 @@ class Collection extends \yii\db\ActiveRecord {
 					]
 				]
 			],
-			'data'=>$amounts_receivable,
+			'data'=>$result['all'],
 		]];
 // 		$result = [ 
 // 				[
@@ -273,7 +264,7 @@ class Collection extends \yii\db\ActiveRecord {
 		//$farm = Farms::find()->where(['management_area'=>$whereArray])->all();
 		//$sum = 0.0;
 		//foreach ($farm as $value) {
-			$sum = (float)Collection::find()->where(['management_area'=>$whereArray,'dckpay'=>1])->sum('real_income_amount');
+			$sum = (float)Collection::find()->where(['management_area'=>$whereArray,'state'=>1,'payyear'=>User::getYear($userid)])->andWhere('farms_id<>0')->sum('real_income_amount');
 // 			var_dump($s);
 			
 		//}
@@ -289,7 +280,7 @@ class Collection extends \yii\db\ActiveRecord {
 			$sum += Farms::getNowContractnumberArea($value['id']);
 		}
 		return (float)sprintf("%.2f",$sum * PlantPrice::find ()->where ( [ 
-							'years' => Theyear::findOne(1)['years'] 
+							'years' => User::getYear($userid)
 					] )->one ()['price']).'元';
 	}
 }

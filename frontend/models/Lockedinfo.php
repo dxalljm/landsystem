@@ -43,4 +43,12 @@ class Lockedinfo extends \yii\db\ActiveRecord
             'lockedcontent' => '冻结原因',
         ];
     }
+
+    public static function deleteLockinfo($farms_id)
+    {
+        $lockinfo = self::find()->where(['farms_id'=>$farms_id])->one();
+        $model = self::findOne($lockinfo['id']);
+        if($model)
+            $model->delete();
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use app\models\Farms;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -13,6 +14,7 @@ use app\models\Huinonggrant;
 class huinonggrantSearch extends Huinonggrant
 {
 	public $farmer_id;
+	public $state;
     /**
      * @inheritdoc
      */
@@ -114,6 +116,16 @@ class huinonggrantSearch extends Huinonggrant
     	//     	var_dump($tj);exit;
     	return $tj;
     }
+	public function lesseepinyinSearch($str = NULL)
+	{
+		if (preg_match ("/^[A-Za-z]/", $str)) {
+			$tj = ['like','lessee',$str];
+		} else {
+			$tj = ['like','farmername',$str];
+		}
+		//     	var_dump($tj);exit;
+		return $tj;
+	}
     public function searchIndex($params)
     {
 //     	var_dump($params);exit;
@@ -123,12 +135,20 @@ class huinonggrantSearch extends Huinonggrant
     			'query' => $query,
     	]);
     
-    	if($params['huinonggrantSearch']['management_area'] == 0)
-    		$this->management_area = NULL;
-    	else
-    		$this->management_area = $params['huinonggrantSearch']['management_area'];
+    	if(isset($params['huinonggrantSearch']['management_area'])) {
+			if($params['huinonggrantSearch']['management_area'] == 0)
+				$this->management_area = NULL;
+			else
+				$this->management_area = $params['huinonggrantSearch']['management_area'];
+		} else {
+			$management_area = Farms::getManagementArea()['id'];
+			if(count($management_area) > 1)
+				$this->management_area = NULL;
+			else 
+				$this->management_area = $management_area;
+		}
     	$farmid = [];
-    	if((isset($params['huinonggrantSearch']['farms_id']) and $params['huinonggrantSearch']['farms_id'] !== '') or (isset($params['huinonggrantSearch']['farmer_id']) and $params['huinonggrantSearch']['farmer_id'] !== '')) {
+    	if((isset($params['huinonggrantSearch']['state']) and $params['huinonggrantSearch']['state'] !== '') or (isset($params['huinonggrantSearch']['farms_id']) and $params['huinonggrantSearch']['farms_id'] !== '') or (isset($params['huinonggrantSearch']['farmer_id']) and $params['huinonggrantSearch']['farmer_id'] !== '')) {
 	    	$farm = Farms::find();
 	    	$farm->andFilterWhere(['management_area'=>$this->management_area]);
     	}
@@ -137,6 +157,10 @@ class huinonggrantSearch extends Huinonggrant
     		$farm->andFilterWhere($this->pinyinSearch($this->farms_id));
     		    		
     	}
+		if(isset($params['huinonggrantSearch']['state']) and $params['huinonggrantSearch']['state'] !== '') {
+			$this->state = $params['huinonggrantSearch']['state'];
+			$farm->andFilterWhere(['state'=>$this->state]);
+		}
 
     	if(isset($params['huinonggrantSearch']['farmer_id']) and $params['huinonggrantSearch']['farmer_id'] !== '') {
     		$this->farmer_id = $params['huinonggrantSearch']['farmer_id'];
@@ -147,8 +171,7 @@ class huinonggrantSearch extends Huinonggrant
 	    		$farmid[] = $value['id'];
 	    	}
     	}
-		if(isset($params['state']))
-			$this->state = $params['state'];
+
     	if(isset($params['huinonggrantSearch']['subsidiestype_id']))
     		$this->subsidiestype_id = $params['huinonggrantSearch']['subsidiestype_id'];
 
@@ -176,4 +199,78 @@ class huinonggrantSearch extends Huinonggrant
     
     	return $dataProvider;
     }
+
+	public function searchSearch($params)
+	{
+//     	var_dump($params);exit;
+		$query = Huinonggrant::find();
+
+		$dataProvider = new ActiveDataProvider([
+			'query' => $query,
+		]);
+
+		if(isset($params['huinonggrantSearch']['management_area'])) {
+			if($params['huinonggrantSearch']['management_area'] == 0)
+				$this->management_area = NULL;
+			else
+				$this->management_area = $params['huinonggrantSearch']['management_area'];
+		} else {
+			$management_area = Farms::getManagementArea()['id'];
+			if(count($management_area) > 1)
+				$this->management_area = NULL;
+			else
+				$this->management_area = $management_area;
+		}
+		$farmid = [];
+		if((isset($params['huinonggrantSearch']['state']) and $params['huinonggrantSearch']['state'] !== '') or (isset($params['huinonggrantSearch']['farms_id']) and $params['huinonggrantSearch']['farms_id'] !== '') or (isset($params['huinonggrantSearch']['farmer_id']) and $params['huinonggrantSearch']['farmer_id'] !== '')) {
+			$farm = Farms::find();
+			$farm->andFilterWhere(['management_area'=>$this->management_area]);
+		}
+		if(isset($params['huinonggrantSearch']['farms_id']) and $params['huinonggrantSearch']['farms_id'] !== '') {
+			$this->farms_id = $params['huinonggrantSearch']['farms_id'];
+			$farm->andFilterWhere($this->pinyinSearch($this->farms_id));
+
+		}
+		if(isset($params['huinonggrantSearch']['state']) and $params['huinonggrantSearch']['state'] !== '') {
+			$this->state = $params['huinonggrantSearch']['state'];
+			$farm->andFilterWhere(['state'=>$this->state]);
+		}
+
+		if(isset($params['huinonggrantSearch']['farmer_id']) and $params['huinonggrantSearch']['farmer_id'] !== '') {
+			$this->farmer_id = $params['huinonggrantSearch']['farmer_id'];
+			$farm->andFilterWhere($this->farmerpinyinSearch($this->farmer_id));
+		}
+		if(isset($farm)) {
+			foreach ($farm->all() as $value) {
+				$farmid[] = $value['id'];
+			}
+		}
+
+		if(isset($params['huinonggrantSearch']['subsidiestype_id']))
+			$this->subsidiestype_id = $params['huinonggrantSearch']['subsidiestype_id'];
+
+
+		if(isset($params['huinonggrantSearch']['typeid']))
+			$this->typeid = $params['huinonggrantSearch']['typeid'];
+
+		if(isset($params['huinonggrantSearch']['area']))
+			$query->andFilterWhere($this->areaSearch($params['huinonggrantSearch']['area']));
+
+		$query->andFilterWhere([
+			'id' => $this->id,
+			'farms_id' => $farmid,
+			'lease_id' => $this->lease_id,
+			'huinong_id' => $this->huinong_id,
+			'subsidiestype_id'=>$this->subsidiestype_id,
+			'typeid' => $this->typeid,
+			'management_area' => $this->management_area,
+			'money' => $this->money,
+			'area' => $this->area,
+			'state' => $this->state,
+		]);
+
+		$query->andFilterWhere(['like', 'note', $this->note]);
+		$query->andFilterWhere(['between','update_at',$params['begindate'],$params['enddate']]);
+		return $dataProvider;
+	}
 }

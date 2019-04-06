@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use app\models\Logs;
 use Yii;
 use app\models\Projecttype;
 use frontend\models\projecttypeSearch;
@@ -25,7 +26,14 @@ class ProjecttypeController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -43,7 +51,7 @@ class ProjecttypeController extends Controller
     {
         $searchModel = new projecttypeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        Logs::writeLogs('项目类型列表');
         return $this->render('projecttypeindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -57,8 +65,10 @@ class ProjecttypeController extends Controller
      */
     public function actionProjecttypeview($id)
     {
+        $model = $this->findModel($id);
+        Logs::writeLogs('查看项目类型',$model);
         return $this->render('projecttypeview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -72,6 +82,7 @@ class ProjecttypeController extends Controller
         $model = new Projecttype();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Logs::writeLogs('创建项目类型',$model);
             return $this->redirect(['projecttypeview', 'id' => $model->id]);
         } else {
             return $this->render('projecttypecreate', [
@@ -91,6 +102,7 @@ class ProjecttypeController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Logs::writeLogs('更新项目类型',$model);
             return $this->redirect(['projecttypeview', 'id' => $model->id]);
         } else {
             return $this->render('projecttypeupdate', [
@@ -107,8 +119,8 @@ class ProjecttypeController extends Controller
      */
     public function actionProjecttypedelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id)->delete();
+        Logs::writeLogs('删除项目类型',$model);
         return $this->redirect(['projecttypeindex']);
     }
 

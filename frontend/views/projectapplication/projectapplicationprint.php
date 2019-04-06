@@ -1,5 +1,5 @@
 <?php
-namespace frontend\controllers;
+namespace frontend\controllers;use app\models\User;
 use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Reviewprocess */

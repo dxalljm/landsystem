@@ -24,6 +24,7 @@ use app\models\AuthItem;
 		$model->menulist = explode(',',$parents['menulist']);
 		$model->plate = explode(',',$parents['plate']);
 		$model->businessmenu = explode(',',$parents['businessmenu']);
+		$model->searchmenu = explode(',',$parents['searchmenu']);
 	?>
     <?= $form->field($model, 'menulist')->checkboxList($menus); ?>
 	<?php $plantarr = ArrayHelper::map(Mainmenu::find()->where(['typename'=>1])->all(), 'id', 'menuname');?>
@@ -31,6 +32,9 @@ use app\models\AuthItem;
 	
 	<?php $business = ArrayHelper::map(Mainmenu::find()->where(['typename'=>2])->all(),'id','menuname');?>
 	<?= $form->field($model, 'businessmenu')->checkboxList($business)->label('业务菜单'); ?>
+	<?php $searchmenu = MenuToUser::getSearchList();?>
+	<?= $form->field($model, 'searchmenu')->checkboxList($searchmenu)?>
+	<?= $form->field($model, 'auditinguser')->checkboxList(MenuToUser::getAuditingList())?>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

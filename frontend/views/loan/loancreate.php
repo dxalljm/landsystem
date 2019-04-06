@@ -1,6 +1,7 @@
 <?php
-namespace backend\controllers;
-use app\models\tables;
+namespace frontend\controllers;
+use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 use app\models\Farms;
 
@@ -20,15 +21,15 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">
-                        <?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']; ?>
+                    <h3>
+                        <?= Farms::find()->where(['id'=>$_GET['farms_id']])->one()['farmname']; ?><font color="red">(<?= User::getYear()?>年度)</font>
                     </h3>
                 </div>
                 <?php Farms::showRow($_GET['farms_id']);?>
                 <div class="box-body">
-
     <?= $this->render('loan_form', [
         'model' => $model,
+        'process' => $process,
     ]) ?>
               </div>
             </div>

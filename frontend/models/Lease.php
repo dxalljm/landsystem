@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use app\models\User;
+use frontend\models\employeeSearch;
 use Yii;
 use app\models\Farms;
 use app\models\Theyear;
@@ -30,14 +32,61 @@ class Lease extends \yii\db\ActiveRecord
     public function rules()
     {
     	return [
-    			[['farms_id', 'years'], 'integer'],
-    			[['lessee_cardid', 'enddate', 'rentpaymode', 'policyholder', 'insured', 'huinongascription', 'address','year'], 'string'],
-    			[['rent'], 'number'],
-    			[['lease_area', 'lessee', 'lessee_telephone', 'begindate', 'photo', 'create_at', 'update_at'], 'string', 'max' => 500]
+    			[['farms_id', 'create_at', 'update_at','years','management_area'], 'integer'],
+    			[['lessee_cardid', 'enddate', 'rentpaymode', 'policyholder', 'insured', 'huinongascription', 'address','year','renttype','renttime','otherassumpsit'], 'string'],
+    			[['rent','lease_area'], 'number'],
+    			[[ 'lessee', 'lessee_telephone', 'begindate', 'photo', 'farmerzb','lesseezb','zhzb_farmer','zhzb_lessee','ddcj_farmer','ddcj_lessee','goodseed_farmer','goodseed_lessee','new_farmer','new_lessee'], 'string', 'max' => 500],
+				[['lessee','lessee_cardid'],'required'],
     	];
     }
-    
 
+	public static function getLesees($farms_id)
+	{
+		$lessees = [];
+		$result = [];
+		$r = [];
+		$ps = Plantingstructurecheck::find()->where(['farms_id'=>$farms_id,'year'=>User::getYear()])->all();
+//		var_dump($ps);exit;
+		foreach ($ps as $p) {
+			$lessees[] = Subsidyratio::getPlanter($p['plant_id'],$farms_id,$p['lease_id']);
+		}
+//		var_dump($lessees);
+		foreach ($lessees as $lessee) {
+			foreach ($lessee as $k => $l) {
+				$bank = BankAccount::isBank($l['cardid'],$farms_id);
+//				var_dump($bank);
+				if(!$bank) {
+					$result[$k] = $l;
+				}
+			}
+		}
+		sort($result);
+		//var_dump($result);exit;
+		foreach ($result as $k => $v) {
+			$v['i'] = $k;
+			$r[] = $v;
+		}
+		return $r;
+	}
+	public static function getLeseesArray($farms_id)
+	{
+		$result = [];
+		$lessees = self::getLesees($farms_id);
+		foreach ($lessees as $lessee) {
+			$bank = BankAccount::find()->where(['farms_id'=>$farms_id,'cardid'=>$lessee['cardid']])->one();
+			$result[$lessee['name']] = ['cardid'=>$lessee['cardid'],'accountnumber'=>$bank['accountnumber']];
+		}
+//		$farmer = Plantingstructure::find()->where(['farms_id'=>$farms_id,'year'=>User::getYear(),'lease_id'=>0])->count();
+//		if($farmer) {
+//			$farm = Farms::findOne($farms_id);
+//			$lessees[$farm->farmername] = $farm->cardid;
+//		}
+//		$lease = Lease::find()->where(['farms_id'=>$farms_id,'year'=>User::getYear()])->all();
+//		foreach ($lease as $value) {
+//			$lessees[$value['lessee']] = $value['lessee_cardid'];
+//		}
+		return $result;
+	}
     //得到1-100（123）中的面积123
     public static function getArea($Leasearea)
     {
@@ -73,6 +122,16 @@ class Lease extends \yii\db\ActiveRecord
     	return $zongdi;
     }
     
+    public static function getZongdiToNumber($zongdi)
+    {
+    	$result = [];
+    	$zongdiArray = explode('、',$zongdi);
+    	foreach($zongdiArray as $value) {
+    		$result[] = self::getZongdi($value);
+    	}
+    	return implode('、',$result);
+    }
+    
     //得到承租人的宗地信息
     public static function getLeaseArea($lease_id) 
     {
@@ -81,18 +140,20 @@ class Lease extends \yii\db\ActiveRecord
     	return $LeaseArea;
     }
     //得到所有当前农场已经租赁的面积
-    public static function getAllLeaseArea($farms_id,$lease_id = null)
+    public static function getAllLeaseArea($farms_id,$year=null)
     {
+		if(empty($year)) {
+			$year = User::getYear();
+		}
     	$result = 0.0;
     	$leaseQuery = self::find();
-    	if($lease_id)
-    		$leases = $leaseQuery->where(['farms_id'=>$farms_id,'id'=>$lease_id])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
-    	else
-    		$leases = $leaseQuery->where(['farms_id'=>$farms_id])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
-    	foreach($leases as $value) {
-    			$result += $value['lease_area'];
-    	}
-//     	var_dump($result);exit;
+		$result = $leaseQuery->where(['farms_id' => $farms_id, 'year' => $year])->sum('lease_area');
+//    	foreach($leases as $value) {
+//    			$result += $value['lease_area'];
+//    	}
+     	if(empty($result)) {
+			return 0;
+		}
     	return $result;
     }
     
@@ -145,21 +206,23 @@ class Lease extends \yii\db\ActiveRecord
    		return $zdarea;
    }
     
-    public static function scanOverArea($farms_id) 
+    public static function scanOverArea($farms_id,$year=null)
     {
-    	$leasearea = 0.0;
     	//$zdarea——农场所有宗地（面积）
-    	$zdarea = self::getFarmsMeasure($farms_id);
     	//$lease——已经被租赁的所有宗地（面积）
-    	$lease = self::find()->where(['farms_id'=>$farms_id])->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]])->all();
-    	$result = 0;
-    	if($lease) {
-    		
-    		foreach ($lease as $value) {
-    			$leasearea += $value['lease_area'];
-    		}
-    	}
-    	return $leasearea;
+		if(empty($year)) {
+			$year = User::getYear();
+		}
+    	$lease_area = self::find()->where(['farms_id'=>$farms_id,'year'=>$year])->sum('lease_area');
+		$area = Plantingstructure::find()->where(['farms_id'=>$farms_id,'year'=>$year])->sum('area');
+		if(empty($lease_area)) {
+			$lease_area = 0;
+		}
+		if(empty($area)) {
+			$area = 0;
+		}
+		$result = bcadd($lease_area,$area,2);
+    	return $result;
     }
    
     //把相同宗地面积进行累加，返回处理后的数组
@@ -190,14 +253,38 @@ class Lease extends \yii\db\ActiveRecord
     	return $zongdiarr;
     }
     //返回还没有租赁面积
-    public static function getNoArea($farms_id)
+    public static function getNoArea($farms_id,$year=null)
     {
+		if(empty($year)) {
+			$year = User::getYear();
+		}
     	$farms = Farms::find()->where(['id'=>$farms_id])->one();
     	$allarea = $farms->contractarea + $farms->notclear;
 //     	var_dump(bcsub($farms->contractarea, self::getAllLeaseArea($farms_id),2));exit;
-    	return bcsub($farms->contractarea, self::getAllLeaseArea($farms_id),2);
+    	$result = (float)bcsub($farms->contractarea, self::getAllLeaseArea($farms_id,$year),2);
+//		var_dump(self::getAllLeaseArea($farms_id));exit;
+		return $result;
     }
 
+	public static function getOverArea($farms_id)
+	{
+//		$leaseArea = Lease::find()->where(['farms_id'=>$farms_id,'year'=>User::getYear()])->sum('lease_area');
+		$plantingArea = Plantingstructure::find()->where(['farms_id'=>$farms_id,'year'=>User::getYear()])->sum('area');
+		$contractarea = Farms::findOne($farms_id)->contractarea;
+		$lease_area = self::getAllLeaseArea($farms_id);
+		$area = bcadd($lease_area,$plantingArea,2);
+		if((int)$area) {
+			if(bccomp($contractarea,$area) == 0) {
+				return $area;
+			} else {
+				$result = bcsub($contractarea, $area, 2);
+			}
+		} else {
+			$result = 0;
+		}
+		return $result;
+//		var_dump($result);
+	}
     //将数组中1-100(10),1-200(123)的面积进行累加
     public static function getListArea($Area)
     {
@@ -239,6 +326,45 @@ class Lease extends \yii\db\ActiveRecord
             'huinongascription' => '惠农补贴归属',
             'address' => '住址',
          	'year' => '年度',
+			'farmerzb' => '法人占比',
+			'lesseezb' => '承租人占比',
+         	'renttype' => '交付方式',
+         	'renttime' => '交付时间',
+         	'otherassumpsit' => '其他约定',
+			'management_area' => '管理区',
         ]; 
     }
+
+	public static function getHuinonginfo($lease_id)
+	{
+//		var_dump($lease_id);
+		$lease = Lease::find()->where(['id'=>$lease_id])->one();
+		if(empty($lease) or $lease_id == 0) {
+			return false;
+		}
+		$result = [];
+//		if($lease['huinongascription'] == 'farmer') {
+//			$result['huinongascription']['farmer'] = Farms::find()->where(['id'=>$lease['farms_id']])->one()['farmername'];
+//		}
+//		if($lease['huinongascription'] == 'lessee') {
+//			$result['huinongascription']['lessee'] = $lease['lessee'];
+//		}
+//		if($lease['huinongascription'] == 'proportion') {
+		$result['huinongascription']['farmer']['zhzb'] = $lease['zhzb_farmer'];
+		$result['huinongascription']['lessee']['zhzb'] = $lease['zhzb_lessee'];
+
+		$result['huinongascription']['farmer']['ddcj'] = $lease['ddcj_farmer'];
+		$result['huinongascription']['lessee']['ddcj'] = $lease['ddcj_lessee'];
+
+		$result['huinongascription']['farmer']['goodseed'] = $lease['goodseed_farmer'];
+		$result['huinongascription']['lessee']['goodseed'] = $lease['goodseed_lessee'];
+
+		$result['huinongascription']['farmer']['ymcj'] = $lease['ymcj_farmer'];
+		$result['huinongascription']['lessee']['ymcj'] = $lease['ymcj_lessee'];
+
+		$result['huinongascription']['farmer']['new'] = $lease['new_farmer'];
+		$result['huinongascription']['lessee']['new'] = $lease['new_lessee'];
+//		}
+		return $result;
+	}
 }

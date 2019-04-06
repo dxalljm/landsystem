@@ -19,7 +19,7 @@ use frontend\helpers\ActiveFormrdiv;
     <td colspan="3" align="center"><h3>大兴安岭岭南宜农林地承包费专用票据</h3></td>
     </tr>
   <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo date('Y年m月d日',$model->create_at); ?></td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo date('Y年m月d日',$model->kptime); ?></td>
     <td align="right">NO:</td><?php $model->nonumber = $nonumber?>
     <td width="30%"><?= $form->field($model, 'nonumber')->textInput(['readonly'=>'readonly'])->label(false)->error(false) ?></td>
   </tr>
@@ -40,7 +40,7 @@ use frontend\helpers\ActiveFormrdiv;
   <tr>
     <td height="23" colspan="2" align="center" valign="middle">      宜农林地承包费</td>
     <td align="center" valign="middle">      元/亩<br /></td>
-    <td align="center" valign="middle"><?= $form->field($model, 'number')->textInput(['readonly'=>'readonly'])->label(false)->error(false) ?></td>
+    <td align="center" valign="middle"><?= $form->field($model, 'measure')->textInput(['readonly'=>'readonly'])->label(false)->error(false) ?></td>
     <td align="center" valign="middle"><?= $form->field($model, 'standard')->textInput(['value'=>30,'readonly'=>'readonly'])->label(false)->error(false) ?></td>
     <td align="center" valign="middle"><?= $form->field($model, 'amountofmoney')->textInput(['readonly'=>'readonly'])->label(false)->error(false) ?></td>
   </tr>
@@ -58,7 +58,7 @@ use frontend\helpers\ActiveFormrdiv;
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td width="60%">收款单位（盖章）大兴安岭林业管理局岭南管委会</td>
-    <td width="13%">收款人：王丽静</td>
+    <td width="13%">收款人：<?= Yii::$app->getUser()->getIdentity()->realname?></td>
     <td width="27%" align="right">（微机专用 手填无效）</td>
   </tr>
 </table>
@@ -69,7 +69,7 @@ use frontend\helpers\ActiveFormrdiv;
 
     <?php ActiveFormrdiv::end(); ?>
 <script>
-$('#tempprintbill-number').keyup(function(event){
+$('#tempprintbill-measure').keyup(function(event){
 	input = $(this).val();
 	result = input*$('#tempprintbill-standard').val();
 	$('#tempprintbill-amountofmoneys').val(result);

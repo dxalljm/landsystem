@@ -1,6 +1,6 @@
 <?php
-namespace backend\controllers;
-use app\models\tables;
+namespace frontend\controllers;use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
 use app\models\ManagementArea;
@@ -24,10 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>
-                    </h3>
-                </div>
+                    <h3>&nbsp;&nbsp;&nbsp;&nbsp;<?= $this->title ?><font color="red">(<?= User::getYear()?>年度)</font></h3></div>
                 <div class="box-body">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -37,15 +34,20 @@ $this->params['breadcrumbs'][] = $this->title;
 
             //'id',
             [
+//                'label' => '管理区',
+                'attribute' => 'management_area',
+                'value'=> function($model) {
+// 				            	var_dump($model);exit;
+                    return ManagementArea::getAreanameOne($model->management_area);
+                },
+                'filter' => ManagementArea::getAreaname(),
+            ],
+            [
             	'attribute' => 'farmname',
 
             ],
             'farmername',
-//             [
-//             	'label' => '管理区',
-//               	'attribute' => 'areaname',      						
-//             	'value' => 'managementarea.areaname',
-//             ],
+
 			//'management_area',
             'measure',
             'contractnumber',

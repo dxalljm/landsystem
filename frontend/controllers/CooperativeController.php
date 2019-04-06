@@ -27,7 +27,14 @@ class CooperativeController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -45,7 +52,7 @@ class CooperativeController extends Controller
     {
         $searchModel = new cooperativeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-		Logs::writeLog('合作社信息');
+		Logs::writeLogs('合作社信息');
         return $this->render('cooperativeindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -78,8 +85,7 @@ class CooperativeController extends Controller
         	$model->create_at = time();
         	$model->update_at = $model->create_at;
         	$model->save();
-        	$newAttr = $model->attributes;
-        	Logs::writeLog('创建合作社',$model->id,'',$newAttr);
+        	Logs::writeLogs('创建合作社',$model);
             return $this->redirect(['cooperativeview', 'id' => $model->id]);
         } else {
             return $this->render('cooperativecreate', [
@@ -97,12 +103,10 @@ class CooperativeController extends Controller
     public function actionCooperativeupdate($id)
     {
         $model = $this->findModel($id);
-		$oldAttr = $model->attributes;
         if ($model->load(Yii::$app->request->post())) {
         	$model->update_at = time();
         	$model->save();
-        	$newAttr = $model->attributes;
-        	Logs::writeLog('更新合作社信息',$id,$oldAttr,$newAttr);
+        	Logs::writeLogs('更新合作社信息',$model);
             return $this->redirect(['cooperativeview', 'id' => $model->id]);
         } else {
             return $this->render('cooperativeupdate', [
@@ -120,8 +124,7 @@ class CooperativeController extends Controller
     public function actionCooperativedelete($id)
     {
     	$model = $this->findModel($id);
-    	$oldAttr = $model->attributes;
-    	Logs::writeLog('删除合作社信息',$id,$oldAttr);
+    	Logs::writeLogs('删除合作社信息',$model);
         $model->delete();
 		
         return $this->redirect(['cooperativeindex']);

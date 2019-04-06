@@ -13,6 +13,8 @@ use app\models\Lease;
 use frontend\models\leaseSearch;
 use app\models\Logs;
 use app\models\Farms;
+use app\models\User;
+
 /**
  * EmployeeController implements the CRUD actions for Employee model.
  */
@@ -29,7 +31,14 @@ class EmployeeController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -45,7 +54,7 @@ class EmployeeController extends Controller
     	$lease = Lease::find()->where(['farms_id'=>$farms_id])->all();
     	$farms = Farms::find()->where(['id'=>$farms_id])->one();
 		//$this->getView()->registerJsFile($url)
-		Logs::writeLog('雇工信息');
+		Logs::writeLog('农场雇工信息',$farms_id);
         return $this->render('employeefathers', [
             'lease' => $lease,
         	'farms' => $farms,
@@ -74,9 +83,10 @@ class EmployeeController extends Controller
      */
     public function actionEmployeeview($id)
     {
-    	Logs::writeLog('查看雇工信息',$id);
+        $model = $this->findModel($id);
+    	Logs::writeLogs('查看雇工信息',$model);
         return $this->render('employeeview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -91,10 +101,10 @@ class EmployeeController extends Controller
         
         if ($model->load(Yii::$app->request->post())) {
         	$model->create_at = time();
-        	$model->update_at = time();
+        	$model->update_at = $model->create_at;
+            $model->year = User::getYear();
         	$model->save();
-        	$newAttr = $model->attributes;
-        	Logs::writeLog('创建雇工',$model->id,'',$newAttr);
+        	Logs::writeLogs('创建雇工',$model);
             return $this->redirect(['employeefathers', 'farms_id' => $farms_id]);
         } else {
             return $this->render('employeecreate', [
@@ -132,12 +142,10 @@ class EmployeeController extends Controller
     public function actionEmployeeupdate($id,$farms_id)
     {
         $model = $this->findModel($id);
-		$oldAttr = $model->attributes;
         if ($model->load(Yii::$app->request->post())) {
         	$model->update_at = time();
         	$model->save();
-        	$newAttr = $model->attributes;
-        	Logs::writeLog('更新雇工信息',$id,$oldAttr,$newAttr);
+        	Logs::writeLogs('更新雇工信息',$model);
             return $this->redirect(['employeefathers', 'farms_id' => $farms_id]);
         } else {
             return $this->render('employeeupdate', [
@@ -155,8 +163,7 @@ class EmployeeController extends Controller
     public function actionEmployeedelete($id,$farms_id)
     {
     	$model = $this->findModel($id);
-    	$oldAttr = $model->attributes;
-    	Logs::writeLog('删除雇工信息',$id,$oldAttr);
+    	Logs::writeLogs('删除雇工信息',$model);
         $model->delete();
 
         return $this->redirect(['employeefathers', 'farms_id' => $farms_id]);

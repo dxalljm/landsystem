@@ -1,6 +1,6 @@
 <?php
-namespace backend\controllers;
-use app\models\tables;
+use app\models\User;
+use app\models\Tables;
 use yii\helpers\Html;
 
 
@@ -19,15 +19,14 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>
-                    </h3>
-                </div>
+                    <h3>&nbsp;&nbsp;&nbsp;&nbsp;<?= $this->title ?><font color="red">(<?= User::getLastYear()?>年度)</font></h3></div>
                 <div class="box-body">
 
     <?= $this->render('sales_form', [
         'model' => $model,
     	'volume' => $volume,
+        'plant' => $plant,
+        'goodseed' => $goodseed,
     ]) ?>
                 </div>
             </div>

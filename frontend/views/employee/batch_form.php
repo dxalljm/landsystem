@@ -26,6 +26,7 @@ use yii\web\View;
               <td><?php echo Html::dropDownList('EmployeesPost[employeetype][]', '', ['长期工'=>'长期工','短期工'=>'短期工','临时工'=>'临时工'],['class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('EmployeesPost[employeename][]', '', ['class' => 'form-control']); ?></td>
               <td><?php echo Html::textInput('EmployeesPost[cardid][]', '', ['class' => 'form-control']); ?></td>
+              <td><?php echo Html::textInput('EmployeesPost[telephone][]', '', ['class' => 'form-control']); ?></td>
               <td valign="middle" align="center"><?php echo Html::button('-', ['class' => 'btn btn-warning delete-employee']) ?></td>
           </tr>
       </thead>
@@ -34,6 +35,7 @@ use yii\web\View;
 			<td width=15% align='center'>雇工类型</td>
 			<td align='center'>雇工姓名</td>
 			<td align='center'>身份证号</td>
+			<td align='center'>联系电话</td>
 			<td align='center'>操作</td>
 		</tr>
 		<?php 
@@ -44,6 +46,7 @@ use yii\web\View;
 			$model->employeetype = $val['employeetype'];
 			$model->employeename = $val['employeename'];
 			$model->cardid = $val['cardid'];
+			$model->telephone = $val['telephone'];
 		?>
 		<tr>
 			<td width=15% align='center'>
@@ -54,6 +57,7 @@ use yii\web\View;
             </td>
 			<td align='center'><?= $form->field($model, 'employeename')->textInput(['maxlength' => 500, 'name' => 'EmployeesPost[employeename][]'])->label(false)->error(false) ?></td>
 			<td align='center'><?= $form->field($model, 'cardid')->textInput(['maxlength' => 500, 'name' => 'EmployeesPost[cardid][]'])->label(false)->error(false) ?></td>
+			<td align='center'><?= $form->field($model, 'telephone')->textInput(['maxlength' => 500, 'name' => 'EmployeesPost[telephone][]'])->label(false)->error(false) ?></td>
 			<td valign="middle" align="center"><?php echo Html::button('-', ['class' => 'btn btn-warning delete-employee']) ?></td>
 		</tr>
 		<?php }?>

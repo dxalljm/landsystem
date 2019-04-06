@@ -27,9 +27,9 @@ use yii\helpers\Url;
 <section class="row">
                     <div class="col-sm-6 col-md-3">
                             
-                            <div class="thumbnail">
+                            <div class="card">
                               
-                              <div class="caption">
+                              <div class="card-header">
                                 <h5>捷宇高拍仪网页控件下载</h5>
                                 <p>适用于D系列高拍仪</p>
                                 <p>
@@ -39,9 +39,9 @@ use yii\helpers\Url;
                             </div>
                     </div>
                     <div class="col-sm-6 col-md-3">
-                            <div class="thumbnail">
+                            <div class="card">
                               
-                              <div class="caption">
+                              <div class="card-header">
                                 <h5>财务打印控件下载</h5>
                                 <p>适用于32位系统与64位系统</p>
                                 <p>
@@ -51,9 +51,9 @@ use yii\helpers\Url;
                             </div>
                     </div>
                      <div class="col-sm-6 col-md-3">
-                            <div class="thumbnail">
+                            <div class="card">
                               
-                              <div class="caption">
+                              <div class="card-header">
                                 <h5>点聚weboffice控件下载</h5>
                                 <p>在线打开、编辑、打印office文档控件</p>
                                 <p>

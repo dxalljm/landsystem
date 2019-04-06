@@ -29,7 +29,7 @@ class Processname extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['processdepartment', 'Identification','rolename','sparerole'], 'string', 'max' => 500]
+            [['processdepartment', 'Identification','department_id','level_id'], 'string', 'max' => 500]
         ];
     }
 
@@ -42,8 +42,20 @@ class Processname extends \yii\db\ActiveRecord
 			'id' => 'ID',
             'processdepartment' => '流程科室名称',
             'Identification' => '标识',
-            'rolename' => '角色',
-            'sparerole' => '备用角色',
+            'department_id' => '科室',
+            'level_id' => '职级',
         ];
+    }
+
+    public static function getProcessname($department_id,$level_id)
+    {
+        $result = [];
+        $processname = Processname::find()->all();
+        foreach ($processname as $process) {
+            if(in_array($department_id,explode(',',$process['department_id'])) and $level_id == $process['level_id']) {
+                $result[$process['id']] = $process['Identification'];
+            }
+        }
+        return $result;
     }
 }

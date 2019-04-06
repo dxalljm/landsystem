@@ -1,6 +1,6 @@
 <?php
 
-use app\models\tables;
+use app\models\Tables;
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
 use app\models\Farms;

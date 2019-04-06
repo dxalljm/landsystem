@@ -19,7 +19,7 @@ class ProcessnameSearch extends Processname
     {
         return [
             [['id'], 'integer'],
-            [['processdepartment', 'Identification','rolename','sparerole'], 'safe'],
+            [['processdepartment', 'Identification','department_id','level_id'], 'safe'],
         ];
     }
 
@@ -61,8 +61,8 @@ class ProcessnameSearch extends Processname
 
         $query->andFilterWhere(['like', 'processdepartment', $this->processdepartment])
             ->andFilterWhere(['like', 'Identification', $this->Identification])
-            ->andFilterWhere(['like', 'rolename', $this->rolename])
-	        ->andFilterWhere(['like', 'sparerole', $this->sparerole]);
+            ->andFilterWhere(['like', 'department_id', $this->department_id])
+	        ->andFilterWhere(['like', 'level_id', $this->level_id]);
 
         return $dataProvider;
     }

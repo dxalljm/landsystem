@@ -91,7 +91,7 @@ class Parcel extends \yii\db\ActiveRecord
     	}
     	return $all;
     }
-
+	
     public static function parcelState($array)
     {
 //     	var_dump($array);exit;
@@ -99,6 +99,7 @@ class Parcel extends \yii\db\ActiveRecord
     		$arrayZongdi = explode('、', $array['zongdi']);
     		foreach ($arrayZongdi as $zongdi) {
     			$parcel = Parcel::find()->where(['unifiedserialnumber'=>Lease::getZongdi($zongdi)])->one();
+//     			var_dump(Lease::getZongdi($zongdi));exit;
 	    		$model = Parcel::findOne($parcel['id']);
 	    		$model->farms_id = $array['farms_id'];
 	    		$model->save();
@@ -112,4 +113,66 @@ class Parcel extends \yii\db\ActiveRecord
 	    	}
     	}
     }
+
+	public static function in_parcel($value,$array,$planting_id=null)
+	{
+//		var_dump($value);exit;
+		$disabled = false;
+		$area = Lease::getArea($value);
+		$zongdi = Lease::getZongdi($value);
+		foreach ($array as $val) {
+			$vz = Lease::getZongdi($val);
+			if($zongdi == $vz) {
+				$area -= Lease::getArea($val);
+				if(bccomp($area,0) == 0) {
+					$disabled = true;
+				}
+				if(!empty($planting_id)) {
+					$p = Plantingstructurecheck::findOne($planting_id);
+					$temp = Lease::getZongdiToNumber($p->zongdi);
+					if(in_array($zongdi,explode('、',$temp))) {
+						$disabled = true;
+					}
+				}
+			}
+		}
+		return ['area'=>$area,'disabled'=>$disabled,'value'=>$zongdi.'('.$area.')'];
+	}
+
+	//宗地号一致时,合并面积
+	public static function zongdi_merge_area($array1,$array2)
+	{
+		$result = [];
+		$zongdiArray = array_merge($array1,$array2);
+		$format = self::zongdiFormat($zongdiArray);
+		foreach ($format as $key => $value) {
+			$result[] = $key.'('.array_sum($value).')';
+		}
+//		foreach ($array1 as $a1) {
+//			$num1 = Lease::getZongdi($a1);
+//			$area1 = Lease::getArea($a1);
+//			foreach ($array2 as $k2 => $a2) {
+//				$num2 = Lease::getZongdi($a2);
+//				$area2 = Lease::getArea($a2);
+//				if($num1 == $num2) {
+//					$area = bcadd($area1,$area2,2);
+//					$result[] = $num1.'('.$area.')';
+//					unset($array2[$k2]);
+//				}
+//			}
+//		}
+//		var_dump($result);
+//		var_dump($array2);
+//		$result = array_merge($result,$array2);
+		return $result;
+	}
+
+	public static function zongdiFormat($array)
+	{
+		$result = [];
+		foreach ($array as $value) {
+			$result[Lease::getZongdi($value)][] = Lease::getArea($value);
+		}
+		return $result;
+	}
 }

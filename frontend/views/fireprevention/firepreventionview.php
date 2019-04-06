@@ -4,10 +4,51 @@ use yii\helpers\Html;
 use frontend\helpers\ActiveFormrdiv;
 use app\models\Firepreventionemployee;
 use app\models\Farms;
+use app\models\User;
 /* @var $this yii\web\View */
 /* @var $model app\models\Fireprevention */
 /* @var $form yii\widgets\ActiveForm */
 ?>
+<link rel="stylesheet" href="vendor/bower/viewerjs-master/dist/viewer.css">
+<style>
+    .pictures {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        max-width: 50rem;
+    }
+
+    .pictures > li {
+        float: left;
+        width: 100%;
+        height: 100%;
+        margin: 0 -1px -1px 0;
+        border: 1px solid transparent;
+        overflow: hidden;
+    }
+
+    .pictures > li > img {
+        width: 100%;
+        cursor: -webkit-zoom-in;
+        cursor: zoom-in;
+    }
+
+    .viewer-download {
+        color: #fff;
+        font-family: FontAwesome;
+        font-size: .75rem;
+        line-height: 1.5rem;
+        text-align: center;
+    }
+
+    .viewer-download::before {
+        content: "\f019";
+    }
+
+</style>
+
+
+
 
 <div class="fireprevention-form">
 <section class="content">
@@ -15,100 +56,101 @@ use app\models\Farms;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">
-                        <?= $this->title ?>
-                    </h3>
-                </div>
+                    <h3>&nbsp;&nbsp;&nbsp;&nbsp;<?= $this->title ?><font color="red">(<?= User::getYear()?>年度)</font></h3></div>
                 <div class="box-body">
+                    <?= Farms::showFarminfo2($_GET['farms_id'])?>
     <?php $form = ActiveFormrdiv::begin(); ?>
-    <h2><?= Farms::find()->where(['id'=>$model->farms_id])->one()['farmname'] ?></h2>
-<table width="57%" class="table table-striped table-bordered table-hover table-condensed">
+<br>
+<table width="57%" class="table table-bordered table-hover ">
 		<tr>
 
-<td colspan="3" align='center'><h4>防火、安全、环保合同</h4></td>
-
-<td colspan="7" align='center' valign="middle"><h4>防火设施及火源管理</h4></td>
-</tr>
-
-<tr>
-
-<td width=8% align='center'>文火合同</td>
-
-<td width="11%" align='center'>安全生产<br />
-  合同</td>
-<td width="10%" align='center'>环境保护<br />
-  协议</td>
-<td width="8%" align='center'>扑火工具</td>
-<td width="9%" align='center'>机械设备<br />
-  防火罩</td>
-<td width="8%" align='center'>烟囱<br />
-  防火罩</td>
-<td width="9%" align='center'>房屋防火<br />
-  隔离带</td>
-<td width="9%" align='center'>防火义务<br />
-  宣管员</td>
-<td width="11%" align='center'>一盒火<br />
-  管理员</td>
-<td width="17%" align='center'>液化气<br />
-  灶具</td>
+<td colspan="12" align='center'><span style="font-weight: 200;font-size: 30px">防火、安全、环保合同</span></td>
 
 </tr>
 
 <tr>
 
-<td width=8% align='center'><?php viewModel($model->firecontract);?></td>
+<td width="33%" align='center'><span style="font-weight: 200;font-size: 20px">防火合同</span></td>
+
+<td width="33%" align='center'><span style="font-weight: 200;font-size: 20px">安全生产合同</span></td>
+<td align='center'><span style="font-weight: 200;font-size: 20px">环境保护协议</span></td>
+
+</tr>
+
+<tr>
+
+<td align='center'><?php viewModel($model->firecontract);?></td>
 <td align='center'><?php viewModel($model->safecontract);?></td>
 <td align='center'><?php viewModel($model->environmental_agreement);?></td>
-<td align='center'><?php viewModel($model->firetools);?></td>
-<td align='center'><?php viewModel($model->mechanical_fire_cover); ?></td>
-<td align='center'><?php viewModel($model->chimney_fire_cover); ?></td>
-<td align='center'><?php viewModel($model->isolation_belt); ?></td>
-<td align='center'><?php viewModel($model->propagandist); ?></td>
-<td align='center'><?php viewModel($model->fire_administrator);?></td>
-<td align='center'><?php viewModel($model->cooker);?></td>
 
 </tr>
 
 <tr>
-
-<td colspan="5" align='center'><h4>农场防火宣传栏</h4></td>
-<td colspan="3" align='center'><h4>防火宣传检查现场取景照</h4></td>
-<td align='left'>&nbsp;</td>
-<td align='left'>&nbsp;</td>
-
+<td colspan="3" align='center'><span style="font-weight: 200;font-size: 30px">农场防火宣传栏</span></td>
 </tr>
 
 <tr>
 
-<td width=8% align='center'>野外作业许可证</td>
-<td align='center'>防火合同</td>
-<td align='center'>防火宣传单</td>
-<td align='center'>雇工防火合同</td>
-<td align='center'>防火检查整改记录</td>
-<td align='center'>设备照片</td>
-<td align='center'>人员照片</td>
-<td align='center'>设施照片</td>
-<td align='left'>&nbsp;</td>
-<td align='left'>&nbsp;</td>
-
+    <td align='center'><span style="font-weight: 200;font-size: 20px">野外作业许可证</span></td>
+    <td align='center'><span style="font-weight: 200;font-size: 20px">防火宣传单</span></td>
+    <td align='center'><span style="font-weight: 200;font-size: 20px">防火检查整改记录</span></td>
 </tr>
-
 <tr>
-
-<td width=8% align='center'><?php viewModel($model->fieldpermit);?></td>
-<td align='center'><?php viewModel($model->propaganda_firecontract);?></td>
-<td align='center'><?php viewModel($model->leaflets); ?></td>
-<td align='center'><?php viewModel($model->employee_firecontract);?></td>
-<td align='center'><?php viewModel($model->rectification_record);?></td>
-<td align='center'><?php viewModel($model->equipmentpic);?></td>
-<td align='center'><?php viewModel($model->peoplepic);?></td>
-<td align='center'><?php viewModel($model->facilitiespic);?></td>
-<td align='left'>&nbsp;</td>
-<td align='left'>&nbsp;</td>
-
+    <td align='center'><?php viewModel($model->fieldpermit);?>
+    <td align='center'><?php viewModel($model->leaflets); ?></td>
+    <td align='center'><?php viewModel($model->rectification_record);?></td>
+</tr>
+<tr>
+    <td align='center' height="300px">
+        <?php
+        if(isset($picArray['fieldpermit'])) {?>
+            <div id="fieldpermit">
+                <ul class="pictures">
+                    <?php
+                    foreach ($picArray['fieldpermit'] as $key => $pic):
+                        ?>
+                        <li><img data-original="<?= 'http://192.168.1.10/'.$pic?>" src="<?= 'http://192.168.1.10/'.$pic?>" ></li>
+                        <?php
+                    endforeach;
+                    ?>
+                </ul>
+            </div>
+        <?php }?></td>
+    <td align='center' height="300px">
+        <?php
+        if(isset($picArray['leaflets'])) {?>
+            <div id="leaflets">
+                <ul class="pictures">
+                    <?php
+                    foreach ($picArray['leaflets'] as $key => $pic):
+                        ?>
+                        <li><img data-original="<?= 'http://192.168.1.10/'.$pic?>" src="<?= 'http://192.168.1.10/'.$pic?>" ></li>
+                        <?php
+                    endforeach;
+                    ?>
+                </ul>
+            </div>
+        <?php }?>
+    </td>
+    <td align='center' height="300px">
+        <?php
+        if(isset($picArray['rectification_record'])) {?>
+            <div id="rectification_record">
+                <ul class="pictures">
+                    <?php
+                    foreach ($picArray['rectification_record'] as $key => $pic):
+                        ?>
+                        <li><img data-original="<?= 'http://192.168.1.10/'.$pic?>" src="<?= 'http://192.168.1.10/'.$pic?>" ></li>
+                        <?php
+                    endforeach;
+                    ?>
+                </ul>
+            </div>
+        <?php }?>
+    </td>
 </tr>
 </table>
-<table width="57%" class="table table-striped table-bordered table-hover table-condensed">
+<table width="57%" class="table table-bordered table-hover">
 <tr>
 
 <td colspan="6" align='center'><h3>农场雇工登记</h3></td>
@@ -147,9 +189,9 @@ foreach($employees as $emp) {
     <?php ActiveFormrdiv::end(); ?>
 <?php function viewModel($modelname) {
 	if($modelname == 0)
-		echo '否';
+		echo '<i class="fa fa-fw fa-times-circle text-danger"></i>';
 	else 
-		echo '是';
+		echo '<i class="fa fa-fw fa-check-circle text-success"></i>';
 }?>
                 </div>
             </div>
@@ -157,3 +199,27 @@ foreach($employees as $emp) {
     </div>
 </section>
 </div>
+<script src="vendor/bower/viewerjs-master/dist/viewer.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', function () {
+        var galley = document.getElementById('fieldpermit');
+        var viewer;
+        viewer = new Viewer(galley, {
+            url: 'data-original',
+        });
+    });
+    window.addEventListener('DOMContentLoaded', function () {
+        var galley = document.getElementById('leaflets');
+        var viewer;
+        viewer = new Viewer(galley, {
+            url: 'data-original',
+        });
+    });
+    window.addEventListener('DOMContentLoaded', function () {
+        var galley = document.getElementById('rectification_record');
+        var viewer;
+        viewer = new Viewer(galley, {
+            url: 'data-original',
+        });
+    });
+</script>

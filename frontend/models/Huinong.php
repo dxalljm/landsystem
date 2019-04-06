@@ -33,7 +33,7 @@ public function rules()
         return [
             [['subsidiesarea', 'subsidiesmoney', 'totalamount', 'realtotalamount','totalsubsidiesarea'], 'number'],
             [['typeid', 'create_at', 'update_at'], 'integer'],
-            [['subsidiestype_id', 'begindate', 'enddate'], 'string', 'max' => 500]
+            [['subsidiestype_id', 'begindate', 'enddate','year'], 'string', 'max' => 500]
         ]; 
     } 
 
@@ -55,13 +55,14 @@ public function rules()
             'enddate' => '结束日期',
             'create_at' => '创建日期',
             'update_at' => '更新日期',
+			'year' => '补贴年度',
         ]; 
     } 
     
     public static function getTypename()
     {
     	$result = [];
-    	$huinongs = Huinong::find()->all();
+    	$huinongs = Huinong::find()->where(['year'=>User::getYear()])->all();
     	if($huinongs) {
 	    	foreach ($huinongs as $value) {
 // 	    		$result['id'][] = $value['id'];
@@ -77,10 +78,52 @@ public function rules()
 //     	var_dump($result);
     	return $result;	
     }
-    
+
+	public static function getSearchPlant($begindate,$enddate)
+	{
+		$years = Theyear::getYearArray($begindate,$enddate);
+		$huinongs = Huinong::find()->where(['year'=>$years])->all();
+		if($huinongs) {
+			foreach ($huinongs as $value) {
+// 	    		$result['id'][] = $value['id'];
+// 				var_dump($value);
+				$sub = Subsidiestype::find()->where(['id'=>$value['subsidiestype_id']])->one();
+// 		    	$modelname = 'app\\model\\'.$sub['urladdress'];
+				if($sub['urladdress'] == 'Plant') {
+
+					$result[$value['typeid']] = Plant::find()->where(['id' => $value['typeid']])->one()['typename'] . $sub['typename'];
+
+				}
+			}
+		}
+		return $result;
+	}
+
+	public static function getPlant($str = null)
+	{
+		$result = [];
+		$huinongs = Huinong::find()->where(['year'=>User::getYear()])->all();
+		if($huinongs) {
+			foreach ($huinongs as $value) {
+// 	    		$result['id'][] = $value['id'];
+// 				var_dump($value);
+				$sub = Subsidiestype::find()->where(['id'=>$value['subsidiestype_id']])->one();
+// 		    	$modelname = 'app\\model\\'.$sub['urladdress'];
+				if($sub['urladdress'] == 'Plant') {
+					if($str == 'id') {
+						$result[] = $value['typeid'];
+					} else {
+						$result[$value['typeid']] = Plant::find()->where(['id' => $value['typeid']])->one()['typename'] . $sub['typename'];
+					}
+				}
+			}
+		}
+		return $result;
+	}
+
     public static function getHuinongCount()
     {
-    	$rows = Huinong::find()->count();
+    	$rows = Huinong::find()->where(['year'=>User::getLastYear()])->count();
     	if($rows)
     		return '<small class="label pull-right bg-red">'.$rows.'</small>';
     	else
@@ -120,4 +163,27 @@ public function rules()
     	
     	return $jsonData;
     }
+
+	//
+	public static function showSubsidyName($result,$state=null)
+	{
+		foreach ($result as $key => $val) {
+			foreach ($val as $k=>$v) {
+				if(is_array($v)) {
+					if($state) {
+						if($state == 'name') {
+							return $k;
+						}
+						if($state == 'zb') {
+							return $val;
+						}
+					} else {
+						return $val;
+					}
+				} else {
+					return $v;
+				}
+			}
+		}
+	}
 }

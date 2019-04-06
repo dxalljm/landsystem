@@ -49,7 +49,6 @@ class Farmer extends \yii\db\ActiveRecord
     {
         return [
             [['farms_id', 'isupdate', 'years', 'state'], 'integer'],
-            [['farmerbeforename', 'nickname', 'gender', 'nation', 'political_outlook', 'cultural_degree', 'domicile', 'nowlive', 'living_room', 'photo', 'cardpic','cardpicback'], 'string', 'max' => 500]
         ];
     }
 
@@ -62,21 +61,9 @@ class Farmer extends \yii\db\ActiveRecord
 			'id' => 'ID',
             'farms_id' => '农场ID',
             'isupdate' => '是否可更新',
-            'farmerbeforename' => '曾用名',
-            'nickname' => '绰号',
-            'gender' => '性别',
-            'nation' => '民族',
-            'political_outlook' => '政治面貌',
-            'cultural_degree' => '文化程度',
-            'domicile' => '户籍所在地',
-            'nowlive' => '现住地',
-            'living_room' => '生产生活用房坐标点',
-            'photo' => '近期照片',
-            'cardpic' => '身份证扫描件',
             'years' => '年度',
             'create_at' => '创建日期',
             'update_at' => '更新日期',
-            'cardpicback' => '身份证扫描件',
             'state' => '状态',
         ];
     }

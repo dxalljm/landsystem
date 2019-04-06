@@ -2,6 +2,8 @@
 
 namespace frontend\controllers;
 
+use app\models\Plant;
+use Composer\IO\NullIO;
 use Yii;
 use app\models\PlantPrice;
 use frontend\models\plantpriceSearch;
@@ -29,7 +31,14 @@ class PlantpriceController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -61,9 +70,10 @@ class PlantpriceController extends Controller
      */
     public function actionPlantpriceview($id)
     {
-    	Logs::writeLog('查看缴费基数',$id);
+        $model = $this->findModel($id);
+    	Logs::writeLog('查看缴费基数',$model);
         return $this->render('plantpriceview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -77,34 +87,58 @@ class PlantpriceController extends Controller
         $model = new PlantPrice();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$farms = Farms::find()->where(['state'=>0])->all();
+        	$farms = Farms::find()->where(['state'=>[1,2,3]])->all();
         	foreach ($farms as $farm) {
         		$collection = Collection::find()->where(['farms_id'=>$farm['id'],'payyear'=>$model->years])->one();
         		$oldCollection = Collection::find()->where(['farms_id'=>$farm['id'],'payyear'=>$model->years-1])->one();
         		if($collection) {
         			$collectionModel = Collection::findOne($collection['id']);
+
         			$collectionModel->update_at = time();
+//                    $collectionModel->payyear = $model->years;
+//                    $collectionModel->farms_id = $farm['id'];
+                    $collectionModel->amounts_receivable = $collectionModel->getAR($model->years,$farm['id']);
+//                    $collectionModel->dckpay = 0;
+//                    $collectionModel->state = 0;
+                    $collectionModel->management_area = $farm['management_area'];
+                    if($oldCollection) {
+                        $collectionModel->owe = $oldCollection->owe;
+                    }
+                    if($collectionModel->state > 0) {
+                        $collectionModel->owe += bcsub($collectionModel->getAR($model->years,$farm['id']), $collectionModel->real_income_amount,2);
+                        $collectionModel->ypayarea = bcdiv(bcsub($collectionModel->getAR($model->years,$farm['id']), $collectionModel->real_income_amount,2),$model->price,2);
+                        $collectionModel->ypaymoney = bcsub($collectionModel->getAR($model->years,$farm['id']), $collectionModel->real_income_amount,2);
+                    } else {
+                        $collectionModel->ypaymoney = $collectionModel->amounts_receivable;
+                    }
+                    $collectionModel->farmstate = $farm['state'];
+                    $collectionModel->contractarea = $farm['contractarea'];
+                    $collectionModel->save();
+//                    var_dump($collectionModel->getErrors());exit;
         		} else {
         			$collectionModel = new Collection();
         			$collectionModel->create_at = time();
         			$collectionModel->update_at = $collectionModel->create_at;
+                    $collectionModel->payyear = $model->years;
+                    $collectionModel->farms_id = $farm['id'];
+                    $collectionModel->amounts_receivable = $collectionModel->getAR($model->years,$farm['id']);
+                    $collectionModel->ypayarea = $farm['contractarea'];
+                    $collectionModel->ypaymoney = $collectionModel->amounts_receivable;
+                    $collectionModel->owe = 0.0;
+                    $collectionModel->dckpay = 0;
+                    $collectionModel->state = 0;
+                    $collectionModel->farmstate = $farm['state'];
+                    $collectionModel->management_area = $farm['management_area'];
+                    $collectionModel->contractarea = $farm['contractarea'];
+                    if($oldCollection) {
+                        $collectionModel->owe = $oldCollection->owe;
+                    }
+                    $collectionModel->save();
         		}
-        		$collectionModel->payyear = $model->years;
-        		$collectionModel->farms_id = $farm['id'];
-        		$collectionModel->amounts_receivable = $collectionModel->getAR($model->years);
-        		$collectionModel->ypayarea = $farm['contractarea'];
-        		$collectionModel->ypaymoney = $collectionModel->amounts_receivable;
-        		$collectionModel->dckpay = 0;
-        		$collectionModel->state = 0;
-        		$collectionModel->management_area = $farm['management_area'];
-        		if($oldCollection) {
-        			$collectionModel->owe = $oldCollection->owe;
-        		}
-        		$collectionModel->save();
+
            	}
-        	$new = $model->attributes;
-        	Logs::writeLog('添加缴费基数',$model->id,'',$new);
-            return $this->redirect(['plantpriceview', 'id' => $model->id]);
+        	Logs::writeLogs('添加缴费基数',$model);
+            return $this->redirect(['collection/collectioninfo']);
         } else {
             return $this->render('plantpricecreate', [
                 'model' => $model,
@@ -118,14 +152,101 @@ class PlantpriceController extends Controller
      * @param integer $id
      * @return mixed
      */
+
+    public function actionPlantpriceaddcollection($id)
+    {
+        $model = $this->findModel($id);
+//        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $farms = Farms::find()->where(['state'=>[1,2,3]])->all();
+            foreach ($farms as $farm) {
+                $collection = Collection::find()->where(['farms_id'=>$farm['id'],'payyear'=>$model->years,])->one();
+                if(empty($collection)) {
+                    $collectionModel = new Collection();
+                    $collectionModel->create_at = time();
+                    $collectionModel->update_at = $collectionModel->create_at;
+                    $collectionModel->payyear = $model->years;
+                    $collectionModel->farms_id = $farm['id'];
+                    $collectionModel->amounts_receivable = $collectionModel->getAR($model->years,$collectionModel->farms_id);
+                    $collectionModel->ypayarea = $farm['contractarea'];
+                    $collectionModel->ypaymoney = $collectionModel->amounts_receivable;
+                    $collectionModel->owe = 0.0;
+                    $collectionModel->dckpay = 0;
+                    $collectionModel->state = 0;
+                    $collectionModel->management_area = $farm['management_area'];
+//                    if($oldCollection) {
+//                        $collectionModel->owe = $oldCollection->owe;
+//                    }
+                    $collectionModel->save();
+                    Logs::writeLogs('追加缴费任务列表',$collectionModel);
+                }
+            }
+//            $new = $model->attributes;
+//            Logs::writeLog('追加缴费任务列表',$id,$old,$new);
+            return $this->redirect(['collection/collectioninfo']);
+//             return $this->redirect(['plantpriceview', 'id' => $model->id]);
+//            return $this->render('plantpriceindex', [
+//                'model' => $model,
+//            ]);
+    }
+
     public function actionPlantpriceupdate($id)
     {
         $model = $this->findModel($id);
 		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	
-        	$new = $model->attributes;
-        	Logs::writeLog('更新缴费基数',$id,$old,$new);
+            $farms = Farms::find()->where(['state'=>[1,2,3]])->all();
+            foreach ($farms as $farm) {
+                $collection = Collection::find()->where(['farms_id'=>$farm['id'],'payyear'=>$model->years,'state'=>0])->one();
+                $oldCollection = Collection::find()->where(['farms_id'=>$farm['id'],'payyear'=>$model->years-1])->one();
+                if($collection) {
+                    $collectionModel = Collection::findOne($collection['id']);
+
+//                    $collectionModel->update_at = time();
+//                    $collectionModel->payyear = $model->years;
+//                    $collectionModel->farms_id = $farm['id'];
+                    $collectionModel->amounts_receivable = $collectionModel->getAR($model->years,$farm['id']);
+//                    $collectionModel->dckpay = 0;
+//                    $collectionModel->state = 0;
+                    $collectionModel->management_area = $farm['management_area'];
+                    if($model->years !== date('Y')) {
+                        $collectionModel->owe = $collectionModel->ypaymoney;
+                        $collectionModel->ypayyear = $model->years;
+                    }
+//                    if($collectionModel->state > 0) {
+//                        $collectionModel->owe += bcsub($collectionModel->getAR($model->years,$farm['id']), $collectionModel->real_income_amount,2);
+//                        var_dump($collectionModel->owe);exit;
+                        $collectionModel->ypayarea = bcdiv(bcsub($collectionModel->getAR($model->years,$farm['id']), $collectionModel->real_income_amount,2),$model->price,2);
+                        $collectionModel->ypaymoney = bcsub($collectionModel->getAR($model->years,$farm['id']), $collectionModel->real_income_amount,2);
+                        $collectionModel->measure = bcdiv($collectionModel->real_income_amount,$model->price,2);
+//                    } else {
+//                        $collectionModel->ypaymoney = $collectionModel->amounts_receivable;
+//                    }
+                    $collectionModel->farmstate = $farm['state'];
+                    $collectionModel->contractarea = $farm['contractarea'];
+                    $collectionModel->save();
+                } else {
+                    $collectionModel = new Collection();
+                    $collectionModel->create_at = time();
+                    $collectionModel->update_at = $collectionModel->create_at;
+                    $collectionModel->payyear = $model->years;
+                    $collectionModel->farms_id = $farm['id'];
+                    $collectionModel->amounts_receivable = $collectionModel->getAR($model->years,$collectionModel->farms_id);
+                    $collectionModel->ypayarea = $farm['contractarea'];
+                    $collectionModel->ypaymoney = $collectionModel->amounts_receivable;
+                    $collectionModel->owe = 0.0;
+                    $collectionModel->dckpay = 0;
+                    $collectionModel->state = 0;
+                    $collectionModel->farmstate = $farm['state'];
+                    $collectionModel->management_area = $farm['management_area'];
+                    $collectionModel->contractarea = $farm['contractarea'];
+//                    if($oldCollection) {
+//                        $collectionModel->owe = $oldCollection->owe;
+//                    }
+                    $collectionModel->save();
+                }
+            }
+        	Logs::writeLogs('更新缴费基数',$model);
+            return $this->redirect(['collection/collectioninfo']);
 //             return $this->redirect(['plantpriceview', 'id' => $model->id]);
         } else {
             return $this->render('plantpriceupdate', [
@@ -149,13 +270,16 @@ class PlantpriceController extends Controller
     public function actionPlantpricedelete($id)
     {
         $model = $this->findModel($id);
-    	$old = $model->attributes;
-    	Logs::writeLog('删除缴费基数',$id,$old);
         $model->delete();
-
+        Logs::writeLogs('删除缴费基数',$model);
         return $this->redirect(['plantpriceindex']);
     }
 
+    public function actionGetprice($year)
+    {
+        $price = PlantPrice::find()->where(['years'=>$year])->one()['price'];
+        echo json_encode($price);
+    }
     /**
      * Finds the PlantPrice model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

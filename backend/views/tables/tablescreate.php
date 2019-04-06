@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\tables */
+/* @var $model app\models\Tables */
 
 $this->title = '创建数据库表';
 $this->params['breadcrumbs'][] = ['label' => '数据库表管理', 'url' => ['tablesindex']];

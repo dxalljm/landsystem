@@ -26,7 +26,14 @@ class ManagementareaController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -59,7 +66,8 @@ class ManagementareaController extends Controller
      */
     public function actionManagementareaview($id)
     {
-    	Logs::writeLog('查看管理区信息',$id);
+        $model = $this->findModel($id);
+    	Logs::writeLogs('查看管理区信息',$model);
         return $this->render('managementareaview', [
             'model' => $this->findModel($id),
         ]);
@@ -75,8 +83,7 @@ class ManagementareaController extends Controller
         $model = new ManagementArea();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$new = $model->attributes;
-        	Logs::writeLog('创建管理区',$model->id,'',$new);
+        	Logs::writeLogs('创建管理区',$model);
             return $this->redirect(['managementareaview', 'id' => $model->id]);
         } else {
             return $this->render('managementareacreate', [
@@ -94,10 +101,8 @@ class ManagementareaController extends Controller
     public function actionManagementareaupdate($id)
     {
         $model = $this->findModel($id);
-		$old = $model->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        	$new = $model->attributes;
-        	Logs::writeLog('更新管理区信息',$id,$old,$new);
+        	Logs::writeLogs('更新管理区信息',$model);
             return $this->redirect(['managementareaview', 'id' => $model->id]);
         } else {
             return $this->render('managementareaupdate', [
@@ -115,8 +120,7 @@ class ManagementareaController extends Controller
     public function actionManagementareadelete($id)
     {
     	$model = $this->findModel($id);
-    	$old = $model->attributes;
-    	Logs::writeLog('删除管理区',$id,$old);
+    	Logs::writeLogs('删除管理区',$model);
         $model->delete();
 
         return $this->redirect(['managementareaindex']);

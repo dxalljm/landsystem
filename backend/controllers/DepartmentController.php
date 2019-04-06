@@ -72,11 +72,18 @@ class DepartmentController extends Controller
         $model = new Department();
 		
         if ($model->load(Yii::$app->request->post())) {
-        	if(is_array($model->membership)) 
-        		$model->membership = implode(',', $model->membership);
-        	
-        	if($model->save())
-            	return $this->redirect(['departmentview', 'id' => $model->id]);
+            if(is_array($model->membership))
+                $model->membership = implode(',', $model->membership);
+            if(is_array($model->menulist))
+                $model->menulist = implode(',', $model->menulist);
+            if(is_array($model->businessmenu))
+                $model->businessmenu = implode(',', $model->businessmenu);
+            if(is_array($model->searchmenu))
+                $model->searchmenu = implode(',', $model->searchmenu);
+        	if($model->save()) {
+//                var_dump($model->getErrors());exit;
+                return $this->redirect(['departmentview', 'id' => $model->id]);
+            }
         } else {
             return $this->render('departmentcreate', [
                 'model' => $model,
@@ -97,6 +104,12 @@ class DepartmentController extends Controller
         if ($model->load(Yii::$app->request->post())) {
         	if(is_array($model->membership))
         		$model->membership = implode(',', $model->membership);
+            if(is_array($model->menulist))
+                $model->menulist = implode(',', $model->menulist);
+            if(is_array($model->businessmenu))
+                $model->businessmenu = implode(',', $model->businessmenu);
+            if(is_array($model->searchmenu))
+                $model->searchmenu = implode(',', $model->searchmenu);
         	if($model->save())
             	return $this->redirect(['departmentview', 'id' => $model->id]);
         } else {

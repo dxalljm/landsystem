@@ -61,7 +61,6 @@ class PermissionController extends Controller
 		$allClassInfo = PermissionForm::allClass();
 		if($classname) {
 			$actionname = $this->getactions($classname);
-			
 			$actions = $this->setActionInfo($actionname, $classname);
 			$model->cname = $classname;
 			$model->classdescription = Tables::find()->where(['tablename'=>str_replace('Controller','',$classname)])->one()['Ctablename'];
@@ -70,13 +69,14 @@ class PermissionController extends Controller
 			$actions = [];
 		if ($model->load(Yii::$app->request->post()))
 		{
+//			var_dump(Tables::find()->where(['tablename'=>str_replace('Controller','',$classname)])->one()['Ctablename']);exit;
 			$itemPost = Yii::$app->request->post('itemPost');
 			for($i=0;$i<count($itemPost['actionName']);$i++) {
 				$permission = new Permission();
 				$permission->name = $this->getActionName($itemPost['actionName'][$i]);
 				$permission->description = $itemPost['description'][$i];
-				$permission->cname = $model->cname;
-				$permission->classdescription = $model->classdescription;
+				$permission->cname = $classname;
+				$permission->classdescription = Tables::find()->where(['tablename'=>str_replace('Controller','',$classname)])->one()['Ctablename'];
 				$permission->type = $model->type;
 				$permission->createdAt = time();
 				$permission->updatedAt = time();
@@ -138,7 +138,7 @@ class PermissionController extends Controller
 					$description = 	'删除'.$tabledesc;
 					break;
 				default:
-					$description = 'JSON'; 
+					$description = '';
 			}
 			$result[] = [
 					'action'=>$value,
@@ -152,9 +152,7 @@ class PermissionController extends Controller
 	{
 		$allClassInfo = PermissionForm::allClass();
 		$c = $allClassInfo[$classname]['path'].$allClassInfo[$classname]['classname'];
-		//var_dump($classname);
-		$actions = $c::actionName();
-		
+		$actions = get_class_methods($c);
 		return $actions;
 	}
 	

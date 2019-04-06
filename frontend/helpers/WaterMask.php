@@ -146,8 +146,8 @@ class WaterMask{
 //         imagefill($this->water_im,0,0,$white_alpha);
     	$this->water_im = imagecreatetruecolor($this->srcImg_info[0],$this->srcImg_info[1]);
         $color = imagecolorallocate($this->water_im,$this->fontColor[0],$this->fontColor[1],$this->fontColor[2]);
-    	for($i=100;$i<=$this->srcImg_info[1];$i+=800) {
-    		for($j=100;$j<=$this->srcImg_info[1];$j+=800) {
+    	for($i=100;$i<=$this->srcImg_info[1];$i+=1000) {
+    		for($j=100;$j<=$this->srcImg_info[1];$j+=1000) {
         		imagettftext($this->water_im,$this->fontSize,$this->angle,$i,$j,$color,$this->fontFile,$this->waterStr);
     		}
     	}

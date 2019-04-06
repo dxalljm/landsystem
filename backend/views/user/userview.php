@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\Department;
-
+use app\models\Userlevel;
 /* @var $this yii\web\View */
 /* @var $model app\models\user */
 
@@ -43,14 +43,20 @@ $this->params['breadcrumbs'][] = $this->title;
             	'value' => date('Y-m-d H:i:s',$model->created_at),
             ],
             [
-            	'attribute' => 'update_at',
-            	'value' => date('Y-m-d H:i:s',$model->created_at),
+            	'attribute' => 'updated_at',
+            	'value' => date('Y-m-d H:i:s',$model->updated_at),
             ],
             [
             	'label' => '所属科室',
             	'attribute' => 'department_id',
             	'value' => Department::find()->where(['id'=>$model->department_id])->one()['departmentname'],
             ],
+            [
+                'attribute' => 'level',
+                'value' => Userlevel::find()->where(['id'=>$model->level])->one()['levelname'],
+            ],
+            'ip',
+            'mac',
             
         ],
     ]) ?>

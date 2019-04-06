@@ -5,7 +5,7 @@ namespace backend\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\tablefields;
+use app\models\Tablefields;
 
 /**
  * tablefieldsSearch represents the model behind the search form about `app\models\tablefields`.
@@ -42,7 +42,7 @@ class tablefieldsSearch extends tablefields
      */
     public function search($params)
     {
-        $query = tablefields::find()->andWhere($params);
+        $query = Tablefields::find()->andWhere($params);
         $query->joinWith(['tables']);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

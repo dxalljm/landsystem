@@ -9,16 +9,17 @@ use yii\bootstrap\ActiveForm;
 ?>
 <style type="text/css">
 .checkbox {
-	color:#FFF;
+	color:#000;
 }
-</style> 
+</style>
+<br><br><br>
 <div class="site-index">
 
 
- <?php $form = ActiveForm::begin(['id' => 'login-form']); ?><br /><br /><br /><br />
-        <table background="images/login3.jpg" height="849" width="1680px" border="0" align="center" cellpadding="0" cellspacing="0">
+ <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+        <table  height="100%" width="100%" border="0" align="center" cellpadding="0" cellspacing="0" style="background-image: url('images/userback.png');background-repeat:no-repeat;background-position:center">
           <tr>
-            <td width="690" height="361"></td>
+            <td width="690" height="0"></td>
             <td width="288">&nbsp;</td>
             <td width="702">&nbsp;</td>
 
@@ -26,7 +27,7 @@ use yii\bootstrap\ActiveForm;
           <tr>
             <td height="36"> </td>
             <td><?= $form->field($model, 'username', [
-        'inputTemplate' => '<div class="input-group"><span class="input-group-addon">用户名:</span>{input}</div>',
+        'inputTemplate' => '<div class="input-group"><span class="input-group-addon" style="color: #FFF">用户名:</span>{input}</div>',
 ])->label('') ?></td>
             <td>&nbsp;</td>
           </tr>
@@ -34,13 +35,13 @@ use yii\bootstrap\ActiveForm;
             <td height="35">
            </td>
             <td><?= $form->field($model, 'password', [
-        'inputTemplate' => '<div class="input-group"><span class="input-group-addon">密&nbsp;&nbsp;码：</span>{input}</div>',
+        'inputTemplate' => '<div class="input-group"><span class="input-group-addon" style="color: #FFF">密&nbsp;&nbsp;码：</span>{input}</div>',
 ])->passwordInput()->label('') ?></td>
             <td>&nbsp;</td>
           </tr>
           <tr>
             <td height="38">&nbsp;</td>
-            <td align="center"><?= Html::submitButton('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;登&nbsp;&nbsp;录&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?></td>
+            <td align="center"><?= Html::submitButton('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;登&nbsp;&nbsp;录&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', ['class' => 'btn btn-success', 'name' => 'login-button']) ?></td>
             <td>&nbsp;</td>
           </tr>
           <tr>

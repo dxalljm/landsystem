@@ -23,12 +23,12 @@ use app\models\AuthItem;
 <td align='left'><?= $form->field($model, 'Identification')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 </tr>
 <tr>
-<td width=15% align='right'>角色</td>
-<td align='left'><?= $form->field($model, 'rolename')->dropDownList(ArrayHelper::map(AuthItem::find()->where(['type'=>1])->all(), 'name', 'name'))->label(false)->error(false) ?></td>
+<td width=15% align='right'>科室</td>
+<td align='left'><?= $form->field($model, 'department_id')->checkboxList(ArrayHelper::map(\app\models\Department::find()->all(), 'id', 'departmentname'))->label(false)->error(false) ?></td>
 </tr>
 <tr>
-<td width=15% align='right'>备用角色</td>
-<td align='left'><?= $form->field($model, 'sparerole')->dropDownList(ArrayHelper::map(AuthItem::find()->where(['type'=>1])->all(), 'name', 'name'))->label(false)->error(false) ?></td>
+<td width=15% align='right'>职级</td>
+<td align='left'><?= $form->field($model, 'level_id')->checkboxList(ArrayHelper::map(\app\models\Userlevel::find()->all(), 'id', 'levelname'))->label(false)->error(false) ?></td>
 </tr>
 </table>
     <div class="form-group">

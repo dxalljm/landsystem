@@ -37,6 +37,13 @@ use frontend\helpers\ActiveFormrdiv;
 <td align='left'><?= $form->field($model, 'cardid')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
 
 </tr>
+<tr>
+
+<td width=15% align='right'>联系电话</td>
+
+<td align='left'><?= $form->field($model, 'telephone')->textInput(['maxlength' => 500])->label(false)->error(false) ?></td>
+
+</tr>
 <?= $form->field($model, 'create_at')->hiddenInput(['value'=>time()])->label(false)->error(false) ?>
 <?= $form->field($model, 'update_at')->hiddenInput(['value'=>time()])->label(false)->error(false) ?>
 </table>

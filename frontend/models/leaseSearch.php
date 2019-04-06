@@ -20,7 +20,7 @@ class leaseSearch extends Lease
     {
         return [
             [['id', 'farms_id', 'years'], 'integer'],
-            [['lease_area', 'lessee', 'lessee_cardid', 'lessee_telephone', 'begindate', 'enddate', 'photo', 'create_at', 'update_at', 'rentpaymode', 'policyholder', 'insured', 'huinongascription', 'address','year'], 'safe'],
+            [['lease_area', 'lessee', 'lessee_cardid', 'lessee_telephone', 'begindate', 'enddate', 'photo', 'create_at', 'update_at', 'rentpaymode', 'policyholder', 'insured', 'huinongascription', 'address','year','zhzb_farmer','zhzb_lessee','ddcj_farmer','ddcj_lessee','goodseed_farmer','goodseed_lessee','new_farmer','new_lessee'], 'safe'],
             [['rent'], 'number'],
         ];
     }
@@ -73,8 +73,8 @@ class leaseSearch extends Lease
             ->andFilterWhere(['like', 'policyholder', $this->policyholder])
             ->andFilterWhere(['like', 'insured', $this->insured])
             ->andFilterWhere(['like', 'huinongascription', $this->huinongascription])
-            ->andFilterWhere(['like', 'address', $this->address])         
-            ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
+            ->andFilterWhere(['like', 'address', $this->address]);
+//            ->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
         
 // 		var_dump($dataProvider->query);exit;
         return $dataProvider;

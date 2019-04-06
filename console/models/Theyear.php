@@ -5,6 +5,7 @@ namespace console\models;
 use Yii;
 use yii\base\Theme;
 
+
 /**
  * This is the model class for table "{{%theyear}}".
  *
@@ -52,6 +53,13 @@ class Theyear extends \yii\db\ActiveRecord
     public static function getYear()
     {
     	return Theyear::findOne(1)['years'];
+    }
+    
+    public static function setYear($year)
+    {
+    	$model = Theyear::findOne(1);
+    	$model->years = $year;
+    	$model->save();
     }
     
     public static function formatDate($begindate=false,$enddate=false)

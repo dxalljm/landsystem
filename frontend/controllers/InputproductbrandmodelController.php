@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use app\models\Logs;
 use Yii;
 use app\models\Inputproductbrandmodel;
 use frontend\models\inputproductbrandmodelSearch;
@@ -25,7 +26,14 @@ class InputproductbrandmodelController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -43,7 +51,7 @@ class InputproductbrandmodelController extends Controller
     {
         $searchModel = new inputproductbrandmodelSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        Logs::writeLogs('化肥品牌型号列表');
         return $this->render('inputproductbrandmodelindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -57,8 +65,10 @@ class InputproductbrandmodelController extends Controller
      */
     public function actionInputproductbrandmodelview($id)
     {
+        $model = $this->findModel($id);
+        Logs::writeLogs('查看化肥品牌型号',$model);
         return $this->render('inputproductbrandmodelview', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -74,6 +84,7 @@ class InputproductbrandmodelController extends Controller
         if ($model->load(Yii::$app->request->post())) {
         	$model->brandpinyin = Pinyin::encode($model->brand);
         	$model->save();
+            Logs::writeLogs('创建化肥品牌型号',$model);
             return $this->redirect(['inputproductbrandmodelview', 'id' => $model->id]);
         } else {
             return $this->render('inputproductbrandmodelcreate', [
@@ -95,6 +106,7 @@ class InputproductbrandmodelController extends Controller
         if ($model->load(Yii::$app->request->post())) {
         	$model->brandpinyin = Pinyin::encode($model->brand);
         	$model->save();
+            Logs::writeLogs('更新化肥品牌型号',$model);
             return $this->redirect(['inputproductbrandmodelview', 'id' => $model->id]);
         } else {
             return $this->render('inputproductbrandmodelupdate', [
@@ -111,8 +123,8 @@ class InputproductbrandmodelController extends Controller
      */
     public function actionInputproductbrandmodeldelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id)->delete();
+        Logs::writeLogs('删除化肥品牌型号',$model);
         return $this->redirect(['inputproductbrandmodelindex']);
     }
 

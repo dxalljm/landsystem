@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use app\models\Logs;
 use Yii;
 use app\models\Tempauditing;
 use frontend\models\TempauditingSearch;
@@ -26,13 +27,21 @@ class TempauditingController extends Controller
             ],
         ];
     }
-
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->isGuest) {
+            return $this->redirect(['site/logout']);
+        } else {
+            return true;
+        }
+    }
     /**
      * Lists all Tempauditing models.
      * @return mixed
      */
     public function actionTempauditingindex()
     {
+    	
         $searchModel = new TempauditingSearch();
         $params = Yii::$app->request->queryParams;
         $params['TempauditingSearch']['user_id'] = Yii::$app->getUser()->id;
@@ -80,6 +89,7 @@ class TempauditingController extends Controller
         	$model->enddate = (string)strtotime($model->enddate);
         	$model->state = 1;
         	$model->save();
+            Logs::writeLogs('创建临时授权',$model);
 //         	var_dump($model->getErrors());exit;
             return $this->redirect(['tempauditingcreate']);
         } else {
@@ -97,6 +107,7 @@ class TempauditingController extends Controller
 //     	var_dump($model);
     	$model->state = 0;
     	$model->save();
+        Logs::writeLogs('回收授权',$model);
 //     	var_dump($model->getErrors());exit;
     	return $this->redirect(['tempauditingcreate']);
     	
@@ -108,6 +119,7 @@ class TempauditingController extends Controller
     	$model = $this->findModel($id);
     	$model->enddate = (string)Theyear::extendDate($model->enddate, 'day', 3);
     	$model->save();
+        Logs::writeLogs('申请延长授权时间',$model);
 //     	var_dump(date('Y-m-d',Theyear::extendDate($model->enddate, 'day', 3)));
 //     	var_dump($model->getErrors());exit;
     	return $this->redirect(['tempauditing/extend']);

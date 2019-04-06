@@ -2,7 +2,7 @@
 namespace frontend\helpers;
 class MoneyFormat
 {
-	public static function num_format($num){
+	public static function num_format($num,$str=null){
 		if(!is_numeric($num)){
 			return false;
 		}
@@ -33,11 +33,19 @@ class MoneyFormat
 		if(!empty($rl)){
 			$rvalue = $rv.'.'.$rl;//小数不为空，整数和小数合并
 		}else{
-			$rvalue = $rv;//小数为空，只有整数
+			$rvalue = $rv.'.00';//小数为空，只有整数
 		}
+		if($str == 'number')
+			return (float)$rvalue;
 		return $rvalue;
 	}
-	
+
+	public static function toNumber($str)
+	{
+		$array = explode(',',$str);
+		$number = implode('',$array);
+		return (float)$number;
+	}
 /**
 *数字金额转换成中文大写金额的函数
 *String Int  $num  要转换的小写数字或小写字符串

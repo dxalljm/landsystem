@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\tables */
+/* @var $model app\models\Tables */
 
 $this->title = "ID:".$model->id;
 $this->params['breadcrumbs'][] = ['label' => '数据库表管理', 'url' => ['tablesindex']];

@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "{{%plant}}".
  *
  * @property integer $id
- * @property string $cropname
+ * @property string $typename
  * @property integer $father_id
  */
 class Plant extends \yii\db\ActiveRecord
@@ -28,7 +28,7 @@ class Plant extends \yii\db\ActiveRecord
     {
         return [
             [['father_id'], 'integer'],
-            [['cropname'], 'string', 'max' => 500]
+            [['typename'], 'string', 'max' => 500]
         ];
     }
 
@@ -39,7 +39,7 @@ class Plant extends \yii\db\ActiveRecord
     {
         return [
 			'id' => 'ID',
-            'cropname' => '作物名称',
+            'typename' => '作物名称',
             'father_id' => '类别',
         ];
     }

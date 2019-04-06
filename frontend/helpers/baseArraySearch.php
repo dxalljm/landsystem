@@ -1,7 +1,8 @@
 <?php
 
 namespace frontend\helpers;
-
+use app\models\Tempprintbill;
+use yii;
 use app\models\Farms;
 use app\models\ManagementArea;
 use app\models\PlantPrice;
@@ -12,12 +13,15 @@ use app\models\Plant;
 use app\models\Huinong;
 use app\models\User;
 use app\models\Yieldbase;
+use app\models\Saleswhere;
+
 class baseArraySearch {
 	private $data = [ ];
-	private $where;
+	public $where;
 	private $temp = [ ];
 	private $namelist;
 	private $echartsWhere = [ ];
+	private $andwhere;
 	private $field;
 	private $echartsName;
 // 	public $saveTemp;
@@ -94,8 +98,8 @@ class baseArraySearch {
 			return false;
 	}
 	public function search() {
-		// var_dump($this->where);
-		if ($this->where) {
+//		 var_dump($this->where);exit;
+		if (is_array($this->where)) {
 			$data = [ ];
 			foreach ( $this->where as $optionvalue ) {
 				if (is_array ( $optionvalue )) {
@@ -146,10 +150,12 @@ class baseArraySearch {
 	}
 	public function sum($field, $num = 1) {
 		$sum = 0.0;
+		$tempSum = [];
 		if ($this->temp)
 			$data = $this->temp;
 		else
 			$data = $this->data;
+
 			// var_dump($this->temp);
 // 		if ($this->echartsWhere) {
 // 			$keys = array_keys ( $this->echartsWhere );
@@ -175,22 +181,192 @@ class baseArraySearch {
 // 				$sum += $value->getAttribute ( $field );
 // 			}
 // 		}
+//		var_dump($this->echartsWhere);exit;
+// var_dump($this->andwhere);
 		if ($this->echartsWhere) {
-			
+//			var_dump('eeeeeeee');
 			$this->tempData = $data;
 			foreach ($this->echartsWhere as $wherekey => $where) {
 				$this->sumWhere($wherekey, $where);
 			}
+//			var_dump($this->tempData);exit;
 			foreach ($this->tempData as $value) {
+//				var_dump($field);exit;
 				$sum += $value->getAttribute ( $field );
+//				var_dump($sum);
+				if(Yii::$app->controller->action->id == 'collectioninfo' or Yii::$app->controller->action->id == 'collectionsearch' or (isset($_GET['modelClass']) and $_GET['modelClass'] == 'Collection'))  {
+//					var_dump(Yii::$app->controller->action->id);
+					if($field == 'amounts_receivable') {
+//						var_dump($value->getAttribute('payyear'));
+						$collections = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => $value->getAttribute('payyear')])->count();
+//						var_dump($collections);
+						if ($collections > 1) {
+//							$collection = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => $value->getAttribute('payyear')])->one();
+							$tempSum[$value->getAttribute('farms_id')][] = $value->getAttribute ( $field );
+						}
+					}
+					if($field == 'ypaymoney' or $field == 'ypayarea' or $field == 'owe') {
+						$collections = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => User::getYear()])->count();
+						if ($collections > 1) {
+							$collection = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => User::getYear()])->orderBy('id DESC')->one();
+							if($collection[$field] == 0.0 and $collection['state'] >= 1) {
+								$sum -= MoneyFormat::toNumber($value->getAttribute ( $field ));
+							}
+						}
+					}
+				}
 			}
+//			var_dump($sum);
 			$this->echartsWhere = [];
 		} else {
-			// var_dump($data);
-			foreach ( $data as $value ) {
-				$sum += $value->getAttribute ( $field );
+			if($this->andwhere) {
+				$this->tempData = $data;
+// 				var_dump($this->andwhere);
+					switch ($this->andwhere[1]) {
+						case '>':
+//							var_dump('>');
+							foreach ($this->tempData as $value) {
+								
+								if ($value->getAttribute($this->andwhere[0]) > $this->andwhere[2]) {
+									$sum += $value->getAttribute($field);
+									if(Yii::$app->controller->action->id == 'collectioninfo' or Yii::$app->controller->action->id == 'collectionsearch' or (isset($_GET['modelClass']) and $_GET['modelClass'] == 'Collection')) {
+										if($field == 'amounts_receivable') {
+											$collections = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => User::getYear()])->count();
+											if ($collections > 1) {
+												$collection = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => User::getYear()])->one();
+												$tempSum[$value->getAttribute('farms_id')][] = $value->getAttribute ( $field );
+											}
+										}
+										if($field == 'ypaymoney' or $field == 'ypayarea' or $field == 'owe') {
+											$collection = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => User::getYear()])->orderBy('id DESC')->one();
+											if($collection[$field] == 0.0 and $collection['state'] >= 1) {
+												$sum -= MoneyFormat::toNumber($value->getAttribute ( $field ));
+											}
+										}
+									}
+								}
+							}
+							break;
+						case '>=':
+//							var_dump('>=');
+							foreach ($this->tempData as $value) {
+								if ($value->getAttribute($this->andwhere[0]) >= $this->andwhere[2]) {
+									$sum += $value->getAttribute($field);
+									if(Yii::$app->controller->action->id == 'collectioninfo' or Yii::$app->controller->action->id == 'collectionsearch' or (isset($_GET['modelClass']) and $_GET['modelClass'] == 'Collection')) {
+										if($field == 'amounts_receivable') {
+											$collections = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => User::getYear()])->count();
+											if ($collections > 1) {
+												$collection = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => User::getYear()])->one();
+												$tempSum[] = $collection['amounts_receivable'];
+											}
+										}
+ 										if($field == 'ypaymoney' or $field == 'ypayarea' or $field == 'owe') {
+ 											$collections = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => User::getYear()])->count();
+ 											if ($collections > 1) {
+ 												$collection = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => User::getYear()])->orderBy('id DESC')->one();
+												if($collection[$field] == 0.0 and $collection['state'] >= 1) {
+													$sum -= MoneyFormat::toNumber($value->getAttribute ( $field ));
+												}
+ 											}
+ 										}
+									}
+								}
+							}
+							break;
+						case '<':
+//							var_dump('<');
+							foreach ($this->tempData as $value) {
+// 								$sum += $value->getAttribute($field);
+								if ($value->getAttribute($this->andwhere[0]) < $this->andwhere[2]) {
+									$sum += $value->getAttribute($field);
+									if(Yii::$app->controller->action->id == 'collectioninfo' or Yii::$app->controller->action->id == 'collectionsearch' or (isset($_GET['modelClass']) and $_GET['modelClass'] == 'Collection'))  {
+										if($field == 'amounts_receivable') {
+											$collections = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => User::getYear()])->count();
+											if ($collections > 1) {
+												$collection = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => User::getYear()])->one();
+												$tempSum[] = $collection['amounts_receivable'];
+											}
+										}
+										if($field == 'ypaymoney' or $field == 'ypayarea' or $field == 'owe') {
+											$collection = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => User::getYear()])->orderBy('id DESC')->one();
+											if($collection[$field] == 0.0 and $collection['state'] >= 1) {
+												$sum -= MoneyFormat::toNumber($value->getAttribute ( $field ));
+											}
+										}
+
+									}
+								}
+							}
+							break;
+						case '<=':
+//							var_dump('<=');
+							foreach ($this->tempData as $value) {
+// 								$sum += $value->getAttribute($field);
+								if ($value->getAttribute($this->andwhere[0]) <= $this->andwhere[2]) {
+									$sum += $value->getAttribute($field);
+									if(Yii::$app->controller->action->id == 'collectioninfo' or Yii::$app->controller->action->id == 'collectionsearch' or (isset($_GET['modelClass']) and $_GET['modelClass'] == 'Collection'))  {
+										if($field == 'amounts_receivable') {
+											$collections = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => User::getYear()])->count();
+											if ($collections > 1) {
+												$collection = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => User::getYear()])->one();
+												$tempSum[] = $collection['amounts_receivable'];
+											}
+										}
+									if($field == 'ypaymoney' or $field == 'ypayarea' or $field == 'owe') {
+											$collections = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => User::getYear()])->count();
+											if ($collections > 1) {
+												$collection = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'ypayyear' => User::getYear()])->orderBy('id DESC')->one();
+												if($collection[$field] == 0.0 and $collection['state'] >= 1) {
+													$sum -= MoneyFormat::toNumber($value->getAttribute ( $field ));
+												}
+											}
+										}
+									}
+								}
+							}
+							break;
+					}
+			} else {
+//				var_dump('===');
+				foreach ( $data as $value ) {
+//					var_dump($value->getAttribute('id'));
+//					var_dump(MoneyFormat::toNumber($value->getAttribute ( $field )));
+					$sum += MoneyFormat::toNumber($value->getAttribute ( $field ));
+					if(Yii::$app->controller->action->id == 'collectioninfo' or Yii::$app->controller->action->id == 'search' or Yii::$app->controller->action->id == 'collectionsearch' or (isset($_GET['modelClass']) and $_GET['modelClass'] == 'Collection'))  {
+						if($field == 'amounts_receivable') {
+							$collections = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'payyear' => User::getYear()])->all();
+							if ($collections > 1) {
+								$collection = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'payyear' => User::getYear()])->one();
+								$tempSum[] = $collection['amounts_receivable'];
+							}
+						}
+							if($field == 'ypaymoney' or $field == 'ypayarea' or $field == 'owe') {
+//								var_dump( User::getYear());
+											$collections = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'payyear' => User::getYear()])->count();
+
+											if ($collections > 1) {
+												$collection = Collection::find()->where(['farms_id' => $value->getAttribute('farms_id'), 'payyear' => User::getYear()])->orderBy('id DESC')->one();
+//												var_dump($collection);
+ 												if($collection[$field] == 0.0 and $collection['state'] >= 1) {
+													$sum -= MoneyFormat::toNumber($value->getAttribute ( $field ));
+ 												}
+
+											}
+										}
+
+					}
+				}
 			}
 		}
+		$this->andwhere = [];
+//		unset($tempSum[0]);
+		foreach ($tempSum as $value) {
+			for($i=1;$i<count($value);$i++) {
+				$sum -= $value[$i];
+			}
+
+		}
+
 		return sprintf ( "%.2f", $sum / $num );
 	}
 	//SUM条件嵌套
@@ -205,7 +381,7 @@ class baseArraySearch {
 		$this->tempData = $newdata;
 	}
 	
-	public function mulyieldSum($field,$where,$num = 1)
+	public function mulyieldSum($field,$where,$num = 1,$year)
 	{
 		$sum = 0.0;
 		if ($this->temp)
@@ -219,21 +395,21 @@ class baseArraySearch {
 				foreach ($data as $value) {
 							if ($value->getAttribute ( $keys [0] ) == $values [0] and $value->getAttribute ( $keys [1] ) == $values [1]) {
 		
-								$yield = Yieldbase::find()->where(['plant_id'=>$value->getAttribute($where),'year'=>User::getYear()])->one()['yield'];
+								$yield = Yieldbase::find()->where(['plant_id'=>$value->getAttribute($where),'year'=>$year])->one()['yield'];
 								$sum += bcmul ( $value->getAttribute ( $field ), $yield ,4);
 							}
 					}
 				} else {
 					foreach ( $data as $value ) {
 						if ($value->getAttribute ( $keys [0] ) == $areaid) {
-							$yield = Yieldbase::find()->where(['plant_id'=>$value->getAttribute($where),'year'=>User::getYear()])->one()['yield'];
+							$yield = Yieldbase::find()->where(['plant_id'=>$value->getAttribute($where),'year'=>$year])->one()['yield'];
 							$sum += bcmul ( $value->getAttribute ( $field ), $yield,4 );
 						}
 					}
 				}
 		} else {
 			foreach ( $data as $key => $value ) {
-				$yield = Yieldbase::find()->where(['plant_id'=>$value->getAttribute($where),'year'=>User::getYear()])->one()['yield'];
+				$yield = Yieldbase::find()->where(['plant_id'=>$value->getAttribute($where),'year'=>$year])->one()['yield'];
 // 				var_dump($yield);
 				$sum += bcmul ( $value->getAttribute ( $field ), $yield,4 );
 			}		
@@ -523,73 +699,140 @@ class baseArraySearch {
 			return 0;
 			
 		if ($this->echartsWhere) {
-			
+// 			exit;
 			$this->tempData = $data;
 			foreach ($this->echartsWhere as $wherekey => $where) {
-				$this->countWhere($wherekey, $where);
+				$this->countWhere($wherekey, $where,$field);
 			}
 			$this->echartsWhere = [];
+
 			return count($this->tempData);
 		} else {
-			if($field == null) {
-				return count($data);
+			if($this->andwhere) {
+//				var_dump($this->andwhere);
+				$this->tempData = $data;
+				switch ($this->andwhere[1]) {
+					case '>':
+						foreach ($this->tempData as $value) {
+							if ($value->getAttribute($this->andwhere[0]) > $this->andwhere[2]) {
+								$newdata[] = $value;
+							}
+						}
+						break;
+					case '>=':
+						foreach ($this->tempData as $value) {
+//								var_dump($this->andwhere);
+//								var_dump($value->getAttribute($this->andwhere[0]));
+							if ($value->getAttribute($this->andwhere[0]) >= $this->andwhere[2]) {
+								$newdata[] = $value;
+							}
+						}
+						break;
+					case '<':
+						foreach ($this->tempData as $value) {
+							if ($value->getAttribute($this->andwhere[0]) < $this->andwhere[2]) {
+								$newdata[] = $value;
+							}
+						}
+						break;
+					case '<=':
+						foreach ($this->tempData as $value) {
+							if ($value->getAttribute($this->andwhere[0]) <= $this->andwhere[2]) {
+								$newdata[] = $value;
+							}
+						}
+						break;
+				}
+//				var_dump($field);
+//				var_dump(count($newdata));
+				$this->andwhere = [];
+				return count($newdata);
 			} else {
-				if ($field == 'farmer_id' and $state) {
-					$farm = [ ];
-					$farmid = [ ];
-					// var_dump($this->temp);
-					foreach ( $data as $key => $value ) {
-						// var_dump($value->getAttribute('farms_id'));
-						if (\Yii::$app->controller->id == 'farms')
-							$farmid [] = $value->getAttribute ( 'id' );
-						else
-							$farmid [] = $value->getAttribute ( 'farms_id' );
-					}
-					// var_dump($farmid);exit;
-					$allid = array_unique ( $farmid );
-					$farm = Farms::find ()->where ( [ 
-							'id' => $allid 
-					] )->all ();
-					foreach ( $farm as $k => $v ) {
-						$olddata [] = [ 
-								'name' => $v ['farmername'],
-								'cardid' => $v ['cardid'] 
-						];
-					}
-					if ($this->arrayLevel ( $olddata ) == 2) {
-						$newdata = $this->unique_arr ( $olddata );
-					} else
-						return 0;
-					return count ( $newdata );
+				if ($field == null) {
+
+					return count($data);
 				} else {
-					
-					foreach ( $data as $key => $value ) {
-						if (! empty ( $value->getAttribute ( $field ) ) and $value->getAttribute ( $field ) !== 0 and $value->getAttribute ( $field ) !== '')
-							$olddata [] = [ 
-									'id' => $value->getAttribute ( $field ) 
-							];
+
+					if ($field == 'farmer_id' and $state) {
+
+						$farm = [];
+						$farmid = [];
+						if(yii::$app->controller->id == 'tempprintbill' and (isset($_GET['tempprintbillSearch']['contract']) and $_GET['tempprintbillSearch']['contract'] === '0')) {
+							return count($data);
+						} else {
+//							 var_dump($this->temp);
+							foreach ($data as $key => $value) {
+								// var_dump($value->getAttribute('farms_id'));
+								if (\Yii::$app->controller->id == 'farms' or (isset($_GET['modelClass']) and $_GET['modelClass'] == 'Farms'))
+									$farmid [] = $value->getAttribute('id');
+								else
+									$farmid [] = $value->getAttribute('farms_id');
+							}
+//							 var_dump($farmid);
+							$allid = array_unique($farmid);
+							$farm = Farms::find()->where([
+								'id' => $allid
+							])->all();
+							foreach ($farm as $k => $v) {
+								$olddata [] = [
+									'name' => $v ['farmername'],
+									'cardid' => $v ['cardid']
+								];
+							}
+//							var_dump($olddata);
+							if ($this->arrayLevel($olddata) == 2) {
+								$newdata = $this->unique_arr($olddata);
+								if(yii::$app->controller->id == 'tempprintbill' and (isset($_GET['tempprintbillSearch']['contract']) and $_GET['tempprintbillSearch']['contract'] === '')) {
+									$nocontractareaCount = Tempprintbill::find()->where(['farms_id'=>0])->count();
+									$result = count($newdata) + $nocontractareaCount;
+								} else
+									$result = count($newdata);
+							} else
+								$result = 0;
+							return $result;
+						}
+					} else {
+
+						foreach ($data as $key => $value) {
+							if (!empty ($value->getAttribute($field)) and $value->getAttribute($field) !== 0 and $value->getAttribute($field) !== '')
+								$olddata [] = [
+									'id' => $value->getAttribute($field)
+								];
+						}
+// 						 var_dump($state);exit;
+						if ($state) {
+							if ($olddata) {
+								$newdata = $this->unique_arr($olddata);
+								return count($newdata);
+							} else {
+								return 0;
+							}
+						} else {
+							return count($olddata);
+						}
 					}
-					// var_dump($olddata);exit;
-					if ($state) {
-						if ($olddata) {
-							$newdata = $this->unique_arr ( $olddata );
-							return count ( $newdata );
-						} else
-							return 0;
-					} else
-						return count ( $olddata );
 				}
 			}
 		}
 	}
 	//
-	public function countWhere($wherekey,$wherevalue)
+	public function countWhere($wherekey,$wherevalue,$field)
 	{
 		$newdata = [];
+		$olddata = [];
+// 		var_dump($wherekey);exit;
 		foreach ($this->tempData as $value) {
-			if ($value->getAttribute ( $wherekey ) == $wherevalue) {
-				$newdata[] = $value;
+			if($field) {
+				if (! empty ( $value->getAttribute ( $field ) ) and $value->getAttribute ( $field ) !== 0 and $value->getAttribute ( $field ) !== '')
+					$newdata [$value->getAttribute ( $field )] = 'id';
+// 				if($olddata)
+// 					$newdata = $this->unique_arr ( $olddata );
+			} else {
+				if ($value->getAttribute ( $wherekey ) == $wherevalue) {
+					$newdata[] = $value;
+				}
 			}
+// 			
 		}
 		$this->tempData = $newdata;
 	}
@@ -670,7 +913,10 @@ class baseArraySearch {
 // 		var_dump($this->saveTemp);
 		return $this->namelist;
 	}
-	public function showAllShadow($actionname = 'sum', $field, $num = 1) {
+	public function showAllShadow($actionname = 'sum', $field, $num = 1,$year=null) {
+		if(empty($year)) {
+			$year = User::getYear();
+		}
 		if ($this->temp)
 			$data = $this->temp;
 		else
@@ -681,15 +927,7 @@ class baseArraySearch {
 		if (isset ( $this->where [0] ['management_area'] ))
 			$management_area = $this->where [0] ['management_area'];
 		else
-			$management_area = [ 
-					1,
-					2,
-					3,
-					4,
-					5,
-					6,
-					7 
-			];
+			$management_area = Farms::getManagementArea()['id'];
 		if (! is_array ( $management_area ))
 			$management_area = ( array ) $management_area;
 		foreach ( $management_area as $areaid ) {
@@ -708,7 +946,7 @@ class baseArraySearch {
 							$sum [] = $this->where ( [
 									'management_area' => $areaid,
 									$this->field => $key
-							] )->mulyieldSum ( $field [0], $field [1], $num );
+							] )->mulyieldSum ( $field [0], $field [1], $num,$year );
 							break;
 						default :
 							
@@ -723,7 +961,7 @@ class baseArraySearch {
 			} else {
 				$sum [] = $this->where ( [ 
 						'management_area' => $areaid 
-				] )->sum ( $field, $num );
+				] )->sum ( $field[0], $num );
 			}
 			// var_dump($sum);
 			$result [] = [ 
@@ -737,6 +975,48 @@ class baseArraySearch {
 		}
 		return json_encode ( $result );
 	}
+	public function showPie($actionname = 'sum', $field, $num = 1)
+	{
+		if ($this->temp)
+			$data = $this->temp;
+		else
+			$data = $this->data;
+
+		// var_dump($this->namelist);
+
+		if (isset ( $this->where [0] ['management_area'] ))
+			$management_area = $this->where [0] ['management_area'];
+		else
+			$management_area = Farms::getManagementArea()['id'];
+		if (! is_array ( $management_area ))
+			$management_area = ( array ) $management_area;
+		foreach ($management_area as $areaid) {
+			$sum = [];
+			if ($this->namelist) {
+				foreach ($this->namelist as $key => $list) {
+//					var_dump($field);
+					switch ($actionname) {
+						case 'sum':
+							$sum [] = $this->where ( [
+								'management_area' => $areaid,
+								$this->field => $key
+							] )->sum ( $field, $num );
+							break;
+						case 'count':
+							$sum = [
+								'value' => $this->where ([
+									'management_area' => $areaid,
+									$field => $key
+								])->count(),
+								'name'=>$list,
+							];
+					}
+
+				}
+			}
+		}
+		return $sum;
+	}
 	public function huinongShowShadow($huinong_id) {
 		$result = [ ];
 		// var_dump($this->namelist);
@@ -747,15 +1027,7 @@ class baseArraySearch {
 					$this->where [0] ['management_area'] 
 			];
 		else
-			$management_area = [ 
-					1,
-					2,
-					3,
-					4,
-					5,
-					6,
-					7 
-			];
+			$management_area = Farms::getManagementArea()['id'];
 		$huinong = Huinong::find()->where(['id'=>$huinong_id])->one();
 // 		foreach ( $this->namelist as $key => $list ) {
 			foreach ( $management_area as $value ) {
@@ -792,47 +1064,152 @@ class baseArraySearch {
 				$result['real']['count'] = $realcount;
 			}
 // 		}
-			var_dump($result);
+//			var_dump($result);
 		return $result;
 	}
-	public function collectionShowShadow() {
+	public function collectionShowShadow($year=null,$begindate = null,$enddate=null) {
 		$sum = [ ];
 		$amounts_receivable = [ ];
 		$real_income_amount = [ ];
-		if (isset ( $this->where [0] ['management_area'] ))
-			$management_area = [ 
-					$this->where [0] ['management_area'] 
-			];
+
+//		var_dump($enddate);exit;
+		if ($this->temp)
+			$data = $this->temp;
 		else
-			$management_area = [ 
-					1,
-					2,
-					3,
-					4,
-					5,
-					6,
-					7 
-			];
-		foreach ( $management_area as $value ) {
-			$allmeasure = Farms::find ()->where ( [ 
-					'management_area' => $value 
-			] )->sum ( 'measure' );
-			$amountsSum = ( float ) sprintf ( "%.2f", $allmeasure * PlantPrice::find ()->where ( [ 
-					'years' => Theyear::findOne ( 1 )['years'] 
-			] )->one ()['price'] );
-			$amounts_receivable [] = $amountsSum;
-			
-			$collectionSUm = 0.0;
-			
-			$collectionSUm = Collection::find ()->where ( [ 
-					'management_area' => $value,
-					'dckpay' => 1 
-			] )->sum ( 'real_income_amount' );
-			
-			$real_income_amount [] = ( float ) sprintf ( "%.2f", $collectionSUm );
-			$result['all'] = $amounts_receivable;
-			$result['real'] = $real_income_amount;
-		}
+			$data = $this->data;
+
+		$management_area = Farms::getManagementArea()['id'];
+
+////			$management_area[] = Farms::getManagementArea()['id'];
+//		foreach ( $management_area as $value ) {
+//			if(is_array($value)) {
+//				foreach ($value as $val) {
+//					$allmeasure = Farms::find ()->where ( [
+//						'management_area' => $val,
+//						'state' => [1,2,3,4,5],
+//					] )->sum ( 'contractarea' );
+//					if(empty($year)) {
+//						if (empty($begindate) or empty($enddate))
+//							$amountsSum = ( float )sprintf("%.2f", $allmeasure * PlantPrice::find()->where([
+//									'years' => User::getYear(),
+//								])->one()['price']);
+//						else
+//							$amountsSum = ( float )sprintf("%.2f", $allmeasure * PlantPrice::find()->where([
+//									'years' => date('Y', $begindate),
+//								])->one()['price']);
+//
+//					} else {
+//						if (empty($begindate) or empty($enddate))
+//							$amountsSum = ( float )sprintf("%.2f", $allmeasure * PlantPrice::find()->where([
+//									'years' => $year
+//								])->one()['price']);
+//						else
+//							$amountsSum = ( float )sprintf("%.2f", $allmeasure * PlantPrice::find()->where([
+//									'years' => $year
+//								])->one()['price']);
+//					}
+//					$collectionSUm = 0.0;
+//					if(empty($year)) {
+//						if (empty($begindate) or empty($enddate))
+//							$collectionSUm = Collection::find()->where([
+//								'management_area' => $val,
+////						'state' => 1,
+//								'payyear' => User::getYear()
+//							])->andWhere('farms_id>0')->andFilterWhere(['between', 'state', 1, 2])->sum('real_income_amount');
+//						else
+//							$collectionSUm = Collection::find()->where([
+//								'management_area' => $val,
+////						'state' => 1,
+////							'payyear' => User::getYear()
+//							])->andWhere('farms_id>0')->andFilterWhere(['between', 'state', 1, 2])->andFilterWhere(['between', 'update_at', $begindate, $enddate])->sum('real_income_amount');
+//					} else {
+//						if (empty($begindate) or empty($enddate))
+//							$collectionSUm = Collection::find()->where([
+//								'management_area' => $val,
+////						'state' => 1,
+//								'payyear' => $year
+//							])->andWhere('farms_id>0')->andFilterWhere(['between', 'state', 1, 2])->sum('real_income_amount');
+//						else
+//							$collectionSUm = Collection::find()->where([
+//								'management_area' => $val,
+////						'state' => 1,
+////							'payyear' => User::getYear()
+//							])->andWhere('farms_id>0')->andFilterWhere(['between', 'state', 1, 2])->andFilterWhere(['between', 'update_at', $begindate, $enddate])->sum('real_income_amount');
+//					}
+//					$amounts_receivable  = ( float )bcsub($amountsSum , $collectionSUm ,2);
+//					$real_income_amount  = ( float ) sprintf ( "%.2f", $collectionSUm );
+//					$result['all'][] = $amounts_receivable;
+//					$result['real'][] = $real_income_amount;
+//				}
+//			} else {
+//				$allmeasure = Farms::find ()->where ( [
+//					'management_area' => $value,
+//					'state' => [1,2,3,4,5],
+//				] )->sum ( 'contractarea' );
+//				if(empty($year)) {
+//					if (empty($begindate) or empty($enddate))
+//						$amountsSum = ( float )sprintf("%.2f", $allmeasure * PlantPrice::find()->where([
+//								'years' => User::getYear(),
+//							])->one()['price']);
+//					else
+//						$amountsSum = ( float )sprintf("%.2f", $allmeasure * PlantPrice::find()->where([
+//								'years' => date('Y', $begindate),
+//							])->one()['price']);
+//				} else {
+//					if (empty($begindate) or empty($enddate))
+//						$amountsSum = ( float )sprintf("%.2f", $allmeasure * PlantPrice::find()->where([
+//								'years' => $year
+//							])->one()['price']);
+//					else
+//						$amountsSum = ( float )sprintf("%.2f", $allmeasure * PlantPrice::find()->where([
+//								'years' => $year
+//							])->one()['price']);
+//				}
+//
+//				$collectionSUm = 0.0;
+//				if(empty($year)) {
+//					if (empty($begindate) or empty($enddate))
+//						$collectionSUm = Collection::find()->where([
+//							'management_area' => $value,
+//							'state' => [1, 2],
+//							'payyear' => User::getYear(),
+//						])->andWhere('farms_id>0')->sum('real_income_amount');
+//					else
+//						$collectionSUm = Collection::find()->where([
+//							'management_area' => $value,
+//							'state' => [1, 2],
+////						'payyear' => User::getYear(),
+//						])->andWhere('farms_id>0')->andFilterWhere(['between', 'update_at', $begindate, $enddate])->sum('real_income_amount');
+//				} else {
+//					if (empty($begindate) or empty($enddate))
+//						$collectionSUm = Collection::find()->where([
+//							'management_area' => $value,
+//							'state' => [1, 2],
+//							'payyear' => $year
+//						])->andWhere('farms_id>0')->sum('real_income_amount');
+//					else
+//						$collectionSUm = Collection::find()->where([
+//							'management_area' => $value,
+//							'state' => [1, 2],
+////						'payyear' => User::getYear(),
+//						])->andWhere('farms_id>0')->andFilterWhere(['between', 'update_at', $begindate, $enddate])->sum('real_income_amount');
+//				}
+			$amounts_receivable_num = 0.0;
+			$real_income_amount_num = 0.0;
+				foreach ( $management_area as $areaid) {
+					$amounts_receivable_num = $this->where(['management_area'=>$areaid])->sum('amounts_receivable');
+//					var_dump($this->where(['management_area'=>$areaid])->sum('amounts_receivable'));
+					$real_income_amount_num = $this->where(['management_area'=>$areaid])->sum('real_income_amount');
+
+					$amounts_receivable[]  = ( float ) bcsub($amounts_receivable_num,$real_income_amount_num,2);
+					$real_income_amount[]  = ( float ) sprintf ( "%.2f", $real_income_amount_num );
+				}
+
+				$result['all'] = $amounts_receivable;
+				$result['real'] = $real_income_amount;
+//			}
+
+//		}
 // 		$result = [ 
 // 				[ 
 // 						'name' => '实收金额',
@@ -877,6 +1254,8 @@ class baseArraySearch {
 // 						'data' => $amounts_receivable 
 // 				] 
 // 		];
+//		var_dump($result);exit;
+//		exit;
 		return $result;
 	}
 	public function showShadowThermometer($field, $num = 1, $state = 0) {
@@ -948,6 +1327,13 @@ class baseArraySearch {
 		
 		return $this;
 	}
+
+	public function andWhere($array) {
+// 		var_dump($array);
+		$this->andwhere = $array;
+		return $this;
+	}
+
 	public function unique_arr($array2D, $stkeep = false, $ndformat = true) {
 		// 判断是否保留一级数组键 (一级数组键可以为非数字)
 		if ($stkeep)

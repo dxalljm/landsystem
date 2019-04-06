@@ -1,6 +1,6 @@
 <?php
 namespace backend\controllers;
-use app\models\tables;
+use app\models\Tables;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\User;
@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'object_old_attr:ntext',
             // 'object_new_attr:ntext',
 
-            ['class' => 'frontend\helpers\eActionColumn'],
+            ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 

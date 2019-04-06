@@ -31,8 +31,8 @@ class Employee extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['father_id', 'farms_id', 'create_at', 'update_at'], 'integer'],
-            [['employeetype', 'employeename', 'cardid'], 'string', 'max' => 500]
+            [['father_id', 'farms_id', 'create_at', 'update_at','year'], 'integer'],
+            [['employeetype', 'employeename', 'cardid','telephone'], 'string', 'max' => 500]
         ];
     }
 
@@ -48,8 +48,10 @@ class Employee extends \yii\db\ActiveRecord
             'employeetype' => '雇工类型',
             'employeename' => '雇工姓名',
             'cardid' => '身份证号',
+        	'telephone' => '电话',
             'create_at' => '创建日期',
             'update_at' => '更新日期',
+            'year' => '年度'
         ];
     }
 
@@ -81,6 +83,8 @@ class Employee extends \yii\db\ActiveRecord
             $model->employeename = $employeesPost['employeename'][$k];
             $model->employeetype = $employeesPost['employeetype'][$k];
             $model->cardid = $employeesPost['cardid'][$k];
+            $model->telephone = $employeesPost['telephone'][$k];
+            $model->year = User::getYear();
             $model->save();
 			$newAttr = $model->attributes;
 			Logs::writeLog('雇工信息批量添加更新',$model->id,$oldAttr,$newAttr);
