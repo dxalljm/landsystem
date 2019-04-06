@@ -116,7 +116,7 @@ class Theyear extends \yii\db\ActiveRecord
         return $array[0].'年'.$array[1].'月'.$array[2].'日';
     }
 
-    public static function getMonth($year = null)
+    public static function getMonths($year = null)
     {
         $result = [];
         if(empty($year)) {

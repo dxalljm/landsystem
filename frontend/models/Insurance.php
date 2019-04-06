@@ -42,18 +42,12 @@ class Insurance extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-<<<<<<< HEAD
             [['management_area','nameissame', 'farms_id','lease_id','state','fwdtstate','issame','isselfselect','company_id','isbxsame','farmstate', 'create_at', 'update_at', 'policyholdertime', 'managemanttime', 'halltime'], 'integer'],
             [['wheat', 'soybean', 'insuredarea', 'insuredwheat', 'insuredsoybean','other','insuredother','contractarea'], 'number'],
             [['year','farmername', 'policyholder', 'cardid', 'telephone','farmerpinyin','policyholderpinyin'], 'string', 'max' => 500],
             [['insured'],'string','max'=>1000],
             [['statecontent'],'string'],
         	[['insuredarea','contractarea','cardid'],'required']
-=======
-            [['management_area', 'farms_id'], 'integer'],
-            [['wheat', 'soybean', 'insuredarea', 'insuredwheat', 'insuredsoybean','other'], 'number'],
-            [['year', 'policyholder', 'cardid', 'telephone', 'company_id', 'create_at', 'update_at', 'policyholdertime', 'managemanttime', 'halltime'], 'string', 'max' => 500]
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         ];
     }
 
@@ -67,23 +61,15 @@ class Insurance extends \yii\db\ActiveRecord
             'management_area' => '管理区',
             'year' => '年度',
             'farms_id' => '农场ID',
-<<<<<<< HEAD
             'lease_id' => '承租人ID',
             'farmername'=>'农场法人',
             'policyholder' => '被保险人',
             'cardid' => '被保险人身份证',
-=======
-            'policyholder' => '投保人',
-            'cardid' => '法人身份证',
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
             'telephone' => '联系电话',
             'wheat' => '小麦',
             'soybean' => '大豆',
             'insuredarea' => '投保面积',
-<<<<<<< HEAD
         	'contractarea' => '合同面积',
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
             'insuredwheat' => '投保小麦面积',
             'insuredsoybean' => '投保大豆面积',
             'company_id' => '保险公司',
@@ -93,7 +79,6 @@ class Insurance extends \yii\db\ActiveRecord
             'managemanttime' => '管理区提交日期',
             'halltime' => '保险负责人提交日期',
         	'other' => '其他',
-<<<<<<< HEAD
             'insuredother' => '投保其它面积',
             'state' => '保险单状态',
             'fwdtstate' => '地产科',
@@ -216,8 +201,4 @@ class Insurance extends \yii\db\ActiveRecord
         $jsonData = json_encode($result);
         return $jsonData;
     }
-=======
-        ];
-    }
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 }

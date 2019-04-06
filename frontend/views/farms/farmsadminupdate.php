@@ -339,19 +339,17 @@ use app\models\User;
 		$('#temp_measure').val(newvalue.toFixed(2));
 // 		alert($('#farms-measure').val());
 		if($('#farms-measure').val()*1 > contractarea) {
-//			alert(notstate);
 			if(notstate > 0) {
-//				alert(000);
 				if(notstate > measure) {
-					var newnostate = notstate * 1 - measure * 1;
+					var newnotstate = notstate * 1 - measure*1;
 				} else {
-					var newnostate = measure*1 - notstate *1;
+					var newnotstate = measure*1 - notstate*1;
 				}
-				$('#farms-notstate').val(newnostate.toFixed(2));
+				$('#farms-notstate').val(newnotstate.toFixed(2));
 			} else {
-				if(measure > contractarea) {
+				if (measure > contractarea) {
 					$('#farms-notstate').val(0);
-					var newnotclear = contractarea*1 - $('#farms-measure').val()*1 + $('#farms-notstate').val()*1;
+					var newnotclear = contractarea * 1 - $('#farms-measure').val() * 1 + $('#farms-notstate').val() * 1;
 					$('#farms-notclear').val(newnotclear.toFixed(2));
 				} else {
 //				var newvalue = $('#farms-measure').val() * 1 - measure * 1;
@@ -359,9 +357,9 @@ use app\models\User;
 					$('#farms-measure').val(newvalue.toFixed(2));
 					$('#temp_measure').val(newvalue.toFixed(2));
 //				alert(notstate);alert(measure);
-					if(notstate == 0) {
+					if (notstate == 0) {
 						var newnotstate = 0;
-						var newnotclear = measure*1 + $('#farms-notclear').val();
+						var newnotclear = measure * 1 + $('#farms-notclear').val();
 						$('#farms-notclear').val(newnotclear.toFixed(2));
 					} else {
 						if (notstate > measure) {
@@ -377,7 +375,6 @@ use app\models\User;
 
 				}
 			}
-
 		} else {
 // 			var newvalue = $('#farms-measure').val() * 1 - measure * 1;
 // 			$('#farms-measure').val(newvalue.toFixed(2));

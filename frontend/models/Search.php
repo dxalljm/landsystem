@@ -81,11 +81,7 @@ class Search extends \yii\db\ActiveRecord {
 				                	switch (Yii::$app->controller->id)
 				                	{
 				                		case 'farms':
-<<<<<<< HEAD
 				                			if(User::getItemname('法规科') or User::getItemname('服务大厅') or User::getItemname('副主任') or User::getItemname('主任'))
-=======
-				                			if(User::getItemname() == '法规科科长' or User::getItemname() == '大厅主任' or User::getItemname() == '副主任' or User::getItemname() == '主任')
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 				                				$url = Url::to(['farms/farmslandview','id'=>$model->id]);
 				                			else
 				                				$url = Url::to(['farms/farmsfile','farms_id'=>$model->id]);

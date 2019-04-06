@@ -51,37 +51,24 @@ class Zongdioffarm extends \yii\db\ActiveRecord
     {
     	$model = new Zongdioffarm();
     	$model->farms_id = $farms_id;
-<<<<<<< HEAD
     	$model->zongdinumber = $zongdi['number'];
     	$model->measure = $zongdi['measure'];
-=======
-    	$model->zongdinumber = $zongdi;
-    	$model->measure = $measure;
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     	$model->save();
     }
     
     public static function getZongdiArray($zongdi)
     {
-<<<<<<< HEAD
 //		var_dump($zongdi);exit;
 		if(is_string($zongdi))
     		$array = explode('、', $zongdi);
 		else
 			$array = $zongdi;
     	$result = false;
-=======
-    	$array = explode('、', $zongdi);
-    	$result = [];
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     	foreach ($array as $key => $value) {
     		$result[$key]['number'] = Lease::getZongdi($value);
     		$result[$key]['measure'] = Lease::getArea($value);
     	}
-<<<<<<< HEAD
     
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     	return $result;
     }
     
@@ -98,7 +85,6 @@ class Zongdioffarm extends \yii\db\ActiveRecord
     
     public static function zongdiUpdate($farms_id,$newfarms_id,$zongdi)
     {
-<<<<<<< HEAD
 //    	var_dump($zongdi);exit;
     		$zongdioffarm = Zongdioffarm::find()->where(['farms_id'=>$farms_id])->all();
     		foreach ($zongdioffarm as $value) {
@@ -150,33 +136,11 @@ class Zongdioffarm extends \yii\db\ActiveRecord
 // 		    	}
 // 	    	}
 //     	}
-=======
-    	if($farms_id) {
-	    	$arrayID = self::getZongdiOfFarmID($farms_id);
-	    	if($arrayID) {
-		    	foreach ($arrayID as $id) {
-		    		$model = self::findOne($id);
-		    		$model->delete();
-		    	}
-	    	}
-    	}
-    	if($zongdi) {
-	    	$newzongdi = self::getZongdiArray($zongdi);
-	    	foreach ($newzongdi as $zongdi) {
-	    		$model = new Zongdioffarm();
-	    		$model->farms_id = $newfarms_id;
-	    		$model->zongdinumber = $zongdi['number'];
-	    		$model->measure = $zongdi['measure'];
-	    		$model->save();
-	    	}
-    	}
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     }
     
     public static function zongdiDelete($farms_id,$zongdi)
     {
 //     	var_dump($zongdi);exit;
-<<<<<<< HEAD
 // 		var_dump(self::find()->where(['farms_id'=>$farms_id])->one());exit;
     	$newzongdi = self::getZongdiArray($zongdi);
 		if($newzongdi) {
@@ -189,15 +153,6 @@ class Zongdioffarm extends \yii\db\ActiveRecord
 	    		}
 	    	}
 		}
-=======
-    	$newzongdi = self::getZongdiArray($zongdi);
-    	foreach ($newzongdi as $value) {
-    		$zdof = self::find()->where(['farms_id'=>$farms_id,'zongdinumber'=>$value['number'],'measure'=>$value['measure']])->one();
-//     		var_dump($farms_id);
-    		$model = Zongdioffarm::findOne($zdof['id']);
-    		$model->delete();
-    	}
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 //     	exit;
     }
 }

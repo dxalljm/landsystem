@@ -49,10 +49,7 @@ use dosamigos\datetimepicker\DateTimePicker;
         	'startView' => 4,
             'format' => 'yyyy'
         ]]) ?></td><?= Html::hiddenInput('tempState','list',['id'=>'state'])?>
-<<<<<<< HEAD
 
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		<td><?= Html::submitButton($model->isNewRecord ? '添加' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary','id'=>'createbutton','onclick'=>$model->isNewRecord ? 'setState("create")': 'setState("update")']) ?></td>
 		
 	</tr>
@@ -89,7 +86,6 @@ use dosamigos\datetimepicker\DateTimePicker;
 
 
     
-<<<<<<< HEAD
 
 </div>
 <div id="machineinfo" title="确认的机具信息">
@@ -117,8 +113,6 @@ use dosamigos\datetimepicker\DateTimePicker;
 		<tr>
 			<td class="text-center"><strong>生产厂家</strong></td>
 			<td class="text-center" id="enterprisename"></td>
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 
 		</tr>
 		<tr>
@@ -129,7 +123,6 @@ use dosamigos\datetimepicker\DateTimePicker;
 	</table>
 </div>
 <script>
-<<<<<<< HEAD
 	function setMachineid(id){
 
 // 	console.dir($("#bigClass option[value=25]").prop("selected", "selected"));
@@ -196,41 +189,6 @@ $('#machineinfo').dialog({
 	]
 });
 
-=======
-function setState(state){
-	$('#state').val(state);
-}
-function setMachineid(id){
-
-// 	console.dir($("#bigClass option[value=25]").prop("selected", "selected")); 
-// 	console.dir($('#bigClass').val(25).prop("selected", "selected"));
-	
-// 	alert($("#bigClass").val());
-	$('#state').val('create');
-	$('#machineoffarm-machine_id').val(id);
-	$.getJSON('index.php?r=machine/getmachineinfo', {id: id}, function (data) {
-// 		alert(data.data.big.id);
-		if (data.status == 1) {
-// 			alert(data.data.big.id);
-			$('#bigClass').val(data.data.big.id).prop("selected","selected");
-			$('#smallClass').html(null);
-			$('#smallClass').append('<option value="prompt">请选择...</option>');
-// 			alert(data.data.small.id);
-			for(i=0;i<data.data.small.data.length;i++) {
-				$('#smallClass').append('<option value="'+data.data.small.data[i]['id']+'">'+data.data.small.data[i]['typename']+'</option>');
-			}
-			$('#smallClass').val(data.data.small.id).prop("selected","selected");
-			$('#lastClass').html(null);
-			$('#lastClass').append('<option value="prompt">请选择...</option>');
-			for(i=0;i<data.data.last.data.length;i++) {
-				$('#lastClass').append('<option value="'+data.data.last.data[i]['id']+'">'+data.data.last.data[i]['typename']+'</option>');
-			}
-			$('#lastClass').val(data.data.last.id).prop("selected","selected");
-			$('#machineoffarm-machinename').val(data.data.machinename);
-		}	
-	});
-}
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 $('#bigClass').change(function(){
 	var input = $(this).val();
 	$.getJSON('index.php?r=machinetype/getsmallclass', {father_id: input}, function (data) {

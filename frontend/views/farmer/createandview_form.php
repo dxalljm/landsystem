@@ -17,7 +17,6 @@ use app\models\Photogallery;
 /* @var $model app\models\farmer */
 //var_dump($farmerinfoModel);exit;
 ?>
-<<<<<<< HEAD
 <script src="/js/photographDialog.js"></script>
 <!-- InputMask -->
 <script src="/vendor/bower/AdminLTE/plugins/input-mask/jquery.inputmask.js"></script>
@@ -33,18 +32,6 @@ use app\models\Photogallery;
       <?= $form->field($model, 'isupdate')->hiddenInput()->label(false);?>
       <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false);?>
       
-=======
-<script src="js/photographDialog.js"></script>
-<div class="farmer-form">
-<h3><?= $farmModel->farmname.'('.Theyear::findOne(1)['years'].'年度)' ?></h3>
-<?php //echo Html::a('XLS导入', ['farmerxls'], ['class' => 'btn btn-success']) ?>
-<?php Farms::showRow($_GET['farms_id']);?>
-<?php photographDialog::dialogHtml();?>
-<?php $form = ActiveFormrdiv::begin(['id' => "farmer-form",'enableAjaxValidation' => false,'options' => ['enctype' => 'multipart/form-data'],]); ?>
-      <?= $form->field($model, 'isupdate')->hiddenInput()->label(false);?>
-      <?= $form->field($model, 'farms_id')->hiddenInput(['value'=>$_GET['farms_id']])->label(false);?>
-
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     <table width="662"  class="table table-bordered table-hover">
       <tr>
         <td width="10%" height="25" align="right" valign="middle">承包人姓名</td>
@@ -57,31 +44,20 @@ use app\models\Photogallery;
 		    <span>请选择...</span>
 		    <input id="fileuploadphoto" type="file" name="upload_file" multiple="">
 		</span>
-<<<<<<< HEAD
 		<?php //photographDialog::showDialog('拍照','photo-dialog');?>
         <p>
           <?php echo Html::img('http://192.168.1.10/'.$farmerinfoModel->photo,['width'=>'180px','id'=>'photo']); ?>
           <?php echo $form->field($farmerinfoModel,'photo')->hiddenInput()->label(false)?>
-=======
-		<?php photographDialog::showDialog('拍照','photo-dialog');?>
-        <p>
-          <?php echo Html::img($model->photo,['width'=>'180px','id'=>'photo']); ?>
-          <?php echo $form->field($model,'photo')->hiddenInput()->label(false)?>
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         </p></td>
      </tr>
       <tr>
         <td align="right" valign="middle">身份证号</td>
-<<<<<<< HEAD
         <td valign="middle"><?php 
         
         if((strlen($farmModel->cardid) > 18) or (strlen($farmModel->cardid) < 18))
         	echo Html::textInput('farms-cardid',$farmModel->cardid,['class'=>'form-control']);
         else 
         	echo $farmModel->cardid;?></td>
-=======
-        <td valign="middle"><?php if($farmModel->cardid)echo $farmModel->cardid;else echo Html::textInput('farms-cardid',$farmModel->cardid,['class'=>'form-control']);?></td>
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         <td align="right" valign="middle">性别</td>
 		  <td valign="middle"><?php if(!$model->isupdate) echo $form->field($farmerinfoModel, 'gender')->dropDownList(['男'=>'男','女'=>'女'])->label(false)->error(false); else echo '&nbsp;'.Nation::find()->where(['id'=>$farmerinfoModel->nation])->one()['nationname']; ?></td>
       </tr>
@@ -100,17 +76,10 @@ use app\models\Photogallery;
       </tr>
       <tr>
         <td align="right" valign="middle">农场位置</td>
-<<<<<<< HEAD
         <td valign="middle"><?php echo Html::textInput('farms-address',$farmModel->address,['class'=>'form-control','id'=>'address']);?></td>
         <td align="right" valign="middle">坐标</td>
         <td valign="middle"><?php echo Html::textInput('farms-longitude',$farmModel->longitude,['id'=>'longitude','class'=>'form-control', 'data-inputmask'=>'"mask": "E999°99′99.99″"', 'data-mask'=>""]);?></td>
         <td valign="middle"><?php echo Html::textInput('farms-latitude',$farmModel->latitude,['id'=>'latitude','class'=>'form-control','data-inputmask'=>'"mask": "N99°99′99.99″"', 'data-mask'=>""]);?></td>
-=======
-        <td valign="middle"><?php echo Html::textInput('farms-address',$farmModel->address,['class'=>'form-control']);?></td>
-        <td align="right" valign="middle">坐标</td>
-        <td valign="middle"><?php echo Html::textInput('farms-longitude',$farmModel->longitude,['class'=>'form-control']);?></td>
-        <td valign="middle"><?php echo Html::textInput('farms-latitude',$farmModel->latitude,['class'=>'form-control']);?></td>
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
       </tr>
       <tr><?php if($farmerinfoModel->domicile == '') $farmerinfoModel->domicile = '黑龙江省大兴安岭地区加格达奇区';?><?php if($farmerinfoModel->nowlive == '') $farmerinfoModel->nowlive = '黑龙江省大兴安岭地区加格达奇区';?>
         <td align="right" valign="middle">户籍所在地</td>
@@ -125,7 +94,6 @@ use app\models\Photogallery;
       <tr>
         <td align="right" valign="middle">身份证扫描件<br><span class="btn btn-success fileinput-button">
 		    <i class="glyphicon glyphicon-plus"></i>
-<<<<<<< HEAD
 		    <span>请选择...(正面)</span>
 		    <input id="fileuploadcardpic" type="file" name="upload_file" multiple="">
 		</span>
@@ -143,20 +111,6 @@ use app\models\Photogallery;
         <?php echo $form->field($farmerinfoModel,'cardpicback')->hiddenInput()->label(false)?>
         </td>
         <td colspan="4" valign="middle"><?php echo '&nbsp;'.Html::img('http://192.168.1.10/'.$farmerinfoModel->cardpicback,['width'=>'400px','height'=>'220px','id'=>'cardpicback']); ?></td>
-=======
-		    <span>请选择...</span>
-		    <input id="fileuploadcardpic" type="file" name="upload_file" multiple="">		    
-		</span>
-		<?php photographDialog::showDialog('身份证正面拍照','cardpic-dialog');?>
-		<?php photographDialog::showDialog('身份证反面拍照','cardpicback-dialog');?>
-		</td>
-        <td valign="middle">
-          <?php echo '&nbsp;'.Html::img($model->cardpic,['width'=>'400px','height'=>'220px','id'=>'cardpic']); ?>
-        <?php echo $form->field($model,'cardpic')->hiddenInput()->label(false)?>
-        <?php echo $form->field($model,'cardpicback')->hiddenInput()->label(false)?>
-        </td>
-        <td colspan="4" valign="middle"><?php echo '&nbsp;'.Html::img($model->cardpicback,['width'=>'400px','height'=>'220px','id'=>'cardpicback']); ?> <?php echo $form->field($model,'cardpicback')->hiddenInput(['id'=>'cardpicbackresult'])->label(false)?></td>
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
       </tr>
   </table>
 
@@ -245,20 +199,12 @@ use app\models\Photogallery;
 <?php if(!$model->isupdate) {?>
 <div class="form-group">
 
-<<<<<<< HEAD
         <?= Html::submitButton('更新', ['class' => 'btn btn-success','method' => 'post','onclick'=>'submittype(0)']) ?>
-=======
-  		<?= Html::submitButton('提交', ['class' => 'btn btn-danger','title'=>'注意：点提交后不可更改','method' => 'post','onclick'=>'submittype(0)']) ?>
-
-        <?= Html::submitButton('保存', ['class' => 'btn btn-success','title'=>'注意：在不确定数据正确可点击保存','method' => 'post','onclick'=>'submittype(0)']) ?>
-
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 <?php }?>
  </div>
     <?php ActiveFormrdiv::end(); ?>
 
 <script type="text/javascript">
-<<<<<<< HEAD
 //	$("#longitude").blur(function () {
 //		var s = /\d+/g;
 //		var input = $(this).val();
@@ -279,15 +225,12 @@ use app\models\Photogallery;
 	function mySubmit(flag){
 		return flag;
 	}
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 
 	$( "#dialog" ).dialog({
 		autoOpen: false,
 		width: 1000,
 		height: 600,
 	});
-<<<<<<< HEAD
 
 
 	$('#farmerinfo-political_outlook').change(function(){
@@ -300,34 +243,23 @@ use app\models\Photogallery;
 		}
 	});
 
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 	// Link to open the dialog
 	$( "#cardpicback-dialog-link" ).click(function( event ) {
 		
 		$( "#dialog" ).dialog( "open" );		
-<<<<<<< HEAD
 //		event.preventDefault();
-=======
-		event.preventDefault();
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		Start1_onclick();
 		$('#tempField').val('cardpicback');
 		
 	});
 	$( "#cardpic-dialog-link" ).click(function( event ) {
 		$( "#dialog" ).dialog( "open" );
-<<<<<<< HEAD
 //		event.preventDefault();
-=======
-		event.preventDefault();
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		Start1_onclick();
 		$('#tempField').val('cardpic');
 	});
 	$( "#photo-dialog-link" ).click(function( event ) {
 		$( "#dialog" ).dialog( "open" );
-<<<<<<< HEAD
 //		event.preventDefault();
 		Start1_onclick();
 		$('#tempField').val('photo');
@@ -353,13 +285,6 @@ use app\models\Photogallery;
 		$('#latitude').focus();
 		return mySubmit(false);
 	}
-=======
-		event.preventDefault();
-		Start1_onclick();
-		$('#tempField').val('photo');
-	});
-function submittype(v) {
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 	$('#farmer-isupdate').val(v);
 
 });
@@ -440,35 +365,19 @@ function Stop_onclick()
 		var field = $('#tempField').val();
 // 		alert(field);
 		captrue.bSaveJPG("d:\\","JPG");
-<<<<<<< HEAD
 		var upload = captrue.bUpLoadImage("D:\\JPG.JPG", "192.168.1.9", 80, "uploadimage/upload.php");
 //		alert(save);
 		if(upload) {
-=======
-		var upload = captrue.bUpLoadImage("D:\\JPG.JPG", "192.168.1.10", 8001, "/front/uploadimage/upload.php");
-//		alert(save);
-		if(upload) {			
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 	        $.getJSON("<?= Url::to(['photogallery/photographdialog'])?>", {farms_id: <?= $_GET['farms_id']?>,field:field}, function (data) {
 // 				var width = "400px"
 			    $('#'+field).attr('src', data.url);
 // 			    $('#'+field).attr('width',width);
-<<<<<<< HEAD
 				captrue.bDeleteFile("d:\\JPG.jpg");
 				var str=captrue.bStopPlay();
 				$('#farmer-'+field).val(data.url);
 				$( "#dialog" ).dialog( "close" );
 	    	});
 		}
-=======
-				captrue.bDeleteFile("d:\\JPG.jpg");   
-				var str=captrue.bStopPlay(); 
-				$('#farmer-'+field).val(data.url);
-				$( "#dialog" ).dialog( "close" );
-	    	});
-		}  
-		;	
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 	}
 	
 	function DeleteJPG_onclick()

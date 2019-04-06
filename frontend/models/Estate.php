@@ -37,11 +37,7 @@ class Estate extends \yii\db\ActiveRecord
     {
         return [
             [['tjsqjbzs', 'tjsffyj', 'sfyzy', 'sfmqzongdi', 'sfydcbg', 'reviewprocess_id','estateisAgree'], 'integer'],
-<<<<<<< HEAD
             [['tjsqjbzscontent', 'tjsffyjcontent', 'sfyzycontent', 'sfmqzongdicontent', 'sfydcbgcontent','estateisAgreecontent','estateundo'], 'string']
-=======
-            [['tjsqjbzscontent', 'tjsffyjcontent', 'sfyzycontent', 'sfmqzongdicontent', 'sfydcbgcontent','estateisAgreecontent'], 'string']
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         ];
     }
 
@@ -64,7 +60,6 @@ class Estate extends \yii\db\ActiveRecord
             'sfydcbgcontent' => '情况说明',
             'reviewprocess_id' => '审核过程ID',
         	'estateisAgree' => '是否同意',
-<<<<<<< HEAD
         	'estateisAgreecontent' => '情况说明',
             'isself' => '是否本人办理',
             'iscontract' => '是否提供承包合同原件',
@@ -75,9 +70,6 @@ class Estate extends \yii\db\ActiveRecord
             'iscardid' => '情况说明',
             'islockedcontent' => '情况说明',
             'estateundo' => '退回',
-=======
-        	'estateisAgreecontent' => '情况说明'
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         ];
     }
     
@@ -90,7 +82,6 @@ class Estate extends \yii\db\ActiveRecord
     			'sfyzy' => '拟转让的承包经营权限有无争议',
     			'sfmqzongdi' => '双方当事人提供的拟转让地块图与实际是否一致',
     			'sfydcbg' => '是否撰写调查报告',
-<<<<<<< HEAD
 //    			'estateisAgree' => ''
 //     			'reviewprocess_id' => '审核过程ID',
     	];
@@ -107,13 +98,6 @@ class Estate extends \yii\db\ActiveRecord
 //        ];
 //    }
 
-=======
-    			'estateisAgree' => ''
-//     			'reviewprocess_id' => '审核过程ID',
-    	];
-    }
-    
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     public static function attributesKey()
     {
     	return [
@@ -127,7 +111,6 @@ class Estate extends \yii\db\ActiveRecord
     			//     			'reviewprocess_id' => '审核过程ID',
     	];
     }
-<<<<<<< HEAD
     public static function loanAttributesList()
     {
         return [
@@ -156,6 +139,4 @@ class Estate extends \yii\db\ActiveRecord
 //            'estateisAgree',
 //        ];
 //    }
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 }

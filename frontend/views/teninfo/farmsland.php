@@ -50,7 +50,8 @@ $arrclass = explode('\\',$dataProvider->query->modelClass);
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
-			<?php User::tableBegin('宜农林地');?>
+			<?php User::tableBegin('宜农林地
+			');?>
 			<?php
 			if(User::getItemname('信息科'))
 				echo Html::a('XLS导出','#',['class'=>'btn btn-success','onclick'=>'dialog()']);
@@ -86,7 +87,7 @@ $arrclass = explode('\\',$dataProvider->query->modelClass);
             'farmername',
 //             [
 //             	'label' => '管理区',
-//               	'attribute' => 'areaname',
+//               	'attribute' => 'areaname',      						
 //             	'value' => 'managementarea.areaname',
 //             ],
 			//'management_area',
@@ -106,7 +107,7 @@ $arrclass = explode('\\',$dataProvider->query->modelClass);
 			],
 
 //            'contractnumber',
-
+			
 //			[
 //				'attribute' => 'create_at',
 //				'value' => function($model) {
@@ -137,7 +138,7 @@ $arrclass = explode('\\',$dataProvider->query->modelClass);
 				            	//'class' => 'btn btn-primary btn-lg',
 				                'value' => function($model,$key){
 					                $option = '查看详情';
-				                	$url = Url::to(['farms/farmslandview','id'=>$model->id]);
+				                	$url = Url::to(['farms/farmslandview','id'=>$model->id]);               	
 				                    $html = Html::a($option,$url, [
 						            			'id' => 'moreOperation',
 						            			'class' => 'btn btn-primary btn-xs',

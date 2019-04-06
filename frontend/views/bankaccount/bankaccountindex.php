@@ -41,7 +41,6 @@ $arrclass = explode('\\',$dataProvider->query->modelClass);
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
-            'tableOptions' => 'aaa',
             'total' => '<tr height="40">
                                         <td></td>	
                                         <td align="left" id="pt0"><strong>合计</strong></td>
@@ -58,16 +57,16 @@ $arrclass = explode('\\',$dataProvider->query->modelClass);
                 ['class' => 'yii\grid\SerialColumn'],
 
 //            'id',
-//                [
-//                    'label' => '管理区',
-//                    'attribute' => 'management_area',
-//                    'headerOptions' => ['width' => '150'],
-//                    'value' => function ($model) {
-//                        // 				            	var_dump($model);exit;
-//                        return ManagementArea::getAreanameOne($model->management_area);
-//                    },
-//                    'filter' => ManagementArea::getAreaname(),
-//                ],
+                [
+                    'label' => '管理区',
+                    'attribute' => 'management_area',
+                    'headerOptions' => ['width' => '150'],
+                    'value' => function ($model) {
+                        // 				            	var_dump($model);exit;
+                        return ManagementArea::getAreanameOne($model->management_area);
+                    },
+                    'filter' => ManagementArea::getAreaname(),
+                ],
                 [
                     'label' => '农场名称',
                     'attribute' => 'farmname',

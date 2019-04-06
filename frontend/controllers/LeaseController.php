@@ -455,6 +455,10 @@ class LeaseController extends Controller
         }
         $model = $this->findModel($id);
         $farm = Farms::find()->where(['id'=>$model->farms_id])->one();
+        $bankModel = BankAccount::find()->where(['farms_id'=>$farms_id,'lease_id'=>$id])->one();
+        if(empty($bankModel)) {
+            $bankModel = new BankAccount();
+        }
 //        var_dump($farm);exit;
         $farmer = Farmer::find()->where(['farms_id'=>$model->farms_id])->one();
         $overarea = Lease::getAllLeaseArea($farms_id);
@@ -467,12 +471,50 @@ class LeaseController extends Controller
             $isinsurance = false;
         }
         if ($model->load(Yii::$app->request->post())) {
+            $bankModel->load(Yii::$app->request->post());
+//            var_dump($bankModel)
         	$model->update_at = time();
         	if($model->renttype) {
             	$model->renttype = implode(',', $model->renttype);
             }
             $model->renttime = (string)strtotime($model->renttime);
         	$state = $model->save();
+            if($state) {
+
+                if(!empty($bankModel->accountnumber)) {
+//                    var_dump($bankModel);exit;
+                    $bModel = BankAccount::find()->where(['farms_id'=>$farms_id,'lease_id'=>$id])->one();
+                    if(empty($bModel)) {
+                        $bModel = new BankAccount();
+                    }
+                    $bModel->farms_id = $farms_id;
+                    $bModel->bank = $bankModel->bank;
+                    $bModel->accountnumber = $bankModel->accountnumber;
+                    $bModel->cardid = $farm['cardid'];
+                    $bModel->lessee = $model->lessee;
+                    $bModel->create_at = time();
+                    $bModel->update_at = $bModel->create_at;
+//                if (BankAccount::scanCard($cardid)) {
+//                    $bModel->state = $bankstate['state'];
+//                    $bModel->modfiyname = $bankstate['modfiyname'];
+//                    $bModel->modfiytime = $bankstate['modfiytime'];
+//                } else {
+                    $bModel->state = 1;
+//                }
+                    $bModel->management_area = $farm['management_area'];
+                    $bModel->farmername = $farm['farmername'];
+                    $bModel->farmerpinyin = $farm['farmerpinyin'];
+                    $bModel->farmname = $farm['farmname'];
+                    $bModel->farmpinyin = $farm['pinyin'];
+                    $bModel->lesseepinyin = Pinyin::encode($model->lessee);
+                    $bModel->contractnumber = $farm['contractnumber'];
+                    $bModel->contractarea = $farm['contractarea'];
+                    $bModel->farmstate = $farm['state'];
+                    $bModel->lease_id = $model->id;
+                    Logs::writeLogs('创建' . $farm['farmername'] . '银行账号', $bModel);
+                    $bModel->save();
+                }
+            }
             if(isset($_POST['Lease']['isinsurance'])) {
 //                var_dump($farm['management_area']);exit;
                 $insurance = Insurance::find()->where(['year'=>$year,'farms_id'=>$farms_id,'lease_id'=>$id])->one();
@@ -590,6 +632,7 @@ class LeaseController extends Controller
         } else {
             return $this->render('leaseupdate', [
                 'model' => $model,
+                'bankModel' => $bankModel,
             	'farm' => $farm,
             	'farmer' => $farmer,
             	'overarea' => $overarea,

@@ -46,7 +46,6 @@ class Processname extends \yii\db\ActiveRecord
             'sparerole' => '备用角色',
         ];
     }
-<<<<<<< HEAD
 
     public static function getUserIdentificationSql()
     {
@@ -153,18 +152,5 @@ class Processname extends \yii\db\ActiveRecord
         $auditprocess = Auditprocess::find()->where(['actionname'=>$classname])->one();
 //        var_dump($auditprocess['process']);exit;
         return explode('>',$auditprocess['process']);
-=======
-    
-    public static function getIdentification()
-    {
-    	$data = self::find()->where(['rolename'=>User::getItemname()])->all();
-    	$result = [];
-    	foreach ($data as $value) {
-    		$classname = 'app\\models\\'.ucfirst($value['Identification']);
-    		$arr = $classname::attributesKey();
-    		$result[] = implode(',', $arr);
-    	}
-    	return implode(',', $result);
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     }
 }

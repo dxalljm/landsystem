@@ -17,10 +17,7 @@ use app\models\Logs;
 use app\models\Lease;
 use app\models\Zongdioffarm;
 use app\models\User;
-<<<<<<< HEAD
 use app\models\ManagementArea;
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 /**
  * ParcelController implements the CRUD actions for Parcel model.
  */
@@ -231,7 +228,6 @@ public  function  actionParcelarea($zongdi,$farms_id=null)
     	$netarea = 0;
 		$areaNumber = explode('-', $zongdi);
 		$management = User::getUserManagementArea();
-<<<<<<< HEAD
 // 		if(in_array($areaNumber[0],$management)) {
 			$parcel = Parcel::find()->where(['unifiedserialnumber' => $zongdi])->one();
 	    	if($parcel) {
@@ -284,54 +280,6 @@ public  function  actionParcelarea($zongdi,$farms_id=null)
 							$netarea = 0;
 // 	    				$showmsg = true;
 							$message .= '没有剩余面积。';
-=======
-		if(in_array($areaNumber[0],$management)) {
-			$parcel = Parcel::find()->where(['unifiedserialnumber' => $zongdi])->one();
-	    	if($parcel) {	
-	    		$zongdiinfo = $this->findParcel($zongdi);
-	// 	    		var_dump($zongdiinfo);
-	    		if($zongdiinfo['state']) {
-	    			if($zongdiinfo['area']) {
-	    				$cha = $zongdiinfo['netarea'] - $zongdiinfo['area'];
-	    				if($cha > 0) {
-		    				$result = $cha;
-			    			$status = 1;
-			    			$netarea = $zongdiinfo['area'];
-			    			$showmsg = true;
-			    			$message = '已被占用'.$result.'亩，将显示剩余面积。';
-	    				} else {
-	    					$status = 0;
-	    					$netarea = 0;
-	    					$showmsg = true;
-	    					$message = '对不起，您输入的地块已经被占用';
-	    				}
-	    			} else {
-	    				$status = 0;
-	    				$netarea = 0;
-	    				$showmsg = true;
-	    				$message = '对不起，您输入的地块已经被占用';
-	    				
-	    			}   			
-	    		} else {
-	    			$status = 1;
-	    			$netarea = $zongdiinfo['netarea'];
-	    			$message = true;	
-	    			$showmsg = false;    			
-	    		}
-	    	}
-	    	else {
-	    		$status = 0;
-	    		$showmsg = true;
-	    		$message = '对不起，您输入的地块不存在！';
-	    	}
-		} else {
-			$status = 0;
-			$showmsg = true;
-			$message = '对不起，您只能输入您所辖管理区的宗地号！';
-		}
-	    	
-    	echo json_encode(['status' => $status, 'area' => $netarea,'message' => $message,'showmsg' => $showmsg]);
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 
 						}
 					} else {
@@ -416,33 +364,6 @@ public  function  actionParcelarea($zongdi,$farms_id=null)
     		$state = false;
     	$result['state'] = $state;
 //     	var_dump($result);exit;
-    	return $result;
-    }
-    
-    private function findParcel($zongdi)
-    {
-    	$result = [];
-    	$parcel = Parcel::find()->where(['unifiedserialnumber' => $zongdi])->one();
-//     	var_dump($parcel['netarea']);
-    	
-    	$parcels = Zongdioffarm::find()->where(['zongdinumber' => $zongdi])->all();
-    	$sum = 0.0;
-//     	$state = false;
-    	if($parcels) {
-    		$state = true;
-    	} else 
-    		$state = false;
-    	$farmname = '';
-    	foreach ($parcels as $value) {
-    		$sum += $value['measure'];
-//     		$farmname = Farms::find()->where([''])
-    	}
-    	
-    	$result['area'] = $parcel['netarea'] - $sum;
-    	$result['state'] = $state;
-    	$result['netarea'] = $parcel['netarea'];
-//     	$result['farmname'] = 
-//     	var_dump($result);
     	return $result;
     }
     

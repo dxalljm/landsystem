@@ -2,46 +2,31 @@
 
 namespace frontend\models;
 
-<<<<<<< HEAD
 use app\models\User;
 use app\models\Farms;
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Insurance;
-<<<<<<< HEAD
 use app\models\Theyear;
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 
 /**
  * insuranceSearch represents the model behind the search form about `app\models\Insurance`.
  */
 class insuranceSearch extends Insurance
 {
-<<<<<<< HEAD
     public $select;
 //     public $;
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-<<<<<<< HEAD
             [['id','management_area', 'farms_id','state','fwdtstate','issame','isselfselect','isbxsame','iscontractarea','farmstate','company_id'], 'integer'],
             [['wheat', 'soybean', 'insuredarea', 'insuredwheat', 'insuredsoybean','other','insuredother','contractarea','insured'], 'number'],
             [['year','farmername', 'farmerpinyin','policyholder', 'policyholderpinyin','cardid', 'telephone', 'company_id', 'create_at', 'update_at', 'policyholdertime', 'managemanttime', 'halltime','select'], 'string', 'max' => 500],
             [['statecontent'],'string']
-=======
-            [['id', 'management_area', 'farms_id'], 'integer'],
-            [['year', 'policyholder', 'cardid', 'telephone', 'company_id', 'create_at', 'update_at', 'policyholdertime', 'managemanttime', 'halltime'], 'safe'],
-            [['wheat', 'soybean', 'insuredarea', 'insuredwheat', 'insuredsoybean','other'], 'number'],
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         ];
     }
 
@@ -54,7 +39,6 @@ class insuranceSearch extends Insurance
         return Model::scenarios();
     }
 
-<<<<<<< HEAD
     public function policyholderSearch($str = NULL)
     {
 
@@ -113,8 +97,6 @@ class insuranceSearch extends Insurance
         return $tj;
     }
     
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     /**
      * Creates data provider instance with search query applied
      *
@@ -124,10 +106,7 @@ class insuranceSearch extends Insurance
      */
     public function search($params)
     {
-<<<<<<< HEAD
 //        var_dump($params);exit;
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         $query = Insurance::find();
 
         $dataProvider = new ActiveDataProvider([
@@ -136,16 +115,7 @@ class insuranceSearch extends Insurance
 
         $this->load($params);
 
-<<<<<<< HEAD
         
-=======
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
-
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         $query->andFilterWhere([
             'id' => $this->id,
             'management_area' => $this->management_area,
@@ -156,7 +126,6 @@ class insuranceSearch extends Insurance
             'insuredwheat' => $this->insuredwheat,
             'insuredsoybean' => $this->insuredsoybean,
         	'other' => $this->other,
-<<<<<<< HEAD
             'state' => $this->state,
             'fwdtstate' => $this->fwdtstate,
             'issame' => $this->issame,
@@ -175,20 +144,10 @@ class insuranceSearch extends Insurance
             ->andFilterWhere(['like', 'cardid', $this->cardid])
             ->andFilterWhere(['like', 'telephone', $this->telephone])
             ->andFilterWhere(['like', 'contractarea', $this->contractarea])
-=======
-        ]);
-
-        $query->andFilterWhere(['like', 'year', $this->year])
-            ->andFilterWhere(['like', 'policyholder', $this->policyholder])
-            ->andFilterWhere(['like', 'cardid', $this->cardid])
-            ->andFilterWhere(['like', 'telephone', $this->telephone])
-            ->andFilterWhere(['like', 'company_id', $this->company_id])
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
             ->andFilterWhere(['like', 'create_at', $this->create_at])
             ->andFilterWhere(['like', 'update_at', $this->update_at])
             ->andFilterWhere(['like', 'policyholdertime', $this->policyholdertime])
             ->andFilterWhere(['like', 'managemanttime', $this->managemanttime])
-<<<<<<< HEAD
             ->andFilterWhere(['like', 'statecontent', $this->statecontent])
 
             ->andFilterWhere(['like', 'halltime', $this->halltime]);
@@ -473,10 +432,6 @@ class insuranceSearch extends Insurance
         	$query->andFilterWhere(['between','update_at',Theyear::getYeartime()[0],Theyear::getYeartime()[1]]);
         }
 //		var_dump($dataProvider->query->where);exit;
-=======
-            ->andFilterWhere(['like', 'halltime', $this->halltime]);
-
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         return $dataProvider;
     }
 }

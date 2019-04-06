@@ -92,7 +92,6 @@ $arrclass = explode('\\',$dataProvider->query->modelClass);
 				'value' => function ($model) {
 					return Machine::find()->where(['id'=>$model->machine_id])->one()['enterprisename'];
 				}
-<<<<<<< HEAD
 			],
 			[
 				'label' => '补贴金额',
@@ -102,8 +101,6 @@ $arrclass = explode('\\',$dataProvider->query->modelClass);
 						return $apply['subsidymoney'];
 					}
 				}
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			],
 			[
 				'label' => '购置年份',

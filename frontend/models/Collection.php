@@ -487,7 +487,6 @@ class Collection extends \yii\db\ActiveRecord {
 	 */
 	public static function copy($farms_id,$model,$state=false)
 	{
-		var_dump($model);exit;
 		$farm = Farms::findOne($farms_id);
 		if($state) {
 			$model = new Collection();

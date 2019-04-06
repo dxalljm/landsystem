@@ -316,7 +316,7 @@ class Farms extends \yii\db\ActiveRecord {
 		$html .= '<td align="right">冻结原因:</td>';
 		$html .= '<td colspan="5" align="left" class="text-danger">'.Lockedinfo::find()->where(['farms_id'=>$farms_id])->one()['lockedcontent'].'</td>';
 
-		$bank = BankAccount::find()->where(['cardid'=>$farm['cardid']])->one();
+		$bank = BankAccount::find()->where(['farms_id'=>$farm['id'],'lease_id'=>0])->one();
 		$html .= '</td>';
 		$html .= '</tr>';
 		$html .= '<tr>';
@@ -325,8 +325,8 @@ class Farms extends \yii\db\ActiveRecord {
 		$html .= Environment::find()->where(['farms_id'=>$farms_id,'year'=>User::getYear()])->one()['isgovernment']?"是":"否";
 		$html .= '</td>';
 		$html .= '<td align="right">银行账号'.Html::a('编辑','#',['id'=>'bankupdate','class'=>'btn btn-xs btn-success']).'</td>';
-		$html .= '<td align="right">'.$bank['bank'].'</td>';
-		$html .= '<td align="left" colspan="3"><span id="banktext">'.$bank['accountnumber'].'</span></td>';
+		$html .= '<td align="right" colspan="2">'.$bank['bank'].'</td>';
+		$html .= '<td align="left" colspan="2"><span id="banktext">'.$bank['accountnumber'].'</span></td>';
 		$html .= '<td align="right">信用分:</td>';
 		$html .= '<td align="left">';
 		if($farm->star) {
@@ -365,7 +365,7 @@ class Farms extends \yii\db\ActiveRecord {
 		$html .= 'click: function () {';
 		$html .= 'var num = $("#bank-accountnumber").val();';
 		$html .= '$.getJSON("index.php?r=bankaccount/setaccountnumber", {';
-		$html .= '"farms_id": 1,';
+		$html .= '"farms_id": '.$farms_id.',';
 		$html .= '"accountnumber": num';
 		$html .= '}, function (data) {';
 		$html .= 'if (data.state) {';
@@ -683,13 +683,8 @@ class Farms extends \yii\db\ActiveRecord {
 	 */
 	public static function searchAll() {
 
-<<<<<<< HEAD
 		$cacheKey = 'farms-search-all27'.\Yii::$app->getUser()->id;
 
-=======
-		$cacheKey = 'farms-search-all18'.\Yii::$app->getUser()->id;
-		
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		$result = Yii::$app->cache->get($cacheKey);
 		if (!empty($result)) {
 			return $result;
@@ -708,11 +703,7 @@ class Farms extends \yii\db\ActiveRecord {
 		// 所有农场
 		$data = [];
 		$where = self::getManagementArea()['id'];
-<<<<<<< HEAD
 		$result = Farms::find()->where(['management_area'=>$where,'state'=>[1,2,3,4,5]])->all();
-=======
-		$result = Farms::find()->where(['management_area'=>$where,'state'=>1])->all();
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		foreach ($result as $farm) {
 			$data[] = [
 				'value' => $farm['pinyin'], // 拼音
@@ -979,12 +970,8 @@ class Farms extends \yii\db\ActiveRecord {
 	
 	public static function getContractnumberArea($contractnumber)
 	{
-<<<<<<< HEAD
  		if(empty($contractnumber))
 			return 0;
-=======
-// 		var_dump($contractnumber);exit;
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		$array = explode ( '-', $contractnumber );
 //		var_dump($array);exit;
 		return $array [2];

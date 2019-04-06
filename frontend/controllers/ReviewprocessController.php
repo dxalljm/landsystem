@@ -2,7 +2,6 @@
 
 namespace frontend\controllers;
 
-<<<<<<< HEAD
 use app\models\Backprocess;
 use app\models\Collection;
 use app\models\Farmer;
@@ -17,9 +16,6 @@ use app\models\PlantPrice;
 use app\models\Theyear;
 use frontend\models\farmsSearch;
 use frontend\models\loanSearch;
-=======
-use app\models\Ttpo;
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 use Yii;
 use app\models\Reviewprocess;
 use frontend\models\ReviewprocessSearch;
@@ -102,7 +98,6 @@ class ReviewprocessController extends Controller
 		$params['begindate'] = $begindate;
 		$params['enddate'] = $enddate;
     	$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
-<<<<<<< HEAD
 		if($temp) {
 			$userinfo = User::find()->where(['id'=>$temp['user_id']])->one();
 			$processname = Processname::getProcessname($userinfo['department_id'],$userinfo['level']);
@@ -121,16 +116,6 @@ class ReviewprocessController extends Controller
 			} else {
 				$whereArrayp = Farms::getManagementArea()['id'];
 			}
-=======
-    	if($temp) {
-    		$whereArray = Farms::getUserManagementArea($temp['user_id']);
-    	} else {
-    		$whereArray = Farms::getManagementArea();
-    	}
-		$Identification = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
-        $farmstransfer = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer',$Identification=>2])->all();
-//		var_dump($farmstransfer);exit;
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 
 		} else {
 			$processname = Processname::getProcessname(Yii::$app->getUser()->getIdentity()->department_id,Yii::$app->getUser()->getIdentity()->level);
@@ -211,7 +196,6 @@ class ReviewprocessController extends Controller
         ]);
     }
 
-<<<<<<< HEAD
 	public function actionReviewprocessreturn($begindate=null,$enddate=null)
 	{
 		if(Yii::$app->user->isGuest) {
@@ -336,18 +320,12 @@ class ReviewprocessController extends Controller
 		if(Yii::$app->user->isGuest) {
 			return $this->redirect(['site/login']);
 		}
-=======
-	public function actionReviewprocesswait()
-	{
-
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
 		if($temp) {
 			$whereArray = Farms::getUserManagementArea($temp['user_id']);
 		} else {
 			$whereArray = Farms::getManagementArea();
 		}
-<<<<<<< HEAD
 		$ttpozongdi = Ttpozongdi::find()->where(['state'=>0,'management_area'=>$whereArray['id']])->all();
 //		var_dump($whereArray['id']);exit;
 		$projectapplication = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'projectapplication'])->all();
@@ -355,19 +333,10 @@ class ReviewprocessController extends Controller
 		$loan = Reviewprocess::find()->where(['management_area' => $whereArray['id'],'actionname'=>'loancreate'])->all();
 		$title = '待办任务';
 		Logs::writeLogs($title);
-=======
-		$ttpozongdi = Ttpozongdi::find()->where(['state'=>0])->all();
-
-		$projectapplication = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'projectapplication'])->all();
-
-		$loan = Reviewprocess::find()->where(['management_area' => $whereArray['id'],'actionname'=>'loancreate'])->all();
-
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		return $this->render('reviewprocesswait', [
 			'ttpozongdi' => $ttpozongdi,
 			'projectapplication' => $projectapplication,
 			'loan' => $loan,
-<<<<<<< HEAD
 			'title' => $title,
 		]);
 	}
@@ -732,58 +701,6 @@ class ReviewprocessController extends Controller
 		return $this->render('reviewprocesscontractclaim');
 	}
 
-=======
-		]);
-	}
-
-	public function actionReviewprocessing()
-	{
-
-		$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
-		if($temp) {
-			$whereArray = Farms::getUserManagementArea($temp['user_id']);
-		} else {
-			$whereArray = Farms::getManagementArea();
-		}
-		$Identification = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
-		$farmstransfer = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer',$Identification=>1,'state'=>4])->all();
-//		var_dump($farmstransfer);exit;
-
-		$projectapplication = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'projectapplication'])->all();
-
-		$loan = Reviewprocess::find()->where(['management_area' => $whereArray['id'],'actionname'=>'loancreate'])->all();
-
-		return $this->render('reviewprocessindex', [
-			'farmstransfer' => $farmstransfer,
-			'projectapplication' => $projectapplication,
-			'loan' => $loan,
-		]);
-	}
-
-	public function actionReviewprocessfinished()
-	{
-
-		$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
-		if($temp) {
-			$whereArray = Farms::getUserManagementArea($temp['user_id']);
-		} else {
-			$whereArray = Farms::getManagementArea();
-		}
-//		$Identification = Processname::find()->where(['rolename'=>User::getItemname()])->one()['Identification'];
-		$farmstransfer = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'farmstransfer','state'=>7])->all();
-//		var_dump($farmstransfer);exit;
-
-		$projectapplication = Reviewprocess::find()->where(['management_area'=>$whereArray['id'],'actionname'=>'projectapplication'])->all();
-
-		$loan = Reviewprocess::find()->where(['management_area' => $whereArray['id'],'actionname'=>'loancreate'])->all();
-
-		return $this->render('reviewprocessindex', [
-			'farmstransfer' => $farmstransfer,
-			'projectapplication' => $projectapplication,
-			'loan' => $loan,
-		]);
-	}
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     /**
      * Displays a single Reviewprocess model.
      * @param integer $id
@@ -823,17 +740,10 @@ class ReviewprocessController extends Controller
 		}
     	//     	var_dump($reviewprocessid);
     	$model = new Reviewprocess();
-<<<<<<< HEAD
     	$newfarm = Farms::find()->where(['id'=>$model->newfarmsid])->one();
     	$oldfarm = Farms::find()->where(['id'=>$model->oldfarmsid])->one();
     	$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$model->newfarmsid])->one();
     	$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$model->oldfarmsid])->one();
-=======
-    	$newfarm = Farms::find()->where(['id'=>$newfarmsid])->one();
-    	$oldfarm = Farms::find()->where(['id'=>$oldfarmsid])->one();
-    	$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$newfarmsid])->one();
-    	$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$oldfarmsid])->one();
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     	$reviewprocess = Reviewprocess::find()->where(['id'=>$reviewprocessid])->one();
     	$process = Auditprocess::find()->where(['id'=>$reviewprocess['operation_id']])->one()['process'];
     	//     	var_dump($process);exit;
@@ -850,7 +760,6 @@ class ReviewprocessController extends Controller
     
     public function actionReviewprocessfarmssplit($reviewprocessid)
     {
-<<<<<<< HEAD
 		if(Yii::$app->user->isGuest) {
 			return $this->redirect(['site/login']);
 		}
@@ -860,16 +769,6 @@ class ReviewprocessController extends Controller
     	$oldfarm = Farms::find()->where(['id'=>$model->oldfarms_id])->one();
     	$newfarm = Farms::find()->where(['id'=>$model->newfarms_id])->one();
 		Logs::writeLogs('打印宜农林地承包经营权转让审批表',$ttpoModel);
-=======
-    	$model = new Reviewprocess();
-    	$newfarm = Farms::find()->where(['id'=>$newfarmsid])->one();
-    	$oldfarm = Farms::find()->where(['id'=>$oldfarmsid])->one();
-    	$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$newfarmsid])->one();
-    	$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$oldfarmsid])->one();
-    	$reviewprocess = Reviewprocess::find()->where(['id'=>$reviewprocessid])->one();
-    	$process = Auditprocess::find()->where(['id'=>$reviewprocess['operation_id']])->one()['process'];
-//     	 var_dump($reviewprocessid);exit;
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     	return $this->render ( 'reviewprocessfarmssplit', [
     			'oldfarm' => $oldfarm,
     			'newfarm' => $newfarm,
@@ -909,7 +808,6 @@ class ReviewprocessController extends Controller
 		}
 		$state = '';
     	$model = $this->findModel($id);
-<<<<<<< HEAD
 //		var_dump($model);exit;
 		$oldmodel = $model->attributes;
 		$nowundo = $oldmodel['undo'];
@@ -1297,7 +1195,7 @@ class ReviewprocessController extends Controller
 											Collection::copy($ttpoModel->newnewfarms_id, $collModel, true);
 										} else {
 											$collModel = Collection::findOne($old['id']);
-											Collection::copy($ttpoModel->newnewfarms_id, $old);
+											Collection::copy($ttpoModel->newnewfarms_id, $collModel);
 											$collModel->delete();
 										}
 									} else {
@@ -1454,7 +1352,7 @@ class ReviewprocessController extends Controller
 //											$old2 = Collection::find()->where(['farms_id'=>$ttpo['oldfarms_id'],'payyear'=>date('Y')])->one();
 //											$new = Collection::find()->where(['farms_id'=>$ttpo['newnewfarms_id'],'payyear'=>date('Y')])->one();
 											Collection::newCollection($ttpoModel->newnewfarms_id);
-//											$same->delete();
+											$same->delete();
 										}
 //									}
 									if(Farms::getContractserialnumber($ttpoModel->samefarms_id) == Farms::getContractserialnumber($ttpoModel->newnewfarms_id)) {
@@ -1744,84 +1642,6 @@ class ReviewprocessController extends Controller
 					else
 						return $this->redirect(['reviewprocess/reviewprocessindex']);
 				}
-=======
-    	$ttpo = Ttpozongdi::find()->where(['reviewprocess_id'=>$id])->one();
-    	$ttpoModel = Ttpozongdi::findOne($ttpo['id']);
-    	$process = Auditprocess::find()->where(['actionname'=>$model->actionname])->one()['process'];
-    	$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$model->oldfarms_id])->one();
-    	$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$model->newfarms_id])->one();
-//     	var_dump(Yii::$app->request->post());exit;
-    	if($class == 'farmstransfer') {
-    		
-	    	$oldfarm = Farms::find()->where(['id'=>$model->oldfarms_id])->one();
-	    	$newfarm = Farms::find()->where(['id'=>$model->newfarms_id])->one();
-	    	if($model->load(Yii::$app->request->post())) {
-
-	    		$model->save();
-// 	    		var_dump($_POST);exit;
-	    		$state = Reviewprocess::isNextProcess($model->id);
-// 	    		exit;
-	    		$modelname = Reviewprocess::getProcessIdentification();
-	    		foreach ($modelname as $name) {
-		    		$classname = 'app\\models\\'.ucfirst($name);
-// 		    		var_dump($classname);exit;
-		    		$estateID= $classname::find()->where(['reviewprocess_id'=>$id])->one()['id'];
-		    		if($estateID)
-		    			$estateModel = $classname::findOne($estateID);
-		    		else 
-		    			$estateModel = new $classname();
-		    		foreach ($classname::attributesList() as $key => $value) {
-		    			$estateModel->$key = Yii::$app->request->post($key);
-		    			$contentName = $key.'content';
-		    			$estateModel->$contentName = Yii::$app->request->post($contentName);
-		    		}
-		    		$estateModel->reviewprocess_id = $id;
-		    		$estateModel->save();
-// 		    		var_dump($estateModel);exit;
-	    		}
-// 	    		var_dump($id);
-	    		if($state) {
-// 	    			var_dump($model->oldfarms_id);exit;
-	    			$oldfarmsModel = Farms::findOne($ttpoModel->oldfarms_id);	    			
-	    			$oldfarmsModel->update_at = time();
-	    			$oldfarmsModel->zongdi = $ttpoModel->oldchangezongdi;
-	    			$oldfarmsModel->measure = $ttpoModel->oldchangemeasure;
-	    			$oldfarmsModel->notclear = $ttpoModel->oldchangenotclear;
-	    			$oldfarmsModel->notstate = $ttpoModel->oldchangenotstate;
-	    			$oldfarmsModel->contractarea = Farms::getContractnumberArea($ttpoModel->oldchangecontractnumber);
-	    			$oldfarmsModel->contractnumber = $ttpoModel->oldchangecontractnumber;
-	    			if($ttpoModel->actionname == 'farmstransfer') {
-	    				$oldfarmsModel->state = 0;
-	    			} else 
-	    				$oldfarmsModel->state = 1;
-	    			
-	    			$oldfarmsModel->locked = 0;
-	    			$oldfarmsModel->save();
-	    			
-	    			$newfarmModel = Farms::findOne($ttpoModel->newfarms_id);	    			
-	    			$newfarmModel->update_at = time();
-	    			$newfarmModel->zongdi = $ttpoModel->newchangezongdi;
-	    			$newfarmModel->measure = $ttpoModel->newchangemeasure;
-	    			$newfarmModel->notclear = $ttpoModel->newchangenotclear;
-	    			$newfarmModel->notstate = $ttpoModel->newchangenotstate;
-	    			$newfarmModel->contractarea = Farms::getContractnumberArea($ttpoModel->newchangecontractnumber);
-	    			$newfarmModel->contractnumber = $ttpoModel->newchangecontractnumber;
-	    			$newfarmModel->state = 1;
-	    			$newfarmModel->locked = 0;
-	    			$newfarmModel->save();
-	    			
-	    			
-	    		}
-	    		if(user::getItemname() == '地产科科长') {
-		    		return $this->redirect(['reviewprocess/reviewprocessfarmssplit',
-		    				'oldfarmsid' => $ttpoModel->oldfarms_id,
-		    				'newfarmsid' => $ttpoModel->newfarms_id,
-		    				'reviewprocessid' => $model->id,
-		    		]);
-	    		} else {
-	    			return $this->redirect(['reviewprocess/reviewprocessindex']);
-	    		}
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 	    	}
 
 	    	return $this->render ( 'reviewprocessinspections', [
@@ -1951,12 +1771,11 @@ class ReviewprocessController extends Controller
     
     public function actionReviewprocessview($id,$class)
     {
-<<<<<<< HEAD
 		if(Yii::$app->user->isGuest) {
 			return $this->redirect(['site/login']);
 		}
     	$model = $this->findModel($id);
-//		var_dump($model);exit;
+    	 
     	$process = Auditprocess::find()->where(['actionname'=>$model->actionname])->one()['process'];
         $ttpoModel = Ttpozongdi::find()->where(['id'=>$model->ttpozongdi_id])->one();
 
@@ -2001,61 +1820,11 @@ class ReviewprocessController extends Controller
 //    			return $this->redirect(['reviewprocess/reviewprocessindex']);
 //    		}
 			Logs::writeLogs('查看过户审核信息',$model);
-=======
-    	$model = $this->findModel($id);
-    	 
-    	$process = Auditprocess::find()->where(['actionname'=>$model->actionname])->one()['process'];
-    	$oldttpozongdi = Ttpozongdi::find()->where(['oldfarms_id'=>$model->oldfarms_id])->one();
-    	$newttpozongdi = Ttpozongdi::find()->where(['newfarms_id'=>$model->newfarms_id])->one();
-    	if($class == 'farmstransfer') {
-    		$oldfarm = Farms::find()->where(['id'=>$model->oldfarms_id])->one();
-    		$newfarm = Farms::find()->where(['id'=>$model->newfarms_id])->one();
-    		if($model->load(Yii::$app->request->post())) {
-    			$model->save();
-    			// 	    		var_dump($_POST);exit;
-    			$state = Reviewprocess::isNextProcess($model->id);
-    			$estateID= Estate::find()->where(['reviewprocess_id'=>$id])->one()['id'];
-    			$estateModel = Estate::findOne($estateID);
-    			foreach (Estate::attributesList() as $key => $value) {
-    				$estateModel->$key = Yii::$app->request->post($key);
-    				$contentName = $key.'content';
-    				$estateModel->$contentName = Yii::$app->request->post($contentName);
-    			}
-    			$estateModel->save();
-    			// 	    		var_dump($estateModel);exit;
-    			if($state) {
-    
-    				$oldfarmsModel = Farms::findOne($model->oldfarms_id);
-    
-    				$oldfarmsModel->update_at = time();
-    				$oldfarmsModel->state = 0;
-    				$oldfarmsModel->locked = 0;
-    				$oldfarmsModel->save();
-    				$newfarmModel = Farms::findOne($model->newfarms_id);
-    
-    				$newfarmModel->update_at = $oldfarmsModel->update_at;
-    				$newfarmModel->state = 1;
-    				$newfarmModel->locked = 0;
-    				$newfarmModel->save();
-    				$projectID = Projectapplication::find()->where(['farms_id'=>$oldfarmsModel->id,'reviewprocess_id'=>$id])->one()['id'];
-    				$projectModel = Projectapplication::findOne($projectID);
-    				$projectModel->farms_id = $newfarmModel->id;
-    				$projectModel->save();
-    
-    			}
-    			return $this->redirect(['reviewprocess/reviewprocessindex']);
-    		}
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     		return $this->render ( 'reviewprocessview', [
     				'model' => $model,
     				'oldfarm' => $oldfarm,
     				'newfarm' => $newfarm,
-<<<<<<< HEAD
     				'ttpoModel' => $ttpoModel,
-=======
-    				'oldttpozongdi' => $oldttpozongdi,
-    				'newttpozongdi' => $newttpozongdi,
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     				'process' => explode('>', $process),
     				'class' => $class,
     		] );
@@ -2064,7 +1833,6 @@ class ReviewprocessController extends Controller
     		$farm = Farms::find()->where(['id'=>$model->oldfarms_id])->one();
     		//     		$whereArray = Farms::getManagementArea();
     		$project = Projectapplication::find()->where(['reviewprocess_id'=>$id])->one();
-<<<<<<< HEAD
 //    		if($model->load(Yii::$app->request->post())) {
 //
 //    			if($model->leader == 0)
@@ -2084,26 +1852,6 @@ class ReviewprocessController extends Controller
 //    			}
 //    		}
 			Logs::writeLogs('查看项目审核信息',$project);
-=======
-    		if($model->load(Yii::$app->request->post())) {
-    			 
-    			if($model->leader == 0)
-    				$model->state = 5;
-    			if($model->leader == 1)
-    				$model->state = 7;
-    			//     			var_dump($model);
-    			$model->save();
-    			$state = Reviewprocess::isNextProcess($model->id);
-    			 
-    			if($state) {
-    				//     				$project = Projectapplication::find()->where(['reviewprocess_id'=>$model->id])->one();
-    				$projectModel = Projectapplication::findOne($project->id);
-    				$projectModel->state = 1;
-    				$projectModel->save();
-    				return $this->redirect(['reviewprocess/reviewprocessindex']);
-    			}
-    		}
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     		return $this->render ( 'reviewprocessview', [
     				'model' => $model,
     				'farm' => $farm,
@@ -2112,7 +1860,6 @@ class ReviewprocessController extends Controller
     				'project'=>$project,
     		] );
     	}
-<<<<<<< HEAD
     	if($class == 'loancreate') {
     		$farm = Farms::find()->where(['id'=>$model->oldfarms_id])->one();
     		//     		$whereArray = Farms::getManagementArea();
@@ -2136,30 +1883,6 @@ class ReviewprocessController extends Controller
 //    			}
 //    		}
 			Logs::writeLogs('查看贷款审核信息',$loan);
-=======
-    	if($class == 'loan') {
-    		$farm = Farms::find()->where(['id'=>$model->oldfarms_id])->one();
-    		//     		$whereArray = Farms::getManagementArea();
-    		$loan = Loan::find()->where(['reviewprocess_id'=>$id])->one();
-    		if($model->load(Yii::$app->request->post())) {
-    
-    			if($model->leader == 0)
-    				$model->state = 5;
-    			if($model->leader == 1)
-    				$model->state = 7;
-    			//     			var_dump($model);
-    			$model->save();
-    			$state = Reviewprocess::isNextProcess($model->id);
-    
-    			if($state) {
-    
-    				$loanModel = Loan::findOne($loan->id);
-    				$loanModel->state = 1;
-    				if($loanModel->save())
-    					return $this->redirect(['reviewprocess/reviewprocessindex']);
-    			}
-    		}
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     		return $this->render ( 'reviewprocessview', [
     				'model' => $model,
     				'farm' => $farm,

@@ -24,6 +24,7 @@ $this->params['breadcrumbs'][] = '更新';
 
     <?= $this->render('lease_form', [
         'model' => $model,
+        'bankModel' => $bankModel,
     	'farm' => $farm,
     	'farmer' => $farmer,
     	'overarea' => $overarea,

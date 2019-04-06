@@ -5,10 +5,7 @@ namespace frontend\controllers;
 use Yii;
 use app\models\Theyear;
 use frontend\models\theyearSearch;
-<<<<<<< HEAD
 use yii\debug\models\search\Log;
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -37,7 +34,6 @@ class TtpozongdiController extends Controller
             ],
         ];
     }
-<<<<<<< HEAD
     public function beforeAction($action)
     {
         if(Yii::$app->user->isGuest) {
@@ -46,9 +42,6 @@ class TtpozongdiController extends Controller
             return true;
         }
     }
-=======
-
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 //     public function beforeAction($action)
 //     {
 //     	$action = Yii::$app->controller->action->id;
@@ -70,11 +63,7 @@ class TtpozongdiController extends Controller
         $model = $this->findModel($id);
 		
         $model->load(Yii::$app->request->post());
-<<<<<<< HEAD
         $reviewprocessID = Reviewprocess::processRun ($model->auditprocess_id, $model->oldfarms_id, $model->newnewfarms_id,$model->id,$model->samefarms_id );
-=======
-        $reviewprocessID = Reviewprocess::processRun ($model->auditprocess_id, $model->oldfarms_id, $model->newfarms_id,$model->id );
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 //         var_dump($reviewprocessID);exit;
         $model->reviewprocess_id = $reviewprocessID;
         $model->state = 1;
@@ -98,7 +87,6 @@ class TtpozongdiController extends Controller
 //         }
     }
 
-<<<<<<< HEAD
     public function actionTtpozongdiall($samefarms_id)
     {
         $ttpozongdis = Ttpozongdi::find()->where(['samefarms_id'=>$samefarms_id,'state'=>0])->all();
@@ -132,8 +120,6 @@ class TtpozongdiController extends Controller
 //         }
     }
 
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     public function actionTtpozongdicreate($id)
     {
     	$model = $this->findModel($id);
@@ -152,7 +138,6 @@ class TtpozongdiController extends Controller
     {
         $model = $this->findModel($id);
 //         var_dump($model);exit;
-<<<<<<< HEAD
 
         if($model->actionname == 'farmssplitcontinue') {
             $oldfarms = Farms::findOne($model->samefarms_id);
@@ -162,70 +147,41 @@ class TtpozongdiController extends Controller
 		$oldfarms->locked = 0;
 		$oldfarms->save();
 		Logs::writeLogs('解锁农场',$oldfarms);
-=======
-    	$old = $model->attributes;
-    	Logs::writeLog('删除转让信息',$id,$old);
-
-		$oldfarms = Farms::findOne($model->oldfarms_id);
-		$oldfarms->locked = 0;
-		$oldfarms->save();
-		
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		if($model->newfarms_id) {
 			$newfarms = Farms::findOne($model->newfarms_id);
 			$newfarms->locked = 0;
 			$newfarms->save();
-<<<<<<< HEAD
             Logs::writeLogs('解锁农场',$newfarms);
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		}
 		if($model->oldnewfarms_id) {
 			$newfarms = Farms::findOne($model->oldnewfarms_id);
 			$newfarms->delete();
-<<<<<<< HEAD
             Logs::writeLogs('删除农场',$newfarms);
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		}
 		if($model->newnewfarms_id) {
 			$newfarms = Farms::findOne($model->newnewfarms_id);
 			$newfarms->delete();
-<<<<<<< HEAD
             Logs::writeLogs('删除农场',$newfarms);
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		}
 		$lockedinfo = Lockedinfo::find()->where(['farms_id'=>$model->oldfarms_id])->one();
 		$lockedinfoModel = Lockedinfo::findOne($lockedinfo['id']);
 		$lockedinfoModel->delete();
-<<<<<<< HEAD
         Logs::writeLogs('删除锁定信息',$lockedinfoModel);
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 
 		$lockedinfo = Lockedinfo::find()->where(['farms_id'=>$model->newfarms_id])->one();
 		if($lockedinfo) {
 			$lockedinfoModel = Lockedinfo::findOne($lockedinfo['id']);
 			$lockedinfoModel->delete();
-<<<<<<< HEAD
             Logs::writeLogs('删除锁定信息',$lockedinfoModel);
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		}
 		
 		Zongdioffarm::zongdiUpdate($model->newnewfarms_id, $model->newfarms_id,$model->newzongdi);
 		Zongdioffarm::zongdiUpdate($model->oldnewfarms_id,$model->oldfarms_id, $model->oldzongdi);		
 		
 		$model->delete();
-<<<<<<< HEAD
         Logs::writeLogs('删除流转信息',$model);
 		Contractnumber::contractnumberSub();
         return $this->redirect(['farms/farmsmenu', 'farms_id'=>$model->samefarms_id]);
-=======
-		Contractnumber::contractnumberSub();
-        return $this->redirect(['farms/farmsmenu', 'farms_id'=>$model->oldfarms_id]);
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     }
 
     /**

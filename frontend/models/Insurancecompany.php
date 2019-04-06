@@ -3,10 +3,7 @@
 namespace app\models;
 
 use Yii;
-<<<<<<< HEAD
 use yii\helpers\ArrayHelper;
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 
 /**
  * This is the model class for table "{{%insurancecompany}}".
@@ -44,13 +41,10 @@ class Insurancecompany extends \yii\db\ActiveRecord
             'companynname' => '保险公司名称',
         ];
     }
-<<<<<<< HEAD
 
     public static function getCompanyList()
     {
         $data = ArrayHelper::map(self::find()->all(),'id','companynname');
         return $data;
     }
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 }

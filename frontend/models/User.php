@@ -450,7 +450,7 @@ class User extends \yii\db\ActiveRecord
                 $html .= '<i class="fa fa-file-text"></i>';
                 $html .= '</div>';
                 $html .= '<div class="card-content">';
-                if($title == '贷款' or $title == '畜牧业') {
+                if($title == '贷款' or $title == '畜牧业' or $title == '贷款解冻') {
                     $html .= '<h4 class="card-title">' . $title . '</h4>';
                 } else {
                     $html .= '<h4 class="card-title">' . $title . '<font color="red">(' . User::getYear() . '年度)</font></h4>';

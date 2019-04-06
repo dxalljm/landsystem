@@ -49,7 +49,6 @@ class ManagementArea extends \yii\db\ActiveRecord
 //     	if (!empty($data)) {
 //     		return $data;
 //     	}
-<<<<<<< HEAD
         $data = '';
 		if(empty($id)) {
 	    	$whereArray = Farms::getManagementArea();
@@ -59,15 +58,6 @@ class ManagementArea extends \yii\db\ActiveRecord
 	            $data[$val->id] = $val->areaname;
 	        }
 //            return '';
-=======
-		if(empty($id)) {
-	    	$whereArray = Farms::getManagementArea();
-	    	$area = ManagementArea::find()->where(['id'=>$whereArray['id']])->all();
-	
-	        foreach ($area as $key => $val) {
-	            $data[$val->id] = $val->areaname;
-	        }
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 		} else {
 			$data = ManagementArea::find()->where(['id'=>$id])->one()['areaname'];
 		}

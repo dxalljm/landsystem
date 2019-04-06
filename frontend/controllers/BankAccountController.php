@@ -94,6 +94,59 @@ class BankaccountController extends Controller
         echo 'fff';
     }
 
+    public function actionScancardid($cardid)
+    {
+        $bank = BankAccount::find()->where(['cardid'=>$cardid])->one();
+        $state = false;
+        $number = '';
+        if($bank) {
+            $state = true;
+            $number = $bank['accountnumber'];
+        }
+        echo json_encode(['state'=>$state,'number'=>$number]);
+    }
+
+    public function actionSetaccountnumber($farms_id,$accountnumber)
+    {
+        $farm = Farms::findOne($farms_id);
+        $model = BankAccount::find()->where(['farms_id'=>$farms_id,'lease_id'=>0])->one();
+        if($model) {
+            $model->accountnumber = $accountnumber;
+            $save = $model->save();
+            Logs::writeLogs('更新' . $farm['farmername'] . '银行帐号', $model);
+        } else {
+            $model = new BankAccount();
+            $model->farms_id = $farms_id;
+            $model->bank = '大兴按岭农村商业银行';
+            $model->accountnumber = $accountnumber;
+            $model->cardid = $farm['cardid'];
+            $model->lessee = '';
+            $model->create_at = time();
+            $model->update_at = $model->create_at;
+//                if (BankAccount::scanCard($cardid)) {
+//                    $model->state = $bankstate['state'];
+//                    $model->modfiyname = $bankstate['modfiyname'];
+//                    $model->modfiytime = $bankstate['modfiytime'];
+//                } else {
+            $model->state = 1;
+//                }
+            $model->management_area = $farm['management_area'];
+            $model->farmername = $farm['farmername'];
+            $model->farmerpinyin = $farm['farmerpinyin'];
+            $model->farmname = $farm['farmname'];
+            $model->farmpinyin = $farm['pinyin'];
+            $model->lesseepinyin = '';
+            $model->contractnumber = $farm['contractnumber'];
+            $model->contractarea = $farm['contractarea'];
+            $model->farmstate = $farm['state'];
+            $model->lease_id = 0;
+            Logs::writeLogs('新增' . $farm['farmername'] . '银行帐号', $model);
+            $save = $model->save();
+        }
+        echo json_encode(['state'=>$save,'number'=>$accountnumber]);
+    }
+
+
     public function actionBankaccountsave($lessee,$cardid,$bank,$accountnumber,$farms_id,$id)
     {
         $farm = Farms::findOne($farms_id);
@@ -196,58 +249,6 @@ class BankaccountController extends Controller
             }
         }
         echo json_encode(['state'=>$save]);
-    }
-
-    public function actionScancardid($cardid)
-    {
-        $bank = BankAccount::find()->where(['cardid'=>$cardid])->one();
-        $state = false;
-        $number = '';
-        if($bank) {
-            $state = true;
-            $number = $bank['accountnumber'];
-        }
-        echo json_encode(['state'=>$state,'number'=>$number]);
-    }
-
-    public function actionSetaccountnumber($farms_id,$accountnumber)
-    {
-        $farm = Farms::findOne($farms_id);
-        $model = BankAccount::find()->where(['farms_id'=>$farms_id,'lease_id'=>0])->one();
-        if($model) {
-            $model->accountnumber = $accountnumber;
-            $save = $model->save();
-            Logs::writeLogs('更新' . $farm['farmername'] . '银行账号', $model);
-        } else {
-            $model = new BankAccount();
-            $model->farms_id = $farms_id;
-            $model->bank = '大兴安岭农村商业银行';
-            $model->accountnumber = $accountnumber;
-            $model->cardid = $farm['cardid'];
-            $model->lessee = '';
-            $model->create_at = time();
-            $model->update_at = $model->create_at;
-//                if (BankAccount::scanCard($cardid)) {
-//                    $model->state = $bankstate['state'];
-//                    $model->modfiyname = $bankstate['modfiyname'];
-//                    $model->modfiytime = $bankstate['modfiytime'];
-//                } else {
-            $model->state = 1;
-//                }
-            $model->management_area = $farm['management_area'];
-            $model->farmername = $farm['farmername'];
-            $model->farmerpinyin = $farm['farmerpinyin'];
-            $model->farmname = $farm['farmname'];
-            $model->farmpinyin = $farm['pinyin'];
-            $model->lesseepinyin = '';
-            $model->contractnumber = $farm['contractnumber'];
-            $model->contractarea = $farm['contractarea'];
-            $model->farmstate = $farm['state'];
-            $model->lease_id = 0;
-            Logs::writeLogs('创建' . $farm['farmername'] . '银行账号', $model);
-            $save = $model->save();
-        }
-        echo json_encode(['number'=>$accountnumber,'state'=>$save]);
     }
 
     public function actionBankaccountmodfiy($id,$cardid,$accountnumber)

@@ -1,14 +1,8 @@
 <?php
 
-<<<<<<< HEAD
 namespace frontend\controllers;
 use Yii;
 use app\models\Tables;
-=======
-namespace backend\controllers;
-use Yii;
-use app\models\tables;
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 use yii\helpers\Html;
 use frontend\helpers\grid\GridView;
 use app\models\Farms;
@@ -39,11 +33,7 @@ $this->params ['breadcrumbs'] [] = $this->title;
 			<div class="col-xs-12">
 				<div class="box">
 					<div class="box-header">
-<<<<<<< HEAD
 						<h3><?= $title?><font color="red">(<?= User::getYear()?>年度)</font></h3>
-=======
-						<h3 class="box-title">任务列表 </h3>
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 						<?php if(Tempauditing::is_tempauditing()) echo Html::a('申请延长时间', ['tempauditing/tempauditingextend','id'=>Tempauditing::is_tempauditing()], ['class' => 'btn btn-success','id'=>'extendDate','data' => [
 			                'confirm' => '您确定要延长授权时间吗？',
 			                'method' => 'post',
@@ -69,7 +59,6 @@ $this->params ['breadcrumbs'] [] = $this->title;
 								<td align="center"><strong>操作</strong></td>
 							</tr>
 							<?php 
-<<<<<<< HEAD
 // 							var_dump($ttpozongdi);exit;
 							foreach ($ttpozongdi as $value) {
 //								var_dump($value);
@@ -82,16 +71,6 @@ $this->params ['breadcrumbs'] [] = $this->title;
 // 							var_dump($newfarm);exit;
 //							if(Reviewprocess::isShowProess($value['operation_id'])) {
 //								$field = Reviewprocess::getProcessIdentification();
-=======
-// 							var_dump($farmstransfer);exit;
-							foreach ($ttpozongdi as $value) {
-//								var_dump($value);
-								$newfarm = Farms::find()->where(['id'=>$value['newfarms_id']])->one();
-								$oldfarm = Farms::find()->where(['id'=>$value['oldfarms_id']])->one();
-// 							var_dump($newfarm);exit;
-							if(Reviewprocess::isShowProess($value['operation_id'])) {
-								$field = Reviewprocess::getProcessIdentification();
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 								?>
 							<tr height="40px">
 								<td align="center"><?= ManagementArea::getAreaname($oldfarm->management_area)?></td>
@@ -103,7 +82,6 @@ $this->params ['breadcrumbs'] [] = $this->title;
 								<td align="center"><?= $newfarm->contractarea?>亩</td>
 								
 								<td align="center">
-<<<<<<< HEAD
 								待办理
 								</td>
 								<td align="center">
@@ -111,68 +89,15 @@ $this->params ['breadcrumbs'] [] = $this->title;
 								
 									echo  html::a('查看',['farms/farmsttpozongdiview','id'=>$value['id']],['class'=>'btn btn-success']);
 
-=======
-								<?php 
-								$useritem = User::getItemname();
-								$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
-								if($temp) {
-									$useritem = User::getUserItemname($temp['user_id']);
-								}
-// 								var_dump($useritem);
-								if($useritem == '地产科科长' or $useritem == '主任' or  $useritem == '副主任' ) {?>
-									<div class="btn-group">
-									<div class="btn dropdown-toggle" 
-								      data-toggle="dropdown" data-trigger="hover">
-								    	  <?= Reviewprocess::state($value['state']); ?> <span class="caret"></span>
-								   </div>
-								   <ul class="dropdown-menu" role="menu">
-								   <?php 
-// 								   var_dump(Reviewprocess::getProcess($value['operation_id']));exit;
-								   foreach (Reviewprocess::getProcess($value['operation_id']) as $val) {
-// 								   var_dump($value[$val]);exit;
-								   	?>
-								      <li><a href="#"><?= Processname::find()->where(['Identification'=>$val])->one()['processdepartment'].':'.Reviewprocess::state($value[$val])?></a></li>
-								   <?php }?>
-								   </ul>
-								   </div>
-								   <?php } else echo Reviewprocess::state($value['state']); ?>
-								</td>
-								<td align="center">
-								<?php 
-								$s = false;
-// 								var_dump($field);
-								foreach ($field as $v) {
-									
-									if($value[$v] == 2 or $value[$v] == 0)
-										$s = true;
-								}
-								if($s) {
-									echo  html::a('审核',['reviewprocess/reviewprocessinspections','id'=>$value['id'],'class'=>'farmstransfer'],['class'=>'btn btn-danger']); 
-								}
-								else {
-									echo  html::a('查看',['reviewprocess/reviewprocessview','id'=>$value['id'],'class'=>'farmstransfer'],['class'=>'btn btn-success']);
-								}
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 								
 								?></td>
 							</tr>
 							
-<<<<<<< HEAD
 							<?php }?>
-=======
-							<?php }}?>
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 						</table>
 <?php }}?>
 <?php 
 $useritem = User::getItemname();
-<<<<<<< HEAD
-=======
-$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
-if($temp) {
-	$useritem = User::getUserItemname($temp['user_id']);
-}
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 
 if(Auditprocess::isShowProcess('项目审核')) {
 if($projectapplication) {?>
@@ -201,11 +126,7 @@ if($projectapplication) {?>
 								<td align="center"><?= Infrastructuretype::find()->where(['id'=>$project['projecttype']])->one()['typename'].'建设'?></td>
 								<td align="center"><?= date('Y-m-d',$project['create_at'])?></td>
 								<td align="center">
-<<<<<<< HEAD
 								<?php if(User::getItemname('地产科') or User::getItemname('主任') or  User::getItemname('副主任')) {?>
-=======
-								<?php if(User::getItemname() == '地产科科长' or User::getItemname() == '主任' or  User::getItemname() == '副主任' ) {?>
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 									<div class="btn-group">
 									<div class="btn dropdown-toggle" 
 								      data-toggle="dropdown" data-trigger="hover">
@@ -239,14 +160,7 @@ if($projectapplication) {?>
 <?php }}?>
 <?php 
 $useritem = User::getItemname();
-<<<<<<< HEAD
 
-=======
-$temp = Tempauditing::find()->where(['tempauditing'=>Yii::$app->getUser()->id,'state'=>1])->andWhere('begindate<='.strtotime(date('Y-m-d')).' and enddate>='.strtotime(date('Y-m-d')))->one();
-if($temp) {
-	$useritem = User::getUserItemname($temp['user_id']);
-}
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 if(Auditprocess::isShowProcess('贷款冻结审批')) {
 if($loan) {?>
 <h3>贷款冻结审批</h3>
@@ -274,11 +188,7 @@ if($loan) {?>
 								<td align="center"><?= $loandata['mortgagebank']?></td>
 								<td align="center"><?= $loandata['mortgagemoney']?></td>
 								<td align="center">
-<<<<<<< HEAD
 								<?php if(User::getItemname('服务大厅') or User::getItemname('主任') or  User::getItemname('副主任')) {?>
-=======
-								<?php if(User::getItemname() == '服务大厅贷款' or User::getItemname() == '主任' or  User::getItemname() == '副主任' ) {?>
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 									<div class="btn-group">
 									<div class="btn dropdown-toggle" 
 								      data-toggle="dropdown" data-trigger="hover">

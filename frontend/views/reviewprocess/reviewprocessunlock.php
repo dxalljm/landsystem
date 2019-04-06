@@ -59,6 +59,13 @@ $this->params ['breadcrumbs'] [] = $this->title;
 													}
 												],
 												[
+													'label' => '合同号',
+													'options' => ['width'=>160],
+													'value' => function($model) {
+														return Farms::find()->where(['id'=>$model->farms_id])->one()['contractnumber'];
+													}
+												],
+												[
 													'label' => '贷款人',
 													'attribute' => 'farmer_id',
 													'value' => function($model) {

@@ -38,7 +38,8 @@ $arrclass = explode('\\',$dataProvider->query->modelClass);
 // 	var_dump($tab);exit;
 
 ?>
-            <?php echo Html::a('XLS导入', ['xlsimport'], ['class' => 'btn btn-success']) ?>
+            <?php //echo Html::a('XLS导入', ['xlsimport'], ['class' => 'btn btn-success']) ?>
+            <?php //echo Html::a('XLS导入', ['xlsimport'], ['class' => 'btn btn-success']) ?>
             <ul class="nav nav-pills nav-pills-warning">
                 <li class="active" id="loaninfo"><a href="#loaninfolist" data-toggle="tab" aria-expanded="true">贷款统计表</a></li>
                 <li class="" id="monthinfo"><a href="#monthinfolist" data-toggle="tab" aria-expanded="false">月贷款图表</a></li>
@@ -99,6 +100,7 @@ $arrclass = explode('\\',$dataProvider->query->modelClass);
             [
                 'label' => '合同号',
                 'attribute' => 'farmstate',
+                'options' => ['width'=>170],
                 'value' => function($model) {
                     return Farms::find ()->where ( [
                         'id' => $model->farms_id
@@ -117,11 +119,20 @@ $arrclass = explode('\\',$dataProvider->query->modelClass);
             'mortgagearea',
             [
                 'attribute' => 'mortgagebank',
+                'options' => ['width'=>200],
                 'filter' => Loan::getBankName(),
             ],
             'mortgagemoney',
-            'begindate',
-            'enddate',
+            [
+                'attribute'=>'begindate',
+                'options' => ['width'=>100]
+            ],
+            [
+                'attribute'=>'enddate',
+                'options' => ['width'=>100]
+            ],
+//            'begindate',
+//            'enddate',
             [
             	'label' => '解冻时间',
             	'value' => function ($model) {

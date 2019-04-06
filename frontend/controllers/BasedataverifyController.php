@@ -216,20 +216,20 @@ class BasedataverifyController extends Controller
         foreach ($farms as $key => $farm) {
             $farmerbank = BankAccount::find()->where(['cardid'=>$farm['cardid'],'lease_id'=>0,'state'=>1])->one();
 //            var_dump($farmerbank);
-            $ddarea = 0;
+            $ddarea = '';
             $ddzongdi = '';
-            $ddbtfarmer = 0;
-            $ddbtlease = 0;
-            $ymarea = 0;
+            $ddbtfarmer = '';
+            $ddbtlease = '';
+            $ymarea = '';
             $ymzongdi = '';
-            $ymbtfarmer = 0;
-            $ymbtlease = 0;
-            $xm = 0;
-            $mls = 0;
-            $zd = 0;
-            $by = 0;
-            $lm = 0;
-            $other = 0;
+            $ymbtfarmer = '';
+            $ymbtlease = '';
+            $xm = '';
+            $mls = '';
+            $zd = '';
+            $by = '';
+            $lm = '';
+            $other = '';
             $verifydate = '';
             $content = '';
             //获取法人种植信息
@@ -239,7 +239,7 @@ class BasedataverifyController extends Controller
                 $farmsAllid[] = $farm['farms_id'];
                 $f++;
                 $i++;
-                $plantsum = 0;
+                $plantsum = '';
                 foreach ($planting as $k => $value) {
                     $sub = Subsidyratio::getSubsidyratio($value['plant_id'],$value['farms_id'],$value['lease_id']);
 //                    $management_area = ManagementArea::getAreaname($farm['management_area']);
@@ -304,40 +304,44 @@ class BasedataverifyController extends Controller
                             if($value['area'])
                                 $xm = $value['area'];
                             else {
-                                $xm = 0;
+                                $xm = '';
                             }
                             break;
                         case 4:
                             if($value['area'])
                                 $mls = $value['area'];
                             else
-                                $mls = 0;
+                                $mls = '';
                             break;
                         case 14:
                             if($value['area'])
                                 $zd = $value['area'];
+                            else
+                                $zd = '';
                             break;
                         case 9:
                             if($value['area'])
                                 $zd = $value['area'];
+                            else
+                                $zd = '';
                             break;
                         case 8:
                             if($value['area'])
                                 $by = $value['area'];
                             else
-                                $by = 0;
+                                $by = '';
                             break;
                         case 17:
                             if($value['area'])
                                 $lm = $value['area'];
                             else
-                                $lm = 0;
+                                $lm = '';
                             break;
                         case 16:
                             if($value['area'])
                                 $other = $value['area'];
                             else
-                                $other = 0;
+                                $other = '';
                             break;
                     }
                 }
@@ -394,23 +398,23 @@ class BasedataverifyController extends Controller
 
                 foreach ($leases as $k => $item) {
                     $i++;
-                    $ddarea = 0;
+                    $ddarea = '';
                     $ddzongdi = '';
-                    $ddbtfarmer = 0;
-                    $ddbtlease = 0;
-                    $ymarea = 0;
+                    $ddbtfarmer = '';
+                    $ddbtlease = '';
+                    $ymarea = '';
                     $ymzongdi = '';
-                    $ymbtfarmer = 0;
-                    $ymbtlease = 0;
-                    $xm = 0;
-                    $mls = 0;
-                    $zd = 0;
-                    $by = 0;
-                    $lm = 0;
-                    $other = 0;
+                    $ymbtfarmer = '';
+                    $ymbtlease = '';
+                    $xm = '';
+                    $mls = '';
+                    $zd = '';
+                    $by = '';
+                    $lm = '';
+                    $other = '';
                     $verifydate = '';
                     $content = '';
-                    $leasearea = 0;
+                    $leasearea = '';
 //                    $leasearea = $item['lease_area'];
                     $planting = Plantingstructurecheck::find()->where(['lease_id' => $item['id'], 'year' => User::getYear()])->all();
                     if ($planting) {
@@ -426,16 +430,16 @@ class BasedataverifyController extends Controller
                                     $ddarea = $value['area'];
                                     if($value['lease_id'] == 0) {
                                         $ddbtfarmer = $value['area'];
-                                        $ddbtlease = 0;
+                                        $ddbtlease = '';
                                     } else {
                                         if (bccomp($farmerp, 1) == 0) {
                                             $p = false;
                                             $ddbtfarmer = bcmul($value['area'], $farmerp, 2);
-                                            $ddbtlease = 0;
+                                            $ddbtlease = '';
                                         }
                                         if (bccomp($lesseep, 1) == 0) {
                                             $p = false;
-                                            $ddbtfarmer = 0;
+                                            $ddbtfarmer = '';
                                             $ddbtlease = bcmul($value['area'], $lesseep, 2);
                                         }
 //						if (bccomp($farmerp, 0) == 1 and bccomp($farmerp, 1) == -1) {
@@ -451,16 +455,16 @@ class BasedataverifyController extends Controller
                                     $ymarea = $value['area'];
                                     if($value['lease_id'] == 0) {
                                         $ymbtfarmer = $value['area'];
-                                        $ymbtlease = 0;
+                                        $ymbtlease = '';
                                     } else {
                                         if (bccomp($farmerp, 1) == 0) {
                                             $p = false;
                                             $ymbtfarmer = bcmul($value['area'], $farmerp, 2);
-                                            $ymbtlease = 0;
+                                            $ymbtlease = '';
                                         }
                                         if (bccomp($lesseep, 1) == 0) {
                                             $p = false;
-                                            $ymbtfarmer = 0;
+                                            $ymbtfarmer = '';
                                             $ymbtlease = bcmul($value['area'], $lesseep, 2);
                                         }
 //						if (bccomp($farmerp, 0) == 1 and bccomp($farmerp, 1) == -1) {
@@ -476,41 +480,45 @@ class BasedataverifyController extends Controller
                                     if($value['area'])
                                         $xm = $value['area'];
                                     else {
-                                        $xm = 0;
+                                        $xm = '';
                                     }
                                     break;
                                 case 4:
                                     if($value['area'])
                                         $mls = $value['area'];
                                     else
-                                        $mls = 0;
+                                        $mls = '';
                                     break;
                                 case 14:
                                     if($value['area'])
                                         $zd = $value['area'];
+                                    else
+                                        $zd = '';
                                     break;
                                 case 9:
                                     if($value['area'])
                                         $zd = $value['area'];
+                                    else
+                                        $zd = '';
 
                                     break;
                                 case 8:
                                     if($value['area'])
                                         $by = $value['area'];
                                     else
-                                        $by = 0;
+                                        $by = '';
                                     break;
                                 case 17:
                                     if($value['area'])
                                         $lm = $value['area'];
                                     else
-                                        $lm = 0;
+                                        $lm = '';
                                     break;
                                 case 16:
                                     if($value['area'])
                                         $other = $value['area'];
                                     else
-                                        $other = 0;
+                                        $other = '';
                                     break;
                             }
                         }
@@ -560,7 +568,7 @@ class BasedataverifyController extends Controller
                 $farmsAllid[] = $farm['farms_id'];
                 $f++;
                 $i++;
-                $plantsum = 0;
+                $plantsum = '';
                 $result[] = [
                     'row' => $i,
                     'management_area' => ManagementArea::getAreanameOne($farm['management_area']),
@@ -575,7 +583,7 @@ class BasedataverifyController extends Controller
                     'accountnumber' => '',
                     'telephone' => '',
                     'contractarea' => '',
-                    'area' => sprintf("%.2f",$plantsum),
+                    'area' => '',
                     'ddarea' => $ddarea,
                     'ddzongdi' => $ddzongdi,
                     'ddbtfarmer' => $ddbtfarmer,
@@ -626,7 +634,8 @@ class BasedataverifyController extends Controller
         $result = [];
         $management_area = Farms::getManagementArea()['id'];
 
-        $farms = Plantingstructureyearfarmsidplan::find()->where($farmsWhere)->all();
+//        $farms = Plantingstructureyearfarmsidplan::find()->where($farmsWhere)->all();
+        $farms = Farms::find()->where(['management_area'=>$management_area,'state'=>[1,2,3,4,5]])->all();
         $sum = Plantingstructureyearfarmsidplan::find()->where($farmsWhere)->groupBy('farms_id')->sum('contractarea');
 //        var_dump(Plantingstructureyearfarmsidplan::find()->where($farmsWhere)->count());
 //        var_dump($sum);exit;
@@ -635,31 +644,31 @@ class BasedataverifyController extends Controller
         $i = 0;
         $farmsAllid = [];
         foreach ($farms as $key => $farm) {
-
-            $ddarea = 0;
+            $farmerbank = BankAccount::find()->where(['cardid'=>$farm['cardid'],'lease_id'=>0,'state'=>1])->one();
+            $ddarea = '';
             $ddzongdi = '';
             $ddbtfarmer = '';
             $ddbtlease = '';
-            $ymarea = 0;
+            $ymarea = '';
             $ymzongdi = '';
             $ymbtfarmer = '';
             $ymbtlease = '';
-            $xm = 0;
-            $mls = 0;
-            $zd = 0;
-            $by = 0;
-            $lm = 0;
-            $other = 0;
+            $xm = '';
+            $mls = '';
+            $zd = '';
+            $by = '';
+            $lm = '';
+            $other = '';
             $verifydate = '';
             $content = '';
             //获取法人种植信息
-            $planting = Plantingstructure::find()->where(['farms_id' => $farm['farms_id'], 'lease_id' => 0, 'year' => User::getYear()])->all();
+            $planting = Plantingstructure::find()->where(['farms_id' => $farm['id'], 'lease_id' => 0, 'year' => User::getYear()])->all();
             //如果存在法人种植信息则执行以下操作
             if ($planting) {
-                $farmsAllid[] = $farm['farms_id'];
+                $farmsAllid[] = $farm['id'];
                 $f++;
                 $i++;
-                $plantsum = 0;
+                $plantsum = '';
                 foreach ($planting as $k => $value) {
 
                     $plantsum+=$value['area'];
@@ -682,39 +691,39 @@ class BasedataverifyController extends Controller
                             if($value['area'])
                                 $xm = $value['area'];
                             else {
-                                $xm = 0;
+                                $xm = '';
                             }
                             break;
                         case 4:
                             if($value['area'])
                                 $mls = $value['area'];
                             else
-                                $mls = 0;
+                                $mls = '';
                             break;
                         case 14:
                             if($value['area'])
                                 $zd = $value['area'];
                             else {
-                                $zd = 0;
+                                $zd = '';
                             }
                             break;
                         case 8:
                             if($value['area'])
                                 $by = $value['area'];
                             else
-                                $by = 0;
+                                $by = '';
                             break;
                         case 17:
                             if($value['area'])
                                 $lm = $value['area'];
                             else
-                                $lm = 0;
+                                $lm = '';
                             break;
                         case 16:
                             if($value['area'])
                                 $other = $value['area'];
                             else
-                                $other = 0;
+                                $other = '';
                             break;
                     }
                 }
@@ -752,7 +761,7 @@ class BasedataverifyController extends Controller
                 ];
             }
             //获取种植者种植信息
-            $leases = Lease::find()->where(['farms_id' => $farm['farms_id'], 'year' => User::getYear()])->all();
+            $leases = Lease::find()->where(['farms_id' => $farm['id'], 'year' => User::getYear()])->all();
 
 //            var_dump(count($leases));
             //如果有种植者信息那么执行以下操作
@@ -763,20 +772,20 @@ class BasedataverifyController extends Controller
 
                 foreach ($leases as $k => $item) {
                     $i++;
-                    $ddarea = 0;
+                    $ddarea = '';
                     $ddzongdi = '';
                     $ddbtfarmer = '100%';
                     $ddbtlease = '0%';
-                    $ymarea = 0;
+                    $ymarea = '';
                     $ymzongdi = '';
                     $ymbtfarmer = '100%';
                     $ymbtlease = '0%';
-                    $xm = 0;
-                    $mls = 0;
-                    $zd = 0;
-                    $by = 0;
-                    $lm = 0;
-                    $other = 0;
+                    $xm = '';
+                    $mls = '';
+                    $zd = '';
+                    $by = '';
+                    $lm = '';
+                    $other = '';
                     $verifydate = '';
                     $content = '';
                     $leasearea = $item['lease_area'];
@@ -799,39 +808,39 @@ class BasedataverifyController extends Controller
                                     if($value['area'])
                                         $xm = $value['area'];
                                     else {
-                                        $xm = 0;
+                                        $xm = '';
                                     }
                                     break;
                                 case 4:
                                     if($value['area'])
                                         $mls = $value['area'];
                                     else
-                                        $mls = 0;
+                                        $mls = '';
                                     break;
                                 case 14:
                                     if($value['area'])
                                         $zd = $value['area'];
                                     else {
-                                        $zd = 0;
+                                        $zd = '';
                                     }
                                     break;
                                 case 8:
                                     if($value['area'])
                                         $by = $value['area'];
                                     else
-                                        $by = 0;
+                                        $by = '';
                                     break;
                                 case 17:
                                     if($value['area'])
                                         $lm = $value['area'];
                                     else
-                                        $lm = 0;
+                                        $lm = '';
                                     break;
                                 case 16:
                                     if($value['area'])
                                         $other = $value['area'];
                                     else
-                                        $other = 0;
+                                        $other = '';
                                     break;
                             }
                         }
@@ -871,6 +880,44 @@ class BasedataverifyController extends Controller
                     ];
 //                    }
                 }
+            }
+            if(empty($planting) and empty($leases)) {
+                $farmsAllid[] = $farm['id'];
+                $f++;
+                $i++;
+                $plantsum = '';
+                $result[] = [
+                    'row' => $i,
+                    'management_area' => ManagementArea::getAreanameOne($farm['management_area']),
+                    'farmname' => $farm['farmname'],
+                    'farmername' => $farm['farmername'],
+                    'farmercardid' => $farm['cardid'],
+                    'farmeraccountnumber' => $farmerbank['accountnumber'],
+                    'farmertelephone' => $farm['telephone'],
+                    'contractnumber' => $farm['contractnumber'],
+                    'lease' => '',
+                    'cardid' => '',
+                    'accountnumber' => '',
+                    'telephone' => '',
+                    'contractarea' => '',
+                    'area' => '',
+                    'ddarea' => $ddarea,
+                    'ddzongdi' => $ddzongdi,
+                    'ddbtfarmer' => $ddbtfarmer,
+                    'ddbtlease' => $ddbtlease,
+                    'ymarea' => $ymarea,
+                    'ymzongdi' => $ymzongdi,
+                    'ymbtfarmer' => $ymbtfarmer,
+                    'ymbtlease' => $ymbtlease,
+                    'xm' => $xm,
+                    'mls' => $mls,
+                    'zd' => $zd,
+                    'by' => $by,
+                    'lm' => $lm,
+                    'other' => $other,
+                    'verifydate' => $verifydate,
+                    'content' => $content,
+                ];
             }
         }
 //        var_dump($farmsAllid);

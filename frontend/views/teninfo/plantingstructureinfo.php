@@ -612,7 +612,7 @@ if(isset($_GET['plantingstructurecheckSearch']['plant_id'])) {
                                 <?php
                                 if(User::getItemname('地产科')) {
                                     echo Html::a('生成汇总表',Url::to(['basedataverify/basedataverifylist','where'=>json_encode($dataProvider->query->where)]),['class'=>'btn btn-success']);
-                                    echo Html::a('生成核实表数据',Url::to(['basedataverify/basedataverifycreatecheck']),['class'=>'btn btn-danger']);
+//                                    echo Html::a('生成核实表数据',Url::to(['basedataverify/basedataverifycreatecheck']),['class'=>'btn btn-danger']);
                                 }?>
                                 <?= GridView::widget([
                                     'dataProvider' => $dataProvider2,

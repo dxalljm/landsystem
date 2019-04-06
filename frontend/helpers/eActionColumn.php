@@ -137,46 +137,43 @@ class eActionColumn extends Column
 				};
 			}
 		}
-//		$farm = Farms::findOne($this->id);
-//		var_dump($farm);
-		$action = $this->controller.'update';
-		if($this->getUserRole($action)){
-			if (!isset($this->buttons['update'])) {
-				$this->buttons['update'] = function ($url, $model) {
-					if(!empty($this->farms_id))
-						$url.='&farms_id='.$this->farms_id;
-					$state = 1;
+			$action = $this->controller . 'update';
+			if ($this->getUserRole($action)) {
+				if (!isset($this->buttons['update'])) {
+					$this->buttons['update'] = function ($url, $model) {
+						if (!empty($this->farms_id))
+							$url .= '&farms_id=' . $this->farms_id;
+						$state = 1;
 //					if($this->controller == 'projectapplication') {
 //						$state = Reviewprocess::find()->where(['id'=>$model->reviewprocess_id])->one()['state'];
 //					}
-					if(User::getItemname('法规科')) {
-						if($model->locked == 0) {
-							$url = Url::to(['farms/farmsadminupdate', 'id' => $model->id]);
-						} else {
-							$r = Reviewprocess::find()->where(['oldfarms_id'=>$model->id,'state'=>4])->count();
-							if($r) {
-								$url = '#';
-								return '';
+						if (User::getItemname('法规科')) {
+							if($model->locked == 0) {
+								$url = Url::to(['farms/farmsadminupdate', 'id' => $model->id]);
+							} else {
+								$r = Reviewprocess::find()->where(['oldfarms_id'=>$model->id,'state'=>4,'actionname'=>'farmstransfer'])->count();
+								if($r) {
+									$url = '#';
+									return '';
+								}
 							}
 						}
-					}
-					if(User::disabled()) {
-						$url = '#';
-					}
-
-					if($state !== 7) {
-						if(User::disabled()) {
-							return '';
-						} else {
-							return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
-								'title' => Yii::t('yii', '更新'),
-								'data-pjax' => '0',
-							]);
+						if (User::disabled()) {
+							$url = '#';
 						}
-					}
-				};
+						if ($state !== 7) {
+							if (User::disabled()) {
+								return '';
+							} else {
+								return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
+									'title' => Yii::t('yii', '更新'),
+									'data-pjax' => '0',
+								]);
+							}
+						}
+					};
+				}
 			}
-		}
 		$action = $this->controller.'delete';
 		if($this->getUserRole($action)){
 			if (!isset($this->buttons['delete'])) {

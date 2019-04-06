@@ -71,7 +71,7 @@ use app\models\Goodseedinfo;
                                 echo '<td align="left">' . Html::a('更新','#',['class'=>'btn btn-xs','onclick'=>'leaseupdateDialog('.$value['id'].','.$_GET['farms_id'].')','disabled'=>User::disabled()]).'&nbsp;'.Html::a('删除',Url::to(['lease/leasedeleteajax','id'=>$value['id']]),['disabled'=>User::disabled(),'class'=>'btn btn-xs btn-danger','data' => [
                                         'confirm' => '您确定要删除这项吗？',
                                         'method' => 'post',
-                                    ],]) .'&nbsp;'.Html::a('打印租赁合同',Url::to(['print/printleasecontract','lease_id'=>$value['id']]),['class'=>'btn btn-xs btn-success']). '</td>';
+                                    ],]) .'&nbsp;'.Html::a('租赁合同',Url::to(['print/printleasecontract','lease_id'=>$value['id']]),['class'=>'btn btn-xs btn-success']). '</td>';
                                 echo '</tr>';
                             }
                             echo '</table>';
@@ -713,5 +713,24 @@ $( "#goodseed" ).dialog({
         LODOP.SET_PRINT_STYLEA(0,"Bold",1);
 //        LODOP.ADD_PRINT_SHAPE(4,286,18,1050,8,0,1,"#C0C0C0");
         <?php endforeach;?>
+
+//        if(<?//= !$isFarmerPlanting?>// || <?//= !$islease?>//) {
+//            LODOP.NewPage();
+//            LODOP.ADD_PRINT_TBURL(100,13,1200,120,"index.php?r=print/sixtable&farms_id="+farms_id);
+////            LODOP.ADD_PRINT_TBURL(147,16,1200,120,"index.php?r=print/fire&farms_id="+farms_id);
+//            LODOP.ADD_PRINT_TBURL(173,10,1206,540,"index.php?r=print/farmertable&farms_id="+farms_id);
+////            LODOP.ADD_PRINT_TBURL(526,16,1200,500,"index.php?r=print/beizhu");
+//            LODOP.ADD_PRINT_TBURL(706,10,1078,863,"<?//= Url::to(['print/downtable'])?>//");
+//            LODOP.ADD_PRINT_TEXT(10,250,657,33,"<?//= User::getYear()?>//年度岭南生态农业示范区农业基础数据调查表");
+//            LODOP.SET_PRINT_STYLEA(0,"FontSize",20);
+//            LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+//            LODOP.ADD_PRINT_TEXT(80,20,341,24,"管理区：<?//= ManagementArea::getNowManagementareaName()?>//");
+//            LODOP.ADD_PRINT_TEXT(80,920,160,25,"单位：亩、升、斤、头");
+//            LODOP.ADD_PRINT_TEXT(720,1020,160,25,farmerpinyin);
+//            LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED",1);
+//            LODOP.SET_PRINT_STYLEA(0,"FontSize",20);
+//            LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+////            LODOP.ADD_PRINT_SHAPE(4,286,18,1050,8,0,1,"#C0C0C0")
+//        }
     };
 </script>

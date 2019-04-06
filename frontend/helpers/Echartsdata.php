@@ -1280,6 +1280,7 @@ class Echartsdata
     public static function getMonths($totalData,$str='')
     {
         $result = [];
+        $years = [];
         foreach ($totalData->getModels() as $value) {
             $years[] = $value['year'];
         }
@@ -1304,56 +1305,60 @@ class Echartsdata
     public static function getMonthsSearch($totalData,$str='date')
     {
         $result = [];
+        $times = [];
         foreach ($totalData->getModels() as $value) {
             $times[] = $value['create_at'];
         }
-        $min = min($times);
-        $max = max($times);
-        $minyear = date('Y',$min);
-        $minmonth = date('m',$min);
-        $maxyear = date('Y',$max);
-        $maxmonth = date('m',$max);
+        if(!empty($times)) {
+            $min = min($times);
+            $max = max($times);
+            $minyear = date('Y',$min);
+            $minmonth = date('m',$min);
+            $maxyear = date('Y',$max);
+            $maxmonth = date('m',$max);
 //        var_dump($minyear);var_dump($maxyear);
-        if($minyear == $maxyear) {
-            for($i=$minmonth;$i<=$maxmonth;$i++) {
-                if($str == 'time') {
-                    $result[] = self::getMonth($minyear,$i);
-                } else {
-                    $result[] = $minyear . '年' . $i . '月';
-                }
-            }
-        } else {
-            for($i=$minyear;$i<=$maxyear;$i++) {
-                if($i == $minyear) {
-                    for($j=$minmonth;$j<=12;$j++) {
-                        if($str == 'time') {
-                            $result[] = self::getMonth($i,$j);
-                        } else {
-                            $result[] = $i . '年' . $j . '月';
-                        }
+            if($minyear == $maxyear) {
+                for($i=$minmonth;$i<=$maxmonth;$i++) {
+                    if($str == 'time') {
+                        $result[] = self::getMonth($minyear,$i);
+                    } else {
+                        $result[] = $minyear . '年' . $i . '月';
                     }
                 }
-                if($i > $minyear and $i > $maxyear) {
-                    for($j=1;$j<=12;$j++) {
-                        if($str == 'time') {
-                            $result[] = self::getMonth($i,$j);
-                        } else {
-                            $result[] = $i . '年' . $j . '月';
+            } else {
+                for($i=$minyear;$i<=$maxyear;$i++) {
+                    if($i == $minyear) {
+                        for($j=$minmonth;$j<=12;$j++) {
+                            if($str == 'time') {
+                                $result[] = self::getMonth($i,$j);
+                            } else {
+                                $result[] = $i . '年' . $j . '月';
+                            }
                         }
                     }
-                }
-                if($i == $maxyear) {
-                    for($j=1;$j<=$maxmonth;$j++) {
-                        if($str == 'time') {
-                            $result[] = self::getMonth($i,$j);
-                        } else {
-                            $result[] = $maxyear.'年'.$j.'月';
+                    if($i > $minyear and $i > $maxyear) {
+                        for($j=1;$j<=12;$j++) {
+                            if($str == 'time') {
+                                $result[] = self::getMonth($i,$j);
+                            } else {
+                                $result[] = $i . '年' . $j . '月';
+                            }
                         }
+                    }
+                    if($i == $maxyear) {
+                        for($j=1;$j<=$maxmonth;$j++) {
+                            if($str == 'time') {
+                                $result[] = self::getMonth($i,$j);
+                            } else {
+                                $result[] = $maxyear.'年'.$j.'月';
+                            }
 
+                        }
                     }
                 }
             }
         }
+
         return $result;
     }
 

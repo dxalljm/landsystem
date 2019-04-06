@@ -32,7 +32,6 @@ use app\models\User;
 						<?= Farms::showFarminfo($_GET['farms_id'])?>
 						<br>
 <?= $farmsmenu?>
-						<div id="dialog"></div>
 <?php //\app\models\Reviewprocess::getReviewFarms();?>
 <?php Farms::showRow($_GET['farms_id']);?>
 
@@ -43,36 +42,4 @@ use app\models\User;
 	</section>
 
 </div>
-<script>
-//	$("#bankupdate").click(function(){
-//		$("#bankDialog").dialog("open");
-//		$("#bank-accountnumber").focus();
-//	});
-//	$( "#bankDialog" ).dialog({
-//		autoOpen: false,
-//		width: 600,
-//		modal: true,
-//		buttons: [
-//			{
-//				text: "确定",
-//				click: function () {
-//					var num = $("#bank-accountnumber").val();
-//					$.getJSON("index.php?r=bankaccount/setaccountnumber", {
-//						"farms_id": 1,
-//						"accountnumber": num
-//					}, function (data) {
-//						if (data.state) {
-//							$('#banktext').text(data.number);
-//							$("#bankDialog").dialog( "close" );
-//						}
-//					});
-//				},
-//			},
-//			{
-//				text: "取消",
-//				click: function() {
-//					$("#bankDialog").dialog( "close" );
-//				}
-//			}
-//		]});
-</script>
+

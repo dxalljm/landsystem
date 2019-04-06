@@ -1,5 +1,4 @@
 <?php
-<<<<<<< HEAD
 namespace frontend\controllers;
 use app\models\Insurancetype;
 use app\models\Plant;
@@ -12,13 +11,6 @@ use yii\grid\GridView;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use app\models\Farms;
-=======
-namespace backend\controllers;
-use app\models\tables;
-use yii\helpers\Html;
-use yii\grid\GridView;
-
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\insuranceSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -34,7 +26,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-<<<<<<< HEAD
                     <h3>&nbsp;&nbsp;&nbsp;&nbsp;种植业保险<?= $this->title ?><font color="red">(<?= User::getYear()?>年度)</font></h3></div>
                 <div class="box-body">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -205,46 +196,6 @@ $this->params['breadcrumbs'][] = $this->title;
 //        'filterModel' => $searchModel,
         'columns' => $columns,
 
-=======
-                    <h3 class="box-title">
-                        <?= $this->title ?>                    </h3>
-                </div>
-                <div class="box-body">
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a('种植业保险申请', ['insurancecreate','farms_id'=>$farms_id], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-//             'id',
-//             'management_area',
-            
-//             'farms_id',
-            'policyholder',
-           
-            'cardid',
-            'telephone',
-            // 'wheat',
-            // 'soybean',
-            // 'insuredarea',
-            // 'insuredwheat',
-            // 'insuredsoybean',
-            'company_id',
-            // 'create_at',
-            // 'update_at',
-            // 'policyholdertime',
-            // 'managemanttime',
-            // 'halltime',
-            'year',
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     ]); ?>
                 </div>
             </div>
@@ -252,12 +203,9 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </section>
 </div>
-<<<<<<< HEAD
 <script>
     function isplan(lease_id)
     {
 //        alert('还没有填写种植结构,请填写种植结构之后再来重试。');
     }
 </script>
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f

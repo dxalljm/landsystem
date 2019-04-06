@@ -85,7 +85,11 @@ class GoodseedController extends Controller
     public function actionGoodseedcreate()
     {
         $model = new Goodseed();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->create_at = time();
+            $model->update_at = $model->create_at;
+            $model->state = 1;
+            $model->save();
         	Logs::writeLogs('创建良种信息',$model);
             return $this->redirect(['goodseedview', 'id' => $model->id]);
         } else {

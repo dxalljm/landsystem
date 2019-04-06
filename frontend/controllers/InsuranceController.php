@@ -2,7 +2,6 @@
 
 namespace frontend\controllers;
 
-<<<<<<< HEAD
 use app\models\Farms;
 use app\models\Insurancedck;
 use app\models\Insurancetype;
@@ -14,15 +13,12 @@ use frontend\helpers\Pinyin;
 use frontend\models\farmsSearch;
 use frontend\models\insurancehistorySearch;
 use frontend\models\plantingstructureSearch;
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 use Yii;
 use app\models\Insurance;
 use frontend\models\insuranceSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-<<<<<<< HEAD
 use app\models\User;
 use app\models\ManagementArea;
 use app\models\Insurancecompany;
@@ -34,9 +30,6 @@ use frontend\models\insuranceplanSearch;
 use \PHPExcel_IOFactory;
 use yii\web\UploadedFile;
 use app\models\UploadForm;
-=======
-
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 /**
  * InsuranceController implements the CRUD actions for Insurance model.
  */
@@ -53,7 +46,6 @@ class InsuranceController extends Controller
             ],
         ];
     }
-<<<<<<< HEAD
     public function beforeAction($action)
     {
         if(Yii::$app->user->isGuest) {
@@ -62,16 +54,12 @@ class InsuranceController extends Controller
             return true;
         }
     }
-=======
-
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     /**
      * Lists all Insurance models.
      * @return mixed
      */
     public function actionInsuranceindex($farms_id)
     {
-<<<<<<< HEAD
         if(Yii::$app->user->isGuest) {
             return $this->redirect(['site/login']);
         }
@@ -88,18 +76,10 @@ class InsuranceController extends Controller
             $isShow = false;
         }
         Logs::writeLog ( User::getYear().'年种植业保险申请列表' );
-=======
-        $searchModel = new insuranceSearch();
-        $params = Yii::$app->request->queryParams;
-        $params['insuranceSearch']['farms_id'] = $farms_id;
-        $dataProvider = $searchModel->search($params);
-
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         return $this->render('insuranceindex', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         	'farms_id' => $farms_id,
-<<<<<<< HEAD
             'isShow' => $isShow,
         ]);
     }
@@ -327,10 +307,6 @@ class InsuranceController extends Controller
     ]);
 
     }
-=======
-        ]);
-    }
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 	//农业保险审核
     public function actionInsurancereview($farms_id)
     {
@@ -338,11 +314,7 @@ class InsuranceController extends Controller
     	$params = Yii::$app->request->queryParams;
     	$params['insuranceSearch']['farms_id'] = $farms_id;
     	$dataProvider = $searchModel->search($params);
-<<<<<<< HEAD
         Logs::writeLog('地产科查看农场保险情况',$farms_id);
-=======
-    
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     	return $this->render('insuranceindex', [
     			'searchModel' => $searchModel,
     			'dataProvider' => $dataProvider,
@@ -357,7 +329,6 @@ class InsuranceController extends Controller
      */
     public function actionInsuranceview($id)
     {
-<<<<<<< HEAD
         $model = $this->findModel($id);
         $farm = Farms::find()->where(['id'=>$model->farms_id])->one();
         Logs::writeLogs('查看保险信息',$model);
@@ -380,19 +351,11 @@ class InsuranceController extends Controller
     	$model->isbxsame = 1;
     	$model->save();    
     }
-=======
-        return $this->render('insuranceview', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     /**
      * Creates a new Insurance model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-<<<<<<< HEAD
 
     public function actionInsurancecreate2($farms_id)
     {
@@ -850,23 +813,10 @@ class InsuranceController extends Controller
             return $this->render('insurancehistorycreate', [
                 'model' => $model,
                 'farms_id' => $farms_id,
-=======
-    public function actionInsurancecreate($farms_id)
-    {
-        $model = new Insurance();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['insuranceview', 'id' => $model->id]);
-        } else {
-            return $this->render('insurancecreate', [
-                'model' => $model,
-            	'farms_id' => $farms_id,
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
             ]);
         }
     }
 
-<<<<<<< HEAD
     public function actionInsuranceprint($id)
     {
         $model = $this->findModel($id);
@@ -901,15 +851,12 @@ class InsuranceController extends Controller
             'farm' => $farm,
         ]);
     }
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     /**
      * Updates an existing Insurance model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      */
-<<<<<<< HEAD
     public function actionInsuranceupdate($id,$btn='')
     {
         $people = [];
@@ -1003,18 +950,10 @@ class InsuranceController extends Controller
 	            $modfiyModel->save();
                 Logs::writeLogs('记录保险变更信息',$modfiyModel);
             }
-=======
-    public function actionInsuranceupdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
             return $this->redirect(['insuranceview', 'id' => $model->id]);
         } else {
             return $this->render('insuranceupdate', [
                 'model' => $model,
-<<<<<<< HEAD
                 'farms_id' => $model->farms_id,
                 'farm' => $farm,
                 'plantArea' => $modeltArea,
@@ -1038,13 +977,10 @@ class InsuranceController extends Controller
             return $this->render('insurancemodfiy', [
                 'model' => $model,
                 'farms_id' => $model->farms_id,
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
             ]);
         }
     }
 
-<<<<<<< HEAD
     public function actionInsurancesearch($tab,$begindate,$enddate)
     {
         if(isset($_GET['tab']) and $_GET['tab'] !== \Yii::$app->controller->id) {
@@ -1142,8 +1078,6 @@ class InsuranceController extends Controller
     }
     
     
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     /**
      * Deletes an existing Insurance model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -1152,17 +1086,11 @@ class InsuranceController extends Controller
      */
     public function actionInsurancedelete($id)
     {
-<<<<<<< HEAD
         $model = $this->findModel($id);
         $farms_id = $model->farms_id;
         $model->delete();
         Logs::writeLogs('删除一笔保险业务',$model);
         return $this->redirect(\Yii::$app->request->getReferrer());
-=======
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['insuranceindex']);
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     }
 
     /**

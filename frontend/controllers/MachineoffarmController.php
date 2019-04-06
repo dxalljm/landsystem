@@ -34,7 +34,6 @@ class MachineoffarmController extends Controller {
 				] 
 		];
 	}
-<<<<<<< HEAD
 	public function beforeAction($action)
 	{
 		if(Yii::$app->user->isGuest) {
@@ -43,16 +42,12 @@ class MachineoffarmController extends Controller {
 			return true;
 		}
 	}
-=======
-	
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 	/**
 	 * Lists all Machineoffarm models.
 	 * 
 	 * @return mixed
 	 */
 	public function actionMachineoffarmindex($farms_id) {
-<<<<<<< HEAD
 //		var_dump($farmerCardID);exit;
 		$cardid = Farms::find()->where(['id'=>$farms_id])->one()['cardid'];
 		$searchModel = new MachineoffarmSearch ();
@@ -82,20 +77,6 @@ class MachineoffarmController extends Controller {
 			'farms_id' => $farms_id,
 		] );
 	}
-=======
-		$searchModel = new MachineoffarmSearch ();
-		$params = Yii::$app->request->queryParams;
-		$params ['MachineoffarmSearch'] ['farms_id'] = $farms_id;
-		$dataProvider = $searchModel->search ( $params );
-		
-		return $this->render ( 'machineoffarmindex', [ 
-				'searchModel' => $searchModel,
-				'dataProvider' => $dataProvider,
-				'farms_id' => $farms_id 
-		] );
-	}
-	
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 	/**
 	 * Displays a single Machineoffarm model.
 	 * 
@@ -107,7 +88,6 @@ class MachineoffarmController extends Controller {
 				'model' => $this->findModel ( $id ) 
 		] );
 	}
-<<<<<<< HEAD
 
 	public function actionMachineapply($farms_id)
 	{
@@ -129,9 +109,6 @@ class MachineoffarmController extends Controller {
 		] );
 	}
 
-=======
-	
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 	/**
 	 * Creates a new Machineoffarm model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
@@ -147,11 +124,7 @@ class MachineoffarmController extends Controller {
 		$save = false;
 		$searchModel = new MachineSearch ();
 		$params = Yii::$app->request->queryParams;
-<<<<<<< HEAD
 //		$params['MachineSearch']['year'] = User::getYear();
-=======
-		
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 // 		if ($machine_id !== 0) {
 // 			$machinename = Machine::find ()->where ( [ 
 // 					'id' => $machine_id 
@@ -172,14 +145,9 @@ class MachineoffarmController extends Controller {
 // 		}
 		
 		$post = Yii::$app->request->post ();
-<<<<<<< HEAD
 // 		var_dump($post);exit;
 		if ($post) {
 // 			
-=======
-		if ($post) {
-// 			var_dump($post);exit;
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 			if (isset ( $post ['lastclass'] ))
 				$params ['MachineSearch'] ['machinetype_id'] = $post ['lastclass'];
 			if (isset ( $post ['MachineSearch'] ['productname'] ))
@@ -204,12 +172,8 @@ class MachineoffarmController extends Controller {
 					$machine = Machine::find ()->where ( [ 
 							'id' => $model->machine_id 
 					] )->one ();
-<<<<<<< HEAD
 //					var_dump($farmerCardID);
 					$model->cardid = Farms::find()->where(['id'=>$farms_id])->one()['cardid'];
-=======
-					$model->farms_id = $farms_id;
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 					if($machine)
 						$model->machinename = $machine ['productname'];
 					else
@@ -225,22 +189,14 @@ class MachineoffarmController extends Controller {
 					$model->create_at = time ();
 					$model->update_at = $model->create_at;
 					$model->acquisitiontime = $_POST['Machineoffarm']['acquisitiontime'];
-<<<<<<< HEAD
 					$model->farms_id = $farms_id;
 					$save = $model->save ();
 					Logs::writeLogs('新增农机器具',$model);
-=======
-					$save = $model->save ();
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 				}
 				if ($save)
 					return $this->redirect ( [ 
 							'machineoffarmindex',
-<<<<<<< HEAD
 							'farms_id' => $farms_id,
-=======
-							'farms_id' => $model->farms_id 
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 					] );
 			}
 		}
@@ -253,7 +209,6 @@ class MachineoffarmController extends Controller {
 				'lastclass' => $lastclass,
 				'smallclass' => $smallclass,
 				'bigclass' => $bigclass,
-<<<<<<< HEAD
 //				'farms_id' => $farms_id
 		] );
 	}
@@ -432,12 +387,6 @@ class MachineoffarmController extends Controller {
 		] );
 	}
 
-=======
-				'farms_id' => $farms_id 
-		] );
-	}
-	
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 	/**
 	 * Updates an existing Machineoffarm model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
@@ -517,10 +466,7 @@ class MachineoffarmController extends Controller {
 // 					$model->update_at = $model->create_at;
 					$model->acquisitiontime = $_POST['Machineoffarm']['acquisitiontime'];
 					$save = $model->save ();
-<<<<<<< HEAD
 					Logs::writeLogs('更新农场农机器具信息',$model);
-=======
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 // 					var_dump($model);exit;
 				}
 				if ($save)
@@ -549,7 +495,6 @@ class MachineoffarmController extends Controller {
 	 * @param integer $id        	
 	 * @return mixed
 	 */
-<<<<<<< HEAD
 	public function actionMachineoffarmdelete($id,$farms_id) {
 		$model = $this->findModel ( $id );
 		$apply = Machineapply::find()->where(['cardid'=>$model->cardid,'farms_id'=>$farms_id,'year'=>User::getYear()])->one();
@@ -575,18 +520,6 @@ class MachineoffarmController extends Controller {
 			'farms_id' => $farms_id,
 		] );
 	}
-=======
-	public function actionMachineoffarmdelete($id) {
-		$model = $this->findModel ( $id );
-		$model->delete ();
-		
-		return $this->redirect ( [ 
-				'machineoffarmindex',
-				'farms_id' => $model->farms_id 
-		] );
-	}
-	
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 	/**
 	 * Finds the Machineoffarm model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.

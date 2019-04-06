@@ -25,7 +25,6 @@ class EstateController extends Controller
             ],
         ];
     }
-<<<<<<< HEAD
     public function beforeAction($action)
     {
         if(Yii::$app->user->isGuest) {
@@ -34,9 +33,6 @@ class EstateController extends Controller
             return true;
         }
     }
-=======
-
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
     /**
      * Lists all Estate models.
      * @return mixed

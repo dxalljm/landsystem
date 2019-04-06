@@ -7,7 +7,6 @@ use app\models\User;
 use app\models\Collection;
 use app\models\Tempauditing;
 use app\models\Huinong;
-<<<<<<< HEAD
 use app\models\Insurance;
 use app\models\Farms;
 use yii\helpers\Html;
@@ -21,9 +20,6 @@ if(isset($_GET['farms_id'])) {
 ?>
 <script type="text/javascript" src="vendor/bower/CircleLoader/jquery.shCircleLoader-min.js"></script>
 <link href="/vendor/bower/CircleLoader/jquery.shCircleLoader.css" rel="stylesheet">
-=======
-?>
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 <style>
     li{
         width:auto;margin:0px 0px;;
@@ -48,7 +44,6 @@ if(isset($_GET['farms_id'])) {
                 <?php
                 if(yii::$app->user->identity->username != 'admin') {
                     //$menuliststr = MenuToUser::find()->where(['role_id'=>User::getItemname()])->one()['menulist'];
-<<<<<<< HEAD
                     $menuArray = explode(',',Yii::$app->getUser()->getIdentity()->mainmenu);
                     $menus = Mainmenu::find()->where(['id'=>$menuArray])->orderBy('sort asc')->all();
 //                var_dump($menulistarr);
@@ -74,16 +69,6 @@ if(isset($_GET['farms_id'])) {
                 <?php }
                 if($menu['menuurl'] == 'dropdown') {
                 ?>
-=======
-                    $menulistarr = MenuToUser::getUserMenu();
-					//asort($menulistarr);
-
-                    foreach($menulistarr as $val) {
-                        $menu = Mainmenu::find()->where(['id'=>$val])->one();
-
-
-                        if($menu['menuurl'] == 'dropdown') {?>
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
                         	<li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">数据管理 <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
@@ -117,20 +102,8 @@ if(isset($_GET['farms_id'])) {
                     </ul>
 
                         <?php } else {
-<<<<<<< HEAD
 							if($menu['menuname'] !== '任务')
                                 echo '<li width="auto"><a href="' . Url::to('index.php?r=' . $menu['menuurl']) . '">' . $menu['menuname'];
-=======
-
-                                echo "<li width='auto'><a href=" . Url::to('index.php?r=' . $menu['menuurl']) . ">" . $menu['menuname'];
-
-                        $isReviewprocess = false;
-                        if($menu['menuurl'] == 'reviewprocess/reviewprocessindex') {
-                        	$isReviewprocess = true;
-                        	echo Reviewprocess::getUserProcessCount();
-                        }
-
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
 
                         if($menu['menuurl'] == 'huinong/huinonglist') {
                         	echo huinong::getHuinongCount();
@@ -183,7 +156,6 @@ if(isset($_GET['farms_id'])) {
                 <?php }
                 ?>
             </ul>
-<<<<<<< HEAD
 
             <script>
                 $(function () {
@@ -209,34 +181,6 @@ if(isset($_GET['farms_id'])) {
 </div>
                </ul>
            </div>
-=======
-            <?php
-//            $dropdownmenu = Mainmenu::find()->where(['dropdown'=>'任务列表'])->all();
-//            if($dropdownmenu) {
-//                echo '<li class="dropdown">';
-//                echo '<a href="#" class="dropdown-toggle" data-toggle="dropdown">任务列表<span class="caret"></span></a>';
-//                echo '<ul class="dropdown-menu" role="menu">';
-//                echo '<li class="divider"></li>';
-//                foreach ($dropdownmenu as $menu) {
-//                    echo '<li><a href="' . Url::to([$menu['menuurl']]) . '">' . $menu['menuname'] . '</a></li>';
-//                }
-//                echo '</ul></li>';
-//            }
-            ?>
-            <ul class="nav navbar-nav">
-                    <li>
-                        <a href="<?= Url::to(['updatecache/updateall'])?>">更新首页图表数据</a>
-                    </li>
-                </ul>
-<!--            <div class="navbar-custom-menu">-->
-<!--                <ul class="nav navbar-nav">-->
-<!--                    <li>-->
-<!--                        <a href="javascript:void(0);" id="currentTime">--><?//= date('Y年m月j日')?><!--</a>-->
-<!--                    </li>-->
-<!---->
-<!--                </ul>-->
-<!--            </div>-->
->>>>>>> e8af1cd29bb9d17f4c7726861a0ddbdd054c389f
         </div>
     </nav>
 </header>

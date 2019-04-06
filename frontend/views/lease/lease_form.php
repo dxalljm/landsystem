@@ -108,7 +108,7 @@ use app\models\Lease;
     <td colspan="1" align="center"><?= $form->field($model, 'rent')->textInput(['placeholder'=>"万元"])->label(false)->error(false) ?></td>
     <td align="right"><strong>租金交纳方式</strong></td>
     <td colspan="2" align="center"><?= $form->field($model, 'rentpaymode')->dropDownlist(['现金'=>'现金','转账'=>'转账'])->label(false)->error(false) ?></td>
-    <td align="right"><strong>方式时间</strong></td><?php if(empty($model->renttime)) $model->renttime = date('Y-m-d');?>
+    <td align="right"><strong>支付时间</strong></td><?php if(empty($model->renttime)) $model->renttime = date('Y-m-d'); else $model->renttime = date('Y-m--d',$model->renttime);?>
     <td colspan="2" align="center"><?= $form->field($model, 'renttime')->textInput()->label(false)->widget(
     DateTimePicker::className(), [
         // inline too, not bad
@@ -317,6 +317,7 @@ $(function () {
 });
     $('#lease-lessee_cardid').change(function () {
         $.getJSON('index.php?r=bankaccount/scancardid',{cardid:$(this).val()},function (data) {
+            console.log(data);
             if(data.state) {
                 $('#bankaccount-accountnumber').val(data.number);
             }
