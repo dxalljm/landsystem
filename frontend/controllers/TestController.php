@@ -25,6 +25,7 @@ use app\models\Plantingstructureyearfarmsid;
 use app\models\Plantingstructureyearfarmsidplan;
 use app\models\Reviewprocess;
 use app\models\Sales;
+use app\models\Ttpo;
 use app\models\Ttpozongdi;
 use console\models\PlantPrice;
 use frontend\helpers\fileUtil;
@@ -1896,5 +1897,16 @@ class TestController extends Controller
             $model->save();
         }
         echo 'finished';
+    }
+
+    public function actionTtpozongdiyear()
+    {
+        $data = Ttpozongdi::find()->all();
+        foreach ($data as $value) {
+            $model = Ttpozongdi::findOne($value['id']);
+            $model->year = date('Y',$model->create_at);
+            $model->save();
+        }
+        echo 'finsished';
     }
 }

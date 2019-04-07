@@ -1375,7 +1375,8 @@ class ReviewprocessController extends Controller
 //											$old2 = Collection::find()->where(['farms_id'=>$ttpo['oldfarms_id'],'payyear'=>date('Y')])->one();
 //											$new = Collection::find()->where(['farms_id'=>$ttpo['newnewfarms_id'],'payyear'=>date('Y')])->one();
 											Collection::newCollection($ttpoModel->newnewfarms_id);
-											$same->delete();
+											if($same)
+												$same->delete();
 										}
 //									}
 									if(Farms::getContractserialnumber($ttpoModel->samefarms_id) == Farms::getContractserialnumber($ttpoModel->newnewfarms_id)) {

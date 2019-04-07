@@ -29,7 +29,7 @@ class Ttpozongdi extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['oldfarms_id','oldnewfarms_id','newfarms_id', 'newnewfarms_id','reviewprocess_id', 'state', 'auditprocess_id','samefarms_id'], 'integer'],
+            [['oldfarms_id','oldnewfarms_id','newfarms_id', 'newnewfarms_id','reviewprocess_id', 'state', 'auditprocess_id','samefarms_id','year'], 'integer'],
             [['newchangezongdi', 'oldzongdi', 'ttpozongdi', 'oldchangecontractnumber','oldchangezongdi','newzongdi'], 'string'],
             [['ttpoarea', 'oldmeasure', 'oldnotclear', 'oldnotstate', 'newmeasure', 'newnotclear', 'newnotstate', 'oldchangemeasure', 'oldchangenotclear', 'oldchangenotstate', 'newchangemeasure', 'newchangenotclear', 'newchangenotstate'], 'number'],
             [['create_at', 'oldcontractnumber', 'actionname', 'newcontractnumber', 'newchangecontractnumber'], 'string', 'max' => 500]
@@ -74,7 +74,8 @@ class Ttpozongdi extends \yii\db\ActiveRecord
             'newchangecontractnumber' => '新改变合同面积',
             'newzongdi' => '新农场宗地',
       		'oldchangezongdi' => '原改变原宗地',
-            'samefarms_id' => '分户指向原农场ID'
+            'samefarms_id' => '分户指向原农场ID',
+            'year' => '年度',
         ]; 
     }
 

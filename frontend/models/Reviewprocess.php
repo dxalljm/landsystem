@@ -418,7 +418,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
 
 	public static function setSameFarmsState($samefarms_id,$year)
 	{
-		foreach (Reviewprocess::find()->where(['samefarms_id'=>$samefarms_id,'year'=>$year])->all() as $value) {
+		foreach (Ttpozongdi::find()->where(['samefarms_id'=>$samefarms_id,'year'=>$year])->all() as $value) {
 			$samefarms = Farms::findOne($samefarms_id);
 			$samefarms->state = 0;
 			$samefarms->save();
@@ -428,11 +428,27 @@ class Reviewprocess extends \yii\db\ActiveRecord
 				$oldfarm->locked = 0;
 				$oldfarm->save();
 			}
-			$newfarm = Farms::findOne($value['newfarms_id']);
-			if(!$newfarm->tempdata) {
-				$newfarm->state = 1;
-				$newfarm->locked = 0;
-				$newfarm->save();
+			if($value['oldnewfarms_id']) {
+				$oldnewfarm = Farms::findOne($value['oldnewfarms_id']);
+				if (!$oldnewfarm->tempdata) {
+					$oldnewfarm->state = 1;
+					$oldnewfarm->locked = 0;
+					$oldnewfarm->save();
+				}
+			}
+			if($value['newfarms_id']) {
+				$newfarm = Farms::findOne($value['newfarms_id']);
+				if (!$newfarm->tempdata) {
+					$newfarm->state = 1;
+					$newfarm->locked = 0;
+					$newfarm->save();
+				}
+			}
+			$newnewfarm = Farms::findOne($value['newnewfarms_id']);
+			if(!$newnewfarm->tempdata) {
+				$newnewfarm->state = 1;
+				$newnewfarm->locked = 0;
+				$newnewfarm->save();
 			}
 		}
 	}

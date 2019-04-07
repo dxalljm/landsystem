@@ -322,10 +322,14 @@ class whereHandle
                 foreach($value as $k => $v) {
                     if($k === 'management_area') {
                         if($str == 'areaname') {
-                            foreach ($v as $id) {
-                                $names[] = ManagementArea::getAreaname($id);
+                            if(is_array($v)) {
+                                foreach ($v as $id) {
+                                    $names[] = ManagementArea::getAreaname($id);
+                                }
+                                return $names;
+                            } else {
+                                return $v;
                             }
-                            return $names;
                         }
                         if($str == 'small') {
                             foreach ($v as $id) {
