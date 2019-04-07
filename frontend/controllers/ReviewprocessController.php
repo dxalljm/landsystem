@@ -879,10 +879,15 @@ class ReviewprocessController extends Controller
 // 						$oldfarmsModel->notstate = $ttpoModel->oldchangenotstate;
 // 						$oldfarmsModel->contractarea = Farms::getContractnumberArea($ttpoModel->oldchangecontractnumber);
 // 						$oldfarmsModel->contractnumber = $ttpoModel->oldchangecontractnumber;
-						if(Reviewprocess::scanSameFarmsid($model->samefarms_id,$model->year)) {
+						if($model->samefarms_id) {
+							if(Reviewprocess::scanSameFarmsid($model->samefarms_id,$model->year)) {
+								Reviewprocess::setSameFarmsState($model->samefarms_id,$model->year);
+							}
+						} else {
 							$oldfarmsModel->state = 0;
 							$oldfarmsModel->locked = 0;
 						}
+					}
 
 						if(date('Y',$oldfarmsModel->create_at) == date('Y')) {
 							$oldfarmsModel->nowyearstate = 1;
@@ -955,7 +960,11 @@ class ReviewprocessController extends Controller
 // 						$newfarmModel->contractarea = Farms::getContractnumberArea($ttpoModel->newchangecontractnumber);
 // 						$newfarmModel->contractnumber = $ttpoModel->newchangecontractnumber;
 
-						if(Reviewprocess::scanSameFarmsid($model->samefarms_id,$model->year)) {
+						if($model->samefarms_id) {
+							if(Reviewprocess::scanSameFarmsid($model->samefarms_id,$model->year)) {
+								Reviewprocess::setSameFarmsState($model->samefarms_id,$model->year);
+							}
+						} else {
 							$newfarmModel->state = 0;
 							$newfarmModel->locked = 0;
 						}
@@ -1179,8 +1188,8 @@ class ReviewprocessController extends Controller
 							}
 						}
 						if (Reviewprocess::scanSameFarmsid($model->samefarms_id, $model->year)) {
-							$farms->locked = 0;
-						}
+						$farms->locked = 0;
+
 						$farms->otherstate = 6;
 						if(date('Y',$farms->create_at) == date('Y')) {
 							$farms->nowyearstate = 1;

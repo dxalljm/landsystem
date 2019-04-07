@@ -416,6 +416,27 @@ class Reviewprocess extends \yii\db\ActiveRecord
 		return $State;
 	}
 
+	public static function setSameFarmsState($samefarms_id,$year)
+	{
+		foreach (Reviewprocess::find()->where(['samefarms_id'=>$samefarms_id,'year'=>$year])->all() as $value) {
+			$samefarms = Farms::findOne($samefarms_id);
+			$samefarms->state = 0;
+			$samefarms->save();
+			$oldfarm = Farms::findOne($value['oldfarms_id']);
+			if(!$oldfarm->tempdata) {
+				$oldfarm->state = 1;
+				$oldfarm->locked = 0;
+				$oldfarm->save();
+			}
+			$newfarm = Farms::findOne($value['newfarms_id']);
+			if(!$newfarm->tempdata) {
+				$newfarm->state = 1;
+				$newfarm->locked = 0;
+				$newfarm->save();
+			}
+		}
+	}
+
 	public static function isNextProcess($id,$field,$post)
 	{
 //		var_dump($id);var_dump($field);var_dump($post);exit;
@@ -1378,7 +1399,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
 	//如果有一条没有通过,则返回false
 	public static function scanSameFarmsid($samefarms_id,$year)
 	{
-		$data = Reviewprocess::find()->where(['samefarms_id'=>$samefarms_id,'year'=>$year]);
+		$data = Reviewprocess::find()->where(['samefarms_id'=>$samefarms_id,'year'=>$year])->all();
 		foreach ($data as $value) {
 			if($value['state'] <= 4) {
 				return false;
