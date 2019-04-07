@@ -106,13 +106,17 @@ $this->params ['breadcrumbs'] [] = $this->title;
 													'label' => '状态',
 //									'attribute' => 'state',
 													'format' => 'raw',
-//													'options' =>['width'=>500],
+													'options' =>['width'=>100],
 													'value' => function($model) {
 //														$loan = Loan::find()->where(['reviewprocess_id'=>$model->id])->one();
 														$farm = Farms::findOne($model->farms_id);
-														if($farm->locked == 1)
-															$html = '冻结';
-														else
+														if($farm->locked == 1) {
+															if($model->state == 2) {
+																$html = '审核中';
+															} else {
+																$html = '冻结';
+															}
+														} else
 															$html = '已解冻';
 														if(!empty($loan['unlockbook'])) {
 															$html.='&nbsp;';
@@ -135,7 +139,7 @@ $this->params ['breadcrumbs'] [] = $this->title;
 													'options' =>['width'=>300],
 													'value' => function($model) {
                                                         $farm = Farms::findOne($model->farms_id);
-														if ($farm->locked == 1) {
+														if ($farm->locked == 1 and $model->state == 1) {
 															$html = html::a('解冻', ['loan/loanunlock', 'id' => $model->id], [
 																'class' => 'btn btn-success',
 																'data' => [
@@ -143,16 +147,18 @@ $this->params ['breadcrumbs'] [] = $this->title;
 																	'method' => 'post',
 																],
 															]);
+															$html .= '&nbsp;';
+															$html .= photographDialog::showDialogClass('拍照','unlock-dialog',$model->id);
 														} else {
 															$html = html::a('解冻', '#', [
 																'class' => 'btn btn-success',
 																'disabled'=>true,
 															]);
 														}
+														$review = Reviewprocess::find()->where(['oldfarms_id'=>$model->farms_id,'actionname'=>'loancreate','year'=>User::getYear()])->one();
+
 														$html .= '&nbsp;';
-														$html .= photographDialog::showDialogClass('拍照','unlock-dialog',$model->id);
-														$html .= '&nbsp;';
-														$html .= html::a('查看', ['loan/loanview', 'id' => $model->id,'farms_id'=>$model->farms_id], [
+														$html .= html::a('查看', ['reviewprocess/reviewprocessview', 'id' => $review['id'],'class'=>'loancreate'], [
 																'class' => 'btn btn-success',
 																
 														]);

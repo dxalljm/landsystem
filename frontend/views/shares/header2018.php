@@ -151,7 +151,14 @@ if(isset($_GET['farms_id'])) {
 
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="<?= Url::to(['reviewprocess/reviewprocessindex'])?>" id="two">审核任务<span class="notification count2">0</span></a></li>
-                        <li><a href="<?= Url::to(['reviewprocess/reviewprocesswait'])?>" id="zero">待办任务<span class="notification count0">0</span></a></li>
+                        <?php
+                        if(User::getItemname('地产科')) {
+                            ?>
+                            <li><a href="<?= Url::to(['reviewprocess/reviewprocesswait']) ?>" id="zero">待办任务<span
+                                        class="notification count0">0</span></a></li>
+                            <?php
+                        }
+                        ?>
                         <li><a href="<?= Url::to(['reviewprocess/reviewprocessing'])?>" id="four">正在办理<span class="notificationgreen count4">0</span></a></li>
                         <li><a href="<?= Url::to(['reviewprocess/reviewprocessfinished'])?>" id="six">已完成任务<span class="notificationgreen count6">0</span></a></li>
                         <li><a href="<?= Url::to(['reviewprocess/reviewprocessreturn'])?>" id="eight">退回任务<span class="notification count8">0</span></a></li>

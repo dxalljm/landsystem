@@ -403,7 +403,7 @@ class FirepreventionController extends Controller
     //判断是否存在farms_id的数据
     protected function findFarmsModel($farms_id)
     {
-    	if (($model = Fireprevention::find()->where(['farms_id'=>$farms_id])->one()) !== null) {
+    	if (($model = Fireprevention::find()->where(['farms_id'=>$farms_id,'year'=>User::getYear()])->one()) !== null) {
     		return $model;
     	} else {
     		return false;

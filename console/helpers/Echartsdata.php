@@ -6,36 +6,37 @@
  * Time: 10:02
  */
 
-namespace frontend\helpers;
-use app\models\Breedinfo;
-use app\models\Disaster;
-use app\models\Disastertype;
-use app\models\Farms;
-use app\models\Fireprevention;
-use app\models\Fixed;
-use app\models\Fixedtype;
-use app\models\Goodseed;
-use app\models\Insurance;
-use app\models\Insurancecompany;
-use app\models\Loan;
-use app\models\Machineapply;
-use app\models\Machineoffarm;
-use app\models\Machinetype;
-use app\models\Plant;
-use app\models\Plantingstructure;
-use app\models\Plantingstructurecheck;
-use app\models\Sales;
-use app\models\Saleswhere;
-use app\models\Subsidytypetofarm;
-use app\models\User;
-use app\models\Breedtype;
-use app\models\ManagementArea;
-use app\models\Collection;
-use app\models\PlantPrice;
-use app\models\Huinong;
-use app\models\Yieldbase;
-use app\models\Theyear;
-use app\models\Projectapplication;
+namespace console\helpers;
+
+use console\models\Breedinfo;
+use console\models\Disaster;
+use console\models\Disastertype;
+use console\models\Farms;
+use console\models\Fireprevention;
+use console\models\Fixed;
+use console\models\Fixedtype;
+use console\models\Goodseed;
+use console\models\Insurance;
+use console\models\Insurancecompany;
+use console\models\Loan;
+use console\models\Machineapply;
+use console\models\Machineoffarm;
+use console\models\Machinetype;
+use console\models\Plant;
+use console\models\Plantingstructure;
+use console\models\Plantingstructurecheck;
+use console\models\Sales;
+use console\models\Saleswhere;
+use console\models\Subsidytypetofarm;
+use console\models\User;
+use console\models\Breedtype;
+use console\models\ManagementArea;
+use console\models\Collection;
+use console\models\PlantPrice;
+use console\models\Huinong;
+use console\models\Yieldbase;
+use console\models\Theyear;
+use console\models\Projectapplication;
 
 class Echartsdata
 {

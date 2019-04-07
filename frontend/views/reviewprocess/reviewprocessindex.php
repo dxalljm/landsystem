@@ -29,6 +29,11 @@ $this->title = Tables::find ()->where ( [
 $this->params ['breadcrumbs'] [] = $this->title;
 ?>
 <script src="/js/jquery.cookie.js"></script>
+<style>
+	.colorred {
+		color: red;
+	}
+</style>
 <div class="reviewprocess-index">
 	<section class="content">
 		<div class="row">
@@ -102,7 +107,7 @@ $this->params ['breadcrumbs'] [] = $this->title;
 												['class' => 'yii\grid\SerialColumn'],
 												[
 													'attribute' => 'management_area',
-													'options' => ['width' => 500],
+													'options' => ['width' => 300],
 													'value' => function ($model) {
 														return ManagementArea::getAreanameOne($model->management_area);
 													},
@@ -110,21 +115,22 @@ $this->params ['breadcrumbs'] [] = $this->title;
 												],
 												[
 													'label' => '出让方农场',
+													'format' => 'raw',
 													'attribute' => 'oldfarmname',
-													'options' => ['width'=>200],
+													'options' => ['width'=>200,'th'=>'colorred'],
 													'value' => function ($model) {
 														return Farms::find()->where(['id' => $model->oldfarms_id])->one()['farmname'];
 													}
 												],
 												[
-													'label' => '出让方法人',
+													'label' => '法人',
 													'attribute' => 'oldfarmername',
 													'value' => function ($model) {
 														return Farms::find()->where(['id' => $model->oldfarms_id])->one()['farmername'];
 													}
 												],
 												[
-													'label' => '出让方合同号',
+													'label' => '合同号',
 //													'attribute' => 'oldcontractnumber'/
 													'options' => ['width'=>200],
 													'value' => function($model) {
@@ -135,7 +141,7 @@ $this->params ['breadcrumbs'] [] = $this->title;
 													}
 												],
 												[
-													'label' => '出让方面积',
+													'label' => '面积',
 													'attribute' => 'oldcontractarea',
 													'value' => function ($model) {
 										                if($model->samefarms_id) {
@@ -145,28 +151,28 @@ $this->params ['breadcrumbs'] [] = $this->title;
 													}
 												],
 												[
-													'label' => '受让方农场名称',
+													'label' => '受让方农场',
 													'attribute' => 'farmname',
 													'value' => function ($model) {
 														return Farms::find()->where(['id' => $model->newfarms_id])->one()['farmname'];
 													}
 												],
 												[
-													'label' => '受让方法人',
+													'label' => '法人',
 													'attribute' => 'farmername',
 													'value' => function ($model) {
 														return Farms::find()->where(['id' => $model->newfarms_id])->one()['farmername'];
 													}
 												],
 												[
-													'label' => '受让方合同号',
+													'label' => '合同号',
 													'options' => ['width'=>200],
 													'value' => function($model) {
 														return Farms::find()->where(['id' => $model->newfarms_id])->one()['contractnumber'];
 													}
 												],
 												[
-													'label' => '受让方面积',
+													'label' => '面积',
 													'attribute' => 'contractarea',
 													'value' => function ($model) {
 														return Farms::find()->where(['id' => $model->newfarms_id])->one()['contractarea'];

@@ -176,6 +176,7 @@ class IndexechartsController extends Controller
         $landcache->year = User::getYear();
         $landcache->plantingstructuretime = time();
         $landcache->save();
+//        var_dump($landcache->getErrors());
     }
 
     public function Huinongcacheone($user_id = null)
@@ -267,7 +268,7 @@ class IndexechartsController extends Controller
         $landcache->insurancetime = time();
         $landcache->year = User::getYear();
         $landcache->save();
-//        var_dump($landcache);
+//        var_dump($landcache->getErrors());
     }
 
     public function Loancacheone($user_id = null)

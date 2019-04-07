@@ -769,6 +769,18 @@ class SixcheckController extends Controller
                             }
                         }
                         $state = $model->save();
+                        $percent = Fireprevention::getPercent($model);
+                        $model->percent = $percent;
+                        if($percent > 60) {
+                            $model->finished = 1;
+                        }
+                        if($percent > 0 and $percent <= 60) {
+                            $model->finished = 2;
+                        }
+                        if($percent == 0 or empty($percent)) {
+                            $model->finished = 0;
+                        }
+                        $model->save();
                         Logs::writeLogs('基础调查表-'.$info,$model);
                         $error[$key] = $model->getErrors();
                         break;

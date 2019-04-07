@@ -247,7 +247,7 @@ class loanSearch extends Loan
 	public function searchUnlock($params)
 	{
 //        var_dump($params);exit;
-		$query = Loan::find();
+		$query = Loan::find()->orderBy('id DESC');
 
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,

@@ -1,9 +1,10 @@
 <?php
 
-namespace app\models;
+namespace console\models;
 
+use frontend\helpers\whereHandle;
 use Yii;
-use console\models\Farms;
+use app\models\User;
 /**
  * This is the model class for table "{{%fireprevention}}".
  *
@@ -44,8 +45,9 @@ class Fireprevention extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['farms_id','management_area'], 'integer'],
-            [['firecontract', 'safecontract', 'environmental_agreement', 'firetools', 'mechanical_fire_cover', 'chimney_fire_cover', 'isolation_belt', 'propagandist', 'fire_administrator', 'cooker', 'fieldpermit', 'propaganda_firecontract', 'leaflets', 'employee_firecontract', 'rectification_record', 'equipmentpic', 'peoplepic', 'facilitiespic','year'], 'string', 'max' => 500]
+            [['farms_id','management_area','finished'], 'integer'],
+            [['firecontract', 'safecontract', 'environmental_agreement', 'firetools', 'mechanical_fire_cover', 'chimney_fire_cover', 'isolation_belt', 'propagandist', 'fire_administrator', 'cooker', 'fieldpermit', 'propaganda_firecontract', 'leaflets', 'employee_firecontract', 'rectification_record', 'equipmentpic', 'peoplepic', 'facilitiespic','year'], 'string', 'max' => 500],
+			[['percent'],'number']
         ];
     }
 
@@ -79,15 +81,48 @@ class Fireprevention extends \yii\db\ActiveRecord
         	'create_at' => '创建日期',
         	'update_at' => '更新日期',
         	'year' => '年度',
+			'percent' => '完成百分比',
+			'finished' => '是否完成',
         ];
     }
-    
+
+	public static function sixLabels()
+	{
+		return [
+			'firecontract' => ['label'=>'防火合同','type'=>'radioList'],
+			'safecontract' => ['label'=>'安全生产合同','type'=>'radioList'],
+			'environmental_agreement' => ['label'=>'环境保护协议','type'=>'radioList'],
+			'fieldpermit' => ['label'=>'野外作业许可证','type'=>'dialog'],
+			'leaflets' => ['label'=>'防火宣传单','type'=>'dialog'],
+			'rectification_record' => ['label'=>'防火检查整改记录','type'=>'dialog'],
+		];
+	}
+
+	public static function sixindexLabels()
+	{
+		return [
+			'firecontract',
+			'safecontract',
+			'environmental_agreement',
+		];
+	}
+
+	public static function getSixbfb($farms_id)
+	{
+		$result = 0;
+		$fire = Fireprevention::find()->where(['farms_id'=>$farms_id,'year'=>User::getYear()])->one();
+		foreach (self::sixindexLabels() as $field) {
+			$result += $fire[$field];
+		}
+		return $result;
+	}
+
     public static function setPercent()
     {
     	return [
-	    	'firecontract' => 10,
-	    	'safecontract' => 10,
-	    	'environmental_agreement' => 10,
+	    	'firecontract' => 20,
+	    	'safecontract' => 20,
+	    	'environmental_agreement' => 20,
 	    	'firetools' => 3,
 	    	'mechanical_fire_cover' => 3,
 	    	'chimney_fire_cover' => 3,
@@ -95,9 +130,9 @@ class Fireprevention extends \yii\db\ActiveRecord
 	    	'propagandist' => 3,
 	    	'fire_administrator' => 5,
 	    	'cooker' => 3,
-	    	'fieldpermit' => 10,
+	    	'fieldpermit' => 15,
 	    	'propaganda_firecontract' => 5,
-	    	'leaflets' => 10,
+	    	'leaflets' => 15,
 	    	'employee_firecontract' => 3,
 	    	'rectification_record' => 10,
 	    	'equipmentpic' => 3,
@@ -105,30 +140,14 @@ class Fireprevention extends \yii\db\ActiveRecord
 	    	'facilitiespic' => 3,
     	];
     }
-    
-    public static function getFinishedField()
-    {
-    	return [
-    			'firecontract' => 10,
-    			'safecontract' => 10,
-    			'environmental_agreement' => 10,
-    			'fieldpermit' => 10,
-    			'leaflets' => 10,
-    			'rectification_record' => 10,
-    		];
-    }
-    
-    public static function getPercent($model,$re = 'number') {
+    public static function getPercent($model) {
     	$percent = 0;
     	foreach (self::setPercent() as $key => $value) {
     		if($model->$key) {
     			$percent += $value; 
     		}
     	}
-    	if(empty($re))
-    		return $percent.'%';
-    	else
-    		return $percent;
+    	return $percent;
     }
     public static function getFinir($id)
     {
@@ -142,132 +161,190 @@ class Fireprevention extends \yii\db\ActiveRecord
     	}
     	return (float)sprintf("%.2f", $yes/count($array))*100;
     }
-    
-    public static function getBfblist($userid)
-    {
-    	$i = 0;
-    	$all = [];
-    	$finished = [];
+
+	public static function getFinishedField()
+	{
+		return [
+			'firecontract' => 20,
+			'safecontract' => 20,
+			'environmental_agreement' => 20,
+			'fieldpermit' => 15,
+			'leaflets' => 15,
+			'rectification_record' => 10,
+		];
+	}
+
+	public static function getAllbfb($user_id = null)
+	{
+		$i = 0;
+		$finished = [];
+		$allfire = 0;
+		$part = 0;
+// 		$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
+// 		$amountsColor = ['#fedfdf','#feeedf','#fefddf','#e1fedf','#dffcfe','#dfe3fe','#fedffe'];
+		if(!empty($user_id)) {
+
+			$managementarea = Farms::getUserManagementArea($user_id)['id'];
+		} else {
+			$managementarea = Farms::getManagementArea()['id'];
+		}
+//		if($managementarea) {
+//			$query = Fireprevention::find();
+//			foreach ($managementarea['id'] as $value) {
+//		var_dump($managementarea);
+		$allfire = Fireprevention::find()->where(['management_area' => $managementarea, 'year' => User::getYear()])->count();
+		$part = Fireprevention::find()->where(['management_area' => $managementarea, 'year' => User::getYear(), 'finished' => [1,2]])->count();
+//			}
+//		var_dump($allfire);var_dump($part);
+		if ($allfire) {
+			return (float)sprintf("%.2f", $part / $allfire)*100;
+		} else {
+			return 0;
+		}
+//		}
+
+	}
+	
+	public static function getData($total,$user_id = null)
+	{
+		$i = 0;
+		$all = [];
+		$part = [];
+		$finished = [];
 //     	$percent = 0;
 //     	$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
 //     	$amountsColor = ['#fedfdf','#feeedf','#fefddf','#e1fedf','#dffcfe','#dfe3fe','#fedffe'];
 //     	var_dump(Farms::getUserManagementArea($userid));
-    	foreach ( Farms::getUserManagementArea($userid) as $value ) {
-    		$farms = Farms::find()->where(['management_area'=>$value,'state'=>[1,2,3,4,5]])->all();
-    		$percent = 0;
-			foreach ($farms as $farm) {
-				$fire = Fireprevention::find ()->where ( [
-						'farms_id' => $farm['id'],
-						'year' => date('Y'),
-				] )->one();
-				$isFinished = 0;
-				foreach (self::getFinishedField() as $key => $value) {
-					if($fire) {
-						$isFinished += $fire[$key];
-					}
-				}
-				if($isFinished == 6) {
-					$percent++;
-				}
-			}
-    		
-//     		if($fires) {
-    			$all[] = count($farms);
-    			$finished[] = $percent;
-//     		} else {
-//     			$all[] = 100;
-//     			$finished[] = (float)0;
-//     		}
-//     		if($value == 7) {
-//     			var_dump($percent);
-//     		}
-    	}
-
-    	return json_encode (['all'=>$all,'real'=>$finished]);
-//     		$result = [[
-//     				'name'=>'已完成',
-//     				'type'=>'bar',
-//     				'stack'=>'sum',
-//     				'barCategoryGap'=>'50%',
-//     				'itemStyle'=>[
-//     						'normal'=> [
-//     								'color'=> 'tomato',
-//     								'barBorderColor'=> 'tomato',
-//     								'barBorderWidth'=> 3,
-// 					'barBorderRadius'=>0,
-//     								'label'=>[
-//     								'show'=> true,
-//     								'position'=> 'insideTop'
-//     						]
-//     				]
-//     		],
-//     				'data'=>$finished,
-//     		],
-//     				[
-//     				'name'=>'应完成',
-//     				'type'=>'bar',
-//     				'stack'=>'sum',
-// 			'itemStyle'=> [
-//     				'normal'=> [
-//     						'color'=>'#fff',
-// 					'barBorderColor'=> 'tomato',
-// 					'barBorderWidth'=> 3,
-// 					'barBorderRadius'=>0,
-// 					'label' => [
-//     								'show'=> false,
-// 						'position'=> 'top',
-//     							// 						'formatter'=> '{c}/10000.toFixed(2)',
-//     								'textStyle'=>[
-//     								'color'=> 'tomato'
-//     						]
-//     				]
-//     		]
-//     		],
-//     				'data'=>$all,
-//     			]];
-    }
-    
-    public static function getAllbfb($userid)
-    {
-    	$i = 0;
-		$finished = [];
-		$allfire = 0;
-		$percent = 0;
-// 		$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
-// 		$amountsColor = ['#fedfdf','#feeedf','#fefddf','#e1fedf','#dffcfe','#dfe3fe','#fedffe'];
-		foreach ( Farms::getUserManagementArea($userid) as $value ) {
-			$farms = Farms::find()->where(['management_area'=>$value,'state'=>[1,2,3,4,5]])->all();
-			
-			foreach ($farms as $farm) {
-				$fire = Fireprevention::find ()->where ( [
-						'farms_id' => $farm['id'],
-						'year' => date('Y'),
-				] )->one();
-			$isFinished = 0;
-				foreach (self::getFinishedField() as $key => $value) {
-					if($fire) {
-						$isFinished += $fire[$key];
-					}
-				}
-				if($isFinished == 6) {
-					$percent++;
-				}
-			}
-			$allfire += count($farms);
-		}
-// 		echo '-----';
-// 		var_dump($userid);
-// 		if($allfire) {
-// 			var_dump($percent/$allfire);
-// 		} else {
-// 			var_dump(0);
-// 		}
-// 		echo '))';
-		if($allfire) {
-			return (float)sprintf("%.2f", $percent/$allfire);
+		$where = whereHandle::toFireWhere($total);
+		if(!empty($user_id)) {
+			$managementarea = Farms::getUserManagementArea($user_id)['id'];
 		} else {
+			$managementarea = Farms::getManagementArea();
+		}
+		if($managementarea) {
+			foreach ($managementarea as $value) {
+				$all[] = Fireprevention::find()->where($where)->andFilterWhere(['management_area' => $value])->count();
+				$part[] = Fireprevention::find()->where($where)->andFilterWhere(['management_area' => $value, 'finished' => 2])->count();
+				$finished[] = Fireprevention::find()->where($where)->andFilterWhere(['management_area' => $value, 'finished' => 1])->count();
+			}
+//		var_dump($all);
+//		var_dump($finished);
+			return ['all' => $all, 'part' => $part, 'real' => $finished];
+		}
+	}
+	public static function getBfblist($user_id = null)
+	{
+		$i = 0;
+		$all = [];
+		$part = [];
+		$finished = [];
+//     	$percent = 0;
+//     	$color = ['#f30703','#f07304','#f1f100','#02f202','#01f0f0','#0201f2','#f101f1'];
+//     	$amountsColor = ['#fedfdf','#feeedf','#fefddf','#e1fedf','#dffcfe','#dfe3fe','#fedffe'];
+//     	var_dump(Farms::getUserManagementArea($userid));
+
+		if(!empty($user_id)) {
+			$managementarea = Farms::getUserManagementArea($user_id);
+		} else {
+			$managementarea = Farms::getManagementArea();
+		}
+		if($managementarea) {
+			foreach ($managementarea['id'] as $value) {
+				$all[] = Fireprevention::find()->where(['management_area' => $value, 'year' => User::getYear()])->count();
+				$part[] = Fireprevention::find()->where(['management_area' => $value, 'year' => User::getYear(), 'finished' => 2])->count();
+				$finished[] = Fireprevention::find()->where(['management_area' => $value, 'year' => User::getYear(), 'finished' => 1])->count();
+			}
+//		var_dump($all);
+//		var_dump($finished);
+			return json_encode(['all' => $all, 'part' => $part, 'real' => $finished]);
+		}
+	}
+	public static function newFire($farms_id)
+	{
+		$farm = Farms::findOne($farms_id);
+		$model = new Fireprevention();
+		$model->year = User::getYear();
+		$model->farms_id = $farms_id;
+		$model->farmstate = $farm['state'];
+		$model->management_area = $farm['management_area'];
+		$model->create_at = time();
+		$model->update_at = $model->create_at;
+		$model->finished = 0;
+		if($model->save()) {
+			return $model->id;
+		}
+		return 0;
+	}
+
+	public static function copy($id,$farms_id=null)
+	{
+		$old = Fireprevention::findOne($id);
+		if(empty($farms_id)) {
+			$farm = Farms::findOne($old->farms_id);
+			$model = new Fireprevention();
+			$model->year = User::getYear();
+			$model->farms_id = $old->farms_id;
+			$model->farmstate = $farm['state'];
+			$model->management_area = $farm['management_area'];
+			$model->create_at = time();
+			$model->update_at = $model->create_at;
+			$model->firecontract = $old->firecontract;
+			$model->safecontract = $old->safecontract;
+			$model->environmental_agreement = $old->environmental_agreement;
+			$model->firetools = $old->firetools;
+			$model->mechanical_fire_cover = $old->mechanical_fire_cover;
+			$model->chimney_fire_cover = $old->chimney_fire_cover;
+			$model->isolation_belt = $old->isolation_belt;
+			$model->propagandist = $old->propagandist;
+			$model->fire_administrator = $old->fire_administrator;
+			$model->cooker = $old->cooker;
+			$model->fieldpermit = $old->fieldpermit;
+			$model->propaganda_firecontract = $old->propaganda_firecontract;
+			$model->leaflets = $old->leaflets;
+			$model->employee_firecontract = $old->employee_firecontract;
+			$model->rectification_record = $old->rectification_record;
+			$model->equipmentpic = $old->equipmentpic;
+			$model->peoplepic = $old->peoplepic;
+			$model->facilitiespic = $old->facilitiespic;
+			$model->percent = $old->percent;
+			$model->finished = $old->finished;
+			if ($model->save()) {
+				return $model->id;
+			}
+			return 0;
+		} else {
+			$farm = Farms::findOne($farms_id);
+			$model = new Fireprevention();
+			$model->year = User::getYear();
+			$model->farms_id = $farms_id;
+			$model->farmstate = $farm['state'];
+			$model->management_area = $farm['management_area'];
+			$model->create_at = time();
+			$model->update_at = $model->create_at;
+			$model->firecontract = $old->firecontract;
+			$model->safecontract = $old->safecontract;
+			$model->environmental_agreement = $old->environmental_agreement;
+			$model->firetools = $old->firetools;
+			$model->mechanical_fire_cover = $old->mechanical_fire_cover;
+			$model->chimney_fire_cover = $old->chimney_fire_cover;
+			$model->isolation_belt = $old->isolation_belt;
+			$model->propagandist = $old->propagandist;
+			$model->fire_administrator = $old->fire_administrator;
+			$model->cooker = $old->cooker;
+			$model->fieldpermit = $old->fieldpermit;
+			$model->propaganda_firecontract = $old->propaganda_firecontract;
+			$model->leaflets = $old->leaflets;
+			$model->employee_firecontract = $old->employee_firecontract;
+			$model->rectification_record = $old->rectification_record;
+			$model->equipmentpic = $old->equipmentpic;
+			$model->peoplepic = $old->peoplepic;
+			$model->facilitiespic = $old->facilitiespic;
+			$model->percent = $old->percent;
+			$model->finished = $old->finished;
+			if ($model->save()) {
+				return $model->id;
+			}
 			return 0;
 		}
-
-    }
+	}
 }

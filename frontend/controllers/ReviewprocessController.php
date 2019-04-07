@@ -817,7 +817,7 @@ class ReviewprocessController extends Controller
     	$process = Auditprocess::find()->where(['actionname'=>$model->actionname])->one()['process'];
 		$post = Yii::$app->request->post();
     	if($class == 'farmstransfer') {
-			Logs::writeLogs('整体转让');
+			Logs::writeLogs('过户转让');
 	    	$oldfarm = Farms::find()->where(['id'=>$ttpo->oldfarms_id])->one();
 	    	$newfarm = Farms::find()->where(['id'=>$ttpo->newnewfarms_id])->one();
 
@@ -879,8 +879,11 @@ class ReviewprocessController extends Controller
 // 						$oldfarmsModel->notstate = $ttpoModel->oldchangenotstate;
 // 						$oldfarmsModel->contractarea = Farms::getContractnumberArea($ttpoModel->oldchangecontractnumber);
 // 						$oldfarmsModel->contractnumber = $ttpoModel->oldchangecontractnumber;
-						$oldfarmsModel->state = 0;
-						$oldfarmsModel->locked = 0;
+						if(Reviewprocess::scanSameFarmsid($model->samefarms_id,$model->year)) {
+							$oldfarmsModel->state = 0;
+							$oldfarmsModel->locked = 0;
+						}
+
 						if(date('Y',$oldfarmsModel->create_at) == date('Y')) {
 							$oldfarmsModel->nowyearstate = 1;
 						} else {
@@ -951,8 +954,11 @@ class ReviewprocessController extends Controller
 // 						$newfarmModel->notstate = $ttpoModel->newchangenotstate;
 // 						$newfarmModel->contractarea = Farms::getContractnumberArea($ttpoModel->newchangecontractnumber);
 // 						$newfarmModel->contractnumber = $ttpoModel->newchangecontractnumber;
-						$newfarmModel->locked = 0;
-						$newfarmModel->state = 0;
+
+						if(Reviewprocess::scanSameFarmsid($model->samefarms_id,$model->year)) {
+							$newfarmModel->state = 0;
+							$newfarmModel->locked = 0;
+						}
 						if(date('Y',$newfarmModel->create_at) == date('Y')) {
 							$newfarmModel->nowyearstate = 0;
 						}
@@ -1029,9 +1035,13 @@ class ReviewprocessController extends Controller
 							if($farms->tempdata) {
 								$farms->state = 0;
 							} else {
-								$farms->state = 1;
+								if(Reviewprocess::scanSameFarmsid($model->samefarms_id,$model->year)) {
+									$farms->state = 1;
+								}
 							}
+						if(Reviewprocess::scanSameFarmsid($model->samefarms_id,$model->year)) {
 							$farms->locked = 0;
+						}
 							$farms->otherstate = 6;
 							if(date('Y',$farms->create_at) == date('Y')) {
 								$farms->nowyearstate = 1;
@@ -1164,9 +1174,13 @@ class ReviewprocessController extends Controller
 						if($farms->tempdata) {
 							$farms->state = 0;
 						} else {
-							$farms->state = 1;
+							if (Reviewprocess::scanSameFarmsid($model->samefarms_id, $model->year)) {
+								$farms->state = 1;
+							}
 						}
-						$farms->locked = 0;
+						if (Reviewprocess::scanSameFarmsid($model->samefarms_id, $model->year)) {
+							$farms->locked = 0;
+						}
 						$farms->otherstate = 6;
 						if(date('Y',$farms->create_at) == date('Y')) {
 							$farms->nowyearstate = 1;
@@ -2006,6 +2020,7 @@ class ReviewprocessController extends Controller
 		$searchLoan = new loanSearch();
 
 		$params['loanSearch']['lock'] = 1;
+		$params['loanSearch']['state'] = [1,2];
 //		$params['ReviewprocessSearch']['management_area'] = $whereArray['id'];
 
 		if (empty($params['loanSearch']['management_area'])) {

@@ -58,7 +58,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
 	public function rules() 
     { 
         return [
-            [['newfarms_id','ttpozongdi_id', 'operation_id', 'create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime', 'regulations', 'regulationstime', 'oldfarms_id', 'management_area', 'state', 'project', 'projecttime','samefarms_id'], 'integer'],
+            [['newfarms_id','ttpozongdi_id', 'operation_id', 'create_at', 'update_at', 'estate', 'finance', 'filereview', 'publicsecurity', 'leader', 'mortgage', 'steeringgroup', 'estatetime', 'financetime', 'filereviewtime', 'publicsecuritytime', 'leadertime', 'mortgagetime', 'steeringgrouptime', 'regulations', 'regulationstime', 'oldfarms_id', 'management_area', 'state', 'project', 'projecttime','samefarms_id','year'], 'integer'],
             [['projectcontent'], 'string'],
             [['estatecontent','financecontent', 'filereviewcontent', 'publicsecuritycontent', 'leadercontent', 'mortgagecontent', 'steeringgroupcontent', 'regulationscontent', 'actionname','undo','fromundo'], 'string', 'max' => 500],
 		];
@@ -109,7 +109,8 @@ class Reviewprocess extends \yii\db\ActiveRecord
         	'ttpozongdi_id' => '转让信息ID',
 			'undo' => '退回',
 			'fromundo' => '从哪退回',
-			'samefarms_id' => '分户指向原农场ID'
+			'samefarms_id' => '分户指向原农场ID',
+			'year' => '年度',
         ];
     }
 
@@ -1373,7 +1374,18 @@ class Reviewprocess extends \yii\db\ActiveRecord
 //		exit;
     	return false;
     }
-   
+
+	//如果有一条没有通过,则返回false
+	public static function scanSameFarmsid($samefarms_id,$year)
+	{
+		$data = Reviewprocess::find()->where(['samefarms_id'=>$samefarms_id,'year'=>$year]);
+		foreach ($data as $value) {
+			if($value['state'] <= 4) {
+				return false;
+			}
+		}
+		return true;
+	}
     
     //保存流程
     public static function processRun($auditprocess_id,$oldfarms_id=NULL,$newfarms_id=null,$ttpozongdi_id = NULL,$samefarms_id=null)
@@ -1394,6 +1406,7 @@ class Reviewprocess extends \yii\db\ActiveRecord
     	$reviewprocessModel->operation_id = $auditprocess_id;
 		$reviewprocessModel->samefarms_id = $samefarms_id;
 		$reviewprocessModel->undo = '';
+		$reviewprocessModel->year = User::getYear();
 //		$reviewprocessModel->estate = 1;
 //     	var_dump($reviewprocessModel->attributes);exit;
     	for($i=0;$i<count($processs);$i++) {

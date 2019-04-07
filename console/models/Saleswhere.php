@@ -5,20 +5,19 @@ namespace console\models;
 use Yii;
 
 /**
- * This is the model class for table "{{%inputproduct}}".
+ * This is the model class for table "{{%saleswhere}}".
  *
  * @property integer $id
- * @property integer $father_id
- * @property string $fertilizer
+ * @property string $wherename
  */
-class Inputproduct extends \yii\db\ActiveRecord
+class Saleswhere extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%inputproduct}}';
+        return '{{%saleswhere}}';
     }
 
     /**
@@ -27,8 +26,7 @@ class Inputproduct extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['father_id'], 'integer'],
-            [['fertilizer'], 'string', 'max' => 500]
+            [['wherename'], 'string', 'max' => 500]
         ];
     }
 
@@ -39,8 +37,7 @@ class Inputproduct extends \yii\db\ActiveRecord
     {
         return [
 			'id' => 'ID',
-            'father_id' => '类别',
-            'fertilizer' => '肥料',
+            'wherename' => '销售去向',
         ];
     }
 }

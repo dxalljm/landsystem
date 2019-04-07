@@ -1865,4 +1865,36 @@ class TestController extends Controller
         }
         echo 'finished';
     }
+
+    public function actionReviewyear()
+    {
+        $re = Reviewprocess::find()->all();
+        foreach ($re as $value) {
+            $model = Reviewprocess::findOne($value['id']);
+            $model->year = date('Y',$model->create_at);
+            $model->save();
+        }
+        echo 'finished';
+    }
+
+    public function actionFirefff()
+    {
+        $data = Fireprevention::find()->all();
+        foreach ($data as $value) {
+            $model = Fireprevention::findOne($value['id']);
+            $percent = Fireprevention::getPercent($model);
+            $model->percent = $percent;
+            if($percent > 60) {
+                $model->finished = 1;
+            }
+            if($percent > 0 and $percent <= 60) {
+                $model->finished = 2;
+            }
+            if($percent == 0 or empty($percent)) {
+                $model->finished = 0;
+            }
+            $model->save();
+        }
+        echo 'finished';
+    }
 }
