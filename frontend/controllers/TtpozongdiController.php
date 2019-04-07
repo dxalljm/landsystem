@@ -184,6 +184,22 @@ class TtpozongdiController extends Controller
         return $this->redirect(['farms/farmsmenu', 'farms_id'=>$model->samefarms_id]);
     }
 
+    public function actionIsfarmer($samefarms_id,$year)
+    {
+        $ttpo = Ttpozongdi::find()->where(['samefarms_id'=>$samefarms_id,'year'=>$year])->all();
+        $farm = Farms::findOne($samefarms_id);
+        $state = false;
+        if($ttpo) {
+            foreach ($ttpo as $value) {
+                $newnewfarm = Farms::findOne($value['newnewfarms_id']);
+                if ($newnewfarm->cardid == $farm['cardid']) {
+                    $state = true;
+                }
+            }
+        }
+        echo json_encode(['state'=>$state]);
+    }
+
     /**
      * Finds the Theyear model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

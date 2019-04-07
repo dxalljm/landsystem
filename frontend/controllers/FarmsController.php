@@ -1047,6 +1047,7 @@ class FarmsController extends Controller {
 			$ttpoModel->ttpoarea = Yii::$app->request->post ( 'ttpoarea' );
 			$ttpoModel->actionname = \Yii::$app->controller->action->id;
 			$ttpoModel->state = 0;
+			$ttpoModel->year = date('Y');
 			$ttpoModel->save ();
 			Logs::writeLogs ( '创建过户信息', $ttpoModel,'ttopzongdi');
 			Zongdioffarm::zongdiUpdate($ttpoModel->oldfarms_id, $ttpoModel->oldnewfarms_id,$ttpoModel->oldchangezongdi);
@@ -1222,6 +1223,7 @@ class FarmsController extends Controller {
 			$ttpoModel->ttpoarea = $oldmodel->contractarea;
 			$ttpoModel->actionname = \Yii::$app->controller->action->id;
 			$ttpoModel->state = 0;
+			$ttpoModel->year = date('Y');
 //			var_dump($ttpoModel);exit;
 			$ttpoModel->save ();
 
@@ -1674,6 +1676,7 @@ class FarmsController extends Controller {
 			$ttpoModel->actionname = \Yii::$app->controller->action->id;
 			$ttpoModel->state = 0;
 			$ttpoModel->samefarms_id = $ttpoModel->oldfarms_id;
+			$ttpoModel->year = date('Y');
 			$ttpoModel->save ();
 			Logs::writeLogs('新增农场过户信息',$ttpoModel,'ttpoozongdi');
 
@@ -1847,7 +1850,7 @@ class FarmsController extends Controller {
 			$ttpoModel->ttpoarea = Yii::$app->request->post ( 'ttpoarea' );
 			$ttpoModel->actionname = \Yii::$app->controller->action->id;
 			$ttpoModel->state = 0;
-			//
+			$ttpoModel->year = date('Y');
 			$ttpoModel->samefarms_id = $samefarms_id;
 			$ttpoModel->save ();
 			Logs::writeLogs('创建农场转让信息',$ttpoModel,'ttopzongdi');
@@ -2159,6 +2162,7 @@ class FarmsController extends Controller {
 			$ttpoModel->actionname = \Yii::$app->controller->action->id;
 			$ttpoModel->state = 0;
 			$ttpoModel->samefarms_id = $ttpoModel->oldfarms_id;
+			$ttpoModel->year = date('Y');
 			$ttpoModel->save ();
 			Logs::writeLogs('创建转让信息',$ttpoModel,'ttpozongdi');
 // 			var_dump($_POST);

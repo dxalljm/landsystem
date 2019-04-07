@@ -457,4 +457,18 @@ class Ttpozongdi extends \yii\db\ActiveRecord
 //     	    	var_dump($farm);
     	return $farm['measure'];
     }
+
+    //判断分户中农场中是否包含法人
+    public static function isFarmer($samefarms_id,$year)
+    {
+        $ttpo = Ttpozongdi::find()->where(['samefarms_id'=>$samefarms_id,'year'=>$year])->all();
+        $farm = Farms::findOne($samefarms_id);
+        foreach ($ttpo as $value) {
+            $newnewfarm = Farms::findOne($value['newnewfarms_id']);
+            if($newnewfarm->cardid == $farm['cardid']) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -173,7 +173,7 @@ use app\models\User;
 			<td align='left' colspan="3">自 <?= date('Y-m-d')?> 至 <?= $oldFarm->enddate?> 止</td>
 		</tr>
 		<tr>
-		  <td align='right' ><?= Help::showHelp3('新宗地','ttpo-newzongdi')?></td><?= html::hiddenInput('tempzongdi','',['id'=>'temp-zongdi'])?><?= $form->field($newFarm, 'zongdi')->hiddenInput()->label(false)->error(false) ?>
+		  <td align='right' ><?= Help::showHelp3('新宗地','ttpo-newzongdi')?></td><?= html::hiddenInput('tempzongdi','',['id'=>'temp-zongdi'])?><?= $form->field($newFarm, 'zongdi')->textInput()->label(false)->error(false) ?>
 		  <td  align='left' colspan="3"><span id="inputZongdi" class="select2-container select2-container--default select2-container--below" dir="ltr" style="width: 100%; color: #000;">
 	<span class="selection">
 		<span class="select2-selection select2-selection--multiple" role="combobox" aria-autocomplete="list" aria-haspopup="true" aria-expanded="false" tabindex="0">
@@ -532,6 +532,7 @@ $( "#dialog" ).dialog({
 						$('#farms-measure').val(newvalue.toFixed(2));
 						$('#temp_measure').val(newvalue.toFixed(2));
 						toHTH();
+						lastFarmer();
 						var ycontractarea = parseFloat($('#farms-contractarea').val());
 						var oldcontractarea = parseFloat($('#oldfarms-contractarea').val());
 						
@@ -808,9 +809,15 @@ function getArea(zongdi)
 	re = /-([\s\S]*)\(([0-9.]+?)\)/
 	var area = zongdi.match(re);
 	return area[2];
-	
 }
-
+function getZongdi(zongdi)
+{
+	re = /-([\s\S]*)\(([0-9.]+?)\)/
+	var area = zongdi.match(re);
+	var num = $('#farms-contractnumber').val();
+	var numArr = num.split('-');
+	return numArr[3]+'-'+area[1];
+}
 function toZongdi(zongdi,area){
 	$( "#dialog" ).dialog( "open" );
 //	event.preventDefault();
@@ -1031,6 +1038,7 @@ $('#input-notclear').keyup(function (event) {
 			
 		}
 	}
+	lastFarmer();
 	toHTH();
 });
 $('#searchFarms').click(function(){
@@ -1040,6 +1048,7 @@ $('#searchFarms').click(function(){
 			$('#farms-farmername').val(data.data['farmername']);
 			$('#farms-cardid').val(data.data['cardid']);
 			$('#farms-telephone').val(data.data['telephone']);
+			lastFarmer();
 		}	
 	});
 });
@@ -1051,6 +1060,7 @@ $('#searchFarmer').click(function(){
 			$('#farms-farmname').val(data.data['farmname']);
 			$('#farms-cardid').val(data.data['cardid']);
 			$('#farms-telephone').val(data.data['telephone']);
+			lastFarmer();
 		}	
 	});
 });
@@ -1062,9 +1072,11 @@ $('#searchCardid').click(function(){
 			$('#farms-farmname').val(data.data['farmname']);
 			$('#farms-farmername').val(data.data['farmername']);
 			$('#farms-telephone').val(data.data['telephone']);
+			lastFarmer();
 		}	
 	});
 });
+
 $('#searchTelephone').click(function(){
 	var input = $('#farms-telephone').val();
 	
@@ -1073,9 +1085,54 @@ $('#searchTelephone').click(function(){
 			$('#farms-farmname').val(data.data['farmname']);
 			$('#farms-cardid').val(data.data['cardid']);
 			$('#farms-farmername').val(data.data['farmername']);
+			lastFarmer();
 		}	
 	});
 });
+
+
+function nowIsFarmer() {
+    var oldcardid = '<?= $oldFarm->cardid?>';
+    if(oldcardid == $('#farms-cardid').val()) {
+        return true;
+    }
+    return false;
+}
+
+function clearNow()
+{
+    $('#farms-farmname').val('');
+    $('#farms-farmername').val('');
+    $('#farms-cardid').val('');
+    $("#farms-telephone").val('');
+    var zongdi = $('#farms-zongdi').val();
+	var zongdiArr = zongdi.split('、');
+	$.each(zongdiArr,function (i,v) {
+		var name = getZongdi(v);
+		var area = getArea(v);
+		zongdiRemove(name,area,'dialog');
+	});
+    toHTH();
+}
+
+function lastFarmer()
+{
+    if($('#farms-contractarea').val() == $('#temp_oldcontractarea').val()) {
+        $.getJSON('index.php?r=ttpozongdi/isfarmer', {samefarms_id: <?= $_GET['samefarms_id']?>,year:'<?= date('Y')?>'}, function (data) {
+            if(data.state) {
+                //包含法人
+                alert('流程错误:请全部撤消,重新操作。');
+				clearNow();
+            } else {
+                //不包含法人
+                if(nowIsFarmer()) {
+                    alert('如最后分户为法人,则无需再进行分户,请到待办任务中直接全部提交即可。');
+                    clearNow();
+                }
+            }
+        });
+    }
+}
 </script>
 <script>
 		$(function () {
